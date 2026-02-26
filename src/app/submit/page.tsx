@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -26,7 +26,7 @@ function mockPiiGuardian(file: File): Promise<{ safe: boolean; message: string }
 
 export default function Submit() {
   const router = useRouter()
-  const supabase = createClient()
+  const [supabase, setSupabase] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [piiStatus, setPiiStatus] = useState<{ safe: boolean; message: string } | null>(null)
   const [formData, setFormData] = useState({
@@ -37,6 +37,11 @@ export default function Submit() {
     category: 'Security',
     evidence: null as File | null
   })
+
+  useEffect(() => {
+    const client = createClient()
+    setSupabase(client)
+  }, [])
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -50,6 +55,7 @@ export default function Submit() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!supabase) return
     setLoading(true)
 
     try {
