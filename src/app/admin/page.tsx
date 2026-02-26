@@ -2,51 +2,70 @@
 
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 export default function Admin() {
   const [users, setUsers] = useState<any[]>([])
   const [aiModels, setAiModels] = useState<any[]>([])
   const [incidents, setIncidents] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const fetched = useRef(false)
 
   useEffect(() => {
-    let mounted = true
+    if (fetched.current) return
+    fetched.current = true
 
     const fetchData = async () => {
       try {
         const supabase = createClient()
         
-        const { data: usersData } = await supabase
+        const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 5000))
+        
+        const usersPromise = supabase
           .from('users')
           .select('*')
           .order('created_at', { ascending: false })
 
-        const { data: modelsData } = await supabase
+        const modelsPromise = supabase
           .from('ai_models')
           .select('*')
           .order('deployed_at', { ascending: false })
 
-        const { data: incidentsData } = await supabase
+        const incidentsPromise = supabase
           .from('incidents')
           .select('*')
           .order('created_at', { ascending: false })
           .limit(10)
 
-        if (mounted) {
-          setUsers(usersData || [])
-          setAiModels(modelsData || [])
-          setIncidents(incidentsData || [])
-          setLoading(false)
-        }
+        const [usersResult, modelsResult, incidentsResult] = await Promise.race([
+          Promise.all([usersPromise, modelsPromise, incidentsPromise]),
+          Promise.all([timeoutPromise, timeoutPromise, timeoutPromise])
+        ]) as any[][]
+
+        if (usersResult[0]?.data) setUsers(usersResult[0].data)
+        else setUsers([])
+
+        if (modelsResult[1]?.data) setAiModels(modelsResult[1].data)
+        else setAiModels([])
+
+        if (incidentsResult[2]?.data) setIncidents(incidentsResult[2].data)
+        else setIncidents([])
+
+        setError(null)
       } catch (err) {
         console.error(err)
-        if (mounted) setLoading(false)
+        setError('Veri yüklenirken hata oluştu')
+        setUsers([])
+        setAiModels([])
+        setIncidents([])
+      } finally {
+        setLoading(false)
       }
     }
 
-    fetchData()
-    return () => { mounted = false }
+    const timer = setTimeout(fetchData, 500)
+    return () => clearTimeout(timer)
   }, [])
 
   if (loading) {
@@ -66,8 +85,8 @@ export default function Admin() {
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">
             <Link href="/" className="hover:text-[#10B981] transition">
-              <span className="neon-text-green">ALPAR</span>
-              <span className="neon-text-red">AI</span>
+              <span className="text-[#10B981]">ALPAR</span>
+              <span className="text-[#EF4444]">AI</span>
             </Link>
             <span className="ml-4 text-[#EF4444]">/ CEO Admin Panel</span>
           </h1>
@@ -79,6 +98,12 @@ export default function Admin() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
+        {error && (
+          <div className="mb-4 p-4 bg-[#EF4444]/20 border border-[#EF4444] rounded-lg text-[#EF4444]">
+            {error}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div>
             <div className="bg-[#0B0F19] border border-[#EF4444]/30 rounded-lg overflow-hidden mb-6">
@@ -119,7 +144,10 @@ export default function Admin() {
                     ))}
                     {users.length === 0 && (
                       <tr>
-                        <td colSpan={3} className="p-4 text-center text-gray-500">Henüz kullanıcı yok</td>
+                        <td colSpan={3} className="p-4 text-center text-gray-500">
+                          <p className="text-2xl mb-2">👥</p>
+                          <p>Henüz kullanıcı yok</p>
+                        </td>
                       </tr>
                     )}
                   </tbody>
@@ -182,7 +210,10 @@ export default function Admin() {
                   </div>
                 ))}
                 {incidents.length === 0 && (
-                  <p className="p-4 text-center text-gray-500">Olay yok</p>
+                  <p className="p-4 text-center text-gray-500">
+                    <p className="text-2xl mb-2">✅</p>
+                    <p>Olay yok - Sistem Temiz</p>
+                  </p>
                 )}
               </div>
             </div>

@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 
 export default function Home() {
   const [incidents, setIncidents] = useState<any[]>([])
@@ -11,34 +11,51 @@ export default function Home() {
   const [loadingMore, setLoadingMore] = useState(false)
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const fetched = useRef(false)
 
   const fetchData = useCallback(async (pageNum: number = 0, append: boolean = false) => {
     try {
       const supabase = createClient()
       const pageSize = 10
       
-      const { data: incidentsData } = await supabase
+      const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 5000))
+      
+      const fetchPromise = supabase
         .from('incidents')
         .select('*, users(username, avatar_url)')
         .order('created_at', { ascending: false })
         .range(pageNum * pageSize, (pageNum + 1) * pageSize - 1)
 
-      const { data: trendingData } = await supabase
+      const result = await Promise.race([fetchPromise, timeoutPromise]) as any
+      
+      if (result?.data) {
+        if (append) {
+          setIncidents(prev => [...prev, ...result.data])
+        } else {
+          setIncidents(result.data)
+        }
+        setHasMore(result.data.length === pageSize)
+      } else {
+        if (!append) setIncidents([])
+        setHasMore(false)
+      }
+
+      const trendingResult = await supabase
         .from('incidents')
         .select('*')
         .order('views', { ascending: false })
         .limit(5)
-
-      if (append) {
-        setIncidents(prev => [...prev, ...(incidentsData || [])])
-      } else {
-        setIncidents(incidentsData || [])
+      
+      if (trendingResult?.data) {
+        setTrending(trendingResult.data)
       }
       
-      setTrending(trendingData || [])
-      setHasMore((incidentsData?.length || 0) === pageSize)
+      setError(null)
     } catch (err) {
-      console.error('Error:', err)
+      console.error('Error fetching data:', err)
+      setError('Veri yüklenirken hata oluştu')
+      if (!append) setIncidents([])
     } finally {
       setLoading(false)
       setLoadingMore(false)
@@ -46,7 +63,14 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    fetchData(0, false)
+    if (fetched.current) return
+    fetched.current = true
+    
+    const timer = setTimeout(() => {
+      fetchData(0, false)
+    }, 500)
+
+    return () => clearTimeout(timer)
   }, [fetchData])
 
   const loadMore = () => {
@@ -93,8 +117,8 @@ export default function Home() {
       <header className="border-b border-[#1F2937] sticky top-0 bg-[#030712]/80 backdrop-blur-md z-50">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">
-            <span className="neon-text-green">ALPAR</span>
-            <span className="neon-text-red">AI</span>
+            <span className="text-[#10B981]">ALPAR</span>
+            <span className="text-[#EF4444]">AI</span>
           </h1>
           <nav className="flex gap-4">
             <Link href="/dashboard" className="hover:text-[#10B981] transition">Dashboard</Link>
@@ -107,6 +131,12 @@ export default function Home() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
+        {error && (
+          <div className="mb-4 p-4 bg-[#EF4444]/20 border border-[#EF4444] rounded-lg text-[#EF4444]">
+            {error}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
@@ -135,24 +165,24 @@ export default function Home() {
                       <span>▼</span> {incident.downvotes || 0}
                     </button>
                     <button onClick={() => handleShare('x', incident.title)} className="flex items-center gap-1 hover:text-[#10B981]">
-                      <span>X</span> X
+                      <span>X</span>
                     </button>
                     <button onClick={() => handleShare('linkedin', incident.title)} className="flex items-center gap-1 hover:text-blue-400">
-                      <span>in</span> LinkedIn
+                      <span>in</span>
                     </button>
                   </div>
                 </div>
               ))}
               
               {incidents.length === 0 && (
-                <div className="text-center py-12 text-gray-500 bg-[#0B0F19] border border-[#1F2937] rounded-lg">
-                  <p className="text-4xl mb-4">🔍</p>
-                  <p>Henüz olay bildirilmedi.</p>
-                  <Link href="/submit" className="text-[#10B981] hover:underline">İlk bildirimi sen yap</Link>
+                <div className="text-center py-12 bg-[#0B0F19] border border-[#1F2937] rounded-lg">
+                  <p className="text-4xl mb-4">✅</p>
+                  <p className="text-gray-400">Sistem Temiz - Henüz Olay Bildirilmedi</p>
+                  <Link href="/submit" className="text-[#10B981] hover:underline block mt-2">İlk bildirimi sen yap</Link>
                 </div>
               )}
 
-              {hasMore && (
+              {hasMore && incidents.length > 0 && (
                 <button
                   onClick={loadMore}
                   disabled={loadingMore}
