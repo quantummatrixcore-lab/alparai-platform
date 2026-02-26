@@ -2,7 +2,8 @@
 
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
+import AuthButton from '@/components/AuthButton'
 
 const DEMO_INCIDENTS = [
   { id: '1', title: 'Demo Olay 1', severity: 'medium', status: 'pending', created_at: new Date().toISOString() }
@@ -12,81 +13,41 @@ const DEMO_USERS = [
 ]
 
 export default function Dashboard() {
-  const [incidents, setIncidents] = useState<any[]>([])
-  const [users, setUsers] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [incidents, setIncidents] = useState<any[]>(DEMO_INCIDENTS)
+  const [users, setUsers] = useState<any[]>(DEMO_USERS)
   const [isDemo, setIsDemo] = useState(true)
-  const fetched = useRef(false)
 
   useEffect(() => {
-    if (fetched.current) return
-    fetched.current = true
-
     const fetchData = async () => {
       try {
         const supabase = createClient()
         
-        const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 3000))
-        
-        const incidentsPromise = supabase
+        const { data: incidentsData } = await supabase
           .from('incidents')
           .select('*')
           .order('created_at', { ascending: false })
 
-        const usersPromise = supabase
+        const { data: usersData } = await supabase
           .from('users')
           .select('*')
 
-        const [incidentsResult, usersResult] = await Promise.race([
-          Promise.all([incidentsPromise, usersPromise]),
-          Promise.all([timeoutPromise, timeoutPromise])
-        ]) as any[][]
-
-        if (incidentsResult[0]?.data && incidentsResult[0].data.length > 0) {
-          setIncidents(incidentsResult[0].data)
+        if (incidentsData && incidentsData.length > 0) {
+          setIncidents(incidentsData)
           setIsDemo(false)
-        } else {
-          setIncidents(DEMO_INCIDENTS)
-          setIsDemo(true)
         }
 
-        if (usersResult[1]?.data && usersResult[1].data.length > 0) {
-          setUsers(usersResult[1].data)
-        } else {
-          setUsers(DEMO_USERS)
-        }
-
-        setError(null)
+        if (usersData) setUsers(usersData)
       } catch (err) {
-        console.error(err)
-        setError('Veri yüklenirken hata oluştu')
-        setIncidents(DEMO_INCIDENTS)
-        setUsers(DEMO_USERS)
-        setIsDemo(true)
-      } finally {
-        setLoading(false)
+        console.log('Demo mode')
       }
     }
 
-    const timer = setTimeout(fetchData, 1000)
-    return () => clearTimeout(timer)
+    fetchData()
   }, [])
 
   const totalIncidents = incidents.length
   const pendingIncidents = incidents.filter((i) => i.status === 'pending').length
   const resolvedIncidents = incidents.filter((i) => i.status === 'resolved').length
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#030712] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-[#10B981] border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-[#10B981] text-lg animate-pulse">Yükleniyor...</p>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="min-h-screen bg-[#030712]">
@@ -99,9 +60,10 @@ export default function Dashboard() {
             </Link>
             <span className="ml-4 text-gray-400">/ Dashboard</span>
           </h1>
-          <nav className="flex gap-4">
+          <nav className="flex gap-4 items-center">
             <Link href="/" className="hover:text-[#10B981] transition">Ana Sayfa</Link>
             <Link href="/admin" className="hover:text-[#10B981] transition">Admin</Link>
+            <AuthButton />
           </nav>
         </div>
       </header>
@@ -109,13 +71,7 @@ export default function Dashboard() {
       <main className="max-w-7xl mx-auto px-4 py-8">
         {isDemo && (
           <div className="mb-4 p-4 bg-[#F59E0B]/20 border border-[#F59E0B] rounded-lg text-[#F59E0B] text-sm">
-            ⚠️ Demo mod - Supabase bağlantısı kurulamadı.
-          </div>
-        )}
-
-        {error && !isDemo && (
-          <div className="mb-4 p-4 bg-[#EF4444]/20 border border-[#EF4444] rounded-lg text-[#EF4444]">
-            {error}
+            ⚠️ Demo mod
           </div>
         )}
 
@@ -180,14 +136,6 @@ export default function Dashboard() {
                     </td>
                   </tr>
                 ))}
-                {incidents.length === 0 && (
-                  <tr>
-                    <td colSpan={4} className="p-4 text-center text-gray-500">
-                      <p className="text-2xl mb-2">✅</p>
-                      <p>Sistem Temiz - Henüz Olay Yok</p>
-                    </td>
-                  </tr>
-                )}
               </tbody>
             </table>
           </div>

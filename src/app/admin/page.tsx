@@ -2,7 +2,8 @@
 
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
+import AuthButton from '@/components/AuthButton'
 
 const DEMO_USERS = [
   { id: '1', email: 'ceo@alparai.com', role: 'ceo', created_at: new Date().toISOString(), username: 'ceo_admin' },
@@ -16,92 +17,46 @@ const DEMO_INCIDENTS = [
 ]
 
 export default function Admin() {
-  const [users, setUsers] = useState<any[]>([])
-  const [aiModels, setAiModels] = useState<any[]>([])
-  const [incidents, setIncidents] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [users, setUsers] = useState<any[]>(DEMO_USERS)
+  const [aiModels, setAiModels] = useState<any[]>(DEMO_MODELS)
+  const [incidents, setIncidents] = useState<any[]>(DEMO_INCIDENTS)
   const [isDemo, setIsDemo] = useState(true)
-  const fetched = useRef(false)
 
   useEffect(() => {
-    if (fetched.current) return
-    fetched.current = true
-
     const fetchData = async () => {
       try {
         const supabase = createClient()
         
-        const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 3000))
-        
-        const usersPromise = supabase
+        const { data: usersData } = await supabase
           .from('users')
           .select('*')
           .order('created_at', { ascending: false })
 
-        const modelsPromise = supabase
+        const { data: modelsData } = await supabase
           .from('ai_models')
           .select('*')
           .order('deployed_at', { ascending: false })
 
-        const incidentsPromise = supabase
+        const { data: incidentsData } = await supabase
           .from('incidents')
           .select('*')
           .order('created_at', { ascending: false })
           .limit(10)
 
-        const [usersResult, modelsResult, incidentsResult] = await Promise.race([
-          Promise.all([usersPromise, modelsPromise, incidentsPromise]),
-          Promise.all([timeoutPromise, timeoutPromise, timeoutPromise])
-        ]) as any[][]
-
-        if (usersResult[0]?.data && usersResult[0].data.length > 0) {
-          setUsers(usersResult[0].data)
+        if (usersData && usersData.length > 0) {
+          setUsers(usersData)
           setIsDemo(false)
-        } else {
-          setUsers(DEMO_USERS)
-          setIsDemo(true)
         }
 
-        if (modelsResult[1]?.data && modelsResult[1].data.length > 0) {
-          setAiModels(modelsResult[1].data)
-        } else {
-          setAiModels(DEMO_MODELS)
-        }
-
-        if (incidentsResult[2]?.data && incidentsResult[2].data.length > 0) {
-          setIncidents(incidentsResult[2].data)
-        } else {
-          setIncidents(DEMO_INCIDENTS)
-        }
-
-        setError(null)
+        if (modelsData) setAiModels(modelsData)
+        if (incidentsData) setIncidents(incidentsData)
       } catch (err) {
-        console.error(err)
-        setError('Veri yüklenirken hata oluştu')
-        setUsers(DEMO_USERS)
-        setAiModels(DEMO_MODELS)
-        setIncidents(DEMO_INCIDENTS)
-        setIsDemo(true)
-      } finally {
-        setLoading(false)
+        console.log('Demo mode')
       }
     }
 
-    const timer = setTimeout(fetchData, 1000)
-    return () => clearTimeout(timer)
+    fetchData()
   }, [])
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#030712] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-[#EF4444] border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-[#EF4444] text-lg animate-pulse">Yükleniyor...</p>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="min-h-screen bg-[#030712]">
@@ -114,9 +69,10 @@ export default function Admin() {
             </Link>
             <span className="ml-4 text-[#EF4444]">/ CEO Admin Panel</span>
           </h1>
-          <nav className="flex gap-4">
+          <nav className="flex gap-4 items-center">
             <Link href="/" className="hover:text-[#10B981] transition">Ana Sayfa</Link>
             <Link href="/dashboard" className="hover:text-[#10B981] transition">Dashboard</Link>
+            <AuthButton />
           </nav>
         </div>
       </header>
@@ -124,13 +80,7 @@ export default function Admin() {
       <main className="max-w-7xl mx-auto px-4 py-8">
         {isDemo && (
           <div className="mb-4 p-4 bg-[#F59E0B]/20 border border-[#F59E0B] rounded-lg text-[#F59E0B] text-sm">
-            ⚠️ Demo mod - Supabase bağlantısı kurulamadı.
-          </div>
-        )}
-
-        {error && !isDemo && (
-          <div className="mb-4 p-4 bg-[#EF4444]/20 border border-[#EF4444] rounded-lg text-[#EF4444]">
-            {error}
+            ⚠️ Demo mod
           </div>
         )}
 
@@ -172,14 +122,6 @@ export default function Admin() {
                         </td>
                       </tr>
                     ))}
-                    {users.length === 0 && (
-                      <tr>
-                        <td colSpan={3} className="p-4 text-center text-gray-500">
-                          <p className="text-2xl mb-2">👥</p>
-                          <p>Henüz kullanıcı yok</p>
-                        </td>
-                      </tr>
-                    )}
                   </tbody>
                 </table>
               </div>
@@ -206,9 +148,6 @@ export default function Admin() {
                     </span>
                   </div>
                 ))}
-                {aiModels.length === 0 && (
-                  <p className="text-gray-500 text-center py-4">Deploy edilmiş AI modeli yok</p>
-                )}
                 <button className="w-full py-2 border border-[#1F2937] rounded hover:border-[#10B981] transition">
                   + Yeni Model Deploy Et
                 </button>
@@ -239,12 +178,6 @@ export default function Admin() {
                     <p className="text-sm text-gray-500 line-clamp-1">{incident.description}</p>
                   </div>
                 ))}
-                {incidents.length === 0 && (
-                  <p className="p-4 text-center text-gray-500">
-                    <p className="text-2xl mb-2">✅</p>
-                    <p>Olay yok - Sistem Temiz</p>
-                  </p>
-                )}
               </div>
             </div>
 
