@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --neon-green: #39ff14;
-  --neon-red: #ff073a;
-  --neon-yellow: #fff01f;
-  --card-bg: #111111;
-  --border-color: #222222;
+  --background: #030712;
+  --foreground: #f3f4f6;
+  --neon-green: #10B981;
+  --neon-red: #EF4444;
+  --neon-yellow: #F59E0B;
+  --card-bg: #0B0F19;
+  --border-color: #1F2937;
 }
 
 @theme inline {
@@ -44,4 +44,21 @@ body {
 .neon-border-red {
   border-color: var(--neon-red);
   box-shadow: 0 0 10px var(--neon-red);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #030712;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1F2937;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #10B981;
 }

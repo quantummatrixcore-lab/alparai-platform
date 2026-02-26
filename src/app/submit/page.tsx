@@ -5,22 +5,29 @@ import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-function mockPiiGuardian(file: File): Promise<{ safe: boolean; message: string }> {
+function mockPiiGuardian(file: File): Promise<{ safe: boolean; message: string; blur?: boolean }> {
   return new Promise((resolve) => {
     setTimeout(() => {
       const random = Math.random()
       if (random > 0.7) {
         resolve({ 
           safe: false, 
-          message: '⚠️ PII Guardian: Kişisel veri tespit edildi. Yüz/kimlik bilgileri bulanıklaştırılacak.' 
+          blur: true,
+          message: '⚠️ PII Guardian: Yüz/kimlik tespit edildi. Otomatik bulanıklaştırılacak.' 
+        })
+      } else if (random > 0.4) {
+        resolve({ 
+          safe: false, 
+          blur: false,
+          message: '⚠️ PII Guardian: Metin tespit edildi. Redakte edilecek.' 
         })
       } else {
         resolve({ 
           safe: true, 
-          message: '✅ PII Guardian: Hassas veri tespit edilmedi. Dosya yüklemeye hazır.' 
+          message: '✅ PII Guardian: Güvenli. Yüklemeye hazır.' 
         })
       }
-    }, 1500)
+    }, 2000)
   })
 }
 
@@ -28,7 +35,8 @@ export default function Submit() {
   const router = useRouter()
   const [supabase, setSupabase] = useState<any>(null)
   const [loading, setLoading] = useState(false)
-  const [piiStatus, setPiiStatus] = useState<{ safe: boolean; message: string } | null>(null)
+  const [piiStatus, setPiiStatus] = useState<{ safe: boolean; message: string; blur?: boolean } | null>(null)
+  const [analyzing, setAnalyzing] = useState(false)
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -47,9 +55,11 @@ export default function Submit() {
     const file = e.target.files?.[0]
     if (file) {
       setFormData({ ...formData, evidence: file })
-      setPiiStatus({ safe: false, message: '🔄 PII Guardian analiz ediyor...' })
+      setPiiStatus(null)
+      setAnalyzing(true)
       const result = await mockPiiGuardian(file)
       setPiiStatus(result)
+      setAnalyzing(false)
     }
   }
 
@@ -88,28 +98,38 @@ export default function Submit() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-background/80 backdrop-blur-md">
+    <div className="min-h-screen bg-[#030712]">
+      <header className="border-b border-[#1F2937] bg-[#030712]/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">
-            <Link href="/" className="hover:text-neon-green transition">
+            <Link href="/" className="hover:text-[#10B981] transition">
               <span className="neon-text-green">ALPAR</span>
               <span className="neon-text-red">AI</span>
             </Link>
             <span className="ml-4 text-gray-400">/ Olay Bildir</span>
           </h1>
           <nav className="flex gap-4">
-            <Link href="/" className="hover:text-neon-green transition">Ana Sayfa</Link>
-            <Link href="/dashboard" className="hover:text-neon-green transition">Dashboard</Link>
+            <Link href="/" className="hover:text-[#10B981] transition">Ana Sayfa</Link>
+            <Link href="/dashboard" className="hover:text-[#10B981] transition">Dashboard</Link>
           </nav>
         </div>
       </header>
 
       <main className="max-w-2xl mx-auto px-4 py-8">
-        <div className="bg-card-bg border border-border rounded-lg p-6">
+        <div className="bg-[#0B0F19] border border-[#1F2937] rounded-lg p-6">
           <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
             <span>📢</span> Olay Bildir
           </h2>
+          
+          <div className="mb-6 p-4 bg-[#030712] border border-[#10B981]/30 rounded-lg">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-2xl">🤖</span>
+              <span className="font-bold text-[#10B981]">PII Guardian Aktif</span>
+            </div>
+            <p className="text-sm text-gray-400">
+              Yüklediğiniz dosyalar otomatik olarak kişisel veri (yüz, kimlik, telefon vb.) açısından taranır.
+            </p>
+          </div>
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -119,7 +139,7 @@ export default function Submit() {
                 required
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-2 bg-black/50 border border-border rounded focus:border-neon-green focus:outline-none"
+                className="w-full px-4 py-2 bg-[#030712] border border-[#1F2937] rounded focus:border-[#10B981] focus:outline-none"
                 placeholder="Olayın kısa açıklaması"
               />
             </div>
@@ -131,7 +151,7 @@ export default function Submit() {
                 rows={4}
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-2 bg-black/50 border border-border rounded focus:border-neon-green focus:outline-none"
+                className="w-full px-4 py-2 bg-[#030712] border border-[#1F2937] rounded focus:border-[#10B981] focus:outline-none"
                 placeholder="Detaylı açıklama..."
               />
             </div>
@@ -143,7 +163,7 @@ export default function Submit() {
                   type="text"
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  className="w-full px-4 py-2 bg-black/50 border border-border rounded focus:border-neon-green focus:outline-none"
+                  className="w-full px-4 py-2 bg-[#030712] border border-[#1F2937] rounded focus:border-[#10B981] focus:outline-none"
                   placeholder="Şehir, Ülke"
                 />
               </div>
@@ -152,7 +172,7 @@ export default function Submit() {
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-4 py-2 bg-black/50 border border-border rounded focus:border-neon-green focus:outline-none"
+                  className="w-full px-4 py-2 bg-[#030712] border border-[#1F2937] rounded focus:border-[#10B981] focus:outline-none"
                 >
                   <option>Güvenlik</option>
                   <option>Gizlilik</option>
@@ -174,12 +194,12 @@ export default function Submit() {
                       value={sev}
                       checked={formData.severity === sev}
                       onChange={(e) => setFormData({ ...formData, severity: e.target.value })}
-                      className="accent-neon-green"
+                      className="accent-[#10B981]"
                     />
                     <span className={`capitalize ${
-                      sev === 'critical' ? 'text-neon-red' :
+                      sev === 'critical' ? 'text-[#EF4444]' :
                       sev === 'high' ? 'text-orange-500' :
-                      sev === 'medium' ? 'text-neon-yellow' :
+                      sev === 'medium' ? 'text-[#F59E0B]' :
                       'text-green-400'
                     }`}>
                       {sev === 'low' ? 'Düşük' : sev === 'medium' ? 'Orta' : sev === 'high' ? 'Yüksek' : 'Kritik'}
@@ -195,11 +215,23 @@ export default function Submit() {
                 type="file"
                 accept="image/*,video/*"
                 onChange={handleFileChange}
-                className="w-full px-4 py-2 bg-black/50 border border-border rounded focus:border-neon-green focus:outline-none"
+                className="w-full px-4 py-2 bg-[#030712] border border-[#1F2937] rounded focus:border-[#10B981] focus:outline-none"
               />
-              {piiStatus && (
+              {analyzing && (
+                <div className="mt-2 p-3 bg-[#030712] border border-[#F59E0B]/30 rounded text-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-[#F59E0B] border-t-transparent rounded-full animate-spin"></div>
+                    <span className="text-[#F59E0B]">PII Guardian dosyayı analiz ediyor...</span>
+                  </div>
+                </div>
+              )}
+              {piiStatus && !analyzing && (
                 <div className={`mt-2 p-3 rounded text-sm ${
-                  piiStatus.safe ? 'bg-green-500/20 text-green-400' : 'bg-neon-yellow/20 text-neon-yellow'
+                  piiStatus.safe 
+                    ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                    : piiStatus.blur
+                      ? 'bg-[#EF4444]/20 text-[#EF4444] border border-[#EF4444]/30'
+                      : 'bg-[#F59E0B]/20 text-[#F59E0B] border border-[#F59E0B]/30'
                 }`}>
                   {piiStatus.message}
                 </div>
@@ -210,13 +242,13 @@ export default function Submit() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 py-3 bg-neon-green text-black font-bold rounded hover:shadow-[0_0_20px_var(--neon-green)] transition disabled:opacity-50"
+                className="flex-1 py-3 bg-[#10B981] text-black font-bold rounded hover:shadow-[0_0_20px_#10B981] transition disabled:opacity-50"
               >
                 {loading ? 'Gönderiliyor...' : 'Olayı Bildir'}
               </button>
               <Link
                 href="/"
-                className="px-6 py-3 border border-border rounded hover:border-gray-500 transition"
+                className="px-6 py-3 border border-[#1F2937] rounded hover:border-gray-500 transition"
               >
                 İptal
               </Link>
