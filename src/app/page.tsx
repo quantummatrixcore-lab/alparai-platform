@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
-import { useEffect, useState, useCallback, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import AuthButton from '@/components/AuthButton'
 
 const DEMO_INCIDENTS = [
@@ -21,85 +21,38 @@ const DEMO_INCIDENTS = [
 export default function Home() {
   const [incidents, setIncidents] = useState<any[]>(DEMO_INCIDENTS)
   const [trending, setTrending] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
-  const [loadingMore, setLoadingMore] = useState(false)
-  const [page, setPage] = useState(0)
-  const [hasMore, setHasMore] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const [isDemo, setIsDemo] = useState(true)
-  const fetched = useRef(false)
-
-  const fetchData = useCallback(async (pageNum: number = 0, append: boolean = false) => {
-    try {
-      const supabase = createClient()
-      const pageSize = 10
-      
-      const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 3000))
-      
-      const fetchPromise = supabase
-        .from('incidents')
-        .select('*, users(username, avatar_url)')
-        .order('created_at', { ascending: false })
-        .range(pageNum * pageSize, (pageNum + 1) * pageSize - 1)
-
-      const result = await Promise.race([fetchPromise, timeoutPromise]) as any
-      
-      if (result?.data && result.data.length > 0) {
-        if (append) {
-          setIncidents(prev => [...prev, ...result.data])
-        } else {
-          setIncidents(result.data)
-        }
-        setHasMore(result.data.length === pageSize)
-        setIsDemo(false)
-        setError(null)
-      } else {
-        if (!append) {
-          setIncidents(DEMO_INCIDENTS)
-        }
-        setHasMore(false)
-        setIsDemo(true)
-      }
-
-      const trendingResult = await supabase
-        .from('incidents')
-        .select('*')
-        .order('views', { ascending: false })
-        .limit(5)
-      
-      if (trendingResult?.data && trendingResult.data.length > 0) {
-        setTrending(trendingResult.data)
-      }
-      
-    } catch (err) {
-      console.error('Error fetching data:', err)
-      setError('Veri yüklenirken hata oluştu - Demo mod')
-      if (!append) setIncidents(DEMO_INCIDENTS)
-      setIsDemo(true)
-    } finally {
-      setLoading(false)
-      setLoadingMore(false)
-    }
-  }, [])
 
   useEffect(() => {
-    if (fetched.current) return
-    fetched.current = true
-    
-    const timer = setTimeout(() => {
-      fetchData(0, false)
-    }, 1000)
+    const fetchData = async () => {
+      try {
+        const supabase = createClient()
+        
+        const { data: incidentsData } = await supabase
+          .from('incidents')
+          .select('*, users(username, avatar_url)')
+          .order('created_at', { ascending: false })
+          .limit(20)
 
-    return () => clearTimeout(timer)
-  }, [fetchData])
+        if (incidentsData && incidentsData.length > 0) {
+          setIncidents(incidentsData)
+          setIsDemo(false)
+        }
 
-  const loadMore = () => {
-    if (loadingMore || !hasMore) return
-    setLoadingMore(true)
-    const nextPage = page + 1
-    setPage(nextPage)
-    fetchData(nextPage, true)
-  }
+        const { data: trendingData } = await supabase
+          .from('incidents')
+          .select('*')
+          .order('views', { ascending: false })
+          .limit(5)
+
+        if (trendingData) setTrending(trendingData)
+      } catch (err) {
+        console.log('Demo mode - using cached data')
+      }
+    }
+
+    fetchData()
+  }, [])
 
   const handleShare = (platform: string, title: string) => {
     const url = typeof window !== 'undefined' ? window.location.href : ''
@@ -119,17 +72,6 @@ export default function Home() {
       case 'medium': return 'text-[#F59E0B]'
       default: return 'text-green-400'
     }
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#030712] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-[#10B981] border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-[#10B981] text-lg animate-pulse">Yükleniyor...</p>
-        </div>
-      </div>
-    )
   }
 
   return (
@@ -154,13 +96,7 @@ export default function Home() {
       <main className="max-w-7xl mx-auto px-4 py-8">
         {isDemo && (
           <div className="mb-4 p-4 bg-[#F59E0B]/20 border border-[#F59E0B] rounded-lg text-[#F59E0B] text-sm">
-            ⚠️ Demo mod - Supabase bağlantısı kurulamadı. Gerçek veriler için Supabase'i yapılandırın.
-          </div>
-        )}
-
-        {error && !isDemo && (
-          <div className="mb-4 p-4 bg-[#EF4444]/20 border border-[#EF4444] rounded-lg text-[#EF4444]">
-            {error}
+            ⚠️ Demo mod - Supabase bağlantısı kurulamadı
           </div>
         )}
 
@@ -207,16 +143,6 @@ export default function Home() {
                   <p className="text-gray-400">Sistem Temiz - Henüz Olay Bildirilmedi</p>
                   <Link href="/submit" className="text-[#10B981] hover:underline block mt-2">İlk bildirimi sen yap</Link>
                 </div>
-              )}
-
-              {hasMore && incidents.length > 0 && (
-                <button
-                  onClick={loadMore}
-                  disabled={loadingMore}
-                  className="w-full py-3 border border-[#1F2937] rounded hover:border-[#10B981] transition disabled:opacity-50"
-                >
-                  {loadingMore ? 'Yükleniyor...' : 'Daha Fazla Yükle'}
-                </button>
               )}
             </div>
           </div>
