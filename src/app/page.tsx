@@ -1,20 +1,37 @@
-import { createClient } from '@/lib/supabase/server'
+'use client'
+
+import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
-export default async function Home() {
-  const supabase = await createClient()
-  
-  const { data: incidents } = await supabase
-    .from('incidents')
-    .select('*, users(username, avatar_url)')
-    .order('created_at', { ascending: false })
-    .limit(20)
+export default function Home() {
+  const [incidents, setIncidents] = useState<any[]>([])
+  const [trending, setTrending] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const { data: trending } = await supabase
-    .from('incidents')
-    .select('*')
-    .order('views', { ascending: false })
-    .limit(5)
+  useEffect(() => {
+    const fetchData = async () => {
+      const supabase = createClient()
+      
+      const { data: incidentsData } = await supabase
+        .from('incidents')
+        .select('*, users(username, avatar_url)')
+        .order('created_at', { ascending: false })
+        .limit(20)
+
+      const { data: trendingData } = await supabase
+        .from('incidents')
+        .select('*')
+        .order('views', { ascending: false })
+        .limit(5)
+
+      setIncidents(incidentsData || [])
+      setTrending(trendingData || [])
+      setLoading(false)
+    }
+
+    fetchData()
+  }, [])
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -23,6 +40,14 @@ export default async function Home() {
       case 'medium': return 'text-neon-yellow'
       default: return 'text-green-400'
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-neon-green animate-pulse">Loading...</div>
+      </div>
+    )
   }
 
   return (
@@ -52,7 +77,7 @@ export default async function Home() {
             </h2>
             
             <div className="space-y-4">
-              {incidents?.map((incident: any) => (
+              {incidents.map((incident) => (
                 <div key={incident.id} className="bg-card-bg border border-border rounded-lg p-4 hover:border-neon-green/50 transition">
                   <div className="flex justify-between items-start mb-2">
                     <div>
@@ -60,7 +85,7 @@ export default async function Home() {
                       <p className="text-gray-400 text-sm">by @{incident.users?.username || 'Anonymous'} • {new Date(incident.created_at).toLocaleDateString()}</p>
                     </div>
                     <span className={`px-2 py-1 rounded text-xs font-bold ${getSeverityColor(incident.severity)} bg-black/50`}>
-                      {incident.severity.toUpperCase()}
+                      {incident.severity?.toUpperCase() || 'MEDIUM'}
                     </span>
                   </div>
                   <p className="text-gray-300 mb-3">{incident.description}</p>
@@ -78,13 +103,13 @@ export default async function Home() {
                 </div>
               ))}
               
-              {(!incidents || incidents.length === 0) && (
+              {incidents.length === 0 && (
                 <div className="text-center py-12 text-gray-500">
                   <p>No incidents reported yet.</p>
-                  <Link href="/submit" className="text-neon-green hover:underline">Be the</Link>
+                  <Link href="/submit" className="text-neon-green hover:underline">Be the first to report</Link>
                 </div>
               )}
- first to report            </div>
+            </div>
           </div>
 
           <div>
@@ -94,7 +119,7 @@ export default async function Home() {
                 Trending
               </h2>
               <div className="space-y-3">
-                {trending?.map((incident: any, index: number) => (
+                {trending.map((incident, index) => (
                   <Link key={incident.id} href="#" className="block group">
                     <div className="flex gap-3 items-center">
                       <span className="text-2xl font-bold text-gray-600 group-hover:text-neon-red transition">
@@ -104,13 +129,13 @@ export default async function Home() {
                         <p className="font-medium group-hover:text-neon-green transition line-clamp-1">
                           {incident.title}
                         </p>
-                        <p className="text-xs text-gray-500">{incident.views} views</p>
+                        <p className="text-xs text-gray-500">{incident.views || 0} views</p>
                       </div>
                     </div>
                   </Link>
                 ))}
                 
-                {(!trending || trending.length === 0) && (
+                {trending.length === 0 && (
                   <p className="text-gray-500 text-sm">No trending incidents</p>
                 )}
               </div>

@@ -1,21 +1,46 @@
-import { createClient } from '@/lib/supabase/server'
+'use client'
+
+import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
-export default async function Dashboard() {
-  const supabase = await createClient()
-  
-  const { data: incidents } = await supabase
-    .from('incidents')
-    .select('*')
-    .order('created_at', { ascending: false })
+export default function Dashboard() {
+  const [incidents, setIncidents] = useState<any[]>([])
+  const [users, setUsers] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const { data: users } = await supabase
-    .from('users')
-    .select('*')
+  useEffect(() => {
+    const fetchData = async () => {
+      const supabase = createClient()
+      
+      const { data: incidentsData } = await supabase
+        .from('incidents')
+        .select('*')
+        .order('created_at', { ascending: false })
 
-  const totalIncidents = incidents?.length || 0
-  const pendingIncidents = incidents?.filter((i: any) => i.status === 'pending').length || 0
-  const resolvedIncidents = incidents?.filter((i: any) => i.status === 'resolved').length || 0
+      const { data: usersData } = await supabase
+        .from('users')
+        .select('*')
+
+      setIncidents(incidentsData || [])
+      setUsers(usersData || [])
+      setLoading(false)
+    }
+
+    fetchData()
+  }, [])
+
+  const totalIncidents = incidents.length
+  const pendingIncidents = incidents.filter((i) => i.status === 'pending').length
+  const resolvedIncidents = incidents.filter((i) => i.status === 'resolved').length
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-neon-green animate-pulse">Loading...</div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -51,7 +76,7 @@ export default async function Dashboard() {
           </div>
           <div className="bg-card-bg border border-border rounded-lg p-6">
             <p className="text-gray-400 text-sm">Total Users</p>
-            <p className="text-3xl font-bold text-blue-400">{users?.length || 0}</p>
+            <p className="text-3xl font-bold text-blue-400">{users.length}</p>
           </div>
         </div>
 
@@ -69,7 +94,7 @@ export default async function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {incidents?.map((incident: any) => (
+              {incidents.map((incident) => (
                 <tr key={incident.id} className="border-t border-border hover:bg-white/5">
                   <td className="p-3">{incident.title}</td>
                   <td className="p-3">
