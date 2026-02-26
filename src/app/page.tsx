@@ -4,14 +4,28 @@ import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { useEffect, useState, useCallback, useRef } from 'react'
 
+const DEMO_INCIDENTS = [
+  {
+    id: '1',
+    title: 'Demo Olay - Sistem Test',
+    description: 'Bu bir demo olaydır. Gerçek veriler yüklenene kadar burada görünecektir.',
+    severity: 'medium',
+    created_at: new Date().toISOString(),
+    upvotes: 5,
+    downvotes: 0,
+    users: { username: 'demo_user' }
+  }
+]
+
 export default function Home() {
-  const [incidents, setIncidents] = useState<any[]>([])
+  const [incidents, setIncidents] = useState<any[]>(DEMO_INCIDENTS)
   const [trending, setTrending] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
   const [page, setPage] = useState(0)
-  const [hasMore, setHasMore] = useState(true)
+  const [hasMore, setHasMore] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [isDemo, setIsDemo] = useState(true)
   const fetched = useRef(false)
 
   const fetchData = useCallback(async (pageNum: number = 0, append: boolean = false) => {
@@ -19,7 +33,7 @@ export default function Home() {
       const supabase = createClient()
       const pageSize = 10
       
-      const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 5000))
+      const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 3000))
       
       const fetchPromise = supabase
         .from('incidents')
@@ -29,16 +43,21 @@ export default function Home() {
 
       const result = await Promise.race([fetchPromise, timeoutPromise]) as any
       
-      if (result?.data) {
+      if (result?.data && result.data.length > 0) {
         if (append) {
           setIncidents(prev => [...prev, ...result.data])
         } else {
           setIncidents(result.data)
         }
         setHasMore(result.data.length === pageSize)
+        setIsDemo(false)
+        setError(null)
       } else {
-        if (!append) setIncidents([])
+        if (!append) {
+          setIncidents(DEMO_INCIDENTS)
+        }
         setHasMore(false)
+        setIsDemo(true)
       }
 
       const trendingResult = await supabase
@@ -47,15 +66,15 @@ export default function Home() {
         .order('views', { ascending: false })
         .limit(5)
       
-      if (trendingResult?.data) {
+      if (trendingResult?.data && trendingResult.data.length > 0) {
         setTrending(trendingResult.data)
       }
       
-      setError(null)
     } catch (err) {
       console.error('Error fetching data:', err)
-      setError('Veri yüklenirken hata oluştu')
-      if (!append) setIncidents([])
+      setError('Veri yüklenirken hata oluştu - Demo mod')
+      if (!append) setIncidents(DEMO_INCIDENTS)
+      setIsDemo(true)
     } finally {
       setLoading(false)
       setLoadingMore(false)
@@ -68,7 +87,7 @@ export default function Home() {
     
     const timer = setTimeout(() => {
       fetchData(0, false)
-    }, 500)
+    }, 1000)
 
     return () => clearTimeout(timer)
   }, [fetchData])
@@ -131,7 +150,13 @@ export default function Home() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {error && (
+        {isDemo && (
+          <div className="mb-4 p-4 bg-[#F59E0B]/20 border border-[#F59E0B] rounded-lg text-[#F59E0B] text-sm">
+            ⚠️ Demo mod - Supabase bağlantısı kurulamadı. Gerçek veriler için Supabase'i yapılandırın.
+          </div>
+        )}
+
+        {error && !isDemo && (
           <div className="mb-4 p-4 bg-[#EF4444]/20 border border-[#EF4444] rounded-lg text-[#EF4444]">
             {error}
           </div>

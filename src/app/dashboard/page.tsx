@@ -4,11 +4,19 @@ import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { useEffect, useState, useRef } from 'react'
 
+const DEMO_INCIDENTS = [
+  { id: '1', title: 'Demo Olay 1', severity: 'medium', status: 'pending', created_at: new Date().toISOString() }
+]
+const DEMO_USERS = [
+  { id: '1', email: 'demo@alparai.com', role: 'ceo', created_at: new Date().toISOString(), username: 'demo_admin' }
+]
+
 export default function Dashboard() {
   const [incidents, setIncidents] = useState<any[]>([])
   const [users, setUsers] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isDemo, setIsDemo] = useState(true)
   const fetched = useRef(false)
 
   useEffect(() => {
@@ -19,7 +27,7 @@ export default function Dashboard() {
       try {
         const supabase = createClient()
         
-        const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 5000))
+        const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 3000))
         
         const incidentsPromise = supabase
           .from('incidents')
@@ -33,32 +41,35 @@ export default function Dashboard() {
         const [incidentsResult, usersResult] = await Promise.race([
           Promise.all([incidentsPromise, usersPromise]),
           Promise.all([timeoutPromise, timeoutPromise])
-        ]) as any[]
+        ]) as any[][]
 
-        if (incidentsResult[0]?.data) {
+        if (incidentsResult[0]?.data && incidentsResult[0].data.length > 0) {
           setIncidents(incidentsResult[0].data)
+          setIsDemo(false)
         } else {
-          setIncidents([])
+          setIncidents(DEMO_INCIDENTS)
+          setIsDemo(true)
         }
 
-        if (usersResult[1]?.data) {
+        if (usersResult[1]?.data && usersResult[1].data.length > 0) {
           setUsers(usersResult[1].data)
         } else {
-          setUsers([])
+          setUsers(DEMO_USERS)
         }
 
         setError(null)
       } catch (err) {
         console.error(err)
         setError('Veri yüklenirken hata oluştu')
-        setIncidents([])
-        setUsers([])
+        setIncidents(DEMO_INCIDENTS)
+        setUsers(DEMO_USERS)
+        setIsDemo(true)
       } finally {
         setLoading(false)
       }
     }
 
-    const timer = setTimeout(fetchData, 500)
+    const timer = setTimeout(fetchData, 1000)
     return () => clearTimeout(timer)
   }, [])
 
@@ -78,8 +89,8 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="-[#030712]">
-      min-h-screen bg<header className="border-b border-[#1F2937] bg-[#030712]/80 backdrop-blur-md">
+    <div className="min-h-screen bg-[#030712]">
+      <header className="border-b border-[#1F2937] bg-[#030712]/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">
             <Link href="/" className="hover:text-[#10B981] transition">
@@ -96,7 +107,13 @@ export default function Dashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {error && (
+        {isDemo && (
+          <div className="mb-4 p-4 bg-[#F59E0B]/20 border border-[#F59E0B] rounded-lg text-[#F59E0B] text-sm">
+            ⚠️ Demo mod - Supabase bağlantısı kurulamadı.
+          </div>
+        )}
+
+        {error && !isDemo && (
           <div className="mb-4 p-4 bg-[#EF4444]/20 border border-[#EF4444] rounded-lg text-[#EF4444]">
             {error}
           </div>

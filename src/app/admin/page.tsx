@@ -4,12 +4,24 @@ import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { useEffect, useState, useRef } from 'react'
 
+const DEMO_USERS = [
+  { id: '1', email: 'ceo@alparai.com', role: 'ceo', created_at: new Date().toISOString(), username: 'ceo_admin' },
+  { id: '2', email: 'admin@alparai.com', role: 'admin', created_at: new Date().toISOString(), username: 'admin_user' }
+]
+const DEMO_MODELS = [
+  { id: '1', name: 'AlparAI-V1', model_type: 'Security Scanner', status: 'active', deployed_at: new Date().toISOString() }
+]
+const DEMO_INCIDENTS = [
+  { id: '1', title: 'Demo Olay', severity: 'medium', description: 'Demo açıklama', created_at: new Date().toISOString() }
+]
+
 export default function Admin() {
   const [users, setUsers] = useState<any[]>([])
   const [aiModels, setAiModels] = useState<any[]>([])
   const [incidents, setIncidents] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isDemo, setIsDemo] = useState(true)
   const fetched = useRef(false)
 
   useEffect(() => {
@@ -20,7 +32,7 @@ export default function Admin() {
       try {
         const supabase = createClient()
         
-        const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 5000))
+        const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 3000))
         
         const usersPromise = supabase
           .from('users')
@@ -43,28 +55,40 @@ export default function Admin() {
           Promise.all([timeoutPromise, timeoutPromise, timeoutPromise])
         ]) as any[][]
 
-        if (usersResult[0]?.data) setUsers(usersResult[0].data)
-        else setUsers([])
+        if (usersResult[0]?.data && usersResult[0].data.length > 0) {
+          setUsers(usersResult[0].data)
+          setIsDemo(false)
+        } else {
+          setUsers(DEMO_USERS)
+          setIsDemo(true)
+        }
 
-        if (modelsResult[1]?.data) setAiModels(modelsResult[1].data)
-        else setAiModels([])
+        if (modelsResult[1]?.data && modelsResult[1].data.length > 0) {
+          setAiModels(modelsResult[1].data)
+        } else {
+          setAiModels(DEMO_MODELS)
+        }
 
-        if (incidentsResult[2]?.data) setIncidents(incidentsResult[2].data)
-        else setIncidents([])
+        if (incidentsResult[2]?.data && incidentsResult[2].data.length > 0) {
+          setIncidents(incidentsResult[2].data)
+        } else {
+          setIncidents(DEMO_INCIDENTS)
+        }
 
         setError(null)
       } catch (err) {
         console.error(err)
         setError('Veri yüklenirken hata oluştu')
-        setUsers([])
-        setAiModels([])
-        setIncidents([])
+        setUsers(DEMO_USERS)
+        setAiModels(DEMO_MODELS)
+        setIncidents(DEMO_INCIDENTS)
+        setIsDemo(true)
       } finally {
         setLoading(false)
       }
     }
 
-    const timer = setTimeout(fetchData, 500)
+    const timer = setTimeout(fetchData, 1000)
     return () => clearTimeout(timer)
   }, [])
 
@@ -98,7 +122,13 @@ export default function Admin() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {error && (
+        {isDemo && (
+          <div className="mb-4 p-4 bg-[#F59E0B]/20 border border-[#F59E0B] rounded-lg text-[#F59E0B] text-sm">
+            ⚠️ Demo mod - Supabase bağlantısı kurulamadı.
+          </div>
+        )}
+
+        {error && !isDemo && (
           <div className="mb-4 p-4 bg-[#EF4444]/20 border border-[#EF4444] rounded-lg text-[#EF4444]">
             {error}
           </div>
