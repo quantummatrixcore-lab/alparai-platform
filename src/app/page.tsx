@@ -8,26 +8,41 @@ export default function Home() {
   const [incidents, setIncidents] = useState<any[]>([])
   const [trending, setTrending] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchData = async () => {
-      const supabase = createClient()
-      
-      const { data: incidentsData } = await supabase
-        .from('incidents')
-        .select('*, users(username, avatar_url)')
-        .order('created_at', { ascending: false })
-        .limit(20)
+      try {
+        const supabase = createClient()
+        
+        const { data: incidentsData, error: incidentsError } = await supabase
+          .from('incidents')
+          .select('*, users(username, avatar_url)')
+          .order('created_at', { ascending: false })
+          .limit(20)
 
-      const { data: trendingData } = await supabase
-        .from('incidents')
-        .select('*')
-        .order('views', { ascending: false })
-        .limit(5)
+        if (incidentsError) {
+          console.error('Incidents error:', incidentsError)
+        }
 
-      setIncidents(incidentsData || [])
-      setTrending(trendingData || [])
-      setLoading(false)
+        const { data: trendingData, error: trendingError } = await supabase
+          .from('incidents')
+          .select('*')
+          .order('views', { ascending: false })
+          .limit(5)
+
+        if (trendingError) {
+          console.error('Trending error:', trendingError)
+        }
+
+        setIncidents(incidentsData || [])
+        setTrending(trendingData || [])
+      } catch (err) {
+        console.error('Fetch error:', err)
+        setError(err instanceof Error ? err.message : 'Unknown error')
+      } finally {
+        setLoading(false)
+      }
     }
 
     fetchData()
@@ -45,7 +60,15 @@ export default function Home() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-neon-green animate-pulse">Loading...</div>
+        <div className="text-neon-green text-xl animate-pulse">Loading...</div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-neon-red text-xl">Error: {error}</div>
       </div>
     )
   }
@@ -84,8 +107,8 @@ export default function Home() {
                       <h3 className="font-bold text-lg">{incident.title}</h3>
                       <p className="text-gray-400 text-sm">by @{incident.users?.username || 'Anonymous'} • {new Date(incident.created_at).toLocaleDateString()}</p>
                     </div>
-                    <span className={`px-2 py-1 rounded text-xs font-bold ${getSeverityColor(incident.severity)} bg-black/50`}>
-                      {incident.severity?.toUpperCase() || 'MEDIUM'}
+                    <span className={`px-2 py-1 rounded text-xs font-bold ${getSeverityColor(incident.severity || 'medium')} bg-black/50`}>
+                      {(incident.severity || 'medium').toUpperCase()}
                     </span>
                   </div>
                   <p className="text-gray-300 mb-3">{incident.description}</p>
