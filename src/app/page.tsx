@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { useEffect, useState, useCallback, useRef } from 'react'
+import AuthButton from '@/components/AuthButton'
 
 const DEMO_INCIDENTS = [
   {
@@ -139,12 +140,13 @@ export default function Home() {
             <span className="text-[#10B981]">ALPAR</span>
             <span className="text-[#EF4444]">AI</span>
           </h1>
-          <nav className="flex gap-4">
+          <nav className="flex gap-4 items-center">
             <Link href="/dashboard" className="hover:text-[#10B981] transition">Dashboard</Link>
             <Link href="/admin" className="hover:text-[#10B981] transition">Admin</Link>
             <Link href="/submit" className="px-4 py-2 bg-[#10B981] text-black font-bold rounded hover:shadow-[0_0_15px_#10B981] transition">
               + Olay Bildir
             </Link>
+            <AuthButton />
           </nav>
         </div>
       </header>
