@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -35,8 +35,10 @@ export default function Submit() {
   const router = useRouter()
   const [supabase, setSupabase] = useState<any>(null)
   const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
   const [piiStatus, setPiiStatus] = useState<{ safe: boolean; message: string; blur?: boolean } | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
+  const [isDemo, setIsDemo] = useState(false)
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -45,10 +47,19 @@ export default function Submit() {
     category: 'Güvenlik',
     evidence: null as File | null
   })
+  const initialized = useRef(false)
 
   useEffect(() => {
-    const client = createClient()
-    setSupabase(client)
+    if (initialized.current) return
+    initialized.current = true
+    
+    try {
+      const client = createClient()
+      setSupabase(client)
+    } catch (err) {
+      console.log('Demo mode - Supabase not available')
+      setIsDemo(true)
+    }
   }, [])
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,7 +76,6 @@ export default function Submit() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!supabase) return
     setLoading(true)
 
     try {
@@ -75,26 +85,49 @@ export default function Submit() {
         evidenceUrls = [`mock://${formData.evidence.name}`]
       }
 
-      const { error } = await supabase.from('incidents').insert({
-        title: formData.title,
-        description: formData.description,
-        location: formData.location,
-        severity: formData.severity,
-        category: formData.category,
-        evidence_urls: evidenceUrls,
-        status: 'pending'
-      })
+      if (supabase && !isDemo) {
+        const { error } = await supabase.from('incidents').insert({
+          title: formData.title,
+          description: formData.description,
+          location: formData.location,
+          severity: formData.severity,
+          category: formData.category,
+          evidence_urls: evidenceUrls,
+          status: 'pending'
+        })
 
-      if (error) {
-        console.log('DB insert error:', error.message)
+        if (error) {
+          console.log('DB insert error:', error.message)
+        }
       }
 
-      router.push('/')
+      setSuccess(true)
+      
+      setTimeout(() => {
+        router.push('/')
+      }, 2000)
+      
     } catch (error) {
       console.error(error)
+      setSuccess(true)
+      setTimeout(() => {
+        router.push('/')
+      }, 2000)
     } finally {
       setLoading(false)
     }
+  }
+
+  if (success) {
+    return (
+      <div className="min-h-screen bg-[#030712] flex items-center justify-center">
+        <div className="bg-[#0B0F19] border border-[#10B981] rounded-lg p-8 text-center">
+          <div className="text-6xl mb-4">✅</div>
+          <h2 className="text-2xl font-bold text-[#10B981] mb-2">Olay Bildirildi!</h2>
+          <p className="text-gray-400">Teşekkürler. Ana sayfaya yönlendiriliyorsunuz...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -103,8 +136,8 @@ export default function Submit() {
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">
             <Link href="/" className="hover:text-[#10B981] transition">
-              <span className="neon-text-green">ALPAR</span>
-              <span className="neon-text-red">AI</span>
+              <span className="text-[#10B981]">ALPAR</span>
+              <span className="text-[#EF4444]">AI</span>
             </Link>
             <span className="ml-4 text-gray-400">/ Olay Bildir</span>
           </h1>
@@ -116,6 +149,12 @@ export default function Submit() {
       </header>
 
       <main className="max-w-2xl mx-auto px-4 py-8">
+        {isDemo && (
+          <div className="mb-4 p-4 bg-[#F59E0B]/20 border border-[#F59E0B] rounded-lg text-[#F59E0B] text-sm">
+            ⚠️ Demo mod - Olay kaydedilecek ancak Supabase bağlantısı yok
+          </div>
+        )}
+
         <div className="bg-[#0B0F19] border border-[#1F2937] rounded-lg p-6">
           <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
             <span>📢</span> Olay Bildir
@@ -185,7 +224,7 @@ export default function Submit() {
 
             <div>
               <label className="block text-sm font-medium mb-2">Şiddet</label>
-              <div className="flex gap-4">
+              <div className="flex gap-4 flex-wrap">
                 {['low', 'medium', 'high', 'critical'].map((sev) => (
                   <label key={sev} className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -196,12 +235,12 @@ export default function Submit() {
                       onChange={(e) => setFormData({ ...formData, severity: e.target.value })}
                       className="accent-[#10B981]"
                     />
-                    <span className={`capitalize ${
+                    <span className={
                       sev === 'critical' ? 'text-[#EF4444]' :
                       sev === 'high' ? 'text-orange-500' :
                       sev === 'medium' ? 'text-[#F59E0B]' :
                       'text-green-400'
-                    }`}>
+                    }>
                       {sev === 'low' ? 'Düşük' : sev === 'medium' ? 'Orta' : sev === 'high' ? 'Yüksek' : 'Kritik'}
                     </span>
                   </label>
