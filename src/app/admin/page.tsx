@@ -1,24 +1,51 @@
-import { createClient } from '@/lib/supabase/server'
+'use client'
+
+import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
-export default async function Admin() {
-  const supabase = await createClient()
-  
-  const { data: users } = await supabase
-    .from('users')
-    .select('*')
-    .order('created_at', { ascending: false })
+export default function Admin() {
+  const [users, setUsers] = useState<any[]>([])
+  const [aiModels, setAiModels] = useState<any[]>([])
+  const [incidents, setIncidents] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const { data: aiModels } = await supabase
-    .from('ai_models')
-    .select('*')
-    .order('deployed_at', { ascending: false })
+  useEffect(() => {
+    const fetchData = async () => {
+      const supabase = createClient()
+      
+      const { data: usersData } = await supabase
+        .from('users')
+        .select('*')
+        .order('created_at', { ascending: false })
 
-  const { data: incidents } = await supabase
-    .from('incidents')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(10)
+      const { data: modelsData } = await supabase
+        .from('ai_models')
+        .select('*')
+        .order('deployed_at', { ascending: false })
+
+      const { data: incidentsData } = await supabase
+        .from('incidents')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(10)
+
+      setUsers(usersData || [])
+      setAiModels(modelsData || [])
+      setIncidents(incidentsData || [])
+      setLoading(false)
+    }
+
+    fetchData()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-neon-red animate-pulse">Loading...</div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -56,7 +83,7 @@ export default async function Admin() {
                   </tr>
                 </thead>
                 <tbody>
-                  {users?.map((user: any) => (
+                  {users.map((user) => (
                     <tr key={user.id} className="border-t border-border hover:bg-white/5">
                       <td className="p-3">
                         <p className="font-medium">{user.email}</p>
@@ -76,7 +103,7 @@ export default async function Admin() {
                       </td>
                     </tr>
                   ))}
-                  {(!users || users.length === 0) && (
+                  {users.length === 0 && (
                     <tr>
                       <td colSpan={3} className="p-4 text-center text-gray-500">No users yet</td>
                     </tr>
@@ -92,7 +119,7 @@ export default async function Admin() {
                 </h2>
               </div>
               <div className="p-4 space-y-3">
-                {aiModels?.map((model: any) => (
+                {aiModels.map((model) => (
                   <div key={model.id} className="flex justify-between items-center p-3 bg-black/50 rounded">
                     <div>
                       <p className="font-medium">{model.name}</p>
@@ -106,7 +133,7 @@ export default async function Admin() {
                     </span>
                   </div>
                 ))}
-                {(!aiModels || aiModels.length === 0) && (
+                {aiModels.length === 0 && (
                   <p className="text-gray-500 text-center py-4">No AI models deployed</p>
                 )}
                 <button className="w-full py-2 border border-border rounded hover:border-neon-green transition">
@@ -124,7 +151,7 @@ export default async function Admin() {
                 </h2>
               </div>
               <div className="divide-y divide-border">
-                {incidents?.map((incident: any) => (
+                {incidents.map((incident) => (
                   <div key={incident.id} className="p-4 hover:bg-white/5">
                     <div className="flex justify-between mb-1">
                       <span className="font-medium">{incident.title}</span>
@@ -139,7 +166,7 @@ export default async function Admin() {
                     <p className="text-sm text-gray-500 line-clamp-1">{incident.description}</p>
                   </div>
                 ))}
-                {(!incidents || incidents.length === 0) && (
+                {incidents.length === 0 && (
                   <p className="p-4 text-center text-gray-500">No incidents</p>
                 )}
               </div>
