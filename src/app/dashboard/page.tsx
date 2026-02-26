@@ -10,24 +10,34 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    let mounted = true
+
     const fetchData = async () => {
-      const supabase = createClient()
-      
-      const { data: incidentsData } = await supabase
-        .from('incidents')
-        .select('*')
-        .order('created_at', { ascending: false })
+      try {
+        const supabase = createClient()
+        
+        const { data: incidentsData } = await supabase
+          .from('incidents')
+          .select('*')
+          .order('created_at', { ascending: false })
 
-      const { data: usersData } = await supabase
-        .from('users')
-        .select('*')
+        const { data: usersData } = await supabase
+          .from('users')
+          .select('*')
 
-      setIncidents(incidentsData || [])
-      setUsers(usersData || [])
-      setLoading(false)
+        if (mounted) {
+          setIncidents(incidentsData || [])
+          setUsers(usersData || [])
+          setLoading(false)
+        }
+      } catch (err) {
+        console.error(err)
+        if (mounted) setLoading(false)
+      }
     }
 
     fetchData()
+    return () => { mounted = false }
   }, [])
 
   const totalIncidents = incidents.length
@@ -37,7 +47,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-neon-green animate-pulse">Loading...</div>
+        <div className="text-neon-green animate-pulse">Yükleniyor...</div>
       </div>
     )
   }
@@ -54,7 +64,7 @@ export default function Dashboard() {
             <span className="ml-4 text-gray-400">/ Dashboard</span>
           </h1>
           <nav className="flex gap-4">
-            <Link href="/" className="hover:text-neon-green transition">Home</Link>
+            <Link href="/" className="hover:text-neon-green transition">Ana Sayfa</Link>
             <Link href="/admin" className="hover:text-neon-green transition">Admin</Link>
           </nav>
         </div>
@@ -63,34 +73,34 @@ export default function Dashboard() {
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-card-bg border border-border rounded-lg p-6">
-            <p className="text-gray-400 text-sm">Total Incidents</p>
+            <p className="text-gray-400 text-sm">Toplam Olay</p>
             <p className="text-3xl font-bold neon-text-green">{totalIncidents}</p>
           </div>
           <div className="bg-card-bg border border-border rounded-lg p-6">
-            <p className="text-gray-400 text-sm">Pending</p>
+            <p className="text-gray-400 text-sm">Bekleyen</p>
             <p className="text-3xl font-bold text-neon-yellow">{pendingIncidents}</p>
           </div>
           <div className="bg-card-bg border border-border rounded-lg p-6">
-            <p className="text-gray-400 text-sm">Resolved</p>
+            <p className="text-gray-400 text-sm">Çözülen</p>
             <p className="text-3xl font-bold text-green-400">{resolvedIncidents}</p>
           </div>
           <div className="bg-card-bg border border-border rounded-lg p-6">
-            <p className="text-gray-400 text-sm">Total Users</p>
+            <p className="text-gray-400 text-sm">Kullanıcılar</p>
             <p className="text-3xl font-bold text-blue-400">{users.length}</p>
           </div>
         </div>
 
         <div className="bg-card-bg border border-border rounded-lg overflow-hidden">
           <div className="p-4 border-b border-border">
-            <h2 className="font-bold">All Incidents</h2>
+            <h2 className="font-bold">Tüm Olaylar</h2>
           </div>
           <table className="w-full">
             <thead className="bg-black/50">
               <tr>
-                <th className="text-left p-3 text-gray-400 font-normal">Title</th>
-                <th className="text-left p-3 text-gray-400 font-normal">Severity</th>
-                <th className="text-left p-3 text-gray-400 font-normal">Status</th>
-                <th className="text-left p-3 text-gray-400 font-normal">Date</th>
+                <th className="text-left p-3 text-gray-400 font-normal">Başlık</th>
+                <th className="text-left p-3 text-gray-400 font-normal">Şiddet</th>
+                <th className="text-left p-3 text-gray-400 font-normal">Durum</th>
+                <th className="text-left p-3 text-gray-400 font-normal">Tarih</th>
               </tr>
             </thead>
             <tbody>
@@ -117,10 +127,15 @@ export default function Dashboard() {
                     </span>
                   </td>
                   <td className="p-3 text-gray-400 text-sm">
-                    {new Date(incident.created_at).toLocaleDateString()}
+                    {new Date(incident.created_at).toLocaleDateString('tr-TR')}
                   </td>
                 </tr>
               ))}
+              {incidents.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="p-4 text-center text-gray-500">Henüz olay yok</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
