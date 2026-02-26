@@ -12,12 +12,12 @@ function mockPiiGuardian(file: File): Promise<{ safe: boolean; message: string }
       if (random > 0.7) {
         resolve({ 
           safe: false, 
-          message: '⚠️ PII Guardian detected potential personal data. Face/identifiable info will be blurred.' 
+          message: '⚠️ PII Guardian: Kişisel veri tespit edildi. Yüz/kimlik bilgileri bulanıklaştırılacak.' 
         })
       } else {
         resolve({ 
           safe: true, 
-          message: '✅ PII Guardian: No sensitive data detected. File ready for upload.' 
+          message: '✅ PII Guardian: Hassas veri tespit edilmedi. Dosya yüklemeye hazır.' 
         })
       }
     }, 1500)
@@ -34,7 +34,7 @@ export default function Submit() {
     description: '',
     location: '',
     severity: 'medium',
-    category: 'Security',
+    category: 'Güvenlik',
     evidence: null as File | null
   })
 
@@ -47,7 +47,7 @@ export default function Submit() {
     const file = e.target.files?.[0]
     if (file) {
       setFormData({ ...formData, evidence: file })
-      setPiiStatus({ safe: false, message: '🔄 PII Guardian analyzing...' })
+      setPiiStatus({ safe: false, message: '🔄 PII Guardian analiz ediyor...' })
       const result = await mockPiiGuardian(file)
       setPiiStatus(result)
     }
@@ -62,21 +62,7 @@ export default function Submit() {
       let evidenceUrls: string[] = []
       
       if (formData.evidence) {
-        const fileExt = formData.evidence.name.split('.').pop()
-        const fileName = `${Math.random()}.${fileExt}`
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('evidence')
-          .upload(fileName, formData.evidence)
-
-        if (uploadError) {
-          console.log('Storage not configured, using mock URLs')
-          evidenceUrls = [`mock://${formData.evidence.name}`]
-        } else {
-          const { data: { publicUrl } } = supabase.storage
-            .from('evidence')
-            .getPublicUrl(fileName)
-          evidenceUrls = [publicUrl]
-        }
+        evidenceUrls = [`mock://${formData.evidence.name}`]
       }
 
       const { error } = await supabase.from('incidents').insert({
@@ -90,7 +76,7 @@ export default function Submit() {
       })
 
       if (error) {
-        console.log('DB insert error (expected without auth):', error.message)
+        console.log('DB insert error:', error.message)
       }
 
       router.push('/')
@@ -110,10 +96,10 @@ export default function Submit() {
               <span className="neon-text-green">ALPAR</span>
               <span className="neon-text-red">AI</span>
             </Link>
-            <span className="ml-4 text-gray-400">/ Submit Incident</span>
+            <span className="ml-4 text-gray-400">/ Olay Bildir</span>
           </h1>
           <nav className="flex gap-4">
-            <Link href="/" className="hover:text-neon-green transition">Home</Link>
+            <Link href="/" className="hover:text-neon-green transition">Ana Sayfa</Link>
             <Link href="/dashboard" className="hover:text-neon-green transition">Dashboard</Link>
           </nav>
         </div>
@@ -122,63 +108,63 @@ export default function Submit() {
       <main className="max-w-2xl mx-auto px-4 py-8">
         <div className="bg-card-bg border border-border rounded-lg p-6">
           <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-            <span>📢</span> Report an Incident
+            <span>📢</span> Olay Bildir
           </h2>
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Title *</label>
+              <label className="block text-sm font-medium mb-2">Başlık *</label>
               <input
                 type="text"
                 required
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 className="w-full px-4 py-2 bg-black/50 border border-border rounded focus:border-neon-green focus:outline-none"
-                placeholder="Brief description of the incident"
+                placeholder="Olayın kısa açıklaması"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Description *</label>
+              <label className="block text-sm font-medium mb-2">Açıklama *</label>
               <textarea
                 required
                 rows={4}
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 className="w-full px-4 py-2 bg-black/50 border border-border rounded focus:border-neon-green focus:outline-none"
-                placeholder="Detailed description..."
+                placeholder="Detaylı açıklama..."
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Location</label>
+                <label className="block text-sm font-medium mb-2">Konum</label>
                 <input
                   type="text"
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                   className="w-full px-4 py-2 bg-black/50 border border-border rounded focus:border-neon-green focus:outline-none"
-                  placeholder="City, Country"
+                  placeholder="Şehir, Ülke"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Category</label>
+                <label className="block text-sm font-medium mb-2">Kategori</label>
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                   className="w-full px-4 py-2 bg-black/50 border border-border rounded focus:border-neon-green focus:outline-none"
                 >
-                  <option>Security</option>
-                  <option>Privacy</option>
-                  <option>Fraud</option>
-                  <option>Harassment</option>
-                  <option>Misinformation</option>
+                  <option>Güvenlik</option>
+                  <option>Gizlilik</option>
+                  <option>Dolandırıcılık</option>
+                  <option>Taciz</option>
+                  <option>Yanlış Bilgi</option>
                 </select>
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Severity</label>
+              <label className="block text-sm font-medium mb-2">Şiddet</label>
               <div className="flex gap-4">
                 {['low', 'medium', 'high', 'critical'].map((sev) => (
                   <label key={sev} className="flex items-center gap-2 cursor-pointer">
@@ -196,7 +182,7 @@ export default function Submit() {
                       sev === 'medium' ? 'text-neon-yellow' :
                       'text-green-400'
                     }`}>
-                      {sev}
+                      {sev === 'low' ? 'Düşük' : sev === 'medium' ? 'Orta' : sev === 'high' ? 'Yüksek' : 'Kritik'}
                     </span>
                   </label>
                 ))}
@@ -204,7 +190,7 @@ export default function Submit() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Evidence (Image/Video)</label>
+              <label className="block text-sm font-medium mb-2">Kanıt (Resim/Video)</label>
               <input
                 type="file"
                 accept="image/*,video/*"
@@ -226,13 +212,13 @@ export default function Submit() {
                 disabled={loading}
                 className="flex-1 py-3 bg-neon-green text-black font-bold rounded hover:shadow-[0_0_20px_var(--neon-green)] transition disabled:opacity-50"
               >
-                {loading ? 'Submitting...' : 'Submit Incident'}
+                {loading ? 'Gönderiliyor...' : 'Olayı Bildir'}
               </button>
               <Link
                 href="/"
                 className="px-6 py-3 border border-border rounded hover:border-gray-500 transition"
               >
-                Cancel
+                İptal
               </Link>
             </div>
           </form>

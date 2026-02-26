@@ -11,38 +11,48 @@ export default function Admin() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    let mounted = true
+
     const fetchData = async () => {
-      const supabase = createClient()
-      
-      const { data: usersData } = await supabase
-        .from('users')
-        .select('*')
-        .order('created_at', { ascending: false })
+      try {
+        const supabase = createClient()
+        
+        const { data: usersData } = await supabase
+          .from('users')
+          .select('*')
+          .order('created_at', { ascending: false })
 
-      const { data: modelsData } = await supabase
-        .from('ai_models')
-        .select('*')
-        .order('deployed_at', { ascending: false })
+        const { data: modelsData } = await supabase
+          .from('ai_models')
+          .select('*')
+          .order('deployed_at', { ascending: false })
 
-      const { data: incidentsData } = await supabase
-        .from('incidents')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(10)
+        const { data: incidentsData } = await supabase
+          .from('incidents')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(10)
 
-      setUsers(usersData || [])
-      setAiModels(modelsData || [])
-      setIncidents(incidentsData || [])
-      setLoading(false)
+        if (mounted) {
+          setUsers(usersData || [])
+          setAiModels(modelsData || [])
+          setIncidents(incidentsData || [])
+          setLoading(false)
+        }
+      } catch (err) {
+        console.error(err)
+        if (mounted) setLoading(false)
+      }
     }
 
     fetchData()
+    return () => { mounted = false }
   }, [])
 
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-neon-red animate-pulse">Loading...</div>
+        <div className="text-neon-red animate-pulse">Yükleniyor...</div>
       </div>
     )
   }
@@ -59,7 +69,7 @@ export default function Admin() {
             <span className="ml-4 text-neon-red">/ CEO Admin Panel</span>
           </h1>
           <nav className="flex gap-4">
-            <Link href="/" className="hover:text-neon-green transition">Home</Link>
+            <Link href="/" className="hover:text-neon-green transition">Ana Sayfa</Link>
             <Link href="/dashboard" className="hover:text-neon-green transition">Dashboard</Link>
           </nav>
         </div>
@@ -71,15 +81,15 @@ export default function Admin() {
             <div className="bg-card-bg border border-neon-red/30 rounded-lg overflow-hidden mb-6">
               <div className="p-4 border-b border-border bg-neon-red/10">
                 <h2 className="font-bold flex items-center gap-2">
-                  <span>👑</span> User Management
+                  <span>👑</span> Kullanıcı Yönetimi
                 </h2>
               </div>
               <table className="w-full">
                 <thead className="bg-black/50">
                   <tr>
-                    <th className="text-left p-3 text-gray-400 font-normal">User</th>
-                    <th className="text-left p-3 text-gray-400 font-normal">Role</th>
-                    <th className="text-left p-3 text-gray-400 font-normal">Joined</th>
+                    <th className="text-left p-3 text-gray-400 font-normal">Kullanıcı</th>
+                    <th className="text-left p-3 text-gray-400 font-normal">Rol</th>
+                    <th className="text-left p-3 text-gray-400 font-normal">Katılma</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -87,7 +97,7 @@ export default function Admin() {
                     <tr key={user.id} className="border-t border-border hover:bg-white/5">
                       <td className="p-3">
                         <p className="font-medium">{user.email}</p>
-                        <p className="text-xs text-gray-500">@{user.username || 'no username'}</p>
+                        <p className="text-xs text-gray-500">@{user.username || 'kullanıcı yok'}</p>
                       </td>
                       <td className="p-3">
                         <span className={`px-2 py-0.5 rounded text-xs ${
@@ -99,13 +109,13 @@ export default function Admin() {
                         </span>
                       </td>
                       <td className="p-3 text-gray-400 text-sm">
-                        {new Date(user.created_at).toLocaleDateString()}
+                        {new Date(user.created_at).toLocaleDateString('tr-TR')}
                       </td>
                     </tr>
                   ))}
                   {users.length === 0 && (
                     <tr>
-                      <td colSpan={3} className="p-4 text-center text-gray-500">No users yet</td>
+                      <td colSpan={3} className="p-4 text-center text-gray-500">Henüz kullanıcı yok</td>
                     </tr>
                   )}
                 </tbody>
@@ -115,7 +125,7 @@ export default function Admin() {
             <div className="bg-card-bg border border-border rounded-lg overflow-hidden">
               <div className="p-4 border-b border-border">
                 <h2 className="font-bold flex items-center gap-2">
-                  <span>🤖</span> AI Models
+                  <span>🤖</span> AI Modelleri
                 </h2>
               </div>
               <div className="p-4 space-y-3">
@@ -134,10 +144,10 @@ export default function Admin() {
                   </div>
                 ))}
                 {aiModels.length === 0 && (
-                  <p className="text-gray-500 text-center py-4">No AI models deployed</p>
+                  <p className="text-gray-500 text-center py-4">Deploy edilmiş AI modeli yok</p>
                 )}
                 <button className="w-full py-2 border border-border rounded hover:border-neon-green transition">
-                  + Deploy New Model
+                  + Yeni Model Deploy Et
                 </button>
               </div>
             </div>
@@ -147,7 +157,7 @@ export default function Admin() {
             <div className="bg-card-bg border border-border rounded-lg overflow-hidden">
               <div className="p-4 border-b border-border">
                 <h2 className="font-bold flex items-center gap-2">
-                  <span>📊</span> Recent Incidents
+                  <span>📊</span> Son Olaylar
                 </h2>
               </div>
               <div className="divide-y divide-border">
@@ -167,25 +177,25 @@ export default function Admin() {
                   </div>
                 ))}
                 {incidents.length === 0 && (
-                  <p className="p-4 text-center text-gray-500">No incidents</p>
+                  <p className="p-4 text-center text-gray-500">Olay yok</p>
                 )}
               </div>
             </div>
 
             <div className="bg-card-bg border border-border rounded-lg p-6 mt-6">
-              <h2 className="font-bold mb-4">Quick Actions</h2>
+              <h2 className="font-bold mb-4">Hızlı İşlemler</h2>
               <div className="grid grid-cols-2 gap-3">
                 <button className="py-3 px-4 bg-neon-green/20 text-neon-green rounded hover:bg-neon-green/30 transition">
-                  Export Report
+                  Rapor İndir
                 </button>
                 <button className="py-3 px-4 bg-blue-500/20 text-blue-400 rounded hover:bg-blue-500/30 transition">
-                  Send Alert
+                  Uyarı Gönder
                 </button>
                 <button className="py-3 px-4 bg-purple-500/20 text-purple-400 rounded hover:bg-purple-500/30 transition">
-                  API Settings
+                  API Ayarları
                 </button>
                 <button className="py-3 px-4 bg-neon-red/20 text-neon-red rounded hover:bg-neon-red/30 transition">
-                  Emergency Stop
+                  Acil Durdur
                 </button>
               </div>
             </div>
