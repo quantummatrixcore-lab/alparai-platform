@@ -61,3 +61,29 @@ pnpm db:migrate       # supabase migration up
 - ADRs: [`docs/adr/`](./docs/adr/)
 - Contributing: [`CONTRIBUTING.md`](./CONTRIBUTING.md)
 - License: [`LICENSE`](./LICENSE) (AGPL-3.0)
+
+## Infrastructure (post 2026-06-06 rebuild)
+
+- **Repo**: `https://github.com/quantummatrixcore-lab/Alparai.com.git` (renamed from `sikayetvar`; Vercel watches `master`).
+- **Hosting**: Vercel project `prj_REYJORnuYOT4tk28iMXnKZBCGkjL` (alparai-com) → `alparai.com` + `www.alparai.com`, region `fra1`. Duplicate `alparai-web` (`prj_mitn2MvIGMedCkJb7dw2fjDZkkqJ`) is unused — safe to delete.
+- **Supabase**: project `alparai-prod` (`ref: azszpzyvxjduhemkjsdh`), region `eu-west-1`, FREE plan. Old `alparai-db` (`ojwtxkwsglbxdkqoliaq`) was lost — paused >90 days, unrecoverable.
+- **i18n**: ALL legal page body content must use `getTranslations({locale, namespace: "legal"})` / `t("key")`. Hardcoded English is a bug.
+
+## Postmortem — 2026-06-06
+
+- The Supabase project `alparai-db` had been paused for >90 days (FREE plan inactivity); `/restore` returned `400 cannot be restored`. All prior data was unrecoverable (no backups).
+- Created fresh `alparai-prod` via Supabase Management API (`POST /v1/projects` requires `organization_slug` body field, NOT `org_id` query string).
+- Two `vercel.json` redirects broke the build (BLOCKED deploy → ERROR promotion); resolved by adding `src/app/page.tsx` with `redirect("/en")` instead.
+- Commit author was a username-based noreply email; Vercel blocked the build (`COMMIT_AUTHOR_REQUIRED`). Fix: use ID-based `240367464+quantummatrixcore-lab@users.noreply.github.com`.
+- `to_tsvector('simple', ...)` in a generated column is STABLE (not IMMUTABLE) on managed Supabase → migration failed. Fix: trigger-based `search_vector` with `to_tsvector('simple'::regconfig, ...)`.
+- `is_moderator()` requires `auth.uid()` arg; the P0 `incident_votes` migration was missing it.
+- Vercel domain was `serviceType: "zeit.world"` (legacy) — the production target is project `alparai-com` (not `alparai-web`).
+- `.env.local` is tracked in git and contains Vercel + Supabase tokens. **MUST** be removed from tracking and added to `.gitignore` (already ignored, just needs `git rm --cached`).
+
+## Pending user actions
+
+- Rotate `vcp_502...` Vercel token + `sbp_1b9...` Supabase token (both exposed in chat history).
+- Reset Supabase DB password and re-set in `.env.local` + Vercel.
+- `git rm --cached .env.local` + commit.
+- Delete duplicate Vercel project `alparai-web`.
+- Fix i18n on remaining legal pages: `terms`, `cookies` (still have hardcoded English).
