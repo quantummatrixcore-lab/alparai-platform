@@ -10,18 +10,16 @@ import { useTransition, useState } from "react";
 import { submitTakedownRequest } from "@/actions/takedown";
 import { toast } from "sonner";
 import { CheckCircle2 } from "lucide-react";
+import { TAKEDOWN_REASON_OPTIONS } from "@/lib/constants/takedown-reasons";
 
-const REASONS = [
-  { value: "defamation", label: "Defamation / libel" },
-  { value: "copyright", label: "Copyright violation" },
-  { value: "privacy", label: "Personal data exposure" },
-  { value: "factual_error", label: "Factual inaccuracy" },
-  { value: "legal_court_order", label: "Court order" },
-  { value: "other", label: "Other" },
-];
+const REASONS = TAKEDOWN_REASON_OPTIONS.map((opt) => ({
+  value: opt.value,
+  label: opt.translationKey,
+}));
 
 export function TakedownForm() {
   const t = useTranslations("legal");
+  const tr = useTranslations("takedown.reasons");
   const [pending, start] = useTransition();
   const [done, setDone] = useState(false);
 
@@ -93,7 +91,7 @@ export function TakedownForm() {
         label={t("takedownReason", { defaultValue: "Reason" })}
         required
         placeholder="Select"
-        options={REASONS}
+        options={REASONS.map((r) => ({ value: r.value, label: tr(r.value as never) }))}
       />
       <Textarea
         name="details"

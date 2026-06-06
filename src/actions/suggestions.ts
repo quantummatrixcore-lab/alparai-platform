@@ -6,7 +6,9 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/session";
 import { suggestionSubmissionSchema } from "@/lib/validation/schemas";
 import { withAutopilot, submitSuggestionPolicy, attemptsOf, durationOf } from "@/lib/autopilot";
+import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
+import type { Database } from "@/types/database";
 
 export interface SubmitSuggestionState {
   ok: boolean;
@@ -27,21 +29,23 @@ const runSuggestionWork = async (
   data: SuggestionWorkInput
 ): Promise<AttemptOutcome<{ id: string }>> => {
   const supabase = await createServerClient();
+  const insertRow: Database["public"]["Tables"]["suggestions"]["Insert"] = {
+    user_id: data.userId,
+    title: data.title,
+    description: data.description,
+    category: data.category,
+    status: "open",
+    is_anonymous: false,
+  };
   const { data: row, error } = await supabase
     .from("suggestions")
-    .insert({
-      user_id: data.userId,
-      title: data.title,
-      description: data.description,
-      category: data.category,
-      status: "open",
-    } as never)
+    .insert(insertRow as never)
     .select("id")
     .single();
   if (error || !row) {
     return { kind: "retryable", error: error?.message ?? "suggestion_insert_failed" };
   }
-  return { kind: "success", value: { id: (row as Record<string, unknown>).id as string } };
+  return { kind: "success", value: { id: (row as { id: string }).id } };
 };
 
 export async function submitSuggestion(
@@ -51,6 +55,10 @@ export async function submitSuggestion(
   const user = await getCurrentUser();
   if (!user) {
     return { ok: false, error: "Sign in to suggest a feature" };
+  }
+  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.suggestion_submission}:${user.id}`);
+  if (!rl.ok) {
+    return { ok: false, error: `Too many suggestions. Try again in ${rl.retryAfter}s.` };
   }
   const raw = {
     title: String(formData.get("title") ?? ""),
@@ -123,10 +131,11 @@ const runSuggestionVoteWork = async (
     }
     return { kind: "success", value: { toggled: "removed" } };
   }
-  const { error } = await admin.from("suggestion_votes").insert({
+  const insertRow: Database["public"]["Tables"]["suggestion_votes"]["Insert"] = {
     suggestion_id: data.suggestionId,
     user_id: data.userId,
-  } as never);
+  };
+  const { error } = await admin.from("suggestion_votes").insert(insertRow as never);
   if (error) {
     return { kind: "retryable", error: error.message };
   }

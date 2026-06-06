@@ -8,7 +8,9 @@ import { headers } from "next/headers";
 import { APP_TAKEDOWN_EMAIL } from "@/lib/constants";
 import { withAutopilot, submitTakedownPolicy, attemptsOf, durationOf } from "@/lib/autopilot";
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
-import { createHash } from "node:crypto";
+import { hashIp } from "@/lib/utils/hash";
+import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
+import type { Database } from "@/types/database";
 
 export interface TakedownResult {
   ok: boolean;
@@ -16,13 +18,6 @@ export interface TakedownResult {
   message?: string;
   autopilot?: { attempts: number; durationMs: number; kind: string };
 }
-
-const hashIp = (ip: string | null, salt: string): string | null =>
-  ip
-    ? createHash("sha256")
-        .update(`${salt}:${ip}`)
-        .digest("hex")
-    : null;
 
 const requestSchema = z.object({
   target_url: z.string().url(),
@@ -45,26 +40,23 @@ const runTakedownRequestWork = async (
   data: TakedownRequestWorkInput
 ): Promise<AttemptOutcome<{ id: string }>> => {
   const admin = createAdminClient();
+  const insertRow: Database["public"]["Tables"]["takedown_requests"]["Insert"] = {
+    reason: `${data.parsed.reason}\n\nTarget: ${data.parsed.target_url}\n\n${data.parsed.details}`,
+    requester_name: data.parsed.requester_name,
+    requester_email: data.parsed.requester_email,
+    requester_organization: data.parsed.organization ?? null,
+    evidence_url: data.parsed.identity_proof_url,
+    ip_hash: data.ipHash,
+  };
   const { data: row, error } = await admin
     .from("takedown_requests")
-    .insert({
-      target_url: data.parsed.target_url,
-      reason: data.parsed.reason,
-      details: data.parsed.details,
-      requester_name: data.parsed.requester_name,
-      requester_email: data.parsed.requester_email,
-      organization: data.parsed.organization ?? null,
-      country: data.parsed.country ?? null,
-      identity_proof_url: data.parsed.identity_proof_url,
-      status: "pending",
-      ip_hash: data.ipHash,
-    } as never)
+    .insert(insertRow as never)
     .select("id")
     .single();
   if (error || !row) {
     return { kind: "retryable", error: error?.message ?? "takedown_request_insert_failed" };
   }
-  return { kind: "success", value: { id: (row as Record<string, unknown>).id as string } };
+  return { kind: "success", value: { id: (row as { id: string }).id } };
 };
 
 export async function submitTakedownRequest(input: z.infer<typeof requestSchema>): Promise<TakedownResult> {
@@ -75,7 +67,12 @@ export async function submitTakedownRequest(input: z.infer<typeof requestSchema>
   const hdrs = await headers();
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
   const clientIdempotencyKey = hdrs.get("x-idempotency-key");
-  const ipHash = hashIp(ip, process.env.IP_SALT ?? "alpar-default-salt");
+  const ipHash = hashIp(ip);
+
+  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.takedown_submission}:${ip ?? "anon"}`);
+  if (!rl.ok) {
+    return { ok: false, error: `Too many requests. Try again in ${rl.retryAfter}s.` };
+  }
 
   const result = await withAutopilot<{ id: string }>(
     submitTakedownPolicy,
@@ -135,25 +132,23 @@ const runInlineTakedownWork = async (
   data: InlineTakedownWorkInput
 ): Promise<AttemptOutcome<{ id: string }>> => {
   const admin = createAdminClient();
+  const insertRow: Database["public"]["Tables"]["takedown_requests"]["Insert"] = {
+    reason: `${data.parsed.reason}\n\nTarget: ${process.env.NEXT_PUBLIC_APP_URL}/incidents/${data.parsed.incidentId}\n\n${data.parsed.details}`,
+    requester_email: data.parsed.contactEmail,
+    requester_name: data.requesterName,
+    requester_organization: data.userId ? null : "Anonymous user",
+    incident_id: data.parsed.incidentId,
+    ip_hash: data.ipHash,
+  };
   const { data: row, error } = await admin
     .from("takedown_requests")
-    .insert({
-      target_url: `${process.env.NEXT_PUBLIC_APP_URL}/incidents/${data.parsed.incidentId}`,
-      reason: data.parsed.reason,
-      details: data.parsed.details,
-      requester_email: data.parsed.contactEmail,
-      requester_name: data.requesterName,
-      user_id: data.userId,
-      incident_id: data.parsed.incidentId,
-      status: "pending",
-      ip_hash: data.ipHash,
-    } as never)
+    .insert(insertRow as never)
     .select("id")
     .single();
   if (error || !row) {
     return { kind: "retryable", error: error?.message ?? "takedown_insert_failed" };
   }
-  return { kind: "success", value: { id: (row as Record<string, unknown>).id as string } };
+  return { kind: "success", value: { id: (row as { id: string }).id } };
 };
 
 export async function submitTakedown(input: z.infer<typeof inlineSchema>): Promise<TakedownResult> {
@@ -163,7 +158,15 @@ export async function submitTakedown(input: z.infer<typeof inlineSchema>): Promi
   const hdrs = await headers();
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
   const clientIdempotencyKey = hdrs.get("x-idempotency-key");
-  const ipHash = hashIp(ip, process.env.IP_SALT ?? "alpar-default-salt");
+  const ipHash = hashIp(ip);
+
+  const rlKey = user?.id
+    ? `${RATE_LIMIT_KEYS.takedown_submission}:${user.id}`
+    : `${RATE_LIMIT_KEYS.takedown_submission}:${ip ?? "anon"}`;
+  const rl = await checkRateLimit(rlKey);
+  if (!rl.ok) {
+    return { ok: false, error: `Too many requests. Try again in ${rl.retryAfter}s.` };
+  }
 
   const result = await withAutopilot<{ id: string }>(
     submitTakedownPolicy,

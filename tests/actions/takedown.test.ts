@@ -5,38 +5,61 @@ import {
   createTestUser,
 } from "../helpers/supabase-mock";
 
-const mockSupabase = createMockSupabaseClient();
-const mockAdminClient = createMockSupabaseClient();
-const mockUser = createTestUser();
+vi.hoisted(() => {
+  vi.doMock("@/lib/supabase/server", () => ({
+    createClient: vi.fn(),
+    createServerClient: vi.fn(),
+  }));
+  vi.doMock("@/lib/supabase/admin", () => ({
+    createAdminClient: vi.fn(),
+  }));
+  vi.doMock("@/lib/auth/session", () => ({
+    getCurrentUser: vi.fn(),
+  }));
+  vi.doMock("@/lib/constants", () => ({
+    APP_TAKEDOWN_EMAIL: "takedown@alparai.online",
+  }));
+  vi.doMock("@/lib/utils/rate-limit", () => ({
+    checkRateLimit: vi.fn().mockResolvedValue({ ok: true }),
+    RATE_LIMIT_KEYS: {
+      takedown_submission: "ratelimit:takedown_submission",
+    },
+  }));
+});
 
-vi.mock("@/lib/supabase/server", () => ({
-  createClient: vi.fn().mockResolvedValue(mockSupabase),
-  createServerClient: vi.fn().mockResolvedValue(mockSupabase),
-}));
-
-vi.mock("@/lib/supabase/admin", () => ({
-  createAdminClient: vi.fn().mockReturnValue(mockAdminClient),
-}));
-
-vi.mock("@/lib/auth/session", () => ({
-  getCurrentUser: vi.fn().mockResolvedValue(null),
-}));
-
-vi.mock("@/lib/constants", () => ({
-  APP_TAKEDOWN_EMAIL: "takedown@alparai.online",
-}));
-
+import { createClient, createServerClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { getCurrentUser } from "@/lib/auth/session";
 import {
   submitTakedownRequest,
   submitTakedown,
 } from "@/actions/takedown";
-import { getCurrentUser } from "@/lib/auth/session";
+
+let mockSupabase: ReturnType<typeof createMockSupabaseClient>;
+let mockAdminClient: ReturnType<typeof createMockSupabaseClient>;
+let mockUser: ReturnType<typeof createTestUser>;
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  mockSupabase = createMockSupabaseClient();
+  mockAdminClient = createMockSupabaseClient();
+  mockUser = createTestUser();
+  vi.mocked(createClient).mockResolvedValue(mockSupabase as never);
+  vi.mocked(createServerClient).mockResolvedValue(mockSupabase as never);
+  vi.mocked(createAdminClient).mockReturnValue(mockAdminClient as never);
+  vi.mocked(getCurrentUser).mockResolvedValue(null);
+});
 
 describe("submitTakedownRequest", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     mockAdminClient.from.mockReturnValue({
-      insert: vi.fn().mockResolvedValue({ data: null, error: null }),
+      insert: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          single: vi
+            .fn()
+            .mockResolvedValue({ data: { id: "td-1" }, error: null }),
+        }),
+      }),
       select: vi.fn().mockReturnValue({
         single: vi
           .fn()
@@ -122,10 +145,15 @@ describe("submitTakedownRequest", () => {
 
 describe("submitTakedown", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     vi.mocked(getCurrentUser).mockResolvedValue(null);
     mockAdminClient.from.mockReturnValue({
-      insert: vi.fn().mockResolvedValue({ data: null, error: null }),
+      insert: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          single: vi
+            .fn()
+            .mockResolvedValue({ data: { id: "td-2" }, error: null }),
+        }),
+      }),
       select: vi.fn().mockReturnValue({
         single: vi
           .fn()

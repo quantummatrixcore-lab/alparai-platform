@@ -6,7 +6,8 @@ import { Resend } from "resend";
 import { headers } from "next/headers";
 import { withAutopilot, submitContactPolicy, attemptsOf, durationOf } from "@/lib/autopilot";
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
-import { createHash } from "node:crypto";
+import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
+import { hashIp } from "@/lib/utils/hash";
 
 export interface ContactState {
   ok: boolean;
@@ -15,11 +16,6 @@ export interface ContactState {
   fieldErrors?: Record<string, string[]>;
   autopilot?: { attempts: number; durationMs: number; kind: string };
 }
-
-const hashIp = (ip: string, salt: string): string =>
-  createHash("sha256")
-    .update(`${salt}:${ip}`)
-    .digest("hex");
 
 interface ContactWorkInput {
   name: string;
@@ -60,6 +56,15 @@ export async function submitContact(
   _prev: ContactState,
   formData: FormData
 ): Promise<ContactState> {
+  const hdrs = await headers();
+  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const userAgent = hdrs.get("user-agent") ?? "unknown";
+
+  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.contact_submission}:${ip}`);
+  if (!rl.ok) {
+    return { ok: false, formError: `Too many submissions. Try again in ${rl.retryAfter}s.` };
+  }
+
   const raw = {
     name: String(formData.get("name") ?? ""),
     email: String(formData.get("email") ?? ""),
@@ -74,9 +79,6 @@ export async function submitContact(
       fieldErrors: parsed.error.flatten().fieldErrors,
     };
   }
-  const hdrs = await headers();
-  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  const userAgent = hdrs.get("user-agent") ?? "unknown";
   const clientIdempotencyKey = hdrs.get("x-idempotency-key");
 
   const result = await withAutopilot<{ sent: boolean; channel: "email" | "log" }>(
@@ -95,7 +97,7 @@ export async function submitContact(
     {
       context: {
         userId: null,
-        ipHash: hashIp(ip, process.env.IP_SALT ?? "alpar-default-salt"),
+        ipHash: hashIp(ip),
         clientIdempotencyKey,
       },
     }

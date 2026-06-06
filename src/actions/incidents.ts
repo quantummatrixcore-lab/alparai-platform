@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { getLocale } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -10,10 +11,11 @@ import {
   type IncidentSubmissionInput,
 } from "@/lib/validation/schemas";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
+import { hashIp } from "@/lib/utils/hash";
 import { headers } from "next/headers";
 import { withAutopilot, submitIncidentPolicy, voteIncidentPolicy, attemptsOf, durationOf } from "@/lib/autopilot";
-import { createHash } from "node:crypto";
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
+import type { Database } from "@/types/database";
 
 export interface SubmitIncidentState {
   ok: boolean;
@@ -35,10 +37,14 @@ const CONSENT_LABELS: Record<string, string> = {
   consent_terms: "terms_of_service",
 };
 
-const hashIp = (ip: string, salt: string): string =>
-  createHash("sha256")
-    .update(`${salt}:${ip}`)
-    .digest("hex");
+async function resolveLocale(): Promise<"en" | "tr"> {
+  try {
+    const loc = await getLocale();
+    return loc === "tr" ? "tr" : "en";
+  } catch {
+    return "en";
+  }
+}
 
 interface SubmitWorkInput {
   user: { id: string; email: string };
@@ -70,6 +76,7 @@ const runSubmitWork = async (
     ? new Date(raw.incident_date).toISOString()
     : new Date().toISOString();
 
+  const locale = await resolveLocale();
   const input: IncidentSubmissionInput = {
     title: raw.title,
     description: raw.description,
@@ -78,7 +85,7 @@ const runSubmitWork = async (
     aiProviderId: raw.provider_id || null,
     aiModelId: raw.model_id || null,
     incidentDate: incidentDateISO.slice(0, 10),
-    language: "en",
+    language: locale,
     isAnonymous: raw.is_anonymous,
     sourceUrl: null,
     consent: {
@@ -95,28 +102,34 @@ const runSubmitWork = async (
   }
 
   const supabase = await createServerClient();
+  const hdrs = await headers();
+  const userAgent = hdrs.get("user-agent") ?? null;
+  const incidentInsert: Database["public"]["Tables"]["incidents"]["Insert"] = {
+    user_id: user.id,
+    title: raw.title,
+    title_masked: maskedTitle.masked,
+    description: raw.description,
+    description_masked: maskedDescription.masked,
+    category: parsed.data.category,
+    severity: parsed.data.severity,
+    ai_provider_id: parsed.data.aiProviderId ?? null,
+    ai_model_id: parsed.data.aiModelId ?? null,
+    incident_date: incidentDateISO,
+    language: await resolveLocale(),
+    is_anonymous: raw.is_anonymous,
+    location_country: null,
+    source_url: null,
+    ip_hash: hashIp(data.ip),
+    user_agent: userAgent,
+    contains_pii: containsPii,
+    pii_categories: [
+      ...maskedTitle.detections.map((d) => d.type),
+      ...maskedDescription.detections.map((d) => d.type),
+    ].filter((v, i, a) => a.indexOf(v) === i),
+  };
   const { data: incident, error } = await supabase
     .from("incidents")
-    .insert({
-      user_id: user.id,
-      title: raw.title,
-      title_masked: maskedTitle.masked,
-      description: raw.description,
-      description_masked: maskedDescription.masked,
-      category: parsed.data.category,
-      severity: parsed.data.severity,
-      ai_provider_id: parsed.data.aiProviderId,
-      ai_model_id: parsed.data.aiModelId,
-      incident_date: incidentDateISO,
-      language: "en",
-      is_anonymous: raw.is_anonymous,
-      status: "pending_review",
-      contains_pii: containsPii,
-      pii_categories: [
-        ...maskedTitle.detections.map((d) => d.type),
-        ...maskedDescription.detections.map((d) => d.type),
-      ].filter((v, i, a) => a.indexOf(v) === i),
-    } as never)
+    .insert(incidentInsert as never)
     .select("id")
     .single();
 
@@ -124,15 +137,18 @@ const runSubmitWork = async (
     return { kind: "retryable", error: error?.message ?? "incident_insert_failed" };
   }
 
-  const incidentId = (incident as Record<string, unknown>).id as string;
+  const incidentId = (incident as { id: string }).id;
 
-  const consentLogEntries = Object.entries(CONSENT_LABELS).map(([, dbKey]) => ({
-    user_id: user.id,
-    consent_type: dbKey,
-    consent_text_snapshot: `Accepted on ${new Date().toISOString()} for incident ${incidentId}`,
-    incident_id: incidentId,
-    ip_hash: hashIp(ip, process.env.IP_SALT ?? "alpar-default-salt"),
-  }));
+  const consentLogEntries: Database["public"]["Tables"]["consent_log"]["Insert"][] =
+    Object.entries(CONSENT_LABELS).map(([, dbKey]) => ({
+      user_id: user.id,
+      consent_type: dbKey,
+      consent_text_snapshot: `Accepted on ${new Date().toISOString()} for incident ${incidentId}`,
+      related_entity_type: "incident",
+      related_entity_id: incidentId,
+      granted: true,
+      ip_hash: hashIp(ip),
+    }));
 
   const consentRes = await supabase.from("consent_log").insert(consentLogEntries as never);
   if (consentRes.error) {
@@ -181,6 +197,33 @@ export async function submitIncident(
     return { ok: false, formError: "You must accept all required consents." };
   }
 
+  const incidentDateISO = raw.incident_date
+    ? new Date(raw.incident_date).toISOString()
+    : new Date().toISOString();
+  const locale = await resolveLocale();
+  const input: IncidentSubmissionInput = {
+    title: raw.title,
+    description: raw.description,
+    category: raw.category as IncidentSubmissionInput["category"],
+    severity: raw.severity as IncidentSubmissionInput["severity"],
+    aiProviderId: raw.provider_id || null,
+    aiModelId: raw.model_id || null,
+    incidentDate: incidentDateISO.slice(0, 10),
+    language: locale,
+    isAnonymous: raw.is_anonymous,
+    sourceUrl: null,
+    consent: {
+      truthfulness: true,
+      anonymousPublication: true,
+      age18Plus: true,
+      termsOfService: true,
+    },
+  };
+  const fieldParsed = incidentSubmissionSchema.safeParse(input);
+  if (!fieldParsed.success) {
+    return { ok: false, fieldErrors: fieldParsed.error.flatten().fieldErrors };
+  }
+
   const result = await withAutopilot<{ id: string }>(
     submitIncidentPolicy,
     [user.id, raw.title, raw.description, raw.category, raw.severity],
@@ -188,7 +231,7 @@ export async function submitIncident(
     {
       context: {
         userId: user.id,
-        ipHash: hashIp(ip, process.env.IP_SALT ?? "alpar-default-salt"),
+        ipHash: hashIp(ip),
         clientIdempotencyKey,
       },
     }
@@ -255,14 +298,14 @@ const runVoteWork = async (
     }
     return { kind: "success", value: { toggle: "removed", newValue: 0 } };
   }
-  const { error } = await admin.from("incident_votes").upsert(
-    {
-      incident_id: data.incidentId,
-      user_id: data.userId,
-      value: data.value,
-    } as never,
-    { onConflict: "incident_id,user_id" }
-  );
+  const voteInsert: Database["public"]["Tables"]["incident_votes"]["Insert"] = {
+    incident_id: data.incidentId,
+    user_id: data.userId,
+    value: data.value,
+  };
+  const { error } = await admin.from("incident_votes").upsert(voteInsert as never, {
+    onConflict: "incident_id,user_id",
+  });
   if (error) {
     return { kind: "retryable", error: error.message };
   }
@@ -285,7 +328,7 @@ export async function voteOnIncident({
     .eq("incident_id", incidentId)
     .eq("user_id", user.id)
     .maybeSingle();
-  const previous = ((existing as Record<string, unknown> | null)?.value ?? 0) as -1 | 0 | 1;
+  const previous = ((existing as { value?: number } | null)?.value ?? 0) as -1 | 0 | 1;
 
   const result = await withAutopilot<{ toggle: "removed" | "set"; newValue: -1 | 0 | 1 }>(
     voteIncidentPolicy,

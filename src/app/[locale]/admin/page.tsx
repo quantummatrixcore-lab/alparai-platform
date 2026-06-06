@@ -9,6 +9,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { FileText, Clock, AlertTriangle, Users, ShieldCheck } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import type { IncidentListItem } from "@/types";
+import { toIncidentListItems } from "@/lib/mappers";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   return { title: "Admin Dashboard" };
@@ -66,25 +67,7 @@ export default async function AdminDashboardPage({
     recent_24h: recent24h ?? 0,
   };
 
-  const queue: IncidentListItem[] = ((pendingData as Array<Record<string, unknown>>) ?? []).map(
-    (r) => ({
-      id: r["id"] as string,
-      title_masked: (r["title_masked"] as string) ?? "",
-      description_masked: (r["description_masked"] as string) ?? "",
-      severity: r["severity"] as IncidentListItem["severity"],
-      status: r["status"] as IncidentListItem["status"],
-      category: r["category"] as IncidentListItem["category"],
-      is_anonymous: (r["is_anonymous"] as boolean) ?? false,
-      incident_date: (r["incident_date"] as string) ?? (r["created_at"] as string),
-      created_at: (r["created_at"] as string) ?? "",
-      view_count: (r["views_count"] as number) ?? 0,
-      vote_count: 0,
-      evidence_count: 0,
-      author_name: null,
-      provider_name: "—",
-      provider_slug: "",
-    })
-  );
+  const queue: IncidentListItem[] = toIncidentListItems(pendingData);
 
   return (
     <Container className="py-10">

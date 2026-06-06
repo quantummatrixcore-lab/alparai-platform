@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import "../../helpers/setup";
+import "../helpers/setup";
 
 vi.mock("resend", () => ({
   Resend: vi.fn().mockImplementation(() => ({

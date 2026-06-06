@@ -52,9 +52,13 @@ export function createMockSupabaseClient() {
     eq: mockDeleteEq,
   });
 
-  const mockUpsert = vi
-    .fn()
-    .mockResolvedValue({ data: null, error: null });
+  const mockUpsert = vi.fn().mockReturnValue({
+    select: vi.fn().mockReturnValue({
+      single: vi
+        .fn()
+        .mockResolvedValue({ data: null, error: null }),
+    }),
+  });
 
   return {
     from: vi.fn().mockReturnValue({

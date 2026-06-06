@@ -6,6 +6,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { requireModerator } from "@/lib/auth/session";
 import { withAutopilot, moderateIncidentPolicy, reviewTakedownPolicy, attemptsOf, durationOf } from "@/lib/autopilot";
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
+import { requireAdmin } from "@/lib/auth/session";
 
 export interface ModerationResult {
   ok: boolean;
@@ -167,13 +168,13 @@ export async function reviewTakedown(
 
 const userRoleSchema = z.object({
   userId: z.string().min(1),
-  role: z.enum(["user", "moderator", "admin"]),
+  role: z.enum(["user", "moderator"]),
 });
 
 export async function setUserRole(
   input: z.infer<typeof userRoleSchema>
 ): Promise<{ ok: boolean; error?: string }> {
-  const admin = await requireModerator();
+  const admin = await requireAdmin();
   if (!admin) return { ok: false, error: "Forbidden" };
   const parsed = userRoleSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: "Invalid input" };

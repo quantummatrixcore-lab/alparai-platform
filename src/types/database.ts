@@ -138,6 +138,8 @@ export interface Database {
           source_url: string | null;
           ip_hash: string | null;
           user_agent: string | null;
+          contains_pii: boolean;
+          pii_categories: string[];
           created_at: string;
           updated_at: string;
         };
@@ -211,6 +213,20 @@ export interface Database {
           created_at: string;
           updated_at: string;
         };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          title: string;
+          description: string;
+          category: string;
+          status?: SuggestionStatus;
+          upvotes_count?: number;
+          comments_count?: number;
+          is_anonymous?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["suggestions"]["Insert"]>;
       };
       suggestion_votes: {
         Row: {
@@ -218,6 +234,12 @@ export interface Database {
           suggestion_id: string;
           created_at: string;
         };
+        Insert: {
+          user_id: string;
+          suggestion_id: string;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["suggestion_votes"]["Insert"]>;
       };
       consent_log: {
         Row: {
@@ -232,6 +254,19 @@ export interface Database {
           related_entity_id: string | null;
           created_at: string;
         };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          consent_type: string;
+          consent_text_snapshot: string;
+          granted: boolean;
+          ip_hash?: string | null;
+          user_agent?: string | null;
+          related_entity_type?: string | null;
+          related_entity_id?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["consent_log"]["Insert"]>;
       };
       takedown_requests: {
         Row: {
@@ -250,6 +285,45 @@ export interface Database {
           sla_due_at: string;
           created_at: string;
         };
+        Insert: {
+          id?: string;
+          incident_id?: string | null;
+          requester_name: string;
+          requester_email: string;
+          requester_organization?: string | null;
+          reason: string;
+          legal_basis?: string | null;
+          evidence_url?: string | null;
+          status?: TakedownStatus;
+          assigned_moderator_id?: string | null;
+          resolution_notes?: string | null;
+          resolved_at?: string | null;
+          sla_due_at?: string;
+          ip_hash?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["takedown_requests"]["Insert"]>;
+      };
+      incident_votes: {
+        Row: {
+          id: string;
+          incident_id: string;
+          user_id: string;
+          value: number;
+          ip_hash: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          incident_id: string;
+          user_id: string;
+          value: number;
+          ip_hash?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["incident_votes"]["Insert"]>;
       };
       audit_log: {
         Row: {
@@ -263,6 +337,18 @@ export interface Database {
           ip_hash: string | null;
           created_at: string;
         };
+        Insert: {
+          id?: string;
+          actor_id?: string | null;
+          action: string;
+          entity_type: string;
+          entity_id: string;
+          before_data?: Json | null;
+          after_data?: Json | null;
+          ip_hash?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["audit_log"]["Insert"]>;
       };
     };
     Views: Record<string, never>;

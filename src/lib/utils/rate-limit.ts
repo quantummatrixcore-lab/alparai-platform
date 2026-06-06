@@ -5,7 +5,12 @@ import { Redis } from "@upstash/redis";
 export const RATE_LIMIT_KEYS = {
   incident_submission: "ratelimit:incident_submission",
   suggestion_submission: "ratelimit:suggestion_submission",
+  contact_submission: "ratelimit:contact_submission",
+  takedown_submission: "ratelimit:takedown_submission",
   auth_signin: "ratelimit:auth_signin",
+  auth_magiclink: "ratelimit:auth_magiclink",
+  search_query: "ratelimit:search_query",
+  export_request: "ratelimit:export_request",
   api_general: "ratelimit:api_general",
 } as const;
 
@@ -36,9 +41,39 @@ function getLimiters(): Record<string, Ratelimit> {
       analytics: true,
       prefix: "alpar",
     }),
+    [RATE_LIMIT_KEYS.contact_submission]: new Ratelimit({
+      redis: _redis,
+      limiter: Ratelimit.slidingWindow(5, "1 h"),
+      analytics: true,
+      prefix: "alpar",
+    }),
+    [RATE_LIMIT_KEYS.takedown_submission]: new Ratelimit({
+      redis: _redis,
+      limiter: Ratelimit.slidingWindow(3, "1 d"),
+      analytics: true,
+      prefix: "alpar",
+    }),
     [RATE_LIMIT_KEYS.auth_signin]: new Ratelimit({
       redis: _redis,
       limiter: Ratelimit.slidingWindow(10, "15 m"),
+      analytics: true,
+      prefix: "alpar",
+    }),
+    [RATE_LIMIT_KEYS.auth_magiclink]: new Ratelimit({
+      redis: _redis,
+      limiter: Ratelimit.slidingWindow(5, "15 m"),
+      analytics: true,
+      prefix: "alpar",
+    }),
+    [RATE_LIMIT_KEYS.search_query]: new Ratelimit({
+      redis: _redis,
+      limiter: Ratelimit.slidingWindow(30, "1 m"),
+      analytics: true,
+      prefix: "alpar",
+    }),
+    [RATE_LIMIT_KEYS.export_request]: new Ratelimit({
+      redis: _redis,
+      limiter: Ratelimit.slidingWindow(5, "1 h"),
       analytics: true,
       prefix: "alpar",
     }),
@@ -56,7 +91,8 @@ export async function checkRateLimit(
   key: string
 ): Promise<{ ok: boolean; retryAfter?: number; remaining?: number }> {
   const limiters = getLimiters();
-  const baseKey = key.split(":")[0] ?? key;
+  const parts = key.split(":");
+  const baseKey = parts.length >= 2 ? `${parts[0]}:${parts[1]}` : key;
   const limiter = limiters[baseKey];
   if (!limiter) {
     return { ok: true };

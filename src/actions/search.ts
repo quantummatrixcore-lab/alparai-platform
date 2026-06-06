@@ -1,6 +1,8 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
+import { headers } from "next/headers";
 import type { Database } from "@/types/database";
 
 type IncidentRow = Database["public"]["Tables"]["incidents"]["Row"];
@@ -20,6 +22,12 @@ export async function searchIncidents(
 ): Promise<{ ok: boolean; results: SearchResult[]; error?: string }> {
   if (!query || query.trim().length < 2) {
     return { ok: true, results: [] };
+  }
+  const hdrs = await headers();
+  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "anon";
+  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.search_query}:${ip}`);
+  if (!rl.ok) {
+    return { ok: false, results: [], error: `Too many searches. Try again in ${rl.retryAfter}s.` };
   }
   const supabase = await createClient();
   const sanitized = query.trim().replace(/[^\w\s-]/g, "").slice(0, 100);

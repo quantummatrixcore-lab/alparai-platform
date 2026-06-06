@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { IncidentList } from "@/components/incidents/incident-list";
 import { Building2, Globe, Mail, ExternalLink } from "lucide-react";
 import type { IncidentListItem } from "@/types";
+import { toIncidentListItems } from "@/lib/mappers";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { slug } = await params;
@@ -53,25 +54,11 @@ export default async function BrandPage({
   const providerLogo = providerRow["logo_url"] as string | null;
   const isVerified = (providerRow["is_verified"] as boolean) ?? false;
 
-  const incidents: IncidentListItem[] = ((incidentsRes.data as Array<Record<string, unknown>>) ?? []).map(
-    (r) => ({
-      id: r["id"] as string,
-      title_masked: (r["title_masked"] as string) ?? "",
-      description_masked: (r["description_masked"] as string) ?? "",
-      severity: r["severity"] as IncidentListItem["severity"],
-      status: r["status"] as IncidentListItem["status"],
-      category: r["category"] as IncidentListItem["category"],
-      is_anonymous: (r["is_anonymous"] as boolean) ?? false,
-      incident_date: (r["incident_date"] as string) ?? (r["created_at"] as string),
-      created_at: (r["created_at"] as string) ?? "",
-      view_count: (r["views_count"] as number) ?? 0,
-      vote_count: 0,
-      evidence_count: 0,
-      author_name: null,
-      provider_name: providerName,
-      provider_slug: providerSlug,
-    })
-  );
+  const incidents: IncidentListItem[] = toIncidentListItems(incidentsRes.data).map((item) => ({
+    ...item,
+    provider_name: providerName,
+    provider_slug: providerSlug,
+  }));
 
   return (
     <Container className="py-10">

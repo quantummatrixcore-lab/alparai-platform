@@ -40,6 +40,12 @@ export async function signInWithGoogle(next = "/profile"): Promise<AuthResult> {
 }
 
 export async function signInWithMagicLink(email: string): Promise<AuthResult> {
+  const hdrs = await headers();
+  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.auth_magiclink}:${ip}`);
+  if (!rl.ok) {
+    return { ok: false, error: `Too many attempts. Try again in ${rl.retryAfter}s.` };
+  }
   const supabase = await createServerClient();
   const { error } = await supabase.auth.signInWithOtp({
     email,

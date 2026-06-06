@@ -10,20 +10,18 @@ import { Modal } from "@/components/ui/modal";
 import { useTranslations } from "next-intl";
 import { submitTakedown } from "@/actions/takedown";
 import { toast } from "sonner";
+import { TAKEDOWN_REASON_OPTIONS } from "@/lib/constants/takedown-reasons";
 
-const REASONS = [
-  { value: "defamation", label: "Defamation / libel" },
-  { value: "copyright", label: "Copyright violation" },
-  { value: "privacy", label: "Personal data exposure" },
-  { value: "factual_error", label: "Factual inaccuracy" },
-  { value: "legal_court_order", label: "Court order" },
-  { value: "other", label: "Other (explain in details)" },
-];
+const REASONS = TAKEDOWN_REASON_OPTIONS.map((opt) => ({
+  value: opt.value,
+  label: opt.translationKey,
+}));
 
 export function TakedownButton({ incidentId }: { incidentId: string }) {
   const [open, setOpen] = useState(false);
   const [pending, start] = useTransition();
   const t = useTranslations("incident");
+  const tr = useTranslations("takedown.reasons");
   return (
     <>
       <Button
@@ -62,7 +60,7 @@ export function TakedownButton({ incidentId }: { incidentId: string }) {
             label="Reason"
             required
             placeholder="Select a reason"
-            options={REASONS}
+            options={REASONS.map((r) => ({ value: r.value, label: tr(r.value as never) }))}
           />
           <Textarea
             name="details"
