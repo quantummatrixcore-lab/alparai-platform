@@ -1,0 +1,153 @@
+/**
+ * Validation schemas (Zod) for forms and server actions.
+ */
+
+import { z } from "zod";
+import {
+  INCIDENT_CATEGORIES,
+  SEVERITY_LEVELS,
+  SUGGESTION_CATEGORIES,
+} from "@/lib/constants";
+
+const categoryValues = INCIDENT_CATEGORIES.map((c) => c.value) as [
+  (typeof INCIDENT_CATEGORIES)[number]["value"],
+  ...(typeof INCIDENT_CATEGORIES)[number]["value"][],
+];
+const severityValues = SEVERITY_LEVELS.map((s) => s.value) as [
+  (typeof SEVERITY_LEVELS)[number]["value"],
+  ...(typeof SEVERITY_LEVELS)[number]["value"][],
+];
+const suggestionCategoryValues = SUGGESTION_CATEGORIES.map((c) => c.value) as [
+  (typeof SUGGESTION_CATEGORIES)[number]["value"],
+  ...(typeof SUGGESTION_CATEGORIES)[number]["value"][],
+];
+
+// =============================================================================
+// Incident
+// =============================================================================
+export const incidentSubmissionSchema = z.object({
+  title: z
+    .string()
+    .min(8, "Title must be at least 8 characters")
+    .max(200, "Title must be at most 200 characters"),
+  description: z
+    .string()
+    .min(20, "Description must be at least 20 characters")
+    .max(10000, "Description must be at most 10,000 characters"),
+  category: z.enum(categoryValues),
+  severity: z.enum(severityValues),
+  aiProviderId: z.string().uuid().optional().nullable(),
+  aiModelId: z.string().uuid().optional().nullable(),
+  incidentDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be YYYY-MM-DD")
+    .optional()
+    .nullable(),
+  locationCountry: z
+    .string()
+    .length(2, "Country must be ISO 3166-1 alpha-2")
+    .optional()
+    .nullable(),
+  language: z.string().min(2).max(5).default("en"),
+  isAnonymous: z.boolean().default(true),
+  sourceUrl: z.string().url().optional().nullable(),
+  evidence: z
+    .array(
+      z.object({
+        filePath: z.string().min(1),
+        fileName: z.string().min(1),
+        fileSizeBytes: z.number().int().nonnegative(),
+        mimeType: z.string().min(1),
+        sha256Hash: z.string().length(64).optional(),
+        widthPx: z.number().int().positive().optional(),
+        heightPx: z.number().int().positive().optional(),
+        kind: z.enum(["screenshot", "video", "document", "url", "transcript", "other"]),
+        containsPii: z.boolean().default(false),
+        piiCategories: z.array(z.string()).optional(),
+      })
+    )
+    .max(10, "Maximum 10 evidence files")
+    .optional(),
+  consent: z.object({
+    truthfulness: z.literal(true, {
+      errorMap: () => ({ message: "You must confirm the truthfulness of your submission" }),
+    }),
+    anonymousPublication: z.literal(true, {
+      errorMap: () => ({ message: "You must accept anonymous publication" }),
+    }),
+    age18Plus: z.literal(true, {
+      errorMap: () => ({ message: "You must be 18 or older to submit" }),
+    }),
+    termsOfService: z.literal(true, {
+      errorMap: () => ({ message: "You must accept the Terms of Service" }),
+    }),
+  }),
+});
+
+export type IncidentSubmissionInput = z.infer<typeof incidentSubmissionSchema>;
+
+// =============================================================================
+// Suggestion
+// =============================================================================
+export const suggestionSubmissionSchema = z.object({
+  title: z
+    .string()
+    .min(8, "Title must be at least 8 characters")
+    .max(200, "Title must be at most 200 characters"),
+  description: z
+    .string()
+    .min(20, "Description must be at least 20 characters")
+    .max(5000, "Description must be at most 5,000 characters"),
+  category: z.enum(suggestionCategoryValues).default("feature"),
+  isAnonymous: z.boolean().default(false),
+});
+
+export type SuggestionSubmissionInput = z.infer<typeof suggestionSubmissionSchema>;
+
+// =============================================================================
+// Takedown request
+// =============================================================================
+export const takedownRequestSchema = z.object({
+  incidentId: z.string().uuid(),
+  requesterName: z.string().min(2).max(100),
+  requesterEmail: z.string().email(),
+  requesterOrganization: z.string().max(200).optional().nullable(),
+  reason: z
+    .string()
+    .min(30, "Please provide at least 30 characters explaining the issue")
+    .max(5000),
+  legalBasis: z
+    .enum(["copyright", "defamation", "gdpr_right_to_erasure", "court_order", "other"])
+    .optional()
+    .nullable(),
+  evidenceUrl: z.string().url().optional().nullable(),
+});
+
+export type TakedownRequestInput = z.infer<typeof takedownRequestSchema>;
+
+// =============================================================================
+// AI Provider response
+// =============================================================================
+export const aiProviderResponseSchema = z.object({
+  incidentId: z.string().uuid(),
+  responseText: z.string().min(30).max(10000),
+  responderName: z.string().min(2).max(100),
+  responderRole: z.string().max(100).optional().nullable(),
+  responderEmail: z.string().email(),
+  isOfficial: z.boolean().default(false),
+});
+
+export type AiProviderResponseInput = z.infer<typeof aiProviderResponseSchema>;
+
+// =============================================================================
+// Contact form
+// =============================================================================
+export const contactFormSchema = z.object({
+  name: z.string().min(2).max(100),
+  email: z.string().email(),
+  subject: z.string().min(5).max(200),
+  message: z.string().min(20).max(5000),
+  category: z.enum(["general", "press", "partnership", "security", "legal"]),
+});
+
+export type ContactFormInput = z.infer<typeof contactFormSchema>;

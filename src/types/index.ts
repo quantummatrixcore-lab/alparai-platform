@@ -1,0 +1,149 @@
+/**
+ * Common application types.
+ */
+
+import type {
+  IncidentCategory,
+  IncidentSeverity,
+  IncidentStatus,
+  UserRole,
+  SuggestionStatus,
+  Database,
+} from "@/types/database";
+
+export type { IncidentCategory, IncidentSeverity, IncidentStatus, UserRole, SuggestionStatus };
+
+export type AIProvider = Database["public"]["Tables"]["ai_providers"]["Row"];
+export type AIModel = Database["public"]["Tables"]["ai_models"]["Row"];
+
+
+export interface SessionUser {
+  id: string;
+  email: string;
+  fullName: string | null;
+  avatarUrl: string | null;
+  role: UserRole;
+  isVerified: boolean;
+  createdAt: string;
+}
+
+export interface IncidentListItem {
+  id: string;
+  title_masked: string;
+  description_masked: string;
+  severity: IncidentSeverity;
+  status: IncidentStatus;
+  category: IncidentCategory;
+  is_anonymous: boolean;
+  incident_date: string;
+  created_at: string;
+  view_count: number;
+  vote_count: number;
+  evidence_count: number;
+  author_name: string | null;
+  provider_name: string;
+  provider_slug: string;
+}
+
+export interface IncidentDetail {
+  id: string;
+  title_masked: string;
+  description_masked: string;
+  severity: IncidentSeverity;
+  status: IncidentStatus;
+  category: IncidentCategory;
+  is_anonymous: boolean;
+  incident_date: string;
+  created_at: string;
+  view_count: number;
+  upvotes: number;
+  downvotes: number;
+  author_name: string | null;
+  provider_name: string;
+  provider_slug: string;
+  model_name: string | null;
+  language: string;
+}
+
+export interface EvidenceItem {
+  id: string;
+  file_name: string;
+  file_url: string;
+  file_type: string;
+}
+
+export interface ProviderResponse {
+  id: string;
+  response: string;
+  verified: boolean;
+  created_at: string;
+  provider_name: string;
+}
+
+export interface SuggestionListItem {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  status: string;
+  upvote_count: number;
+  comment_count: number;
+  created_at: string;
+  author_name: string | null;
+}
+
+export interface SuggestionItem {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  status: SuggestionStatus;
+  upvote_count: number;
+  comment_count: number;
+  is_anonymous: boolean;
+  created_at: string;
+  author: {
+    id: string | null;
+    username: string | null;
+    fullName: string | null;
+    avatarUrl: string | null;
+  } | null;
+  hasVoted?: boolean;
+}
+
+export interface LeaderboardEntry {
+  provider_id: string;
+  provider_name: string;
+  provider_slug: string;
+  incident_count: number;
+  resolved_count: number;
+  avg_severity: number;
+  trend: number;
+}
+
+export interface TakedownRequestItem {
+  id: string;
+  incidentId: string | null;
+  requesterName: string;
+  requesterEmail: string;
+  requesterOrganization: string | null;
+  reason: string;
+  legalBasis: string | null;
+  evidenceUrl: string | null;
+  status: "received" | "under_review" | "approved" | "rejected" | "escalated";
+  assignedModeratorId: string | null;
+  resolutionNotes: string | null;
+  slaDueAt: string;
+  createdAt: string;
+}
+
+export interface AdminStats {
+  total: number;
+  pending: number;
+  published: number;
+  taken_down: number;
+  users: number;
+  providers: number;
+  takedown_requests: number;
+  recent_24h: number;
+}

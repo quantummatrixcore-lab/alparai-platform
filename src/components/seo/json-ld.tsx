@@ -1,0 +1,68 @@
+import { APP_NAME, APP_DESCRIPTION, APP_URL, GITHUB_URL, TWITTER_URL, LINKEDIN_URL } from "@/lib/constants";
+
+export function OrganizationJsonLd() {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: APP_NAME,
+    url: APP_URL,
+    logo: `${APP_URL}/icons/android-chrome-512x512.png`,
+    description: APP_DESCRIPTION,
+    sameAs: [GITHUB_URL, TWITTER_URL, LINKEDIN_URL],
+    contactPoint: {
+      "@type": "ContactPoint",
+      email: "hello@alparai.online",
+      contactType: "customer support",
+      availableLanguage: ["English", "Turkish"],
+    },
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+export function WebSiteJsonLd() {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: APP_NAME,
+    url: APP_URL,
+    description: APP_DESCRIPTION,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${APP_URL}/en/incidents?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+export function BreadcrumbJsonLd({ items }: { items: Array<{ name: string; url: string }> }) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}

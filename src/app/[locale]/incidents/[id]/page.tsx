@@ -1,0 +1,120 @@
+import { setRequestLocale, getTranslations } from "next-intl/server";
+import { notFound } from "next/navigation";
+import { createServerClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { getCurrentUser } from "@/lib/auth/session";
+import { Container } from "@/components/ui/layout";
+import { IncidentDetailView } from "@/components/incidents/incident-detail";
+import type { IncidentDetail, ProviderResponse, EvidenceItem } from "@/types";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; id: string }> }) {
+  const { id } = await params;
+  const supabase = await createServerClient();
+  const { data } = await supabase
+    .from("incidents")
+    .select("title_masked")
+    .eq("id", id)
+    .maybeSingle();
+  return { title: ((data as Record<string, unknown> | null)?.title_masked as string) ?? "Incident" };
+}
+
+export default async function IncidentDetailPage({
+  params,
+}: {
+  params: Promise<{ locale: string; id: string }>;
+}) {
+  const { locale, id } = await params;
+  setRequestLocale(locale);
+  const supabase = await createServerClient();
+  const admin = createAdminClient();
+
+  const { data: incidentRow } = await supabase
+    .from("incidents")
+    .select("*")
+    .eq("id", id)
+    .eq("status", "published")
+    .maybeSingle();
+  if (!incidentRow) notFound();
+
+  const [providerRes, modelRes, evidenceRes, responseRes, user] = await Promise.all([
+    supabase.from("ai_providers").select("name, slug").eq("id", (incidentRow as Record<string, unknown>)["ai_provider_id"] as string).maybeSingle(),
+    supabase.from("ai_models").select("name, version").eq("id", (incidentRow as Record<string, unknown>)["ai_model_id"] as string).maybeSingle(),
+    supabase.from("evidence").select("id, file_name, file_path, mime_type").eq("incident_id", id),
+    supabase.from("ai_provider_responses").select("id, response_text, is_official, is_published, created_at, ai_provider_id").eq("incident_id", id).eq("is_published", true).maybeSingle(),
+    getCurrentUser(),
+  ]);
+
+  const providerData = providerRes.data as { name: string; slug: string } | null;
+  const modelData = modelRes.data as { name: string; version: string | null } | null;
+  const responseRow = responseRes.data as { id: string; response_text: string; is_official: boolean; created_at: string; ai_provider_id: string } | null;
+  let providerResponse: ProviderResponse | null = null;
+  if (responseRow && providerData) {
+    providerResponse = {
+      id: responseRow.id,
+      response: responseRow.response_text,
+      verified: responseRow.is_official,
+      created_at: responseRow.created_at,
+      provider_name: providerData.name,
+    };
+  }
+
+  const evidence: EvidenceItem[] = ((evidenceRes.data as Array<Record<string, unknown>>) ?? []).map(
+    (e) => ({
+      id: e["id"] as string,
+      file_name: e["file_name"] as string,
+      file_url: e["file_path"] as string,
+      file_type: (e["mime_type"] as string) ?? "application/octet-stream",
+    })
+  );
+
+  const r = incidentRow as Record<string, unknown>;
+  const incident: IncidentDetail = {
+    id: r["id"] as string,
+    title_masked: (r["title_masked"] as string) ?? (r["title"] as string) ?? "",
+    description_masked: (r["description_masked"] as string) ?? (r["description"] as string) ?? "",
+    severity: r["severity"] as IncidentDetail["severity"],
+    status: r["status"] as IncidentDetail["status"],
+    category: r["category"] as IncidentDetail["category"],
+    is_anonymous: (r["is_anonymous"] as boolean) ?? false,
+    incident_date: (r["incident_date"] as string) ?? (r["created_at"] as string),
+    created_at: (r["created_at"] as string) ?? "",
+    view_count: (r["views_count"] as number) ?? 0,
+    upvotes: (r["upvotes_count"] as number) ?? 0,
+    downvotes: 0,
+    author_name: null,
+    provider_name: providerData?.name ?? "Unknown",
+    provider_slug: providerData?.slug ?? "",
+    model_name: modelData?.name ?? null,
+    language: (r["language"] as string) ?? "en",
+  };
+
+  let userVote: -1 | 0 | 1 = 0;
+  if (user) {
+    const { data: vote } = await supabase
+      .from("incident_votes")
+      .select("value")
+      .eq("incident_id", id)
+      .eq("user_id", user.id)
+      .maybeSingle();
+    if (vote) userVote = (vote as { value: -1 | 0 | 1 }).value;
+  }
+
+  // Fire-and-forget view increment
+  void admin
+    .from("incidents")
+    .update({ views_count: ((r["views_count"] as number) ?? 0) + 1 } as never)
+    .eq("id", id)
+    .then(() => null);
+
+  return (
+    <Container className="py-10">
+      <IncidentDetailView
+        incident={incident}
+        evidence={evidence}
+        providerResponse={providerResponse}
+        userVote={userVote}
+        isAuthenticated={!!user}
+      />
+    </Container>
+  );
+}
