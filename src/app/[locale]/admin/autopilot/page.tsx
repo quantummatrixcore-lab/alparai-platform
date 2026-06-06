@@ -1,0 +1,254 @@
+import { setRequestLocale, getTranslations } from "next-intl/server";
+import { redirect } from "next/navigation";
+import { Container } from "@/components/ui/layout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "@/i18n/routing";
+import { getCurrentUser } from "@/lib/auth/session";
+import {
+  getAdminAutopilotSnapshot,
+} from "@/actions/admin-autopilot";
+import { Activity, ShieldCheck, Workflow } from "lucide-react";
+import { WorkerTickButton } from "@/components/admin/autopilot-tick-button";
+
+export async function generateMetadata() {
+  return { title: "Autopilot" };
+}
+
+const formatMs = (ms: number) => `${ms.toFixed(0)} ms`;
+
+const formatTime = (iso: string) => {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "—";
+  return d.toISOString().slice(0, 19).replace("T", " ");
+};
+
+export default async function AdminAutopilotPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const user = await getCurrentUser();
+  if (!user) redirect(`/${locale}/auth/signin?next=/${locale}/admin/autopilot`);
+  if (user.role !== "admin") redirect(`/${locale}`);
+
+  const t = await getTranslations({ locale, namespace: "autopilot" });
+  const result = await getAdminAutopilotSnapshot(100);
+  if (!result.ok || !result.snapshot) {
+    return (
+      <Container className="py-10">
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("admin_title")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-fg-muted">{result.error ?? "Unknown error"}</p>
+          </CardContent>
+        </Card>
+      </Container>
+    );
+  }
+  const { runs, stats, breakers, policies, queue } = result.snapshot;
+
+  return (
+    <Container className="py-10">
+      <header className="mb-6 flex items-center justify-between">
+        <h1 className="inline-flex items-center gap-2 text-2xl font-bold text-fg-primary">
+          <Activity className="h-6 w-6 text-brand-400" />
+          {t("admin_title")}
+        </h1>
+        <nav className="flex flex-wrap items-center gap-2 text-sm">
+          <Link href={`/${locale}/admin` as never} className="text-fg-muted hover:text-brand-400">
+            <ShieldCheck className="mr-1 inline h-4 w-4" />
+            Dashboard
+          </Link>
+          <span className="text-fg-muted">·</span>
+          <Link
+            href={`/${locale}/admin/moderation` as never}
+            className="text-fg-muted hover:text-brand-400"
+          >
+            Moderation
+          </Link>
+        </nav>
+      </header>
+      <p className="mb-6 text-fg-muted">{t("admin_subtitle")}</p>
+
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-7">
+        <Stat label={t("stats_total")} value={stats.total} />
+        <Stat label={t("stats_succeeded")} value={stats.succeeded} accent="ok" />
+        <Stat label={t("stats_failed")} value={stats.failed} accent="danger" />
+        <Stat label={t("stats_replayed")} value={stats.replayed} />
+        <Stat label={t("stats_retried")} value={stats.retried} accent="warn" />
+        <Stat label={t("stats_p50")} value={formatMs(stats.p50DurationMs)} />
+        <Stat label={t("stats_p95")} value={formatMs(stats.p95DurationMs)} />
+      </div>
+
+      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="inline-flex items-center gap-2">
+              <Workflow className="h-5 w-5 text-brand-400" />
+              {t("section_breakers")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="divide-y divide-border-subtle">
+              {Object.entries(breakers).map(([name, snap]) => (
+                <li key={name} className="flex items-center justify-between py-2 text-sm">
+                  <span className="font-mono text-fg-secondary">{name}</span>
+                  <span className="inline-flex items-center gap-3">
+                    <BreakerPill state={snap?.state ?? "closed"} />
+                    <span className="text-fg-muted">
+                      {t("breaker_failures")}: {snap?.failures ?? 0}
+                    </span>
+                    {snap?.openedAt ? (
+                      <span className="text-fg-muted">
+                        {t("breaker_cooldown")}: {formatTime(new Date(snap.openedAt).toISOString())}
+                      </span>
+                    ) : null}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("section_policies")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <table className="w-full text-left text-sm">
+              <thead className="text-fg-muted">
+                <tr>
+                  <th className="py-2 font-medium">{t("policy_action")}</th>
+                  <th className="py-2 font-medium">{t("policy_on_exhaust")}</th>
+                  <th className="py-2 font-medium">{t("policy_attempts")}</th>
+                  <th className="py-2 font-medium">{t("policy_budget")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {policies.map((p) => (
+                  <tr key={p.action} className="border-t border-border-subtle">
+                    <td className="py-2 font-mono text-fg-secondary">{p.action}</td>
+                    <td className="py-2">{p.onExhaust}</td>
+                    <td className="py-2">{p.attempts}</td>
+                    <td className="py-2">
+                      {p.budgetMs} ms · {p.budgetTokens} tok
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle>{t("section_queue")}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between gap-4">
+            <p className="text-sm text-fg-secondary">
+              {queue.available ? t("queue_available") : t("queue_unavailable")} · {t("queue_size")}:{" "}
+              {queue.size}
+            </p>
+            <WorkerTickButton />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle>{t("section_runs")}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {runs.length === 0 ? (
+            <p className="text-sm text-fg-muted">{t("empty_runs")}</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="text-fg-muted">
+                  <tr>
+                    <th className="py-2 font-medium">{t("run_id")}</th>
+                    <th className="py-2 font-medium">{t("run_action")}</th>
+                    <th className="py-2 font-medium">{t("run_status")}</th>
+                    <th className="py-2 font-medium">{t("run_attempts")}</th>
+                    <th className="py-2 font-medium">{t("run_duration")}</th>
+                    <th className="py-2 font-medium">{t("run_updated")}</th>
+                    <th className="py-2 font-medium">{t("run_error")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {runs.map((r) => (
+                    <tr key={r.id} className="border-t border-border-subtle">
+                      <td className="py-2 font-mono text-xs text-fg-muted">
+                        {r.idempotency_key.slice(0, 14)}…
+                      </td>
+                      <td className="py-2 font-mono text-fg-secondary">{r.action}</td>
+                      <td className="py-2">
+                        <RunStatusPill status={r.status} />
+                      </td>
+                      <td className="py-2">{r.attempts}</td>
+                      <td className="py-2">{formatMs(r.duration_ms)}</td>
+                      <td className="py-2 text-fg-muted">{formatTime(r.updated_at)}</td>
+                      <td className="py-2 max-w-[24ch] truncate text-fg-muted" title={r.last_error ?? ""}>
+                        {r.last_error ?? "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </Container>
+  );
+}
+
+function Stat({ label, value, accent }: { label: string; value: number | string; accent?: "ok" | "warn" | "danger" }) {
+  const colour =
+    accent === "ok"
+      ? "text-success-400"
+      : accent === "warn"
+        ? "text-warning-500"
+        : accent === "danger"
+          ? "text-danger-400"
+          : "text-fg-primary";
+  return (
+    <Card>
+      <CardContent className="p-4">
+        <p className="text-xs text-fg-muted">{label}</p>
+        <p className={`mt-1 text-2xl font-bold ${colour}`}>{value}</p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function BreakerPill({ state }: { state: "closed" | "open" | "half_open" }) {
+  const colour =
+    state === "closed"
+      ? "bg-success-500/10 text-success-300"
+      : state === "half_open"
+        ? "bg-warning-500/10 text-warning-500"
+        : "bg-danger-500/10 text-danger-400";
+  return <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${colour}`}>{state}</span>;
+}
+
+function RunStatusPill({ status }: { status: string }) {
+  const colour =
+    status === "ok"
+      ? "bg-success-500/10 text-success-300"
+      : status === "replayed"
+        ? "bg-brand-500/10 text-brand-300"
+        : status === "circuit_open" || status === "exhausted"
+          ? "bg-danger-500/10 text-danger-400"
+          : status === "budget_exceeded"
+            ? "bg-warning-500/10 text-warning-500"
+            : "bg-fg-muted/10 text-fg-secondary";
+  return <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${colour}`}>{status}</span>;
+}

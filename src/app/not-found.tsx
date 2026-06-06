@@ -1,19 +1,28 @@
-import Link from 'next/link'
+import Link from "next/link";
+import { Container } from "@/components/ui/layout";
+import { Button } from "@/components/ui/button";
+import { Home, ArrowLeft } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-[#030712] flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-6xl font-bold text-[#EF4444] mb-4">404</h1>
-        <h2 className="text-2xl font-bold text-white mb-2">Sayfa Bulunamadı</h2>
-        <p className="text-gray-400 mb-6">Aradığınız sayfa mevcut değil.</p>
-        <Link 
-          href="/"
-          className="px-6 py-3 bg-[#10B981] text-black font-bold rounded hover:shadow-[0_0_20px_#10B981] transition"
-        >
-          Ana Sayfaya Dön
+    <Container size="narrow" className="py-24 text-center">
+      <p className="text-7xl font-bold bg-gradient-to-r from-brand-300 to-brand-500 bg-clip-text text-transparent">
+        404
+      </p>
+      <h1 className="mt-4 text-2xl font-semibold text-fg-primary">Page not found</h1>
+      <p className="mt-2 text-sm text-fg-muted">
+        The page you're looking for doesn't exist or has been moved.
+      </p>
+      <div className="mt-8 flex justify-center gap-3">
+        <Link href="/">
+          <Button leftIcon={<Home className="h-4 w-4" />}>Home</Button>
+        </Link>
+        <Link href="/incidents">
+          <Button variant="outline" leftIcon={<ArrowLeft className="h-4 w-4" />}>
+            Browse incidents
+          </Button>
         </Link>
       </div>
-    </div>
-  )
+    </Container>
+  );
 }

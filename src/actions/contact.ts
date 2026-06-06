@@ -1,0 +1,120 @@
+"use server";
+
+import { contactFormSchema } from "@/lib/validation/schemas";
+import { APP_EMAIL } from "@/lib/constants";
+import { Resend } from "resend";
+import { headers } from "next/headers";
+import { withAutopilot, submitContactPolicy, attemptsOf, durationOf } from "@/lib/autopilot";
+import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
+import { createHash } from "node:crypto";
+
+export interface ContactState {
+  ok: boolean;
+  error?: string;
+  formError?: string;
+  fieldErrors?: Record<string, string[]>;
+  autopilot?: { attempts: number; durationMs: number; kind: string };
+}
+
+const hashIp = (ip: string, salt: string): string =>
+  createHash("sha256")
+    .update(`${salt}:${ip}`)
+    .digest("hex");
+
+interface ContactWorkInput {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  category: string;
+  ip: string;
+  userAgent: string;
+}
+
+const runContactWork = async (
+  _ctx: AttemptContext,
+  data: ContactWorkInput
+): Promise<AttemptOutcome<{ sent: boolean; channel: "email" | "log" }>> => {
+  if (!process.env.RESEND_API_KEY) {
+    return { kind: "success", value: { sent: true, channel: "log" } };
+  }
+  try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from: "ALPAR AI Contact <contact@alparai.online>",
+      to: APP_EMAIL,
+      replyTo: data.email,
+      subject: `[${data.category}] ${data.subject}`,
+      text: `From: ${data.name} <${data.email}>\n\n${data.message}\n\n--\nIP: ${data.ip}\nUA: ${data.userAgent}`,
+    });
+    return { kind: "success", value: { sent: true, channel: "email" } };
+  } catch (e) {
+    return {
+      kind: "retryable",
+      error: e instanceof Error ? e.message : "resend_failed",
+    };
+  }
+};
+
+export async function submitContact(
+  _prev: ContactState,
+  formData: FormData
+): Promise<ContactState> {
+  const raw = {
+    name: String(formData.get("name") ?? ""),
+    email: String(formData.get("email") ?? ""),
+    subject: String(formData.get("subject") ?? ""),
+    message: String(formData.get("message") ?? ""),
+    category: String(formData.get("category") ?? "general"),
+  };
+  const parsed = contactFormSchema.safeParse(raw);
+  if (!parsed.success) {
+    return {
+      ok: false,
+      fieldErrors: parsed.error.flatten().fieldErrors,
+    };
+  }
+  const hdrs = await headers();
+  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const userAgent = hdrs.get("user-agent") ?? "unknown";
+  const clientIdempotencyKey = hdrs.get("x-idempotency-key");
+
+  const result = await withAutopilot<{ sent: boolean; channel: "email" | "log" }>(
+    submitContactPolicy,
+    [parsed.data.email, parsed.data.subject, parsed.data.message, parsed.data.category],
+    (ctx) =>
+      runContactWork(ctx, {
+        name: parsed.data.name,
+        email: parsed.data.email,
+        subject: parsed.data.subject,
+        message: parsed.data.message,
+        category: parsed.data.category,
+        ip,
+        userAgent,
+      }),
+    {
+      context: {
+        userId: null,
+        ipHash: hashIp(ip, process.env.IP_SALT ?? "alpar-default-salt"),
+        clientIdempotencyKey,
+      },
+    }
+  );
+
+  if (result.kind === "ok" || result.kind === "replayed") {
+    return {
+      ok: true,
+      autopilot: { attempts: attemptsOf(result), durationMs: durationOf(result), kind: result.kind },
+    };
+  }
+  if (result.kind === "circuit_open") {
+    return { ok: false, formError: "Service temporarily unavailable. Please email us directly." };
+  }
+  if (result.kind === "budget_exceeded") {
+    return { ok: false, formError: "Request timed out. Please try again shortly." };
+  }
+  if (result.kind === "exhausted") {
+    return { ok: false, formError: "Failed to send. Please email us directly." };
+  }
+  return { ok: false, formError: "Unexpected error." };
+}
