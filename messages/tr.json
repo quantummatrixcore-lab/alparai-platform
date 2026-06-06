@@ -246,7 +246,12 @@
     "privacyChanges": "Önemli değişiklikler en az 14 gün önceden e-posta ve ana sayfadaki banner ile duyurulur.",
     "privacyContactTitle": "12. İletişim",
     "privacyDpo": "Veri Koruma Sorumlusu: {email}",
-    "privacyPostal": "Posta adresi: tüzel kişilik tescil edildiğinde Künye sayfasında yayınlanacaktır."
+    "privacyPostal": "Posta adresi: tüzel kişilik tescil edildiğinde Künye sayfasında yayınlanacaktır.",
+    "cookieTitle": "Gizliliğinize önem veriyoruz",
+    "cookieBody": "Bu siteyi çalıştırmak için zorunlu çerezler kullanıyoruz. Onayınızla, ürünü geliştirmek için gizlilik dostu analitik (Plausible) de kullanıyoruz. İzleme yok, üçüncü taraf reklam yok.",
+    "cookieLearnMore": "Gizlilik politikası",
+    "cookieAccept": "Tümünü kabul et",
+    "cookieEssential": "Sadece zorunlu"
   },
   "errors": {
     "generic": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",

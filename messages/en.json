@@ -246,7 +246,12 @@
     "privacyChanges": "Material changes will be announced at least 14 days in advance via email and a banner on the home page.",
     "privacyContactTitle": "12. Contact",
     "privacyDpo": "Data Protection Officer: {email}",
-    "privacyPostal": "Postal address: published in the Imprint page when the legal entity is registered."
+    "privacyPostal": "Postal address: published in the Imprint page when the legal entity is registered.",
+    "cookieTitle": "We value your privacy",
+    "cookieBody": "We use essential cookies to run this site. With your consent we also use privacy-friendly analytics (Plausible) to improve the product. No tracking, no third-party ads.",
+    "cookieLearnMore": "Privacy policy",
+    "cookieAccept": "Accept all",
+    "cookieEssential": "Essential only"
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
