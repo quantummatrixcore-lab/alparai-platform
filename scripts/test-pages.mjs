@@ -6,11 +6,11 @@ async function test(url) {
     const main = bodyMatch[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
     console.log(`\n=== ${url} ===`);
     console.log('STATUS:', r.status);
-    console.log('MAIN:', main.slice(0, 250));
+    console.log('MAIN:', main.slice(0, 400));
   }
 }
 (async () => {
+  await test('https://alparai.com/tr/legal/takedown');
+  await test('https://alparai.com/tr/legal/privacy');
   await test('https://alparai.com/en/legal/takedown');
-  await test('https://alparai.com/en/legal/privacy');
-  await test('https://alparai.com/en/incidents');
 })();
