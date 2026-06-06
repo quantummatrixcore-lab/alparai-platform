@@ -1,9 +1,11 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { LegalLayout } from "@/components/legal/legal-layout";
 import { TakedownForm } from "@/components/legal/takedown-form";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
-  return { title: "Takedown Request" };
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "legal" });
+  return { title: t("takedownTitle") };
 }
 
 export default async function TakedownPage({
@@ -13,45 +15,41 @@ export default async function TakedownPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "legal" });
   return (
     <LegalLayout
-      title="Takedown / Correction Request"
+      title={t("takedownTitle")}
       lastUpdated="2026-06-01"
     >
       <p>
-        If you believe content on this platform is unlawful, defamatory,
-        infringes your copyright or other rights, or contains your personal
-        data, you can submit a takedown request. We will review and respond
-        within <strong>7 days</strong>.
+        {t("takedownIntro", { days: 7 })}
       </p>
       <p>
-        For GDPR / KVKK data subject requests (erasure, access, rectification),
-        use the Privacy Policy contact instead.
+        {t("takedownGdpr")}
       </p>
-      <h2>How to file</h2>
+      <h2>{t("takedownHowTitle")}</h2>
       <ol>
-        <li>Fill in the form below with as much detail as possible.</li>
-        <li>Provide a public link to a document proving your identity or authority.</li>
-        <li>Specify the URL of the content and explain the issue clearly.</li>
+        <li>{t("takedownHow1")}</li>
+        <li>{t("takedownHow2")}</li>
+        <li>{t("takedownHow3")}</li>
       </ol>
       <div className="not-prose mt-8">
         <TakedownForm />
       </div>
-      <h2>What happens next</h2>
+      <h2>{t("takedownNextTitle")}</h2>
       <ul>
-        <li>You receive a confirmation email within 24 hours.</li>
-        <li>A moderator reviews your request within 7 days.</li>
-        <li>If approved, the content is removed or corrected. You are notified.</li>
-        <li>If rejected, you receive a written explanation and may appeal.</li>
+        <li>{t("takedownNext1")}</li>
+        <li>{t("takedownNext2")}</li>
+        <li>{t("takedownNext3")}</li>
+        <li>{t("takedownNext4")}</li>
       </ul>
-      <h2>Abuse</h2>
+      <h2>{t("takedownAbuseTitle")}</h2>
       <p>
-        Submitting fraudulent or vexatious takedown requests may result in
-        account suspension and reporting to the relevant authorities.
+        {t("takedownAbuse")}
       </p>
-      <h2>Direct contact</h2>
+      <h2>{t("takedownDirectTitle")}</h2>
       <p>
-        For urgent matters:{" "}
+        {t("takedownDirect")}{" "}
         <a href="mailto:takedown@alparai.online">takedown@alparai.online</a>
       </p>
     </LegalLayout>
