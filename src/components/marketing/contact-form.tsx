@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
@@ -25,20 +26,19 @@ function SubmitBtn({ children }: { children: React.ReactNode }) {
 
 export function ContactForm() {
   const [state, formAction] = useFormState(submitContact, initialState);
+  const t = useTranslations("contact.form");
   useEffect(() => {
-    if (state.ok) toast.success("Message sent");
+    if (state.ok) toast.success(t("sent_toast"));
     else if (state.error) toast.error(state.error);
-  }, [state]);
+  }, [state, t]);
 
   if (state.ok) {
     return (
       <Card variant="elevated">
         <CardContent className="py-12 text-center">
           <CheckCircle2 className="mx-auto h-12 w-12 text-success-500" />
-          <h2 className="mt-4 text-xl font-semibold text-fg-primary">Message sent</h2>
-          <p className="mt-2 text-sm text-fg-muted">
-            We typically respond within 1–2 business days.
-          </p>
+          <h2 className="mt-4 text-xl font-semibold text-fg-primary">{t("sent_title")}</h2>
+          <p className="mt-2 text-sm text-fg-muted">{t("sent_desc")}</p>
         </CardContent>
       </Card>
     );
@@ -52,26 +52,26 @@ export function ContactForm() {
         </div>
       )}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Input name="name" label="Your name" required minLength={2} maxLength={100} error={state.fieldErrors?.name?.[0]} />
-        <Input name="email" type="email" label="Email" required error={state.fieldErrors?.email?.[0]} />
+        <Input name="name" label={t("name")} required minLength={2} maxLength={100} error={state.fieldErrors?.name?.[0]} />
+        <Input name="email" type="email" label={t("email")} required error={state.fieldErrors?.email?.[0]} />
       </div>
       <Select
         name="category"
-        label="Category"
+        label={t("category")}
         required
         defaultValue="general"
         options={[
-          { value: "general", label: "General" },
-          { value: "press", label: "Press" },
-          { value: "partnership", label: "Partnership" },
-          { value: "security", label: "Security disclosure" },
-          { value: "legal", label: "Legal" },
+          { value: "general", label: t("category_general") },
+          { value: "press", label: t("category_press") },
+          { value: "partnership", label: t("category_partnership") },
+          { value: "security", label: t("category_security") },
+          { value: "legal", label: t("category_legal") },
         ]}
         error={state.fieldErrors?.category?.[0]}
       />
-      <Input name="subject" label="Subject" required minLength={5} maxLength={200} error={state.fieldErrors?.subject?.[0]} />
-      <Textarea name="message" label="Message" required rows={6} minLength={20} maxLength={5000} error={state.fieldErrors?.message?.[0]} />
-      <SubmitBtn>Send message</SubmitBtn>
+      <Input name="subject" label={t("subject")} required minLength={5} maxLength={200} error={state.fieldErrors?.subject?.[0]} />
+      <Textarea name="message" label={t("message")} required rows={6} minLength={20} maxLength={5000} error={state.fieldErrors?.message?.[0]} />
+      <SubmitBtn>{t("submit")}</SubmitBtn>
     </form>
   );
 }

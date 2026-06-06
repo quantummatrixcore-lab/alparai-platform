@@ -7,7 +7,9 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { formatDate } from "@/lib/utils";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
-  return { title: "Settings" };
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "settings" });
+  return { title: t("title") };
 }
 
 export default async function SettingsPage({
@@ -17,39 +19,40 @@ export default async function SettingsPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "settings" });
   const user = await getCurrentUser();
   if (!user) redirect(`/${locale}/auth/signin?next=/${locale}/settings`);
 
   return (
     <Container size="narrow" className="py-10">
       <header className="mb-6">
-        <h1 className="text-2xl font-bold text-fg-primary">Settings</h1>
-        <p className="mt-1 text-sm text-fg-muted">Account, privacy, and notifications.</p>
+        <h1 className="text-2xl font-bold text-fg-primary">{t("title")}</h1>
+        <p className="mt-1 text-sm text-fg-muted">{t("subtitle")}</p>
       </header>
       <Card>
         <CardHeader>
-          <CardTitle>Account</CardTitle>
+          <CardTitle>{t("account")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm">
-          <Row label="Email" value={user.email} />
-          <Row label="Name" value={user.fullName ?? "—"} />
-          <Row label="Member since" value={formatDate(new Date(user.createdAt), locale)} />
+          <Row label={t("email")} value={user.email} />
+          <Row label={t("name")} value={user.fullName ?? "—"} />
+          <Row label={t("memberSince")} value={formatDate(new Date(user.createdAt), locale)} />
           <Row
-            label="Role"
+            label={t("role")}
             value={<Badge variant="muted">{user.role}</Badge>}
           />
         </CardContent>
       </Card>
       <Card className="mt-6">
         <CardHeader>
-          <CardTitle>Privacy</CardTitle>
+          <CardTitle>{t("privacy")}</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-fg-muted">
           <p>
-            Your data is processed as described in our{" "}
+            {t("privacyText")}{" "}
             <a href={`/${locale}/legal/privacy`} className="text-brand-400 hover:underline">
-              Privacy Policy
-            </a>. You can request erasure at any time by emailing{" "}
+              {t("privacyPolicy")}
+            </a>. {t("privacyErase")}{" "}
             <a href="mailto:privacy@alparai.online" className="text-brand-400 hover:underline">
               privacy@alparai.online
             </a>.

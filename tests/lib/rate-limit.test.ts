@@ -15,9 +15,11 @@ const mockLimit = vi.fn().mockResolvedValue({
 });
 
 vi.mock("@upstash/ratelimit", () => ({
-  Ratelimit: vi.fn().mockImplementation(() => ({
+  Ratelimit: Object.assign(vi.fn().mockImplementation(() => ({
     limit: mockLimit,
-  })),
+  })), {
+    slidingWindow: vi.fn().mockReturnValue({} as never),
+  }),
 }));
 
 vi.mock("@upstash/redis", () => ({

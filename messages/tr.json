@@ -339,5 +339,80 @@
     "run_error": "Son hata",
     "tick_button": "Worker tick çalıştır",
     "empty_runs": "Henüz otopilot çalışması yok."
+  },
+  "takedown": {
+    "reasons": {
+      "defamation": "İftira / hakaret",
+      "copyright": "Telif hakkı ihlali",
+      "privacy": "Kişisel veri ifşası",
+      "factual_error": "Olgusal hata",
+      "legal_court_order": "Mahkeme kararı",
+      "other": "Diğer (detaylarda açıklayın)"
+    }
+  },
+  "contact": {
+    "form": {
+      "sent_toast": "Mesaj gönderildi",
+      "sent_title": "Mesaj gönderildi",
+      "sent_desc": "Genellikle 1-2 iş günü içinde yanıt veriyoruz.",
+      "name": "Adınız",
+      "email": "E-posta",
+      "category": "Kategori",
+      "category_general": "Genel",
+      "category_press": "Basın",
+      "category_partnership": "Ortaklık",
+      "category_security": "Güvenlik bildirimi",
+      "category_legal": "Hukuki",
+      "subject": "Konu",
+      "message": "Mesaj",
+      "submit": "Mesaj gönder"
+    }
+  },
+  "badge": {
+    "severity": {
+      "low": "Düşük",
+      "medium": "Orta",
+      "high": "Yüksek",
+      "critical": "Kritik"
+    },
+    "status": {
+      "pending_review": "İncelemede",
+      "published": "Yayında",
+      "rejected": "Reddedildi",
+      "archived": "Arşivlendi",
+      "takedown": "Kaldırıldı"
+    }
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "subtitle": "Hesap, gizlilik ve bildirimler.",
+    "account": "Hesap",
+    "email": "E-posta",
+    "name": "Ad",
+    "memberSince": "Üyelik tarihi",
+    "role": "Rol",
+    "privacy": "Gizlilik",
+    "privacyText": "Verileriniz, aşağıda açıklandığı gibi işlenmektedir:",
+    "privacyPolicy": "Gizlilik Politikası",
+    "privacyErase": "Şu adrese e-posta göndererek istediğiniz zaman silinme talebinde bulunabilirsiniz:"
+  },
+  "about": {
+    "mission": "Misyonumuz",
+    "missionText": "Yapay zeka sistemlerinin gerçek dünyada nasıl davrandığına dair kamuya açık, bağımsız ve doğrulanabilir bir kayıt oluşturmak — böylece kullanıcılar, düzenleyiciler ve geliştiriciler daha iyi kararlar alabilir.",
+    "intermediary": "Aracı, yayıncı değil",
+    "intermediaryText": "Topluluk tarafından gönderilen raporları barındırıyoruz. İçeriğin yayıncısı biz değiliz. Herhangi bir gönderinin doğruluğundan, gönderen kullanıcı sorumludur — Trustpilot veya sikayetvar.com ile aynı model.",
+    "voice": "Yapay zeka sağlayıcılarına ses",
+    "voiceText": "Yayınlanan her olay, yapay zeka sağlayıcısından resmi bir yanıt davet eder. Kimliklerini doğrular ve yanıtı raporla birlikte yayınlarız. Gerçek kanıtlar üzerinde sağlıklı tartışma.",
+    "openSource": "Açık kaynak",
+    "openSourceText": "ALPAR, AGPL-3.0 altında lisanslanmıştır. Herkes kodu denetleyebilir, bir örnek çalıştırabilir veya katkıda bulunabilir. Güven altyapısının kendisinin de güvenilir olması gerektiğine inanıyoruz."
+  },
+  "contact": {
+    "title": "İletişime geçin",
+    "subtitle": "Basın, ortaklık, güvenlik bildirimi veya sadece bir soru. Her mesajı okuyoruz.",
+    "sendMessage": "Bize mesaj gönderin",
+    "general": "Genel",
+    "press": "Basın",
+    "office": "Kayıtlı ofis",
+    "officeText": "Tüzel kişilik tescil edildikten sonra İmpressum sayfasında açıklanacaktır."
   }
 }

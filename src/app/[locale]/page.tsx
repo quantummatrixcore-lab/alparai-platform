@@ -6,6 +6,7 @@ import { LeaderboardPreview } from "@/components/marketing/leaderboard-preview";
 import { SuggestFeatureCTA } from "@/components/marketing/cta-suggest-feature";
 import { Container, Section } from "@/components/ui/layout";
 import type { IncidentListItem, LeaderboardEntry } from "@/types";
+import { toIncidentListItems } from "@/lib/mappers";
 
 export default async function HomePage({
   params,
@@ -45,29 +46,17 @@ export default async function HomePage({
     ])
   );
 
-  const incidents: IncidentListItem[] = ((incidentsResult.data as Array<Record<string, unknown>>) ?? []).map(
-    (row) => {
-      const providerId = row["ai_provider_id"] as string | null;
-      const provider = providerId ? providerMap.get(providerId) : null;
-      return {
-        id: row["id"] as string,
-        title_masked: (row["title_masked"] as string) ?? "",
-        description_masked: (row["description_masked"] as string) ?? "",
-        severity: row["severity"] as IncidentListItem["severity"],
-        status: row["status"] as IncidentListItem["status"],
-        category: row["category"] as IncidentListItem["category"],
-        is_anonymous: (row["is_anonymous"] as boolean) ?? false,
-        incident_date: (row["incident_date"] as string) ?? (row["created_at"] as string),
-        created_at: (row["created_at"] as string) ?? "",
-        view_count: (row["views_count"] as number) ?? 0,
-        vote_count: 0,
-        evidence_count: 0,
-        author_name: null,
-        provider_name: provider?.name ?? "Unknown",
-        provider_slug: provider?.slug ?? "",
-      };
-    }
-  );
+  const incidents: IncidentListItem[] = toIncidentListItems(incidentsResult.data).map((item) => {
+    const providerId = (incidentsResult.data as Array<Record<string, unknown>> | null)?.find(
+      (r) => r["id"] === item.id
+    )?.["ai_provider_id"] as string | null;
+    const provider = providerId ? providerMap.get(providerId) : null;
+    return {
+      ...item,
+      provider_name: provider?.name ?? "Unknown",
+      provider_slug: provider?.slug ?? "",
+    };
+  });
 
   const leaderboard: LeaderboardEntry[] = (((providersResult.data as Array<Record<string, unknown>>) ?? [])).map(
     (p) => ({

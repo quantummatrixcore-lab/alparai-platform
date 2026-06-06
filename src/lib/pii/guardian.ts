@@ -65,7 +65,7 @@ const PATTERNS: ReadonlyArray<{ name: string; re: RegExp; mask: string; luhn?: b
   // Generic API key patterns (sk-…, ghp_…, AKIA…)
   {
     name: "api_key",
-    re: /\b(?:sk-[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{30,}|AKIA[0-9A-Z]{16}|xai-[A-Za-z0-9]{20,})\b/g,
+    re: /\b(?:sk-[A-Za-z0-9-]{20,}|ghp_[A-Za-z0-9]{30,}|AKIA[0-9A-Z]{16}|xai-[A-Za-z0-9]{20,})\b/g,
     mask: "[REDACTED-API-KEY]",
   },
   // Turkish passport (letter + 8 digits) — heuristic
@@ -108,6 +108,7 @@ export function maskPII(input: string): PiiScanResult {
   let totalRedactions = 0;
 
   for (const { name, re, mask, luhn } of PATTERNS) {
+    re.lastIndex = 0;
     const matches = [...input.matchAll(re)];
     if (matches.length === 0) continue;
 
@@ -148,7 +149,10 @@ export function maskPII(input: string): PiiScanResult {
  */
 export function hasPII(input: string): boolean {
   if (!input) return false;
-  return PATTERNS.some(({ re }) => re.test(input));
+  return PATTERNS.some(({ re }) => {
+    re.lastIndex = 0;
+    return re.test(input);
+  });
 }
 
 /**
@@ -157,8 +161,16 @@ export function hasPII(input: string): boolean {
 export function detectPIITypes(input: string): string[] {
   if (!input) return [];
   const types: string[] = [];
-  for (const { name, re } of PATTERNS) {
-    if (re.test(input)) types.push(name);
+  for (const { name, re, luhn } of PATTERNS) {
+    re.lastIndex = 0;
+    if (!re.test(input)) continue;
+    if (luhn) {
+      re.lastIndex = 0;
+      const matches = [...input.matchAll(re)];
+      if (matches.some((m) => isLuhnValid(m[0]))) types.push(name);
+    } else {
+      types.push(name);
+    }
   }
   return types;
 }

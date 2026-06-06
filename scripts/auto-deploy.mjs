@@ -65,7 +65,7 @@ const vercelFetch = async (path, init = {}) => {
   return data;
 };
 
-const supabaseFetch = async (path, init = {}) => {
+const _supabaseFetch = async (path, init = {}) => {
   const r = await fetch(`https://api.supabase.com/v1${path}`, {
     ...init,
     headers: {

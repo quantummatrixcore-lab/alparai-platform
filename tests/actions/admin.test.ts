@@ -5,23 +5,37 @@ import {
   createTestModerator,
 } from "../helpers/supabase-mock";
 
-const mockAdminClient = createMockSupabaseClient();
-const mockModerator = createTestModerator();
+vi.hoisted(() => {
+  vi.doMock("@/lib/supabase/admin", () => ({
+    createAdminClient: vi.fn(),
+  }));
+  vi.doMock("@/lib/auth/session", () => ({
+    requireModerator: vi.fn(),
+    requireAdmin: vi.fn(),
+  }));
+});
 
-vi.mock("@/lib/supabase/admin", () => ({
-  createAdminClient: vi.fn().mockReturnValue(mockAdminClient),
-}));
-
-vi.mock("@/lib/auth/session", () => ({
-  requireModerator: vi.fn().mockResolvedValue(mockModerator),
-}));
-
+import {
+  createAdminClient,
+} from "@/lib/supabase/admin";
+import { requireModerator, requireAdmin } from "@/lib/auth/session";
 import {
   moderateIncident,
   reviewTakedown,
   setUserRole,
 } from "@/actions/admin";
-import { requireModerator } from "@/lib/auth/session";
+
+let mockAdminClient: ReturnType<typeof createMockSupabaseClient>;
+let mockModerator: ReturnType<typeof createTestModerator>;
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  mockAdminClient = createMockSupabaseClient();
+  mockModerator = createTestModerator();
+  vi.mocked(createAdminClient).mockReturnValue(mockAdminClient as never);
+  vi.mocked(requireModerator).mockResolvedValue(mockModerator as never);
+  vi.mocked(requireAdmin).mockResolvedValue(mockModerator as never);
+});
 
 describe("moderateIncident", () => {
   beforeEach(() => {
@@ -75,7 +89,7 @@ describe("moderateIncident", () => {
   });
 
   it("returns error when not a moderator", async () => {
-    vi.mocked(requireModerator).mockRejectedValueOnce(new Error("FORBIDDEN"));
+    vi.mocked(requireModerator).mockResolvedValueOnce(null as never);
     const result = await moderateIncident({
       incidentId: "inc-1",
       decision: "approve",

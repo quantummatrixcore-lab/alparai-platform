@@ -5,47 +5,60 @@ import {
   createTestUser,
 } from "../helpers/supabase-mock";
 
-const mockSupabase = createMockSupabaseClient();
-const mockAdminClient = createMockSupabaseClient();
-const mockUser = createTestUser();
+vi.hoisted(() => {
+  vi.doMock("@/lib/supabase/server", () => ({
+    createClient: vi.fn(),
+    createServerClient: vi.fn(),
+  }));
+  vi.doMock("@/lib/supabase/admin", () => ({
+    createAdminClient: vi.fn(),
+  }));
+  vi.doMock("@/lib/auth/session", () => ({
+    getCurrentUser: vi.fn(),
+  }));
+  vi.doMock("@/lib/utils/rate-limit", () => ({
+    checkRateLimit: vi.fn(),
+    RATE_LIMIT_KEYS: {
+      incident_submission: "ratelimit:incident_submission",
+      suggestion_submission: "ratelimit:suggestion_submission",
+      auth_signin: "ratelimit:auth_signin",
+      api_general: "ratelimit:api_general",
+    },
+  }));
+  vi.doMock("@/lib/pii/guardian", () => ({
+    maskPII: vi.fn(),
+  }));
+});
 
-vi.mock("@/lib/supabase/server", () => ({
-  createClient: vi.fn().mockResolvedValue(mockSupabase),
-  createServerClient: vi.fn().mockResolvedValue(mockSupabase),
-}));
+import { createClient, createServerClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { getCurrentUser } from "@/lib/auth/session";
+import { checkRateLimit } from "@/lib/utils/rate-limit";
+import { maskPII } from "@/lib/pii/guardian";
+import { submitIncident, voteOnIncident } from "@/actions/incidents";
 
-vi.mock("@/lib/supabase/admin", () => ({
-  createAdminClient: vi.fn().mockReturnValue(mockAdminClient),
-}));
+let mockSupabase: ReturnType<typeof createMockSupabaseClient>;
+let mockAdminClient: ReturnType<typeof createMockSupabaseClient>;
+let mockUser: ReturnType<typeof createTestUser>;
 
-vi.mock("@/lib/auth/session", () => ({
-  getCurrentUser: vi.fn().mockResolvedValue(mockUser),
-}));
-
-vi.mock("@/lib/utils/rate-limit", () => ({
-  checkRateLimit: vi.fn().mockResolvedValue({ ok: true, remaining: 4 }),
-  RATE_LIMIT_KEYS: {
-    incident_submission: "ratelimit:incident_submission",
-    suggestion_submission: "ratelimit:suggestion_submission",
-    auth_signin: "ratelimit:auth_signin",
-    api_general: "ratelimit:api_general",
-  },
-}));
-
-vi.mock("@/lib/pii/guardian", () => ({
-  maskPII: vi.fn().mockImplementation((input: string) => ({
+beforeEach(() => {
+  vi.clearAllMocks();
+  mockSupabase = createMockSupabaseClient();
+  mockAdminClient = createMockSupabaseClient();
+  mockUser = createTestUser();
+  vi.mocked(createClient).mockResolvedValue(mockSupabase as never);
+  vi.mocked(createServerClient).mockResolvedValue(mockSupabase as never);
+  vi.mocked(createAdminClient).mockReturnValue(mockAdminClient as never);
+  vi.mocked(getCurrentUser).mockResolvedValue(mockUser as never);
+  vi.mocked(checkRateLimit).mockResolvedValue({ ok: true, remaining: 4 });
+  vi.mocked(maskPII).mockImplementation((input: string) => ({
     masked: input,
     detections: [],
     piiFound: false,
     redactedCount: 0,
     detectedTypes: [],
-  })),
-}));
-
-import { submitIncident, voteOnIncident } from "@/actions/incidents";
-import { getCurrentUser } from "@/lib/auth/session";
-import { checkRateLimit } from "@/lib/utils/rate-limit";
-import { maskPII } from "@/lib/pii/guardian";
+  }));
+});
 
 function buildFormData(overrides: Record<string, string> = {}): FormData {
   const fd = new FormData();
@@ -71,7 +84,6 @@ function buildFormData(overrides: Record<string, string> = {}): FormData {
 
 describe("submitIncident", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     vi.mocked(getCurrentUser).mockResolvedValue(mockUser);
     vi.mocked(checkRateLimit).mockResolvedValue({ ok: true, remaining: 4 });
     vi.mocked(maskPII).mockImplementation((input: string) => ({
@@ -199,7 +211,6 @@ describe("submitIncident", () => {
 
 describe("voteOnIncident", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     vi.mocked(getCurrentUser).mockResolvedValue(mockUser);
 
     const mockDeleteInnerEq = vi

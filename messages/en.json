@@ -339,5 +339,80 @@
     "run_error": "Last error",
     "tick_button": "Run worker tick",
     "empty_runs": "No autopilot runs yet."
+  },
+  "takedown": {
+    "reasons": {
+      "defamation": "Defamation / libel",
+      "copyright": "Copyright violation",
+      "privacy": "Personal data exposure",
+      "factual_error": "Factual inaccuracy",
+      "legal_court_order": "Court order",
+      "other": "Other (explain in details)"
+    }
+  },
+  "contact": {
+    "form": {
+      "sent_toast": "Message sent",
+      "sent_title": "Message sent",
+      "sent_desc": "We typically respond within 1–2 business days.",
+      "name": "Your name",
+      "email": "Email",
+      "category": "Category",
+      "category_general": "General",
+      "category_press": "Press",
+      "category_partnership": "Partnership",
+      "category_security": "Security disclosure",
+      "category_legal": "Legal",
+      "subject": "Subject",
+      "message": "Message",
+      "submit": "Send message"
+    }
+  },
+  "badge": {
+    "severity": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "critical": "Critical"
+    },
+    "status": {
+      "pending_review": "Pending review",
+      "published": "Published",
+      "rejected": "Rejected",
+      "archived": "Archived",
+      "takedown": "Taken down"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Account, privacy, and notifications.",
+    "account": "Account",
+    "email": "Email",
+    "name": "Name",
+    "memberSince": "Member since",
+    "role": "Role",
+    "privacy": "Privacy",
+    "privacyText": "Your data is processed as described in our",
+    "privacyPolicy": "Privacy Policy",
+    "privacyErase": "You can request erasure at any time by emailing"
+  },
+  "about": {
+    "mission": "Our mission",
+    "missionText": "Build a public, independent, verifiable record of how AI systems behave in the real world — so that users, regulators, and developers can make better decisions.",
+    "intermediary": "Intermediary, not publisher",
+    "intermediaryText": "We host community-submitted reports. We are not the publisher of the content. The liability for the accuracy of any submission rests with the user who submitted it — the same model as Trustpilot or sikayetvar.com.",
+    "voice": "AI providers get a voice",
+    "voiceText": "Every published incident invites an official response from the AI provider. We verify their identity and publish the response alongside the report. Healthy debate over real evidence.",
+    "openSource": "Open source",
+    "openSourceText": "ALPAR is licensed under AGPL-3.0. Anyone can audit the code, run an instance, or contribute. We believe trust infrastructure should itself be trustworthy."
+  },
+  "contact": {
+    "title": "Get in touch",
+    "subtitle": "Press, partnership, security disclosure, or just a question. We read every message.",
+    "sendMessage": "Send us a message",
+    "general": "General",
+    "press": "Press",
+    "office": "Registered office",
+    "officeText": "Will be disclosed in the Imprint page once the legal entity is registered."
   }
 }

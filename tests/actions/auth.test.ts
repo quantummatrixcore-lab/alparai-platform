@@ -5,44 +5,58 @@ import {
   createTestUser,
 } from "../helpers/supabase-mock";
 
-const mockSupabase = createMockSupabaseClient();
-const mockUser = createTestUser();
+vi.hoisted(() => {
+  vi.doMock("@/lib/supabase/server", () => ({
+    createClient: vi.fn(),
+    createServerClient: vi.fn(),
+  }));
+  vi.doMock("@/lib/auth/session", () => ({
+    getCurrentUser: vi.fn(),
+  }));
+  vi.doMock("@/lib/utils/rate-limit", () => ({
+    checkRateLimit: vi.fn(),
+    RATE_LIMIT_KEYS: {
+      incident_submission: "ratelimit:incident_submission",
+      suggestion_submission: "ratelimit:suggestion_submission",
+      auth_signin: "ratelimit:auth_signin",
+      auth_magiclink: "ratelimit:auth_magiclink",
+      contact_submission: "ratelimit:contact_submission",
+      takedown_submission: "ratelimit:takedown_submission",
+      search_query: "ratelimit:search_query",
+      export_request: "ratelimit:export_request",
+      api_general: "ratelimit:api_general",
+    },
+  }));
+  vi.doMock("@/lib/constants", () => ({
+    APP_URL: "https://test.alparai.online",
+    APP_NAME: "ALPAR AI",
+  }));
+});
 
-vi.mock("@/lib/supabase/server", () => ({
-  createClient: vi.fn().mockResolvedValue(mockSupabase),
-  createServerClient: vi.fn().mockResolvedValue(mockSupabase),
-}));
-
-vi.mock("@/lib/auth/session", () => ({
-  getCurrentUser: vi.fn().mockResolvedValue(null),
-}));
-
-vi.mock("@/lib/utils/rate-limit", () => ({
-  checkRateLimit: vi.fn().mockResolvedValue({ ok: true }),
-  RATE_LIMIT_KEYS: {
-    incident_submission: "ratelimit:incident_submission",
-    suggestion_submission: "ratelimit:suggestion_submission",
-    auth_signin: "ratelimit:auth_signin",
-    api_general: "ratelimit:api_general",
-  },
-}));
-
-vi.mock("@/lib/constants", () => ({
-  APP_URL: "https://test.alparai.online",
-  APP_NAME: "ALPAR AI",
-}));
-
+import { createClient, createServerClient } from "@/lib/supabase/server";
+import { getCurrentUser } from "@/lib/auth/session";
+import { checkRateLimit } from "@/lib/utils/rate-limit";
 import {
   signInWithGoogle,
   signInWithMagicLink,
   getMe,
 } from "@/actions/auth";
-import { getCurrentUser } from "@/lib/auth/session";
-import { checkRateLimit } from "@/lib/utils/rate-limit";
+
+let mockSupabase: ReturnType<typeof createMockSupabaseClient>;
+let mockUser: ReturnType<typeof createTestUser>;
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  mockSupabase = createMockSupabaseClient();
+  mockUser = createTestUser();
+  vi.mocked(createClient).mockResolvedValue(mockSupabase as never);
+  vi.mocked(createServerClient).mockResolvedValue(mockSupabase as never);
+  vi.mocked(getCurrentUser).mockResolvedValue(null);
+  vi.mocked(checkRateLimit).mockResolvedValue({ ok: true });
+});
 
 describe("signInWithGoogle", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     vi.mocked(checkRateLimit).mockResolvedValue({ ok: true });
     mockSupabase.auth.signInWithOAuth.mockResolvedValue({
       data: { url: "https://accounts.google.com/o/oauth2/auth" },
