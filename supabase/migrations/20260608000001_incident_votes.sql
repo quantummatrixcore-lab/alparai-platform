@@ -68,8 +68,8 @@ create policy "incident_votes_mod_all"
   on public.incident_votes
   for all
   to authenticated
-  using (public.is_moderator())
-  with check (public.is_moderator());
+  using (public.is_moderator(auth.uid()))
+  with check (public.is_moderator(auth.uid()));
 
 -- ----------------------------------------------------------------------------
 -- Trigger: keep updated_at fresh + bump parent incidents.upvotes_count

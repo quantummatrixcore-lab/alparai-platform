@@ -3,6 +3,8 @@
 -- =============================================================================
 -- Trust infrastructure for AI accountability. Community-driven incident
 -- reporting platform inspired by Trustpilot / sikayetvar.com model.
+
+create extension if not exists pgcrypto;
 --
 -- Design principles:
 --   1. Platform is a HOST (intermediary), not a publisher. Liability is on users.
@@ -141,11 +143,7 @@ create table public.incidents (
   user_agent text,
 
   -- Search
-  search_vector tsvector generated always as (
-    setweight(to_tsvector('simple', coalesce(title,'')), 'A') ||
-    setweight(to_tsvector('simple', coalesce(description,'')), 'B') ||
-    setweight(to_tsvector('simple', coalesce(category::text,'')), 'C')
-  ) stored,
+  search_vector tsvector,
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -339,6 +337,28 @@ $$;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
+
+-- ============================================================================
+-- TRIGGER: Maintain incidents.search_vector
+-- ============================================================================
+create or replace function public.tg_incidents_search_vector()
+returns trigger language plpgsql as $$
+begin
+  new.search_vector :=
+    setweight(to_tsvector('simple'::regconfig, coalesce(new.title,'')), 'A') ||
+    setweight(to_tsvector('simple'::regconfig, coalesce(new.description,'')), 'B') ||
+    setweight(to_tsvector('simple'::regconfig, coalesce(new.category::text,'')), 'C');
+  return new;
+end;
+$$;
+
+drop trigger if exists trg_incidents_search_vector on public.incidents;
+create trigger trg_incidents_search_vector
+  before insert or update of title, description, category on public.incidents
+  for each row execute function public.tg_incidents_search_vector();
+
+create index if not exists idx_incidents_search_vector
+  on public.incidents using gin(search_vector);
 
 -- ============================================================================
 -- HELPER: IS_MODERATOR
