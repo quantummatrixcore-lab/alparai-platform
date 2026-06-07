@@ -6,12 +6,12 @@ import { StatsCards, type AdminStats } from "@/components/admin/stats-cards";
 import { ModerationQueue } from "@/components/admin/moderation-queue";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { FileText, Clock, AlertTriangle, Users, ShieldCheck } from "lucide-react";
+import { AlertTriangle, ShieldCheck } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import type { IncidentListItem } from "@/types";
 import { toIncidentListItems } from "@/lib/mappers";
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+export async function generateMetadata({ params: _params }: { params: Promise<{ locale: string }> }) {
   return { title: "Admin Dashboard" };
 }
 
@@ -48,7 +48,7 @@ export default async function AdminDashboardPage({
     admin.from("ai_providers").select("*", { count: "exact", head: true }),
     admin.from("takedown_requests").select("*", { count: "exact", head: true }).eq("status", "pending"),
     admin.from("incidents").select("*", { count: "exact", head: true })
-      .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()),
+      .gte("created_at", new Date(new Date().getTime() - 24 * 60 * 60 * 1000).toISOString()),
     admin.from("incidents")
       .select("id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id")
       .eq("status", "pending_review")

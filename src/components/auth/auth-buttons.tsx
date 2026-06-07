@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { useTransition, useState } from "react";
 import { toast } from "sonner";
-import { Mail, Loader2 } from "lucide-react";
+import { Mail } from "lucide-react";
 
 export function GoogleSignInButton({
   next = "/profile",
@@ -33,12 +33,7 @@ export function GoogleSignInButton({
         });
       }}
     >
-      <svg
-        className="h-4 w-4"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        aria-hidden="true"
-      >
+      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <path
           d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
           fill="#4285F4"
@@ -86,12 +81,12 @@ export function EmailMagicLinkForm({ className }: { className?: string }) {
       }}
     >
       {sent ? (
-        <p className="text-sm text-success-500" role="status">
+        <p className="text-success-500 text-sm" role="status">
           {t("magic_link_sent")}
         </p>
       ) : (
         <>
-          <label htmlFor="magic-email" className="block text-sm font-medium mb-1.5">
+          <label htmlFor="magic-email" className="mb-1.5 block text-sm font-medium">
             {t("or_continue_email")}
           </label>
           <div className="flex gap-2">
@@ -101,7 +96,7 @@ export function EmailMagicLinkForm({ className }: { className?: string }) {
               type="email"
               required
               placeholder="you@example.com"
-              className="flex-1 rounded-md border border-border-subtle bg-bg-secondary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="border-border-subtle bg-bg-secondary focus:ring-brand-500 flex-1 rounded-md border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
             />
             <Button type="submit" isLoading={pending} leftIcon={<Mail className="h-4 w-4" />}>
               Send

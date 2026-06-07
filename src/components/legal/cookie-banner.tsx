@@ -10,8 +10,8 @@ import { useTranslations } from "next-intl";
 const COOKIE_KEY = "alpar_cookie_consent";
 
 export function CookieBanner() {
-  const [visible, setVisible] = useState(false);
   const t = useTranslations("legal");
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (!window.localStorage.getItem(COOKIE_KEY)) setVisible(true);
@@ -27,17 +27,13 @@ export function CookieBanner() {
     <div
       role="dialog"
       aria-label="Cookie preferences"
-      className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-2xl rounded-xl border border-border-subtle bg-bg-elevated p-4 shadow-2xl sm:bottom-6 sm:left-6 sm:right-6"
+      className="border-border-subtle bg-bg-elevated fixed right-4 bottom-4 left-4 z-50 mx-auto max-w-2xl rounded-xl border p-4 shadow-2xl sm:right-6 sm:bottom-6 sm:left-6"
     >
       <div className="flex items-start gap-4">
         <div className="flex-1 space-y-2 text-sm">
-          <p className="font-semibold text-fg-primary">
-            {t("cookieTitle")}
-          </p>
-          <p className="text-fg-muted">
-            {t("cookieBody")}
-          </p>
-          <p className="text-xs text-fg-muted">
+          <p className="text-fg-primary font-semibold">{t("cookieTitle")}</p>
+          <p className="text-fg-muted">{t("cookieBody")}</p>
+          <p className="text-fg-muted text-xs">
             <Link href="/legal/privacy" className="text-brand-400 hover:underline">
               {t("cookieLearnMore")}
             </Link>

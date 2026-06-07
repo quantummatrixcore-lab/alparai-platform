@@ -1,7 +1,5 @@
-import { setRequestLocale } from "next-intl/server";
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
 
 const SAFE_NEXT_PATH = /^\/[a-zA-Z0-9_\-/]*$/;
 

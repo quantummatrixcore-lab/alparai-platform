@@ -1,6 +1,0 @@
-scripts/
-node_modules/
-.next/
-out/
-coverage/
-*.min.js

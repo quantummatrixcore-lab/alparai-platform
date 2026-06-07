@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useLocale } from "next-intl";
-import { usePathname, useRouter, routing } from "@/i18n/routing";
+import { usePathname, useRouter } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { Globe } from "lucide-react";
 
@@ -18,7 +18,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
         "inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium",
         "text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary",
         "transition-colors duration-200",
-        "border border-border-subtle",
+        "border-border-subtle border",
         className
       )}
       aria-label={`Switch language to ${otherLocale === "en" ? "English" : "Türkçe"}`}

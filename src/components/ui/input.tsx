@@ -11,21 +11,19 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type = "text", label, hint, error, leftIcon, rightIcon, id, ...props }, ref) => {
-    const inputId = id ?? React.useId();
+    const idFromProps = React.useId();
+    const inputId = id ?? idFromProps;
     return (
       <div className="w-full space-y-1.5">
         {label && (
-          <label
-            htmlFor={inputId}
-            className="block text-sm font-medium text-fg-primary"
-          >
+          <label htmlFor={inputId} className="text-fg-primary block text-sm font-medium">
             {label}
-            {props.required && <span className="ml-0.5 text-danger-500">*</span>}
+            {props.required && <span className="text-danger-500 ml-0.5">*</span>}
           </label>
         )}
         <div className="relative">
           {leftIcon && (
-            <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-fg-muted">
+            <div className="text-fg-muted pointer-events-none absolute top-1/2 left-3 -translate-y-1/2">
               {leftIcon}
             </div>
           )}
@@ -36,10 +34,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             aria-invalid={!!error}
             aria-describedby={error ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined}
             className={cn(
-              "w-full rounded-md border bg-bg-secondary px-3 py-2 text-sm text-fg-primary",
+              "bg-bg-secondary text-fg-primary w-full rounded-md border px-3 py-2 text-sm",
               "placeholder:text-fg-muted",
               "transition-colors duration-200",
-              "focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-bg-primary",
+              "focus:ring-brand-500 focus:ring-offset-bg-primary focus:ring-2 focus:ring-offset-2 focus:outline-none",
               "disabled:cursor-not-allowed disabled:opacity-50",
               leftIcon && "pl-10",
               rightIcon && "pr-10",
@@ -51,18 +49,18 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
           {rightIcon && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-fg-muted">
+            <div className="text-fg-muted absolute top-1/2 right-3 -translate-y-1/2">
               {rightIcon}
             </div>
           )}
         </div>
         {error && (
-          <p id={`${inputId}-error`} className="text-xs text-danger-500" role="alert">
+          <p id={`${inputId}-error`} className="text-danger-500 text-xs" role="alert">
             {error}
           </p>
         )}
         {!error && hint && (
-          <p id={`${inputId}-hint`} className="text-xs text-fg-muted">
+          <p id={`${inputId}-hint`} className="text-fg-muted text-xs">
             {hint}
           </p>
         )}
