@@ -1,8 +1,8 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { Container } from "@/components/ui/layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trophy, TrendingDown, TrendingUp, Minus } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Trophy } from "lucide-react";
 import { cn, formatNumber } from "@/lib/utils";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -11,11 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: t("title") };
 }
 
-export default async function LeaderboardPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function LeaderboardPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const supabase = await createServerClient();
@@ -27,7 +23,15 @@ export default async function LeaderboardPage({
     .order("name");
 
   const counts = await Promise.all(
-    ((providers as Array<{ id: string; slug: string; name: string; logo_url: string | null; is_verified: boolean }>) ?? []).map(async (p) => {
+    (
+      (providers as Array<{
+        id: string;
+        slug: string;
+        name: string;
+        logo_url: string | null;
+        is_verified: boolean;
+      }>) ?? []
+    ).map(async (p) => {
       const { count } = await supabase
         .from("incidents")
         .select("*", { count: "exact", head: true })
@@ -46,25 +50,25 @@ export default async function LeaderboardPage({
   return (
     <Container className="py-10">
       <header className="mb-8">
-        <h1 className="inline-flex items-center gap-2 text-3xl font-bold tracking-tight text-fg-primary">
-          <Trophy className="h-7 w-7 text-warning-500" />
+        <h1 className="text-fg-primary inline-flex items-center gap-2 text-3xl font-bold tracking-tight">
+          <Trophy className="text-warning-500 h-7 w-7" />
           {t("title")}
         </h1>
-        <p className="mt-2 text-sm text-fg-muted">{t("subtitle")}</p>
+        <p className="text-fg-muted mt-2 text-sm">{t("subtitle")}</p>
       </header>
       <Card>
         <CardContent className="p-0">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border-subtle text-left text-xs font-semibold uppercase tracking-wider text-fg-muted">
-                <th className="p-4 w-12">{t("rank")}</th>
+              <tr className="border-border-subtle text-fg-muted border-b text-left text-xs font-semibold tracking-wider uppercase">
+                <th className="w-12 p-4">{t("rank")}</th>
                 <th className="p-4">{t("provider")}</th>
                 <th className="p-4 text-right">{t("incidents")}</th>
                 <th className="p-4 text-right">{t("resolved")}</th>
                 <th className="p-4 text-right">Trend</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border-subtle">
+            <tbody className="divide-border-subtle divide-y">
               {sorted.map((p, i) => (
                 <tr key={p.id} className="hover:bg-bg-tertiary/30">
                   <td className="p-4">
@@ -74,19 +78,23 @@ export default async function LeaderboardPage({
                         i === 0
                           ? "bg-warning-500/15 text-warning-500"
                           : i === 1
-                          ? "bg-fg-muted/15 text-fg-muted"
-                          : i === 2
-                          ? "bg-warning-700/15 text-warning-700"
-                          : "bg-bg-tertiary text-fg-muted"
+                            ? "bg-fg-muted/15 text-fg-muted"
+                            : i === 2
+                              ? "bg-warning-700/15 text-warning-700"
+                              : "bg-bg-tertiary text-fg-muted"
                       )}
                     >
                       {i + 1}
                     </span>
                   </td>
-                  <td className="p-4 font-medium text-fg-primary">{p.name}</td>
-                  <td className="p-4 text-right text-fg-secondary">{formatNumber(p.incident_count)}</td>
-                  <td className="p-4 text-right text-fg-secondary">{formatNumber(p.resolved_count)}</td>
-                  <td className="p-4 text-right text-fg-muted">—</td>
+                  <td className="text-fg-primary p-4 font-medium">{p.name}</td>
+                  <td className="text-fg-secondary p-4 text-right">
+                    {formatNumber(p.incident_count)}
+                  </td>
+                  <td className="text-fg-secondary p-4 text-right">
+                    {formatNumber(p.resolved_count)}
+                  </td>
+                  <td className="text-fg-muted p-4 text-right">—</td>
                 </tr>
               ))}
             </tbody>

@@ -35,18 +35,21 @@ export function NewSuggestionForm() {
     if (state.ok) {
       toast.success("Suggestion submitted");
       setDone(true);
-      setTimeout(() => router.push("/suggestions"), 1200);
-    } else if (state.error) {
+      const timer = setTimeout(() => router.push("/suggestions"), 1200);
+      return () => clearTimeout(timer);
+    }
+    if (state.error) {
       toast.error(state.error);
     }
+    return;
   }, [state, router]);
 
   if (done) {
     return (
       <Card>
         <CardContent className="py-12 text-center">
-          <p className="text-lg font-semibold text-success-500">Thanks for your suggestion!</p>
-          <p className="mt-1 text-sm text-fg-muted">Redirecting to suggestions list…</p>
+          <p className="text-success-500 text-lg font-semibold">Thanks for your suggestion!</p>
+          <p className="text-fg-muted mt-1 text-sm">Redirecting to suggestions list…</p>
         </CardContent>
       </Card>
     );

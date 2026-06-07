@@ -1,5 +1,4 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
-import { redirect } from "next/navigation";
 import { Container } from "@/components/ui/layout";
 import { getCurrentUser } from "@/lib/auth/session";
 import { GoogleSignInButton, EmailMagicLinkForm } from "@/components/auth/auth-buttons";
@@ -27,7 +26,7 @@ export default async function NewSuggestionPage({
         <Card variant="elevated">
           <CardHeader>
             <CardTitle className="inline-flex items-center gap-2">
-              <Shield className="h-5 w-5 text-brand-400" />
+              <Shield className="text-brand-400 h-5 w-5" />
               Sign in to suggest
             </CardTitle>
           </CardHeader>
@@ -42,10 +41,8 @@ export default async function NewSuggestionPage({
   return (
     <Container size="narrow" className="py-12">
       <header className="mb-6">
-        <h1 className="text-3xl font-bold tracking-tight text-fg-primary">
-          New suggestion
-        </h1>
-        <p className="mt-1 text-sm text-fg-muted">
+        <h1 className="text-fg-primary text-3xl font-bold tracking-tight">New suggestion</h1>
+        <p className="text-fg-muted mt-1 text-sm">
           Share a feature idea, a bug, or anything that would make ALPAR better.
         </p>
       </header>

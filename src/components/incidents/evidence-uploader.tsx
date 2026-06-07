@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
-import { Upload, X, FileText, Loader2 } from "lucide-react";
+import { Upload, X, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { cn, formatNumber } from "@/lib/utils";
@@ -72,7 +72,7 @@ export function EvidenceUploader({
           addFiles(e.dataTransfer.files);
         }}
         className={cn(
-          "flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 text-center cursor-pointer transition-colors",
+          "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 text-center transition-colors",
           dragOver
             ? "border-brand-500 bg-brand-500/5"
             : "border-border-subtle hover:border-brand-500/50 hover:bg-bg-tertiary/30",
@@ -88,12 +88,10 @@ export function EvidenceUploader({
         }}
         aria-label={t("evidence")}
       >
-        <Upload className="h-6 w-6 text-fg-muted" aria-hidden="true" />
+        <Upload className="text-fg-muted h-6 w-6" aria-hidden="true" />
         <div>
-          <p className="text-sm font-medium text-fg-primary">
-            {t("evidence")}
-          </p>
-          <p className="text-xs text-fg-muted">{t("evidence_hint")}</p>
+          <p className="text-fg-primary text-sm font-medium">{t("evidence")}</p>
+          <p className="text-fg-muted text-xs">{t("evidence_hint")}</p>
         </div>
         <input
           ref={inputRef}
@@ -106,18 +104,22 @@ export function EvidenceUploader({
           onChange={(e) => addFiles(e.target.files)}
         />
       </div>
-      {error && <p className="text-xs text-danger-500" role="alert">{error}</p>}
+      {error && (
+        <p className="text-danger-500 text-xs" role="alert">
+          {error}
+        </p>
+      )}
       {files.length > 0 && (
         <ul className="space-y-1.5">
           {files.map((f, i) => (
             <li
               key={i}
-              className="flex items-center justify-between gap-2 rounded-md border border-border-subtle bg-bg-secondary px-3 py-2"
+              className="border-border-subtle bg-bg-secondary flex items-center justify-between gap-2 rounded-md border px-3 py-2"
             >
-              <div className="flex items-center gap-2 min-w-0">
-                <FileText className="h-4 w-4 shrink-0 text-fg-muted" />
-                <span className="truncate text-sm text-fg-primary">{f.name}</span>
-                <span className="shrink-0 text-xs text-fg-muted">
+              <div className="flex min-w-0 items-center gap-2">
+                <FileText className="text-fg-muted h-4 w-4 shrink-0" />
+                <span className="text-fg-primary truncate text-sm">{f.name}</span>
+                <span className="text-fg-muted shrink-0 text-xs">
                   {formatNumber(Math.round(f.size / 1024))} KB
                 </span>
               </div>
@@ -137,7 +139,13 @@ export function EvidenceUploader({
   );
 }
 
-export function SubmitButton({ children, className }: { children: React.ReactNode; className?: string }) {
+export function SubmitButton({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   const { pending } = useFormStatus();
   const t = useTranslations("incident");
   return (

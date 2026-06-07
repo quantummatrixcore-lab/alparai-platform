@@ -1,8 +1,8 @@
-import { setRequestLocale, getTranslations } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import { Container } from "@/components/ui/layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { IncidentList } from "@/components/incidents/incident-list";
 import { Building2, Globe, Mail, ExternalLink } from "lucide-react";

@@ -1,13 +1,12 @@
 import { setRequestLocale } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { Container } from "@/components/ui/layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { TakedownQueue, type TakedownItem } from "@/components/admin/takedown-queue";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+export async function generateMetadata({ params: _params }: { params: Promise<{ locale: string }> }) {
   return { title: "Takedown Requests" };
 }
 

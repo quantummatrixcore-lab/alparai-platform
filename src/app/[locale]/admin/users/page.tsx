@@ -1,14 +1,14 @@
 import { setRequestLocale } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { Container } from "@/components/ui/layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatDate } from "@/lib/utils";
 import { Users } from "lucide-react";
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+export async function generateMetadata({ params: _params }: { params: Promise<{ locale: string }> }) {
   return { title: "Users" };
 }
 

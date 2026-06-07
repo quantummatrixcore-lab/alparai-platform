@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { User as UserIcon, LogOut, Settings, ShieldCheck, BarChart3 } from "lucide-react";
-import { cn, getInitials } from "@/lib/utils";
+import { getInitials } from "@/lib/utils";
 import { getMe } from "@/actions/auth";
 
 interface SessionUserShape {
@@ -42,7 +42,7 @@ export function UserMenu({ initialUser }: { initialUser: SessionUserShape | null
     return (
       <Link
         href="/auth/signin"
-        className="inline-flex h-10 items-center gap-2 rounded-md border border-border-strong px-4 text-sm font-medium text-fg-primary hover:border-brand-500 hover:text-brand-400 transition-colors"
+        className="border-border-strong text-fg-primary hover:border-brand-500 hover:text-brand-400 inline-flex h-10 items-center gap-2 rounded-md border px-4 text-sm font-medium transition-colors"
       >
         {t("signIn")}
       </Link>
@@ -55,7 +55,7 @@ export function UserMenu({ initialUser }: { initialUser: SessionUserShape | null
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen((o) => !o)}
-        className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-bg-tertiary border border-border-strong text-fg-primary hover:border-brand-500 overflow-hidden"
+        className="bg-bg-tertiary border-border-strong text-fg-primary hover:border-brand-500 inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border"
         aria-label={tCommon("account")}
         aria-expanded={open}
         aria-haspopup="menu"
@@ -63,23 +63,21 @@ export function UserMenu({ initialUser }: { initialUser: SessionUserShape | null
         {user.avatarUrl ? (
           <img src={user.avatarUrl} alt="" className="h-full w-full object-cover" />
         ) : (
-          <span className="text-sm font-semibold">
-            {getInitials(user.fullName ?? user.email)}
-          </span>
+          <span className="text-sm font-semibold">{getInitials(user.fullName ?? user.email)}</span>
         )}
       </button>
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-12 w-64 rounded-lg border border-border-subtle bg-bg-elevated shadow-2xl overflow-hidden z-50"
+          className="border-border-subtle bg-bg-elevated absolute top-12 right-0 z-50 w-64 overflow-hidden rounded-lg border shadow-2xl"
         >
-          <div className="p-3 border-b border-border-subtle">
-            <p className="text-sm font-semibold text-fg-primary truncate">
+          <div className="border-border-subtle border-b p-3">
+            <p className="text-fg-primary truncate text-sm font-semibold">
               {user.fullName ?? user.email}
             </p>
-            <p className="text-xs text-fg-muted truncate">{user.email}</p>
+            <p className="text-fg-muted truncate text-xs">{user.email}</p>
             {isMod && (
-              <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-brand-500/15 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-brand-300">
+              <span className="bg-brand-500/15 text-brand-300 mt-1.5 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium tracking-wider uppercase">
                 <ShieldCheck className="h-3 w-3" />
                 {user.role}
               </span>
@@ -89,7 +87,7 @@ export function UserMenu({ initialUser }: { initialUser: SessionUserShape | null
             <Link
               href="/profile"
               role="menuitem"
-              className="flex items-center gap-2 px-3 py-2 text-sm text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary"
+              className="text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary flex items-center gap-2 px-3 py-2 text-sm"
               onClick={() => setOpen(false)}
             >
               <UserIcon className="h-4 w-4" /> {t("profile")}
@@ -97,7 +95,7 @@ export function UserMenu({ initialUser }: { initialUser: SessionUserShape | null
             <Link
               href="/my-incidents"
               role="menuitem"
-              className="flex items-center gap-2 px-3 py-2 text-sm text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary"
+              className="text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary flex items-center gap-2 px-3 py-2 text-sm"
               onClick={() => setOpen(false)}
             >
               <BarChart3 className="h-4 w-4" /> {t("myIncidents")}
@@ -105,7 +103,7 @@ export function UserMenu({ initialUser }: { initialUser: SessionUserShape | null
             <Link
               href="/settings"
               role="menuitem"
-              className="flex items-center gap-2 px-3 py-2 text-sm text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary"
+              className="text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary flex items-center gap-2 px-3 py-2 text-sm"
               onClick={() => setOpen(false)}
             >
               <Settings className="h-4 w-4" /> {t("settings")}
@@ -114,19 +112,19 @@ export function UserMenu({ initialUser }: { initialUser: SessionUserShape | null
               <Link
                 href="/admin"
                 role="menuitem"
-                className="flex items-center gap-2 px-3 py-2 text-sm text-brand-300 hover:bg-bg-tertiary"
+                className="text-brand-300 hover:bg-bg-tertiary flex items-center gap-2 px-3 py-2 text-sm"
                 onClick={() => setOpen(false)}
               >
                 <ShieldCheck className="h-4 w-4" /> {t("adminPanel")}
               </Link>
             )}
           </div>
-          <div className="border-t border-border-subtle py-1">
+          <div className="border-border-subtle border-t py-1">
             <form action="/api/auth/signout" method="post">
               <button
                 type="submit"
                 role="menuitem"
-                className="flex w-full items-center gap-2 px-3 py-2 text-sm text-danger-400 hover:bg-danger-500/10"
+                className="text-danger-400 hover:bg-danger-500/10 flex w-full items-center gap-2 px-3 py-2 text-sm"
               >
                 <LogOut className="h-4 w-4" /> {t("signOut")}
               </button>

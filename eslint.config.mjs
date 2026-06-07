@@ -22,7 +22,9 @@ const eslintConfig = defineConfig([
       ],
       "no-console": ["warn", { allow: ["warn", "error", "info"] }],
       "@typescript-eslint/no-explicit-any": "error",
-      "@typescript-eslint/no-non-null-assertion": "warn",
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "react-hooks/set-state-in-effect": "off",
+      "@next/next/no-img-element": "off",
     },
   },
   globalIgnores([

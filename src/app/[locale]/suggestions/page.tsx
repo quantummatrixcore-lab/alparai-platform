@@ -1,7 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { Container } from "@/components/ui/layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { SuggestionCard } from "@/components/marketing/suggestion-card";
 import { Lightbulb } from "lucide-react";
 import { Link } from "@/i18n/routing";
@@ -16,11 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: t("title") };
 }
 
-export default async function SuggestionsPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function SuggestionsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "suggestions" });
@@ -28,7 +24,9 @@ export default async function SuggestionsPage({
   const supabase = await createServerClient();
   const { data } = await supabase
     .from("suggestions")
-    .select("id, title, description, category, status, upvotes_count, comments_count, created_at, user_id")
+    .select(
+      "id, title, description, category, status, upvotes_count, comments_count, created_at, user_id"
+    )
     .order("upvotes_count", { ascending: false })
     .limit(50);
 
@@ -48,24 +46,22 @@ export default async function SuggestionsPage({
     <Container className="py-10">
       <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="inline-flex items-center gap-2 text-3xl font-bold tracking-tight text-fg-primary">
-            <Lightbulb className="h-7 w-7 text-brand-400" />
+          <h1 className="text-fg-primary inline-flex items-center gap-2 text-3xl font-bold tracking-tight">
+            <Lightbulb className="text-brand-400 h-7 w-7" />
             {t("title")}
           </h1>
-          <p className="mt-2 text-sm text-fg-muted">{t("subtitle")}</p>
+          <p className="text-fg-muted mt-2 text-sm">{t("subtitle")}</p>
         </div>
         {user && (
           <Link href={`/${locale}/suggestions/new` as never}>
-            <Button leftIcon={<Plus className="h-4 w-4" />}>
-              {t("create_title")}
-            </Button>
+            <Button leftIcon={<Plus className="h-4 w-4" />}>{t("create_title")}</Button>
           </Link>
         )}
       </header>
       <div className="space-y-3">
         {items.length === 0 ? (
           <Card>
-            <CardContent className="py-12 text-center text-sm text-fg-muted">
+            <CardContent className="text-fg-muted py-12 text-center text-sm">
               No suggestions yet. Be the first to share an idea.
             </CardContent>
           </Card>

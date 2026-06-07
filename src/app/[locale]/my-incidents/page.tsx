@@ -1,14 +1,13 @@
-import { setRequestLocale, getTranslations } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { Container } from "@/components/ui/layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { IncidentList } from "@/components/incidents/incident-list";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import type { IncidentListItem } from "@/types";
 import { toIncidentListItems } from "@/lib/mappers";
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+export async function generateMetadata({ params: _params }: { params: Promise<{ locale: string }> }) {
   return { title: "My Incidents" };
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -26,12 +26,10 @@ export interface TakedownItem {
 }
 
 export function TakedownQueue({ items }: { items: TakedownItem[] }) {
-  const t = useTranslations("admin");
-  const locale = useLocale();
   if (items.length === 0) {
     return (
       <Card>
-        <CardContent className="py-12 text-center text-sm text-fg-muted">
+        <CardContent className="text-fg-muted py-12 text-center text-sm">
           No pending takedown requests.
         </CardContent>
       </Card>
@@ -59,7 +57,7 @@ function TakedownRow({ item }: { item: TakedownItem }) {
   };
   return (
     <Card>
-      <CardContent className="p-4 space-y-3">
+      <CardContent className="space-y-3 p-4">
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="muted">{item.reason}</Badge>
           <Badge
@@ -67,33 +65,50 @@ function TakedownRow({ item }: { item: TakedownItem }) {
               item.status === "approved"
                 ? "success"
                 : item.status === "rejected"
-                ? "danger"
-                : "warning"
+                  ? "danger"
+                  : "warning"
             }
           >
             {item.status}
           </Badge>
-          <span className="text-xs text-fg-muted">
+          <span className="text-fg-muted text-xs">
             {formatRelativeTime(new Date(item.created_at), locale)}
           </span>
         </div>
-        <p className="text-sm text-fg-primary whitespace-pre-wrap">{item.details}</p>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-fg-muted">
+        <p className="text-fg-primary text-sm whitespace-pre-wrap">{item.details}</p>
+        <div className="text-fg-muted flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
           {item.requester_name && <span>{item.requester_name}</span>}
           {item.organization && <span>{item.organization}</span>}
           {item.country && <span>{item.country}</span>}
           {item.target_url && (
-            <a href={item.target_url} target="_blank" rel="noreferrer noopener" className="text-brand-400 hover:underline truncate max-w-md">
+            <a
+              href={item.target_url}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="text-brand-400 max-w-md truncate hover:underline"
+            >
               {item.target_url}
             </a>
           )}
         </div>
         {item.status === "pending" && (
           <div className="flex gap-2">
-            <Button size="sm" variant="success" leftIcon={<Check className="h-3.5 w-3.5" />} isLoading={pending} onClick={() => decide("approve")}>
+            <Button
+              size="sm"
+              variant="success"
+              leftIcon={<Check className="h-3.5 w-3.5" />}
+              isLoading={pending}
+              onClick={() => decide("approve")}
+            >
               {t("approve")}
             </Button>
-            <Button size="sm" variant="danger" leftIcon={<X className="h-3.5 w-3.5" />} isLoading={pending} onClick={() => decide("reject")}>
+            <Button
+              size="sm"
+              variant="danger"
+              leftIcon={<X className="h-3.5 w-3.5" />}
+              isLoading={pending}
+              onClick={() => decide("reject")}
+            >
               {t("reject")}
             </Button>
           </div>

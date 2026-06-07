@@ -6,6 +6,7 @@ import "server-only";
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import type { SessionUser } from "@/types";
+import type { Database } from "@/types/database";
 
 export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
   const supabase = await createClient();
@@ -15,7 +16,7 @@ export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
   if (!user) return null;
 
   type UserProfile = Pick<
-    import("@/types/database").Database["public"]["Tables"]["users"]["Row"],
+    Database["public"]["Tables"]["users"]["Row"],
     "id" | "email" | "full_name" | "avatar_url" | "role" | "is_verified" | "created_at"
   >;
 

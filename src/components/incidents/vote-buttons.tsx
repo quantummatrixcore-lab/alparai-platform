@@ -21,7 +21,6 @@ export function VoteButtons({
   initialUserVote?: -1 | 0 | 1;
   disabled?: boolean;
 }) {
-  const t = useTranslations("incident");
   const tCommon = useTranslations("common");
   const [up, setUp] = useState(initialUpvotes);
   const [down, setDown] = useState(initialDownvotes);
@@ -53,7 +52,7 @@ export function VoteButtons({
   };
 
   return (
-    <div className="flex flex-col items-center gap-1 rounded-md border border-border-subtle bg-bg-secondary p-2">
+    <div className="border-border-subtle bg-bg-secondary flex flex-col items-center gap-1 rounded-md border p-2">
       <button
         onClick={() => handleVote(1)}
         disabled={disabled || pending}
@@ -69,7 +68,7 @@ export function VoteButtons({
       >
         <ThumbsUp className="h-4 w-4" />
       </button>
-      <span className="text-sm font-semibold text-fg-primary">{up - down}</span>
+      <span className="text-fg-primary text-sm font-semibold">{up - down}</span>
       <button
         onClick={() => handleVote(-1)}
         disabled={disabled || pending}

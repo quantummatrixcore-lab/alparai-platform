@@ -1,13 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormState } from "react-dom";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
 import { EvidenceUploader, SubmitButton } from "./evidence-uploader";
 import { PIIBanner } from "./pii-banner";
 import { Shield, CheckCircle2 } from "lucide-react";
@@ -39,8 +38,7 @@ export function IncidentForm({
     age: false,
     terms: false,
   });
-  const allConsents =
-    consents.truth && consents.anonymous && consents.age && consents.terms;
+  const allConsents = consents.truth && consents.anonymous && consents.age && consents.terms;
 
   useEffect(() => {
     if (state.ok) {
@@ -67,10 +65,20 @@ export function IncidentForm({
     };
   }, [title, description]);
 
-  const categoryOptions = (Object.keys({
-    hallucination: 0, bias: 0, privacy: 0, security: 0, misinformation: 0,
-    harassment: 0, manipulation: 0, inaccessibility: 0, copyright: 0, other: 0,
-  }) as IncidentCategory[]).map((c) => ({ value: c, label: tCat(c) }));
+  const categoryOptions = (
+    Object.keys({
+      hallucination: 0,
+      bias: 0,
+      privacy: 0,
+      security: 0,
+      misinformation: 0,
+      harassment: 0,
+      manipulation: 0,
+      inaccessibility: 0,
+      copyright: 0,
+      other: 0,
+    }) as IncidentCategory[]
+  ).map((c) => ({ value: c, label: tCat(c) }));
 
   const severityOptions: Array<{ value: IncidentSeverity; label: string }> = [
     { value: "low", label: t("severity_low") },
@@ -88,7 +96,7 @@ export function IncidentForm({
     <form action={formAction} className="space-y-6">
       {state.formError && (
         <div
-          className="rounded-md border border-danger-500/30 bg-danger-500/5 p-3 text-sm text-danger-400"
+          className="border-danger-500/30 bg-danger-500/5 text-danger-400 rounded-md border p-3 text-sm"
           role="alert"
         >
           {state.formError}
@@ -166,9 +174,7 @@ export function IncidentForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-fg-primary mb-1.5">
-          {t("evidence")}
-        </label>
+        <label className="text-fg-primary mb-1.5 block text-sm font-medium">{t("evidence")}</label>
         <EvidenceUploader name="evidence" />
       </div>
 
@@ -181,9 +187,9 @@ export function IncidentForm({
 
       {piiDetected && <PIIBanner />}
 
-      <fieldset className="space-y-3 rounded-md border border-border-subtle bg-bg-secondary/50 p-4">
-        <legend className="px-2 text-sm font-semibold text-fg-primary inline-flex items-center gap-1.5">
-          <Shield className="h-4 w-4 text-brand-400" />
+      <fieldset className="border-border-subtle bg-bg-secondary/50 space-y-3 rounded-md border p-4">
+        <legend className="text-fg-primary inline-flex items-center gap-1.5 px-2 text-sm font-semibold">
+          <Shield className="text-brand-400 h-4 w-4" />
           {t("consent_required", { defaultValue: "Required consents" })}
         </legend>
         <Checkbox
@@ -219,7 +225,7 @@ export function IncidentForm({
       <SubmitButton className="w-full">{t("submit")}</SubmitButton>
 
       {allConsents && (
-        <p className="inline-flex items-center gap-1.5 text-xs text-success-500">
+        <p className="text-success-500 inline-flex items-center gap-1.5 text-xs">
           <CheckCircle2 className="h-3.5 w-3.5" />
           {tCommon("allSet", { defaultValue: "All consents accepted" })}
         </p>
