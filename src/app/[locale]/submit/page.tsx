@@ -2,10 +2,10 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import { Container } from "@/components/ui/layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { IncidentForm } from "@/components/incidents/incident-form";
 import { GoogleSignInButton, EmailMagicLinkForm } from "@/components/auth/auth-buttons";
-import { Shield } from "lucide-react";
+import { Info } from "lucide-react";
 import type { AIProvider, AIModel } from "@/types";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -18,36 +18,6 @@ export default async function SubmitPage({ params }: { params: Promise<{ locale:
   const { locale } = await params;
   setRequestLocale(locale);
   const user = await getCurrentUser();
-  if (!user) {
-    return (
-      <Container size="narrow" className="py-12">
-        <Card variant="elevated">
-          <CardHeader>
-            <CardTitle className="inline-flex items-center gap-2">
-              <Shield className="text-brand-400 h-5 w-5" />
-              Sign in to report
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-fg-muted text-sm">
-              You need an account to submit an incident. This helps us keep the community
-              accountable and lets AI providers respond.
-            </p>
-            <GoogleSignInButton next={`/${locale}/submit`} className="w-full" />
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="border-border-subtle w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs">
-                <span className="bg-bg-elevated text-fg-muted px-2">or</span>
-              </div>
-            </div>
-            <EmailMagicLinkForm />
-          </CardContent>
-        </Card>
-      </Container>
-    );
-  }
 
   const supabase = await createServerClient();
   const [{ data: providersData }, { data: modelsData }] = await Promise.all([
@@ -75,9 +45,31 @@ export default async function SubmitPage({ params }: { params: Promise<{ locale:
           before publication.
         </p>
       </header>
+
+      {!user && (
+        <Card variant="default" className="border-brand-500/30 bg-brand-500/5 mb-6">
+          <CardContent className="flex items-start gap-3 py-4">
+            <Info className="text-brand-400 mt-0.5 h-4 w-4 shrink-0" />
+            <div className="space-y-2">
+              <p className="text-fg-primary text-sm font-medium">
+                Fill out the form now — sign in when you&apos;re ready to submit
+              </p>
+              <p className="text-fg-muted text-xs">
+                You can prepare your report without an account. When you click submit, you&apos;ll
+                be asked to sign in. This keeps the community accountable.
+              </p>
+              <div className="flex flex-wrap gap-2 pt-1">
+                <GoogleSignInButton next={`/${locale}/submit`} />
+                <EmailMagicLinkForm />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <Card variant="elevated">
         <CardContent>
-          <IncidentForm providers={providers} models={models} />
+          <IncidentForm providers={providers} models={models} isLoggedIn={!!user} />
         </CardContent>
       </Card>
     </Container>

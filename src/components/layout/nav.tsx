@@ -4,7 +4,7 @@ import * as React from "react";
 import { Link, usePathname } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-import { Home, FileText, BarChart3, ShieldAlert, Lightbulb } from "lucide-react";
+import { Home, FileText, BarChart3, ShieldAlert } from "lucide-react";
 import type { ComponentType } from "react";
 
 interface NavItem {
@@ -17,7 +17,6 @@ const navItems: NavItem[] = [
   { href: "/", labelKey: "home", icon: Home },
   { href: "/incidents", labelKey: "incidents", icon: FileText },
   { href: "/leaderboard", labelKey: "leaderboard", icon: BarChart3 },
-  { href: "/suggestions", labelKey: "suggestions", icon: Lightbulb },
   { href: "/legal/takedown", labelKey: "takedown", icon: ShieldAlert },
 ];
 
