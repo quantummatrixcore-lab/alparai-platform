@@ -7,29 +7,22 @@ export const APP_SHORT_NAME = "ALPAR" as const;
 export const APP_DESCRIPTION =
   "Trust infrastructure for AI accountability. Community-driven incident reporting platform." as const;
 export const APP_TAGLINE = "Trust infrastructure for AI accountability" as const;
-export const APP_URL =
-  process.env.NEXT_PUBLIC_APP_URL ?? "https://alparai.online" as const;
-export const APP_EMAIL = "hello@alparai.online" as const;
-export const APP_LEGAL_EMAIL =
-  process.env.LEGAL_EMAIL ?? "legal@alparai.online" as const;
-export const APP_PRIVACY_EMAIL =
-  process.env.PRIVACY_EMAIL ?? "privacy@alparai.online" as const;
-export const APP_TAKEDOWN_EMAIL =
-  process.env.TAKEDOWN_EMAIL ?? "takedown@alparai.online" as const;
-export const APP_SUPPORT_EMAIL =
-  process.env.SUPPORT_EMAIL ?? "support@alparai.online" as const;
+export const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? ("https://alparai.com" as const);
+export const APP_EMAIL = "hello@alparai.com" as const;
+export const APP_LEGAL_EMAIL = process.env.LEGAL_EMAIL ?? ("legal@alparai.com" as const);
+export const APP_PRIVACY_EMAIL = process.env.PRIVACY_EMAIL ?? ("privacy@alparai.com" as const);
+export const APP_TAKEDOWN_EMAIL = process.env.TAKEDOWN_EMAIL ?? ("takedown@alparai.com" as const);
+export const APP_SUPPORT_EMAIL = process.env.SUPPORT_EMAIL ?? ("support@alparai.com" as const);
 
 export const DEFAULT_LOCALE = "en" as const;
 export const SUPPORTED_LOCALES = ["en", "tr"] as const;
 export type Locale = (typeof SUPPORTED_LOCALES)[number];
 
-export const GITHUB_URL =
-  "https://github.com/quantummatrixcore-lab/sikayetvar" as const;
+export const GITHUB_URL = "https://github.com/quantummatrixcore-lab/Alparai.com" as const;
 export const LINKEDIN_URL =
-  process.env.NEXT_PUBLIC_LINKEDIN_URL ??
-  "https://www.linkedin.com/company/alpar-ai" as const;
+  process.env.NEXT_PUBLIC_LINKEDIN_URL ?? ("https://www.linkedin.com/company/alpar-ai" as const);
 export const TWITTER_URL =
-  process.env.NEXT_PUBLIC_TWITTER_URL ?? "https://twitter.com/alparai" as const;
+  process.env.NEXT_PUBLIC_TWITTER_URL ?? ("https://twitter.com/alparai" as const);
 
 export const NAV_LINKS = [
   { href: "/", labelKey: "nav.home" },

@@ -1,4 +1,11 @@
-import { APP_NAME, APP_DESCRIPTION, APP_URL, GITHUB_URL, TWITTER_URL, LINKEDIN_URL } from "@/lib/constants";
+import {
+  APP_NAME,
+  APP_DESCRIPTION,
+  APP_URL,
+  GITHUB_URL,
+  TWITTER_URL,
+  LINKEDIN_URL,
+} from "@/lib/constants";
 
 export function OrganizationJsonLd() {
   const data = {
@@ -11,16 +18,13 @@ export function OrganizationJsonLd() {
     sameAs: [GITHUB_URL, TWITTER_URL, LINKEDIN_URL],
     contactPoint: {
       "@type": "ContactPoint",
-      email: "hello@alparai.online",
+      email: "hello@alparai.com",
       contactType: "customer support",
       availableLanguage: ["English", "Turkish"],
     },
   };
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
   );
 }
 
@@ -41,10 +45,7 @@ export function WebSiteJsonLd() {
     },
   };
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
   );
 }
 
@@ -60,9 +61,6 @@ export function BreadcrumbJsonLd({ items }: { items: Array<{ name: string; url: 
     })),
   };
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
   );
 }

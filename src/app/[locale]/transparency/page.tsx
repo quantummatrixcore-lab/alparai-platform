@@ -28,6 +28,7 @@ export default async function TransparencyPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "legal" });
+  const tTransparency = await getTranslations({ locale, namespace: "transparency" });
 
   const supabase = await createServerClient();
 
@@ -90,7 +91,7 @@ export default async function TransparencyPage({
             </div>
             <div>
               <p className="text-fg-primary text-2xl font-bold">{totalIncidents ?? 0}</p>
-              <p className="text-fg-muted text-xs">Total reports</p>
+              <p className="text-fg-muted text-xs">{tTransparency("totalReports")}</p>
             </div>
           </CardContent>
         </Card>
@@ -101,7 +102,7 @@ export default async function TransparencyPage({
             </div>
             <div>
               <p className="text-fg-primary text-2xl font-bold">{publishRate}%</p>
-              <p className="text-fg-muted text-xs">Publish rate</p>
+              <p className="text-fg-muted text-xs">{tTransparency("publishRate")}</p>
             </div>
           </CardContent>
         </Card>
@@ -112,7 +113,7 @@ export default async function TransparencyPage({
             </div>
             <div>
               <p className="text-fg-primary text-2xl font-bold">{pendingIncidents ?? 0}</p>
-              <p className="text-fg-muted text-xs">Pending review</p>
+              <p className="text-fg-muted text-xs">{tTransparency("pendingReview")}</p>
             </div>
           </CardContent>
         </Card>
@@ -123,7 +124,7 @@ export default async function TransparencyPage({
             </div>
             <div>
               <p className="text-fg-primary text-2xl font-bold">{responseRate}%</p>
-              <p className="text-fg-muted text-xs">Provider response rate</p>
+              <p className="text-fg-muted text-xs">{tTransparency("providerResponseRate")}</p>
             </div>
           </CardContent>
         </Card>
@@ -138,26 +139,10 @@ export default async function TransparencyPage({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-sm">
-            <Step
-              number={1}
-              title="Submit"
-              desc="Anyone can report an incident. PII is automatically masked before storage."
-            />
-            <Step
-              number={2}
-              title="Review"
-              desc="Volunteer moderators review every submission for accuracy, not opinion."
-            />
-            <Step
-              number={3}
-              title="Publish"
-              desc="Approved incidents are published publicly. The AI provider is notified."
-            />
-            <Step
-              number={4}
-              title="Respond"
-              desc="AI providers can post an official response. Identity is verified before publishing."
-            />
+            <Step number={1} title={tTransparency("submit")} desc={tTransparency("submitDesc")} />
+            <Step number={2} title={tTransparency("review")} desc={tTransparency("reviewDesc")} />
+            <Step number={3} title={tTransparency("publish")} desc={tTransparency("publishDesc")} />
+            <Step number={4} title={tTransparency("respond")} desc={tTransparency("respondDesc")} />
           </CardContent>
         </Card>
 
@@ -171,37 +156,37 @@ export default async function TransparencyPage({
           <CardContent className="space-y-3 text-sm">
             <Row
               icon={<Users className="h-3.5 w-3.5" />}
-              label="Registered users"
+              label={tTransparency("registeredUsers")}
               value={totalUsers ?? 0}
             />
             <Row
               icon={<Eye className="h-3.5 w-3.5" />}
-              label="AI providers tracked"
+              label={tTransparency("aiProvidersTracked")}
               value={totalProviders ?? 0}
             />
             <Row
               icon={<FileText className="h-3.5 w-3.5" />}
-              label="Incidents reported"
+              label={tTransparency("incidentsReported")}
               value={totalIncidents ?? 0}
             />
             <Row
               icon={<CheckCircle2 className="h-3.5 w-3.5" />}
-              label="Published"
+              label={tTransparency("publishedLabel")}
               value={publishedIncidents ?? 0}
             />
             <Row
               icon={<Clock className="h-3.5 w-3.5" />}
-              label="Pending moderation"
+              label={tTransparency("pendingModeration")}
               value={pendingIncidents ?? 0}
             />
             <Row
               icon={<MessageSquare className="h-3.5 w-3.5" />}
-              label="Provider responses"
+              label={tTransparency("providerResponses")}
               value={totalResponses ?? 0}
             />
             <Row
               icon={<Shield className="h-3.5 w-3.5" />}
-              label="Takedown requests"
+              label={tTransparency("takedownRequests")}
               value={totalTakedowns ?? 0}
             />
           </CardContent>
@@ -215,19 +200,9 @@ export default async function TransparencyPage({
           </CardTitle>
         </CardHeader>
         <CardContent className="text-fg-secondary space-y-3 text-sm">
-          <p>
-            ALPAR AI is a transparency platform. We believe that accountability starts with
-            openness. Every number on this page is live and accurate.
-          </p>
-          <p>
-            We do not suppress, delay, or selectively publish incidents. Every submitted report that
-            meets our guidelines is published. Moderators cannot remove content based on pressure
-            from AI providers.
-          </p>
-          <p>
-            This platform is open source under AGPL-3.0. Anyone can audit the code, run an instance,
-            or contribute. We believe trust infrastructure should itself be trustworthy.
-          </p>
+          <p>{tTransparency("commitmentText1")}</p>
+          <p>{tTransparency("commitmentText2")}</p>
+          <p>{tTransparency("commitmentText3")}</p>
         </CardContent>
       </Card>
     </Container>

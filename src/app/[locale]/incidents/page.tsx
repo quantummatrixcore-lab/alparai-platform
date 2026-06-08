@@ -21,12 +21,15 @@ export default async function IncidentsPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "incident" });
   const { q, category, severity } = await searchParams;
   const supabase = await createServerClient();
 
   let query = supabase
     .from("incidents")
-    .select("id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id")
+    .select(
+      "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id"
+    )
     .eq("status", "published")
     .order("published_at", { ascending: false })
     .limit(50);
@@ -39,7 +42,10 @@ export default async function IncidentsPage({
     supabase.from("ai_providers").select("id, slug, name"),
   ]);
   const providerMap = new Map(
-    ((providersResult.data as Array<{ id: string; slug: string; name: string }>) ?? []).map((p) => [p.id, p])
+    ((providersResult.data as Array<{ id: string; slug: string; name: string }>) ?? []).map((p) => [
+      p.id,
+      p,
+    ])
   );
 
   const items: IncidentListItem[] = toIncidentListItems(incidentsResult.data)
@@ -66,10 +72,8 @@ export default async function IncidentsPage({
   return (
     <Container className="py-10">
       <header className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-fg-primary">All Incidents</h1>
-        <p className="mt-2 text-sm text-fg-muted">
-          Browse {items.length} published reports from the community.
-        </p>
+        <h1 className="text-fg-primary text-3xl font-bold tracking-tight">{t("page_title")}</h1>
+        <p className="text-fg-muted mt-2 text-sm">{t("page_subtitle", { count: items.length })}</p>
       </header>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
         <aside>

@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,12 +12,10 @@ import { Link } from "@/i18n/routing";
 import type { IncidentListItem } from "@/types";
 import { toIncidentListItems } from "@/lib/mappers";
 
-export async function generateMetadata({
-  params: _params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  return { title: "Admin Dashboard" };
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "admin" });
+  return { title: t("dashboard") };
 }
 
 export default async function AdminDashboardPage({
@@ -27,6 +25,7 @@ export default async function AdminDashboardPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "admin" });
   const user = await getCurrentUser();
   if (!user) redirect(`/${locale}/auth/signin?next=/${locale}/admin`);
   if (user.role !== "moderator" && user.role !== "admin") {
@@ -103,25 +102,25 @@ export default async function AdminDashboardPage({
             href={`/${locale}/admin/moderation` as never}
             className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
           >
-            Moderation
+            {t("moderation_queue")}
           </Link>
           <Link
             href={`/${locale}/admin/takedown` as never}
             className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
           >
-            Takedowns
+            {t("stats_takedown_requests")}
           </Link>
           <Link
             href={`/${locale}/admin/users` as never}
             className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
           >
-            Users
+            {t("users")}
           </Link>
           <Link
             href={`/${locale}/admin/providers` as never}
             className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
           >
-            Providers
+            {t("providers")}
           </Link>
           <Link
             href={`/${locale}/admin/autopilot` as never}
@@ -133,13 +132,13 @@ export default async function AdminDashboardPage({
             href={`/${locale}/admin/analysis` as never}
             className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
           >
-            Analysis
+            {t("analytics")}
           </Link>
           <Link
             href={`/${locale}/admin/audit` as never}
             className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
           >
-            Audit
+            {t("audit_log")}
           </Link>
         </nav>
       </header>
@@ -166,20 +165,20 @@ export default async function AdminDashboardPage({
             <CardHeader>
               <CardTitle className="inline-flex items-center gap-2 text-base">
                 <Clock className="text-fg-muted h-4 w-4" />
-                Quick overview
+                {t("quick_actions")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
               <div className="flex items-center justify-between">
-                <span className="text-fg-muted">Takedowns (pending)</span>
+                <span className="text-fg-muted">{t("stats_takedown_requests")}</span>
                 <span className="text-danger-500 font-semibold">{stats.takedown_requests}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-fg-muted">Providers registered</span>
+                <span className="text-fg-muted">{t("stats_providers")}</span>
                 <span className="text-brand-400 font-semibold">{stats.providers}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-fg-muted">Incidents today</span>
+                <span className="text-fg-muted">{t("stats_24h")}</span>
                 <span className="text-accent-400 font-semibold">{stats.recent_24h}</span>
               </div>
             </CardContent>

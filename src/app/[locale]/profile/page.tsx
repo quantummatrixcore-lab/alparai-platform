@@ -17,6 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function ProfilePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "profile" });
   const user = await getCurrentUser();
   if (!user) redirect(`/${locale}/auth/signin?next=/${locale}/profile`);
 
@@ -45,7 +46,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
                   <Mail className="h-3.5 w-3.5" /> {user.email}
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <Calendar className="h-3.5 w-3.5" /> Joined{" "}
+                  <Calendar className="h-3.5 w-3.5" /> {t("joined")}{" "}
                   {formatDate(new Date(user.createdAt), locale)}
                 </span>
               </div>
@@ -57,7 +58,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
                 )}
                 {user.isVerified && (
                   <Badge variant="success" size="sm" dot>
-                    Verified
+                    {t("verified")}
                   </Badge>
                 )}
               </div>
@@ -67,11 +68,11 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
         <CardContent className="border-border-subtle grid grid-cols-2 gap-4 border-t pt-6 lg:grid-cols-3">
           <div className="bg-bg-tertiary flex flex-col justify-center rounded-md p-4">
             <p className="text-fg-primary text-2xl font-bold">{myIncidents ?? 0}</p>
-            <p className="text-fg-muted text-xs">Incidents reported</p>
+            <p className="text-fg-muted text-xs">{t("incidentsReported")}</p>
           </div>
           <div className="bg-bg-tertiary flex flex-col justify-center rounded-md p-4">
             <p className="text-fg-primary text-2xl font-bold">{mySuggestions ?? 0}</p>
-            <p className="text-fg-muted text-xs">Suggestions made</p>
+            <p className="text-fg-muted text-xs">{t("suggestionsMade")}</p>
           </div>
           <div className="bg-brand-500/10 border-brand-500/20 group relative flex flex-col justify-center overflow-hidden rounded-md border p-4">
             <div className="absolute -right-4 -bottom-4 opacity-10 transition-opacity group-hover:opacity-20">
@@ -80,13 +81,15 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
             <p className="text-brand-500 relative z-10 flex items-center gap-1.5 text-2xl font-black">
               {rep}
             </p>
-            <p className="text-brand-400 relative z-10 text-xs font-medium">Reputation Score</p>
+            <p className="text-brand-400 relative z-10 text-xs font-medium">
+              {t("reputationScore")}
+            </p>
           </div>
         </CardContent>
         {badges.length > 0 && (
           <div className="border-border-subtle bg-bg-secondary/30 border-t p-6">
             <h3 className="text-fg-primary mb-3 flex items-center gap-2 text-sm font-semibold">
-              <Award className="text-warning-500 h-4 w-4" /> Earned Badges
+              <Award className="text-warning-500 h-4 w-4" /> {t("earnedBadges")}
             </h3>
             <div className="flex flex-wrap gap-2">
               {badges.map((b, i) => (

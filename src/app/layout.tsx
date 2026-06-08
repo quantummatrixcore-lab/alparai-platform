@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://alparai.online"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://alparai.com"),
   title: {
     default: "ALPAR AI — Trust infrastructure for AI accountability",
     template: "%s · ALPAR AI",

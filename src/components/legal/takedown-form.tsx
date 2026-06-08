@@ -25,12 +25,12 @@ export function TakedownForm() {
 
   if (done) {
     return (
-      <div className="rounded-xl border border-success-500/30 bg-success-500/5 p-6 text-center">
-        <CheckCircle2 className="mx-auto h-10 w-10 text-success-500" />
-        <h3 className="mt-3 text-lg font-semibold text-fg-primary">
+      <div className="border-success-500/30 bg-success-500/5 rounded-xl border p-6 text-center">
+        <CheckCircle2 className="text-success-500 mx-auto h-10 w-10" />
+        <h3 className="text-fg-primary mt-3 text-lg font-semibold">
           {t("takedownReceived", { defaultValue: "Request received" })}
         </h3>
-        <p className="mt-2 text-sm text-fg-muted">
+        <p className="text-fg-muted mt-2 text-sm">
           {t("takedownReceivedDesc", {
             defaultValue:
               "We review takedown requests within 7 days. You will receive a response at the email you provided.",
@@ -65,7 +65,7 @@ export function TakedownForm() {
       <Input
         name="target_url"
         label={t("takedownTarget", { defaultValue: "URL of the content" })}
-        placeholder="https://alparai.online/incidents/…"
+        placeholder="https://alparai.com/incidents/…"
         required
         type="url"
       />
@@ -83,7 +83,10 @@ export function TakedownForm() {
         />
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Input name="organization" label={t("takedownOrg", { defaultValue: "Organization (optional)" })} />
+        <Input
+          name="organization"
+          label={t("takedownOrg", { defaultValue: "Organization (optional)" })}
+        />
         <Input name="country" label={t("takedownCountry", { defaultValue: "Country" })} required />
       </div>
       <Select

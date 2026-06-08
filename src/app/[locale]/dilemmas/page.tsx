@@ -5,13 +5,14 @@ import { PollCard, type Poll } from "@/components/dilemmas/poll-card";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "nav" });
-  return { title: t("report") + " - AI Dilemmas" };
+  const t = await getTranslations({ locale, namespace: "dilemmas" });
+  return { title: t("pageTitle") };
 }
 
 export default async function DilemmasPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "dilemmas" });
   const supabase = await createServerClient();
 
   // Fetch active polls
@@ -28,12 +29,9 @@ export default async function DilemmasPage({ params }: { params: Promise<{ local
     <Container className="py-12">
       <header className="mx-auto mb-12 max-w-3xl space-y-4 text-center">
         <h1 className="bg-gradient-brand bg-clip-text pb-2 text-4xl font-extrabold tracking-tight text-transparent md:text-5xl">
-          AI Dilemmas
+          {t("pageTitle")}
         </h1>
-        <p className="text-fg-muted text-lg">
-          As AI becomes more integrated into our lives, we face unprecedented moral and ethical
-          challenges. Vote on these critical dilemmas to help shape the public consensus.
-        </p>
+        <p className="text-fg-muted text-lg">{t("pageDescription")}</p>
       </header>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

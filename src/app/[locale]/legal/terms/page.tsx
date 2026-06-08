@@ -70,7 +70,7 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
 
       <h2>{t("tContact")}</h2>
       <p>
-        <a href="mailto:legal@alparai.online">legal@alparai.online</a>
+        <a href="mailto:legal@alparai.com">legal@alparai.com</a>
       </p>
     </LegalLayout>
   );

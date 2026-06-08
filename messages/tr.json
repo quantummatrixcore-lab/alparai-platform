@@ -78,6 +78,10 @@
     "zero_tolerance": "Sıfır Tolerans. %100 Şeffaflık."
   },
   "incident": {
+    "page_title": "Tüm Olaylar",
+    "page_subtitle": "Topluluktan {count} yayınlanmış raporu inceleyin.",
+    "submit_page_title": "Bir olay bildir",
+    "submit_page_subtitle": "Ne olduğunu paylaşın. KVT otomatik olarak maskelenir. Her gönderi yayınlanmadan önce bir moderatör tarafından incelenir.",
     "title_placeholder": "Olayı kısaca tanımlayın",
     "description_placeholder": "Ne oldu? AI ne söyledi veya ne yaptı? Ne zaman? Hangi bağlamda?",
     "category": "Kategori",
@@ -149,13 +153,18 @@
     "anon": "Anonim"
   },
   "leaderboard": {
-    "title": "AI Sağlayıcı Skor Tablosu",
-    "subtitle": "Bildirilen olay sayısına göre sıralı (az olan daha iyi)",
+    "title": "Yapay Zeka Sağlayıcı Sıralaması",
+    "subtitle": "Bildirilen olaylara göre sıralanır (düşük iyidir)",
     "rank": "Sıra",
-    "provider": "AI Sağlayıcı",
-    "incidents": "Olay",
+    "provider": "Yapay Zeka Sağlayıcısı",
+    "incidents": "Olaylar",
     "resolved": "Çözülen",
-    "avg_severity": "Ort. ciddiyet"
+    "avg_severity": "Ort. ciddiyet",
+    "responses": "Yanıtlar",
+    "responseRate": "Yanıt Oranı",
+    "providersTakipEdilen": "Takip edilen sağlayıcılar",
+    "toplamYanit": "Toplam yanıt",
+    "ortYanitOrani": "Ort. yanıt oranı"
   },
   "auth": {
     "signin_with_google": "Google ile devam et",
@@ -543,6 +552,8 @@
     "analysisSubtitle": "Platform iyileştirmesi için AI model analizleri"
   },
   "dilemmas": {
+    "pageTitle": "Yapay Zeka Dilemmaları",
+    "pageDescription": "Yapay zeka hayatımızın vazgeçilmez bir parçası haline geldikçe, benzeri görülmemiş ahlaki ve etik zorluklarla karşılaşıyoruz. Bu kritik dilemmalara oy vererek kamuoyunun oluşmasına yardımcı olun.",
     "title": "Halkın Sesi: Yapay Zeka Dilemmaları",
     "description": "Bu sorunun cevabı geleceğimizi şekillendirebilir. Oyunuzu verin, topluluğun düşüncesini görün.",
     "turnstileRequired": "Lütfen önce bot doğrulamasını (Turnstile) tamamlayın.",
@@ -581,5 +592,62 @@
       "subtitle": "Bu sorunun cevabı geleceğimizi şekillendirebilir. Oyunuzu verin, topluluğun düşüncesini görün.",
       "critical_question": "Kritik Soru"
     }
+  },
+  "myIncidents": {
+    "title": "Olaylarım",
+    "subtitle": "{count} gönderi, tüm durumlar.",
+    "metadata_title": "Olaylarım"
+  },
+  "profile": {
+    "joined": "Katılma tarihi",
+    "verified": "Doğrulanmış",
+    "incidentsReported": "Bildirilen olaylar",
+    "suggestionsMade": "Yapılan öneriler",
+    "reputationScore": "İtibar Puanı",
+    "earnedBadges": "Kazanılan Rozetler"
+  },
+  "brand": {
+    "verified": "Doğrulanmış",
+    "website": "Web sitesi",
+    "models": "Modeller",
+    "trustScore": "Güven Puanı",
+    "totalIncidents": "Toplam olay",
+    "responseRate": "Yanıt oranı",
+    "avgViews": "Ort. görüntülenme",
+    "severityBreakdown": "Ciddiyet dağılımı",
+    "critical": "Kritik",
+    "high": "Yüksek",
+    "medium": "Orta",
+    "low": "Düşük",
+    "quickStats": "Hızlı istatistikler",
+    "published": "Yayınlanan",
+    "responsesGiven": "Verilen yanıtlar",
+    "totalViews": "Toplam görüntülenme",
+    "incidentsResponded": "Yanıt verilen olaylar",
+    "incidentsReported": "Bildirilen olaylar ({count})"
+  },
+  "transparency": {
+    "totalReports": "Toplam rapor",
+    "publishRate": "Yayın oranı",
+    "pendingReview": "İncelenmeyi bekleyen",
+    "providerResponseRate": "Sağlayıcı yanıt oranı",
+    "submit": "Gönder",
+    "submitDesc": "Herkes bir olayı bildirebilir. KVT, depolama öncesi otomatik olarak maskelenir.",
+    "review": "İncele",
+    "reviewDesc": "Gönüllü moderatörler her gönderiyi doğruluk için inceler, görüş için değil.",
+    "publish": "Yayınla",
+    "publishDesc": "Onaylanan olaylar kamuya açık olarak yayınlanır. Yapay zeka sağlayıcısına bildirilir.",
+    "respond": "Yanıt Ver",
+    "respondDesc": "Yapay zeka sağlayıcıları resmi bir yanıt yayınlayabilir. Kimlik, yayınlanmadan önce doğrulanır.",
+    "registeredUsers": "Kayıtlı kullanıcılar",
+    "aiProvidersTracked": "Takip edilen yapay zeka sağlayıcıları",
+    "incidentsReported": "Bildirilen olaylar",
+    "publishedLabel": "Yayınlanan",
+    "pendingModeration": "Moderasyon bekleyen",
+    "providerResponses": "Sağlayıcı yanıtları",
+    "takedownRequests": "Kaldırma talepleri",
+    "commitmentText1": "ALPAR AI bir şeffaflık platformudur. Hesap verebilirliğin şeffaflıkla başladığına inanıyoruz. Bu sayfadaki her rakam canlı ve doğrudur.",
+    "commitmentText2": "Olayları bastırmıyor, ertelemiyor veya seçici olarak yayınlamıyoruz. Kılavuzlarımıza uyan her gönderilen rapor yayınlanır. Moderatörler sağlayıcıların baskısıyla içerik kaldıramaz.",
+    "commitmentText3": "Bu platform AGPL-3.0 kapsamında açık kaynaklıdır. Herkes kodu denetleyebilir, bir örnek çalıştırabilir veya katkıda bulunabilir. Güven altyapısının kendisinin de güvenilir olması gerektiğine inanıyoruz."
   }
 }

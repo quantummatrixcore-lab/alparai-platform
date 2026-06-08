@@ -8,25 +8,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: t("takedownTitle") };
 }
 
-export default async function TakedownPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function TakedownPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "legal" });
   return (
-    <LegalLayout
-      title={t("takedownTitle")}
-      lastUpdated="2026-06-01"
-    >
-      <p>
-        {t("takedownIntro", { days: 7 })}
-      </p>
-      <p>
-        {t("takedownGdpr")}
-      </p>
+    <LegalLayout title={t("takedownTitle")} lastUpdated="2026-06-01">
+      <p>{t("takedownIntro", { days: 7 })}</p>
+      <p>{t("takedownGdpr")}</p>
       <h2>{t("takedownHowTitle")}</h2>
       <ol>
         <li>{t("takedownHow1")}</li>
@@ -44,13 +33,10 @@ export default async function TakedownPage({
         <li>{t("takedownNext4")}</li>
       </ul>
       <h2>{t("takedownAbuseTitle")}</h2>
-      <p>
-        {t("takedownAbuse")}
-      </p>
+      <p>{t("takedownAbuse")}</p>
       <h2>{t("takedownDirectTitle")}</h2>
       <p>
-        {t("takedownDirect")}{" "}
-        <a href="mailto:takedown@alparai.online">takedown@alparai.online</a>
+        {t("takedownDirect")} <a href="mailto:takedown@alparai.com">takedown@alparai.com</a>
       </p>
     </LegalLayout>
   );
