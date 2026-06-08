@@ -2,14 +2,42 @@ import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import { Container } from "@/components/ui/layout";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { IncidentList } from "@/components/incidents/incident-list";
-import { Building2, Globe, Mail, ExternalLink } from "lucide-react";
+import {
+  Building2,
+  Globe,
+  Mail,
+  ExternalLink,
+  Shield,
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
+  Eye,
+  TrendingUp,
+} from "lucide-react";
 import type { IncidentListItem } from "@/types";
 import { toIncidentListItems } from "@/lib/mappers";
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+function calculateTrustScore(
+  totalIncidents: number,
+  responseCount: number,
+  resolvedCount: number
+): number {
+  if (totalIncidents === 0) return 0;
+  const responseRate = responseCount / totalIncidents;
+  const resolutionRate = resolvedCount / totalIncidents;
+  const volumeBonus = Math.min(totalIncidents / 10, 1);
+  const raw = responseRate * 40 + resolutionRate * 40 + volumeBonus * 20;
+  return Math.round(Math.min(raw, 100));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
   const { slug } = await params;
   return { title: `Brand: ${slug}` };
 }
@@ -30,19 +58,32 @@ export default async function BrandPage({
     .maybeSingle();
   if (!provider) notFound();
 
-  const [incidentsRes, modelsRes] = await Promise.all([
+  const providerId = (provider as Record<string, unknown>)["id"] as string;
+
+  const [incidentsRes, modelsRes, allIncidentsRes, responsesRes] = await Promise.all([
     supabase
       .from("incidents")
-      .select("id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id")
+      .select(
+        "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id"
+      )
       .eq("status", "published")
-      .eq("ai_provider_id", (provider as { id: string }).id)
+      .eq("ai_provider_id", providerId)
       .order("published_at", { ascending: false })
       .limit(50),
     supabase
       .from("ai_models")
       .select("id, name, version, status, released_at")
-      .eq("provider_id", (provider as { id: string }).id)
+      .eq("provider_id", providerId)
       .order("name"),
+    supabase
+      .from("incidents")
+      .select("id, severity, status, views_count")
+      .eq("ai_provider_id", providerId),
+    supabase
+      .from("ai_provider_responses")
+      .select("id, incident_id, is_official, is_published, created_at")
+      .eq("ai_provider_id", providerId)
+      .eq("is_published", true),
   ]);
 
   const providerRow = provider as Record<string, unknown>;
@@ -53,6 +94,27 @@ export default async function BrandPage({
   const providerContact = providerRow["contact_email"] as string | null;
   const providerLogo = providerRow["logo_url"] as string | null;
   const isVerified = (providerRow["is_verified"] as boolean) ?? false;
+
+  const allIncidents = (allIncidentsRes.data as Array<Record<string, unknown>>) ?? [];
+  const responses = (responsesRes.data as Array<Record<string, unknown>>) ?? [];
+
+  const totalIncidents = allIncidents.length;
+  const publishedIncidents = allIncidents.filter((i) => i["status"] === "published").length;
+  const responseCount = responses.length;
+  const respondedIncidentIds = new Set(responses.map((r) => r["incident_id"]));
+  const responseRate = totalIncidents > 0 ? Math.round((responseCount / totalIncidents) * 100) : 0;
+
+  const severityBreakdown = {
+    critical: allIncidents.filter((i) => i["severity"] === "critical").length,
+    high: allIncidents.filter((i) => i["severity"] === "high").length,
+    medium: allIncidents.filter((i) => i["severity"] === "medium").length,
+    low: allIncidents.filter((i) => i["severity"] === "low").length,
+  };
+
+  const totalViews = allIncidents.reduce((sum, i) => sum + ((i["views_count"] as number) ?? 0), 0);
+  const avgViews = totalIncidents > 0 ? Math.round(totalViews / totalIncidents) : 0;
+
+  const trustScore = calculateTrustScore(totalIncidents, responseCount, responseCount);
 
   const incidents: IncidentListItem[] = toIncidentListItems(incidentsRes.data).map((item) => ({
     ...item,
@@ -69,28 +131,32 @@ export default async function BrandPage({
               <img
                 src={providerLogo}
                 alt={`${providerName} logo`}
-                className="h-16 w-16 rounded-md border border-border-subtle bg-bg-tertiary object-contain"
+                className="border-border-subtle bg-bg-tertiary h-16 w-16 rounded-md border object-contain"
               />
             ) : (
-              <div className="flex h-16 w-16 items-center justify-center rounded-md border border-border-subtle bg-bg-tertiary">
-                <Building2 className="h-8 w-8 text-fg-muted" />
+              <div className="border-border-subtle bg-bg-tertiary flex h-16 w-16 items-center justify-center rounded-md border">
+                <Building2 className="text-fg-muted h-8 w-8" />
               </div>
             )}
             <div className="flex-1 space-y-2">
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-2xl font-bold text-fg-primary">{providerName}</h1>
-                {isVerified && <Badge variant="success" dot>Verified</Badge>}
+                <h1 className="text-fg-primary text-2xl font-bold">{providerName}</h1>
+                {isVerified && (
+                  <Badge variant="success" dot>
+                    Verified
+                  </Badge>
+                )}
               </div>
               {providerDescription && (
-                <p className="text-sm text-fg-secondary">{providerDescription}</p>
+                <p className="text-fg-secondary text-sm">{providerDescription}</p>
               )}
-              <div className="flex flex-wrap items-center gap-3 text-xs text-fg-muted">
+              <div className="text-fg-muted flex flex-wrap items-center gap-3 text-xs">
                 {providerWebsite && (
                   <a
                     href={providerWebsite}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="inline-flex items-center gap-1 hover:text-brand-400"
+                    className="hover:text-brand-400 inline-flex items-center gap-1"
                   >
                     <Globe className="h-3 w-3" />
                     Website
@@ -100,7 +166,7 @@ export default async function BrandPage({
                 {providerContact && (
                   <a
                     href={`mailto:${providerContact}`}
-                    className="inline-flex items-center gap-1 hover:text-brand-400"
+                    className="hover:text-brand-400 inline-flex items-center gap-1"
                   >
                     <Mail className="h-3 w-3" />
                     {providerContact}
@@ -112,7 +178,7 @@ export default async function BrandPage({
         </CardHeader>
         {modelsRes.data && modelsRes.data.length > 0 && (
           <CardContent>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-fg-muted">
+            <p className="text-fg-muted mb-2 text-xs font-semibold tracking-wider uppercase">
               Models
             </p>
             <div className="flex flex-wrap gap-2">
@@ -128,8 +194,117 @@ export default async function BrandPage({
         )}
       </Card>
 
+      <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <Card>
+          <CardContent className="flex items-center gap-3 p-4">
+            <div className="bg-brand-500/10 flex h-10 w-10 items-center justify-center rounded-lg">
+              <Shield className="text-brand-400 h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-fg-primary text-2xl font-bold">{trustScore}</p>
+              <p className="text-fg-muted text-xs">TrustScore</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="flex items-center gap-3 p-4">
+            <div className="bg-warning-500/10 flex h-10 w-10 items-center justify-center rounded-lg">
+              <AlertTriangle className="text-warning-500 h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-fg-primary text-2xl font-bold">{totalIncidents}</p>
+              <p className="text-fg-muted text-xs">Total incidents</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="flex items-center gap-3 p-4">
+            <div className="bg-success-500/10 flex h-10 w-10 items-center justify-center rounded-lg">
+              <CheckCircle2 className="text-success-500 h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-fg-primary text-2xl font-bold">{responseRate}%</p>
+              <p className="text-fg-muted text-xs">Response rate</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="flex items-center gap-3 p-4">
+            <div className="bg-accent-500/10 flex h-10 w-10 items-center justify-center rounded-lg">
+              <Eye className="text-accent-400 h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-fg-primary text-2xl font-bold">{avgViews}</p>
+              <p className="text-fg-muted text-xs">Avg. views</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="mb-8 grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle className="inline-flex items-center gap-2 text-sm">
+              <TrendingUp className="text-brand-400 h-4 w-4" />
+              Severity breakdown
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {[
+                { label: "Critical", count: severityBreakdown.critical, color: "bg-danger-500" },
+                { label: "High", count: severityBreakdown.high, color: "bg-danger-400" },
+                { label: "Medium", count: severityBreakdown.medium, color: "bg-warning-500" },
+                { label: "Low", count: severityBreakdown.low, color: "bg-success-500" },
+              ].map((s) => (
+                <div key={s.label} className="flex items-center gap-3">
+                  <span className="text-fg-muted w-16 text-xs">{s.label}</span>
+                  <div className="bg-bg-tertiary h-2 flex-1 rounded-full">
+                    <div
+                      className={`h-2 rounded-full ${s.color}`}
+                      style={{
+                        width: totalIncidents > 0 ? `${(s.count / totalIncidents) * 100}%` : "0%",
+                      }}
+                    />
+                  </div>
+                  <span className="text-fg-primary w-8 text-right text-xs font-semibold">
+                    {s.count}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="inline-flex items-center gap-2 text-sm">
+              <Clock className="text-fg-muted h-4 w-4" />
+              Quick stats
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm">
+            <div className="flex items-center justify-between">
+              <span className="text-fg-muted">Published</span>
+              <span className="text-success-500 font-semibold">{publishedIncidents}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-fg-muted">Responses given</span>
+              <span className="text-brand-400 font-semibold">{responseCount}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-fg-muted">Total views</span>
+              <span className="text-fg-primary font-semibold">{totalViews.toLocaleString()}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-fg-muted">Incidents responded</span>
+              <span className="text-accent-400 font-semibold">{respondedIncidentIds.size}</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       <div className="space-y-3">
-        <h2 className="text-lg font-semibold text-fg-primary">
+        <h2 className="text-fg-primary text-lg font-semibold">
           Incidents reported ({incidents.length})
         </h2>
         <IncidentList incidents={incidents} />

@@ -2,68 +2,76 @@
 
 /* ===========================================================================
    ALPAR AI — Design Tokens
-   Primary: brand blue (logo) | Accent: success green | Danger: alert red
+   Primary: deep blue (trust/transparency) | Accent: violet (AI innovation)
+   Success: green (operational) | Danger: red (critical alerts)
    =========================================================================== */
 
 :root {
-  /* Brand — Blue */
-  --brand-50:  #eff6ff;
-  --brand-100: #dbeafe;
-  --brand-200: #bfdbfe;
-  --brand-300: #93c5fd;
-  --brand-400: #60a5fa;
-  --brand-500: #1b95c0;
-  --brand-600: #14789b;
-  --brand-700: #0f5e7c;
-  --brand-800: #0a455c;
-  --brand-900: #062d3d;
+  /* Brand — Deep Blue (trust, transparency, accountability) */
+  --brand-50: #eef4ff;
+  --brand-100: #dbe6fe;
+  --brand-200: #bfd3fe;
+  --brand-300: #93b4fd;
+  --brand-400: #6090fa;
+  --brand-500: #1b6fb5;
+  --brand-600: #145a94;
+  --brand-700: #0f4575;
+  --brand-800: #0a3156;
+  --brand-900: #061f3a;
 
-  /* Success — Neon Green */
+  /* Accent — Violet (AI, innovation, intelligence) */
+  --accent-300: #c4b5fd;
+  --accent-400: #a78bfa;
+  --accent-500: #8b5cf6;
+  --accent-600: #7c3aed;
+
+  /* Success — Emerald Green (operational, verified, safe) */
   --success-300: #6ee7b7;
   --success-400: #34d399;
   --success-500: #10b981;
   --success-600: #059669;
 
-  /* Danger — Neon Red */
+  /* Danger — Signal Red (critical, blocked, violation) */
   --danger-300: #fca5a5;
   --danger-400: #f87171;
   --danger-500: #ef4444;
   --danger-600: #dc2626;
 
-  /* Warning — Amber */
+  /* Warning — Amber (pending, review needed) */
   --warning-400: #fbbf24;
   --warning-500: #f59e0b;
   --warning-600: #d97706;
 
-  /* Surfaces */
-  --bg-primary:   #030712;
-  --bg-secondary: #0b0f19;
-  --bg-tertiary:  #111827;
-  --bg-elevated:  #1a2233;
-  --border-subtle: #1f2937;
-  --border-strong: #374151;
-  --fg-primary:   #f9fafb;
-  --fg-secondary: #d1d5db;
-  --fg-muted:     #9ca3af;
-  --fg-disabled:  #6b7280;
+  /* Surfaces — Deep navy with subtle blue undertone */
+  --bg-primary: #030712;
+  --bg-secondary: #0a0f1e;
+  --bg-tertiary: #111827;
+  --bg-elevated: #182033;
+  --border-subtle: #1e2a3f;
+  --border-strong: #334155;
+  --fg-primary: #f1f5f9;
+  --fg-secondary: #cbd5e1;
+  --fg-muted: #94a3b8;
+  --fg-disabled: #64748b;
 
   /* Glow effects */
-  --glow-brand: 0 0 20px rgba(27, 149, 192, 0.4);
-  --glow-success: 0 0 20px rgba(16, 185, 129, 0.4);
-  --glow-danger: 0 0 20px rgba(239, 68, 68, 0.4);
+  --glow-brand: 0 0 24px rgba(27, 111, 181, 0.35);
+  --glow-accent: 0 0 24px rgba(139, 92, 246, 0.3);
+  --glow-success: 0 0 20px rgba(16, 185, 129, 0.35);
+  --glow-danger: 0 0 20px rgba(239, 68, 68, 0.35);
 
   /* Type scale (perfect fourth) */
-  --fs-xs:   0.75rem;   /* 12px */
-  --fs-sm:   0.875rem;  /* 14px */
-  --fs-base: 1rem;      /* 16px */
-  --fs-lg:   1.125rem;  /* 18px */
-  --fs-xl:   1.25rem;   /* 20px */
-  --fs-2xl:  1.5rem;    /* 24px */
-  --fs-3xl:  1.875rem;  /* 30px */
-  --fs-4xl:  2.25rem;   /* 36px */
-  --fs-5xl:  3rem;      /* 48px */
-  --fs-6xl:  3.75rem;   /* 60px */
-  --fs-7xl:  4.5rem;    /* 72px */
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.25rem;
+  --fs-2xl: 1.5rem;
+  --fs-3xl: 1.875rem;
+  --fs-4xl: 2.25rem;
+  --fs-5xl: 3rem;
+  --fs-6xl: 3.75rem;
+  --fs-7xl: 4.5rem;
 
   /* Spacing (4px base) */
   --space-1: 0.25rem;
@@ -97,7 +105,7 @@
 }
 
 @theme inline {
-  --color-brand-50:  var(--brand-50);
+  --color-brand-50: var(--brand-50);
   --color-brand-100: var(--brand-100);
   --color-brand-200: var(--brand-200);
   --color-brand-300: var(--brand-300);
@@ -107,6 +115,11 @@
   --color-brand-700: var(--brand-700);
   --color-brand-800: var(--brand-800);
   --color-brand-900: var(--brand-900);
+
+  --color-accent-300: var(--accent-300);
+  --color-accent-400: var(--accent-400);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
 
   --color-success-300: var(--success-300);
   --color-success-400: var(--success-400);
@@ -122,19 +135,21 @@
   --color-warning-500: var(--warning-500);
   --color-warning-600: var(--warning-600);
 
-  --color-bg-primary:   var(--bg-primary);
+  --color-bg-primary: var(--bg-primary);
   --color-bg-secondary: var(--bg-secondary);
-  --color-bg-tertiary:  var(--bg-tertiary);
-  --color-bg-elevated:  var(--bg-elevated);
+  --color-bg-tertiary: var(--bg-tertiary);
+  --color-bg-elevated: var(--bg-elevated);
   --color-border-subtle: var(--border-subtle);
   --color-border-strong: var(--border-strong);
-  --color-fg-primary:   var(--fg-primary);
+  --color-fg-primary: var(--fg-primary);
   --color-fg-secondary: var(--fg-secondary);
-  --color-fg-muted:     var(--fg-muted);
-  --color-fg-disabled:  var(--fg-disabled);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-disabled: var(--fg-disabled);
 
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, Monaco, "Cascadia Code", monospace;
+  --font-sans:
+    var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono:
+    var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, Monaco, "Cascadia Code", monospace;
 }
 
 /* ===========================================================================
@@ -154,7 +169,10 @@ body {
   background-color: var(--bg-primary);
   color: var(--fg-primary);
   font-family: var(--font-sans);
-  font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+  font-feature-settings:
+    "rlig" 1,
+    "calt" 1,
+    "ss01" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -212,13 +230,13 @@ body {
 }
 
 @utility bg-gradient-brand {
-  background-image: linear-gradient(135deg, var(--brand-500) 0%, var(--brand-700) 100%);
+  background-image: linear-gradient(135deg, var(--brand-500) 0%, var(--accent-600) 100%);
 }
 
 @utility bg-gradient-hero {
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(27, 149, 192, 0.15), transparent 70%),
-    radial-gradient(ellipse 60% 50% at 80% 50%, rgba(16, 185, 129, 0.08), transparent 70%),
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(27, 111, 181, 0.15), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 50%, rgba(139, 92, 246, 0.06), transparent 70%),
     var(--bg-primary);
 }
 
@@ -233,8 +251,10 @@ body {
     inset: 0;
     padding: 1px;
     border-radius: inherit;
-    background: linear-gradient(135deg, var(--brand-500), var(--brand-700));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    background: linear-gradient(135deg, var(--brand-500), var(--accent-600));
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
