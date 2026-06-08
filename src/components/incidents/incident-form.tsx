@@ -20,11 +20,9 @@ const initialState: SubmitIncidentState = { ok: false };
 export function IncidentForm({
   providers,
   models,
-  isLoggedIn,
 }: {
   providers: AIProvider[];
   models: AIModel[];
-  isLoggedIn: boolean;
 }) {
   const t = useTranslations("incident");
   const tCat = useTranslations("categories");
@@ -224,23 +222,7 @@ export function IncidentForm({
         />
       </fieldset>
 
-      {!isLoggedIn ? (
-        <div className="space-y-3">
-          <div className="border-border-subtle bg-bg-secondary/50 rounded-md border p-4 text-center">
-            <p className="text-fg-primary text-sm font-medium">
-              {t("sign_in_to_submit", { defaultValue: "Sign in to submit your report" })}
-            </p>
-            <p className="text-fg-muted mt-1 text-xs">
-              {t("sign_in_hint", {
-                defaultValue:
-                  "Your report is saved in this form. Sign in and it will be submitted automatically.",
-              })}
-            </p>
-          </div>
-        </div>
-      ) : (
-        <SubmitButton className="w-full">{t("submit")}</SubmitButton>
-      )}
+      <SubmitButton className="w-full">{t("submit")}</SubmitButton>
 
       {allConsents && (
         <p className="text-success-500 inline-flex items-center gap-1.5 text-xs">
