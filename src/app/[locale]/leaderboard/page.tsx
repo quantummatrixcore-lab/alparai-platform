@@ -166,8 +166,30 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
                   <td className="p-4">
                     <Link
                       href={`/brand/${p.slug}`}
-                      className="text-fg-primary hover:text-brand-400 font-medium hover:underline"
+                      className="text-fg-primary hover:text-brand-400 group flex items-center gap-3 font-medium transition-colors"
                     >
+                      <div className="border-border-subtle bg-bg-primary relative h-10 w-10 shrink-0 overflow-hidden rounded-xl border shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(231,76,60,0.3)]">
+                        {p.logo_url ? (
+                          <>
+                            <img
+                              src={p.logo_url}
+                              alt={`${p.name} logo`}
+                              className="h-full w-full object-contain p-1.5"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = "none";
+                                (e.target as HTMLImageElement).nextElementSibling?.classList.remove("hidden");
+                              }}
+                            />
+                            <div className="bg-bg-tertiary text-fg-muted hidden h-full w-full items-center justify-center text-sm font-bold">
+                              {p.name.charAt(0)}
+                            </div>
+                          </>
+                        ) : (
+                          <div className="bg-bg-tertiary text-fg-muted flex h-full w-full items-center justify-center text-sm font-bold">
+                            {p.name.charAt(0)}
+                          </div>
+                        )}
+                      </div>
                       {p.name}
                     </Link>
                   </td>
