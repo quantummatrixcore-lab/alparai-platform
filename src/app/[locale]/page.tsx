@@ -11,6 +11,7 @@ import { GetInvolved } from "@/components/marketing/get-involved";
 import { ClosingSection } from "@/components/marketing/closing-section";
 import { SuggestFeatureCTA } from "@/components/marketing/cta-suggest-feature";
 import { Container, Section } from "@/components/ui/layout";
+import { PollCard, type Poll } from "@/components/dilemmas/poll-card";
 import type { IncidentListItem, LeaderboardEntry } from "@/types";
 import { toIncidentListItems } from "@/lib/mappers";
 
@@ -19,7 +20,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   setRequestLocale(locale);
   const supabase = await createServerClient();
 
-  const [incidentsResult, incidentsCountResult, providersResult, countriesResult] =
+  const [incidentsResult, incidentsCountResult, providersResult, countriesResult, pollsResult] =
     await Promise.all([
       supabase
         .from("incidents")
@@ -38,6 +39,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         .select("id, slug, name, description, logo_url, website_url, is_verified")
         .order("name"),
       supabase.from("incidents").select("location_country").not("location_country", "is", null),
+      supabase
+        .from("ai_polls")
+        .select("*")
+        .eq("is_active", true)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .returns<Poll[]>(),
     ]);
 
   const providerMap = new Map(
@@ -77,6 +85,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       .filter(Boolean)
   ).size;
 
+  const topPoll = pollsResult.data?.[0];
+
   return (
     <>
       <HeroSection
@@ -84,6 +94,26 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         totalProviders={providersResult.data?.length ?? 0}
         totalCountries={countries}
       />
+
+      {topPoll && (
+        <Section className="bg-bg-secondary border-brand-500/10 border-y">
+          <Container>
+            <div className="mx-auto mb-8 max-w-4xl text-center">
+              <h2 className="bg-gradient-brand bg-clip-text text-3xl font-extrabold text-transparent">
+                Halkın Sesi: AI Dilemmas
+              </h2>
+              <p className="text-fg-muted mt-2">
+                Bu sorunun cevabı geleceğimizi şekillendirebilir. Oyunuzu verin, topluluğun
+                düşüncesini görün.
+              </p>
+            </div>
+            <div className="mx-auto max-w-2xl">
+              <PollCard poll={topPoll} />
+            </div>
+          </Container>
+        </Section>
+      )}
+
       <FounderStory />
       <WhyItMatters />
       <HowItWorks />
