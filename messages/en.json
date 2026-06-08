@@ -121,7 +121,17 @@
     "or_continue_email": "Or continue with email",
     "magic_link_sent": "Check your email for the sign-in link",
     "welcome_back": "Welcome back",
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "signin_title": "Sign in to ALPAR AI",
+    "signin_description": "We use Google for secure authentication. We never see your password. We do not post anything to your social media.",
+    "or_divider": "OR",
+    "terms_prefix": "By signing in you confirm that you are at least 18 years old and accept our",
+    "terms_service": "Terms of Service",
+    "terms_and": "and",
+    "terms_privacy": "Privacy Policy",
+    "benefit_no_password": "No password to remember",
+    "benefit_no_sell": "We never sell your data",
+    "benefit_delete": "You can delete your account at any time"
   },
   "admin": {
     "dashboard": "Dashboard",
