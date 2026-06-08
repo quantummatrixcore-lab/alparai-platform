@@ -14,19 +14,7 @@ export async function middleware(request: NextRequest) {
   const intlResponse = intlMiddleware(request);
 
   // 2. Supabase session refresh
-  const supabaseResponse = await updateSession(request);
-
-  // Merge cookies from both middleware layers
-  supabaseResponse.cookies.getAll().forEach((cookie) => {
-    intlResponse.cookies.set(cookie);
-  });
-  intlResponse.cookies.getAll().forEach((cookie) => {
-    if (!supabaseResponse.cookies.has(cookie.name)) {
-      supabaseResponse.cookies.set(cookie);
-    }
-  });
-
-  return supabaseResponse;
+  return await updateSession(request, intlResponse);
 }
 
 export const config = {

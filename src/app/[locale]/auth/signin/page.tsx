@@ -12,63 +12,58 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: t("welcome_back") };
 }
 
-export default async function SignInPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function SignInPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const user = await getCurrentUser();
   if (user) redirect(`/${locale}/profile`);
+
+  const t = await getTranslations({ locale, namespace: "auth" });
 
   return (
     <Container size="narrow" className="py-12">
       <Card variant="elevated">
         <CardHeader>
           <CardTitle className="inline-flex items-center gap-2 text-xl">
-            <Shield className="h-6 w-6 text-brand-400" />
-            Sign in to ALPAR AI
+            <Shield className="text-brand-400 h-6 w-6" />
+            {t("signin_title")}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
-          <p className="text-sm text-fg-muted">
-            We use Google for secure authentication. We never see your password.
-            We do not post anything to your social media.
-          </p>
+          <p className="text-fg-muted text-sm">{t("signin_description")}</p>
           <GoogleSignInButton next={`/${locale}/profile`} className="w-full" />
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-border-subtle" />
+              <div className="border-border-subtle w-full border-t" />
             </div>
-            <div className="relative flex justify-center text-xs uppercase tracking-wider">
-              <span className="bg-bg-elevated px-2 text-fg-muted">or</span>
+            <div className="relative flex justify-center text-xs tracking-wider uppercase">
+              <span className="bg-bg-elevated text-fg-muted px-2">{t("or_divider")}</span>
             </div>
           </div>
           <EmailMagicLinkForm />
-          <p className="text-xs text-fg-muted">
-            By signing in you confirm that you are at least 18 years old and
-            accept our{" "}
+          <p className="text-fg-muted text-xs">
+            {t("terms_prefix")}{" "}
             <a href={`/${locale}/legal/terms`} className="text-brand-400 hover:underline">
-              Terms of Service
+              {t("terms_service")}
             </a>{" "}
-            and{" "}
+            {t("terms_and")}{" "}
             <a href={`/${locale}/legal/privacy`} className="text-brand-400 hover:underline">
-              Privacy Policy
-            </a>.
+              {t("terms_privacy")}
+            </a>
+            .
           </p>
-          <ul className="space-y-1.5 text-xs text-fg-muted">
+          <ul className="text-fg-muted space-y-1.5 text-xs">
             <li className="flex items-center gap-2">
-              <CheckCircle2 className="h-3.5 w-3.5 text-success-500" />
-              No password to remember
+              <CheckCircle2 className="text-success-500 h-3.5 w-3.5" />
+              {t("benefit_no_password")}
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle2 className="h-3.5 w-3.5 text-success-500" />
-              We never sell your data
+              <CheckCircle2 className="text-success-500 h-3.5 w-3.5" />
+              {t("benefit_no_sell")}
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle2 className="h-3.5 w-3.5 text-success-500" />
-              You can delete your account at any time
+              <CheckCircle2 className="text-success-500 h-3.5 w-3.5" />
+              {t("benefit_delete")}
             </li>
           </ul>
         </CardContent>

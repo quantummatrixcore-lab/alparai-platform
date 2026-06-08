@@ -121,7 +121,17 @@
     "or_continue_email": "Veya e-posta ile devam et",
     "magic_link_sent": "E-postanıza giriş linki gönderildi",
     "welcome_back": "Tekrar hoş geldiniz",
-    "loading": "Yükleniyor…"
+    "loading": "Yükleniyor…",
+    "signin_title": "ALPAR AI'a Giriş Yap",
+    "signin_description": "Güvenli kimlik doğrulama için Google kullanıyoruz. Şifrenizi görmeyiz. Sosyal medyanızda hiçbir şey paylaşmayız.",
+    "or_divider": "VEYA",
+    "terms_prefix": "Giriş yaparak 18 yaşından büyük olduğunuzu ve",
+    "terms_service": "Kullanım Koşulları",
+    "terms_and": "ve",
+    "terms_privacy": "Gizlilik Politikası",
+    "benefit_no_password": "Hatırlanacak şifre yok",
+    "benefit_no_sell": "Verilerinizi asla satmayız",
+    "benefit_delete": "Hesabınızı istediğiniz zaman silebilirsiniz"
   },
   "admin": {
     "dashboard": "Kontrol paneli",
