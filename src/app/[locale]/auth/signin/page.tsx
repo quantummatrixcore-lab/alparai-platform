@@ -1,15 +1,12 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
-import { Container } from "@/components/ui/layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SignInForm } from "@/components/auth/sign-in-form";
-import { Shield } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth/session";
+import { SignInForm } from "@/components/auth/sign-in-form";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "auth" });
-  return { title: t("welcome_back") };
+  return { title: `${t("signin_title")} — ALPAR AI` };
 }
 
 export default async function SignInPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -18,22 +15,50 @@ export default async function SignInPage({ params }: { params: Promise<{ locale:
   const user = await getCurrentUser();
   if (user) redirect(`/${locale}/profile`);
 
-  const t = await getTranslations({ locale, namespace: "auth" });
-
   return (
-    <Container size="narrow" className="py-12">
-      <Card variant="elevated">
-        <CardHeader>
-          <CardTitle className="inline-flex items-center gap-2 text-xl">
-            <Shield className="text-brand-400 h-6 w-6" />
-            {t("signin_title")}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-5">
-          <p className="text-fg-muted text-sm">{t("signin_description")}</p>
+    <div className="bg-bg-primary flex min-h-screen items-center justify-center px-4 py-12">
+      <div className="w-full max-w-md">
+        {/* Logo */}
+        <div className="mb-8 text-center">
+          <div className="from-brand-500 to-accent-600 shadow-brand-500/25 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br shadow-lg">
+            <svg
+              className="h-8 w-8 text-white"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+          <h1 className="text-fg-primary text-2xl font-bold tracking-tight">ALPAR AI</h1>
+          <p className="text-fg-muted mt-2 text-sm">Trust infrastructure for AI accountability</p>
+        </div>
+
+        {/* Card */}
+        <div className="border-border-subtle bg-bg-elevated rounded-2xl border p-8 shadow-2xl shadow-black/20">
+          <div className="mb-6 text-center">
+            <h2 className="text-fg-primary text-xl font-semibold">Welcome back</h2>
+            <p className="text-fg-muted mt-1 text-sm">Sign in to your account to continue</p>
+          </div>
+
           <SignInForm locale={locale} />
-        </CardContent>
-      </Card>
-    </Container>
+        </div>
+
+        {/* Footer */}
+        <p className="text-fg-muted mt-6 text-center text-xs">
+          By signing in, you agree to our{" "}
+          <a href={`/${locale}/legal/terms`} className="text-brand-400 hover:underline">
+            Terms
+          </a>{" "}
+          and{" "}
+          <a href={`/${locale}/legal/privacy`} className="text-brand-400 hover:underline">
+            Privacy Policy
+          </a>
+        </p>
+      </div>
+    </div>
   );
 }
