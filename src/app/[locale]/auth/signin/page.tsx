@@ -15,6 +15,8 @@ export default async function SignInPage({ params }: { params: Promise<{ locale:
   const user = await getCurrentUser();
   if (user) redirect(`/${locale}/profile`);
 
+  const t = await getTranslations({ locale, namespace: "auth" });
+
   return (
     <div className="bg-bg-primary flex min-h-screen items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
@@ -34,14 +36,14 @@ export default async function SignInPage({ params }: { params: Promise<{ locale:
             </svg>
           </div>
           <h1 className="text-fg-primary text-2xl font-bold tracking-tight">ALPAR AI</h1>
-          <p className="text-fg-muted mt-2 text-sm">Trust infrastructure for AI accountability</p>
+          <p className="text-fg-muted mt-2 text-sm">{t("tagline")}</p>
         </div>
 
         {/* Card */}
         <div className="border-border-subtle bg-bg-elevated rounded-2xl border p-8 shadow-2xl shadow-black/20">
           <div className="mb-6 text-center">
-            <h2 className="text-fg-primary text-xl font-semibold">Welcome back</h2>
-            <p className="text-fg-muted mt-1 text-sm">Sign in to your account to continue</p>
+            <h2 className="text-fg-primary text-xl font-semibold">{t("welcome_title")}</h2>
+            <p className="text-fg-muted mt-1 text-sm">{t("welcome_subtitle")}</p>
           </div>
 
           <SignInForm locale={locale} />
@@ -49,13 +51,13 @@ export default async function SignInPage({ params }: { params: Promise<{ locale:
 
         {/* Footer */}
         <p className="text-fg-muted mt-6 text-center text-xs">
-          By signing in, you agree to our{" "}
+          {t("signin_footer_prefix")}{" "}
           <a href={`/${locale}/legal/terms`} className="text-brand-400 hover:underline">
-            Terms
+            {t("terms_service")}
           </a>{" "}
-          and{" "}
+          {t("signin_footer_and")}{" "}
           <a href={`/${locale}/legal/privacy`} className="text-brand-400 hover:underline">
-            Privacy Policy
+            {t("terms_privacy")}
           </a>
         </p>
       </div>
