@@ -3,7 +3,7 @@
 import * as React from "react";
 import { motion } from "framer-motion";
 import { Link } from "@/i18n/routing";
-import { Sparkles, ArrowRight, Award } from "lucide-react";
+import { Sparkles, ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export function HeroSection({
@@ -22,15 +22,15 @@ export function HeroSection({
       <div aria-hidden="true" className="bg-gradient-hero pointer-events-none absolute inset-0" />
       <div
         aria-hidden="true"
-        className="bg-brand-500/20 pointer-events-none absolute -top-32 left-1/2 h-96 w-[640px] -translate-x-1/2 rounded-full blur-3xl"
+        className="bg-danger-500/10 pointer-events-none absolute -top-32 left-1/2 h-96 w-[640px] -translate-x-1/2 rounded-full blur-3xl"
       />
       <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
-        <div className="mx-auto max-w-3xl text-center">
+        <div className="mx-auto max-w-4xl text-center">
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="border-brand-500/30 bg-brand-500/10 text-brand-300 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium"
+            className="border-danger-500/30 bg-danger-500/10 text-danger-300 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium"
           >
             <Sparkles className="h-3 w-3" />
             {t("eyebrow")}
@@ -39,7 +39,7 @@ export function HeroSection({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-fg-primary mt-6 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl"
+            className="text-fg-primary mt-6 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
           >
             {t("title")}
           </motion.h1>
@@ -47,7 +47,7 @@ export function HeroSection({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-fg-secondary mt-6 text-lg leading-relaxed"
+            className="text-fg-secondary mt-6 text-lg leading-relaxed sm:text-xl"
           >
             {t("subtitle")}
           </motion.p>
@@ -59,13 +59,13 @@ export function HeroSection({
           >
             <Link
               href="/submit"
-              className="bg-brand-500 hover:bg-brand-600 inline-flex h-12 items-center gap-2 rounded-md px-6 text-sm font-semibold text-white transition-all hover:shadow-[0_0_24px_rgba(27,149,192,0.5)]"
+              className="bg-danger-500 hover:bg-danger-600 inline-flex h-12 items-center gap-2 rounded-md px-8 text-sm font-semibold text-white transition-all hover:shadow-[0_0_24px_rgba(239,68,68,0.5)]"
             >
               {t("cta_primary")}
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
-              href="/suggestions"
+              href="/incidents"
               className="border-border-strong text-fg-primary hover:border-brand-500 hover:text-brand-400 inline-flex h-12 items-center gap-2 rounded-md border px-6 text-sm font-semibold transition-colors"
             >
               {t("cta_secondary")}
@@ -81,15 +81,6 @@ export function HeroSection({
             <Stat label={t("stats_providers")} value={totalProviders} />
             <Stat label={t("stats_countries")} value={totalCountries} />
           </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="border-brand-500/20 bg-brand-500/5 text-brand-300 mt-8 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm"
-          >
-            <Award className="h-4 w-4" />
-            <span>{t("bounty_title")}</span>
-          </motion.div>
         </div>
       </div>
     </section>
@@ -99,7 +90,7 @@ export function HeroSection({
 function Stat({ label, value }: { label: string; value: number }) {
   return (
     <div className="text-center">
-      <p className="text-brand-400 text-3xl font-bold sm:text-4xl">{value.toLocaleString()}</p>
+      <p className="text-danger-400 text-3xl font-bold sm:text-4xl">{value.toLocaleString()}</p>
       <p className="text-fg-muted mt-1 text-xs tracking-wider uppercase sm:text-sm">{label}</p>
     </div>
   );

@@ -1,18 +1,20 @@
 import { setRequestLocale } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { HeroSection } from "@/components/marketing/hero-section";
+import { FounderStory } from "@/components/marketing/founder-story";
+import { WhyItMatters } from "@/components/marketing/why-it-matters";
+import { HowItWorks } from "@/components/marketing/how-it-works";
 import { LiveFeed } from "@/components/marketing/live-feed";
 import { LeaderboardPreview } from "@/components/marketing/leaderboard-preview";
+import { TrustBar } from "@/components/marketing/trust-bar";
+import { GetInvolved } from "@/components/marketing/get-involved";
+import { ClosingSection } from "@/components/marketing/closing-section";
 import { SuggestFeatureCTA } from "@/components/marketing/cta-suggest-feature";
 import { Container, Section } from "@/components/ui/layout";
 import type { IncidentListItem, LeaderboardEntry } from "@/types";
 import { toIncidentListItems } from "@/lib/mappers";
 
-export default async function HomePage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const supabase = await createServerClient();
@@ -21,7 +23,9 @@ export default async function HomePage({
     await Promise.all([
       supabase
         .from("incidents")
-        .select("id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id")
+        .select(
+          "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id"
+        )
         .eq("status", "published")
         .order("published_at", { ascending: false })
         .limit(5),
@@ -33,10 +37,7 @@ export default async function HomePage({
         .from("ai_providers")
         .select("id, slug, name, description, logo_url, website_url, is_verified")
         .order("name"),
-      supabase
-        .from("incidents")
-        .select("location_country")
-        .not("location_country", "is", null),
+      supabase.from("incidents").select("location_country").not("location_country", "is", null),
     ]);
 
   const providerMap = new Map(
@@ -58,17 +59,17 @@ export default async function HomePage({
     };
   });
 
-  const leaderboard: LeaderboardEntry[] = (((providersResult.data as Array<Record<string, unknown>>) ?? [])).map(
-    (p) => ({
-      provider_id: p["id"] as string,
-      provider_name: (p["name"] as string) ?? "",
-      provider_slug: (p["slug"] as string) ?? "",
-      incident_count: 0,
-      resolved_count: 0,
-      avg_severity: 0,
-      trend: 0,
-    })
-  );
+  const leaderboard: LeaderboardEntry[] = (
+    (providersResult.data as Array<Record<string, unknown>>) ?? []
+  ).map((p) => ({
+    provider_id: p["id"] as string,
+    provider_name: (p["name"] as string) ?? "",
+    provider_slug: (p["slug"] as string) ?? "",
+    incident_count: 0,
+    resolved_count: 0,
+    avg_severity: 0,
+    trend: 0,
+  }));
 
   const countries = new Set(
     ((countriesResult.data as Array<{ location_country: string | null }>) ?? [])
@@ -83,6 +84,9 @@ export default async function HomePage({
         totalProviders={providersResult.data?.length ?? 0}
         totalCountries={countries}
       />
+      <FounderStory />
+      <WhyItMatters />
+      <HowItWorks />
       <Section>
         <Container>
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
@@ -91,6 +95,9 @@ export default async function HomePage({
           </div>
         </Container>
       </Section>
+      <TrustBar />
+      <GetInvolved />
+      <ClosingSection />
       <SuggestFeatureCTA />
     </>
   );

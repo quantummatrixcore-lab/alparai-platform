@@ -2,22 +2,22 @@
 
 /* ===========================================================================
    ALPAR AI — Design Tokens
-   Primary: deep blue (trust/transparency) | Accent: violet (AI innovation)
-   Success: green (operational) | Danger: red (critical alerts)
+   Primary: deep navy (trust/authority) | Danger: alert red (urgency/action)
+   Success: guardian teal (safety/verified) | Warning: signal amber (highlights)
    =========================================================================== */
 
 :root {
-  /* Brand — Deep Blue (trust, transparency, accountability) */
-  --brand-50: #eef4ff;
-  --brand-100: #dbe6fe;
-  --brand-200: #bfd3fe;
-  --brand-300: #93b4fd;
-  --brand-400: #6090fa;
-  --brand-500: #1b6fb5;
-  --brand-600: #145a94;
-  --brand-700: #0f4575;
-  --brand-800: #0a3156;
-  --brand-900: #061f3a;
+  /* Brand — Deep Navy (authority, seriousness, institutional trust) */
+  --brand-50: #e8edf5;
+  --brand-100: #c5d0e6;
+  --brand-200: #9fb3d4;
+  --brand-300: #7a96c2;
+  --brand-400: #5a7ab0;
+  --brand-500: #1a237e;
+  --brand-600: #151d66;
+  --brand-700: #10174f;
+  --brand-800: #0c1138;
+  --brand-900: #070a21;
 
   /* Accent — Violet (AI, innovation, intelligence) */
   --accent-300: #c4b5fd;
@@ -25,40 +25,40 @@
   --accent-500: #8b5cf6;
   --accent-600: #7c3aed;
 
-  /* Success — Emerald Green (operational, verified, safe) */
-  --success-300: #6ee7b7;
-  --success-400: #34d399;
-  --success-500: #10b981;
-  --success-600: #059669;
+  /* Success — Guardian Teal (safety, verified, community trust) */
+  --success-300: #80cbc4;
+  --success-400: #4db6ac;
+  --success-500: #00897b;
+  --success-600: #00695c;
 
-  /* Danger — Signal Red (critical, blocked, violation) */
-  --danger-300: #fca5a5;
-  --danger-400: #f87171;
-  --danger-500: #ef4444;
-  --danger-600: #dc2626;
+  /* Danger — Alert Red (urgency, action, critical alerts) */
+  --danger-300: #ef9a9a;
+  --danger-400: #ef5350;
+  --danger-500: #e53935;
+  --danger-600: #c62828;
 
-  /* Warning — Amber (pending, review needed) */
-  --warning-400: #fbbf24;
-  --warning-500: #f59e0b;
-  --warning-600: #d97706;
+  /* Warning — Signal Amber (highlights, CTAs, badges) */
+  --warning-400: #ffca28;
+  --warning-500: #ffb300;
+  --warning-600: #ff8f00;
 
   /* Surfaces — Deep navy with subtle blue undertone */
-  --bg-primary: #030712;
-  --bg-secondary: #0a0f1e;
-  --bg-tertiary: #111827;
-  --bg-elevated: #182033;
-  --border-subtle: #1e2a3f;
-  --border-strong: #334155;
+  --bg-primary: #0d1b2a;
+  --bg-secondary: #111f33;
+  --bg-tertiary: #162740;
+  --bg-elevated: #1c3050;
+  --border-subtle: #243b5c;
+  --border-strong: #334d73;
   --fg-primary: #f1f5f9;
   --fg-secondary: #cbd5e1;
   --fg-muted: #94a3b8;
   --fg-disabled: #64748b;
 
   /* Glow effects */
-  --glow-brand: 0 0 24px rgba(27, 111, 181, 0.35);
+  --glow-brand: 0 0 24px rgba(26, 35, 126, 0.35);
   --glow-accent: 0 0 24px rgba(139, 92, 246, 0.3);
-  --glow-success: 0 0 20px rgba(16, 185, 129, 0.35);
-  --glow-danger: 0 0 20px rgba(239, 68, 68, 0.35);
+  --glow-success: 0 0 20px rgba(0, 137, 123, 0.35);
+  --glow-danger: 0 0 20px rgba(229, 57, 53, 0.35);
 
   /* Type scale (perfect fourth) */
   --fs-xs: 0.75rem;
@@ -230,13 +230,13 @@ body {
 }
 
 @utility bg-gradient-brand {
-  background-image: linear-gradient(135deg, var(--brand-500) 0%, var(--accent-600) 100%);
+  background-image: linear-gradient(135deg, var(--brand-500) 0%, var(--danger-500) 100%);
 }
 
 @utility bg-gradient-hero {
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(27, 111, 181, 0.15), transparent 70%),
-    radial-gradient(ellipse 60% 50% at 80% 50%, rgba(139, 92, 246, 0.06), transparent 70%),
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(229, 57, 53, 0.1), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 50%, rgba(26, 35, 126, 0.15), transparent 70%),
     var(--bg-primary);
 }
 
@@ -251,7 +251,7 @@ body {
     inset: 0;
     padding: 1px;
     border-radius: inherit;
-    background: linear-gradient(135deg, var(--brand-500), var(--accent-600));
+    background: linear-gradient(135deg, var(--brand-500), var(--danger-500));
     -webkit-mask:
       linear-gradient(#fff 0 0) content-box,
       linear-gradient(#fff 0 0);
