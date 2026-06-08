@@ -110,7 +110,9 @@
     "share_copy": "Linki kopyala",
     "report_inappropriate": "Bu içeriği bildir",
     "ai_response": "Resmi yanıt",
-    "ai_response_pending": "Resmi yanıt bekleniyor"
+    "ai_response_pending": "Resmi yanıt bekleniyor",
+    "sign_in_to_submit": "Raporunuzu göndermek için giriş yapın",
+    "sign_in_hint": "Raporunuz bu formda kaydedilir. Giriş yapın ve otomatik olarak gönderilecektir."
   },
   "categories": {
     "hallucination": "Halüsinasyon",
@@ -279,7 +281,9 @@
     "account": "Hesap",
     "back": "Geri",
     "optional": "İsteğe bağlı",
-    "required": "Zorunlu"
+    "required": "Zorunlu",
+    "provider": "AI Sağlayıcı",
+    "model": "Model"
   },
   "autopilot": {
     "title": "Kendini iyileştiren gönderim",
