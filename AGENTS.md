@@ -78,6 +78,27 @@ pnpm db:migrate       # supabase migration up
 - **Supabase**: project `alparai-prod` (`ref: azszpzyvxjduhemkjsdh`), region `eu-west-1`, FREE plan. Old `alparai-db` (`ojwtxkwsglbxdkqoliaq`) was lost — paused >90 days, unrecoverable.
 - **i18n**: ALL legal page body content must use `getTranslations({locale, namespace: "legal"})` / `t("key")`. Hardcoded English is a bug.
 
+## Google OAuth Configuration
+
+- **Google Cloud Project ID**: `341717447635`
+- **OAuth Client ID**: `341717447635-75ramo1e88p34b9dkmhfp5ocecqv0ff1.apps.googleusercontent.com`
+- **Google Account**: `quantum.matrix.core@gmail.com`
+- **Supabase Auth Config**: Updated via Management API (2026-06-08)
+- **Site URL**: `https://alparai.com`
+- **Redirect URIs**: `https://alparai.com,http://localhost:3000`
+
+### OAuth Consent Screen Fix (MANUAL)
+
+Google OAuth ekranında "ALPAR AI" yerine Supabase proje ID'si görünmesinin nedeni Google Cloud Console'daki OAuth consent screen ayarları. Bu ayar Supabase API ile değiştirilemez.
+
+**Çözüm:**
+
+1. https://console.cloud.google.com/apis/credentials/consent adresine git
+2. **App name** alanını "ALPAR AI" olarak değiştir
+3. **User support email**: `quantum.matrix.core@gmail.com`
+4. **Developer contact information**: `quantum.matrix.core@gmail.com`
+5. **Save**
+
 ## Postmortem — 2026-06-06
 
 - The Supabase project `alparai-db` had been paused for >90 days (FREE plan inactivity); `/restore` returned `400 cannot be restored`. All prior data was unrecoverable (no backups).
