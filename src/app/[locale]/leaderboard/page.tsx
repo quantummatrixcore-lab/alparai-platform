@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Trophy, MessageSquare, TrendingUp, TrendingDown } from "lucide-react";
 import { cn, formatNumber } from "@/lib/utils";
 import { Link } from "@/i18n/routing";
+import { ProviderLogo } from "@/components/leaderboard/provider-logo";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -169,26 +170,7 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
                       className="text-fg-primary hover:text-brand-400 group flex items-center gap-3 font-medium transition-colors"
                     >
                       <div className="border-border-subtle bg-bg-primary relative h-10 w-10 shrink-0 overflow-hidden rounded-xl border shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(231,76,60,0.3)]">
-                        {p.logo_url ? (
-                          <>
-                            <img
-                              src={p.logo_url}
-                              alt={`${p.name} logo`}
-                              className="h-full w-full object-contain p-1.5"
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).style.display = "none";
-                                (e.target as HTMLImageElement).nextElementSibling?.classList.remove("hidden");
-                              }}
-                            />
-                            <div className="bg-bg-tertiary text-fg-muted hidden h-full w-full items-center justify-center text-sm font-bold">
-                              {p.name.charAt(0)}
-                            </div>
-                          </>
-                        ) : (
-                          <div className="bg-bg-tertiary text-fg-muted flex h-full w-full items-center justify-center text-sm font-bold">
-                            {p.name.charAt(0)}
-                          </div>
-                        )}
+                        <ProviderLogo src={p.logo_url} name={p.name} />
                       </div>
                       {p.name}
                     </Link>

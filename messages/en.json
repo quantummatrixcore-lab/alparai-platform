@@ -549,5 +549,30 @@
     "newBadgeDesc": "Added to your profile. Thanks for adding your voice to the community!",
     "voteRecorded": "Your vote has been recorded successfully!",
     "voteRecordedDesc": "Thanks for adding your voice to the community."
+  },
+  "marketing": {
+    "incident_of_week": {
+      "title": "Incident of the Week",
+      "provider": "Provider",
+      "views": "views"
+    },
+    "advocate_of_week": {
+      "title": "Advocate of the Week",
+      "rep": "Rep",
+      "pioneer": "Pioneer"
+    },
+    "founder_story": {
+      "title": "The Genesis of ALPAR AI",
+      "highlight": "It started with a hallucination.",
+      "p1": "When an AI system falsely accused an individual in a high-profile passport scandal (the Grok incident), the victim had no clear path to recourse. The truth was buried under algorithmic confidence, and the public record was non-existent.",
+      "p2": "We realized that as AI systems become the arbiters of truth, we need an independent infrastructure to hold them accountable. When AI causes harm—whether it's a biased loan decision, a privacy leak, or a dangerous hallucination—users need a place to report it.",
+      "quote": "If AI systems are black boxes, ALPAR AI is the flight data recorder.",
+      "p3": "ALPAR is a public, verifiable record of how AI behaves in the real world. You report it. AI providers respond. The public decides. We are building the trust infrastructure for the age of artificial intelligence."
+    },
+    "dilemma": {
+      "title": "Voice of the People: AI Dilemmas",
+      "subtitle": "The answer to this question may shape our future. Cast your vote and see what the community thinks.",
+      "critical_question": "Critical Question"
+    }
   }
 }

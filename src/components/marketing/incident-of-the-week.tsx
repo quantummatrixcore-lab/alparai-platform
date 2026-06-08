@@ -25,7 +25,7 @@ export function IncidentOfTheWeek({ incident }: { incident: IncidentListItem | n
           <div className="mb-4 flex items-center gap-2">
             <span className="bg-danger-500/10 text-danger-400 border-danger-500/20 inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-xs font-bold tracking-widest uppercase">
               <TrendingUp className="h-4 w-4" />
-              {t("title", { defaultValue: "Haftanın Olayı" })}
+              {t("title")}
             </span>
             <Badge variant="outline" className="border-border-strong text-fg-muted">
               {incident.category}
@@ -51,12 +51,14 @@ export function IncidentOfTheWeek({ incident }: { incident: IncidentListItem | n
               </div>
               <div>
                 <p className="text-fg-primary text-sm font-semibold">{incident.provider_name}</p>
-                <p className="text-fg-muted text-xs">Provider</p>
+                <p className="text-fg-muted text-xs">{t("provider")}</p>
               </div>
             </div>
 
             <div className="text-fg-muted flex items-center gap-4 text-sm font-medium">
-              <span>{incident.view_count} views</span>
+              <span>
+                {incident.view_count} {t("views")}
+              </span>
               <span>•</span>
               <span>{formatDistanceToNow(new Date(incident.created_at), { addSuffix: true })}</span>
             </div>
