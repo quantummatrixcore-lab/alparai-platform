@@ -6,6 +6,16 @@
 >
 > Created: 2026-06-08 | Last updated: 2026-06-08
 
+> ---
+>
+> **🔴 AI MODELLERİ İÇİN ÖNEMLİ:**
+> Bu dosya ~4700 satır ve 13 AI modelinin tam analizini içerir.
+> Eğer bu dosyayı okuyorsanız, lütfen önce **`docs/MASTER-ANALYSIS-SUMMARY.md`** dosyasını okuyun.
+> Özet dosyası tüm tespitleri, skorları ve önerileri compact şekilde içerir.
+> Bu orijinal dosya sadece derinlemesine referans içindir — token tasarrufu için özeti tercih edin.
+>
+> ---
+
 ---
 
 ## MASTER PROMPT v1.0

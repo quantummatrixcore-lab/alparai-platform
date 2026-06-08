@@ -35,15 +35,22 @@ pnpm db:migrate       # supabase migration up
 
 ## File map
 
-| Need to touch            | File(s)                                                       |
-| ------------------------ | ------------------------------------------------------------- |
-| Add a page               | `src/app/[locale]/.../page.tsx`                                |
-| Add a server action      | `src/actions/<domain>.ts`                                     |
-| Add a form               | `src/components/<domain>/<form>.tsx`                          |
-| Add a translation key    | `messages/en.json` + `messages/tr.json`                       |
-| Add a DB table           | `supabase/migrations/<timestamp>_<name>.sql`                  |
-| Add a PII regex          | `src/lib/pii/guardian.ts`                                     |
-| Add a rate limit         | `src/lib/utils/rate-limit.ts` + `RATE_LIMITS` in constants    |
+| Need to touch         | File(s)                                                    |
+| --------------------- | ---------------------------------------------------------- |
+| Add a page            | `src/app/[locale]/.../page.tsx`                            |
+| Add a server action   | `src/actions/<domain>.ts`                                  |
+| Add a form            | `src/components/<domain>/<form>.tsx`                       |
+| Add a translation key | `messages/en.json` + `messages/tr.json`                    |
+| Add a DB table        | `supabase/migrations/<timestamp>_<name>.sql`               |
+| Add a PII regex       | `src/lib/pii/guardian.ts`                                  |
+| Add a rate limit      | `src/lib/utils/rate-limit.ts` + `RATE_LIMITS` in constants |
+
+> ⚠️ **MASTER ANALYSIS KURALI:**
+> AI analiz dosyaları `docs/` klasöründedir. Okuma sırası:
+>
+> 1. **Önce** `docs/MASTER-ANALYSIS-SUMMARY.md` oku (özet, ~500 satır, token tasarruflu)
+> 2. **Sadece** gerektiğinde `docs/MASTER-ANALYSIS.md` oku (tam analiz, ~4700 satır, 13 model)
+>    Orijinal dosya çok uzundur ve her okumada ~50-80K token harcar. Özeti tercih edin.
 
 ## Safety
 
@@ -56,6 +63,8 @@ pnpm db:migrate       # supabase migration up
 
 - README: [`README.md`](./README.md)
 - Architecture: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md)
+- Master Analysis Summary: [`docs/MASTER-ANALYSIS-SUMMARY.md`](./docs/MASTER-ANALYSIS-SUMMARY.md) ← AI models read this first
+- Master Analysis (full): [`docs/MASTER-ANALYSIS.md`](./docs/MASTER-ANALYSIS.md) ← deep reference only
 - Security: [`docs/SECURITY.md`](./docs/SECURITY.md)
 - KVKK: [`docs/KVKK.md`](./docs/KVKK.md)
 - ADRs: [`docs/adr/`](./docs/adr/)
