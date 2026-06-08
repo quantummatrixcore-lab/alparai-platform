@@ -10,7 +10,7 @@ const csp = [
   "script-src 'self' 'unsafe-inline' https://*.supabase.co https://*.sentry.io",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
-  "img-src 'self' data: blob: https://*.supabase.co https://*.googleusercontent.com https://avatars.githubusercontent.com",
+  "img-src 'self' data: blob: https://*.supabase.co https://*.googleusercontent.com https://avatars.githubusercontent.com https://logo.clearbit.com",
   "connect-src 'self' https://*.supabase.co https://*.sentry.io wss://*.supabase.co",
   "frame-ancestors 'none'",
   "base-uri 'self'",
@@ -61,6 +61,7 @@ const nextConfig = {
       { protocol: "https", hostname: "*.supabase.co" },
       { protocol: "https", hostname: "avatars.githubusercontent.com" },
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
+      { protocol: "https", hostname: "logo.clearbit.com" },
     ],
   },
   experimental: {

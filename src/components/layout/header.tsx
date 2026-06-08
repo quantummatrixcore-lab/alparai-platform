@@ -23,38 +23,45 @@ export function Header({
 }) {
   const t = useTranslations("nav");
   return (
-    <header className="border-border-subtle bg-bg-primary/80 sticky top-0 z-40 w-full border-b backdrop-blur-md">
-      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-8">
+    <div className="pointer-events-none fixed top-0 z-50 flex w-full justify-center p-4 sm:p-6">
+      <header className="pointer-events-auto border-border-subtle/40 bg-bg-primary/70 flex h-14 w-full max-w-6xl items-center justify-between gap-4 rounded-full border px-4 shadow-[0_8px_30px_rgb(0,0,0,0.12)] backdrop-blur-xl ring-1 ring-white/5 transition-all duration-500 hover:bg-bg-primary/80 hover:shadow-[0_8px_30px_rgba(231,76,60,0.1)]">
+        <div className="flex items-center gap-6 md:gap-8">
           <Link
             href="/"
-            className="focus-visible:ring-brand-500 rounded-md focus-visible:ring-2 focus-visible:outline-none"
+            className="focus-visible:ring-brand-500 group relative flex items-center rounded-full pl-1 focus-visible:ring-2 focus-visible:outline-none"
             aria-label="ALPAR AI home"
           >
+            <div className="absolute -inset-2 rounded-full bg-gradient-to-r from-brand-500/0 via-brand-500/10 to-brand-500/0 opacity-0 blur transition-opacity duration-500 group-hover:opacity-100"></div>
             <Wordmark size="md" />
           </Link>
-          <Nav />
+          <div className="hidden md:block">
+            <Nav />
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <LanguageSwitcher className="hidden sm:inline-flex" />
           <Link
             href="/suggestions"
-            className="border-border-subtle text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary focus-visible:ring-brand-500 focus-visible:ring-offset-bg-primary hidden h-8 items-center gap-1.5 rounded-md border px-3 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:inline-flex"
+            className="border-border-subtle/50 text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary focus-visible:ring-brand-500 focus-visible:ring-offset-bg-primary hidden h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-semibold transition-all hover:shadow-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:inline-flex"
           >
-            <Lightbulb className="h-3.5 w-3.5" aria-hidden="true" />
+            <Lightbulb className="text-warning-400 h-3.5 w-3.5" aria-hidden="true" />
             {t("suggestions")}
           </Link>
           <Link
             href="/submit"
-            className="bg-brand-500 hover:bg-brand-600 active:bg-brand-700 focus-visible:ring-brand-500 focus-visible:ring-offset-bg-primary hidden h-8 items-center gap-1.5 rounded-md px-3 text-xs font-semibold text-white transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:inline-flex"
+            className="bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 focus-visible:ring-brand-500 hidden h-9 items-center gap-1.5 rounded-full px-4 text-xs font-bold text-white shadow-[0_0_15px_rgba(231,76,60,0.2)] transition-all hover:shadow-[0_0_20px_rgba(231,76,60,0.4)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:inline-flex"
           >
             <Plus className="h-3.5 w-3.5" aria-hidden="true" />
             {t("report")}
           </Link>
-          <UserMenu initialUser={user} />
-          <MobileNav />
+          <div className="pl-1">
+            <UserMenu initialUser={user} />
+          </div>
+          <div className="md:hidden">
+            <MobileNav />
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </div>
   );
 }
