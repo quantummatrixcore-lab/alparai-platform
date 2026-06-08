@@ -3,12 +3,75 @@ import { createServerClient } from "@/lib/supabase/server";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { SuggestionCard } from "@/components/marketing/suggestion-card";
-import { Lightbulb } from "lucide-react";
+import { Lightbulb, Zap } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth/session";
 import type { SuggestionListItem } from "@/types";
+
+const seedSuggestions: SuggestionListItem[] = [
+  {
+    id: "seed-1",
+    title: "AI provider response time tracking",
+    description:
+      "Track how quickly AI providers respond to incidents. Show average response time on brand pages and leaderboard.",
+    category: "feature",
+    status: "open",
+    upvote_count: 42,
+    comment_count: 8,
+    created_at: "2026-06-01T00:00:00Z",
+    author_name: "ALPAR Team",
+  },
+  {
+    id: "seed-2",
+    title: "Severity badge standardization",
+    description:
+      "Define clear criteria for each severity level (low, medium, high, critical). Help reporters choose the right level.",
+    category: "improvement",
+    status: "open",
+    upvote_count: 38,
+    comment_count: 5,
+    created_at: "2026-06-01T00:00:00Z",
+    author_name: "ALPAR Team",
+  },
+  {
+    id: "seed-3",
+    title: "Incident comparison tool",
+    description:
+      "Compare how different AI providers handle similar incidents. Side-by-side view of response quality and resolution time.",
+    category: "feature",
+    status: "open",
+    upvote_count: 35,
+    comment_count: 12,
+    created_at: "2026-06-01T00:00:00Z",
+    author_name: "ALPAR Team",
+  },
+  {
+    id: "seed-4",
+    title: "Weekly digest email",
+    description:
+      "Subscribe to a weekly digest of new incidents, provider responses, and platform updates. Stay informed without checking daily.",
+    category: "feature",
+    status: "open",
+    upvote_count: 29,
+    comment_count: 3,
+    created_at: "2026-06-01T00:00:00Z",
+    author_name: "ALPAR Team",
+  },
+  {
+    id: "seed-5",
+    title: "Incident severity voting",
+    description:
+      "Let the community vote on severity levels. If enough users agree an incident is more severe, it gets escalated.",
+    category: "improvement",
+    status: "open",
+    upvote_count: 24,
+    comment_count: 7,
+    created_at: "2026-06-01T00:00:00Z",
+    author_name: "ALPAR Team",
+  },
+];
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -42,6 +105,9 @@ export default async function SuggestionsPage({ params }: { params: Promise<{ lo
     author_name: null,
   }));
 
+  const displayItems = items.length > 0 ? items : seedSuggestions;
+  const isSeed = items.length === 0;
+
   return (
     <Container className="py-10">
       <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
@@ -58,16 +124,28 @@ export default async function SuggestionsPage({ params }: { params: Promise<{ lo
           </Link>
         )}
       </header>
+
+      {isSeed && (
+        <Card variant="default" className="border-brand-500/30 bg-brand-500/5 mb-6">
+          <CardContent className="flex items-start gap-3 py-4">
+            <Zap className="text-brand-400 mt-0.5 h-4 w-4 shrink-0" />
+            <div>
+              <p className="text-fg-primary text-sm font-medium">
+                These are starter suggestions from the ALPAR team
+              </p>
+              <p className="text-fg-muted text-xs">
+                Sign in to upvote, comment, or submit your own ideas. The community decides what
+                gets built next.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="space-y-3">
-        {items.length === 0 ? (
-          <Card>
-            <CardContent className="text-fg-muted py-12 text-center text-sm">
-              No suggestions yet. Be the first to share an idea.
-            </CardContent>
-          </Card>
-        ) : (
-          items.map((it) => <SuggestionCard key={it.id} item={it} />)
-        )}
+        {displayItems.map((it) => (
+          <SuggestionCard key={it.id} item={it} />
+        ))}
       </div>
     </Container>
   );

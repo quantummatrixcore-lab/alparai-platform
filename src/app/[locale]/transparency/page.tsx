@@ -1,0 +1,261 @@
+import { setRequestLocale, getTranslations } from "next-intl/server";
+import { createServerClient } from "@/lib/supabase/server";
+import { Container } from "@/components/ui/layout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  FileText,
+  CheckCircle2,
+  Clock,
+  Shield,
+  Eye,
+  Users,
+  MessageSquare,
+  BarChart3,
+} from "lucide-react";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "legal" });
+  return { title: t("transparencyTitle", { defaultValue: "Transparency Report" }) };
+}
+
+export default async function TransparencyPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "legal" });
+
+  const supabase = await createServerClient();
+
+  const [
+    { count: totalIncidents },
+    { count: publishedIncidents },
+    { count: pendingIncidents },
+    { count: totalProviders },
+    { count: totalResponses },
+    { count: totalUsers },
+    { count: totalTakedowns },
+  ] = await Promise.all([
+    supabase.from("incidents").select("*", { count: "exact", head: true }),
+    supabase
+      .from("incidents")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "published"),
+    supabase
+      .from("incidents")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "pending_review"),
+    supabase.from("ai_providers").select("*", { count: "exact", head: true }),
+    supabase.from("ai_provider_responses").select("*", { count: "exact", head: true }),
+    supabase.from("profiles").select("*", { count: "exact", head: true }),
+    supabase.from("takedown_requests").select("*", { count: "exact", head: true }),
+  ]);
+
+  const responseRate =
+    (totalIncidents ?? 0) > 0
+      ? Math.round(((totalResponses ?? 0) / (totalIncidents ?? 1)) * 100)
+      : 0;
+
+  const publishRate =
+    (totalIncidents ?? 0) > 0
+      ? Math.round(((publishedIncidents ?? 0) / (totalIncidents ?? 1)) * 100)
+      : 0;
+
+  return (
+    <Container className="py-12">
+      <header className="mb-10 space-y-3 text-center">
+        <Badge variant="brand" size="sm">
+          {t("transparencyTitle", { defaultValue: "Transparency Report" })}
+        </Badge>
+        <h1 className="text-fg-primary text-3xl font-bold tracking-tight">
+          {t("transparencyHeading", { defaultValue: "How ALPAR AI works" })}
+        </h1>
+        <p className="text-fg-muted mx-auto max-w-2xl text-sm">
+          {t("transparencySubheading", {
+            defaultValue:
+              "Trust infrastructure requires transparency. Here's how we handle reports, moderation, and provider responses.",
+          })}
+        </p>
+      </header>
+
+      <div className="mb-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <Card>
+          <CardContent className="flex items-center gap-3 p-4">
+            <div className="bg-brand-500/10 flex h-10 w-10 items-center justify-center rounded-lg">
+              <FileText className="text-brand-400 h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-fg-primary text-2xl font-bold">{totalIncidents ?? 0}</p>
+              <p className="text-fg-muted text-xs">Total reports</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="flex items-center gap-3 p-4">
+            <div className="bg-success-500/10 flex h-10 w-10 items-center justify-center rounded-lg">
+              <CheckCircle2 className="text-success-500 h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-fg-primary text-2xl font-bold">{publishRate}%</p>
+              <p className="text-fg-muted text-xs">Publish rate</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="flex items-center gap-3 p-4">
+            <div className="bg-warning-500/10 flex h-10 w-10 items-center justify-center rounded-lg">
+              <Clock className="text-warning-500 h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-fg-primary text-2xl font-bold">{pendingIncidents ?? 0}</p>
+              <p className="text-fg-muted text-xs">Pending review</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="flex items-center gap-3 p-4">
+            <div className="bg-accent-500/10 flex h-10 w-10 items-center justify-center rounded-lg">
+              <MessageSquare className="text-accent-400 h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-fg-primary text-2xl font-bold">{responseRate}%</p>
+              <p className="text-fg-muted text-xs">Provider response rate</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="inline-flex items-center gap-2 text-sm">
+              <Shield className="text-brand-400 h-4 w-4" />
+              {t("transparencyModeration", { defaultValue: "Moderation process" })}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 text-sm">
+            <Step
+              number={1}
+              title="Submit"
+              desc="Anyone can report an incident. PII is automatically masked before storage."
+            />
+            <Step
+              number={2}
+              title="Review"
+              desc="Volunteer moderators review every submission for accuracy, not opinion."
+            />
+            <Step
+              number={3}
+              title="Publish"
+              desc="Approved incidents are published publicly. The AI provider is notified."
+            />
+            <Step
+              number={4}
+              title="Respond"
+              desc="AI providers can post an official response. Identity is verified before publishing."
+            />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="inline-flex items-center gap-2 text-sm">
+              <BarChart3 className="text-fg-muted h-4 w-4" />
+              {t("transparencyNumbers", { defaultValue: "Platform numbers" })}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm">
+            <Row
+              icon={<Users className="h-3.5 w-3.5" />}
+              label="Registered users"
+              value={totalUsers ?? 0}
+            />
+            <Row
+              icon={<Eye className="h-3.5 w-3.5" />}
+              label="AI providers tracked"
+              value={totalProviders ?? 0}
+            />
+            <Row
+              icon={<FileText className="h-3.5 w-3.5" />}
+              label="Incidents reported"
+              value={totalIncidents ?? 0}
+            />
+            <Row
+              icon={<CheckCircle2 className="h-3.5 w-3.5" />}
+              label="Published"
+              value={publishedIncidents ?? 0}
+            />
+            <Row
+              icon={<Clock className="h-3.5 w-3.5" />}
+              label="Pending moderation"
+              value={pendingIncidents ?? 0}
+            />
+            <Row
+              icon={<MessageSquare className="h-3.5 w-3.5" />}
+              label="Provider responses"
+              value={totalResponses ?? 0}
+            />
+            <Row
+              icon={<Shield className="h-3.5 w-3.5" />}
+              label="Takedown requests"
+              value={totalTakedowns ?? 0}
+            />
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className="mt-8">
+        <CardHeader>
+          <CardTitle className="text-sm">
+            {t("transparencyCommitment", { defaultValue: "Our commitment" })}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="text-fg-secondary space-y-3 text-sm">
+          <p>
+            ALPAR AI is a transparency platform. We believe that accountability starts with
+            openness. Every number on this page is live and accurate.
+          </p>
+          <p>
+            We do not suppress, delay, or selectively publish incidents. Every submitted report that
+            meets our guidelines is published. Moderators cannot remove content based on pressure
+            from AI providers.
+          </p>
+          <p>
+            This platform is open source under AGPL-3.0. Anyone can audit the code, run an instance,
+            or contribute. We believe trust infrastructure should itself be trustworthy.
+          </p>
+        </CardContent>
+      </Card>
+    </Container>
+  );
+}
+
+function Step({ number, title, desc }: { number: number; title: string; desc: string }) {
+  return (
+    <div className="flex items-start gap-3">
+      <div className="bg-brand-500/10 text-brand-400 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold">
+        {number}
+      </div>
+      <div>
+        <p className="text-fg-primary font-medium">{title}</p>
+        <p className="text-fg-muted text-xs">{desc}</p>
+      </div>
+    </div>
+  );
+}
+
+function Row({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-fg-muted inline-flex items-center gap-1.5 text-xs">
+        {icon}
+        {label}
+      </span>
+      <span className="text-fg-primary font-semibold">{value}</span>
+    </div>
+  );
+}

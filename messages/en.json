@@ -496,6 +496,12 @@
     "cookieBody": "We use essential cookies to run this site. With your consent we also use privacy-friendly analytics (Plausible) to improve the product. No tracking, no third-party ads.",
     "cookieLearnMore": "Privacy policy",
     "cookieAccept": "Accept all",
-    "cookieEssential": "Essential only"
+    "cookieEssential": "Essential only",
+    "transparencyTitle": "Transparency Report",
+    "transparencyHeading": "How ALPAR AI works",
+    "transparencySubheading": "Trust infrastructure requires transparency. Here's how we handle reports, moderation, and provider responses.",
+    "transparencyModeration": "Moderation process",
+    "transparencyNumbers": "Platform numbers",
+    "transparencyCommitment": "Our commitment"
   }
 }

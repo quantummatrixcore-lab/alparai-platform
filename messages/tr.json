@@ -496,6 +496,12 @@
     "cookieBody": "Bu siteyi çalıştırmak için zorunlu çerezler kullanıyoruz. Onayınızla, ürünü geliştirmek için gizlilik dostu analitik (Plausible) de kullanıyoruz. İzleme yok, üçüncü taraf reklam yok.",
     "cookieLearnMore": "Gizlilik politikası",
     "cookieAccept": "Tümünü kabul et",
-    "cookieEssential": "Sadece zorunlu"
+    "cookieEssential": "Sadece zorunlu",
+    "transparencyTitle": "Şeffaflık Raporu",
+    "transparencyHeading": "ALPAR AI nasıl çalışır",
+    "transparencySubheading": "Güven altyapısı şeffaflık gerektirir. Raporları, moderasyonu ve sağlayıcı yanıtlarını nasıl ele aldığımızı burada bulabilirsiniz.",
+    "transparencyModeration": "Moderasyon süreci",
+    "transparencyNumbers": "Platform sayıları",
+    "transparencyCommitment": "Taahhüdümüz"
   }
 }
