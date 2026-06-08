@@ -502,6 +502,8 @@
     "transparencySubheading": "Trust infrastructure requires transparency. Here's how we handle reports, moderation, and provider responses.",
     "transparencyModeration": "Moderation process",
     "transparencyNumbers": "Platform numbers",
-    "transparencyCommitment": "Our commitment"
+    "transparencyCommitment": "Our commitment",
+    "analysisTitle": "Master Analysis",
+    "analysisSubtitle": "AI model analyses for platform improvement"
   }
 }

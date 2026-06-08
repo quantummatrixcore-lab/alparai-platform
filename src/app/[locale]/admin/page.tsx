@@ -130,6 +130,12 @@ export default async function AdminDashboardPage({
             Autopilot
           </Link>
           <Link
+            href={`/${locale}/admin/analysis` as never}
+            className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
+          >
+            Analysis
+          </Link>
+          <Link
             href={`/${locale}/admin/audit` as never}
             className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
           >

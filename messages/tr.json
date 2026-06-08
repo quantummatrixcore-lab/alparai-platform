@@ -502,6 +502,8 @@
     "transparencySubheading": "Güven altyapısı şeffaflık gerektirir. Raporları, moderasyonu ve sağlayıcı yanıtlarını nasıl ele aldığımızı burada bulabilirsiniz.",
     "transparencyModeration": "Moderasyon süreci",
     "transparencyNumbers": "Platform sayıları",
-    "transparencyCommitment": "Taahhüdümüz"
+    "transparencyCommitment": "Taahhüdümüz",
+    "analysisTitle": "Ana Analiz",
+    "analysisSubtitle": "Platform iyileştirmesi için AI model analizleri"
   }
 }
