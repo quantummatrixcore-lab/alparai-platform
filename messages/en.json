@@ -110,7 +110,9 @@
     "share_copy": "Copy link",
     "report_inappropriate": "Report this content",
     "ai_response": "Official response",
-    "ai_response_pending": "Awaiting official response"
+    "ai_response_pending": "Awaiting official response",
+    "sign_in_to_submit": "Sign in to submit your report",
+    "sign_in_hint": "Your report is saved in this form. Sign in and it will be submitted automatically."
   },
   "categories": {
     "hallucination": "Hallucination",
@@ -279,7 +281,9 @@
     "account": "Account",
     "back": "Back",
     "optional": "Optional",
-    "required": "Required"
+    "required": "Required",
+    "provider": "AI Provider",
+    "model": "Model"
   },
   "autopilot": {
     "title": "Self-healing submission",
