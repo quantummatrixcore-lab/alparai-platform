@@ -12,6 +12,8 @@ import { ClosingSection } from "@/components/marketing/closing-section";
 import { SuggestFeatureCTA } from "@/components/marketing/cta-suggest-feature";
 import { Container, Section } from "@/components/ui/layout";
 import { PollCard, type Poll } from "@/components/dilemmas/poll-card";
+import { IncidentOfTheWeek } from "@/components/marketing/incident-of-the-week";
+import { AdvocateOfTheWeek, type Advocate } from "@/components/marketing/advocate-of-the-week";
 import type { IncidentListItem, LeaderboardEntry } from "@/types";
 import { toIncidentListItems } from "@/lib/mappers";
 
@@ -20,33 +22,45 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   setRequestLocale(locale);
   const supabase = await createServerClient();
 
-  const [incidentsResult, incidentsCountResult, providersResult, countriesResult, pollsResult] =
-    await Promise.all([
-      supabase
-        .from("incidents")
-        .select(
-          "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id"
-        )
-        .eq("status", "published")
-        .order("published_at", { ascending: false })
-        .limit(5),
-      supabase
-        .from("incidents")
-        .select("*", { count: "exact", head: true })
-        .eq("status", "published"),
-      supabase
-        .from("ai_providers")
-        .select("id, slug, name, description, logo_url, website_url, is_verified")
-        .order("name"),
-      supabase.from("incidents").select("location_country").not("location_country", "is", null),
-      supabase
-        .from("ai_polls")
-        .select("*")
-        .eq("is_active", true)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .returns<Poll[]>(),
-    ]);
+  const [
+    incidentsResult,
+    incidentsCountResult,
+    providersResult,
+    countriesResult,
+    pollsResult,
+    topUserResult,
+  ] = await Promise.all([
+    supabase
+      .from("incidents")
+      .select(
+        "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id"
+      )
+      .eq("status", "published")
+      .order("published_at", { ascending: false })
+      .limit(5),
+    supabase
+      .from("incidents")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "published"),
+    supabase
+      .from("ai_providers")
+      .select("id, slug, name, description, logo_url, website_url, is_verified")
+      .order("name"),
+    supabase.from("incidents").select("location_country").not("location_country", "is", null),
+    supabase
+      .from("ai_polls")
+      .select("*")
+      .eq("is_active", true)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .returns<Poll[]>(),
+    supabase
+      .from("users")
+      .select("id, name, avatar_url, reputation_score, badges")
+      .order("reputation_score", { ascending: false })
+      .limit(1)
+      .returns<Advocate[]>(),
+  ]);
 
   const providerMap = new Map(
     ((providersResult.data as Array<{ id: string; slug: string; name: string }>) ?? []).map((p) => [
@@ -86,6 +100,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   ).size;
 
   const topPoll = pollsResult.data?.[0];
+  const topAdvocate = topUserResult.data?.[0] ?? null;
 
   return (
     <>
@@ -94,6 +109,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         totalProviders={providersResult.data?.length ?? 0}
         totalCountries={countries}
       />
+
+      <Section className="bg-bg-primary pt-12 pb-6">
+        <Container>
+          <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-2">
+            <IncidentOfTheWeek incident={incidents[0] ?? null} />
+            <AdvocateOfTheWeek advocate={topAdvocate} />
+          </div>
+        </Container>
+      </Section>
 
       {topPoll && (
         <Section className="bg-bg-secondary border-brand-500/10 border-y">

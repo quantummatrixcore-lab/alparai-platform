@@ -6,14 +6,17 @@ import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/session";
 import { maskPII } from "@/lib/pii/guardian";
-import {
-  incidentSubmissionSchema,
-  type IncidentSubmissionInput,
-} from "@/lib/validation/schemas";
+import { incidentSubmissionSchema, type IncidentSubmissionInput } from "@/lib/validation/schemas";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { hashIp } from "@/lib/utils/hash";
 import { headers } from "next/headers";
-import { withAutopilot, submitIncidentPolicy, voteIncidentPolicy, attemptsOf, durationOf } from "@/lib/autopilot";
+import {
+  withAutopilot,
+  submitIncidentPolicy,
+  voteIncidentPolicy,
+  attemptsOf,
+  durationOf,
+} from "@/lib/autopilot";
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
 import type { Database } from "@/types/database";
 
@@ -47,7 +50,7 @@ async function resolveLocale(): Promise<"en" | "tr"> {
 }
 
 interface SubmitWorkInput {
-  user: { id: string; email: string };
+  user: { id: string; email: string } | null;
   ip: string;
   raw: {
     title: string;
@@ -70,7 +73,8 @@ const runSubmitWork = async (
   const { user, ip, raw } = data;
   const maskedTitle = maskPII(raw.title);
   const maskedDescription = maskPII(raw.description);
-  const containsPii = maskedTitle.masked !== raw.title || maskedDescription.masked !== raw.description;
+  const containsPii =
+    maskedTitle.masked !== raw.title || maskedDescription.masked !== raw.description;
 
   const incidentDateISO = raw.incident_date
     ? new Date(raw.incident_date).toISOString()
@@ -105,7 +109,7 @@ const runSubmitWork = async (
   const hdrs = await headers();
   const userAgent = hdrs.get("user-agent") ?? null;
   const incidentInsert: Database["public"]["Tables"]["incidents"]["Insert"] = {
-    user_id: user.id,
+    user_id: user?.id ?? null,
     title: raw.title,
     title_masked: maskedTitle.masked,
     description: raw.description,
@@ -139,16 +143,17 @@ const runSubmitWork = async (
 
   const incidentId = (incident as { id: string }).id;
 
-  const consentLogEntries: Database["public"]["Tables"]["consent_log"]["Insert"][] =
-    Object.entries(CONSENT_LABELS).map(([, dbKey]) => ({
-      user_id: user.id,
-      consent_type: dbKey,
-      consent_text_snapshot: `Accepted on ${new Date().toISOString()} for incident ${incidentId}`,
-      related_entity_type: "incident",
-      related_entity_id: incidentId,
-      granted: true,
-      ip_hash: hashIp(ip),
-    }));
+  const consentLogEntries: Database["public"]["Tables"]["consent_log"]["Insert"][] = Object.entries(
+    CONSENT_LABELS
+  ).map(([, dbKey]) => ({
+    user_id: user?.id ?? null,
+    consent_type: dbKey,
+    consent_text_snapshot: `Accepted on ${new Date().toISOString()} for incident ${incidentId}`,
+    related_entity_type: "incident",
+    related_entity_id: incidentId,
+    granted: true,
+    ip_hash: hashIp(ip),
+  }));
 
   const consentRes = await supabase.from("consent_log").insert(consentLogEntries as never);
   if (consentRes.error) {
@@ -163,13 +168,12 @@ export async function submitIncident(
   formData: FormData
 ): Promise<SubmitIncidentState> {
   const user = await getCurrentUser();
-  if (!user) {
-    return { ok: false, formError: "You must be signed in to submit an incident." };
-  }
+  // Anonymous submissions allowed
   const hdrs = await headers();
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   const clientIdempotencyKey = hdrs.get("x-idempotency-key");
-  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.incident_submission}:${user.id}:${ip}`);
+  const userIdForRl = user?.id ?? "anonymous";
+  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.incident_submission}:${userIdForRl}:${ip}`);
   if (!rl.ok) {
     return { ok: false, formError: `Too many submissions. Try again in ${rl.retryAfter}s.` };
   }
@@ -226,11 +230,11 @@ export async function submitIncident(
 
   const result = await withAutopilot<{ id: string }>(
     submitIncidentPolicy,
-    [user.id, raw.title, raw.description, raw.category, raw.severity],
+    [user?.id ?? "anon", raw.title, raw.description, raw.category, raw.severity],
     (ctx) => runSubmitWork(ctx, { user, ip, raw }),
     {
       context: {
-        userId: user.id,
+        userId: user?.id ?? null,
         ipHash: hashIp(ip),
         clientIdempotencyKey,
       },
@@ -243,7 +247,11 @@ export async function submitIncident(
     return {
       ok: true,
       incidentId: result.value.id,
-      autopilot: { attempts: attemptsOf(result), durationMs: durationOf(result), kind: result.kind },
+      autopilot: {
+        attempts: attemptsOf(result),
+        durationMs: durationOf(result),
+        kind: result.kind,
+      },
     };
   }
   if (result.kind === "replayed") {
