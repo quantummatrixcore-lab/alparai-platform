@@ -56,7 +56,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       .returns<Poll[]>(),
     supabase
       .from("users")
-      .select("id, name, avatar_url, reputation_score, badges")
+      .select("id, name:full_name, avatar_url, reputation_score, badges")
       .order("reputation_score", { ascending: false })
       .limit(1)
       .returns<Advocate[]>(),

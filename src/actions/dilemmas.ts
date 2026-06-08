@@ -91,6 +91,30 @@ export async function submitVote(
 
       if (!badgeError) {
         awardedBadge = badgeName;
+        
+        // Also update the users table to add reputation points and the badge to the array
+        const { data: userRecord } = await supabaseAdmin
+          .from("users")
+          .select("reputation_score, badges")
+          .eq("id", userId)
+          .single();
+          
+        if (userRecord) {
+          const newReputation = (userRecord.reputation_score || 0) + 10;
+          const currentBadges = userRecord.badges || [];
+          
+          if (!currentBadges.includes(badgeName)) {
+            currentBadges.push(badgeName);
+          }
+          
+          await supabaseAdmin
+            .from("users")
+            .update({ 
+              reputation_score: newReputation,
+              badges: currentBadges
+            })
+            .eq("id", userId);
+        }
       }
     }
 
