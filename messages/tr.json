@@ -162,9 +162,9 @@
     "avg_severity": "Ort. ciddiyet",
     "responses": "Yanıtlar",
     "responseRate": "Yanıt Oranı",
-    "providersTakipEdilen": "Takip edilen sağlayıcılar",
-    "toplamYanit": "Toplam yanıt",
-    "ortYanitOrani": "Ort. yanıt oranı"
+    "providersTracked": "Takip edilen sağlayıcılar",
+    "totalResponses": "Toplam yanıt",
+    "avgResponseRate": "Ort. yanıt oranı"
   },
   "auth": {
     "signin_with_google": "Google ile devam et",
