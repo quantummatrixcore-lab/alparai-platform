@@ -1,16 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@/lib/supabase/server";
 
-const SAFE_NEXT_PATH = /^\/[a-zA-Z0-9_\-/]*$/;
-
 function safeNextPath(raw: string | null): string {
   if (!raw) return "/profile";
-  if (!raw.startsWith("/")) return "/profile";
-  if (raw.startsWith("//") || raw.startsWith("/\\")) return "/profile";
-  if (raw.includes(":")) return "/profile";
-  if (!SAFE_NEXT_PATH.test(raw)) return "/profile";
-  if (raw.length > 200) return "/profile";
-  return raw;
+  try {
+    const url = new URL(raw, "http://localhost");
+    return url.pathname === "/" ? "/profile" : url.pathname;
+  } catch {
+    return "/profile";
+  }
 }
 
 export async function GET(request: NextRequest) {
