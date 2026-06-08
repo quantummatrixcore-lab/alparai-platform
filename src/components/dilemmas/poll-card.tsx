@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { submitVote } from "@/actions/dilemmas";
+import { toast } from "sonner";
 
 export type Poll = {
   id: string;
@@ -25,17 +27,28 @@ export function PollCard({ poll }: { poll: Poll }) {
 
   const handleVote = async (voteType: "yes" | "no" | "unsure") => {
     if (!turnstileToken) {
-      alert("Please complete the bot verification first.");
+      toast.error("Lütfen önce bot doğrulamasını (Turnstile) tamamlayın.");
       return;
     }
 
     setIsVoting(true);
-    // TODO: implement actual server action vote(poll.id, voteType, turnstileToken)
-    console.log(`Voted ${voteType} with token ${turnstileToken}`);
-    // Simulate network delay
-    await new Promise((r) => setTimeout(r, 500));
+    const result = await submitVote(poll.id, voteType, turnstileToken);
     setIsVoting(false);
-    alert("Oyunuz başarıyla kaydedildi! Topluluğun sesine katıldığınız için teşekkürler.");
+
+    if (result.error) {
+      toast.error(result.error);
+    } else {
+      if (result.awardedBadge) {
+        toast.success(`YENİ ROZET KAZANDINIZ! ${result.badgeIcon} ${result.awardedBadge}`, {
+          description: "Profilinize eklendi. Topluluğun sesine katıldığınız için teşekkürler!",
+          duration: 8000,
+        });
+      } else {
+        toast.success("Oyunuz başarıyla kaydedildi!", {
+          description: "Topluluğun sesine katıldığınız için teşekkürler.",
+        });
+      }
+    }
   };
 
   return (
