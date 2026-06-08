@@ -7,58 +7,58 @@
    =========================================================================== */
 
 :root {
-  /* Brand — Deep Navy (authority, seriousness, institutional trust) */
-  --brand-50: #e8edf5;
-  --brand-100: #c5d0e6;
-  --brand-200: #9fb3d4;
-  --brand-300: #7a96c2;
-  --brand-400: #5a7ab0;
-  --brand-500: #1a237e;
-  --brand-600: #151d66;
-  --brand-700: #10174f;
-  --brand-800: #0c1138;
-  --brand-900: #070a21;
+  /* Brand — Deep Space / Neon Violet (Premium AI Startup) */
+  --brand-50: #faf5ff;
+  --brand-100: #f3e8ff;
+  --brand-200: #e9d5ff;
+  --brand-300: #d8b4fe;
+  --brand-400: #c084fc;
+  --brand-500: #a855f7;
+  --brand-600: #9333ea;
+  --brand-700: #7e22ce;
+  --brand-800: #6b21a8;
+  --brand-900: #581c87;
 
-  /* Accent — Violet (AI, innovation, intelligence) */
-  --accent-300: #c4b5fd;
-  --accent-400: #a78bfa;
-  --accent-500: #8b5cf6;
-  --accent-600: #7c3aed;
+  /* Accent — Cyan (Future/Tech) */
+  --accent-300: #67e8f9;
+  --accent-400: #22d3ee;
+  --accent-500: #06b6d4;
+  --accent-600: #0891b2;
 
-  /* Success — Guardian Teal (safety, verified, community trust) */
-  --success-300: #80cbc4;
-  --success-400: #4db6ac;
-  --success-500: #00897b;
-  --success-600: #00695c;
+  /* Success — Emerald (verified, trust) */
+  --success-300: #6ee7b7;
+  --success-400: #34d399;
+  --success-500: #10b981;
+  --success-600: #059669;
 
-  /* Danger — Alert Red (urgency, action, critical alerts) */
-  --danger-300: #ef9a9a;
-  --danger-400: #ef5350;
-  --danger-500: #e53935;
-  --danger-600: #c62828;
+  /* Danger — Rose/Crimson (alerts) */
+  --danger-300: #fda4af;
+  --danger-400: #fb7185;
+  --danger-500: #f43f5e;
+  --danger-600: #e11d48;
 
-  /* Warning — Signal Amber (highlights, CTAs, badges) */
-  --warning-400: #ffca28;
-  --warning-500: #ffb300;
-  --warning-600: #ff8f00;
+  /* Warning — Amber */
+  --warning-400: #fbbf24;
+  --warning-500: #f59e0b;
+  --warning-600: #d97706;
 
-  /* Surfaces — Deep navy with subtle blue undertone */
-  --bg-primary: #0d1b2a;
-  --bg-secondary: #111f33;
-  --bg-tertiary: #162740;
-  --bg-elevated: #1c3050;
-  --border-subtle: #243b5c;
-  --border-strong: #334d73;
-  --fg-primary: #f1f5f9;
-  --fg-secondary: #cbd5e1;
-  --fg-muted: #94a3b8;
-  --fg-disabled: #64748b;
+  /* Surfaces — OLED Black / Deep Space */
+  --bg-primary: #050505;
+  --bg-secondary: #0a0a0a;
+  --bg-tertiary: #121212;
+  --bg-elevated: #18181b;
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-strong: rgba(255, 255, 255, 0.1);
+  --fg-primary: #ffffff;
+  --fg-secondary: #a1a1aa;
+  --fg-muted: #71717a;
+  --fg-disabled: #52525b;
 
-  /* Glow effects */
-  --glow-brand: 0 0 24px rgba(26, 35, 126, 0.35);
-  --glow-accent: 0 0 24px rgba(139, 92, 246, 0.3);
-  --glow-success: 0 0 20px rgba(0, 137, 123, 0.35);
-  --glow-danger: 0 0 20px rgba(229, 57, 53, 0.35);
+  /* Glow effects - Premium Aesthetic */
+  --glow-brand: 0 0 30px rgba(168, 85, 247, 0.4);
+  --glow-accent: 0 0 30px rgba(6, 182, 212, 0.4);
+  --glow-success: 0 0 25px rgba(16, 185, 129, 0.35);
+  --glow-danger: 0 0 25px rgba(244, 63, 94, 0.35);
 
   /* Type scale (perfect fourth) */
   --fs-xs: 0.75rem;
@@ -84,21 +84,21 @@
   --space-16: 4rem;
   --space-24: 6rem;
 
-  /* Radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-2xl: 24px;
+  /* Radius - Softer rounded corners for modern AI UI */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
   --radius-full: 9999px;
 
   /* Container */
   --container-max: 1280px;
   --container-narrow: 768px;
 
-  /* Motion */
+  /* Motion - Snappy but smooth */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.8, 0, 0.2, 1);
   --duration-fast: 150ms;
   --duration-base: 250ms;
   --duration-slow: 400ms;
@@ -146,10 +146,8 @@
   --color-fg-muted: var(--fg-muted);
   --color-fg-disabled: var(--fg-disabled);
 
-  --font-sans:
-    var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono:
-    var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, Monaco, "Cascadia Code", monospace;
+  --font-sans: "Inter", var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", var(--font-geist-mono), ui-monospace, monospace;
 }
 
 /* ===========================================================================
