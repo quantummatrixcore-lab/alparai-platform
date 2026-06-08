@@ -45,7 +45,7 @@ export function HeroSection({
           >
             <div className="border-danger-500/30 bg-danger-500/10 text-danger-400 inline-flex items-center gap-2 rounded-sm border px-5 py-2 text-xs font-bold tracking-[0.2em] uppercase shadow-[0_0_20px_rgba(230,57,70,0.3)] backdrop-blur-md">
               <Target className="h-4 w-4" />
-              <span>Sıfır Tolerans. %100 Şeffaflık.</span>
+              <span>{t("zero_tolerance")}</span>
             </div>
           </motion.div>
 
@@ -78,13 +78,13 @@ export function HeroSection({
               className="group bg-danger-500 hover:bg-danger-400 relative inline-flex h-16 w-full items-center justify-center gap-3 rounded-md px-10 text-lg font-black text-white shadow-[0_0_30px_rgba(230,57,70,0.5)] transition-all hover:-translate-y-1 hover:shadow-[0_0_50px_rgba(230,57,70,0.7)] sm:w-auto"
             >
               <ShieldAlert className="h-6 w-6" />
-              VAKA BİLDİR
+              {t("cta_primary")}
             </Link>
             <Link
               href="/incidents"
               className="border-border-strong bg-bg-elevated/40 text-fg-primary hover:border-brand-500/50 hover:bg-bg-elevated/80 inline-flex h-16 w-full items-center justify-center gap-3 rounded-md border px-10 text-lg font-bold shadow-xl backdrop-blur-xl transition-all hover:-translate-y-1 sm:w-auto"
             >
-              VAKALARI İNCELE
+              {t("cta_secondary")}
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-2" />
             </Link>
           </motion.div>
@@ -96,13 +96,17 @@ export function HeroSection({
             className="mx-auto mt-24 grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-3"
           >
             <StatCard
-              label="Kayıtlı Vaka"
+              label={t("stats_incidents")}
               value={totalIncidents}
               glowColor="rgba(230,57,70,0.15)"
             />
-            <StatCard label="Sağlayıcı" value={totalProviders} glowColor="rgba(168,85,247,0.15)" />
             <StatCard
-              label="Etkilenen Ülke"
+              label={t("stats_providers")}
+              value={totalProviders}
+              glowColor="rgba(168,85,247,0.15)"
+            />
+            <StatCard
+              label={t("stats_countries")}
               value={totalCountries}
               glowColor="rgba(39,174,96,0.15)"
             />

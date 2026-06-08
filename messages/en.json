@@ -74,7 +74,8 @@
     "join_cta_4": "Read the Methodology",
     "join_cta_4_desc": "How we verify, score, and publish incidents.",
     "closing_title": "Where the world holds AI accountable",
-    "closing_subtitle": "Not governments alone. Not companies alone. Everyone. Because the question of how AI behaves is too important to be left to anyone who isn't all of us."
+    "closing_subtitle": "Not governments alone. Not companies alone. Everyone. Because the question of how AI behaves is too important to be left to anyone who isn't all of us.",
+    "zero_tolerance": "Zero Tolerance. 100% Transparency."
   },
   "incident": {
     "title_placeholder": "Briefly describe the incident",
@@ -341,22 +342,13 @@
     }
   },
   "contact": {
-    "form": {
-      "sent_toast": "Message sent",
-      "sent_title": "Message sent",
-      "sent_desc": "We typically respond within 1–2 business days.",
-      "name": "Your name",
-      "email": "Email",
-      "category": "Category",
-      "category_general": "General",
-      "category_press": "Press",
-      "category_partnership": "Partnership",
-      "category_security": "Security disclosure",
-      "category_legal": "Legal",
-      "subject": "Subject",
-      "message": "Message",
-      "submit": "Send message"
-    }
+    "title": "Get in touch",
+    "subtitle": "Press, partnership, security disclosure, or just a question. We read every message.",
+    "sendMessage": "Send us a message",
+    "general": "General",
+    "press": "Press",
+    "office": "Registered office",
+    "officeText": "Will be disclosed in the Imprint page once the legal entity is registered."
   },
   "badge": {
     "severity": {
@@ -395,15 +387,6 @@
     "voiceText": "Every published incident invites an official response from the AI provider. We verify their identity and publish the response alongside the report. Healthy debate over real evidence.",
     "openSource": "Open source",
     "openSourceText": "ALPAR is licensed under AGPL-3.0. Anyone can audit the code, run an instance, or contribute. We believe trust infrastructure should itself be trustworthy."
-  },
-  "contact": {
-    "title": "Get in touch",
-    "subtitle": "Press, partnership, security disclosure, or just a question. We read every message.",
-    "sendMessage": "Send us a message",
-    "general": "General",
-    "press": "Press",
-    "office": "Registered office",
-    "officeText": "Will be disclosed in the Imprint page once the legal entity is registered."
   },
   "legal": {
     "termsTitle": "Terms of Service",
@@ -551,5 +534,20 @@
     "transparencyCommitment": "Our commitment",
     "analysisTitle": "Master Analysis",
     "analysisSubtitle": "AI model analyses for platform improvement"
+  },
+  "dilemmas": {
+    "title": "Voice of the People: AI Dilemmas",
+    "description": "The answer to this question may shape our future. Cast your vote and see what the community thinks.",
+    "turnstileRequired": "Please complete the bot verification (Turnstile) first.",
+    "yes": "Yes",
+    "no": "No",
+    "unsure": "Undecided",
+    "unsureButton": "Undecided",
+    "criticalQuestion": "Critical Question",
+    "totalVotes": "Total {count} votes cast",
+    "newBadgeTitle": "NEW BADGE EARNED!",
+    "newBadgeDesc": "Added to your profile. Thanks for adding your voice to the community!",
+    "voteRecorded": "Your vote has been recorded successfully!",
+    "voteRecordedDesc": "Thanks for adding your voice to the community."
   }
 }

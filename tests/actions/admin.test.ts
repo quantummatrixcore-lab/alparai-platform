@@ -1,9 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import "../helpers/setup";
-import {
-  createMockSupabaseClient,
-  createTestModerator,
-} from "../helpers/supabase-mock";
+import { createMockSupabaseClient, createTestModerator } from "../helpers/supabase-mock";
 
 vi.hoisted(() => {
   vi.doMock("@/lib/supabase/admin", () => ({
@@ -15,15 +12,9 @@ vi.hoisted(() => {
   }));
 });
 
-import {
-  createAdminClient,
-} from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { requireModerator, requireAdmin } from "@/lib/auth/session";
-import {
-  moderateIncident,
-  reviewTakedown,
-  setUserRole,
-} from "@/actions/admin";
+import { moderateIncident, reviewTakedown, setUserRole } from "@/actions/admin";
 
 let mockAdminClient: ReturnType<typeof createMockSupabaseClient>;
 let mockModerator: ReturnType<typeof createTestModerator>;
@@ -42,31 +33,31 @@ describe("moderateIncident", () => {
     vi.clearAllMocks();
     vi.mocked(requireModerator).mockResolvedValue(mockModerator);
 
-    const mockUpdateEq = vi
-      .fn()
-      .mockResolvedValue({ data: null, error: null });
+    const mockUpdateEq = vi.fn().mockResolvedValue({ data: null, error: null });
     mockAdminClient.from.mockReturnValue({
       update: vi.fn().mockReturnValue({ eq: mockUpdateEq }),
       select: vi.fn().mockReturnValue({
-        single: vi
-          .fn()
-          .mockResolvedValue({ data: null, error: null }),
+        single: vi.fn().mockResolvedValue({ data: null, error: null }),
       }),
       insert: vi.fn().mockReturnValue({
         select: vi.fn().mockReturnValue({
-          single: vi
-            .fn()
-            .mockResolvedValue({ data: null, error: null }),
+          single: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
       delete: vi.fn().mockReturnValue({
         eq: vi.fn().mockReturnValue({
-          eq: vi
-            .fn()
-            .mockResolvedValue({ data: null, error: null }),
+          eq: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
-      upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
+      upsert: vi
+        .fn()
+        .mockReturnValue({
+          select: vi
+            .fn()
+            .mockReturnValue({
+              single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
+            }),
+        }),
     } as ReturnType<typeof mockAdminClient.from>);
   });
 
@@ -113,31 +104,31 @@ describe("reviewTakedown", () => {
     vi.clearAllMocks();
     vi.mocked(requireModerator).mockResolvedValue(mockModerator);
 
-    const mockUpdateEq = vi
-      .fn()
-      .mockResolvedValue({ data: null, error: null });
+    const mockUpdateEq = vi.fn().mockResolvedValue({ data: null, error: null });
     mockAdminClient.from.mockReturnValue({
       update: vi.fn().mockReturnValue({ eq: mockUpdateEq }),
       select: vi.fn().mockReturnValue({
-        single: vi
-          .fn()
-          .mockResolvedValue({ data: null, error: null }),
+        single: vi.fn().mockResolvedValue({ data: null, error: null }),
       }),
       insert: vi.fn().mockReturnValue({
         select: vi.fn().mockReturnValue({
-          single: vi
-            .fn()
-            .mockResolvedValue({ data: null, error: null }),
+          single: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
       delete: vi.fn().mockReturnValue({
         eq: vi.fn().mockReturnValue({
-          eq: vi
-            .fn()
-            .mockResolvedValue({ data: null, error: null }),
+          eq: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
-      upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
+      upsert: vi
+        .fn()
+        .mockReturnValue({
+          select: vi
+            .fn()
+            .mockReturnValue({
+              single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
+            }),
+        }),
     } as ReturnType<typeof mockAdminClient.from>);
   });
 
@@ -164,31 +155,31 @@ describe("setUserRole", () => {
     vi.clearAllMocks();
     vi.mocked(requireModerator).mockResolvedValue(mockModerator);
 
-    const mockUpdateEq = vi
-      .fn()
-      .mockResolvedValue({ data: null, error: null });
+    const mockUpdateEq = vi.fn().mockResolvedValue({ data: null, error: null });
     mockAdminClient.from.mockReturnValue({
       update: vi.fn().mockReturnValue({ eq: mockUpdateEq }),
       select: vi.fn().mockReturnValue({
-        single: vi
-          .fn()
-          .mockResolvedValue({ data: null, error: null }),
+        single: vi.fn().mockResolvedValue({ data: null, error: null }),
       }),
       insert: vi.fn().mockReturnValue({
         select: vi.fn().mockReturnValue({
-          single: vi
-            .fn()
-            .mockResolvedValue({ data: null, error: null }),
+          single: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
       delete: vi.fn().mockReturnValue({
         eq: vi.fn().mockReturnValue({
-          eq: vi
-            .fn()
-            .mockResolvedValue({ data: null, error: null }),
+          eq: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
-      upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
+      upsert: vi
+        .fn()
+        .mockReturnValue({
+          select: vi
+            .fn()
+            .mockReturnValue({
+              single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
+            }),
+        }),
     } as ReturnType<typeof mockAdminClient.from>);
   });
 
