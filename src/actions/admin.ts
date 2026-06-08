@@ -4,7 +4,13 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireModerator } from "@/lib/auth/session";
-import { withAutopilot, moderateIncidentPolicy, reviewTakedownPolicy, attemptsOf, durationOf } from "@/lib/autopilot";
+import {
+  withAutopilot,
+  moderateIncidentPolicy,
+  reviewTakedownPolicy,
+  attemptsOf,
+  durationOf,
+} from "@/lib/autopilot";
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
 import { requireAdmin } from "@/lib/auth/session";
 
@@ -41,7 +47,7 @@ const runModerationWork = async (
       moderated_at: new Date().toISOString(),
       moderation_note: data.moderationNote,
       published_at: newStatus === "published" ? new Date().toISOString() : null,
-    } as never)
+    })
     .eq("id", data.incidentId);
   if (error) {
     return { kind: "retryable", error: error.message };
@@ -115,7 +121,7 @@ const runTakedownReviewWork = async (
       status: data.newStatus,
       reviewed_by: data.reviewerId,
       reviewed_at: new Date().toISOString(),
-    } as never)
+    })
     .eq("id", data.id);
   if (error) {
     return { kind: "retryable", error: error.message };
@@ -181,7 +187,7 @@ export async function setUserRole(
   const db = createAdminClient();
   const { error } = await db
     .from("users")
-    .update({ role: parsed.data.role } as never)
+    .update({ role: parsed.data.role })
     .eq("id", parsed.data.userId);
   if (error) return { ok: false, error: "Failed to update" };
   revalidatePath("/admin");

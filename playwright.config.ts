@@ -20,7 +20,7 @@ export default defineConfig({
   webServer: process.env.CI
     ? undefined
     : {
-        command: "pnpm dev",
+        command: "npx pnpm dev",
         port: 3000,
         timeout: 60_000,
         reuseExistingServer: true,

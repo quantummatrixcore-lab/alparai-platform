@@ -1,6 +1,15 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
+vi.mock("@/lib/supabase/admin", () => ({
+  createAdminClient: () => ({
+    from: () => ({
+      upsert: () => ({
+        select: () => ({ single: () => Promise.resolve({ data: { id: "mock" }, error: null }) }),
+      }),
+    }),
+  }),
+}));
 
 import {
   registerAutopilotHandler,
@@ -79,11 +88,9 @@ describe("autopilot worker", () => {
 
 describe("enqueueAutopilotJob", () => {
   it("returns an id when enqueued", async () => {
-    const id = await enqueueAutopilotJob(
-      "submitIncident",
-      createIdempotencyKey("abc"),
-      { hello: "world" }
-    );
+    const id = await enqueueAutopilotJob("submitIncident", createIdempotencyKey("abc"), {
+      hello: "world",
+    });
     expect(typeof id === "string" && id.length > 0).toBe(true);
   });
 });

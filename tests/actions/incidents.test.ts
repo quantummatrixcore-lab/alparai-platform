@@ -1,9 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import "../helpers/setup";
-import {
-  createMockSupabaseClient,
-  createTestUser,
-} from "../helpers/supabase-mock";
+import { createMockSupabaseClient, createTestUser } from "../helpers/supabase-mock";
 
 vi.hoisted(() => {
   vi.doMock("@/lib/supabase/server", () => ({
@@ -96,9 +93,7 @@ describe("submitIncident", () => {
     mockSupabase.from.mockReturnValue({
       insert: vi.fn().mockReturnValue({
         select: vi.fn().mockReturnValue({
-          single: vi
-            .fn()
-            .mockResolvedValue({ data: { id: "inc-123" }, error: null }),
+          single: vi.fn().mockResolvedValue({ data: { id: "inc-123" }, error: null }),
         }),
       }),
       select: vi.fn().mockReturnValue({
@@ -107,11 +102,12 @@ describe("submitIncident", () => {
     } as ReturnType<typeof mockSupabase.from>);
   });
 
-  it("returns error when user is not authenticated", async () => {
+  it("allows anonymous submission when user is not authenticated", async () => {
     vi.mocked(getCurrentUser).mockResolvedValueOnce(null);
-    const result = await submitIncident({ ok: false }, buildFormData());
-    expect(result.ok).toBe(false);
-    expect(result.formError).toContain("signed in");
+    const fd = buildFormData();
+    fd.set("is_anonymous", "on");
+    const result = await submitIncident({ ok: false }, fd);
+    expect(result.ok).toBe(true);
   });
 
   it("returns error when rate limited", async () => {
@@ -156,9 +152,7 @@ describe("submitIncident", () => {
   it("calls maskPII on title and description", async () => {
     await submitIncident({ ok: false }, buildFormData());
     expect(maskPII).toHaveBeenCalledWith("A valid incident title here");
-    expect(maskPII).toHaveBeenCalledWith(
-      expect.stringContaining("detailed description")
-    );
+    expect(maskPII).toHaveBeenCalledWith(expect.stringContaining("detailed description"));
   });
 
   it("detects PII in masked fields", async () => {
@@ -181,9 +175,7 @@ describe("submitIncident", () => {
     mockSupabase.from.mockReturnValue({
       insert: vi.fn().mockReturnValue({
         select: vi.fn().mockReturnValue({
-          single: vi
-            .fn()
-            .mockResolvedValue({ data: null, error: { message: "DB error" } }),
+          single: vi.fn().mockResolvedValue({ data: null, error: { message: "DB error" } }),
         }),
       }),
       select: vi.fn().mockReturnValue({
@@ -213,15 +205,11 @@ describe("voteOnIncident", () => {
   beforeEach(() => {
     vi.mocked(getCurrentUser).mockResolvedValue(mockUser);
 
-    const mockDeleteInnerEq = vi
-      .fn()
-      .mockResolvedValue({ data: null, error: null });
+    const mockDeleteInnerEq = vi.fn().mockResolvedValue({ data: null, error: null });
     const mockDeleteOuterEq = vi.fn().mockReturnValue({
       eq: mockDeleteInnerEq,
     });
-    const mockMaybeSingle = vi
-      .fn()
-      .mockResolvedValue({ data: null, error: null });
+    const mockMaybeSingle = vi.fn().mockResolvedValue({ data: null, error: null });
     const mockEqInner = vi.fn().mockReturnValue({
       maybeSingle: mockMaybeSingle,
     });
@@ -235,12 +223,16 @@ describe("voteOnIncident", () => {
     mockAdminClient.from.mockReturnValue({
       select: mockSelect,
       delete: vi.fn().mockReturnValue({ eq: mockDeleteOuterEq }),
-      upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
+      upsert: vi
+        .fn()
+        .mockReturnValue({
+          select: vi
+            .fn()
+            .mockReturnValue({ single: vi.fn().mockResolvedValue({ data: null, error: null }) }),
+        }),
       insert: vi.fn().mockReturnValue({
         select: vi.fn().mockReturnValue({
-          single: vi
-            .fn()
-            .mockResolvedValue({ data: null, error: null }),
+          single: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
       update: vi.fn().mockReturnValue({
@@ -284,9 +276,7 @@ describe("voteOnIncident", () => {
   });
 
   it("toggles vote when same value already exists", async () => {
-    const mockMaybeSingle = vi
-      .fn()
-      .mockResolvedValue({ data: { value: 1 }, error: null });
+    const mockMaybeSingle = vi.fn().mockResolvedValue({ data: { value: 1 }, error: null });
     const mockEqInner = vi.fn().mockReturnValue({
       maybeSingle: mockMaybeSingle,
     });
@@ -296,9 +286,7 @@ describe("voteOnIncident", () => {
     const mockSelect = vi.fn().mockReturnValue({
       eq: mockEqOuter,
     });
-    const mockDeleteInnerEq = vi
-      .fn()
-      .mockResolvedValue({ data: null, error: null });
+    const mockDeleteInnerEq = vi.fn().mockResolvedValue({ data: null, error: null });
     const mockDeleteOuterEq = vi.fn().mockReturnValue({
       eq: mockDeleteInnerEq,
     });
@@ -306,12 +294,16 @@ describe("voteOnIncident", () => {
     mockAdminClient.from.mockReturnValue({
       select: mockSelect,
       delete: vi.fn().mockReturnValue({ eq: mockDeleteOuterEq }),
-      upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
+      upsert: vi
+        .fn()
+        .mockReturnValue({
+          select: vi
+            .fn()
+            .mockReturnValue({ single: vi.fn().mockResolvedValue({ data: null, error: null }) }),
+        }),
       insert: vi.fn().mockReturnValue({
         select: vi.fn().mockReturnValue({
-          single: vi
-            .fn()
-            .mockResolvedValue({ data: null, error: null }),
+          single: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
       update: vi.fn().mockReturnValue({
