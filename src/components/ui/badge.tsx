@@ -3,7 +3,10 @@
 import * as React from "react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-import type { IncidentSeverity, IncidentStatus } from "@/types/database";
+import type { Database } from "@/types/database";
+
+type IncidentSeverity = Database["public"]["Enums"]["incident_severity"];
+type IncidentStatus = Database["public"]["Enums"]["incident_status"];
 
 type BadgeVariant =
   | "default"

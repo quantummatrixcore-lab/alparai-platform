@@ -60,7 +60,7 @@ export default async function AdminDashboardPage({
     admin
       .from("takedown_requests")
       .select("*", { count: "exact", head: true })
-      .eq("status", "pending"),
+      .eq("status", "received"),
     admin
       .from("incidents")
       .select("*", { count: "exact", head: true })

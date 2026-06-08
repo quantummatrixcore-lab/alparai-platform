@@ -129,7 +129,6 @@ export function PollCard({ poll }: { poll: Poll }) {
           <div className="grid grid-cols-3 gap-3 pt-2">
             <Button
               variant="outline"
-              size="default"
               disabled={!turnstileToken || isVoting}
               onClick={() => handleVote("yes")}
               className="text-success-400 border-success-400/40 hover:bg-success-400/20 w-full font-bold transition-all disabled:opacity-40"
@@ -138,7 +137,6 @@ export function PollCard({ poll }: { poll: Poll }) {
             </Button>
             <Button
               variant="outline"
-              size="default"
               disabled={!turnstileToken || isVoting}
               onClick={() => handleVote("unsure")}
               className="text-fg-muted border-fg-muted/40 hover:bg-fg-muted/20 w-full font-bold transition-all disabled:opacity-40"
@@ -147,7 +145,6 @@ export function PollCard({ poll }: { poll: Poll }) {
             </Button>
             <Button
               variant="outline"
-              size="default"
               disabled={!turnstileToken || isVoting}
               onClick={() => handleVote("no")}
               className="text-danger-400 border-danger-400/40 hover:bg-danger-400/20 w-full font-bold transition-all disabled:opacity-40"

@@ -8,7 +8,7 @@ import type {
   IncidentCategory,
   IncidentSeverity,
   IncidentStatus,
-} from "@/types/database";
+} from "@/types";
 import type { IncidentListItem } from "@/types";
 
 type RawIncidentRow = Record<string, unknown> & {

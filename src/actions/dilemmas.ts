@@ -2,7 +2,7 @@
 
 import { headers } from "next/headers";
 import { createServerClient } from "@/lib/supabase/server";
-import { supabaseAdmin } from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/supabase/admin";
 import crypto from "crypto";
 import { revalidatePath } from "next/cache";
 
@@ -33,6 +33,7 @@ export async function submitVote(
 
     const { data: userData } = await supabase.auth.getUser();
     const userId = userData?.user?.id;
+    const supabaseAdmin = createAdminClient();
 
     // 2. Insert vote into ai_poll_votes using admin to bypass RLS on insert if needed
     // But votes should be insertable by authenticated users or anon via admin
@@ -61,7 +62,7 @@ export async function submitVote(
       .single();
 
     if (poll) {
-      const updates: Record<string, number> = {};
+      const updates: { yes_count?: number; no_count?: number; unsure_count?: number } = {};
       if (choice === "yes") updates.yes_count = poll.yes_count + 1;
       if (choice === "no") updates.no_count = poll.no_count + 1;
       if (choice === "unsure") updates.unsure_count = poll.unsure_count + 1;

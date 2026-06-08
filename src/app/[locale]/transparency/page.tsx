@@ -51,7 +51,7 @@ export default async function TransparencyPage({
       .eq("status", "pending_review"),
     supabase.from("ai_providers").select("*", { count: "exact", head: true }),
     supabase.from("ai_provider_responses").select("*", { count: "exact", head: true }),
-    supabase.from("profiles").select("*", { count: "exact", head: true }),
+    supabase.from("users").select("*", { count: "exact", head: true }),
     supabase.from("takedown_requests").select("*", { count: "exact", head: true }),
   ]);
 
