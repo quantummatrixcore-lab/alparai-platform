@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { submitVote } from "@/actions/dilemmas";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export type Poll = {
   id: string;
@@ -17,6 +18,7 @@ export type Poll = {
 };
 
 export function PollCard({ poll }: { poll: Poll }) {
+  const t = useTranslations("dilemmas");
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [isVoting, setIsVoting] = useState(false);
 
@@ -27,7 +29,7 @@ export function PollCard({ poll }: { poll: Poll }) {
 
   const handleVote = async (voteType: "yes" | "no" | "unsure") => {
     if (!turnstileToken) {
-      toast.error("Lütfen önce bot doğrulamasını (Turnstile) tamamlayın.");
+      toast.error(t("turnstileRequired"));
       return;
     }
 
@@ -39,13 +41,13 @@ export function PollCard({ poll }: { poll: Poll }) {
       toast.error(result.error);
     } else {
       if (result.awardedBadge) {
-        toast.success(`YENİ ROZET KAZANDINIZ! ${result.badgeIcon} ${result.awardedBadge}`, {
-          description: "Profilinize eklendi. Topluluğun sesine katıldığınız için teşekkürler!",
+        toast.success(t("newBadgeTitle"), {
+          description: t("newBadgeDesc"),
           duration: 8000,
         });
       } else {
-        toast.success("Oyunuz başarıyla kaydedildi!", {
-          description: "Topluluğun sesine katıldığınız için teşekkürler.",
+        toast.success(t("voteRecorded"), {
+          description: t("voteRecordedDesc"),
         });
       }
     }
@@ -59,7 +61,7 @@ export function PollCard({ poll }: { poll: Poll }) {
       <CardContent className="flex flex-1 flex-col p-8">
         <div className="flex-1 text-center">
           <div className="bg-brand-500/10 text-brand-400 border-brand-500/20 mb-4 inline-block rounded-full border px-3 py-1 text-xs font-bold tracking-widest uppercase">
-            Kritik Soru
+            {t("criticalQuestion")}
           </div>
           <h3 className="text-fg-primary mb-4 text-2xl font-extrabold">{poll.title}</h3>
           <p className="text-fg-secondary mb-8 text-sm leading-relaxed">{poll.description}</p>
@@ -69,9 +71,13 @@ export function PollCard({ poll }: { poll: Poll }) {
           {/* Professional Graph Bar */}
           <div className="space-y-2">
             <div className="flex justify-between px-1 text-xs font-medium">
-              <span className="text-success-400 font-bold tracking-wider uppercase">Evet</span>
-              <span className="text-fg-muted font-bold tracking-wider uppercase">Kararsız</span>
-              <span className="text-danger-400 font-bold tracking-wider uppercase">Hayır</span>
+              <span className="text-success-400 font-bold tracking-wider uppercase">
+                {t("yes")}
+              </span>
+              <span className="text-fg-muted font-bold tracking-wider uppercase">
+                {t("unsure")}
+              </span>
+              <span className="text-danger-400 font-bold tracking-wider uppercase">{t("no")}</span>
             </div>
 
             <div className="bg-bg-tertiary/40 relative flex h-8 w-full overflow-hidden rounded-md border border-white/5">
@@ -109,7 +115,7 @@ export function PollCard({ poll }: { poll: Poll }) {
               </div>
             </div>
             <div className="text-fg-muted pt-1 text-center text-xs font-medium">
-              Toplam {totalVotes.toLocaleString()} oy kullanıldı
+              {t("totalVotes", { count: totalVotes.toLocaleString() })}
             </div>
           </div>
 
@@ -133,7 +139,7 @@ export function PollCard({ poll }: { poll: Poll }) {
               onClick={() => handleVote("yes")}
               className="text-success-400 border-success-400/40 hover:bg-success-400/20 w-full font-bold transition-all disabled:opacity-40"
             >
-              Evet
+              {t("yes")}
             </Button>
             <Button
               variant="outline"
@@ -141,7 +147,7 @@ export function PollCard({ poll }: { poll: Poll }) {
               onClick={() => handleVote("unsure")}
               className="text-fg-muted border-fg-muted/40 hover:bg-fg-muted/20 w-full font-bold transition-all disabled:opacity-40"
             >
-              Kararsızım
+              {t("unsureButton")}
             </Button>
             <Button
               variant="outline"
@@ -149,7 +155,7 @@ export function PollCard({ poll }: { poll: Poll }) {
               onClick={() => handleVote("no")}
               className="text-danger-400 border-danger-400/40 hover:bg-danger-400/20 w-full font-bold transition-all disabled:opacity-40"
             >
-              Hayır
+              {t("no")}
             </Button>
           </div>
         </div>

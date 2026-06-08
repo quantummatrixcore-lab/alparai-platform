@@ -1,9 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import "../helpers/setup";
-import {
-  createMockSupabaseClient,
-  createTestUser,
-} from "../helpers/supabase-mock";
+import { createMockSupabaseClient, createTestUser } from "../helpers/supabase-mock";
 
 vi.hoisted(() => {
   vi.doMock("@/lib/supabase/server", () => ({
@@ -27,10 +24,7 @@ vi.hoisted(() => {
 import { createClient, createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/session";
-import {
-  submitSuggestion,
-  upvoteSuggestion,
-} from "@/actions/suggestions";
+import { submitSuggestion, upvoteSuggestion } from "@/actions/suggestions";
 
 let mockSupabase: ReturnType<typeof createMockSupabaseClient>;
 let mockAdminClient: ReturnType<typeof createMockSupabaseClient>;
@@ -47,9 +41,7 @@ beforeEach(() => {
   vi.mocked(getCurrentUser).mockResolvedValue(mockUser as never);
 });
 
-function buildSuggestionForm(
-  overrides: Record<string, string> = {}
-): FormData {
+function buildSuggestionForm(overrides: Record<string, string> = {}): FormData {
   const fd = new FormData();
   fd.set("title", "Add dark mode support for the platform");
   fd.set(
@@ -70,45 +62,41 @@ describe("submitSuggestion", () => {
     mockSupabase.from.mockReturnValue({
       insert: vi.fn().mockReturnValue({
         select: vi.fn().mockReturnValue({
-          single: vi
-            .fn()
-            .mockResolvedValue({ data: { id: "sug-1" }, error: null }),
+          single: vi.fn().mockResolvedValue({ data: { id: "sug-1" }, error: null }),
         }),
       }),
       select: vi.fn().mockReturnValue({
-        single: vi
-          .fn()
-          .mockResolvedValue({ data: null, error: null }),
+        single: vi.fn().mockResolvedValue({ data: null, error: null }),
       }),
       update: vi.fn().mockReturnValue({
         eq: vi.fn().mockResolvedValue({ data: null, error: null }),
       }),
       delete: vi.fn().mockReturnValue({
         eq: vi.fn().mockReturnValue({
-          eq: vi
-            .fn()
-            .mockResolvedValue({ data: null, error: null }),
+          eq: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
-      upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
+      upsert: vi
+        .fn()
+        .mockReturnValue({
+          select: vi
+            .fn()
+            .mockReturnValue({
+              single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
+            }),
+        }),
     } as ReturnType<typeof mockSupabase.from>);
   });
 
   it("submits successfully with valid data", async () => {
-    const result = await submitSuggestion(
-      { ok: false },
-      buildSuggestionForm()
-    );
+    const result = await submitSuggestion({ ok: false }, buildSuggestionForm());
     expect(result.ok).toBe(true);
     expect(mockSupabase.from).toHaveBeenCalledWith("suggestions");
   });
 
   it("returns error when not authenticated", async () => {
     vi.mocked(getCurrentUser).mockResolvedValueOnce(null);
-    const result = await submitSuggestion(
-      { ok: false },
-      buildSuggestionForm()
-    );
+    const result = await submitSuggestion({ ok: false }, buildSuggestionForm());
     expect(result.ok).toBe(false);
     expect(result.error).toContain("Sign in");
   });
@@ -127,26 +115,27 @@ describe("submitSuggestion", () => {
         error: { message: "DB error" },
       }),
       select: vi.fn().mockReturnValue({
-        single: vi
-          .fn()
-          .mockResolvedValue({ data: null, error: null }),
+        single: vi.fn().mockResolvedValue({ data: null, error: null }),
       }),
       update: vi.fn().mockReturnValue({
         eq: vi.fn().mockResolvedValue({ data: null, error: null }),
       }),
       delete: vi.fn().mockReturnValue({
         eq: vi.fn().mockReturnValue({
-          eq: vi
-            .fn()
-            .mockResolvedValue({ data: null, error: null }),
+          eq: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
-      upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
+      upsert: vi
+        .fn()
+        .mockReturnValue({
+          select: vi
+            .fn()
+            .mockReturnValue({
+              single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
+            }),
+        }),
     } as ReturnType<typeof mockSupabase.from>);
-    const result = await submitSuggestion(
-      { ok: false },
-      buildSuggestionForm()
-    );
+    const result = await submitSuggestion({ ok: false }, buildSuggestionForm());
     expect(result.ok).toBe(false);
     expect(result.error).toContain("Failed");
   });
@@ -156,9 +145,7 @@ describe("upvoteSuggestion", () => {
   beforeEach(() => {
     vi.mocked(getCurrentUser).mockResolvedValue(mockUser);
 
-    const mockMaybeSingle = vi
-      .fn()
-      .mockResolvedValue({ data: null, error: null });
+    const mockMaybeSingle = vi.fn().mockResolvedValue({ data: null, error: null });
     const mockEqInner = vi.fn().mockReturnValue({
       maybeSingle: mockMaybeSingle,
     });
@@ -175,7 +162,15 @@ describe("upvoteSuggestion", () => {
       update: vi.fn().mockReturnValue({
         eq: vi.fn().mockResolvedValue({ data: null, error: null }),
       }),
-      upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
+      upsert: vi
+        .fn()
+        .mockReturnValue({
+          select: vi
+            .fn()
+            .mockReturnValue({
+              single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
+            }),
+        }),
     } as ReturnType<typeof mockAdminClient.from>);
   });
 

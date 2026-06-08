@@ -74,7 +74,8 @@
     "join_cta_4": "Metodolojiyi Oku",
     "join_cta_4_desc": "Olayları nasıl doğruladığımızı, puanladığımızı ve yayınladığımızı öğren.",
     "closing_title": "Dünyanın AI'ı hesap verilebilir kıldığı yer",
-    "closing_subtitle": "Sadece hükümetler değil. Sadece şirketler değil. Herkes. Çünkü AI'ın nasıl davranması gerektiği sorusu, hepimiz olmayan hiçbirine bırakılamayacak kadar önemlidir."
+    "closing_subtitle": "Sadece hükümetler değil. Sadece şirketler değil. Herkes. Çünkü AI'ın nasıl davranması gerektiği sorusu, hepimiz olmayan hiçbirine bırakılamayacak kadar önemlidir.",
+    "zero_tolerance": "Sıfır Tolerans. %100 Şeffaflık."
   },
   "incident": {
     "title_placeholder": "Olayı kısaca tanımlayın",
@@ -341,22 +342,13 @@
     }
   },
   "contact": {
-    "form": {
-      "sent_toast": "Mesaj gönderildi",
-      "sent_title": "Mesaj gönderildi",
-      "sent_desc": "Genellikle 1-2 iş günü içinde yanıt veriyoruz.",
-      "name": "Adınız",
-      "email": "E-posta",
-      "category": "Kategori",
-      "category_general": "Genel",
-      "category_press": "Basın",
-      "category_partnership": "Ortaklık",
-      "category_security": "Güvenlik bildirimi",
-      "category_legal": "Hukuki",
-      "subject": "Konu",
-      "message": "Mesaj",
-      "submit": "Mesaj gönder"
-    }
+    "title": "İletişime geçin",
+    "subtitle": "Basın, ortaklık, güvenlik bildirimi veya sadece bir soru. Her mesajı okuyoruz.",
+    "sendMessage": "Bize mesaj gönderin",
+    "general": "Genel",
+    "press": "Basın",
+    "office": "Kayıtlı ofis",
+    "officeText": "Tüzel kişilik tescil edildikten sonra İmpressum sayfasında açıklanacaktır."
   },
   "badge": {
     "severity": {
@@ -395,15 +387,6 @@
     "voiceText": "Yayınlanan her olay, yapay zeka sağlayıcısından resmi bir yanıt davet eder. Kimliklerini doğrular ve yanıtı raporla birlikte yayınlarız. Gerçek kanıtlar üzerinde sağlıklı tartışma.",
     "openSource": "Açık kaynak",
     "openSourceText": "ALPAR, AGPL-3.0 altında lisanslanmıştır. Herkes kodu denetleyebilir, bir örnek çalıştırabilir veya katkıda bulunabilir. Güven altyapısının kendisinin de güvenilir olması gerektiğine inanıyoruz."
-  },
-  "contact": {
-    "title": "İletişime geçin",
-    "subtitle": "Basın, ortaklık, güvenlik bildirimi veya sadece bir soru. Her mesajı okuyoruz.",
-    "sendMessage": "Bize mesaj gönderin",
-    "general": "Genel",
-    "press": "Basın",
-    "office": "Kayıtlı ofis",
-    "officeText": "Tüzel kişilik tescil edildikten sonra İmpressum sayfasında açıklanacaktır."
   },
   "legal": {
     "termsTitle": "Kullanım Koşulları",
@@ -551,5 +534,20 @@
     "transparencyCommitment": "Taahhüdümüz",
     "analysisTitle": "Ana Analiz",
     "analysisSubtitle": "Platform iyileştirmesi için AI model analizleri"
+  },
+  "dilemmas": {
+    "title": "Halkın Sesi: AI Dilemmas",
+    "description": "Bu sorunun cevabı geleceğimizi şekillendirebilir. Oyunuzu verin, topluluğun düşüncesini görün.",
+    "turnstileRequired": "Lütfen önce bot doğrulamasını (Turnstile) tamamlayın.",
+    "yes": "Evet",
+    "no": "Hayır",
+    "unsure": "Kararsız",
+    "unsureButton": "Kararsızım",
+    "criticalQuestion": "Kritik Soru",
+    "totalVotes": "Toplam {count} oy kullanıldı",
+    "newBadgeTitle": "YENİ ROZET KAZANDINIZ!",
+    "newBadgeDesc": "Profilinize eklendi. Topluluğun sesine katıldığınız için teşekkürler!",
+    "voteRecorded": "Oyunuz başarıyla kaydedildi!",
+    "voteRecordedDesc": "Topluluğun sesine katıldığınız için teşekkürler."
   }
 }

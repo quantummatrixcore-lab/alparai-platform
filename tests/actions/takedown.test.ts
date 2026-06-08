@@ -1,9 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import "../helpers/setup";
-import {
-  createMockSupabaseClient,
-  createTestUser,
-} from "../helpers/supabase-mock";
+import { createMockSupabaseClient, createTestUser } from "../helpers/supabase-mock";
 
 vi.hoisted(() => {
   vi.doMock("@/lib/supabase/server", () => ({
@@ -30,10 +27,7 @@ vi.hoisted(() => {
 import { createClient, createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/session";
-import {
-  submitTakedownRequest,
-  submitTakedown,
-} from "@/actions/takedown";
+import { submitTakedownRequest, submitTakedown } from "@/actions/takedown";
 
 let mockSupabase: ReturnType<typeof createMockSupabaseClient>;
 let mockAdminClient: ReturnType<typeof createMockSupabaseClient>;
@@ -55,27 +49,29 @@ describe("submitTakedownRequest", () => {
     mockAdminClient.from.mockReturnValue({
       insert: vi.fn().mockReturnValue({
         select: vi.fn().mockReturnValue({
-          single: vi
-            .fn()
-            .mockResolvedValue({ data: { id: "td-1" }, error: null }),
+          single: vi.fn().mockResolvedValue({ data: { id: "td-1" }, error: null }),
         }),
       }),
       select: vi.fn().mockReturnValue({
-        single: vi
-          .fn()
-          .mockResolvedValue({ data: null, error: null }),
+        single: vi.fn().mockResolvedValue({ data: null, error: null }),
       }),
       update: vi.fn().mockReturnValue({
         eq: vi.fn().mockResolvedValue({ data: null, error: null }),
       }),
       delete: vi.fn().mockReturnValue({
         eq: vi.fn().mockReturnValue({
-          eq: vi
-            .fn()
-            .mockResolvedValue({ data: null, error: null }),
+          eq: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
-      upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
+      upsert: vi
+        .fn()
+        .mockReturnValue({
+          select: vi
+            .fn()
+            .mockReturnValue({
+              single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
+            }),
+        }),
     } as ReturnType<typeof mockAdminClient.from>);
   });
 
@@ -113,21 +109,25 @@ describe("submitTakedownRequest", () => {
         error: { message: "DB error" },
       }),
       select: vi.fn().mockReturnValue({
-        single: vi
-          .fn()
-          .mockResolvedValue({ data: null, error: null }),
+        single: vi.fn().mockResolvedValue({ data: null, error: null }),
       }),
       update: vi.fn().mockReturnValue({
         eq: vi.fn().mockResolvedValue({ data: null, error: null }),
       }),
       delete: vi.fn().mockReturnValue({
         eq: vi.fn().mockReturnValue({
-          eq: vi
-            .fn()
-            .mockResolvedValue({ data: null, error: null }),
+          eq: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
-      upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
+      upsert: vi
+        .fn()
+        .mockReturnValue({
+          select: vi
+            .fn()
+            .mockReturnValue({
+              single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
+            }),
+        }),
     } as ReturnType<typeof mockAdminClient.from>);
     const result = await submitTakedownRequest({
       target_url: "https://alparai.online/incidents/123",
@@ -149,27 +149,29 @@ describe("submitTakedown", () => {
     mockAdminClient.from.mockReturnValue({
       insert: vi.fn().mockReturnValue({
         select: vi.fn().mockReturnValue({
-          single: vi
-            .fn()
-            .mockResolvedValue({ data: { id: "td-2" }, error: null }),
+          single: vi.fn().mockResolvedValue({ data: { id: "td-2" }, error: null }),
         }),
       }),
       select: vi.fn().mockReturnValue({
-        single: vi
-          .fn()
-          .mockResolvedValue({ data: null, error: null }),
+        single: vi.fn().mockResolvedValue({ data: null, error: null }),
       }),
       update: vi.fn().mockReturnValue({
         eq: vi.fn().mockResolvedValue({ data: null, error: null }),
       }),
       delete: vi.fn().mockReturnValue({
         eq: vi.fn().mockReturnValue({
-          eq: vi
-            .fn()
-            .mockResolvedValue({ data: null, error: null }),
+          eq: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
-      upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
+      upsert: vi
+        .fn()
+        .mockReturnValue({
+          select: vi
+            .fn()
+            .mockReturnValue({
+              single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
+            }),
+        }),
     } as ReturnType<typeof mockAdminClient.from>);
   });
 
@@ -177,8 +179,7 @@ describe("submitTakedown", () => {
     const result = await submitTakedown({
       incidentId: "inc-1",
       reason: "Defamatory content in report",
-      details:
-        "This incident report contains false and defamatory statements about our company.",
+      details: "This incident report contains false and defamatory statements about our company.",
       contactEmail: "contact@company.com",
     });
     expect(result.ok).toBe(true);
@@ -190,8 +191,7 @@ describe("submitTakedown", () => {
     const result = await submitTakedown({
       incidentId: "inc-1",
       reason: "Defamatory content in report",
-      details:
-        "This incident report contains false and defamatory statements about our company.",
+      details: "This incident report contains false and defamatory statements about our company.",
       contactEmail: "contact@company.com",
     });
     expect(result.ok).toBe(true);

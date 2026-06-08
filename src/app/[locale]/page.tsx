@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { HeroSection } from "@/components/marketing/hero-section";
 import { FounderStory } from "@/components/marketing/founder-story";
@@ -124,11 +124,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <Container>
             <div className="mx-auto mb-8 max-w-4xl text-center">
               <h2 className="bg-gradient-brand bg-clip-text text-3xl font-extrabold text-transparent">
-                Halkın Sesi: AI Dilemmas
+                {(await getTranslations("dilemmas"))("title")}
               </h2>
               <p className="text-fg-muted mt-2">
-                Bu sorunun cevabı geleceğimizi şekillendirebilir. Oyunuzu verin, topluluğun
-                düşüncesini görün.
+                {(await getTranslations("dilemmas"))("description")}
               </p>
             </div>
             <div className="mx-auto max-w-2xl">
