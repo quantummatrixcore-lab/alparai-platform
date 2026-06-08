@@ -31,7 +31,7 @@ export function AdvocateOfTheWeek({ advocate }: { advocate: Advocate | null }) {
           <div className="mb-6 flex items-center gap-2">
             <span className="bg-success-500/10 text-success-400 border-success-500/20 inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-xs font-bold tracking-widest uppercase">
               <Star className="fill-success-400 h-4 w-4" />
-              {t("title", { defaultValue: "Haftanın Etik Savunucusu" })}
+              {t("title")}
             </span>
           </div>
 
@@ -58,7 +58,7 @@ export function AdvocateOfTheWeek({ advocate }: { advocate: Advocate | null }) {
           <h3 className="text-fg-primary mb-1 text-2xl font-black">{advocate.name}</h3>
           <p className="text-success-400 mb-4 flex items-center gap-1 font-bold">
             <Zap className="h-4 w-4" />
-            {advocate.reputation_score} Rep
+            {advocate.reputation_score} {t("rep")}
           </p>
 
           <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
@@ -72,7 +72,7 @@ export function AdvocateOfTheWeek({ advocate }: { advocate: Advocate | null }) {
             ))}
             {advocate.badges.length === 0 && (
               <span className="bg-bg-tertiary text-fg-secondary border-border-subtle inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs font-medium">
-                Pioneer
+                {t("pioneer")}
               </span>
             )}
           </div>

@@ -536,7 +536,7 @@
     "analysisSubtitle": "Platform iyileştirmesi için AI model analizleri"
   },
   "dilemmas": {
-    "title": "Halkın Sesi: AI Dilemmas",
+    "title": "Halkın Sesi: Yapay Zeka Dilemmaları",
     "description": "Bu sorunun cevabı geleceğimizi şekillendirebilir. Oyunuzu verin, topluluğun düşüncesini görün.",
     "turnstileRequired": "Lütfen önce bot doğrulamasını (Turnstile) tamamlayın.",
     "yes": "Evet",
@@ -549,5 +549,30 @@
     "newBadgeDesc": "Profilinize eklendi. Topluluğun sesine katıldığınız için teşekkürler!",
     "voteRecorded": "Oyunuz başarıyla kaydedildi!",
     "voteRecordedDesc": "Topluluğun sesine katıldığınız için teşekkürler."
+  },
+  "marketing": {
+    "incident_of_week": {
+      "title": "Haftanın Olayı",
+      "provider": "Sağlayıcı",
+      "views": "görüntülenme"
+    },
+    "advocate_of_week": {
+      "title": "Haftanın Etik Savunucusu",
+      "rep": "Rep",
+      "pioneer": "Öncü"
+    },
+    "founder_story": {
+      "title": "ALPAR'ın Doğuşu",
+      "highlight": "Her şey bir halüsinasyonla başladı.",
+      "p1": "Bir yapay zeka sistemi, yüksek profilli bir pasaport skandalında bir kişiyi yanlışlıkla suçladığında (Grok olayı), mağdurun başvurabileceği net bir yol yoktu. Gerçek, algoritmik güvenin altında gömülüydü ve kamusal kayıt mevcut değildi.",
+      "p2": "Yapay zeka sistemleri gerçeğin belirleyicileri haline geldikçe, onları hesap verebilir kılacak bağımsız bir altyapıya ihtiyacımız olduğunu fark ettik. Yapay zeka zarar verdiğinde—ister önyargılı bir kredi kararı, ister bir gizlilik sızıntısı, ister tehlikeli bir halüsinasyon olsun—kullanıcıların bunu bildirebileceği bir yer olmalı.",
+      "quote": "Yapay zeka sistemleri kara kutularsa, ALPAR AI uçuş veri kaydedicidir.",
+      "p3": "ALPAR, yapay zekanın gerçek dünyada nasıl davrandığının kamuya açık, doğrulanabilir bir kaydıdır. Sen bildirirsin. Yapay zeka sağlayıcıları yanıt verir. Halk karar verir. Yapay zeka çağı için güven altyapısını inşa ediyoruz."
+    },
+    "dilemma": {
+      "title": "Halkın Sesi: Yapay Zeka Dilemmaları",
+      "subtitle": "Bu sorunun cevabı geleceğimizi şekillendirebilir. Oyunuzu verin, topluluğun düşüncesini görün.",
+      "critical_question": "Kritik Soru"
+    }
   }
 }
