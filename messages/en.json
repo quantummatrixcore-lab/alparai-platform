@@ -182,7 +182,14 @@
     "consent_prefix": "I have read and agree to the",
     "consent_and": "and",
     "consent_suffix": "I understand my data will be processed as described.",
-    "consent_aria": "I agree to the Terms of Service and Privacy Policy"
+    "consent_aria": "I agree to the Terms of Service and Privacy Policy",
+    "tagline": "Trust infrastructure for AI accountability",
+    "welcome_title": "Welcome back",
+    "welcome_subtitle": "Sign in to your account to continue",
+    "signin_footer_prefix": "By signing in, you agree to our",
+    "signin_footer_and": "and",
+    "benefit_secure": "Secure authentication via Google OAuth",
+    "send": "Send"
   },
   "admin": {
     "dashboard": "Dashboard",

@@ -23,7 +23,7 @@ export function SignInForm({ locale }: { locale: string }) {
           <div className="border-border-subtle w-full border-t" />
         </div>
         <div className="relative flex justify-center text-xs">
-          <span className="bg-bg-elevated text-fg-muted px-3">or continue with email</span>
+          <span className="bg-bg-elevated text-fg-muted px-3">{t("or_continue_email")}</span>
         </div>
       </div>
 
@@ -42,13 +42,13 @@ export function SignInForm({ locale }: { locale: string }) {
           aria-label={t("consent_aria")}
         />
         <span className="text-fg-muted text-xs leading-relaxed">
-          I agree to the{" "}
+          {t("consent_prefix")}{" "}
           <Link href="/legal/terms" className="text-brand-400 font-medium hover:underline">
-            Terms of Service
+            {t("terms_service")}
           </Link>{" "}
-          and{" "}
+          {t("consent_and")}{" "}
           <Link href="/legal/privacy" className="text-brand-400 font-medium hover:underline">
-            Privacy Policy
+            {t("terms_privacy")}
           </Link>
         </span>
       </label>
@@ -57,15 +57,15 @@ export function SignInForm({ locale }: { locale: string }) {
       <div className="border-border-subtle bg-bg-secondary/30 space-y-2 rounded-lg border p-4">
         <div className="flex items-center gap-2">
           <Shield className="text-success-500 h-4 w-4" />
-          <span className="text-fg-secondary text-xs">Secure authentication via Google OAuth</span>
+          <span className="text-fg-secondary text-xs">{t("benefit_secure")}</span>
         </div>
         <div className="flex items-center gap-2">
           <CheckCircle2 className="text-success-500 h-4 w-4" />
-          <span className="text-fg-secondary text-xs">No password to remember</span>
+          <span className="text-fg-secondary text-xs">{t("benefit_no_password")}</span>
         </div>
         <div className="flex items-center gap-2">
           <CheckCircle2 className="text-success-500 h-4 w-4" />
-          <span className="text-fg-secondary text-xs">We never sell your data</span>
+          <span className="text-fg-secondary text-xs">{t("benefit_no_sell")}</span>
         </div>
       </div>
     </div>

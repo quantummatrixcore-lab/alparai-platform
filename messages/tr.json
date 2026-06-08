@@ -182,7 +182,14 @@
     "consent_prefix": "Okudum ve kabul ediyorum:",
     "consent_and": "ve",
     "consent_suffix": "Verilerimin açıklandığı şekilde işleneceğini anlıyorum.",
-    "consent_aria": "Kullanım Koşulları'nı ve Gizlilik Politikası'nı kabul ediyorum"
+    "consent_aria": "Kullanım Koşulları'nı ve Gizlilik Politikası'nı kabul ediyorum",
+    "tagline": "AI hesap verebilirliği için güven altyapısı",
+    "welcome_title": "Tekrar hoş geldiniz",
+    "welcome_subtitle": "Devam etmek için hesabınıza giriş yapın",
+    "signin_footer_prefix": "Giriş yaparak şunları kabul etmiş olursunuz:",
+    "signin_footer_and": "ve",
+    "benefit_secure": "Google OAuth ile güvenli kimlik doğrulama",
+    "send": "Gönder"
   },
   "admin": {
     "dashboard": "Kontrol paneli",
