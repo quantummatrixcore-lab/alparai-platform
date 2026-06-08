@@ -2,16 +2,13 @@
  * Common application types.
  */
 
-import type {
-  IncidentCategory,
-  IncidentSeverity,
-  IncidentStatus,
-  UserRole,
-  SuggestionStatus,
-  Database,
-} from "@/types/database";
+import type { Database } from "@/types/database";
 
-export type { IncidentCategory, IncidentSeverity, IncidentStatus, UserRole, SuggestionStatus };
+export type IncidentCategory = Database["public"]["Enums"]["incident_category"];
+export type IncidentSeverity = Database["public"]["Enums"]["incident_severity"];
+export type IncidentStatus = Database["public"]["Enums"]["incident_status"];
+export type UserRole = Database["public"]["Enums"]["user_role"];
+export type SuggestionStatus = Database["public"]["Enums"]["suggestion_status"];
 
 export type AIProvider = Database["public"]["Tables"]["ai_providers"]["Row"];
 export type AIModel = Database["public"]["Tables"]["ai_models"]["Row"];

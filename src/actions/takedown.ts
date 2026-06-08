@@ -46,7 +46,6 @@ const runTakedownRequestWork = async (
     requester_email: data.parsed.requester_email,
     requester_organization: data.parsed.organization ?? null,
     evidence_url: data.parsed.identity_proof_url,
-    ip_hash: data.ipHash,
   };
   const { data: row, error } = await admin
     .from("takedown_requests")
@@ -138,7 +137,6 @@ const runInlineTakedownWork = async (
     requester_name: data.requesterName,
     requester_organization: data.userId ? null : "Anonymous user",
     incident_id: data.parsed.incidentId,
-    ip_hash: data.ipHash,
   };
   const { data: row, error } = await admin
     .from("takedown_requests")
