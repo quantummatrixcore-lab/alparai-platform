@@ -11,9 +11,11 @@ import { Mail } from "lucide-react";
 export function GoogleSignInButton({
   next = "/profile",
   className,
+  disabled = false,
 }: {
   next?: string;
   className?: string;
+  disabled?: boolean;
 }) {
   const t = useTranslations("auth");
   const [pending, start] = useTransition();
@@ -24,6 +26,7 @@ export function GoogleSignInButton({
       variant="secondary"
       size="lg"
       isLoading={pending}
+      disabled={disabled}
       className={className}
       onClick={() => {
         start(async () => {
