@@ -15,12 +15,22 @@ export default async function DilemmasPage({ params }: { params: Promise<{ local
   setRequestLocale(locale);
   const supabase = await createServerClient();
 
+  type Poll = {
+    id: string;
+    title: string;
+    description: string;
+    yes_count: number;
+    no_count: number;
+    unsure_count: number;
+  };
+
   // Fetch active polls
   const { data: pollsData } = await supabase
     .from("ai_polls")
     .select("*")
     .eq("is_active", true)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .returns<Poll[]>();
 
   const polls = pollsData ?? [];
 
