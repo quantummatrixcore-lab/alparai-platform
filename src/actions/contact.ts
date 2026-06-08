@@ -37,7 +37,7 @@ const runContactWork = async (
   try {
     const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({
-      from: "ALPAR AI Contact <contact@alparai.online>",
+      from: "ALPAR AI Contact <contact@alparai.com>",
       to: APP_EMAIL,
       replyTo: data.email,
       subject: `[${data.category}] ${data.subject}`,
@@ -106,7 +106,11 @@ export async function submitContact(
   if (result.kind === "ok" || result.kind === "replayed") {
     return {
       ok: true,
-      autopilot: { attempts: attemptsOf(result), durationMs: durationOf(result), kind: result.kind },
+      autopilot: {
+        attempts: attemptsOf(result),
+        durationMs: durationOf(result),
+        kind: result.kind,
+      },
     };
   }
   if (result.kind === "circuit_open") {

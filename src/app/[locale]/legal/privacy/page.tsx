@@ -7,11 +7,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: t("privacyTitle") };
 }
 
-export default async function PrivacyPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function PrivacyPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "legal" });
@@ -49,7 +45,7 @@ export default async function PrivacyPage({
         <li>{t("privacyRights6")}</li>
       </ul>
       <p>
-        <a href="mailto:privacy@alparai.online">privacy@alparai.online</a>
+        <a href="mailto:privacy@alparai.com">privacy@alparai.com</a>
       </p>
 
       <h2>{t("privacyBasisTitle")}</h2>
@@ -83,7 +79,7 @@ export default async function PrivacyPage({
 
       <h2>{t("privacyContactTitle")}</h2>
       <p>
-        <a href="mailto:dpo@alparai.online">dpo@alparai.online</a>
+        <a href="mailto:dpo@alparai.com">dpo@alparai.com</a>
       </p>
       <p>{t("privacyPostal")}</p>
     </LegalLayout>

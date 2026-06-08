@@ -124,10 +124,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <Container>
             <div className="mx-auto mb-8 max-w-4xl text-center">
               <h2 className="bg-gradient-brand bg-clip-text text-3xl font-extrabold text-transparent">
-                {(await getTranslations("dilemmas"))("title")}
+                {(await getTranslations({ locale, namespace: "dilemmas" }))("title")}
               </h2>
               <p className="text-fg-muted mt-2">
-                {(await getTranslations("dilemmas"))("description")}
+                {(await getTranslations({ locale, namespace: "dilemmas" }))("description")}
               </p>
             </div>
             <div className="mx-auto max-w-2xl">

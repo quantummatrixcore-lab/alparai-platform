@@ -86,7 +86,7 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
             </div>
             <div>
               <p className="text-fg-primary text-2xl font-bold">{stats.length}</p>
-              <p className="text-fg-muted text-xs">Providers tracked</p>
+              <p className="text-fg-muted text-xs">{t("providersTracked")}</p>
             </div>
           </CardContent>
         </Card>
@@ -99,7 +99,7 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
               <p className="text-fg-primary text-2xl font-bold">
                 {stats.reduce((s, p) => s + p.response_count, 0)}
               </p>
-              <p className="text-fg-muted text-xs">Total responses</p>
+              <p className="text-fg-muted text-xs">{t("totalResponses")}</p>
             </div>
           </CardContent>
         </Card>
@@ -120,7 +120,7 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
                   : 0}
                 %
               </p>
-              <p className="text-fg-muted text-xs">Avg response rate</p>
+              <p className="text-fg-muted text-xs">{t("avgResponseRate")}</p>
             </div>
           </CardContent>
         </Card>
@@ -137,11 +137,11 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
                 <th className="p-4 text-right">
                   <span className="inline-flex items-center gap-1">
                     <MessageSquare className="h-3 w-3" />
-                    Responses
+                    {t("responses")}
                   </span>
                 </th>
                 <th className="p-4 text-right">
-                  <span className="inline-flex items-center gap-1">Response Rate</span>
+                  <span className="inline-flex items-center gap-1">{t("responseRate")}</span>
                 </th>
               </tr>
             </thead>

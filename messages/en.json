@@ -78,6 +78,10 @@
     "zero_tolerance": "Zero Tolerance. 100% Transparency."
   },
   "incident": {
+    "page_title": "All Incidents",
+    "page_subtitle": "Browse {count} published reports from the community.",
+    "submit_page_title": "Report an incident",
+    "submit_page_subtitle": "Share what happened. PII is masked automatically. A moderator reviews every submission before publication.",
     "title_placeholder": "Briefly describe the incident",
     "description_placeholder": "Tell us what happened. What did the AI say or do? When? In what context?",
     "category": "Category",
@@ -155,7 +159,12 @@
     "provider": "AI Provider",
     "incidents": "Incidents",
     "resolved": "Resolved",
-    "avg_severity": "Avg. severity"
+    "avg_severity": "Avg. severity",
+    "responses": "Responses",
+    "responseRate": "Response Rate",
+    "providersTracked": "Providers tracked",
+    "totalResponses": "Total responses",
+    "avgResponseRate": "Avg response rate"
   },
   "auth": {
     "signin_with_google": "Continue with Google",
@@ -543,6 +552,8 @@
     "analysisSubtitle": "AI model analyses for platform improvement"
   },
   "dilemmas": {
+    "pageTitle": "AI Dilemmas",
+    "pageDescription": "As AI becomes more integrated into our lives, we face unprecedented moral and ethical challenges. Vote on these critical dilemmas to help shape the public consensus.",
     "title": "Voice of the People: AI Dilemmas",
     "description": "The answer to this question may shape our future. Cast your vote and see what the community thinks.",
     "turnstileRequired": "Please complete the bot verification (Turnstile) first.",
@@ -581,5 +592,62 @@
       "subtitle": "The answer to this question may shape our future. Cast your vote and see what the community thinks.",
       "critical_question": "Critical Question"
     }
+  },
+  "myIncidents": {
+    "title": "My Incidents",
+    "subtitle": "{count} submissions, all statuses.",
+    "metadata_title": "My Incidents"
+  },
+  "profile": {
+    "joined": "Joined",
+    "verified": "Verified",
+    "incidentsReported": "Incidents reported",
+    "suggestionsMade": "Suggestions made",
+    "reputationScore": "Reputation Score",
+    "earnedBadges": "Earned Badges"
+  },
+  "brand": {
+    "verified": "Verified",
+    "website": "Website",
+    "models": "Models",
+    "trustScore": "TrustScore",
+    "totalIncidents": "Total incidents",
+    "responseRate": "Response rate",
+    "avgViews": "Avg. views",
+    "severityBreakdown": "Severity breakdown",
+    "critical": "Critical",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "quickStats": "Quick stats",
+    "published": "Published",
+    "responsesGiven": "Responses given",
+    "totalViews": "Total views",
+    "incidentsResponded": "Incidents responded",
+    "incidentsReported": "Incidents reported ({count})"
+  },
+  "transparency": {
+    "totalReports": "Total reports",
+    "publishRate": "Publish rate",
+    "pendingReview": "Pending review",
+    "providerResponseRate": "Provider response rate",
+    "submit": "Submit",
+    "submitDesc": "Anyone can report an incident. PII is automatically masked before storage.",
+    "review": "Review",
+    "reviewDesc": "Volunteer moderators review every submission for accuracy, not opinion.",
+    "publish": "Publish",
+    "publishDesc": "Approved incidents are published publicly. The AI provider is notified.",
+    "respond": "Respond",
+    "respondDesc": "AI providers can post an official response. Identity is verified before publishing.",
+    "registeredUsers": "Registered users",
+    "aiProvidersTracked": "AI providers tracked",
+    "incidentsReported": "Incidents reported",
+    "publishedLabel": "Published",
+    "pendingModeration": "Pending moderation",
+    "providerResponses": "Provider responses",
+    "takedownRequests": "Takedown requests",
+    "commitmentText1": "ALPAR AI is a transparency platform. We believe that accountability starts with openness. Every number on this page is live and accurate.",
+    "commitmentText2": "We do not suppress, delay, or selectively publish incidents. Every submitted report that meets our guidelines is published. Moderators cannot remove content based on pressure from AI providers.",
+    "commitmentText3": "This platform is open source under AGPL-3.0. Anyone can audit the code, run an instance, or contribute. We believe trust infrastructure should itself be trustworthy."
   }
 }

@@ -29,20 +29,18 @@ export function Footer() {
   const t = useTranslations("footer");
   const year = new Date().getFullYear();
   return (
-    <footer className="border-t border-border-subtle bg-bg-secondary">
+    <footer className="border-border-subtle bg-bg-secondary border-t">
       <Container className="py-12">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="space-y-4">
             <Wordmark size="sm" showTagline />
-            <p className="text-sm text-fg-muted max-w-xs">
-              {t("tagline")}
-            </p>
+            <p className="text-fg-muted max-w-xs text-sm">{t("tagline")}</p>
             <div className="flex items-center gap-2">
               <a
-                href="https://github.com/anomalyco/opencode"
+                href="https://github.com/quantummatrixcore-lab/Alparai.com"
                 target="_blank"
                 rel="noreferrer noopener"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-md text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary"
+                className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary inline-flex h-9 w-9 items-center justify-center rounded-md"
                 aria-label="GitHub"
               >
                 <Github className="h-4 w-4" />
@@ -51,14 +49,14 @@ export function Footer() {
                 href="https://twitter.com/alparai"
                 target="_blank"
                 rel="noreferrer noopener"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-md text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary"
+                className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary inline-flex h-9 w-9 items-center justify-center rounded-md"
                 aria-label="Twitter"
               >
                 <Twitter className="h-4 w-4" />
               </a>
               <a
-                href="mailto:hello@alparai.online"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-md text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary"
+                href="mailto:hello@alparai.com"
+                className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary inline-flex h-9 w-9 items-center justify-center rounded-md"
                 aria-label="Email"
               >
                 <Mail className="h-4 w-4" />
@@ -66,16 +64,11 @@ export function Footer() {
             </div>
           </div>
           <div>
-            <h4 className="mb-3 text-sm font-semibold text-fg-primary">
-              {t("sections.product")}
-            </h4>
+            <h4 className="text-fg-primary mb-3 text-sm font-semibold">{t("sections.product")}</h4>
             <ul className="space-y-2">
               {productLinks.map((l) => (
                 <li key={l.href}>
-                  <Link
-                    href={l.href}
-                    className="text-sm text-fg-muted hover:text-brand-400"
-                  >
+                  <Link href={l.href} className="text-fg-muted hover:text-brand-400 text-sm">
                     {t(`links.${l.key}`)}
                   </Link>
                 </li>
@@ -83,16 +76,11 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="mb-3 text-sm font-semibold text-fg-primary">
-              {t("sections.legal")}
-            </h4>
+            <h4 className="text-fg-primary mb-3 text-sm font-semibold">{t("sections.legal")}</h4>
             <ul className="space-y-2">
               {legalLinks.map((l) => (
                 <li key={l.href}>
-                  <Link
-                    href={l.href}
-                    className="text-sm text-fg-muted hover:text-brand-400"
-                  >
+                  <Link href={l.href} className="text-fg-muted hover:text-brand-400 text-sm">
                     {t(`links.${l.key}`)}
                   </Link>
                 </li>
@@ -100,16 +88,11 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="mb-3 text-sm font-semibold text-fg-primary">
-              {t("sections.about")}
-            </h4>
+            <h4 className="text-fg-primary mb-3 text-sm font-semibold">{t("sections.about")}</h4>
             <ul className="space-y-2">
               {aboutLinks.map((l) => (
                 <li key={l.href}>
-                  <Link
-                    href={l.href}
-                    className="text-sm text-fg-muted hover:text-brand-400"
-                  >
+                  <Link href={l.href} className="text-fg-muted hover:text-brand-400 text-sm">
                     {t(`links.${l.key}`)}
                   </Link>
                 </li>
@@ -117,11 +100,11 @@ export function Footer() {
             </ul>
           </div>
         </div>
-        <div className="mt-12 flex flex-col gap-4 border-t border-border-subtle pt-8 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs text-fg-muted">
+        <div className="border-border-subtle mt-12 flex flex-col gap-4 border-t pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-fg-muted text-xs">
             © {year} ALPAR AI. {t("rights")}
           </p>
-          <p className="inline-flex items-center gap-1.5 text-xs text-fg-muted">
+          <p className="text-fg-muted inline-flex items-center gap-1.5 text-xs">
             <Shield className="h-3 w-3" aria-hidden="true" />
             {t("platformStatus")}
           </p>

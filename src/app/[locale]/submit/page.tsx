@@ -15,6 +15,7 @@ export default async function SubmitPage({ params }: { params: Promise<{ locale:
   const { locale } = await params;
   setRequestLocale(locale);
 
+  const t = await getTranslations({ locale, namespace: "incident" });
   const supabase = await createServerClient();
   const [{ data: providersData }, { data: modelsData }] = await Promise.all([
     supabase
@@ -35,11 +36,10 @@ export default async function SubmitPage({ params }: { params: Promise<{ locale:
   return (
     <Container size="narrow" className="py-12">
       <header className="mb-8 space-y-2">
-        <h1 className="text-fg-primary text-3xl font-bold tracking-tight">Report an incident</h1>
-        <p className="text-fg-muted text-sm">
-          Share what happened. PII is masked automatically. A moderator reviews every submission
-          before publication.
-        </p>
+        <h1 className="text-fg-primary text-3xl font-bold tracking-tight">
+          {t("submit_page_title")}
+        </h1>
+        <p className="text-fg-muted text-sm">{t("submit_page_subtitle")}</p>
       </header>
 
       <Card variant="elevated">

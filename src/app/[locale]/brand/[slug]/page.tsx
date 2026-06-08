@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import { Container } from "@/components/ui/layout";
@@ -49,6 +49,7 @@ export default async function BrandPage({
 }) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "brand" });
   const supabase = await createServerClient();
 
   const { data: provider } = await supabase
@@ -143,7 +144,7 @@ export default async function BrandPage({
                 <h1 className="text-fg-primary text-2xl font-bold">{providerName}</h1>
                 {isVerified && (
                   <Badge variant="success" dot>
-                    Verified
+                    {t("verified")}
                   </Badge>
                 )}
               </div>
@@ -159,7 +160,7 @@ export default async function BrandPage({
                     className="hover:text-brand-400 inline-flex items-center gap-1"
                   >
                     <Globe className="h-3 w-3" />
-                    Website
+                    {t("website")}
                     <ExternalLink className="h-3 w-3" />
                   </a>
                 )}
@@ -179,7 +180,7 @@ export default async function BrandPage({
         {modelsRes.data && modelsRes.data.length > 0 && (
           <CardContent>
             <p className="text-fg-muted mb-2 text-xs font-semibold tracking-wider uppercase">
-              Models
+              {t("models")}
             </p>
             <div className="flex flex-wrap gap-2">
               {(modelsRes.data as Array<{ id: string; name: string; version: string | null }>).map(
@@ -202,7 +203,7 @@ export default async function BrandPage({
             </div>
             <div>
               <p className="text-fg-primary text-2xl font-bold">{trustScore}</p>
-              <p className="text-fg-muted text-xs">TrustScore</p>
+              <p className="text-fg-muted text-xs">{t("trustScore")}</p>
             </div>
           </CardContent>
         </Card>
@@ -213,7 +214,7 @@ export default async function BrandPage({
             </div>
             <div>
               <p className="text-fg-primary text-2xl font-bold">{totalIncidents}</p>
-              <p className="text-fg-muted text-xs">Total incidents</p>
+              <p className="text-fg-muted text-xs">{t("totalIncidents")}</p>
             </div>
           </CardContent>
         </Card>
@@ -224,7 +225,7 @@ export default async function BrandPage({
             </div>
             <div>
               <p className="text-fg-primary text-2xl font-bold">{responseRate}%</p>
-              <p className="text-fg-muted text-xs">Response rate</p>
+              <p className="text-fg-muted text-xs">{t("responseRate")}</p>
             </div>
           </CardContent>
         </Card>
@@ -235,7 +236,7 @@ export default async function BrandPage({
             </div>
             <div>
               <p className="text-fg-primary text-2xl font-bold">{avgViews}</p>
-              <p className="text-fg-muted text-xs">Avg. views</p>
+              <p className="text-fg-muted text-xs">{t("avgViews")}</p>
             </div>
           </CardContent>
         </Card>
@@ -246,16 +247,16 @@ export default async function BrandPage({
           <CardHeader>
             <CardTitle className="inline-flex items-center gap-2 text-sm">
               <TrendingUp className="text-brand-400 h-4 w-4" />
-              Severity breakdown
+              {t("severityBreakdown")}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {[
-                { label: "Critical", count: severityBreakdown.critical, color: "bg-danger-500" },
-                { label: "High", count: severityBreakdown.high, color: "bg-danger-400" },
-                { label: "Medium", count: severityBreakdown.medium, color: "bg-warning-500" },
-                { label: "Low", count: severityBreakdown.low, color: "bg-success-500" },
+                { label: t("critical"), count: severityBreakdown.critical, color: "bg-danger-500" },
+                { label: t("high"), count: severityBreakdown.high, color: "bg-danger-400" },
+                { label: t("medium"), count: severityBreakdown.medium, color: "bg-warning-500" },
+                { label: t("low"), count: severityBreakdown.low, color: "bg-success-500" },
               ].map((s) => (
                 <div key={s.label} className="flex items-center gap-3">
                   <span className="text-fg-muted w-16 text-xs">{s.label}</span>
@@ -279,24 +280,24 @@ export default async function BrandPage({
           <CardHeader>
             <CardTitle className="inline-flex items-center gap-2 text-sm">
               <Clock className="text-fg-muted h-4 w-4" />
-              Quick stats
+              {t("quickStats")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
             <div className="flex items-center justify-between">
-              <span className="text-fg-muted">Published</span>
+              <span className="text-fg-muted">{t("published")}</span>
               <span className="text-success-500 font-semibold">{publishedIncidents}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-fg-muted">Responses given</span>
+              <span className="text-fg-muted">{t("responsesGiven")}</span>
               <span className="text-brand-400 font-semibold">{responseCount}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-fg-muted">Total views</span>
+              <span className="text-fg-muted">{t("totalViews")}</span>
               <span className="text-fg-primary font-semibold">{totalViews.toLocaleString()}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-fg-muted">Incidents responded</span>
+              <span className="text-fg-muted">{t("incidentsResponded")}</span>
               <span className="text-accent-400 font-semibold">{respondedIncidentIds.size}</span>
             </div>
           </CardContent>
@@ -305,7 +306,7 @@ export default async function BrandPage({
 
       <div className="space-y-3">
         <h2 className="text-fg-primary text-lg font-semibold">
-          Incidents reported ({incidents.length})
+          {t("incidentsReported", { count: incidents.length })}
         </h2>
         <IncidentList incidents={incidents} />
       </div>

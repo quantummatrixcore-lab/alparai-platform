@@ -130,13 +130,8 @@ export default async function SuggestionsPage({ params }: { params: Promise<{ lo
           <CardContent className="flex items-start gap-3 py-4">
             <Zap className="text-brand-400 mt-0.5 h-4 w-4 shrink-0" />
             <div>
-              <p className="text-fg-primary text-sm font-medium">
-                These are starter suggestions from the ALPAR team
-              </p>
-              <p className="text-fg-muted text-xs">
-                Sign in to upvote, comment, or submit your own ideas. The community decides what
-                gets built next.
-              </p>
+              <p className="text-fg-primary text-sm font-medium">{t("subtitle")}</p>
+              <p className="text-fg-muted text-xs">{t("create_description")}</p>
             </div>
           </CardContent>
         </Card>
