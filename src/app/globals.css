@@ -27,38 +27,38 @@
 
   /* Success — Emerald (verified, trust) */
   --success-300: #6ee7b7;
-  --success-400: #34d399;
-  --success-500: #10b981;
-  --success-600: #059669;
+  --success-400: #2ecc71;
+  --success-500: #27ae60;
+  --success-600: #219653;
 
-  /* Danger — Rose/Crimson (alerts) */
-  --danger-300: #fda4af;
-  --danger-400: #fb7185;
-  --danger-500: #f43f5e;
-  --danger-600: #e11d48;
+  /* Danger — Rose/Crimson (alerts) -> Fire Red */
+  --danger-300: #ff6b6b;
+  --danger-400: #ff4757;
+  --danger-500: #e63946;
+  --danger-600: #c0392b;
 
-  /* Warning — Amber */
-  --warning-400: #fbbf24;
-  --warning-500: #f59e0b;
-  --warning-600: #d97706;
+  /* Warning — Amber -> Gold */
+  --warning-400: #f1c40f;
+  --warning-500: #f39c12;
+  --warning-600: #e67e22;
 
-  /* Surfaces — OLED Black / Deep Space */
-  --bg-primary: #050505;
-  --bg-secondary: #0a0a0a;
-  --bg-tertiary: #121212;
-  --bg-elevated: #18181b;
-  --border-subtle: rgba(255, 255, 255, 0.05);
-  --border-strong: rgba(255, 255, 255, 0.1);
+  /* Surfaces — OLED Black / Deep Space -> Deep Navy */
+  --bg-primary: #0a0f1e;
+  --bg-secondary: #0f172a;
+  --bg-tertiary: #1e293b;
+  --bg-elevated: #334155;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
   --fg-primary: #ffffff;
-  --fg-secondary: #a1a1aa;
-  --fg-muted: #71717a;
-  --fg-disabled: #52525b;
+  --fg-secondary: #cbd5e1;
+  --fg-muted: #94a3b8;
+  --fg-disabled: #475569;
 
   /* Glow effects - Premium Aesthetic */
   --glow-brand: 0 0 30px rgba(168, 85, 247, 0.4);
   --glow-accent: 0 0 30px rgba(6, 182, 212, 0.4);
-  --glow-success: 0 0 25px rgba(16, 185, 129, 0.35);
-  --glow-danger: 0 0 25px rgba(244, 63, 94, 0.35);
+  --glow-success: 0 0 25px rgba(39, 174, 96, 0.35);
+  --glow-danger: 0 0 25px rgba(230, 57, 70, 0.35);
 
   /* Type scale (perfect fourth) */
   --fs-xs: 0.75rem;

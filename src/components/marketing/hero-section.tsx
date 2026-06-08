@@ -3,7 +3,7 @@
 import * as React from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "@/i18n/routing";
-import { Sparkles, ArrowRight, ShieldAlert } from "lucide-react";
+import { ArrowRight, ShieldAlert, Target } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export function HeroSection({
@@ -21,28 +21,31 @@ export function HeroSection({
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   return (
-    <section className="border-border-subtle bg-bg-primary relative overflow-hidden border-b pt-24 pb-32">
-      {/* Deep Space Background Effects */}
-      <div aria-hidden="true" className="absolute inset-0 z-0">
+    <section className="bg-bg-primary relative overflow-hidden pt-28 pb-32">
+      {/* DORA Elite "War Room" Background Effects */}
+      <div aria-hidden="true" className="absolute inset-0 z-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
         <motion.div
           style={{ y: y1, opacity }}
-          className="bg-brand-500/10 absolute -top-[40%] left-1/2 h-[800px] w-[1000px] -translate-x-1/2 rounded-full mix-blend-screen blur-[120px]"
+          className="bg-brand-600/10 absolute -top-[30%] left-1/4 h-[800px] w-[800px] -translate-x-1/2 rounded-full mix-blend-screen blur-[140px]"
         />
-        <div className="bg-accent-500/5 absolute top-[20%] left-[20%] h-[400px] w-[400px] rounded-full mix-blend-screen blur-[100px]" />
-        <div className="bg-danger-500/5 absolute top-[30%] right-[10%] h-[500px] w-[500px] rounded-full mix-blend-screen blur-[120px]" />
+        <div className="bg-danger-500/15 absolute top-[20%] right-[10%] h-[600px] w-[600px] rounded-full mix-blend-screen blur-[160px]" />
+
+        {/* Technical grid lines for HUD effect */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_0%,#000_20%,transparent_100%)] bg-[size:64px_64px]"></div>
       </div>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-[1440px] px-6 lg:px-12">
         <div className="mx-auto max-w-5xl text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="mb-8 flex justify-center"
+            className="mb-10 flex justify-center"
           >
-            <div className="border-brand-500/30 bg-brand-500/10 text-brand-300 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-medium shadow-[0_0_20px_rgba(168,85,247,0.2)] backdrop-blur-md">
-              <Sparkles className="h-4 w-4" />
-              <span>{t("eyebrow")}</span>
+            <div className="border-danger-500/30 bg-danger-500/10 text-danger-400 inline-flex items-center gap-2 rounded-sm border px-5 py-2 text-xs font-bold tracking-[0.2em] uppercase shadow-[0_0_20px_rgba(230,57,70,0.3)] backdrop-blur-md">
+              <Target className="h-4 w-4" />
+              <span>Sıfır Tolerans. %100 Şeffaflık.</span>
             </div>
           </motion.div>
 
@@ -50,7 +53,7 @@ export function HeroSection({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
-            className="via-fg-secondary to-brand-300 bg-gradient-to-br from-white bg-clip-text pb-4 text-5xl font-extrabold tracking-tight text-transparent drop-shadow-sm sm:text-6xl md:text-7xl lg:text-8xl"
+            className="text-fg-primary pb-6 text-6xl leading-[0.95] font-black tracking-tighter drop-shadow-lg sm:text-7xl md:text-8xl lg:text-[100px]"
           >
             {t("title")}
           </motion.h1>
@@ -59,7 +62,7 @@ export function HeroSection({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
-            className="text-fg-muted mx-auto mt-6 max-w-3xl text-lg leading-relaxed sm:text-xl md:text-2xl"
+            className="text-fg-secondary mx-auto mt-6 max-w-3xl text-xl leading-relaxed font-medium tracking-tight sm:text-2xl"
           >
             {t("subtitle")}
           </motion.p>
@@ -68,21 +71,21 @@ export function HeroSection({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
-            className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row"
+            className="mt-14 flex flex-col items-center justify-center gap-5 sm:flex-row"
           >
             <Link
               href="/submit"
-              className="group bg-danger-500 hover:bg-danger-400 relative inline-flex h-14 items-center gap-2 rounded-xl px-8 text-base font-bold text-white shadow-[0_0_30px_rgba(244,63,94,0.4)] transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(244,63,94,0.6)]"
+              className="group bg-danger-500 hover:bg-danger-400 relative inline-flex h-16 w-full items-center justify-center gap-3 rounded-md px-10 text-lg font-black text-white shadow-[0_0_30px_rgba(230,57,70,0.5)] transition-all hover:-translate-y-1 hover:shadow-[0_0_50px_rgba(230,57,70,0.7)] sm:w-auto"
             >
-              <ShieldAlert className="h-5 w-5" />
-              {t("cta_primary")}
+              <ShieldAlert className="h-6 w-6" />
+              VAKA BİLDİR
             </Link>
             <Link
               href="/incidents"
-              className="border-border-strong bg-bg-elevated/50 text-fg-primary hover:border-brand-500 hover:text-brand-300 inline-flex h-14 items-center gap-2 rounded-xl border px-8 text-base font-semibold backdrop-blur-md transition-colors"
+              className="border-border-strong bg-bg-elevated/40 text-fg-primary hover:border-brand-500/50 hover:bg-bg-elevated/80 inline-flex h-16 w-full items-center justify-center gap-3 rounded-md border px-10 text-lg font-bold shadow-xl backdrop-blur-xl transition-all hover:-translate-y-1 sm:w-auto"
             >
-              {t("cta_secondary")}
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              VAKALARI İNCELE
+              <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-2" />
             </Link>
           </motion.div>
 
@@ -90,22 +93,18 @@ export function HeroSection({
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-            className="mx-auto mt-20 grid max-w-4xl grid-cols-1 gap-6 sm:grid-cols-3"
+            className="mx-auto mt-24 grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-3"
           >
             <StatCard
-              label={t("stats_incidents")}
+              label="Kayıtlı Vaka"
               value={totalIncidents}
-              glowColor="rgba(244,63,94,0.15)"
+              glowColor="rgba(230,57,70,0.15)"
             />
+            <StatCard label="Sağlayıcı" value={totalProviders} glowColor="rgba(168,85,247,0.15)" />
             <StatCard
-              label={t("stats_providers")}
-              value={totalProviders}
-              glowColor="rgba(168,85,247,0.15)"
-            />
-            <StatCard
-              label={t("stats_countries")}
+              label="Etkilenen Ülke"
               value={totalCountries}
-              glowColor="rgba(6,182,212,0.15)"
+              glowColor="rgba(39,174,96,0.15)"
             />
           </motion.div>
         </div>
@@ -125,13 +124,14 @@ function StatCard({
 }) {
   return (
     <div
-      className="border-border-strong bg-bg-elevated/30 hover:border-border-subtle relative overflow-hidden rounded-2xl border p-8 backdrop-blur-md transition-all"
+      className="border-border-strong bg-bg-primary/40 hover:border-border-subtle relative overflow-hidden rounded-lg border p-8 backdrop-blur-2xl transition-all duration-500 hover:-translate-y-1"
       style={{ boxShadow: `0 0 40px ${glowColor} inset` }}
     >
-      <p className="text-fg-primary text-4xl font-extrabold md:text-5xl">
+      <div className="absolute top-0 left-0 h-[1px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+      <p className="text-fg-primary text-5xl font-black tracking-tighter md:text-6xl">
         {value.toLocaleString()}
       </p>
-      <p className="text-fg-muted mt-2 text-sm font-medium tracking-widest uppercase">{label}</p>
+      <p className="text-fg-muted mt-3 text-sm font-bold tracking-[0.2em] uppercase">{label}</p>
     </div>
   );
 }
