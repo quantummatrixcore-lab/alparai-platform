@@ -364,7 +364,23 @@
     "general": "General",
     "press": "Press",
     "office": "Registered office",
-    "officeText": "Will be disclosed in the Imprint page once the legal entity is registered."
+    "officeText": "Will be disclosed in the Imprint page once the legal entity is registered.",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "category": "Category",
+      "category_general": "General",
+      "category_press": "Press",
+      "category_partnership": "Partnership",
+      "category_security": "Security",
+      "category_legal": "Legal",
+      "subject": "Subject",
+      "message": "Message",
+      "submit": "Send Message",
+      "sent_title": "Message sent!",
+      "sent_desc": "Thank you for reaching out. We'll get back to you soon.",
+      "sent_toast": "Message sent successfully"
+    }
   },
   "badge": {
     "severity": {
@@ -408,7 +424,7 @@
     "termsTitle": "Terms of Service",
     "cookiesTitle": "Cookie Policy",
     "tAcceptance": "1. Acceptance",
-    "tAcceptanceText": "By accessing or using alparai.online (the \"Platform\"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Platform.",
+    "tAcceptanceText": "By accessing or using alparai.com (the \"Platform\"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Platform.",
     "tRole": "2. Our role — Intermediary, not publisher",
     "tRoleP1": "ALPAR AI is an intermediary platform in the sense of Article 14 of the EU E-Commerce Directive (2000/31/EC) and the Turkish E-Commerce Law (6563 sayılı Kanun). We host content submitted by users. We are not the author, editor, or publisher of that content. The liability for the accuracy and legality of submissions rests with the user who submitted them.",
     "tRoleP2": "We do not pre-moderate submissions (except for automated PII masking and obvious illegal content detection). All published content is reviewed by volunteer moderators after submission.",
@@ -441,7 +457,7 @@
     "tGoverning": "11. Governing law",
     "tGoverningText": "These Terms are governed by the laws of the Republic of Turkey. Any dispute shall be subject to the exclusive jurisdiction of Istanbul courts, without prejudice to your right as a consumer to bring proceedings in your country of residence.",
     "tContact": "12. Contact",
-    "tContactText": "Email us at legal@alparai.online",
+    "tContactText": "Email us at legal@alparai.com",
     "cookiesWhatTitle": "What is a cookie?",
     "cookiesWhatText": "A cookie is a small text file that a website stores on your device to remember information between visits. We try to use as few as possible.",
     "cookiesUsedTitle": "Cookies we use",
@@ -505,7 +521,7 @@
     "privacyPostal": "Postal address will be disclosed in the Imprint page once the legal entity is registered.",
     "takedownTitle": "Takedown Request",
     "takedownIntro": "If you believe content hosted on the Platform is unlawful or infringes your rights, you can submit a takedown request below. We review and act on valid requests within {days} days, in line with Article 14 of the EU E-Commerce Directive and KVKK Article 11.",
-    "takedownGdpr": "For GDPR data-subject requests (access, deletion, rectification), use privacy@alparai.online instead.",
+    "takedownGdpr": "For GDPR data-subject requests (access, deletion, rectification), use privacy@alparai.com instead.",
     "takedownHowTitle": "How to file",
     "takedownHow1": "Provide the exact URL of the content you want reviewed.",
     "takedownHow2": "State the legal ground for your request (copyright, defamation, privacy, etc.).",

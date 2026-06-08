@@ -62,7 +62,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </Card>
       </div>
       <div className="mt-12 text-center">
-        <Link href={`/${locale}/submit`}>
+        <Link href="/submit">
           <Button size="lg" rightIcon={<ArrowRight className="h-4 w-4" />}>
             {tApp("description")}
           </Button>

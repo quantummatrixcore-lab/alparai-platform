@@ -364,7 +364,23 @@
     "general": "Genel",
     "press": "Basın",
     "office": "Kayıtlı ofis",
-    "officeText": "Tüzel kişilik tescil edildikten sonra İmpressum sayfasında açıklanacaktır."
+    "officeText": "Tüzel kişilik tescil edildikten sonra İmpressum sayfasında açıklanacaktır.",
+    "form": {
+      "name": "Ad",
+      "email": "E-posta",
+      "category": "Kategori",
+      "category_general": "Genel",
+      "category_press": "Basın",
+      "category_partnership": "Ortaklık",
+      "category_security": "Güvenlik",
+      "category_legal": "Yasal",
+      "subject": "Konu",
+      "message": "Mesaj",
+      "submit": "Mesaj Gönder",
+      "sent_title": "Mesaj gönderildi!",
+      "sent_desc": "Bizimle iletişime geçtiğiniz için teşekkür ederiz. En kısa sürede size döneceğiz.",
+      "sent_toast": "Mesaj başarıyla gönderildi"
+    }
   },
   "badge": {
     "severity": {
@@ -408,7 +424,7 @@
     "termsTitle": "Kullanım Koşulları",
     "cookiesTitle": "Çerez Politikası",
     "tAcceptance": "1. Kabul",
-    "tAcceptanceText": "alparai.online'a (bundan sonra \"Platform\" olarak anılacaktır) erişerek veya kullanarak bu Kullanım Koşullarına bağlı olmayı kabul ediyorsunuz. Kabul etmiyorsanız, Platformu kullanmayın.",
+    "tAcceptanceText": "alparai.com'a (bundan sonra \"Platform\" olarak anılacaktır) erişerek veya kullanarak bu Kullanım Koşullarına bağlı olmayı kabul ediyorsunuz. Kabul etmiyorsanız, Platformu kullanmayın.",
     "tRole": "2. Rolümüz — Aracı, yayıncı değil",
     "tRoleP1": "ALPAR AI, AB E-Ticaret Direktifi (2000/31/EC) Madde 14 ve Türk E-Ticaret Kanunu (6563 sayılı Kanun) anlamında bir aracı platformdur. Kullanıcılar tarafından gönderilen içerikleri barındırıyoruz. İçeriğin yazarı, editörü veya yayıncısı biz değiliz. Gönderilerin doğruluğu ve hukuka uygunluğu konusundaki sorumluluk, gönderen kullanıcıya aittir.",
     "tRoleP2": "Gönderileri ön-moderasyona tabi tutmuyoruz (otomatik KVT maskesi ve bariz yasadışı içerik tespiti hariç). Yayınlanan tüm içerikler, gönderim sonrasında gönüllü moderatörler tarafından incelenir.",
@@ -441,7 +457,7 @@
     "tGoverning": "11. Uygulanacak hukuk",
     "tGoverningText": "Bu Koşullar Türkiye Cumhuriyeti yasalarına tabidir. Herhangi bir uyuşmazlık, tüketici olarak ikamet ettiğiniz ülkede dava açma hakkınız saklı kalmak kaydıyla, İstanbul mahkemelerinin münhasır yargı yetkisine tabidir.",
     "tContact": "12. İletişim",
-    "tContactText": "Bize legal@alparai.online adresinden ulaşabilirsiniz",
+    "tContactText": "Bize legal@alparai.com adresinden ulaşabilirsiniz",
     "cookiesWhatTitle": "Çerez nedir?",
     "cookiesWhatText": "Çerez, bir web sitesinin ziyaretler arasında bilgileri hatırlamak için cihazınızda sakladığı küçük bir metin dosyasıdır. Mümkün olduğunca az kullanmaya çalışıyoruz.",
     "cookiesUsedTitle": "Kullandığımız çerezler",
@@ -505,7 +521,7 @@
     "privacyPostal": "Posta adresi, tüzel kişilik tescil edildikten sonra İmpressum sayfasında açıklanacaktır.",
     "takedownTitle": "Kaldırma Talebi",
     "takedownIntro": "Platformda barındırılan bir içeriğin yasadışı olduğunu veya haklarınızı ihlal ettiğini düşünüyorsanız, aşağıdan kaldırma talebinde bulunabilirsiniz. AB E-Ticaret Direktifi Madde 14 ve KVKK Madde 11 uyarınca geçerli talepleri {days} gün içinde inceleyip işleme alıyoruz.",
-    "takedownGdpr": "GDPR veri sahibi talepleri (erişim, silme, düzeltme) için lütfen privacy@alparai.online adresini kullanın.",
+    "takedownGdpr": "GDPR veri sahibi talepleri (erişim, silme, düzeltme) için lütfen privacy@alparai.com adresini kullanın.",
     "takedownHowTitle": "Nasıl başvurulur",
     "takedownHow1": "İncelenmesini istediğiniz içeriğin tam URL'sini belirtin.",
     "takedownHow2": "Talebinizin hukuki dayanağını belirtin (telif hakkı, iftira, gizlilik vb.).",
