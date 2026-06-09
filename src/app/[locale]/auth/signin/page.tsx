@@ -2,6 +2,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/session";
 import { SignInForm } from "@/components/auth/sign-in-form";
+import { AlertCircle } from "lucide-react";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -9,13 +10,39 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: `${t("signin_title")} — ALPAR AI` };
 }
 
-export default async function SignInPage({ params }: { params: Promise<{ locale: string }> }) {
+const ERROR_KEYS: Record<string, string> = {
+  oauth: "oauth_failed",
+  otp: "otp_failed",
+  server_error: "server_error",
+  missing_params: "missing_params",
+};
+
+export default async function SignInPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ error?: string; reason?: string }>;
+}) {
   const { locale } = await params;
+  const { error, reason } = await searchParams;
   setRequestLocale(locale);
   const user = await getCurrentUser();
   if (user) redirect(`/${locale}/profile`);
 
   const t = await getTranslations({ locale, namespace: "auth" });
+  const tErrors = await getTranslations({ locale, namespace: "auth" }).catch(() => null);
+
+  const errorKey = error ? ERROR_KEYS[error] : null;
+  const errorMessage = errorKey
+    ? (() => {
+        try {
+          return tErrors?.(errorKey) ?? t(errorKey as never);
+        } catch {
+          return null;
+        }
+      })()
+    : null;
 
   return (
     <div className="bg-bg-primary flex min-h-screen items-center justify-center px-4 py-12">
@@ -41,6 +68,19 @@ export default async function SignInPage({ params }: { params: Promise<{ locale:
 
         {/* Card */}
         <div className="border-border-subtle bg-bg-elevated rounded-2xl border p-8 shadow-2xl shadow-black/20">
+          {errorMessage && (
+            <div
+              className="border-danger-500/30 bg-danger-500/10 text-danger-400 mb-6 flex items-start gap-2 rounded-lg border p-3 text-sm"
+              role="alert"
+              aria-live="polite"
+            >
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+              <div>
+                <p className="font-semibold">{errorMessage}</p>
+                {reason && <p className="text-fg-muted mt-1 font-mono text-xs">[{reason}]</p>}
+              </div>
+            </div>
+          )}
           <div className="mb-6 text-center">
             <h2 className="text-fg-primary text-xl font-semibold">{t("welcome_title")}</h2>
             <p className="text-fg-muted mt-1 text-sm">{t("welcome_subtitle")}</p>

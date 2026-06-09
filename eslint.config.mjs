@@ -39,6 +39,7 @@ const eslintConfig = defineConfig([
     "playwright-report/**",
     "test-results/**",
     "scripts/**",
+    ".browser_profile/**",
   ]),
 ]);
 
