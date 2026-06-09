@@ -28,6 +28,11 @@ lerna-debug.log*
 # vercel
 .vercel
 
+# agent/browser
+agent-browser.json
+.browser_profile
+.opencode
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
