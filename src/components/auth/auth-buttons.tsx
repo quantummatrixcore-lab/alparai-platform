@@ -6,7 +6,10 @@ import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { useTransition, useState } from "react";
 import { toast } from "sonner";
-import { Mail } from "lucide-react";
+import { CheckCircle2, Loader2, Mail } from "lucide-react";
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const RESEND_COOLDOWN_SEC = 60;
 
 export function GoogleSignInButton({
   next = "/profile",
@@ -59,53 +62,168 @@ export function GoogleSignInButton({
   );
 }
 
-export function EmailMagicLinkForm({ className }: { className?: string }) {
+type MagicLinkState =
+  | { status: "idle" }
+  | { status: "sending" }
+  | { status: "sent"; email: string; sentAt: number }
+  | { status: "error"; message: string };
+
+export function EmailMagicLinkForm({
+  className,
+  disabled = false,
+}: {
+  className?: string;
+  disabled?: boolean;
+}) {
   const t = useTranslations("auth");
-  const [pending, start] = useTransition();
-  const [sent, setSent] = useState(false);
+  const [, start] = useTransition();
+  const [state, setState] = useState<MagicLinkState>({ status: "idle" });
+  const [emailValue, setEmailValue] = useState("");
+  const [validationError, setValidationError] = useState<string | null>(null);
+  const [cooldown, setCooldown] = useState(0);
+
+  React.useEffect(() => {
+    if (cooldown <= 0) return;
+    const id = setTimeout(() => setCooldown((c) => c - 1), 1000);
+    return () => clearTimeout(id);
+  }, [cooldown]);
+
+  const handleSend = (email: string, isResend = false) => {
+    if (!EMAIL_REGEX.test(email)) {
+      setValidationError(t("invalid_email"));
+      return;
+    }
+    setValidationError(null);
+    setState({ status: "sending" });
+
+    start(async () => {
+      const { signInWithMagicLink } = await import("@/actions/auth");
+      const res = await signInWithMagicLink(email);
+      if (res.ok) {
+        setState({ status: "sent", email, sentAt: Date.now() });
+        setCooldown(RESEND_COOLDOWN_SEC);
+        if (isResend) {
+          toast.success(t("magic_link_sent_toast", { email }));
+        }
+      } else {
+        const message = res.error ?? t("server_error");
+        setState({ status: "error", message });
+        toast.error(message);
+      }
+    });
+  };
+
+  const handleResend = () => {
+    if (cooldown > 0 || !state || state.status !== "sent") return;
+    handleSend(state.email, true);
+  };
+
+  const handleTryAnother = () => {
+    setState({ status: "idle" });
+    setEmailValue("");
+    setValidationError(null);
+  };
+
+  if (state?.status === "sent") {
+    const parts = t.rich("magic_link_subtitle", {
+      email: () => (
+        <span className="text-fg-primary font-semibold break-all" dir="ltr">
+          {state.email}
+        </span>
+      ),
+    });
+    return (
+      <div
+        className={`border-success-500/30 bg-success-500/5 space-y-4 rounded-lg border p-5 ${className ?? ""}`}
+        role="status"
+        aria-live="polite"
+      >
+        <div className="flex items-start gap-3">
+          <div className="bg-success-500/15 shrink-0 rounded-full p-1.5">
+            <CheckCircle2 className="text-success-500 h-5 w-5" aria-hidden="true" />
+          </div>
+          <div className="min-w-0 flex-1 space-y-1">
+            <h3 className="text-fg-primary text-sm font-semibold">{t("magic_link_heading")}</h3>
+            <p className="text-fg-secondary text-xs leading-relaxed">{parts}</p>
+          </div>
+        </div>
+
+        <div className="text-fg-muted flex flex-wrap items-center justify-between gap-2 pt-1 text-xs">
+          <span>
+            {t("magic_link_check_spam")}{" "}
+            <button
+              type="button"
+              onClick={handleTryAnother}
+              className="text-brand-400 font-medium underline-offset-2 hover:underline"
+            >
+              {t("magic_link_try_another")}
+            </button>
+          </span>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={handleResend}
+            disabled={cooldown > 0}
+            className="h-7 px-2 text-xs"
+          >
+            {cooldown > 0 ? `${t("magic_link_resend")} (${cooldown}s)` : t("magic_link_resend")}
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form
       className={className}
       onSubmit={(e) => {
         e.preventDefault();
-        const email = new FormData(e.currentTarget).get("email");
-        if (!email) return;
-        start(async () => {
-          const { signInWithMagicLink } = await import("@/actions/auth");
-          const res = await signInWithMagicLink(String(email));
-          if (res.ok) {
-            setSent(true);
-            toast.success(t("magic_link_sent"));
-          } else {
-            toast.error(res.error ?? "Failed");
-          }
-        });
+        handleSend(emailValue.trim(), false);
       }}
+      noValidate
     >
-      {sent ? (
-        <p className="text-success-500 text-sm" role="status">
-          {t("magic_link_sent")}
+      <label htmlFor="magic-email" className="text-fg-secondary mb-1.5 block text-xs font-medium">
+        {t("email_label")}
+      </label>
+      <div className="flex gap-2">
+        <input
+          id="magic-email"
+          name="email"
+          type="email"
+          required
+          inputMode="email"
+          autoComplete="email"
+          placeholder="you@example.com"
+          value={emailValue}
+          onChange={(e) => {
+            setEmailValue(e.target.value);
+            if (validationError) setValidationError(null);
+          }}
+          disabled={disabled || state?.status === "sending"}
+          aria-invalid={validationError ? true : undefined}
+          aria-describedby={validationError ? "magic-email-error" : undefined}
+          className="border-border-subtle bg-bg-secondary focus:ring-brand-500 flex-1 rounded-md border px-3 py-2 text-sm focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+        />
+        <Button
+          type="submit"
+          isLoading={state?.status === "sending"}
+          disabled={disabled || !emailValue.trim()}
+          leftIcon={
+            state?.status !== "sending" ? (
+              <Mail className="h-4 w-4" />
+            ) : (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            )
+          }
+        >
+          {state?.status === "sending" ? t("magic_link_sending") : t("send")}
+        </Button>
+      </div>
+      {validationError && (
+        <p id="magic-email-error" className="text-danger-400 mt-1.5 text-xs" role="alert">
+          {validationError}
         </p>
-      ) : (
-        <>
-          <label htmlFor="magic-email" className="mb-1.5 block text-sm font-medium">
-            {t("or_continue_email")}
-          </label>
-          <div className="flex gap-2">
-            <input
-              id="magic-email"
-              name="email"
-              type="email"
-              required
-              placeholder="you@example.com"
-              className="border-border-subtle bg-bg-secondary focus:ring-brand-500 flex-1 rounded-md border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
-            />
-            <Button type="submit" isLoading={pending} leftIcon={<Mail className="h-4 w-4" />}>
-              {t("send")}
-            </Button>
-          </div>
-        </>
       )}
     </form>
   );
