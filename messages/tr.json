@@ -255,7 +255,7 @@
       "terms": "Şartlar",
       "takedown": "Kaldırma",
       "cookies": "Çerezler",
-      "about": "Hakkında",
+      "about": "Hikayemiz",
       "contact": "İletişim",
       "transparency": "Şeffaflık raporu"
     },
@@ -264,6 +264,9 @@
   },
   "errors": {
     "generic": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
+    "error_404": "Hata 404",
+    "notFoundTitle": "Bu sayfa moderatörlerin gözünden kaçtı.",
+    "notFoundDesc": "Aradığınız sayfa mevcut değil veya taşınmış. ALPAR'daki her olay belgelenir — ama bu, kamu arşivinde yok.",
     "not_found": "Sayfa bulunamadı",
     "not_found_desc": "Aradığınız sayfa mevcut değil.",
     "unauthorized": "Giriş gerekli",
@@ -276,7 +279,11 @@
     "server_error_desc": "Ekibimiz bilgilendirildi. Lütfen daha sonra tekrar deneyin.",
     "somethingWentWrong": "Bir şeyler ters gitti",
     "unexpectedError": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.",
-    "tryAgain": "Tekrar dene"
+    "tryAgain": "Tekrar dene",
+    "goHome": "Ana sayfaya dön",
+    "goHomeDesc": "AI davranışının kamu arşivi",
+    "browseDesc": "Yayınlanmış AI olaylarını inceleyin",
+    "goBack": "Geri dön"
   },
   "common": {
     "loading": "Yükleniyor…",

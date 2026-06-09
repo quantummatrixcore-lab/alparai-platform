@@ -255,7 +255,7 @@
       "terms": "Terms",
       "takedown": "Takedown",
       "cookies": "Cookies",
-      "about": "About",
+      "about": "Our story",
       "contact": "Contact",
       "transparency": "Transparency report"
     },
@@ -264,6 +264,9 @@
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
+    "error_404": "Error 404",
+    "notFoundTitle": "This page slipped past the moderators.",
+    "notFoundDesc": "The page you're looking for doesn't exist or has been moved. Every incident on ALPAR is documented — but this one isn't in the public record.",
     "not_found": "Page not found",
     "not_found_desc": "The page you're looking for doesn't exist.",
     "unauthorized": "Sign in required",
@@ -276,7 +279,11 @@
     "server_error_desc": "Our team has been notified. Please try again later.",
     "somethingWentWrong": "Something went wrong",
     "unexpectedError": "An unexpected error occurred. Please try again.",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "goHome": "Back to home",
+    "goHomeDesc": "The public record of AI behavior",
+    "browseDesc": "Browse published AI incidents",
+    "goBack": "Go back"
   },
   "common": {
     "loading": "Loading…",
