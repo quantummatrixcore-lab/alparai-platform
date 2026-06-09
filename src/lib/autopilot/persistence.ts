@@ -1,6 +1,7 @@
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { AutopilotResult, IdempotencyKey } from "./types";
+import { logger } from "@/lib/utils/logger";
 
 export interface PersistedAutopilotRun {
   id: string;
@@ -25,9 +26,13 @@ export const persistAutopilotRun = async <T>(
     const status = mapResultToStatus(result);
     const attempts = "attempts" in result ? result.attempts : 0;
     const lastError = result.kind === "exhausted" ? result.error : null;
-    const resultId = result.kind === "ok" && result.value && typeof result.value === "object" && "id" in result.value
-      ? String((result.value as Record<string, unknown>)["id"])
-      : null;
+    const resultId =
+      result.kind === "ok" &&
+      result.value &&
+      typeof result.value === "object" &&
+      "id" in result.value
+        ? String((result.value as Record<string, unknown>)["id"])
+        : null;
 
     const { data, error } = await admin
       .from("autopilot_runs")
@@ -51,7 +56,7 @@ export const persistAutopilotRun = async <T>(
       .single();
 
     if (error || !data) {
-      console.error("[autopilot] persist failed", error?.message ?? "no data");
+      logger.error("[autopilot] persist failed", { reason: error?.message ?? "no data" });
       return null;
     }
     const row = data as Record<string, unknown>;
@@ -63,7 +68,7 @@ export const persistAutopilotRun = async <T>(
       idempotency_key: String(row["idempotency_key"]),
     };
   } catch (e) {
-    console.error("[autopilot] persist exception", e);
+    logger.error("[autopilot] persist exception", undefined, e instanceof Error ? e : undefined);
     return null;
   }
 };
@@ -73,11 +78,14 @@ export const findReplay = async (
 ): Promise<PersistedAutopilotRun | null> => {
   try {
     const admin = createAdminClient();
-    const { data, error } = await admin
+    const { data, error } = (await admin
       .from("autopilot_runs")
       .select("id, status, attempts, result_id, idempotency_key")
       .eq("idempotency_key", idempotencyKey)
-      .maybeSingle() as unknown as { data: Record<string, unknown> | null; error: { message: string } | null };
+      .maybeSingle()) as unknown as {
+      data: Record<string, unknown> | null;
+      error: { message: string } | null;
+    };
     if (error || !data) return null;
     const row = data as Record<string, unknown>;
     return {
@@ -100,19 +108,19 @@ export interface PersistedAutopilotRunWithMeta extends PersistedAutopilotRun {
   updated_at: string;
 }
 
-export const listRecentRuns = async (
-  limit: number
-): Promise<PersistedAutopilotRunWithMeta[]> => {
+export const listRecentRuns = async (limit: number): Promise<PersistedAutopilotRunWithMeta[]> => {
   try {
     const admin = createAdminClient();
-    const { data, error } = await admin
+    const { data, error } = (await admin
       .from("autopilot_runs")
-      .select("id, status, attempts, result_id, idempotency_key, action, duration_ms, last_error, created_at, updated_at")
+      .select(
+        "id, status, attempts, result_id, idempotency_key, action, duration_ms, last_error, created_at, updated_at"
+      )
       .order("updated_at", { ascending: false })
-      .limit(limit) as unknown as {
-        data: Record<string, unknown>[] | null;
-        error: { message: string } | null;
-      };
+      .limit(limit)) as unknown as {
+      data: Record<string, unknown>[] | null;
+      error: { message: string } | null;
+    };
     if (error || !data) return [];
     return data.map((row) => ({
       id: String(row["id"]),

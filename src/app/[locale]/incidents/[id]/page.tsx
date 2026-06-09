@@ -5,9 +5,15 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/session";
 import { Container } from "@/components/ui/layout";
 import { IncidentDetailView } from "@/components/incidents/incident-detail";
+import { IncidentJsonLd } from "@/components/seo/json-ld";
+import { APP_URL } from "@/lib/constants";
 import type { IncidentDetail, ProviderResponse, EvidenceItem } from "@/types";
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string; id: string }> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; id: string }>;
+}) {
   const { id } = await params;
   const supabase = await createServerClient();
   const { data } = await supabase
@@ -15,7 +21,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     .select("title_masked")
     .eq("id", id)
     .maybeSingle();
-  return { title: ((data as Record<string, unknown> | null)?.title_masked as string) ?? "Incident" };
+  return {
+    title: ((data as Record<string, unknown> | null)?.title_masked as string) ?? "Incident",
+  };
 }
 
 export default async function IncidentDetailPage({
@@ -37,16 +45,35 @@ export default async function IncidentDetailPage({
   if (!incidentRow) notFound();
 
   const [providerRes, modelRes, evidenceRes, responseRes, user] = await Promise.all([
-    supabase.from("ai_providers").select("name, slug").eq("id", (incidentRow as Record<string, unknown>)["ai_provider_id"] as string).maybeSingle(),
-    supabase.from("ai_models").select("name, version").eq("id", (incidentRow as Record<string, unknown>)["ai_model_id"] as string).maybeSingle(),
+    supabase
+      .from("ai_providers")
+      .select("name, slug")
+      .eq("id", (incidentRow as Record<string, unknown>)["ai_provider_id"] as string)
+      .maybeSingle(),
+    supabase
+      .from("ai_models")
+      .select("name, version")
+      .eq("id", (incidentRow as Record<string, unknown>)["ai_model_id"] as string)
+      .maybeSingle(),
     supabase.from("evidence").select("id, file_name, file_path, mime_type").eq("incident_id", id),
-    supabase.from("ai_provider_responses").select("id, response_text, is_official, is_published, created_at, ai_provider_id").eq("incident_id", id).eq("is_published", true).maybeSingle(),
+    supabase
+      .from("ai_provider_responses")
+      .select("id, response_text, is_official, is_published, created_at, ai_provider_id")
+      .eq("incident_id", id)
+      .eq("is_published", true)
+      .maybeSingle(),
     getCurrentUser(),
   ]);
 
   const providerData = providerRes.data as { name: string; slug: string } | null;
   const modelData = modelRes.data as { name: string; version: string | null } | null;
-  const responseRow = responseRes.data as { id: string; response_text: string; is_official: boolean; created_at: string; ai_provider_id: string } | null;
+  const responseRow = responseRes.data as {
+    id: string;
+    response_text: string;
+    is_official: boolean;
+    created_at: string;
+    ai_provider_id: string;
+  } | null;
   let providerResponse: ProviderResponse | null = null;
   if (responseRow && providerData) {
     providerResponse = {
@@ -108,6 +135,14 @@ export default async function IncidentDetailPage({
 
   return (
     <Container className="py-10">
+      <IncidentJsonLd
+        title={incident.title_masked}
+        description={incident.description_masked}
+        dateOccurred={incident.incident_date}
+        url={`${APP_URL}/${locale}/incidents/${id}`}
+        severity={incident.severity}
+        provider={incident.provider_name}
+      />
       <IncidentDetailView
         incident={incident}
         evidence={evidence}
