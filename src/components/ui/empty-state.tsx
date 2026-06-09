@@ -1,54 +1,31 @@
+import * as React from "react";
 import { cn } from "@/lib/utils";
-import { Button } from "./button";
-import { FileQuestion, SearchX, ShieldAlert, Inbox } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 
-const variantIcons: Record<string, LucideIcon> = {
-  "no-results": SearchX,
-  "no-data": Inbox,
-  error: ShieldAlert,
-  default: FileQuestion,
-};
-
-export interface EmptyStateProps {
-  variant?: "no-results" | "no-data" | "error" | "default";
-  icon?: LucideIcon;
+interface EmptyStateProps {
+  icon?: React.ReactNode;
   title: string;
   description?: string;
-  actionLabel?: string;
-  actionHref?: string;
-  onAction?: () => void;
+  action?: React.ReactNode;
   className?: string;
 }
 
-export function EmptyState({
-  variant = "default",
-  icon,
-  title,
-  description,
-  actionLabel,
-  actionHref,
-  onAction,
-  className,
-}: EmptyStateProps) {
-  const Icon = icon ?? variantIcons[variant] ?? FileQuestion;
+export function EmptyState({ icon, title, description, action, className }: EmptyStateProps) {
   return (
-    <div className={cn("flex flex-col items-center justify-center gap-4 py-16 text-center", className)}>
-      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-bg-tertiary">
-        <Icon className="h-8 w-8 text-fg-muted" aria-hidden="true" />
-      </div>
-      <div className="max-w-sm space-y-1">
-        <h3 className="text-lg font-semibold text-fg-primary">{title}</h3>
-        {description && <p className="text-sm text-fg-muted">{description}</p>}
-      </div>
-      {actionLabel && actionHref && (
-        <a href={actionHref}>
-          <Button variant="secondary" size="sm">{actionLabel}</Button>
-        </a>
+    <div
+      className={cn(
+        "border-border-subtle bg-bg-secondary/30 mx-auto flex max-w-md flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 text-center",
+        className
       )}
-      {actionLabel && onAction && !actionHref && (
-        <Button variant="secondary" size="sm" onClick={onAction}>{actionLabel}</Button>
+      role="status"
+    >
+      {icon && (
+        <div className="bg-bg-tertiary text-fg-muted mb-4 flex h-14 w-14 items-center justify-center rounded-full">
+          {icon}
+        </div>
       )}
+      <h3 className="text-fg-primary text-base font-semibold">{title}</h3>
+      {description && <p className="text-fg-muted mt-2 text-sm">{description}</p>}
+      {action && <div className="mt-6">{action}</div>}
     </div>
   );
 }
