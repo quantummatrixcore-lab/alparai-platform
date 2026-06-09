@@ -2,7 +2,7 @@
 
 > Trust infrastructure for AI accountability. Community-driven incident reporting platform. Like Trustpilot, but for AI systems.
 
-🌐 **[alparai.online](https://alparai.online)** · 📧 [hello@alparai.online](mailto:hello@alparai.online) · 📜 [AGPL-3.0](./LICENSE)
+🌐 **[alparai.com](https://alparai.com)** · 📧 [hello@alparai.com](mailto:hello@alparai.com) · 📜 [AGPL-3.0](./LICENSE)
 
 ---
 
@@ -143,10 +143,10 @@ docs/                          # Documentation (English)
 
 ## Roles
 
-| Role        | Can                                                         |
-| ----------- | ----------------------------------------------------------- |
-| `user`      | Sign in, submit incidents, vote, comment, suggest features  |
-| `moderator` | All of `user` + approve/reject incidents, review takedowns  |
+| Role        | Can                                                          |
+| ----------- | ------------------------------------------------------------ |
+| `user`      | Sign in, submit incidents, vote, comment, suggest features   |
+| `moderator` | All of `user` + approve/reject incidents, review takedowns   |
 | `admin`     | All of `moderator` + manage users, providers, view audit log |
 
 The `users` table is auto-populated via a Postgres trigger on `auth.users` insert. Role assignment is manual (we promote trusted contributors).

@@ -33,7 +33,7 @@ vi.mock("@/lib/validation/schemas", async () => {
 });
 
 vi.mock("@/lib/constants", () => ({
-  APP_EMAIL: "hello@alparai.online",
+  APP_EMAIL: "hello@alparai.com",
 }));
 
 import { submitContact } from "@/actions/contact";

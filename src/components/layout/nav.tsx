@@ -17,7 +17,7 @@ const navItems: NavItem[] = [
   { href: "/", labelKey: "home", icon: Home },
   { href: "/incidents", labelKey: "incidents", icon: FileText },
   { href: "/leaderboard", labelKey: "leaderboard", icon: BarChart3 },
-  { href: "/legal/takedown", labelKey: "takedown", icon: ShieldAlert },
+  { href: "/suggestions", labelKey: "suggestions", icon: ShieldAlert },
 ];
 
 export function Nav({ className }: { className?: string }) {

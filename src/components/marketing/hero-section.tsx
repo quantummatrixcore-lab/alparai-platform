@@ -9,11 +9,9 @@ import { useTranslations } from "next-intl";
 export function HeroSection({
   totalIncidents = 0,
   totalProviders = 0,
-  totalCountries = 0,
 }: {
   totalIncidents?: number;
   totalProviders?: number;
-  totalCountries?: number;
 }) {
   const t = useTranslations("hero");
   const { scrollY } = useScroll();
@@ -105,11 +103,7 @@ export function HeroSection({
               value={totalProviders}
               glowColor="rgba(168,85,247,0.15)"
             />
-            <StatCard
-              label={t("stats_countries")}
-              value={totalCountries}
-              glowColor="rgba(39,174,96,0.15)"
-            />
+            <StatCard label={t("stats_countries")} value="EU" glowColor="rgba(39,174,96,0.15)" />
           </motion.div>
         </div>
       </div>
@@ -123,7 +117,7 @@ function StatCard({
   glowColor,
 }: {
   label: string;
-  value: number;
+  value: React.ReactNode;
   glowColor: string;
 }) {
   return (
@@ -133,7 +127,7 @@ function StatCard({
     >
       <div className="absolute top-0 left-0 h-[1px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
       <p className="text-fg-primary text-5xl font-black tracking-tighter md:text-6xl">
-        {value.toLocaleString()}
+        {typeof value === "number" ? value.toLocaleString() : value}
       </p>
       <p className="text-fg-muted mt-3 text-sm font-bold tracking-[0.2em] uppercase">{label}</p>
     </div>
