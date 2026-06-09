@@ -22,10 +22,13 @@
   },
   "hero": {
     "eyebrow": "The world's first community-governed AI accountability platform",
-    "title": "When AI fails, the world should know.",
+    "title_primary": "Let's set AI ethics together. Let's grow AI under human control.",
+    "title_accent": "Hack AI. Win the bounty.",
+    "title_accent_desc": "Found a real AI failure? Document it. Get verified. Earn the Ethics Advocate badge — and reward credits from the providers you reported.",
     "subtitle": "Join thousands building the permanent public record of AI behavior. Evidence, not opinions. Verified, not silenced.",
     "cta_primary": "Document an AI Incident",
     "cta_secondary": "Explore the Public Record",
+    "cta_bounty": "Learn about Bug Bounties",
     "stats_incidents": "Incidents reported",
     "stats_providers": "AI providers",
     "stats_countries": "Founded 2026",
@@ -167,7 +170,10 @@
     "responseRate": "Response Rate",
     "providersTracked": "Providers tracked",
     "totalResponses": "Total responses",
-    "avgResponseRate": "Avg response rate"
+    "avgResponseRate": "Avg response rate",
+    "filter_all": "All Providers",
+    "filter_verified": "Verified Only",
+    "filter_with_incidents": "With Incidents"
   },
   "auth": {
     "signin_with_google": "Continue with Google",
@@ -466,6 +472,19 @@
     "spec_desc": "Download the full OpenAPI spec to generate typed clients in your language of choice.",
     "rate_title": "Rate limits",
     "rate_desc": "100 requests per minute per IP. Burst allowed. Returns 429 with retryAfter when exceeded."
+  },
+  "bounties": {
+    "eyebrow": "AI Accountability Bounty",
+    "title": "Hack AI. Earn the bounty.",
+    "description": "Real AI failures earn reputation, badges, and reward credits. Every validated incident contributes to the permanent public record.",
+    "stats_total": "Total bounties",
+    "stats_validated": "Validated",
+    "stats_paid": "Paid out",
+    "stats_reward": "Total rewards",
+    "empty": "No bounties yet. Be the first to report a verified AI incident.",
+    "severity": "Severity",
+    "reward": "Reward",
+    "date": "Date"
   },
   "about": {
     "mission": "Our mission",

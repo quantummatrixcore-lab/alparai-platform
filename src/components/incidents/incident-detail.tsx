@@ -29,6 +29,15 @@ export function IncidentDetailView({
   const tCat = useTranslations("categories");
   const tCommon = useTranslations("common");
   const locale = useLocale();
+
+  const displayTitle =
+    locale === "tr" && incident.title_tr && incident.title_tr.length > 0
+      ? incident.title_tr
+      : incident.title_masked;
+  const displayDesc =
+    locale === "tr" && incident.description_tr && incident.description_tr.length > 0
+      ? incident.description_tr
+      : incident.description_masked;
   return (
     <article className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px]">
       <div className="space-y-6">
@@ -58,7 +67,7 @@ export function IncidentDetailView({
             )}
           </div>
           <h1 className="text-fg-primary text-3xl leading-tight font-bold tracking-tight">
-            {incident.title_masked}
+            {displayTitle}
           </h1>
           <div className="text-fg-muted flex flex-wrap items-center gap-4 text-xs">
             <span className="inline-flex items-center gap-1">
@@ -81,7 +90,7 @@ export function IncidentDetailView({
 
         <Card>
           <CardContent className="prose prose-invert text-fg-primary max-w-none whitespace-pre-wrap">
-            {incident.description_masked}
+            {displayDesc}
           </CardContent>
         </Card>
 
@@ -161,7 +170,7 @@ export function IncidentDetailView({
             disabled={!isAuthenticated}
           />
           <div className="flex-1">
-            <ShareButtons url={`/incidents/${incident.id}`} title={incident.title_masked} />
+            <ShareButtons url={`/incidents/${incident.id}`} title={displayTitle} />
           </div>
         </div>
         <Card>

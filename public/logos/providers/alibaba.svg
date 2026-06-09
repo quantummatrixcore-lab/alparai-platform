@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 60" width="160" height="60" role="img" aria-label="Anthropic">
-  <title>Anthropic</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 60" width="160" height="60" role="img" aria-label="Alibaba">
+  <title>Alibaba</title>
   <style>
     .wordmark {
       font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', system-ui, sans-serif;
       font-weight: 700;
       letter-spacing: 0;
-      fill: #D97757;
+      fill: #FF6A00;
       font-size: 22px;
       dominant-baseline: central;
     }
   </style>
-  <text x="80" y="30" text-anchor="middle" class="wordmark">Anthropic</text>
+  <text x="80" y="30" text-anchor="middle" class="wordmark">Alibaba</text>
 </svg>

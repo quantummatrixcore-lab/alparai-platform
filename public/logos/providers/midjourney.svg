@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 161 60" width="161" height="60" role="img" aria-label="Midjourney">
+  <title>Midjourney</title>
+  <style>
+    .wordmark {
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      fill: currentColor;
+      font-size: 22px;
+      dominant-baseline: central;
+    }
+  </style>
+  <text x="80.5" y="30" text-anchor="middle" class="wordmark">Midjourney</text>
+</svg>

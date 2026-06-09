@@ -22,10 +22,13 @@
   },
   "hero": {
     "eyebrow": "Dünyanın ilk topluluk yönetimli AI hesap verebilirlik platformu",
-    "title": "AI başarısız olduğunda, dünya bilmeli.",
+    "title_primary": "Yapay zeka etik kurallarını birlikte koyalım. YZ'yi insan kontrolünde büyütelim.",
+    "title_accent": "AI Hackle. Ödülü Kap.",
+    "title_accent_desc": "Gerçek bir AI hatası mı buldun? Belgele. Doğrulat. Etik Savunucu rozeti kazan — ve bildirdiğin sağlayıcıdan ödül kredisi al.",
     "subtitle": "AI davranışının kalıcı kamu arşivini oluşturan binlerce kişiye katılın. Kanıt, görüş değil. Doğrulanmış, susturulmamış.",
     "cta_primary": "Bir AI Olayı Belgele",
     "cta_secondary": "Kamu Arşivini Keşfet",
+    "cta_bounty": "Bug Bounty Hakkında",
     "stats_incidents": "Bildirilen olay",
     "stats_providers": "AI sağlayıcı",
     "stats_countries": "2026'da kuruldu",
@@ -167,7 +170,10 @@
     "responseRate": "Yanıt Oranı",
     "providersTracked": "Takip edilen sağlayıcılar",
     "totalResponses": "Toplam yanıt",
-    "avgResponseRate": "Ort. yanıt oranı"
+    "avgResponseRate": "Ort. yanıt oranı",
+    "filter_all": "Tüm Sağlayıcılar",
+    "filter_verified": "Yalnızca Doğrulanmış",
+    "filter_with_incidents": "Olayı Olanlar"
   },
   "auth": {
     "signin_with_google": "Google ile devam et",
@@ -466,6 +472,19 @@
     "spec_desc": "Tercih ettiğiniz dilde tipli istemciler oluşturmak için tam OpenAPI spesifikasyonunu indirin.",
     "rate_title": "Hız limitleri",
     "rate_desc": "IP başına dakikada 100 istek. Patlama izin verilir. Aşıldığında retryAfter ile 429 döndürür."
+  },
+  "bounties": {
+    "eyebrow": "AI Hesap Verebilirlik Ödülü",
+    "title": "AI Hackle. Ödülü Kap.",
+    "description": "Gerçek AI başarısızlıkları itibar, rozet ve ödül kredisi kazandırır. Her doğrulanmış olay kalıcı kamu arşivine katkıda bulunur.",
+    "stats_total": "Toplam ödül",
+    "stats_validated": "Doğrulanmış",
+    "stats_paid": "Ödenmiş",
+    "stats_reward": "Toplam ödüller",
+    "empty": "Henüz ödül yok. İlk doğrulanmış AI olayını bildiren siz olun.",
+    "severity": "Ciddiyet",
+    "reward": "Ödül",
+    "date": "Tarih"
   },
   "about": {
     "mission": "Misyonumuz",

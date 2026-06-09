@@ -4,11 +4,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Card } from "@/components/ui/card";
 import { SeverityBadge, StatusBadge, Badge } from "@/components/ui/badge";
-import type {
-  IncidentListItem,
-  IncidentSeverity,
-  IncidentStatus,
-} from "@/types";
+import type { IncidentListItem, IncidentSeverity, IncidentStatus } from "@/types";
 import { MessageSquare, ThumbsUp, Clock, Building2 } from "lucide-react";
 
 export function IncidentCard({
@@ -22,12 +18,17 @@ export function IncidentCard({
   const tCat = useTranslations("categories");
   const locale = useLocale();
 
+  const displayTitle =
+    locale === "tr" && incident.title_tr && incident.title_tr.length > 0
+      ? incident.title_tr
+      : incident.title_masked;
+  const displayDesc =
+    locale === "tr" && incident.description_tr && incident.description_tr.length > 0
+      ? incident.description_tr
+      : incident.description_masked;
+
   return (
-    <Card
-      interactive
-      padding="md"
-      className={cn("group relative", className)}
-    >
+    <Card interactive padding="md" className={cn("group relative", className)}>
       <div className="flex items-start justify-between gap-4">
         <div className="flex flex-wrap items-center gap-2">
           <SeverityBadge severity={incident.severity as IncidentSeverity} />
@@ -44,18 +45,13 @@ export function IncidentCard({
           </Badge>
         )}
       </div>
-      <Link
-        href={`/incidents/${incident.id}`}
-        className="mt-3 block focus-visible:outline-none"
-      >
-        <h3 className="line-clamp-2 text-lg font-semibold text-fg-primary group-hover:text-brand-400 transition-colors">
-          {incident.title_masked}
+      <Link href={`/incidents/${incident.id}`} className="mt-3 block focus-visible:outline-none">
+        <h3 className="text-fg-primary group-hover:text-brand-400 line-clamp-2 text-lg font-semibold transition-colors">
+          {displayTitle}
         </h3>
-        <p className="mt-1.5 line-clamp-3 text-sm text-fg-muted">
-          {incident.description_masked}
-        </p>
+        <p className="text-fg-muted mt-1.5 line-clamp-3 text-sm">{displayDesc}</p>
       </Link>
-      <div className="mt-4 flex items-center justify-between text-xs text-fg-muted">
+      <div className="text-fg-muted mt-4 flex items-center justify-between text-xs">
         <div className="flex items-center gap-4">
           <span className="inline-flex items-center gap-1">
             <Clock className="h-3.5 w-3.5" aria-hidden="true" />
@@ -77,4 +73,3 @@ export function IncidentCard({
     </Card>
   );
 }
-

@@ -13,7 +13,6 @@ export type SuggestionStatus = Database["public"]["Enums"]["suggestion_status"];
 export type AIProvider = Database["public"]["Tables"]["ai_providers"]["Row"];
 export type AIModel = Database["public"]["Tables"]["ai_models"]["Row"];
 
-
 export interface SessionUser {
   id: string;
   email: string;
@@ -28,6 +27,8 @@ export interface IncidentListItem {
   id: string;
   title_masked: string;
   description_masked: string;
+  title_tr: string | null;
+  description_tr: string | null;
   severity: IncidentSeverity;
   status: IncidentStatus;
   category: IncidentCategory;
@@ -46,6 +47,8 @@ export interface IncidentDetail {
   id: string;
   title_masked: string;
   description_masked: string;
+  title_tr: string | null;
+  description_tr: string | null;
   severity: IncidentSeverity;
   status: IncidentStatus;
   category: IncidentCategory;
@@ -81,6 +84,8 @@ export interface SuggestionListItem {
   id: string;
   title: string;
   description: string;
+  title_tr?: string | null;
+  description_tr?: string | null;
   category: string;
   status: string;
   upvote_count: number;
