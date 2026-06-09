@@ -22,45 +22,38 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   setRequestLocale(locale);
   const supabase = await createServerClient();
 
-  const [
-    incidentsResult,
-    incidentsCountResult,
-    providersResult,
-    countriesResult,
-    pollsResult,
-    topUserResult,
-  ] = await Promise.all([
-    supabase
-      .from("incidents")
-      .select(
-        "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id"
-      )
-      .eq("status", "published")
-      .order("published_at", { ascending: false })
-      .limit(5),
-    supabase
-      .from("incidents")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "published"),
-    supabase
-      .from("ai_providers")
-      .select("id, slug, name, description, logo_url, website_url, is_verified")
-      .order("name"),
-    supabase.from("incidents").select("location_country").not("location_country", "is", null),
-    supabase
-      .from("ai_polls")
-      .select("*")
-      .eq("is_active", true)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .returns<Poll[]>(),
-    supabase
-      .from("users")
-      .select("id, name:full_name, avatar_url, reputation_score, badges")
-      .order("reputation_score", { ascending: false })
-      .limit(1)
-      .returns<Advocate[]>(),
-  ]);
+  const [incidentsResult, incidentsCountResult, providersResult, pollsResult, topUserResult] =
+    await Promise.all([
+      supabase
+        .from("incidents")
+        .select(
+          "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id"
+        )
+        .eq("status", "published")
+        .order("published_at", { ascending: false })
+        .limit(5),
+      supabase
+        .from("incidents")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "published"),
+      supabase
+        .from("ai_providers")
+        .select("id, slug, name, description, logo_url, website_url, is_verified")
+        .order("name"),
+      supabase
+        .from("ai_polls")
+        .select("*")
+        .eq("is_active", true)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .returns<Poll[]>(),
+      supabase
+        .from("users")
+        .select("id, name:full_name, avatar_url, reputation_score, badges")
+        .order("reputation_score", { ascending: false })
+        .limit(1)
+        .returns<Advocate[]>(),
+    ]);
 
   const providerMap = new Map(
     ((providersResult.data as Array<{ id: string; slug: string; name: string }>) ?? []).map((p) => [
@@ -93,12 +86,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     trend: 0,
   }));
 
-  const countries = new Set(
-    ((countriesResult.data as Array<{ location_country: string | null }>) ?? [])
-      .map((c) => c.location_country)
-      .filter(Boolean)
-  ).size;
-
   const topPoll = pollsResult.data?.[0];
   const topAdvocate = topUserResult.data?.[0] ?? null;
 
@@ -107,7 +94,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <HeroSection
         totalIncidents={incidentsCountResult.count ?? 0}
         totalProviders={providersResult.data?.length ?? 0}
-        totalCountries={countries}
       />
 
       <Section className="bg-bg-primary pt-12 pb-6">
