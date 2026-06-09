@@ -9,6 +9,7 @@ const productLinks = [
   { href: "/incidents", key: "incidents" },
   { href: "/leaderboard", key: "leaderboard" },
   { href: "/suggestions", key: "suggestions" },
+  { href: "/blog", key: "blog" },
   { href: "/submit", key: "submit" },
 ] as const;
 

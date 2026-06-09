@@ -3,6 +3,7 @@ import { createServerClient } from "@/lib/supabase/server";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { IncidentForm } from "@/components/incidents/incident-form";
+import { ShieldCheck } from "lucide-react";
 import type { AIProvider, AIModel } from "@/types";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -41,6 +42,18 @@ export default async function SubmitPage({ params }: { params: Promise<{ locale:
         </h1>
         <p className="text-fg-muted text-sm">{t("submit_page_subtitle")}</p>
       </header>
+
+      <div
+        className="border-success-500/30 bg-success-500/5 mb-6 flex items-start gap-3 rounded-lg border p-4"
+        role="status"
+        aria-live="polite"
+      >
+        <ShieldCheck className="text-success-500 mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
+        <div>
+          <p className="text-fg-primary text-sm font-semibold">{t("anon_badge")}</p>
+          <p className="text-fg-muted text-xs">{t("anon_badge_desc")}</p>
+        </div>
+      </div>
 
       <Card variant="elevated">
         <CardContent>
