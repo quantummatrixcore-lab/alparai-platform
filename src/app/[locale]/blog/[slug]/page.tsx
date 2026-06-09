@@ -96,7 +96,11 @@ export default async function BlogPostPage({
   const post = getPostBySlug(slug);
   if (!post) notFound();
 
-  const html = renderMarkdown(post.content);
+  const title = locale === "tr" ? post.title_tr : post.title;
+  const description = locale === "tr" ? post.description_tr : post.description;
+  const author = locale === "tr" && post.author_tr ? post.author_tr : post.author;
+  const content = locale === "tr" ? post.content_tr : post.content;
+  const html = renderMarkdown(content);
 
   return (
     <Container size="narrow" className="py-12">
@@ -111,13 +115,13 @@ export default async function BlogPostPage({
       <article>
         <header className="mb-8 space-y-4">
           <h1 className="text-fg-primary text-4xl leading-tight font-black tracking-tight md:text-5xl">
-            {post.title}
+            {title}
           </h1>
-          <p className="text-fg-secondary text-lg">{post.description}</p>
+          <p className="text-fg-secondary text-lg">{description}</p>
           <div className="text-fg-muted flex flex-wrap items-center gap-4 text-sm">
             <span className="inline-flex items-center gap-1.5">
               <User className="h-4 w-4" />
-              {post.author}
+              {author}
             </span>
             <span className="inline-flex items-center gap-1.5">
               <Calendar className="h-4 w-4" />

@@ -99,6 +99,8 @@ export default async function IncidentDetailPage({
     id: r["id"] as string,
     title_masked: (r["title_masked"] as string) ?? (r["title"] as string) ?? "",
     description_masked: (r["description_masked"] as string) ?? (r["description"] as string) ?? "",
+    title_tr: (r["title_tr"] as string | null) ?? null,
+    description_tr: (r["description_tr"] as string | null) ?? null,
     severity: r["severity"] as IncidentDetail["severity"],
     status: r["status"] as IncidentDetail["status"],
     category: r["category"] as IncidentDetail["category"],

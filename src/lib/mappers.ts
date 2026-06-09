@@ -4,19 +4,17 @@
  * into our strongly-typed view models.
  */
 
-import type {
-  IncidentCategory,
-  IncidentSeverity,
-  IncidentStatus,
-} from "@/types";
+import type { IncidentCategory, IncidentSeverity, IncidentStatus } from "@/types";
 import type { IncidentListItem } from "@/types";
 
 type RawIncidentRow = Record<string, unknown> & {
   id: string;
   title_masked?: string | null;
   title?: string | null;
+  title_tr?: string | null;
   description_masked?: string | null;
   description?: string | null;
+  description_tr?: string | null;
   severity?: string | null;
   status?: string | null;
   category?: string | null;
@@ -37,6 +35,8 @@ export function toIncidentListItem(row: RawIncidentRow): IncidentListItem {
     id: row.id,
     title_masked: row.title_masked ?? row.title ?? "",
     description_masked: row.description_masked ?? row.description ?? "",
+    title_tr: row.title_tr ?? null,
+    description_tr: row.description_tr ?? null,
     severity: row.severity as IncidentSeverity,
     status: row.status as IncidentStatus,
     category: row.category as IncidentCategory,

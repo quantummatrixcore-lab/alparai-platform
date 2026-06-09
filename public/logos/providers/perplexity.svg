@@ -1,4 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
-    <rect width="100" height="100" rx="20" fill="#1B1B1B" />
-    <text x="50" y="55" font-family="Arial, sans-serif" font-size="50" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">P</text>
-  </svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 161 60" width="161" height="60" role="img" aria-label="Perplexity">
+  <title>Perplexity</title>
+  <style>
+    .wordmark {
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0;
+      fill: #20808D;
+      font-size: 22px;
+      dominant-baseline: central;
+    }
+  </style>
+  <text x="80.5" y="30" text-anchor="middle" class="wordmark">Perplexity</text>
+</svg>

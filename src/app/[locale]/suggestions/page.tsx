@@ -10,66 +10,88 @@ import { Plus } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth/session";
 import type { SuggestionListItem } from "@/types";
 
-const seedSuggestions: SuggestionListItem[] = [
+const seedSuggestions: Array<
+  SuggestionListItem & { title_tr: string; description_tr: string; author_name_tr: string }
+> = [
   {
     id: "seed-1",
     title: "AI provider response time tracking",
+    title_tr: "AI sağlayıcı yanıt süresi takibi",
     description:
       "Track how quickly AI providers respond to incidents. Show average response time on brand pages and leaderboard.",
+    description_tr:
+      "AI sağlayıcılarının olaylara ne kadar hızlı yanıt verdiğini takip edin. Marka sayfalarında ve skor tablosunda ortalama yanıt süresini gösterin.",
     category: "feature",
     status: "open",
     upvote_count: 42,
     comment_count: 8,
     created_at: "2026-06-01T00:00:00Z",
     author_name: "ALPAR Team",
+    author_name_tr: "ALPAR Ekibi",
   },
   {
     id: "seed-2",
     title: "Severity badge standardization",
+    title_tr: "Ciddiyet rozeti standardizasyonu",
     description:
       "Define clear criteria for each severity level (low, medium, high, critical). Help reporters choose the right level.",
+    description_tr:
+      "Her ciddiyet seviyesi için net kriterler tanımlayın (düşük, orta, yüksek, kritik). Raporcuların doğru seviyeyi seçmesine yardımcı olun.",
     category: "improvement",
     status: "open",
     upvote_count: 38,
     comment_count: 5,
     created_at: "2026-06-01T00:00:00Z",
     author_name: "ALPAR Team",
+    author_name_tr: "ALPAR Ekibi",
   },
   {
     id: "seed-3",
     title: "Incident comparison tool",
+    title_tr: "Olay karşılaştırma aracı",
     description:
       "Compare how different AI providers handle similar incidents. Side-by-side view of response quality and resolution time.",
+    description_tr:
+      "Farklı AI sağlayıcılarının benzer olaylara nasıl yanıt verdiğini karşılaştırın. Yanıt kalitesi ve çözüm süresinin yan yana görünümü.",
     category: "feature",
     status: "open",
     upvote_count: 35,
     comment_count: 12,
     created_at: "2026-06-01T00:00:00Z",
     author_name: "ALPAR Team",
+    author_name_tr: "ALPAR Ekibi",
   },
   {
     id: "seed-4",
     title: "Weekly digest email",
+    title_tr: "Haftalık özet e-postası",
     description:
       "Subscribe to a weekly digest of new incidents, provider responses, and platform updates. Stay informed without checking daily.",
+    description_tr:
+      "Yeni olaylar, sağlayıcı yanıtları ve platform güncellemelerinin haftalık özetine abone olun. Her gün kontrol etmeden haberdar olun.",
     category: "feature",
     status: "open",
     upvote_count: 29,
     comment_count: 3,
     created_at: "2026-06-01T00:00:00Z",
     author_name: "ALPAR Team",
+    author_name_tr: "ALPAR Ekibi",
   },
   {
     id: "seed-5",
     title: "Incident severity voting",
+    title_tr: "Olay ciddiyet oylaması",
     description:
       "Let the community vote on severity levels. If enough users agree an incident is more severe, it gets escalated.",
+    description_tr:
+      "Topluluğun ciddiyet seviyelerini oylamasına izin verin. Yeterli kullanıcı bir olayın daha ciddi olduğunu kabul ederse, yükseltilir.",
     category: "improvement",
     status: "open",
     upvote_count: 24,
     comment_count: 7,
     created_at: "2026-06-01T00:00:00Z",
     author_name: "ALPAR Team",
+    author_name_tr: "ALPAR Ekibi",
   },
 ];
 
@@ -88,15 +110,19 @@ export default async function SuggestionsPage({ params }: { params: Promise<{ lo
   const { data } = await supabase
     .from("suggestions")
     .select(
-      "id, title, description, category, status, upvotes_count, comments_count, created_at, user_id"
+      "id, title, description, title_tr, description_tr, category, status, upvotes_count, comments_count, created_at, user_id"
     )
     .order("upvotes_count", { ascending: false })
     .limit(50);
 
-  const items: SuggestionListItem[] = ((data as Array<Record<string, unknown>>) ?? []).map((r) => ({
+  const items: SuggestionListItem[] = (
+    (data as unknown as Array<Record<string, unknown>>) ?? []
+  ).map((r) => ({
     id: r["id"] as string,
     title: r["title"] as string,
     description: r["description"] as string,
+    title_tr: (r["title_tr"] as string | null) ?? null,
+    description_tr: (r["description_tr"] as string | null) ?? null,
     category: r["category"] as string,
     status: r["status"] as string,
     upvote_count: (r["upvotes_count"] as number) ?? 0,
@@ -138,9 +164,26 @@ export default async function SuggestionsPage({ params }: { params: Promise<{ lo
       )}
 
       <div className="space-y-3">
-        {displayItems.map((it) => (
-          <SuggestionCard key={it.id} item={it} />
-        ))}
+        {displayItems.map((it) => {
+          const seedItem = (seedSuggestions as unknown as Array<Record<string, unknown>>).find(
+            (s) => s["id"] === it.id
+          );
+          const isSeedItem = Boolean(seedItem);
+          const displayTitle =
+            isSeedItem && locale === "tr" && seedItem && seedItem["title_tr"]
+              ? (seedItem["title_tr"] as string)
+              : it.title;
+          const displayDesc =
+            isSeedItem && locale === "tr" && seedItem && seedItem["description_tr"]
+              ? (seedItem["description_tr"] as string)
+              : it.description;
+          return (
+            <SuggestionCard
+              key={it.id}
+              item={{ ...it, title: displayTitle, description: displayDesc }}
+            />
+          );
+        })}
       </div>
     </Container>
   );
