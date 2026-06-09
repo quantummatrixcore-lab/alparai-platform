@@ -1,6 +1,7 @@
 import "server-only";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { logger } from "./logger";
 
 export const RATE_LIMIT_KEYS = {
   incident_submission: "ratelimit:incident_submission",
@@ -105,7 +106,7 @@ export async function checkRateLimit(
       retryAfter: Math.max(0, Math.ceil((reset - Date.now()) / 1000)),
     };
   } catch (e) {
-    console.error("rate limit check failed", e);
+    logger.error("rate limit check failed", { key }, e instanceof Error ? e : undefined);
     if (process.env.NODE_ENV === "production") {
       return { ok: false, retryAfter: 60 };
     }

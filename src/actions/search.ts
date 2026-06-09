@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { headers } from "next/headers";
+import { logger } from "@/lib/utils/logger";
 import type { Database } from "@/types/database";
 
 type IncidentRow = Database["public"]["Tables"]["incidents"]["Row"];
@@ -30,7 +31,10 @@ export async function searchIncidents(
     return { ok: false, results: [], error: `Too many searches. Try again in ${rl.retryAfter}s.` };
   }
   const supabase = await createClient();
-  const sanitized = query.trim().replace(/[^\w\s-]/g, "").slice(0, 100);
+  const sanitized = query
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .slice(0, 100);
   const { data: rawData, error } = await supabase
     .from("incidents")
     .select("id, title_masked, category, severity, created_at")
@@ -39,10 +43,16 @@ export async function searchIncidents(
     .order("created_at", { ascending: false })
     .limit(limit);
 
-  const data = rawData as unknown as Pick<IncidentRow, "id" | "title_masked" | "category" | "severity" | "created_at">[] | null;
+  const data = rawData as unknown as
+    | Pick<IncidentRow, "id" | "title_masked" | "category" | "severity" | "created_at">[]
+    | null;
 
   if (error) {
-    console.error("searchIncidents error", error);
+    logger.error(
+      "searchIncidents error",
+      { query: sanitized },
+      error instanceof Error ? error : undefined
+    );
     return { ok: false, results: [], error: "Search failed" };
   }
 

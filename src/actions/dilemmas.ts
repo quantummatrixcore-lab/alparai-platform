@@ -5,6 +5,7 @@ import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import crypto from "crypto";
 import { revalidatePath } from "next/cache";
+import { logger } from "@/lib/utils/logger";
 
 export async function submitVote(
   pollId: string,
@@ -49,7 +50,7 @@ export async function submitVote(
         // unique violation
         return { error: "You have already voted on this dilemma." };
       }
-      console.error("Vote error:", voteError);
+      logger.error("Vote error", { pollId }, voteError instanceof Error ? voteError : undefined);
       return { error: "Failed to record vote." };
     }
 
@@ -91,27 +92,27 @@ export async function submitVote(
 
       if (!badgeError) {
         awardedBadge = badgeName;
-        
+
         // Also update the users table to add reputation points and the badge to the array
         const { data: userRecord } = await supabaseAdmin
           .from("users")
           .select("reputation_score, badges")
           .eq("id", userId)
           .single();
-          
+
         if (userRecord) {
           const newReputation = (userRecord.reputation_score || 0) + 10;
           const currentBadges = userRecord.badges || [];
-          
+
           if (!currentBadges.includes(badgeName)) {
             currentBadges.push(badgeName);
           }
-          
+
           await supabaseAdmin
             .from("users")
-            .update({ 
+            .update({
               reputation_score: newReputation,
-              badges: currentBadges
+              badges: currentBadges,
             })
             .eq("id", userId);
         }
@@ -123,7 +124,7 @@ export async function submitVote(
 
     return { success: true, awardedBadge, badgeIcon };
   } catch (error) {
-    console.error("Error submitting vote:", error);
+    logger.error("Error submitting vote", { pollId }, error instanceof Error ? error : undefined);
     return { error: "An unexpected error occurred." };
   }
 }

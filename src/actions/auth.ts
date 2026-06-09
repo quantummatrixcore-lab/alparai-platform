@@ -7,6 +7,7 @@ import { createServerClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { APP_URL } from "@/lib/constants";
+import { logger } from "@/lib/utils/logger";
 
 export interface AuthResult {
   ok: boolean;
@@ -33,7 +34,7 @@ export async function signInWithGoogle(next = "/profile"): Promise<AuthResult> {
     },
   });
   if (error) {
-    console.error("signInWithGoogle", error);
+    logger.error("signInWithGoogle failed", { action: "signInWithGoogle" }, error);
     return { ok: false, error: error.message };
   }
   return { ok: true, url: data.url };

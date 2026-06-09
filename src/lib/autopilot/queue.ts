@@ -1,6 +1,7 @@
 import "server-only";
 import { Redis } from "@upstash/redis";
 import type { IdempotencyKey } from "./types";
+import { logger } from "@/lib/utils/logger";
 
 export interface QueueHandle {
   available: boolean;
@@ -66,7 +67,7 @@ const createRedisHandle = (redis: Redis): QueueHandle => {
     push: async (job) => {
       const size = await redis.llen(QUEUE_KEY);
       if (size >= MAX_QUEUE_LENGTH) {
-        console.warn("[autopilot] queue at capacity, dropping job");
+        logger.warn("[autopilot] queue at capacity, dropping job", { size, max: MAX_QUEUE_LENGTH });
         return null;
       }
       const data = JSON.stringify(job);
@@ -84,8 +85,7 @@ const createRedisHandle = (redis: Redis): QueueHandle => {
         try {
           const parsed = JSON.parse(item) as QueueJob;
           jobs.push(parsed);
-        } catch {
-        }
+        } catch {}
       }
       return jobs;
     },

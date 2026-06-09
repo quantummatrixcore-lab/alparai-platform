@@ -64,3 +64,56 @@ export function BreadcrumbJsonLd({ items }: { items: Array<{ name: string; url: 
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
   );
 }
+
+export function FAQJsonLd({ items }: { items: Array<{ question: string; answer: string }> }) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+  return (
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
+  );
+}
+
+export function IncidentJsonLd({
+  title,
+  description,
+  dateOccurred,
+  url,
+  severity,
+  provider,
+}: {
+  title: string;
+  description: string;
+  dateOccurred?: string;
+  url: string;
+  severity: string;
+  provider: string;
+}) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description,
+    url,
+    datePublished: dateOccurred ?? new Date().toISOString(),
+    publisher: {
+      "@type": "Organization",
+      name: APP_NAME,
+      url: APP_URL,
+    },
+    keywords: ["AI", "incident", severity, provider, "accountability"],
+    inLanguage: ["en", "tr"],
+  };
+  return (
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
+  );
+}

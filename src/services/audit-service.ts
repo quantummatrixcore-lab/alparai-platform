@@ -2,6 +2,7 @@ import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sha256 } from "@/lib/utils";
 import { headers } from "next/headers";
+import { logger } from "@/lib/utils/logger";
 
 export interface AuditLogEntry {
   actorId: string | null;
@@ -29,6 +30,10 @@ export async function logAuditEvent(entry: AuditLogEntry): Promise<void> {
       ip_hash: ipHash,
     } as never);
   } catch (error) {
-    console.error("Failed to write audit log", error);
+    logger.error(
+      "Failed to write audit log",
+      { action: entry.action },
+      error instanceof Error ? error : undefined
+    );
   }
 }
