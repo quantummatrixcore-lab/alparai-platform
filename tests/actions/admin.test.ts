@@ -1,6 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import "../helpers/setup";
-import { createMockSupabaseClient, createTestModerator } from "../helpers/supabase-mock";
+import {
+  createMockSupabaseClient,
+  createTestModerator,
+  createTestAdmin,
+} from "../helpers/supabase-mock";
 
 vi.hoisted(() => {
   vi.doMock("@/lib/supabase/admin", () => ({
@@ -18,14 +22,16 @@ import { moderateIncident, reviewTakedown, setUserRole } from "@/actions/admin";
 
 let mockAdminClient: ReturnType<typeof createMockSupabaseClient>;
 let mockModerator: ReturnType<typeof createTestModerator>;
+let mockAdmin: ReturnType<typeof createTestAdmin>;
 
 beforeEach(() => {
   vi.clearAllMocks();
   mockAdminClient = createMockSupabaseClient();
   mockModerator = createTestModerator();
+  mockAdmin = createTestAdmin();
   vi.mocked(createAdminClient).mockReturnValue(mockAdminClient as never);
   vi.mocked(requireModerator).mockResolvedValue(mockModerator as never);
-  vi.mocked(requireAdmin).mockResolvedValue(mockModerator as never);
+  vi.mocked(requireAdmin).mockResolvedValue(mockAdmin as never);
 });
 
 describe("moderateIncident", () => {
@@ -49,15 +55,11 @@ describe("moderateIncident", () => {
           eq: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
-      upsert: vi
-        .fn()
-        .mockReturnValue({
-          select: vi
-            .fn()
-            .mockReturnValue({
-              single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
-            }),
+      upsert: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
         }),
+      }),
     } as ReturnType<typeof mockAdminClient.from>);
   });
 
@@ -120,15 +122,11 @@ describe("reviewTakedown", () => {
           eq: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
-      upsert: vi
-        .fn()
-        .mockReturnValue({
-          select: vi
-            .fn()
-            .mockReturnValue({
-              single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
-            }),
+      upsert: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
         }),
+      }),
     } as ReturnType<typeof mockAdminClient.from>);
   });
 
@@ -154,33 +152,43 @@ describe("setUserRole", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(requireModerator).mockResolvedValue(mockModerator);
+    vi.mocked(requireAdmin).mockResolvedValue(mockAdmin as never);
 
     const mockUpdateEq = vi.fn().mockResolvedValue({ data: null, error: null });
-    mockAdminClient.from.mockReturnValue({
-      update: vi.fn().mockReturnValue({ eq: mockUpdateEq }),
+    const mockUpdate = vi.fn().mockReturnValue({ eq: mockUpdateEq });
+
+    const mockBeforeMaybeSingle = vi.fn().mockResolvedValue({
+      data: { id: "user-1", role: "user", email: "user-1@test.com" },
+      error: null,
+    });
+    const mockBeforeEq = vi.fn().mockReturnValue({
+      maybeSingle: mockBeforeMaybeSingle,
+      single: mockBeforeMaybeSingle,
+    });
+    const mockBeforeSelect = vi.fn().mockReturnValue({
+      eq: mockBeforeEq,
+      maybeSingle: mockBeforeMaybeSingle,
+      single: mockBeforeMaybeSingle,
+    });
+
+    const mockInsert = vi.fn().mockReturnValue({
       select: vi.fn().mockReturnValue({
         single: vi.fn().mockResolvedValue({ data: null, error: null }),
       }),
-      insert: vi.fn().mockReturnValue({
-        select: vi.fn().mockReturnValue({
-          single: vi.fn().mockResolvedValue({ data: null, error: null }),
-        }),
-      }),
-      delete: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          eq: vi.fn().mockResolvedValue({ data: null, error: null }),
-        }),
-      }),
-      upsert: vi
-        .fn()
-        .mockReturnValue({
-          select: vi
-            .fn()
-            .mockReturnValue({
-              single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
-            }),
-        }),
-    } as ReturnType<typeof mockAdminClient.from>);
+    });
+
+    mockAdminClient.from.mockImplementation((table: string) => {
+      if (table === "users") {
+        return {
+          update: mockUpdate,
+          select: mockBeforeSelect,
+        } as ReturnType<typeof mockAdminClient.from>;
+      }
+      if (table === "audit_log") {
+        return { insert: mockInsert } as ReturnType<typeof mockAdminClient.from>;
+      }
+      return mockAdminClient.from.mockReturnValue({}) as never;
+    });
   });
 
   it("sets user role successfully", async () => {
