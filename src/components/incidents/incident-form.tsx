@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ProviderCombobox, type ComboboxOption } from "@/components/ui/provider-combobox";
+import { ModelAutocomplete, type ModelOption } from "@/components/ui/model-autocomplete";
 import { EvidenceUploader, SubmitButton } from "./evidence-uploader";
 import { PIIBanner } from "./pii-banner";
 import { Shield, CheckCircle2 } from "lucide-react";
@@ -32,13 +34,13 @@ export function IncidentForm({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedProvider, setSelectedProvider] = useState("");
+  const [customProviderName, setCustomProviderName] = useState("");
+  const [selectedModel, setSelectedModel] = useState("");
   const [consents, setConsents] = useState({
     truth: false,
-    anonymous: false,
     age: false,
     terms: false,
   });
-  const allConsents = consents.truth && consents.anonymous && consents.age && consents.terms;
 
   useEffect(() => {
     if (state.ok) {
@@ -87,13 +89,36 @@ export function IncidentForm({
     { value: "critical", label: t("severity_critical") },
   ];
 
-  const providerOptions = providers.map((p) => ({ value: p.id, label: p.name }));
-  const modelOptions = models
-    .filter((m) => m.provider_id === selectedProvider)
-    .map((m) => ({ value: m.id, label: `${m.name} (${m.version})` }));
+  const providerOptions: ComboboxOption[] = providers.map((p) => ({
+    value: p.id,
+    label: p.name,
+    hint: p.is_verified ? "✓" : undefined,
+  }));
+
+  const modelOptions: ModelOption[] = models
+    .filter((m) => m.provider_id === selectedProvider && !selectedProvider.startsWith("custom:"))
+    .map((m) => ({
+      value: m.id,
+      label: m.version ? `${m.name} (${m.version})` : m.name,
+      hint: m.released_at ? new Date(m.released_at).getFullYear().toString() : undefined,
+    }));
+
+  const handleProviderChange = (value: string, customName?: string) => {
+    setSelectedProvider(value);
+    setSelectedModel("");
+    if (customName) setCustomProviderName(customName);
+    else setCustomProviderName("");
+  };
+
+  const handleModelChange = (value: string, _isCustom: boolean) => {
+    setSelectedModel(value);
+  };
+
+  const allConsents = consents.truth && consents.age && consents.terms;
+  const canSubmit = allConsents && selectedProvider && title.trim() && description.trim();
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} className="space-y-5">
       {state.formError && (
         <div
           className="border-danger-500/30 bg-danger-500/5 text-danger-400 rounded-md border p-3 text-sm"
@@ -126,51 +151,65 @@ export function IncidentForm({
         error={state.fieldErrors?.description?.[0]}
       />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Select
-          name="provider_id"
-          label={tCommon("provider") ?? "AI Provider"}
-          required
-          placeholder="Select provider"
-          value={selectedProvider}
-          onChange={(e) => setSelectedProvider(e.target.value)}
-          options={providerOptions}
-          error={state.fieldErrors?.provider_id?.[0]}
+      <div className="border-border-subtle bg-bg-secondary/30 space-y-4 rounded-md border p-4">
+        <h3 className="text-fg-primary flex items-center gap-2 text-sm font-semibold">
+          <Shield className="text-brand-400 h-4 w-4" />
+          {t("incident_classification")}
+        </h3>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <ProviderCombobox
+            name="provider_id"
+            label={tCommon("provider") ?? "AI Provider"}
+            required
+            value={selectedProvider}
+            onChange={handleProviderChange}
+            options={providerOptions}
+            placeholder={t("select_provider")}
+            error={state.fieldErrors?.provider_id?.[0]}
+          />
+          <ModelAutocomplete
+            name="model_id"
+            label={tCommon("model") ?? "Model"}
+            required
+            value={selectedModel}
+            onChange={handleModelChange}
+            options={modelOptions}
+            placeholder={t("select_model")}
+            error={state.fieldErrors?.model_id?.[0]}
+            disabled={!selectedProvider}
+          />
+        </div>
+        <input type="hidden" name="provider_custom" value={customProviderName} />
+        <input
+          type="hidden"
+          name="model_custom"
+          value={selectedModel.startsWith("custom:") ? selectedModel.slice(7) : ""}
         />
-        <Select
-          name="model_id"
-          label={tCommon("model") ?? "Model"}
-          required
-          placeholder="Select model"
-          options={modelOptions}
-          error={state.fieldErrors?.model_id?.[0]}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Select
-          name="category"
-          label={t("category")}
-          required
-          placeholder="—"
-          options={categoryOptions}
-          error={state.fieldErrors?.category?.[0]}
-        />
-        <Select
-          name="severity"
-          label={t("severity")}
-          required
-          options={severityOptions}
-          defaultValue="medium"
-          error={state.fieldErrors?.severity?.[0]}
-        />
-        <Input
-          name="incident_date"
-          type="datetime-local"
-          label={t("incident_date")}
-          required
-          error={state.fieldErrors?.incident_date?.[0]}
-        />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <Select
+            name="category"
+            label={t("category")}
+            required
+            placeholder="—"
+            options={categoryOptions}
+            error={state.fieldErrors?.category?.[0]}
+          />
+          <Select
+            name="severity"
+            label={t("severity")}
+            required
+            options={severityOptions}
+            defaultValue="medium"
+            error={state.fieldErrors?.severity?.[0]}
+          />
+          <Input
+            name="incident_date"
+            type="datetime-local"
+            label={t("incident_date")}
+            required
+            error={state.fieldErrors?.incident_date?.[0]}
+          />
+        </div>
       </div>
 
       <div>
@@ -178,16 +217,15 @@ export function IncidentForm({
         <EvidenceUploader name="evidence" />
       </div>
 
-      <Checkbox
-        name="is_anonymous"
-        label={t("anonymous")}
-        description={t("anonymous_hint")}
-        defaultChecked={false}
-      />
+      <div>
+        <label className="text-fg-primary mb-2 block text-sm font-medium">
+          {t("evidence_hint") ?? ""}
+        </label>
+      </div>
 
       {piiDetected && <PIIBanner />}
 
-      <fieldset className="border-border-subtle bg-bg-secondary/50 space-y-3 rounded-md border p-4">
+      <fieldset className="border-border-subtle bg-bg-secondary/40 space-y-3 rounded-md border p-4">
         <legend className="text-fg-primary inline-flex items-center gap-1.5 px-2 text-sm font-semibold">
           <Shield className="text-brand-400 h-4 w-4" />
           {t("consent_required", { defaultValue: "Required consents" })}
@@ -198,13 +236,6 @@ export function IncidentForm({
           required
           checked={consents.truth}
           onChange={(e) => setConsents((c) => ({ ...c, truth: e.target.checked }))}
-        />
-        <Checkbox
-          name="consent_anonymous"
-          label={t("consent_anonymous")}
-          required
-          checked={consents.anonymous}
-          onChange={(e) => setConsents((c) => ({ ...c, anonymous: e.target.checked }))}
         />
         <Checkbox
           name="consent_age"
@@ -220,9 +251,13 @@ export function IncidentForm({
           checked={consents.terms}
           onChange={(e) => setConsents((c) => ({ ...c, terms: e.target.checked }))}
         />
+        <Checkbox
+          name="is_anonymous"
+          label={t("anonymous")}
+          description={t("anonymous_hint")}
+          checked={false}
+        />
       </fieldset>
-
-      <SubmitButton className="w-full">{t("submit")}</SubmitButton>
 
       {allConsents && (
         <p className="text-success-500 inline-flex items-center gap-1.5 text-xs">
@@ -230,6 +265,10 @@ export function IncidentForm({
           {tCommon("allSet", { defaultValue: "All consents accepted" })}
         </p>
       )}
+
+      <SubmitButton className="w-full" disabled={!canSubmit}>
+        {t("submit")}
+      </SubmitButton>
     </form>
   );
 }

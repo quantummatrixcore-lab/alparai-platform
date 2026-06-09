@@ -35,7 +35,6 @@ export interface SubmitIncidentState {
 
 const CONSENT_LABELS: Record<string, string> = {
   consent_truth: "submission_truthfulness",
-  consent_anonymous: "anonymous_publication",
   consent_age: "age_18_plus",
   consent_terms: "terms_of_service",
 };
@@ -58,12 +57,31 @@ interface SubmitWorkInput {
     category: string;
     severity: string;
     provider_id: string;
+    provider_custom: string;
     model_id: string;
+    model_custom: string;
     incident_date: string;
     is_anonymous: boolean;
-    consents: { truth: boolean; anonymous: boolean; age: boolean; terms: boolean };
+    consents: { truth: boolean; age: boolean; terms: boolean };
   };
 }
+
+const isCustomValue = (v: string) => v.startsWith("custom:");
+
+const extractCustomName = (v: string) => {
+  if (!isCustomValue(v)) return null;
+  const raw = v.slice(7);
+  return raw.replace(/-/g, " ");
+};
+
+const slugify = (s: string) =>
+  s
+    .toLowerCase()
+    .trim()
+    .replace(/[^\p{L}\p{N}\s-]/gu, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
 
 const runSubmitWork = async (
   ctx: AttemptContext,
@@ -80,46 +98,35 @@ const runSubmitWork = async (
     ? new Date(raw.incident_date).toISOString()
     : new Date().toISOString();
 
-  const locale = await resolveLocale();
-  const input: IncidentSubmissionInput = {
-    title: raw.title,
-    description: raw.description,
-    category: raw.category as IncidentSubmissionInput["category"],
-    severity: raw.severity as IncidentSubmissionInput["severity"],
-    aiProviderId: raw.provider_id || null,
-    aiModelId: raw.model_id || null,
-    incidentDate: incidentDateISO.slice(0, 10),
-    language: locale,
-    isAnonymous: raw.is_anonymous,
-    sourceUrl: null,
-    consent: {
-      truthfulness: true,
-      anonymousPublication: true,
-      age18Plus: true,
-      termsOfService: true,
-    },
-  };
+  const providerIsCustom = isCustomValue(raw.provider_id);
+  const providerCustom = providerIsCustom
+    ? (raw.provider_custom || extractCustomName(raw.provider_id) || "").trim()
+    : "";
+  const providerCustomSlug = providerCustom ? slugify(providerCustom) : "";
 
-  const parsed = incidentSubmissionSchema.safeParse(input);
-  if (!parsed.success) {
-    return { kind: "fatal", error: "validation_failed" };
-  }
+  const modelIsCustom = isCustomValue(raw.model_id);
+  const modelCustom = modelIsCustom ? (raw.model_custom || raw.model_id.slice(7) || "").trim() : "";
+
+  const locale = await resolveLocale();
 
   const supabase = await createServerClient();
   const hdrs = await headers();
   const userAgent = hdrs.get("user-agent") ?? null;
-  const incidentInsert: Database["public"]["Tables"]["incidents"]["Insert"] = {
+
+  const incidentInsert: Record<string, unknown> = {
     user_id: user?.id ?? null,
     title: raw.title,
     title_masked: maskedTitle.masked,
     description: raw.description,
     description_masked: maskedDescription.masked,
-    category: parsed.data.category,
-    severity: parsed.data.severity,
-    ai_provider_id: parsed.data.aiProviderId ?? null,
-    ai_model_id: parsed.data.aiModelId ?? null,
+    category: raw.category as IncidentSubmissionInput["category"],
+    severity: raw.severity as IncidentSubmissionInput["severity"],
+    ai_provider_id: providerIsCustom ? null : raw.provider_id || null,
+    ai_model_id: modelIsCustom ? null : raw.model_id || null,
+    provider_custom_name: providerIsCustom ? providerCustom || null : null,
+    model_custom_name: modelIsCustom ? modelCustom || null : null,
     incident_date: incidentDateISO,
-    language: await resolveLocale(),
+    language: locale,
     is_anonymous: raw.is_anonymous,
     location_country: null,
     source_url: null,
@@ -130,10 +137,11 @@ const runSubmitWork = async (
       ...maskedTitle.detections.map((d) => d.type),
       ...maskedDescription.detections.map((d) => d.type),
     ].filter((v, i, a) => a.indexOf(v) === i),
+    status: "pending_review",
   };
   const { data: incident, error } = await supabase
     .from("incidents")
-    .insert(incidentInsert as never)
+    .insert(incidentInsert as unknown as never)
     .select("id")
     .single();
 
@@ -142,6 +150,53 @@ const runSubmitWork = async (
   }
 
   const incidentId = (incident as { id: string }).id;
+
+  if (providerIsCustom && providerCustom) {
+    const admin = createAdminClient();
+    const slug = providerCustomSlug || slugify(providerCustom);
+    const { data: existing } = await admin
+      .from("ai_providers" as never)
+      .select("id")
+      .eq("slug", slug)
+      .maybeSingle();
+    if (!existing) {
+      const { data: newProvider } = await admin
+        .from("ai_providers" as never)
+        .insert({
+          slug,
+          name: providerCustom,
+          description: "User-submitted provider, pending verification",
+          website_url: null,
+          is_verified: false,
+        } as never)
+        .select("id")
+        .single();
+      if (newProvider) {
+        await admin
+          .from("incidents" as never)
+          .update({ ai_provider_id: (newProvider as { id: string }).id } as never)
+          .eq("id", incidentId);
+        if (modelCustom) {
+          const { data: newModel } = await admin
+            .from("ai_models" as never)
+            .insert({
+              provider_id: (newProvider as { id: string }).id,
+              name: modelCustom,
+              version: null,
+              status: "active",
+            } as never)
+            .select("id")
+            .single();
+          if (newModel) {
+            await admin
+              .from("incidents" as never)
+              .update({ ai_model_id: (newModel as { id: string }).id } as never)
+              .eq("id", incidentId);
+          }
+        }
+      }
+    }
+  }
 
   const consentLogEntries: Database["public"]["Tables"]["consent_log"]["Insert"][] = Object.entries(
     CONSENT_LABELS
@@ -184,7 +239,9 @@ export async function submitIncident(
     category: String(formData.get("category") ?? ""),
     severity: String(formData.get("severity") ?? ""),
     provider_id: String(formData.get("provider_id") ?? ""),
+    provider_custom: String(formData.get("provider_custom") ?? ""),
     model_id: String(formData.get("model_id") ?? ""),
+    model_custom: String(formData.get("model_custom") ?? ""),
     incident_date: String(formData.get("incident_date") ?? ""),
     is_anonymous: formData.get("is_anonymous") === "on",
     consents: {
@@ -195,8 +252,7 @@ export async function submitIncident(
     },
   };
 
-  const requiredConsents =
-    raw.consents.truth && raw.consents.anonymous && raw.consents.age && raw.consents.terms;
+  const requiredConsents = raw.consents.truth && raw.consents.age && raw.consents.terms;
   if (!requiredConsents) {
     return { ok: false, formError: "You must accept all required consents." };
   }
