@@ -142,14 +142,16 @@ export function EvidenceUploader({
 export function SubmitButton({
   children,
   className,
+  disabled,
 }: {
   children: React.ReactNode;
   className?: string;
+  disabled?: boolean;
 }) {
   const { pending } = useFormStatus();
   const t = useTranslations("incident");
   return (
-    <Button type="submit" isLoading={pending} size="lg" className={className}>
+    <Button type="submit" isLoading={pending} size="lg" className={className} disabled={disabled}>
       {pending ? t("submitting") : children}
     </Button>
   );
