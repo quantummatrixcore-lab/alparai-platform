@@ -19,7 +19,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Skip Next.js internals, static files, API routes (handled separately)
-    "/((?!api|_next|_vercel|.*\\..*).*)",
+    // Skip Next.js internals, static files, API routes, and auth callback (Supabase OAuth needs raw query params)
+    "/((?!api|_next|_vercel|auth/callback|.*\\..*).*)",
   ],
 };
