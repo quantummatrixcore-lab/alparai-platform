@@ -36,6 +36,8 @@ export function IncidentForm({
   const [selectedProvider, setSelectedProvider] = useState("");
   const [customProviderName, setCustomProviderName] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
+  const [customModelName, setCustomModelName] = useState("");
+  const [isAnonymous, setIsAnonymous] = useState(false);
   const [consents, setConsents] = useState({
     truth: false,
     age: false,
@@ -89,29 +91,43 @@ export function IncidentForm({
     { value: "critical", label: t("severity_critical") },
   ];
 
-  const providerOptions: ComboboxOption[] = providers.map((p) => ({
-    value: p.id,
-    label: p.name,
-    hint: p.is_verified ? "✓" : undefined,
-  }));
+  const providerOptions: ComboboxOption[] = [
+    ...providers.map((p) => ({
+      value: p.id,
+      label: p.name,
+      hint: p.is_verified ? "✓" : undefined,
+    })),
+    {
+      value: "custom:other",
+      label: t("other_provider", { defaultValue: "Diğer (Kendi yazmak istiyorum)" }),
+    },
+  ];
 
-  const modelOptions: ModelOption[] = models
-    .filter((m) => m.provider_id === selectedProvider && !selectedProvider.startsWith("custom:"))
-    .map((m) => ({
-      value: m.id,
-      label: m.version ? `${m.name} (${m.version})` : m.name,
-      hint: m.released_at ? new Date(m.released_at).getFullYear().toString() : undefined,
-    }));
+  const modelOptions: ModelOption[] = [
+    ...models
+      .filter((m) => m.provider_id === selectedProvider && !selectedProvider.startsWith("custom:"))
+      .map((m) => ({
+        value: m.id,
+        label: m.version ? `${m.name} (${m.version})` : m.name,
+        hint: m.released_at ? new Date(m.released_at).getFullYear().toString() : undefined,
+      })),
+    {
+      value: "custom:other",
+      label: t("other_model", { defaultValue: "Diğer (Kendi yazmak istiyorum)" }),
+    },
+  ];
 
   const handleProviderChange = (value: string, customName?: string) => {
     setSelectedProvider(value);
     setSelectedModel("");
-    if (customName) setCustomProviderName(customName);
-    else setCustomProviderName("");
+    if (customName && value !== "custom:other") setCustomProviderName(customName);
+    else if (value !== "custom:other") setCustomProviderName("");
   };
 
-  const handleModelChange = (value: string, _isCustom: boolean) => {
+  const handleModelChange = (value: string, isCustom: boolean) => {
     setSelectedModel(value);
+    if (isCustom && value !== "custom:other") setCustomModelName(value);
+    else if (value !== "custom:other") setCustomModelName("");
   };
 
   const allConsents = consents.truth && consents.age && consents.terms;
@@ -156,36 +172,67 @@ export function IncidentForm({
           <Shield className="text-brand-400 h-4 w-4" />
           {t("incident_classification")}
         </h3>
+
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <ProviderCombobox
-            name="provider_id"
-            label={tCommon("provider") ?? "AI Provider"}
-            required
-            value={selectedProvider}
-            onChange={handleProviderChange}
-            options={providerOptions}
-            placeholder={t("select_provider")}
-            error={state.fieldErrors?.provider_id?.[0]}
-          />
-          <ModelAutocomplete
-            name="model_id"
-            label={tCommon("model") ?? "Model"}
-            required
-            value={selectedModel}
-            onChange={handleModelChange}
-            options={modelOptions}
-            placeholder={t("select_model")}
-            error={state.fieldErrors?.model_id?.[0]}
-            disabled={!selectedProvider}
-          />
+          <div className="space-y-3">
+            <ProviderCombobox
+              name="provider_id"
+              label={tCommon("provider") ?? "AI Provider"}
+              required
+              value={selectedProvider}
+              onChange={handleProviderChange}
+              options={providerOptions}
+              placeholder={t("select_provider")}
+              error={state.fieldErrors?.provider_id?.[0]}
+            />
+            {selectedProvider === "custom:other" && (
+              <Input
+                name="provider_custom"
+                placeholder={t("custom_provider_name", {
+                  defaultValue: "Şirket/Sağlayıcı Adını Yazın",
+                })}
+                value={customProviderName}
+                onChange={(e) => setCustomProviderName(e.target.value)}
+                required
+              />
+            )}
+            {selectedProvider !== "custom:other" && (
+              <input type="hidden" name="provider_custom" value={customProviderName} />
+            )}
+          </div>
+
+          <div className="space-y-3">
+            <ModelAutocomplete
+              name="model_id"
+              label={tCommon("model") ?? "Model"}
+              required
+              value={selectedModel}
+              onChange={handleModelChange}
+              options={modelOptions}
+              placeholder={t("select_model")}
+              error={state.fieldErrors?.model_id?.[0]}
+              disabled={!selectedProvider}
+            />
+            {selectedModel === "custom:other" && (
+              <Input
+                name="model_custom"
+                placeholder={t("custom_model_name", { defaultValue: "Model Adını Yazın" })}
+                value={customModelName}
+                onChange={(e) => setCustomModelName(e.target.value)}
+                required
+              />
+            )}
+            {selectedModel !== "custom:other" && (
+              <input
+                type="hidden"
+                name="model_custom"
+                value={selectedModel.startsWith("custom:") ? selectedModel.slice(7) : ""}
+              />
+            )}
+          </div>
         </div>
-        <input type="hidden" name="provider_custom" value={customProviderName} />
-        <input
-          type="hidden"
-          name="model_custom"
-          value={selectedModel.startsWith("custom:") ? selectedModel.slice(7) : ""}
-        />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+
+        <div className="border-border-subtle/50 grid grid-cols-1 gap-4 border-t pt-2 sm:grid-cols-3">
           <Select
             name="category"
             label={t("category")}
@@ -251,12 +298,15 @@ export function IncidentForm({
           checked={consents.terms}
           onChange={(e) => setConsents((c) => ({ ...c, terms: e.target.checked }))}
         />
-        <Checkbox
-          name="is_anonymous"
-          label={t("anonymous")}
-          description={t("anonymous_hint")}
-          checked={false}
-        />
+        <div className="pt-2">
+          <Checkbox
+            name="is_anonymous"
+            label={t("anonymous")}
+            description={t("anonymous_hint")}
+            checked={isAnonymous}
+            onChange={(e) => setIsAnonymous(e.target.checked)}
+          />
+        </div>
       </fieldset>
 
       {allConsents && (
