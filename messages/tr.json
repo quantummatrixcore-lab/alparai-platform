@@ -347,7 +347,15 @@
     "optional": "İsteğe bağlı",
     "required": "Zorunlu",
     "provider": "AI Sağlayıcı",
-    "model": "Model"
+    "model": "Model",
+    "viewCount": "görüntülenme",
+    "details": "Detaylar",
+    "aiResponseDesc": "AI sağlayıcısının bu olaya verdiği resmi yanıt.",
+    "allSet": "Tüm onaylar kabul edildi",
+    "tr": "Türkçe",
+    "en": "İngilizce",
+    "switchToEnglish": "EN",
+    "switchToTurkish": "TR"
   },
   "autopilot": {
     "title": "Kendini iyileştiren gönderim",

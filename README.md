@@ -4,6 +4,11 @@
 
 🌐 **[alparai.com](https://alparai.com)** · 📧 [hello@alparai.com](mailto:hello@alparai.com) · 📜 [AGPL-3.0](./LICENSE)
 
+[![CI](https://github.com/quantummatrixcore-lab/Alparai.com/actions/workflows/ci.yml/badge.svg)](https://github.com/quantummatrixcore-lab/Alparai.com/actions/workflows/ci.yml)
+[![Security](https://github.com/quantummatrixcore-lab/Alparai.com/actions/workflows/security.yml/badge.svg)](https://github.com/quantummatrixcore-lab/Alparai.com/actions/workflows/security.yml)
+[![Deploy](https://github.com/quantummatrixcore-lab/Alparai.com/actions/workflows/deploy.yml/badge.svg)](https://github.com/quantummatrixcore-lab/Alparai.com/actions/workflows/deploy.yml)
+[![AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](./LICENSE)
+
 ---
 
 ## Why

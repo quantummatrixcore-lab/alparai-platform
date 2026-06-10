@@ -347,7 +347,15 @@
     "optional": "Optional",
     "required": "Required",
     "provider": "AI Provider",
-    "model": "Model"
+    "model": "Model",
+    "viewCount": "views",
+    "details": "Details",
+    "aiResponseDesc": "The official response from the AI provider for this incident.",
+    "allSet": "All consents accepted",
+    "tr": "Turkish",
+    "en": "English",
+    "switchToEnglish": "EN",
+    "switchToTurkish": "TR"
   },
   "autopilot": {
     "title": "Self-healing submission",
