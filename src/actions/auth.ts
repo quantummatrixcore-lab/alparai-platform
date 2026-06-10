@@ -6,13 +6,20 @@ import { headers } from "next/headers";
 import { createServerClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
-import { APP_URL } from "@/lib/constants";
 import { logger } from "@/lib/utils/logger";
 
 export interface AuthResult {
   ok: boolean;
   error?: string;
   url?: string;
+}
+
+function getOrigin(hdrs: Headers) {
+  const origin = hdrs.get("origin");
+  if (origin) return origin;
+  const host = hdrs.get("x-forwarded-host") ?? hdrs.get("host") ?? "alparai.com";
+  const protocol = hdrs.get("x-forwarded-proto") ?? (host.includes("localhost") ? "http" : "https");
+  return `${protocol}://${host}`;
 }
 
 export async function signInWithGoogle(next = "/profile"): Promise<AuthResult> {
@@ -23,10 +30,11 @@ export async function signInWithGoogle(next = "/profile"): Promise<AuthResult> {
     return { ok: false, error: `Too many attempts. Try again in ${rl.retryAfter}s.` };
   }
   const supabase = await createServerClient();
+  const originUrl = getOrigin(hdrs);
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${APP_URL}/auth/callback?next=${encodeURIComponent(next)}`,
+      redirectTo: `${originUrl}/auth/callback?next=${encodeURIComponent(next)}`,
       queryParams: {
         access_type: "offline",
         prompt: "consent",
@@ -48,9 +56,10 @@ export async function signInWithMagicLink(email: string): Promise<AuthResult> {
     return { ok: false, error: `Too many attempts. Try again in ${rl.retryAfter}s.` };
   }
   const supabase = await createServerClient();
+  const originUrl = getOrigin(hdrs);
   const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: { emailRedirectTo: `${APP_URL}/auth/callback` },
+    options: { emailRedirectTo: `${originUrl}/auth/callback` },
   });
   if (error) return { ok: false, error: error.message };
   return { ok: true };
