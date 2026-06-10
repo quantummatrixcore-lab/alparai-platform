@@ -1,0 +1,58 @@
+name: Security Audit
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+  schedule:
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  pnpm-audit:
+    name: Dependency Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Check for high severity vulnerabilities
+        run: pnpm audit --audit-level=high
+        continue-on-error: true
+
+  secrets-scan:
+    name: Secrets Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Scan for secrets in history
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+        continue-on-error: true
+
+  lint-secret-detection:
+    name: No env files in commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify .env files are not tracked
+        run: |
+          if git ls-files | grep -E "^\.env(\.|$)" | grep -v "^\.env\.example$" | grep -v "^\.env\.backup$"; then
+            echo "::error::Found tracked .env files!"
+            git ls-files | grep -E "^\.env(\.|$)" | grep -v "^\.env\.example$" | grep -v "^\.env\.backup$"
+            exit 1
+          else
+            echo "✅ No .env files tracked in git."
+          fi
