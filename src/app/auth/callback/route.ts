@@ -1,0 +1,76 @@
+import { NextResponse, type NextRequest } from "next/server";
+import { createServerClient } from "@/lib/supabase/server";
+import { logger } from "@/lib/utils/logger";
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "@/lib/constants";
+
+function safeNextPath(raw: string | null): string {
+  if (!raw) return "/profile";
+  try {
+    const decoded = decodeURIComponent(raw);
+    const url = new URL(decoded, "http://localhost");
+    if (url.pathname === "/" || url.pathname === "") return "/profile";
+    return url.pathname;
+  } catch {
+    return "/profile";
+  }
+}
+
+function detectLocale(request: NextRequest): string {
+  const acceptLanguage = request.headers.get("accept-language") ?? "";
+  const preferred = acceptLanguage.split(",")[0]?.split("-")[0]?.toLowerCase();
+  if (preferred && (SUPPORTED_LOCALES as readonly string[]).includes(preferred)) {
+    return preferred;
+  }
+  return DEFAULT_LOCALE;
+}
+
+export async function GET(request: NextRequest) {
+  const { searchParams, origin } = new URL(request.url);
+  const code = searchParams.get("code");
+  const tokenHash = searchParams.get("token_hash");
+  const type = searchParams.get("type");
+  const next = safeNextPath(searchParams.get("next"));
+  const locale = detectLocale(request);
+  const redirectTo = `${origin}/${locale}${next}`;
+
+  try {
+    const supabase = await createServerClient();
+
+    if (code) {
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      if (!error) {
+        return NextResponse.redirect(redirectTo);
+      }
+      logger.warn("OAuth code exchange failed", {
+        code: error.code,
+        message: error.message,
+      });
+      return NextResponse.redirect(
+        `${origin}/${locale}/auth/signin?error=oauth&reason=${encodeURIComponent(error.code ?? "exchange_failed")}`
+      );
+    }
+
+    if (tokenHash && type) {
+      const { error } = await supabase.auth.verifyOtp({
+        token_hash: tokenHash,
+        type: type as never,
+      });
+      if (!error) {
+        return NextResponse.redirect(redirectTo);
+      }
+      logger.warn("OTP verification failed", {
+        type,
+        code: error.code,
+        message: error.message,
+      });
+      return NextResponse.redirect(
+        `${origin}/${locale}/auth/signin?error=otp&reason=${encodeURIComponent(error.code ?? "verify_failed")}`
+      );
+    }
+
+    return NextResponse.redirect(`${origin}/${locale}/auth/signin?error=missing_params`);
+  } catch (err) {
+    logger.error("Callback handler exception", undefined, err instanceof Error ? err : undefined);
+    return NextResponse.redirect(`${origin}/${locale}/auth/signin?error=server_error`);
+  }
+}
