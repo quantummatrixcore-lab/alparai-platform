@@ -25,13 +25,16 @@ export async function GET(): Promise<NextResponse<HealthCheck>> {
   if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     const start = performance.now();
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/`, {
-        headers: {
-          apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
-        },
-        signal: AbortSignal.timeout(3000),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/ai_providers?select=id&limit=1`,
+        {
+          headers: {
+            apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+          },
+          signal: AbortSignal.timeout(3000),
+        }
+      );
       dbLatency = Math.round(performance.now() - start);
       dbStatus = res.ok ? "up" : "down";
     } catch {
@@ -66,7 +69,10 @@ export async function GET(): Promise<NextResponse<HealthCheck>> {
     checks: {
       app: { status: "up" },
       database: { status: dbStatus, ...(dbLatency !== undefined && { latencyMs: dbLatency }) },
-      redis: { status: redisStatus, ...(redisLatency !== undefined && { latencyMs: redisLatency }) },
+      redis: {
+        status: redisStatus,
+        ...(redisLatency !== undefined && { latencyMs: redisLatency }),
+      },
     },
   };
 
