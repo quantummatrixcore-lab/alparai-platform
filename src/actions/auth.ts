@@ -15,9 +15,12 @@ export interface AuthResult {
 }
 
 function getOrigin(hdrs: Headers) {
+  if (process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production") {
+    return "https://alparai.com";
+  }
   const origin = hdrs.get("origin");
   if (origin) return origin;
-  const host = hdrs.get("x-forwarded-host") ?? hdrs.get("host") ?? "alparai.com";
+  const host = hdrs.get("x-forwarded-host") ?? hdrs.get("host") ?? "localhost:3000";
   const protocol = hdrs.get("x-forwarded-proto") ?? (host.includes("localhost") ? "http" : "https");
   return `${protocol}://${host}`;
 }
