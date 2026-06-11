@@ -30,11 +30,23 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get("code");
   const tokenHash = searchParams.get("token_hash");
   const type = searchParams.get("type");
+  const errorParam = searchParams.get("error");
+  const errorDescription = searchParams.get("error_description");
   const next = safeNextPath(searchParams.get("next"));
   const locale = detectLocale(request);
   const redirectTo = `${origin}/${locale}${next}`;
 
   const response = NextResponse.redirect(redirectTo);
+
+  if (errorParam) {
+    logger.warn("OAuth provider returned an error", {
+      error: errorParam,
+      description: errorDescription,
+    });
+    return NextResponse.redirect(
+      `${origin}/${locale}/auth/signin?error=oauth&reason=${encodeURIComponent(errorDescription || errorParam)}`
+    );
+  }
 
   const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
