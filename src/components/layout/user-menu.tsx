@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { User as UserIcon, LogOut, Settings, ShieldCheck, BarChart3 } from "lucide-react";
 import { getInitials } from "@/lib/utils";
 import { getMe } from "@/actions/auth";
+import Image from "next/image";
 
 interface SessionUserShape {
   id: string;
@@ -61,7 +62,13 @@ export function UserMenu({ initialUser }: { initialUser: SessionUserShape | null
         aria-haspopup="menu"
       >
         {user.avatarUrl ? (
-          <img src={user.avatarUrl} alt="" className="h-full w-full object-cover" />
+          <Image
+            src={user.avatarUrl}
+            alt=""
+            width={40}
+            height={40}
+            className="h-full w-full object-cover"
+          />
         ) : (
           <span className="text-sm font-semibold">{getInitials(user.fullName ?? user.email)}</span>
         )}

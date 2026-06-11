@@ -5,10 +5,10 @@
   "description": "ALPAR AI — Trust infrastructure for AI accountability. Community-driven incident reporting platform.",
   "license": "AGPL-3.0",
   "author": "ALPAR AI Team",
-  "homepage": "https://alparai.online",
+  "homepage": "https://alparai.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/quantummatrixcore-lab/sikayetvar.git"
+    "url": "https://github.com/quantummatrixcore-lab/Alparai.com.git"
   },
   "keywords": [
     "ai",

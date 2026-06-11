@@ -23,6 +23,7 @@
   "hero": {
     "eyebrow": "The world's first community-governed AI accountability platform",
     "title_primary": "Let's set AI ethics together. Let's grow AI under human control.",
+    "bug_bounty_badge": "AI Bug Bounty",
     "title_accent": "Hack AI. Win the bounty.",
     "title_accent_desc": "Found a real AI failure? Document it. Get verified. Earn the Ethics Advocate badge — and reward credits from the providers you reported.",
     "subtitle": "Join thousands building the permanent public record of AI behavior. Evidence, not opinions. Verified, not silenced.",

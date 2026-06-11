@@ -7,6 +7,7 @@ import { Trophy, MessageSquare, TrendingUp, TrendingDown } from "lucide-react";
 import { cn, formatNumber } from "@/lib/utils";
 import { Link } from "@/i18n/routing";
 import { ProviderLogo } from "@/components/leaderboard/provider-logo";
+import Image from "next/image";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -78,12 +79,6 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
         </h1>
         <p className="text-fg-muted mt-2 text-sm">{t("subtitle")}</p>
       </header>
-
-      <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <FilterChip label={t("filter_all")} active />
-        <FilterChip label={t("filter_verified")} />
-        <FilterChip label={t("filter_with_incidents")} />
-      </div>
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Card>
@@ -178,10 +173,12 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
                     >
                       {p.logo_url ? (
                         <div className="border-border-subtle bg-bg-primary relative h-10 w-24 shrink-0 overflow-hidden rounded-md border shadow-sm transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_15px_rgba(231,76,60,0.3)]">
-                          <img
+                          <Image
                             src={p.logo_url}
                             alt={`${p.name} logo`}
-                            className="h-full w-full object-contain p-1"
+                            fill
+                            className="object-contain p-1"
+                            sizes="96px"
                           />
                         </div>
                       ) : (
@@ -228,18 +225,5 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
         </CardContent>
       </Card>
     </Container>
-  );
-}
-
-function FilterChip({ label, active }: { label: string; active?: boolean }) {
-  return (
-    <button
-      type="button"
-      className={`border-border-subtle bg-bg-secondary/40 hover:border-brand-500/50 flex items-center justify-center rounded-lg border px-4 py-2.5 text-sm font-semibold transition-colors ${
-        active ? "border-brand-500 bg-brand-500/10 text-brand-400" : "text-fg-secondary"
-      }`}
-    >
-      {label}
-    </button>
   );
 }
