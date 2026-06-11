@@ -7,10 +7,10 @@ export interface LogoProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const sizeMap = {
-  sm: { w: 90, h: 24 },
-  md: { w: 120, h: 32 },
-  lg: { w: 180, h: 48 },
-  xl: { w: 360, h: 96 },
+  sm: { w: 24, h: 24 },
+  md: { w: 32, h: 32 },
+  lg: { w: 48, h: 48 },
+  xl: { w: 96, h: 96 },
 } as const;
 
 export function Logo({ className, size = "md", ...props }: LogoProps) {
@@ -24,7 +24,7 @@ export function Logo({ className, size = "md", ...props }: LogoProps) {
       {...props}
     >
       <Image
-        src="/logo.svg"
+        src="/favicon.svg"
         alt="ALPAR AI"
         width={w}
         height={h}

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { Logo } from "./logo";
+import { Wordmark } from "./wordmark";
 
 const links = [
   { href: "/", key: "home" },
@@ -64,7 +64,7 @@ export function MobileNav() {
           aria-label={tCommon("openMenu")}
         >
           <div className="border-border-subtle flex items-center justify-between border-b p-4">
-            <Logo size="md" />
+            <Wordmark size="md" />
             <button
               onClick={() => setOpen(false)}
               className="text-fg-secondary hover:bg-bg-tertiary focus-visible:ring-brand-500 inline-flex h-10 w-10 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:outline-none"
