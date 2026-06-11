@@ -1,7 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createServerClient } from "@/lib/supabase/server";
+import { createServerClient } from "@supabase/ssr";
 import { logger } from "@/lib/utils/logger";
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "@/lib/constants";
+import type { Database } from "@/types/database";
 
 function safeNextPath(raw: string | null): string {
   if (!raw) return "/profile";
@@ -33,13 +34,31 @@ export async function GET(request: NextRequest) {
   const locale = detectLocale(request);
   const redirectTo = `${origin}/${locale}${next}`;
 
-  try {
-    const supabase = await createServerClient();
+  const response = NextResponse.redirect(redirectTo);
 
+  const supabase = createServerClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          );
+        },
+      },
+    }
+  );
+
+  try {
     if (code) {
       const { error } = await supabase.auth.exchangeCodeForSession(code);
       if (!error) {
-        return NextResponse.redirect(redirectTo);
+        return response;
       }
       logger.warn("OAuth code exchange failed", {
         code: error.code,
@@ -56,7 +75,7 @@ export async function GET(request: NextRequest) {
         type: type as never,
       });
       if (!error) {
-        return NextResponse.redirect(redirectTo);
+        return response;
       }
       logger.warn("OTP verification failed", {
         type,
