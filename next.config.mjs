@@ -67,21 +67,6 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
   },
-  async redirects() {
-    return [
-      {
-        source: "/:path*",
-        has: [
-          {
-            type: "host",
-            value: "www.alparai.com",
-          },
-        ],
-        destination: "https://alparai.com/:path*",
-        permanent: true,
-      },
-    ];
-  },
   async headers() {
     return [
       {
