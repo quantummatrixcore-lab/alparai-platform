@@ -82,7 +82,7 @@ export function HeroSection({
               <div className="relative flex flex-col items-center gap-3">
                 <div className="border-warning-500/40 bg-warning-500/15 text-warning-400 inline-flex items-center gap-2 rounded-sm border px-4 py-1.5 text-[10px] font-black tracking-[0.25em] uppercase shadow-[0_0_15px_rgba(234,179,8,0.3)]">
                   <Sparkles className="h-3.5 w-3.5" />
-                  <span>AI Bug Bounty</span>
+                  <span>{t("bug_bounty_badge", { defaultValue: "AI Bug Bounty" })}</span>
                 </div>
                 <h2 className="from-warning-300 via-warning-500 to-warning-300 bg-gradient-to-r bg-clip-text text-3xl font-black tracking-tight text-transparent sm:text-4xl md:text-5xl">
                   {t("title_accent")}

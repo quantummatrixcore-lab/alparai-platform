@@ -74,13 +74,30 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     };
   });
 
+  const incidentCountsByProvider = new Map<string, number>();
+  if (providersResult.data) {
+    const { data: countData } = await supabase
+      .from("incidents")
+      .select("ai_provider_id")
+      .eq("status", "published")
+      .not("ai_provider_id", "is", null);
+    if (countData) {
+      for (const row of countData as Array<{ ai_provider_id: string }>) {
+        incidentCountsByProvider.set(
+          row.ai_provider_id,
+          (incidentCountsByProvider.get(row.ai_provider_id) ?? 0) + 1
+        );
+      }
+    }
+  }
+
   const leaderboard: LeaderboardEntry[] = (
     (providersResult.data as Array<Record<string, unknown>>) ?? []
   ).map((p) => ({
     provider_id: p["id"] as string,
     provider_name: (p["name"] as string) ?? "",
     provider_slug: (p["slug"] as string) ?? "",
-    incident_count: 0,
+    incident_count: incidentCountsByProvider.get(p["id"] as string) ?? 0,
     resolved_count: 0,
     avg_severity: 0,
     trend: 0,

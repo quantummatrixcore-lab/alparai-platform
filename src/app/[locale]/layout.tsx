@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages, setRequestLocale } from "next-intl/server";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { Inter } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import { Header } from "@/components/layout/header";
@@ -29,9 +29,10 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  if (!routing.locales.includes(locale as typeof routing.locales[number])) notFound();
+  if (!routing.locales.includes(locale as (typeof routing.locales)[number])) notFound();
   setRequestLocale(locale);
   const messages = await getMessages();
+  const tCommon = await getTranslations({ locale, namespace: "common" });
   const user = await getCurrentUser();
   const headerUser = user
     ? {
@@ -45,17 +46,19 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} className={inter.variable} suppressHydrationWarning>
-      <body className="min-h-screen bg-bg-primary font-sans text-fg-primary antialiased">
+      <body className="bg-bg-primary text-fg-primary min-h-screen font-sans antialiased">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-brand-500 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:outline-none"
+          className="focus:bg-brand-500 sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:outline-none"
         >
-          Skip to main content
+          {tCommon("skipToContent", { defaultValue: "Skip to main content" })}
         </a>
         <NextIntlClientProvider messages={messages}>
           <div className="flex min-h-screen flex-col">
             <Header user={headerUser} />
-            <main id="main-content" className="flex-1">{children}</main>
+            <main id="main-content" className="flex-1">
+              {children}
+            </main>
             <Footer />
           </div>
           <ClientProviders />
