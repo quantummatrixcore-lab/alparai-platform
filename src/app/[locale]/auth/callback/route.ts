@@ -34,7 +34,10 @@ export async function GET(request: NextRequest) {
   const errorDescription = searchParams.get("error_description");
   const next = safeNextPath(searchParams.get("next"));
   const locale = detectLocale(request);
-  const redirectTo = `${origin}/${locale}${next}`;
+  const hasLocalePrefix = SUPPORTED_LOCALES.some(
+    (l) => next === `/${l}` || next.startsWith(`/${l}/`)
+  );
+  const redirectTo = hasLocalePrefix ? `${origin}${next}` : `${origin}/${locale}${next}`;
 
   const response = NextResponse.redirect(redirectTo);
 
