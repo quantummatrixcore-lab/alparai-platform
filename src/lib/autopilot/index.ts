@@ -48,6 +48,8 @@ export {
   submitSuggestionPolicy,
   reviewTakedownPolicy,
   exportDataPolicy,
+  submitModelReviewPolicy,
+  submitModelFeatureRequestPolicy,
   isAutopilotPolicyName,
   getPolicy,
   policyNames,
@@ -185,7 +187,11 @@ export const withAutopilot = async <T>(
       cooldownMs: decision.cooldownMs,
       idempotencyKey,
     };
-    emitTelemetry(toTelemetry(config, exhausted, 0, 0, ctx.userId, ctx.ipHash, null), exhausted, null);
+    emitTelemetry(
+      toTelemetry(config, exhausted, 0, 0, ctx.userId, ctx.ipHash, null),
+      exhausted,
+      null
+    );
     return exhausted;
   }
 
@@ -207,9 +213,20 @@ export const withAutopilot = async <T>(
         attempts,
         idempotencyKey,
       };
-      emitTelemetry(toTelemetry(config, budget, attempts, Date.now() - start, ctx.userId, ctx.ipHash, null), budget, null);
+      emitTelemetry(
+        toTelemetry(config, budget, attempts, Date.now() - start, ctx.userId, ctx.ipHash, null),
+        budget,
+        null
+      );
       clearTimeout(timer);
-      await persistAutopilotRun(config.action, idempotencyKey, budget, ctx.userId, ctx.ipHash, Date.now() - start);
+      await persistAutopilotRun(
+        config.action,
+        idempotencyKey,
+        budget,
+        ctx.userId,
+        ctx.ipHash,
+        Date.now() - start
+      );
       return budget;
     }
     if (isBudgetExceededTokens(config.budget, totalTokens)) {
@@ -219,9 +236,20 @@ export const withAutopilot = async <T>(
         attempts,
         idempotencyKey,
       };
-      emitTelemetry(toTelemetry(config, budget, attempts, Date.now() - start, ctx.userId, ctx.ipHash, null), budget, null);
+      emitTelemetry(
+        toTelemetry(config, budget, attempts, Date.now() - start, ctx.userId, ctx.ipHash, null),
+        budget,
+        null
+      );
       clearTimeout(timer);
-      await persistAutopilotRun(config.action, idempotencyKey, budget, ctx.userId, ctx.ipHash, Date.now() - start);
+      await persistAutopilotRun(
+        config.action,
+        idempotencyKey,
+        budget,
+        ctx.userId,
+        ctx.ipHash,
+        Date.now() - start
+      );
       return budget;
     }
 
@@ -250,8 +278,19 @@ export const withAutopilot = async <T>(
           durationMs: Date.now() - start,
           idempotencyKey,
         };
-        emitTelemetry(toTelemetry(config, ok, i, ok.durationMs, ctx.userId, ctx.ipHash, null), ok, null);
-        await persistAutopilotRun(config.action, idempotencyKey, ok, ctx.userId, ctx.ipHash, ok.durationMs);
+        emitTelemetry(
+          toTelemetry(config, ok, i, ok.durationMs, ctx.userId, ctx.ipHash, null),
+          ok,
+          null
+        );
+        await persistAutopilotRun(
+          config.action,
+          idempotencyKey,
+          ok,
+          ctx.userId,
+          ctx.ipHash,
+          ok.durationMs
+        );
         return ok;
       }
       if (outcome.kind === "fatal") {
@@ -264,8 +303,27 @@ export const withAutopilot = async <T>(
           durationMs: Date.now() - start,
           idempotencyKey,
         };
-        emitTelemetry(toTelemetry(config, exhausted, i, exhausted.durationMs, ctx.userId, ctx.ipHash, outcome.error), exhausted, outcome.error);
-        await persistAutopilotRun(config.action, idempotencyKey, exhausted, ctx.userId, ctx.ipHash, exhausted.durationMs);
+        emitTelemetry(
+          toTelemetry(
+            config,
+            exhausted,
+            i,
+            exhausted.durationMs,
+            ctx.userId,
+            ctx.ipHash,
+            outcome.error
+          ),
+          exhausted,
+          outcome.error
+        );
+        await persistAutopilotRun(
+          config.action,
+          idempotencyKey,
+          exhausted,
+          ctx.userId,
+          ctx.ipHash,
+          exhausted.durationMs
+        );
         return exhausted;
       }
       lastError = outcome.error;
@@ -283,8 +341,19 @@ export const withAutopilot = async <T>(
           durationMs: Date.now() - start,
           idempotencyKey,
         };
-        emitTelemetry(toTelemetry(config, exhausted, i, exhausted.durationMs, ctx.userId, ctx.ipHash, err), exhausted, err);
-        await persistAutopilotRun(config.action, idempotencyKey, exhausted, ctx.userId, ctx.ipHash, exhausted.durationMs);
+        emitTelemetry(
+          toTelemetry(config, exhausted, i, exhausted.durationMs, ctx.userId, ctx.ipHash, err),
+          exhausted,
+          err
+        );
+        await persistAutopilotRun(
+          config.action,
+          idempotencyKey,
+          exhausted,
+          ctx.userId,
+          ctx.ipHash,
+          exhausted.durationMs
+        );
         return exhausted;
       }
       breaker.recordFailure();
@@ -302,9 +371,7 @@ export const withAutopilot = async <T>(
 
   clearTimeout(timer);
   const errorMsg =
-    lastResult && lastResult.kind !== "success"
-      ? lastResult.error
-      : errorMessage(lastError);
+    lastResult && lastResult.kind !== "success" ? lastResult.error : errorMessage(lastError);
   const exhausted: AutopilotResult<T> = {
     kind: "exhausted",
     error: errorMsg,
@@ -312,8 +379,27 @@ export const withAutopilot = async <T>(
     durationMs: Date.now() - start,
     idempotencyKey,
   };
-  emitTelemetry(toTelemetry(config, exhausted, attempts, exhausted.durationMs, ctx.userId, ctx.ipHash, lastError), exhausted, lastError);
-  await persistAutopilotRun(config.action, idempotencyKey, exhausted, ctx.userId, ctx.ipHash, exhausted.durationMs);
+  emitTelemetry(
+    toTelemetry(
+      config,
+      exhausted,
+      attempts,
+      exhausted.durationMs,
+      ctx.userId,
+      ctx.ipHash,
+      lastError
+    ),
+    exhausted,
+    lastError
+  );
+  await persistAutopilotRun(
+    config.action,
+    idempotencyKey,
+    exhausted,
+    ctx.userId,
+    ctx.ipHash,
+    exhausted.durationMs
+  );
 
   if (config.onExhaust === "escalate_admin") {
     void enqueueAutopilotJob(config.action, idempotencyKey, {
@@ -350,5 +436,4 @@ export const breakerSnapshot = (action: string) => {
   return breakers.get(action)?.snapshot() ?? null;
 };
 
-export const listBreakerActions = (): ReadonlyArray<string> =>
-  Array.from(breakers.keys());
+export const listBreakerActions = (): ReadonlyArray<string> => Array.from(breakers.keys());

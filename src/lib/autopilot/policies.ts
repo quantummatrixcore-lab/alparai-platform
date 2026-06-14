@@ -102,6 +102,30 @@ export const exportDataPolicy: AutopilotPolicy = {
   },
 };
 
+export const submitModelReviewPolicy: AutopilotPolicy = {
+  config: {
+    action: "submitModelReview",
+    retry: { ...DEFAULT_RETRY, attempts: 3, baseMs: 400, maxMs: 3_000 },
+    breaker: { ...DEFAULT_BREAKER, threshold: 15, cooldownMs: 30_000 },
+    budget: { maxMs: 5_000, maxTokens: 600 },
+    idempotency: { ...DEFAULT_IDEMPOTENCY, enabled: true, hashInputs: true },
+    onExhaust: "toast_warn",
+    redactionFields: ["password", "token", "secret", "api_key"],
+  },
+};
+
+export const submitModelFeatureRequestPolicy: AutopilotPolicy = {
+  config: {
+    action: "submitModelFeatureRequest",
+    retry: { ...DEFAULT_RETRY, attempts: 3, baseMs: 400, maxMs: 3_000 },
+    breaker: { ...DEFAULT_BREAKER, threshold: 15, cooldownMs: 30_000 },
+    budget: { maxMs: 5_000, maxTokens: 600 },
+    idempotency: { ...DEFAULT_IDEMPOTENCY, enabled: true, hashInputs: true },
+    onExhaust: "toast_warn",
+    redactionFields: ["password", "token", "secret", "api_key"],
+  },
+};
+
 export const policies = {
   submitIncident: submitIncidentPolicy,
   submitContact: submitContactPolicy,
@@ -111,6 +135,8 @@ export const policies = {
   submitSuggestion: submitSuggestionPolicy,
   reviewTakedown: reviewTakedownPolicy,
   exportUserData: exportDataPolicy,
+  submitModelReview: submitModelReviewPolicy,
+  submitModelFeatureRequest: submitModelFeatureRequestPolicy,
 } as const;
 
 export type AutopilotPolicyName = keyof typeof policies;

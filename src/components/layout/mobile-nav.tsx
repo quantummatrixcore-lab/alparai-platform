@@ -11,6 +11,7 @@ import { Wordmark } from "./wordmark";
 const links = [
   { href: "/", key: "home" },
   { href: "/incidents", key: "incidents" },
+  { href: "/models", key: "models" },
   { href: "/leaderboard", key: "leaderboard" },
   { href: "/blog", key: "blog" },
   { href: "/suggestions", key: "suggestions" },

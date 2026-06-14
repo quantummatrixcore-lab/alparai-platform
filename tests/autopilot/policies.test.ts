@@ -8,6 +8,8 @@ import {
   submitSuggestionPolicy,
   reviewTakedownPolicy,
   exportDataPolicy,
+  submitModelReviewPolicy,
+  submitModelFeatureRequestPolicy,
   policies,
   isAutopilotPolicyName,
   getPolicy,
@@ -16,8 +18,8 @@ import {
 } from "@/lib/autopilot/policies";
 
 describe("autopilot policies", () => {
-  it("exposes 8 named policies", () => {
-    expect(policyNames().length).toBe(8);
+  it("exposes 10 named policies", () => {
+    expect(policyNames().length).toBe(10);
   });
 
   it("each policy has a unique action", () => {
@@ -75,5 +77,14 @@ describe("autopilot policies", () => {
     expect(merged.onExhaust).toBe("throw");
     expect(merged.retry.attempts).toBe(submitIncidentPolicy.config.retry.attempts);
   });
-});
 
+  it("submitModelReviewPolicy has standard retry config", () => {
+    expect(submitModelReviewPolicy.config.action).toBe("submitModelReview");
+    expect(submitModelReviewPolicy.config.onExhaust).toBe("toast_warn");
+  });
+
+  it("submitModelFeatureRequestPolicy has standard retry config", () => {
+    expect(submitModelFeatureRequestPolicy.config.action).toBe("submitModelFeatureRequest");
+    expect(submitModelFeatureRequestPolicy.config.onExhaust).toBe("toast_warn");
+  });
+});

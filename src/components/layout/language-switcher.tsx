@@ -2,18 +2,19 @@
 
 import * as React from "react";
 import { useLocale } from "next-intl";
-import { usePathname, useRouter } from "@/i18n/routing";
+import { usePathname } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { Globe } from "lucide-react";
 
 export function LanguageSwitcher({ className }: { className?: string }) {
   const locale = useLocale();
-  const router = useRouter();
   const pathname = usePathname();
   const otherLocale = locale === "en" ? "tr" : "en";
+  const targetHref = "/" + otherLocale + (pathname === "/" ? "" : pathname);
+
   return (
-    <button
-      onClick={() => router.replace(pathname, { locale: otherLocale })}
+    <a
+      href={targetHref}
       className={cn(
         "inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium",
         "text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary",
@@ -25,6 +26,6 @@ export function LanguageSwitcher({ className }: { className?: string }) {
     >
       <Globe className="h-4 w-4" aria-hidden="true" />
       <span className="uppercase">{otherLocale}</span>
-    </button>
+    </a>
   );
 }

@@ -149,3 +149,49 @@ export interface AdminStats {
   takedown_requests: number;
   recent_24h: number;
 }
+
+export interface ModelReview {
+  id: string;
+  model_id: string;
+  user_id: string | null;
+  is_anonymous: boolean;
+  score_overall: number;
+  score_accuracy: number | null;
+  score_safety: number | null;
+  score_creativity: number | null;
+  score_speed: number | null;
+  score_value: number | null;
+  title: string | null;
+  body: string | null;
+  status: "published" | "pending" | "rejected";
+  helpful_count: number;
+  created_at: string;
+  author_name?: string | null;
+  has_voted?: boolean;
+}
+
+export interface ModelFeatureRequest {
+  id: string;
+  model_id: string;
+  user_id: string | null;
+  is_anonymous: boolean;
+  title: string;
+  description: string | null;
+  category: "feature" | "safety" | "accuracy" | "ux" | "integration" | "other";
+  status: "open" | "planned" | "in_progress" | "completed" | "declined";
+  votes_count: number;
+  created_at: string;
+  author_name?: string | null;
+  has_voted?: boolean;
+}
+
+export interface ModelScoreSummary {
+  model_id: string;
+  score_overall: number;
+  score_accuracy: number;
+  score_safety: number;
+  score_creativity: number;
+  score_speed: number;
+  score_value: number;
+  reviews_count: number;
+}

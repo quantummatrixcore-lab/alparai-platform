@@ -1,5 +1,6 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { createServerClient } from "@/lib/supabase/server";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -73,7 +74,7 @@ export default async function BrandPage({
       .limit(50),
     supabase
       .from("ai_models")
-      .select("id, name, version, status, released_at")
+      .select("id, name, version, status, released_at, provider_id, model_reviews(score_overall)")
       .eq("provider_id", providerId)
       .order("name"),
     supabase
@@ -183,13 +184,38 @@ export default async function BrandPage({
               {t("models")}
             </p>
             <div className="flex flex-wrap gap-2">
-              {(modelsRes.data as Array<{ id: string; name: string; version: string | null }>).map(
-                (m) => (
-                  <Badge key={m.id} variant="outline">
-                    {m.name} {m.version && `· ${m.version}`}
-                  </Badge>
-                )
-              )}
+              {(
+                modelsRes.data as Array<{
+                  id: string;
+                  name: string;
+                  version: string | null;
+                  provider_id: string;
+                  model_reviews: Array<{ score_overall: number }>;
+                }>
+              ).map((m) => {
+                const reviews = m.model_reviews || [];
+                const avgScore =
+                  reviews.length > 0
+                    ? reviews.reduce((sum, r) => sum + r.score_overall, 0) / reviews.length
+                    : 0;
+                return (
+                  <Link key={m.id} href={`/${locale}/models/${m.provider_id}/${m.id}`}>
+                    <Badge
+                      variant="outline"
+                      className="hover:bg-bg-tertiary flex cursor-pointer items-center gap-1.5 py-1 transition duration-200"
+                    >
+                      <span>
+                        {m.name} {m.version && `· ${m.version}`}
+                      </span>
+                      {avgScore > 0 && (
+                        <span className="text-brand-400 bg-brand-500/10 border-brand-500/20 flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-[10px] font-bold">
+                          ★ {avgScore.toFixed(1)}
+                        </span>
+                      )}
+                    </Badge>
+                  </Link>
+                );
+              })}
             </div>
           </CardContent>
         )}
