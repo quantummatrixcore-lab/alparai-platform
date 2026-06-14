@@ -3,11 +3,7 @@
  */
 
 import { z } from "zod";
-import {
-  INCIDENT_CATEGORIES,
-  SEVERITY_LEVELS,
-  SUGGESTION_CATEGORIES,
-} from "@/lib/constants";
+import { INCIDENT_CATEGORIES, SEVERITY_LEVELS, SUGGESTION_CATEGORIES } from "@/lib/constants";
 
 const categoryValues = INCIDENT_CATEGORIES.map((c) => c.value) as [
   (typeof INCIDENT_CATEGORIES)[number]["value"],
@@ -43,11 +39,7 @@ export const incidentSubmissionSchema = z.object({
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be YYYY-MM-DD")
     .optional()
     .nullable(),
-  locationCountry: z
-    .string()
-    .length(2, "Country must be ISO 3166-1 alpha-2")
-    .optional()
-    .nullable(),
+  locationCountry: z.string().length(2, "Country must be ISO 3166-1 alpha-2").optional().nullable(),
   language: z.string().min(2).max(5).default("en"),
   isAnonymous: z.boolean().default(true),
   sourceUrl: z.string().url().optional().nullable(),
@@ -151,3 +143,39 @@ export const contactFormSchema = z.object({
 });
 
 export type ContactFormInput = z.infer<typeof contactFormSchema>;
+
+// =============================================================================
+// Model Review & Ratings
+// =============================================================================
+export const modelReviewSchema = z.object({
+  modelId: z.string().uuid(),
+  isAnonymous: z.boolean().default(false),
+  scoreOverall: z.number().int().min(1).max(5),
+  scoreAccuracy: z.number().int().min(1).max(5).optional().nullable(),
+  scoreSafety: z.number().int().min(1).max(5).optional().nullable(),
+  scoreCreativity: z.number().int().min(1).max(5).optional().nullable(),
+  scoreSpeed: z.number().int().min(1).max(5).optional().nullable(),
+  scoreValue: z.number().int().min(1).max(5).optional().nullable(),
+  title: z.string().max(150).optional().nullable(),
+  body: z.string().max(3000).optional().nullable(),
+});
+
+export type ModelReviewInput = z.infer<typeof modelReviewSchema>;
+
+// =============================================================================
+// Model Feature Request
+// =============================================================================
+export const modelFeatureRequestSchema = z.object({
+  modelId: z.string().uuid(),
+  isAnonymous: z.boolean().default(false),
+  title: z
+    .string()
+    .min(10, "Title must be at least 10 characters")
+    .max(200, "Title must be at most 200 characters"),
+  description: z.string().max(2000).optional().nullable(),
+  category: z
+    .enum(["feature", "safety", "accuracy", "ux", "integration", "other"])
+    .default("feature"),
+});
+
+export type ModelFeatureRequestInput = z.infer<typeof modelFeatureRequestSchema>;

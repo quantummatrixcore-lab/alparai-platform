@@ -13,6 +13,8 @@ export const RATE_LIMIT_KEYS = {
   search_query: "ratelimit:search_query",
   export_request: "ratelimit:export_request",
   api_general: "ratelimit:api_general",
+  model_review: "ratelimit:model_review",
+  model_feature_request: "ratelimit:model_feature",
 } as const;
 
 let _redis: Redis | null = null;
@@ -81,6 +83,18 @@ function getLimiters(): Record<string, Ratelimit> {
     [RATE_LIMIT_KEYS.api_general]: new Ratelimit({
       redis: _redis,
       limiter: Ratelimit.slidingWindow(100, "1 m"),
+      analytics: true,
+      prefix: "alpar",
+    }),
+    [RATE_LIMIT_KEYS.model_review]: new Ratelimit({
+      redis: _redis,
+      limiter: Ratelimit.slidingWindow(3, "1 d"),
+      analytics: true,
+      prefix: "alpar",
+    }),
+    [RATE_LIMIT_KEYS.model_feature_request]: new Ratelimit({
+      redis: _redis,
+      limiter: Ratelimit.slidingWindow(5, "1 d"),
       analytics: true,
       prefix: "alpar",
     }),

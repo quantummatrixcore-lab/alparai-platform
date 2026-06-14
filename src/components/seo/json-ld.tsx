@@ -117,3 +117,46 @@ export function IncidentJsonLd({
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
   );
 }
+
+export function ModelJsonLd({
+  name,
+  description,
+  provider,
+  ratingValue,
+  reviewCount,
+  url,
+}: {
+  name: string;
+  description: string;
+  provider: string;
+  ratingValue?: number;
+  reviewCount?: number;
+  url: string;
+}) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Cloud",
+    description,
+    url,
+    publisher: {
+      "@type": "Organization",
+      name: provider,
+    },
+    ...(ratingValue &&
+      reviewCount && {
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: ratingValue,
+          reviewCount: reviewCount,
+          bestRating: 5,
+          worstRating: 1,
+        },
+      }),
+  };
+  return (
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
+  );
+}

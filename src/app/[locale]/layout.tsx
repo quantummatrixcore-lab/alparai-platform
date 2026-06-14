@@ -9,6 +9,8 @@ import { ClientProviders } from "@/components/client-providers";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/json-ld";
 import { getCurrentUser } from "@/lib/auth/session";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "../globals.css";
 
 const inter = Inter({
@@ -49,14 +51,14 @@ export default async function LocaleLayout({
       <body className="bg-bg-primary text-fg-primary min-h-screen font-sans antialiased">
         <a
           href="#main-content"
-          className="focus:bg-brand-500 sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:outline-none"
+          className="focus:bg-brand-500 sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-md focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:outline-none"
         >
           {tCommon("skipToContent", { defaultValue: "Skip to main content" })}
         </a>
         <NextIntlClientProvider messages={messages}>
           <div className="flex min-h-screen flex-col">
             <Header user={headerUser} />
-            <main id="main-content" className="flex-1">
+            <main id="main-content" className="flex-1" tabIndex={-1}>
               {children}
             </main>
             <Footer />
@@ -65,6 +67,8 @@ export default async function LocaleLayout({
           <ScrollToTop />
           <OrganizationJsonLd />
           <WebSiteJsonLd />
+          <Analytics />
+          <SpeedInsights />
         </NextIntlClientProvider>
       </body>
     </html>

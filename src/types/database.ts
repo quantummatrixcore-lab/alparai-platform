@@ -1,4 +1,4 @@
-﻿export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
@@ -8,6 +8,201 @@ export type Database = {
   };
   public: {
     Tables: {
+      model_reviews: {
+        Row: {
+          id: string;
+          model_id: string;
+          user_id: string | null;
+          is_anonymous: boolean;
+          score_overall: number;
+          score_accuracy: number | null;
+          score_safety: number | null;
+          score_creativity: number | null;
+          score_speed: number | null;
+          score_value: number | null;
+          title: string | null;
+          body: string | null;
+          status: string;
+          helpful_count: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          model_id: string;
+          user_id?: string | null;
+          is_anonymous?: boolean;
+          score_overall: number;
+          score_accuracy?: number | null;
+          score_safety?: number | null;
+          score_creativity?: number | null;
+          score_speed?: number | null;
+          score_value?: number | null;
+          title?: string | null;
+          body?: string | null;
+          status?: string;
+          helpful_count?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          model_id?: string;
+          user_id?: string | null;
+          is_anonymous?: boolean;
+          score_overall?: number;
+          score_accuracy?: number | null;
+          score_safety?: number | null;
+          score_creativity?: number | null;
+          score_speed?: number | null;
+          score_value?: number | null;
+          title?: string | null;
+          body?: string | null;
+          status?: string;
+          helpful_count?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "model_reviews_model_id_fkey";
+            columns: ["model_id"];
+            isOneToOne: false;
+            referencedRelation: "ai_models";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "model_reviews_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      model_review_votes: {
+        Row: {
+          user_id: string;
+          review_id: string;
+          created_at: string;
+        };
+        Insert: {
+          user_id: string;
+          review_id: string;
+          created_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          review_id?: string;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "model_review_votes_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "model_review_votes_review_id_fkey";
+            columns: ["review_id"];
+            isOneToOne: false;
+            referencedRelation: "model_reviews";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      model_feature_requests: {
+        Row: {
+          id: string;
+          model_id: string;
+          user_id: string | null;
+          is_anonymous: boolean;
+          title: string;
+          description: string | null;
+          category: string;
+          status: string;
+          votes_count: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          model_id: string;
+          user_id?: string | null;
+          is_anonymous?: boolean;
+          title: string;
+          description?: string | null;
+          category?: string;
+          status?: string;
+          votes_count?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          model_id?: string;
+          user_id?: string | null;
+          is_anonymous?: boolean;
+          title?: string;
+          description?: string | null;
+          category?: string;
+          status?: string;
+          votes_count?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "model_feature_requests_model_id_fkey";
+            columns: ["model_id"];
+            isOneToOne: false;
+            referencedRelation: "ai_models";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "model_feature_requests_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      model_feature_votes: {
+        Row: {
+          user_id: string;
+          request_id: string;
+          created_at: string;
+        };
+        Insert: {
+          user_id: string;
+          request_id: string;
+          created_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          request_id?: string;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "model_feature_votes_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "model_feature_votes_request_id_fkey";
+            columns: ["request_id"];
+            isOneToOne: false;
+            referencedRelation: "model_feature_requests";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       ai_models: {
         Row: {
           created_at: string;

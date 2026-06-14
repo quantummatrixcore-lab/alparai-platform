@@ -5,7 +5,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
   reporter: process.env.CI ? "github" : "list",
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000",
@@ -20,10 +20,10 @@ export default defineConfig({
   webServer: process.env.CI
     ? undefined
     : {
-        command: "npx pnpm dev",
+        command: "npx next start",
         port: 3000,
         timeout: 60_000,
-        reuseExistingServer: true,
+        reuseExistingServer: false,
         env: {
           NEXT_PUBLIC_SUPABASE_URL: "https://mock-supabase.supabase.co",
           NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock-anon-key",
