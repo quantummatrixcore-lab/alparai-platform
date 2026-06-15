@@ -2,7 +2,7 @@
  * Next.js middleware — combines i18n routing + Supabase session refresh.
  */
 
-import { type NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 import createIntlMiddleware from "next-intl/middleware";
 import { updateSession } from "@/lib/supabase/middleware";
 import { routing } from "@/i18n/routing";
@@ -10,11 +10,18 @@ import { routing } from "@/i18n/routing";
 const intlMiddleware = createIntlMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
-  // 1. Internationalization routing
-  const intlResponse = intlMiddleware(request);
+  const requestId = request.headers.get("x-request-id") ?? crypto.randomUUID();
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-request-id", requestId);
 
-  // 2. Supabase session refresh
-  return await updateSession(request, intlResponse);
+  const requestWithId = new NextRequest(request, {
+    headers: requestHeaders,
+  });
+
+  const intlResponse = intlMiddleware(requestWithId);
+  const response = await updateSession(requestWithId, intlResponse);
+  response.headers.set("x-request-id", requestId);
+  return response;
 }
 
 export const config = {

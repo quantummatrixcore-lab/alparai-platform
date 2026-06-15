@@ -12,6 +12,18 @@ interface LogEntry {
 
 function formatEntry(entry: LogEntry): string {
   const { level, message, context, timestamp, error } = entry;
+  if (process.env.NODE_ENV === "production") {
+    const jsonEntry: Record<string, unknown> = {
+      ts: timestamp,
+      level,
+      msg: message,
+    };
+    if (context && Object.keys(context).length > 0) jsonEntry["ctx"] = context;
+    if (error) {
+      jsonEntry["err"] = { name: error.name, message: error.message, stack: error.stack };
+    }
+    return JSON.stringify(jsonEntry);
+  }
   const base = `[${timestamp}] ${level.toUpperCase()}: ${message}`;
   if (error) {
     return `${base} | error=${error.name}: ${error.message}\n${error.stack ?? ""}`;

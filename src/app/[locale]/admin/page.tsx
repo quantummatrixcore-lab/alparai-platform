@@ -93,7 +93,7 @@ export default async function AdminDashboardPage({
         <div>
           <h1 className="text-fg-primary inline-flex items-center gap-2 text-2xl font-bold">
             <ShieldCheck className="text-brand-400 h-6 w-6" />
-            Admin dashboard
+            {t("dashboardTitle")}
           </h1>
           <p className="text-fg-muted mt-1 text-sm">{user.email}</p>
         </div>
@@ -126,7 +126,7 @@ export default async function AdminDashboardPage({
             href={`/${locale}/admin/autopilot` as never}
             className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
           >
-            Autopilot
+            {t("autopilot")}
           </Link>
           <Link
             href={`/${locale}/admin/analysis` as never}
@@ -151,7 +151,7 @@ export default async function AdminDashboardPage({
             <CardHeader>
               <CardTitle className="inline-flex items-center gap-2">
                 <AlertTriangle className="text-warning-500 h-5 w-5" />
-                Moderation queue ({queue.length})
+                {t("moderation_queue")} ({queue.length})
               </CardTitle>
             </CardHeader>
             <CardContent>
