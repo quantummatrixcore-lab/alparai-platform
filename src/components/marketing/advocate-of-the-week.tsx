@@ -4,6 +4,7 @@ import * as React from "react";
 import { useTranslations } from "next-intl";
 import { Card, CardContent } from "@/components/ui/card";
 import { Award, Star, Shield, Zap } from "lucide-react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 
 export interface Advocate {
@@ -23,7 +24,7 @@ export function AdvocateOfTheWeek({ advocate }: { advocate: Advocate | null }) {
   return (
     <div className="group relative w-full">
       <div className="from-success-500 to-brand-500 absolute -inset-0.5 rounded-xl bg-gradient-to-r opacity-20 blur transition duration-500 group-hover:opacity-40"></div>
-      <Card className="bg-bg-elevated/80 border-success-500/20 relative overflow-hidden rounded-xl backdrop-blur-xl">
+      <Card variant="glass" className="relative overflow-hidden rounded-xl">
         <div className="pointer-events-none absolute -top-6 -right-6 rotate-12 p-4 opacity-10">
           <Award className="h-40 w-40" />
         </div>
@@ -35,8 +36,14 @@ export function AdvocateOfTheWeek({ advocate }: { advocate: Advocate | null }) {
             </span>
           </div>
 
-          <div className="relative mb-4">
-            <div className="border-bg-elevated bg-bg-tertiary relative z-10 h-24 w-24 overflow-hidden rounded-full border-4 shadow-[0_0_20px_rgba(39,174,96,0.3)]">
+          <div className="relative mb-4 flex items-center justify-center">
+            {/* Rotating neon gradient border */}
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+              className="from-brand-500 via-accent-400 to-success-400 absolute h-28 w-28 rounded-full bg-gradient-to-tr opacity-80 blur-[2px]"
+            />
+            <div className="border-bg-secondary bg-bg-tertiary relative z-10 h-24 w-24 overflow-hidden rounded-full border-4 shadow-[0_0_20px_rgba(168,85,247,0.2)]">
               {advocate.avatar_url ? (
                 <Image
                   src={advocate.avatar_url}
@@ -50,8 +57,8 @@ export function AdvocateOfTheWeek({ advocate }: { advocate: Advocate | null }) {
                 </div>
               )}
             </div>
-            <div className="bg-brand-500 border-bg-elevated absolute -right-2 -bottom-2 z-20 rounded-full border-2 p-1.5 text-white shadow-lg">
-              <Shield className="h-5 w-5" />
+            <div className="bg-brand-500 border-bg-elevated absolute right-0 bottom-0 z-20 rounded-full border-2 p-1.5 text-white shadow-lg">
+              <Shield className="h-4 w-4" />
             </div>
           </div>
 

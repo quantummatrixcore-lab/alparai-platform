@@ -13,31 +13,23 @@ export function LeaderboardPreview({ entries }: { entries: LeaderboardEntry[] })
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="inline-flex items-center gap-2 text-xl font-semibold text-fg-primary">
-          <Trophy className="h-5 w-5 text-warning-500" />
+        <h2 className="text-fg-primary inline-flex items-center gap-2 text-xl font-semibold">
+          <Trophy className="text-warning-500 h-5 w-5" />
           {t("title")}
         </h2>
-        <Link
-          href="/leaderboard"
-          className="text-sm text-brand-400 hover:underline"
-        >
+        <Link href="/leaderboard" className="text-brand-400 text-sm hover:underline">
           {t("subtitle")}
         </Link>
       </div>
-      <Card>
+      <Card variant="glass">
         <CardContent className="p-0">
-          <ol className="divide-y divide-border-subtle">
+          <ol className="divide-border-subtle divide-y">
             {entries.slice(0, 10).map((e, i) => {
-              const trend =
-                e.trend > 0
-                  ? "up"
-                  : e.trend < 0
-                  ? "down"
-                  : "flat";
+              const trend = e.trend > 0 ? "up" : e.trend < 0 ? "down" : "flat";
               return (
                 <li
                   key={e.provider_id}
-                  className="flex items-center gap-3 p-3"
+                  className="flex items-center gap-3 p-3 transition-colors duration-300 first:rounded-t-xl last:rounded-b-xl hover:bg-white/5"
                 >
                   <span
                     className={cn(
@@ -45,22 +37,22 @@ export function LeaderboardPreview({ entries }: { entries: LeaderboardEntry[] })
                       i === 0
                         ? "bg-warning-500/15 text-warning-500"
                         : i === 1
-                        ? "bg-fg-muted/15 text-fg-muted"
-                        : i === 2
-                        ? "bg-warning-700/15 text-warning-700"
-                        : "bg-bg-tertiary text-fg-muted"
+                          ? "bg-fg-muted/15 text-fg-muted"
+                          : i === 2
+                            ? "bg-warning-700/15 text-warning-700"
+                            : "bg-bg-tertiary text-fg-muted"
                     )}
                   >
                     {i + 1}
                   </span>
-                  <div className="flex-1 min-w-0">
+                  <div className="min-w-0 flex-1">
                     <Link
                       href={`/brand/${e.provider_slug}`}
-                      className="block truncate text-sm font-semibold text-fg-primary hover:text-brand-400"
+                      className="text-fg-primary hover:text-brand-400 block truncate text-sm font-semibold"
                     >
                       {e.provider_name}
                     </Link>
-                    <p className="text-xs text-fg-muted">
+                    <p className="text-fg-muted text-xs">
                       {formatNumber(e.incident_count)} {t("incidents").toLowerCase()}
                     </p>
                   </div>

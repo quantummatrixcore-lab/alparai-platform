@@ -2,7 +2,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: "default" | "elevated" | "outline" | "gradient";
+  variant?: "default" | "elevated" | "outline" | "gradient" | "glass";
   padding?: "none" | "sm" | "md" | "lg";
   interactive?: boolean;
 }
@@ -11,8 +11,8 @@ const variantClasses = {
   default: "bg-bg-secondary border border-border-subtle",
   elevated: "bg-bg-elevated border border-border-subtle shadow-xl",
   outline: "bg-transparent border border-border-strong",
-  gradient:
-    "bg-gradient-to-br from-bg-secondary to-bg-tertiary border border-brand-500/20",
+  gradient: "bg-gradient-to-br from-bg-secondary to-bg-tertiary border border-brand-500/20",
+  glass: "bg-glass",
 };
 
 const paddingClasses = {
@@ -23,19 +23,16 @@ const paddingClasses = {
 };
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  (
-    { className, variant = "default", padding = "md", interactive = false, ...props },
-    ref
-  ) => {
+  ({ className, variant = "default", padding = "md", interactive = false, ...props }, ref) => {
     return (
       <div
         ref={ref}
         className={cn(
-          "rounded-xl",
+          "rounded-xl transition-all duration-300",
           variantClasses[variant],
           paddingClasses[padding],
           interactive &&
-            "transition-all duration-200 hover:border-brand-500/50 hover:shadow-[0_0_30px_rgba(27,149,192,0.1)] cursor-pointer",
+            "hover:border-brand-500/30 cursor-pointer hover:scale-[1.015] hover:shadow-[0_0_30px_rgba(168,85,247,0.15)]",
           className
         )}
         {...props}
@@ -45,16 +42,11 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
 );
 Card.displayName = "Card";
 
-export const CardHeader = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex flex-col space-y-1.5 pb-4", className)}
-    {...props}
-  />
-));
+export const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn("flex flex-col space-y-1.5 pb-4", className)} {...props} />
+  )
+);
 CardHeader.displayName = "CardHeader";
 
 export const CardTitle = React.forwardRef<
@@ -63,7 +55,7 @@ export const CardTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h3
     ref={ref}
-    className={cn("text-lg font-semibold leading-tight tracking-tight", className)}
+    className={cn("text-lg leading-tight font-semibold tracking-tight", className)}
     {...props}
   />
 ));
@@ -73,26 +65,18 @@ export const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p ref={ref} className={cn("text-sm text-fg-muted", className)} {...props} />
+  <p ref={ref} className={cn("text-fg-muted text-sm", className)} {...props} />
 ));
 CardDescription.displayName = "CardDescription";
 
-export const CardContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("", className)} {...props} />
-));
+export const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => <div ref={ref} className={cn("", className)} {...props} />
+);
 CardContent.displayName = "CardContent";
 
-export const CardFooter = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex items-center pt-4", className)}
-    {...props}
-  />
-));
+export const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn("flex items-center pt-4", className)} {...props} />
+  )
+);
 CardFooter.displayName = "CardFooter";
