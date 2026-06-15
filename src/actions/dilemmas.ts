@@ -3,7 +3,8 @@
 import { headers } from "next/headers";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import crypto from "crypto";
+import { hashIp } from "@/lib/utils/hash";
+import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { revalidatePath } from "next/cache";
 import { logger } from "@/lib/utils/logger";
 
@@ -13,65 +14,82 @@ export async function submitVote(
   turnstileToken: string
 ) {
   try {
-    // 1. Verify Turnstile (skip in dev unless configured)
-    if (process.env.NODE_ENV === "production" || process.env.TURNSTILE_SECRET_KEY) {
+    // 1. Verify Turnstile — no test key fallback in production
+    const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+    if (process.env.NODE_ENV === "production") {
+      if (!turnstileSecret) {
+        logger.error("TURNSTILE_SECRET_KEY is not set in production", { pollId });
+        return { error: "Server misconfiguration. Please try again later." };
+      }
       const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `secret=${process.env.TURNSTILE_SECRET_KEY || "1x0000000000000000000000000000000AA"}&response=${turnstileToken}`,
+        body: `secret=${turnstileSecret}&response=${turnstileToken}`,
       });
-
+      const verifyJson = await verifyRes.json();
+      if (!verifyJson.success) {
+        return { error: "Bot verification failed." };
+      }
+    } else if (turnstileSecret) {
+      const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `secret=${turnstileSecret}&response=${turnstileToken}`,
+      });
       const verifyJson = await verifyRes.json();
       if (!verifyJson.success) {
         return { error: "Bot verification failed." };
       }
     }
 
-    const supabase = await createServerClient();
     const headersList = await headers();
-    const rawIp = headersList.get("x-forwarded-for") || "127.0.0.1";
-    const ipHash = crypto.createHash("sha256").update(rawIp).digest("hex");
+    const rawIp = headersList.get("x-forwarded-for") ?? "127.0.0.1";
+    const ipHash = hashIp(rawIp);
 
+    // 2. Rate limit by salted IP hash
+    const rateLimitKey = `${RATE_LIMIT_KEYS.dilemma_vote}:${ipHash ?? "anon"}`;
+    const { ok, retryAfter } = await checkRateLimit(rateLimitKey);
+    if (!ok) {
+      return { error: `Too many votes. Please try again in ${retryAfter ?? 60} seconds.` };
+    }
+
+    const supabase = await createServerClient();
     const { data: userData } = await supabase.auth.getUser();
     const userId = userData?.user?.id;
     const supabaseAdmin = createAdminClient();
 
-    // 2. Insert vote into ai_poll_votes using admin to bypass RLS on insert if needed
-    // But votes should be insertable by authenticated users or anon via admin
+    // 3. Insert vote (unique constraint on poll_id + ip_hash prevents duplicates)
     const { error: voteError } = await supabaseAdmin.from("ai_poll_votes").insert({
       poll_id: pollId,
-      user_id: userId || null,
-      ip_hash: ipHash,
+      user_id: userId ?? null,
+      ip_hash: ipHash ?? "unknown",
       choice,
     });
 
     if (voteError) {
       if (voteError.code === "23505") {
-        // unique violation
         return { error: "You have already voted on this dilemma." };
       }
       logger.error("Vote error", { pollId }, voteError instanceof Error ? voteError : undefined);
       return { error: "Failed to record vote." };
     }
 
-    // 3. Increment the count on ai_polls table
-    // We fetch current count and increment. (RPC is better, but this works for now)
-    const { data: poll } = await supabaseAdmin
-      .from("ai_polls")
-      .select("yes_count, no_count, unsure_count")
-      .eq("id", pollId)
-      .single();
+    // 4. Atomic increment via RPC — no read-modify-write race condition
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error: rpcError } = await (supabaseAdmin as any).rpc("increment_poll_count", {
+      p_poll_id: pollId,
+      p_choice: choice,
+    });
 
-    if (poll) {
-      const updates: { yes_count?: number; no_count?: number; unsure_count?: number } = {};
-      if (choice === "yes") updates.yes_count = poll.yes_count + 1;
-      if (choice === "no") updates.no_count = poll.no_count + 1;
-      if (choice === "unsure") updates.unsure_count = poll.unsure_count + 1;
-
-      await supabaseAdmin.from("ai_polls").update(updates).eq("id", pollId);
+    if (rpcError) {
+      logger.error(
+        "Poll count increment error",
+        { pollId, choice },
+        rpcError instanceof Error ? rpcError : undefined
+      );
     }
 
-    // 4. Gamification (Badges)
+    // 5. Gamification (Badges)
     let awardedBadge = null;
     let badgeIcon = null;
     if (userId) {
@@ -93,7 +111,6 @@ export async function submitVote(
       if (!badgeError) {
         awardedBadge = badgeName;
 
-        // Also update the users table to add reputation points and the badge to the array
         const { data: userRecord } = await supabaseAdmin
           .from("users")
           .select("reputation_score, badges")
@@ -101,8 +118,8 @@ export async function submitVote(
           .single();
 
         if (userRecord) {
-          const newReputation = (userRecord.reputation_score || 0) + 10;
-          const currentBadges = userRecord.badges || [];
+          const newReputation = (userRecord.reputation_score ?? 0) + 10;
+          const currentBadges: string[] = userRecord.badges ?? [];
 
           if (!currentBadges.includes(badgeName)) {
             currentBadges.push(badgeName);
