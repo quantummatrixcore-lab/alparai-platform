@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, TrendingUp, ShieldCheck } from "lucide-react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import type { IncidentListItem } from "@/types";
 import { formatDistanceToNow } from "date-fns";
@@ -17,10 +18,21 @@ export function IncidentOfTheWeek({ incident }: { incident: IncidentListItem | n
   return (
     <div className="group relative w-full">
       <div className="from-danger-500 to-warning-500 absolute -inset-0.5 rounded-xl bg-gradient-to-r opacity-20 blur transition duration-500 group-hover:opacity-40"></div>
-      <Card className="bg-bg-elevated/80 border-danger-500/20 relative overflow-hidden rounded-xl backdrop-blur-xl">
-        <div className="pointer-events-none absolute top-0 right-0 p-4 opacity-10">
+      <Card variant="glass" className="relative overflow-hidden rounded-xl">
+        <motion.div
+          animate={{
+            y: [0, -10, 0],
+            rotate: [0, 2, -2, 0],
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="pointer-events-none absolute top-0 right-0 p-4 opacity-10"
+        >
           <AlertTriangle className="h-32 w-32" />
-        </div>
+        </motion.div>
         <CardContent className="p-6 sm:p-8">
           <div className="mb-4 flex items-center gap-2">
             <span className="bg-danger-500/10 text-danger-400 border-danger-500/20 inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-xs font-bold tracking-widest uppercase">
@@ -36,8 +48,9 @@ export function IncidentOfTheWeek({ incident }: { incident: IncidentListItem | n
             href={`/incidents/${incident.id}`}
             className="focus-visible:ring-brand-500 block rounded-md outline-none focus-visible:ring-2"
           >
-            <h3 className="text-fg-primary group-hover:text-danger-400 mb-3 text-2xl leading-tight font-black transition-colors sm:text-3xl">
+            <h3 className="text-fg-primary group-hover:text-danger-400 relative mb-3 inline-block pb-1 text-2xl leading-tight font-black transition-colors sm:text-3xl">
               {incident.title_masked}
+              <span className="bg-danger-500 absolute bottom-0 left-0 h-[2px] w-0 transition-all duration-300 group-hover:w-full"></span>
             </h3>
             <p className="text-fg-secondary mb-6 line-clamp-3 text-base sm:text-lg">
               {incident.description_masked}

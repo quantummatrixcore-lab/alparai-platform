@@ -166,6 +166,10 @@ html {
 
 body {
   background-color: var(--bg-primary);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.007) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.007) 1px, transparent 1px);
+  background-size: 48px 48px;
   color: var(--fg-primary);
   font-family: var(--font-sans);
   font-feature-settings:
@@ -226,6 +230,36 @@ body {
 }
 @utility glow-danger {
   box-shadow: var(--glow-danger);
+}
+
+@utility glow-violet {
+  box-shadow: 0 0 25px rgba(168, 85, 247, 0.25);
+}
+@utility glow-cyan {
+  box-shadow: 0 0 25px rgba(6, 182, 212, 0.25);
+}
+@utility glow-red {
+  box-shadow: 0 0 25px rgba(230, 57, 70, 0.25);
+}
+
+@utility bg-glass {
+  background-color: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+@utility bg-glass-hover {
+  background-color: rgba(15, 23, 42, 0.65);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 25px rgba(168, 85, 247, 0.12);
+}
+
+@utility text-gradient-neon {
+  background-image: linear-gradient(135deg, var(--brand-400) 0%, var(--accent-400) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 @utility bg-gradient-brand {

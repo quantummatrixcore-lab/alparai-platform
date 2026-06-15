@@ -25,10 +25,43 @@ export function HeroSection({
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
         <motion.div
           style={{ y: y1, opacity }}
-          className="bg-brand-600/10 absolute -top-[30%] left-1/4 h-[800px] w-[800px] -translate-x-1/2 rounded-full mix-blend-screen blur-[140px]"
+          animate={{
+            scale: [1, 1.1, 1],
+            x: ["-50%", "-48%", "-52%", "-50%"],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="bg-brand-600/10 absolute -top-[30%] left-1/4 h-[800px] w-[800px] rounded-full mix-blend-screen blur-[140px]"
         />
-        <div className="bg-danger-500/15 absolute top-[20%] right-[10%] h-[600px] w-[600px] rounded-full mix-blend-screen blur-[160px]" />
-        <div className="bg-warning-500/10 absolute bottom-[10%] left-[15%] h-[500px] w-[500px] rounded-full mix-blend-screen blur-[140px]" />
+        <motion.div
+          animate={{
+            scale: [1, 1.05, 0.95, 1],
+            y: [0, 20, -20, 0],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1,
+          }}
+          className="bg-danger-500/15 absolute top-[20%] right-[10%] h-[600px] w-[600px] rounded-full mix-blend-screen blur-[160px]"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.1, 1],
+            x: [0, -30, 30, 0],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2,
+          }}
+          className="bg-warning-500/10 absolute bottom-[10%] left-[15%] h-[500px] w-[500px] rounded-full mix-blend-screen blur-[140px]"
+        />
 
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_0%,#000_20%,transparent_100%)] bg-[size:64px_64px]"></div>
       </div>
@@ -75,7 +108,7 @@ export function HeroSection({
             transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
             className="mt-12"
           >
-            <div className="border-warning-500/40 from-warning-500/10 via-brand-500/10 to-warning-500/10 shadow-warning-500/20 relative inline-block overflow-hidden rounded-2xl border bg-gradient-to-r p-8 shadow-2xl backdrop-blur-md">
+            <div className="bg-glass border-warning-500/20 shadow-warning-500/5 hover:border-warning-500/40 relative inline-block overflow-hidden rounded-2xl p-8 shadow-2xl transition-all duration-500 hover:shadow-[0_0_40px_rgba(234,179,8,0.1)]">
               <div className="from-warning-400 to-warning-600 absolute top-0 left-0 h-[2px] w-full bg-gradient-to-r via-transparent" />
               <div className="from-warning-500/20 to-warning-500/0 absolute -top-px -right-px h-20 w-20 rounded-bl-3xl bg-gradient-to-bl" />
               <div className="from-warning-500/20 to-warning-500/0 absolute -bottom-px -left-px h-20 w-20 rounded-tr-3xl bg-gradient-to-tr" />
@@ -111,14 +144,14 @@ export function HeroSection({
           >
             <Link
               href="/submit"
-              className="group bg-danger-500 hover:bg-danger-400 relative inline-flex h-14 w-full items-center justify-center gap-3 rounded-md px-10 text-lg font-black text-white shadow-[0_0_30px_rgba(230,57,70,0.5)] transition-all hover:-translate-y-1 hover:shadow-[0_0_50px_rgba(230,57,70,0.7)] sm:w-auto"
+              className="group bg-danger-500 hover:bg-danger-400 relative inline-flex h-14 w-full items-center justify-center gap-3 rounded-md px-10 text-lg font-black text-white shadow-[0_0_25px_rgba(230,57,70,0.4)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-[0_0_40px_rgba(230,57,70,0.7)] sm:w-auto"
             >
               <ShieldAlert className="h-5 w-5" />
               {t("cta_primary")}
             </Link>
             <Link
               href="/incidents"
-              className="border-border-strong bg-bg-elevated/40 text-fg-primary hover:border-brand-500/50 hover:bg-bg-elevated/80 inline-flex h-14 w-full items-center justify-center gap-3 rounded-md border px-10 text-lg font-bold shadow-xl backdrop-blur-xl transition-all hover:-translate-y-1 sm:w-auto"
+              className="bg-glass text-fg-primary hover:border-brand-500/40 hover:bg-bg-elevated/40 inline-flex h-14 w-full items-center justify-center gap-3 rounded-md px-10 text-lg font-bold shadow-xl transition-all duration-300 hover:-translate-y-1 hover:scale-105 sm:w-auto"
             >
               {t("cta_secondary")}
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-2" />
@@ -135,14 +168,14 @@ export function HeroSection({
             <StatCard
               label={t("stats_incidents")}
               value={totalIncidents}
-              glowColor="rgba(230,57,70,0.15)"
+              glowColor="rgba(230,57,70,0.1)"
             />
             <StatCard
               label={t("stats_providers")}
               value={totalProviders}
-              glowColor="rgba(168,85,247,0.15)"
+              glowColor="rgba(168,85,247,0.1)"
             />
-            <StatCard label={t("stats_countries")} value="EU" glowColor="rgba(39,174,96,0.15)" />
+            <StatCard label={t("stats_countries")} value="EU" glowColor="rgba(39,174,96,0.1)" />
           </motion.div>
         </div>
       </div>
@@ -160,15 +193,17 @@ function StatCard({
   glowColor: string;
 }) {
   return (
-    <div
-      className="border-border-strong bg-bg-primary/40 hover:border-border-subtle relative overflow-hidden rounded-lg border p-8 backdrop-blur-2xl transition-all duration-500 hover:-translate-y-1"
-      style={{ boxShadow: `0 0 40px ${glowColor} inset` }}
+    <motion.div
+      whileHover={{ y: -5, scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className="bg-glass hover:border-brand-500/30 relative overflow-hidden rounded-lg p-8 transition-all duration-500"
+      style={{ boxShadow: `inset 0 0 30px ${glowColor}, 0 4px 30px rgba(0, 0, 0, 0.4)` }}
     >
-      <div className="absolute top-0 left-0 h-[1px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+      <div className="absolute top-0 left-0 h-[1px] w-full bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
       <p className="text-fg-primary text-5xl font-black tracking-tighter md:text-6xl">
         {typeof value === "number" ? value.toLocaleString() : value}
       </p>
       <p className="text-fg-muted mt-3 text-sm font-bold tracking-[0.2em] uppercase">{label}</p>
-    </div>
+    </motion.div>
   );
 }

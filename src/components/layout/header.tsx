@@ -24,14 +24,14 @@ export function Header({
   const t = useTranslations("nav");
   return (
     <div className="pointer-events-none fixed top-0 z-50 flex w-full justify-center p-4 sm:p-6">
-      <header className="pointer-events-auto border-border-subtle/40 bg-bg-primary/70 flex h-14 w-full max-w-6xl items-center justify-between gap-4 rounded-full border px-4 shadow-[0_8px_30px_rgb(0,0,0,0.12)] backdrop-blur-xl ring-1 ring-white/5 transition-all duration-500 hover:bg-bg-primary/80 hover:shadow-[0_8px_30px_rgba(231,76,60,0.1)]">
+      <header className="bg-glass hover:border-brand-500/20 pointer-events-auto flex h-14 w-full max-w-6xl items-center justify-between gap-4 rounded-full px-4 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] transition-all duration-500 hover:shadow-[0_8px_32px_rgba(168,85,247,0.15)]">
         <div className="flex items-center gap-6 md:gap-8">
           <Link
             href="/"
             className="focus-visible:ring-brand-500 group relative flex items-center rounded-full pl-1 focus-visible:ring-2 focus-visible:outline-none"
             aria-label="ALPAR AI home"
           >
-            <div className="absolute -inset-2 rounded-full bg-gradient-to-r from-brand-500/0 via-brand-500/10 to-brand-500/0 opacity-0 blur transition-opacity duration-500 group-hover:opacity-100"></div>
+            <div className="from-brand-500/0 via-brand-500/10 to-brand-500/0 absolute -inset-2 rounded-full bg-gradient-to-r opacity-0 blur transition-opacity duration-500 group-hover:opacity-100"></div>
             <Wordmark size="md" />
           </Link>
           <div className="hidden md:block">
@@ -49,7 +49,7 @@ export function Header({
           </Link>
           <Link
             href="/submit"
-            className="bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 focus-visible:ring-brand-500 hidden h-9 items-center gap-1.5 rounded-full px-4 text-xs font-bold text-white shadow-[0_0_15px_rgba(231,76,60,0.2)] transition-all hover:shadow-[0_0_20px_rgba(231,76,60,0.4)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:inline-flex"
+            className="from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 focus-visible:ring-brand-500 hidden h-9 items-center gap-1.5 rounded-full bg-gradient-to-r px-4 text-xs font-bold text-white shadow-[0_0_15px_rgba(168,85,247,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_25px_rgba(168,85,247,0.6)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:inline-flex"
           >
             <Plus className="h-3.5 w-3.5" aria-hidden="true" />
             {t("report")}
