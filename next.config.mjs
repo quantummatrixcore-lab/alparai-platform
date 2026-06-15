@@ -7,11 +7,13 @@
  */
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://*.supabase.co https://*.sentry.io",
+  "script-src 'self' 'unsafe-inline' https://*.supabase.co https://*.sentry.io https://challenges.cloudflare.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: blob: https://*.supabase.co https://*.googleusercontent.com https://avatars.githubusercontent.com https://logo.clearbit.com",
-  "connect-src 'self' https://*.supabase.co https://*.sentry.io wss://*.supabase.co",
+  "connect-src 'self' https://*.supabase.co https://*.sentry.io wss://*.supabase.co https://challenges.cloudflare.com",
+  "frame-src https://challenges.cloudflare.com",
+  "worker-src 'self' blob:",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -33,6 +35,9 @@ const securityHeaders = [
     value: "max-age=31536000; includeSubDomains; preload",
   },
   { key: "X-DNS-Prefetch-Control", value: "on" },
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+  { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
+  { key: "Cross-Origin-Embedder-Policy", value: "require-corp" },
 ];
 
 import path from "path";

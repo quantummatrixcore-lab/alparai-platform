@@ -3,9 +3,7 @@ import type { SessionUser } from "@/types";
 
 export function createMockSupabaseClient() {
   const mockSingle = vi.fn().mockResolvedValue({ data: null, error: null });
-  const mockMaybeSingle = vi
-    .fn()
-    .mockResolvedValue({ data: null, error: null });
+  const mockMaybeSingle = vi.fn().mockResolvedValue({ data: null, error: null });
 
   const innerEq = vi.fn().mockReturnValue({
     single: mockSingle,
@@ -24,27 +22,26 @@ export function createMockSupabaseClient() {
     eq: outerEq,
   });
 
-  const mockInsertSelectSingle = vi
-    .fn()
-    .mockResolvedValue({ data: null, error: null });
+  const mockInsertSelectSingle = vi.fn().mockResolvedValue({ data: null, error: null });
   const mockInsertSelect = vi.fn().mockReturnValue({
     single: mockInsertSelectSingle,
   });
   const mockInsert = vi.fn().mockReturnValue({
     select: mockInsertSelect,
-    then: vi.fn().mockResolvedValue({ data: null, error: null }),
+    then: vi.fn((onfulfilled) => {
+      if (typeof onfulfilled === "function") {
+        onfulfilled({ data: null, error: null });
+      }
+      return Promise.resolve({ data: null, error: null });
+    }),
   });
 
-  const mockUpdateEq = vi
-    .fn()
-    .mockResolvedValue({ data: null, error: null });
+  const mockUpdateEq = vi.fn().mockResolvedValue({ data: null, error: null });
   const mockUpdate = vi.fn().mockReturnValue({
     eq: mockUpdateEq,
   });
 
-  const mockDeleteInnerEq = vi
-    .fn()
-    .mockResolvedValue({ data: null, error: null });
+  const mockDeleteInnerEq = vi.fn().mockResolvedValue({ data: null, error: null });
   const mockDeleteEq = vi.fn().mockReturnValue({
     eq: mockDeleteInnerEq,
   });
@@ -54,9 +51,7 @@ export function createMockSupabaseClient() {
 
   const mockUpsert = vi.fn().mockReturnValue({
     select: vi.fn().mockReturnValue({
-      single: vi
-        .fn()
-        .mockResolvedValue({ data: null, error: null }),
+      single: vi.fn().mockResolvedValue({ data: null, error: null }),
     }),
   });
 
@@ -69,15 +64,11 @@ export function createMockSupabaseClient() {
       upsert: mockUpsert,
     }),
     auth: {
-      getUser: vi
-        .fn()
-        .mockResolvedValue({ data: { user: null }, error: null }),
-      signInWithOAuth: vi
-        .fn()
-        .mockResolvedValue({
-          data: { url: "https://auth.example.com" },
-          error: null,
-        }),
+      getUser: vi.fn().mockResolvedValue({ data: { user: null }, error: null }),
+      signInWithOAuth: vi.fn().mockResolvedValue({
+        data: { url: "https://auth.example.com" },
+        error: null,
+      }),
       signInWithOtp: vi.fn().mockResolvedValue({ error: null }),
       signOut: vi.fn().mockResolvedValue({ error: null }),
     },
@@ -100,9 +91,7 @@ export function createMockSupabaseClient() {
   };
 }
 
-export function createTestUser(
-  overrides: Partial<SessionUser> = {}
-): SessionUser {
+export function createTestUser(overrides: Partial<SessionUser> = {}): SessionUser {
   return {
     id: "test-user-id",
     email: "test@example.com",
@@ -115,9 +104,7 @@ export function createTestUser(
   };
 }
 
-export function createTestModerator(
-  overrides: Partial<SessionUser> = {}
-): SessionUser {
+export function createTestModerator(overrides: Partial<SessionUser> = {}): SessionUser {
   return createTestUser({
     role: "moderator",
     fullName: "Test Moderator",
@@ -125,9 +112,7 @@ export function createTestModerator(
   });
 }
 
-export function createTestAdmin(
-  overrides: Partial<SessionUser> = {}
-): SessionUser {
+export function createTestAdmin(overrides: Partial<SessionUser> = {}): SessionUser {
   return createTestUser({
     role: "admin",
     fullName: "Test Admin",

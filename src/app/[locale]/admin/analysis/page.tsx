@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,17 +8,16 @@ import { Link } from "@/i18n/routing";
 import fs from "fs";
 import path from "path";
 
-export async function generateMetadata({
-  params: _params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  return { title: "Master Analysis — Admin" };
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "admin" });
+  return { title: t("analysisTitle") };
 }
 
 export default async function AnalysisPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "admin" });
   const user = await getCurrentUser();
   if (!user) redirect(`/${locale}/auth/signin?next=/${locale}/admin/analysis`);
   if (user.role !== "admin") {
@@ -46,10 +45,10 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
         <div>
           <h1 className="text-fg-primary inline-flex items-center gap-2 text-2xl font-bold">
             <FileText className="text-brand-400 h-6 w-6" />
-            Master Analysis
+            {t("analysisHeading")}
           </h1>
           <p className="text-fg-muted mt-1 text-sm">
-            {completedCount} completed · {pendingCount} pending · 13 total models
+            {t("analysisStats", { completedCount, pendingCount, totalCount: 13 })}
           </p>
         </div>
         <nav className="hidden items-center gap-1 text-sm md:flex">
@@ -57,19 +56,19 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
             href={`/${locale}/admin` as never}
             className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
           >
-            Dashboard
+            {t("dashboard")}
           </Link>
           <Link
             href={`/${locale}/admin/moderation` as never}
             className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
           >
-            Moderation
+            {t("moderation")}
           </Link>
           <Link
             href={`/${locale}/admin/analysis` as never}
             className="bg-bg-tertiary text-brand-400 rounded-md px-3 py-1.5"
           >
-            Analysis
+            {t("analysis")}
           </Link>
         </nav>
       </header>
@@ -78,11 +77,8 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
         <CardContent className="flex items-start gap-3 py-4">
           <AlertTriangle className="text-warning-500 mt-0.5 h-4 w-4 shrink-0" />
           <div>
-            <p className="text-fg-primary text-sm font-medium">This document is immutable</p>
-            <p className="text-fg-muted text-xs">
-              The master prompt and AI model analyses cannot be deleted or modified. This is a
-              project rule. New analyses are appended only.
-            </p>
+            <p className="text-fg-primary text-sm font-medium">{t("immutableTitle")}</p>
+            <p className="text-fg-muted text-xs">{t("immutableDesc")}</p>
           </div>
         </CardContent>
       </Card>
@@ -93,7 +89,7 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
             <CardHeader>
               <CardTitle className="inline-flex items-center gap-2 text-sm">
                 <Lock className="text-brand-400 h-4 w-4" />
-                Master Prompt v1.0
+                {t("masterPrompt")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -104,7 +100,7 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
           </Card>
         )}
 
-        <h2 className="text-fg-primary text-lg font-semibold">AI Model Analyses</h2>
+        <h2 className="text-fg-primary text-lg font-semibold">{t("aiModelAnalyses")}</h2>
 
         {analyses.map((analysis, i) => {
           const isPending = analysis.includes("[PENDING:");
@@ -129,9 +125,7 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
               </CardHeader>
               <CardContent>
                 {isPending ? (
-                  <p className="text-fg-muted text-sm italic">
-                    This analysis has not been added yet.
-                  </p>
+                  <p className="text-fg-muted text-sm italic">{t("analysisPending")}</p>
                 ) : (
                   <div className="prose prose-invert prose-sm text-fg-secondary max-w-none whitespace-pre-wrap">
                     {analysis.trim()}
