@@ -11,8 +11,14 @@ const intlMiddleware = createIntlMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
   const requestId = request.headers.get("x-request-id") ?? crypto.randomUUID();
+  const pathname = request.nextUrl.pathname;
+  const isAdmin = /^\/(?:en|tr)\/admin(?:\/|$)/.test(pathname);
+
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-request-id", requestId);
+  if (isAdmin) {
+    requestHeaders.set("x-is-admin", "true");
+  }
 
   const requestWithId = new NextRequest(request, {
     headers: requestHeaders,

@@ -8,7 +8,6 @@ import { ModerationQueue } from "@/components/admin/moderation-queue";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { AlertTriangle, ShieldCheck, Clock } from "lucide-react";
-import { Link } from "@/i18n/routing";
 import type { IncidentListItem } from "@/types";
 import { toIncidentListItems } from "@/lib/mappers";
 
@@ -89,58 +88,12 @@ export default async function AdminDashboardPage({
 
   return (
     <Container className="py-10">
-      <header className="mb-8 flex items-center justify-between">
-        <div>
-          <h1 className="text-fg-primary inline-flex items-center gap-2 text-2xl font-bold">
-            <ShieldCheck className="text-brand-400 h-6 w-6" />
-            {t("dashboardTitle")}
-          </h1>
-          <p className="text-fg-muted mt-1 text-sm">{user.email}</p>
-        </div>
-        <nav className="hidden items-center gap-1 text-sm md:flex">
-          <Link
-            href={`/${locale}/admin/moderation` as never}
-            className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
-          >
-            {t("moderation_queue")}
-          </Link>
-          <Link
-            href={`/${locale}/admin/takedown` as never}
-            className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
-          >
-            {t("stats_takedown_requests")}
-          </Link>
-          <Link
-            href={`/${locale}/admin/users` as never}
-            className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
-          >
-            {t("users")}
-          </Link>
-          <Link
-            href={`/${locale}/admin/providers` as never}
-            className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
-          >
-            {t("providers")}
-          </Link>
-          <Link
-            href={`/${locale}/admin/autopilot` as never}
-            className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
-          >
-            {t("autopilot")}
-          </Link>
-          <Link
-            href={`/${locale}/admin/analysis` as never}
-            className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
-          >
-            {t("analytics")}
-          </Link>
-          <Link
-            href={`/${locale}/admin/audit` as never}
-            className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
-          >
-            {t("audit_log")}
-          </Link>
-        </nav>
+      <header className="mb-8">
+        <h1 className="text-fg-primary inline-flex items-center gap-2 text-2xl font-bold">
+          <ShieldCheck className="text-brand-400 h-6 w-6" />
+          {t("dashboardTitle")}
+        </h1>
+        <p className="text-fg-muted mt-1 text-sm">{user.email}</p>
       </header>
 
       <StatsCards stats={stats} />

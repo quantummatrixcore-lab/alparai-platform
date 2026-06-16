@@ -46,6 +46,10 @@ export default async function LocaleLayout({
       }
     : null;
 
+  const { headers } = await import("next/headers");
+  const headersList = await headers();
+  const isAdmin = headersList.get("x-is-admin") === "true";
+
   return (
     <html lang={locale} className={inter.variable} suppressHydrationWarning>
       <body className="bg-bg-primary text-fg-primary min-h-screen font-sans antialiased">
@@ -57,11 +61,11 @@ export default async function LocaleLayout({
         </a>
         <NextIntlClientProvider messages={messages}>
           <div className="flex min-h-screen flex-col">
-            <Header user={headerUser} />
+            {!isAdmin && <Header user={headerUser} />}
             <main id="main-content" className="flex-1" tabIndex={-1}>
               {children}
             </main>
-            <Footer />
+            {!isAdmin && <Footer />}
           </div>
           <ClientProviders />
           <ScrollToTop />
