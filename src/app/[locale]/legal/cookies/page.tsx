@@ -18,7 +18,7 @@ export default async function CookiesPage({ params }: { params: Promise<{ locale
 
       <h2>{t("cookiesUsedTitle")}</h2>
       <table>
-        <caption className="sr-only">Cookie Details Table</caption>
+        <caption className="sr-only">{t("cookiesTableCaption")}</caption>
         <thead>
           <tr>
             <th>{t("cookiesColName")}</th>

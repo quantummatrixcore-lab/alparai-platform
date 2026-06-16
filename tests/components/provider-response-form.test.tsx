@@ -17,7 +17,7 @@ vi.mock("next-intl", () => ({
 
 // Mock react-dom useFormState and useFormStatus
 vi.mock("react-dom", () => ({
-  useFormState: vi.fn((fn, initial) => [initial, fn]),
+  useFormState: vi.fn((fn, initial) => [initial, fn, false]),
   useFormStatus: vi.fn(() => ({ pending: false })),
 }));
 
@@ -49,7 +49,7 @@ describe("ProviderResponseForm Component", () => {
   });
 
   test("renders success card when state.ok is true", () => {
-    vi.mocked(useFormState).mockImplementationOnce(() => [{ ok: true }, vi.fn()]);
+    vi.mocked(useFormState).mockImplementationOnce(() => [{ ok: true }, vi.fn(), false]);
 
     render(<ProviderResponseForm {...defaultProps} />);
     expect(screen.getByText("success_title")).toBeDefined();
@@ -61,6 +61,7 @@ describe("ProviderResponseForm Component", () => {
     vi.mocked(useFormState).mockImplementationOnce(() => [
       { ok: false, error: "invalid_token" },
       vi.fn(),
+      false,
     ]);
 
     render(<ProviderResponseForm {...defaultProps} />);
@@ -78,6 +79,7 @@ describe("ProviderResponseForm Component", () => {
         },
       },
       vi.fn(),
+      false,
     ]);
 
     render(<ProviderResponseForm {...defaultProps} />);

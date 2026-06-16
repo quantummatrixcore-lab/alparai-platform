@@ -27,7 +27,7 @@ export default async function ModelsPage({ params, searchParams }: ModelPageProp
     db
       .from("ai_models")
       .select(
-        "id, name, version, status, released_at, provider_id, ai_providers(id, name, slug, logo_url)"
+        "id, name, version, status, released_at, provider_id, ai_providers(id, name, slug, logo_url)",
       )
       .order("name"),
     db.from("model_reviews").select("model_id, score_overall").eq("status", "published"),
@@ -51,7 +51,7 @@ export default async function ModelsPage({ params, searchParams }: ModelPageProp
       stat.count += 1;
       return acc;
     },
-    {}
+    {},
   );
 
   const featureStats = features.reduce((acc: Record<string, number>, curr) => {
@@ -164,7 +164,7 @@ export default async function ModelsPage({ params, searchParams }: ModelPageProp
                       <img
                         src={provider.logo_url}
                         alt={provider.name}
-                        className="h-8 w-8 rounded-lg bg-white object-contain p-1"
+                        className="bg-bg-tertiary h-8 w-8 rounded-lg object-contain p-1"
                       />
                     ) : (
                       <div className="bg-bg-tertiary text-fg-muted flex h-8 w-8 items-center justify-center rounded-lg text-xs font-bold">
