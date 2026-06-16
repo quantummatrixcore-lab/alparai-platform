@@ -680,6 +680,8 @@ export type Database = {
           status: Database["public"]["Enums"]["incident_status"];
           title: string;
           title_masked: string | null;
+          provider_custom_name: string | null;
+          model_custom_name: string | null;
           updated_at: string;
           upvotes_count: number;
           user_agent: string | null;
@@ -715,6 +717,8 @@ export type Database = {
           status?: Database["public"]["Enums"]["incident_status"];
           title: string;
           title_masked?: string | null;
+          provider_custom_name?: string | null;
+          model_custom_name?: string | null;
           updated_at?: string;
           upvotes_count?: number;
           user_agent?: string | null;
@@ -750,6 +754,8 @@ export type Database = {
           status?: Database["public"]["Enums"]["incident_status"];
           title?: string;
           title_masked?: string | null;
+          provider_custom_name?: string | null;
+          model_custom_name?: string | null;
           updated_at?: string;
           upvotes_count?: number;
           user_agent?: string | null;
@@ -1051,6 +1057,155 @@ export type Database = {
           username?: string | null;
         };
         Relationships: [];
+      };
+      bug_bounties: {
+        Row: {
+          id: string;
+          incident_id: string;
+          reporter_id: string;
+          provider_id: string | null;
+          status: string;
+          severity_score: number;
+          estimated_reward_cents: number | null;
+          actual_reward_cents: number | null;
+          badge_awarded: boolean;
+          notes: string | null;
+          validated_by: string | null;
+          validated_at: string | null;
+          paid_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          incident_id: string;
+          reporter_id: string;
+          provider_id?: string | null;
+          status?: string;
+          severity_score?: number;
+          estimated_reward_cents?: number | null;
+          actual_reward_cents?: number | null;
+          badge_awarded?: boolean;
+          notes?: string | null;
+          validated_by?: string | null;
+          validated_at?: string | null;
+          paid_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          incident_id?: string;
+          reporter_id?: string;
+          provider_id?: string | null;
+          status?: string;
+          severity_score?: number;
+          estimated_reward_cents?: number | null;
+          actual_reward_cents?: number | null;
+          badge_awarded?: boolean;
+          notes?: string | null;
+          validated_by?: string | null;
+          validated_at?: string | null;
+          paid_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "bug_bounties_incident_id_fkey";
+            columns: ["incident_id"];
+            isOneToOne: false;
+            referencedRelation: "incidents";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "bug_bounties_reporter_id_fkey";
+            columns: ["reporter_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "bug_bounties_provider_id_fkey";
+            columns: ["provider_id"];
+            isOneToOne: false;
+            referencedRelation: "ai_providers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      bounty_badges: {
+        Row: {
+          code: string;
+          name_en: string;
+          name_tr: string;
+          description_en: string;
+          description_tr: string;
+          icon: string;
+          threshold_count: number;
+        };
+        Insert: {
+          code: string;
+          name_en: string;
+          name_tr: string;
+          description_en: string;
+          description_tr: string;
+          icon: string;
+          threshold_count?: number;
+        };
+        Update: {
+          code?: string;
+          name_en?: string;
+          name_tr?: string;
+          description_en?: string;
+          description_tr?: string;
+          icon?: string;
+          threshold_count?: number;
+        };
+        Relationships: [];
+      };
+      user_bounty_badges: {
+        Row: {
+          user_id: string;
+          badge_code: string;
+          awarded_at: string;
+          bounty_id: string | null;
+        };
+        Insert: {
+          user_id: string;
+          badge_code: string;
+          awarded_at?: string;
+          bounty_id?: string | null;
+        };
+        Update: {
+          user_id?: string;
+          badge_code?: string;
+          awarded_at?: string;
+          bounty_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_bounty_badges_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_bounty_badges_badge_code_fkey";
+            columns: ["badge_code"];
+            isOneToOne: false;
+            referencedRelation: "bounty_badges";
+            referencedColumns: ["code"];
+          },
+          {
+            foreignKeyName: "user_bounty_badges_bounty_id_fkey";
+            columns: ["bounty_id"];
+            isOneToOne: false;
+            referencedRelation: "bug_bounties";
+            referencedColumns: ["id"];
+          },
+        ];
       };
     };
     Views: {

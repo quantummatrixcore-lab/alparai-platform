@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireAdmin, requireModerator } from "@/lib/auth/session";
 import { logger } from "@/lib/utils/logger";
+import type { Database } from "@/types/database";
 
 const claimBountySchema = z.object({
   incidentId: z.string().uuid(),
@@ -38,7 +39,7 @@ type BountyRow = {
 };
 
 export async function claimBounty(
-  input: z.infer<typeof claimBountySchema>
+  input: z.infer<typeof claimBountySchema>,
 ): Promise<{ ok: boolean; error?: string; bountyId?: string }> {
   const admin = await requireAdmin();
   if (!admin) return { ok: false, error: "Forbidden" };
@@ -80,7 +81,7 @@ export async function claimBounty(
   const estimatedReward = severityToReward[severity] ?? 0;
 
   const { data, error } = await db
-    .from("bug_bounties" as never)
+    .from("bug_bounties")
     .insert({
       incident_id: parsed.data.incidentId,
       reporter_id: reporterId,
@@ -89,7 +90,7 @@ export async function claimBounty(
       severity_score: parsed.data.severityScore,
       estimated_reward_cents: estimatedReward,
       notes: parsed.data.notes ?? null,
-    } as never)
+    })
     .select("id")
     .single();
 
@@ -119,7 +120,7 @@ export async function claimBounty(
 }
 
 export async function updateBountyStatus(
-  input: z.infer<typeof validateBountySchema>
+  input: z.infer<typeof validateBountySchema>,
 ): Promise<{ ok: boolean; error?: string }> {
   const moderator = await requireModerator();
   if (!moderator) return { ok: false, error: "Forbidden" };
@@ -130,14 +131,14 @@ export async function updateBountyStatus(
   const db = createAdminClient();
 
   const { data: existing } = await db
-    .from("bug_bounties" as never)
-    .select("id, reporter_id, incident_id, status, severity_score" as never)
+    .from("bug_bounties")
+    .select("id, reporter_id, incident_id, status, severity_score")
     .eq("id", parsed.data.bountyId)
     .maybeSingle();
 
   if (!existing) return { ok: false, error: "Bounty not found" };
 
-  const updates: Record<string, unknown> = {
+  const updates: Database["public"]["Tables"]["bug_bounties"]["Update"] = {
     status: parsed.data.status,
     validated_by: moderator.id,
     validated_at: new Date().toISOString(),
@@ -155,10 +156,7 @@ export async function updateBountyStatus(
     updates["paid_at"] = new Date().toISOString();
   }
 
-  const { error } = await db
-    .from("bug_bounties" as never)
-    .update(updates as never)
-    .eq("id", parsed.data.bountyId);
+  const { error } = await db.from("bug_bounties").update(updates).eq("id", parsed.data.bountyId);
 
   if (error) {
     logger.error("updateBountyStatus failed", { bountyId: parsed.data.bountyId }, error as Error);
@@ -196,10 +194,10 @@ export async function updateBountyStatus(
 
 async function awardBadgesForBounty(
   db: ReturnType<typeof createAdminClient>,
-  info: { reporterId: string; severityScore: number; severity: string }
+  info: { reporterId: string; severityScore: number; severity: string },
 ): Promise<void> {
   const { count: validatedCount } = await db
-    .from("bug_bounties" as never)
+    .from("bug_bounties")
     .select("*", { count: "exact", head: true })
     .eq("reporter_id", info.reporterId)
     .in("status", ["validated", "paid"]);
@@ -214,20 +212,20 @@ async function awardBadgesForBounty(
   if (info.severity === "critical") badgesToAward.push("ethics_advocate");
 
   for (const code of badgesToAward) {
-    await db.from("user_bounty_badges" as never).upsert(
+    await db.from("user_bounty_badges").upsert(
       {
         user_id: info.reporterId,
         badge_code: code,
         awarded_at: new Date().toISOString(),
-      } as never,
-      { onConflict: "user_id,badge_code" }
+      },
+      { onConflict: "user_id,badge_code" },
     );
   }
 
   if (badgesToAward.length > 0) {
     await db
-      .from("bug_bounties" as never)
-      .update({ badge_awarded: true } as never)
+      .from("bug_bounties")
+      .update({ badge_awarded: true })
       .eq("reporter_id", info.reporterId)
       .in("status", ["validated", "paid"]);
   }

@@ -26,7 +26,7 @@ interface SuggestionWorkInput {
 
 const runSuggestionWork = async (
   _ctx: AttemptContext,
-  data: SuggestionWorkInput
+  data: SuggestionWorkInput,
 ): Promise<AttemptOutcome<{ id: string }>> => {
   const supabase = await createServerClient();
   const insertRow: Database["public"]["Tables"]["suggestions"]["Insert"] = {
@@ -39,18 +39,18 @@ const runSuggestionWork = async (
   };
   const { data: row, error } = await supabase
     .from("suggestions")
-    .insert(insertRow as never)
+    .insert(insertRow)
     .select("id")
     .single();
   if (error || !row) {
     return { kind: "retryable", error: error?.message ?? "suggestion_insert_failed" };
   }
-  return { kind: "success", value: { id: (row as { id: string }).id } };
+  return { kind: "success", value: { id: row.id } };
 };
 
 export async function submitSuggestion(
   _prev: SubmitSuggestionState,
-  formData: FormData
+  formData: FormData,
 ): Promise<SubmitSuggestionState> {
   const user = await getCurrentUser();
   if (!user) {
@@ -67,7 +67,8 @@ export async function submitSuggestion(
   };
   const parsed = suggestionSubmissionSchema.safeParse({
     ...raw,
-    category: raw.category as never,
+    category:
+      raw.category as unknown as Database["public"]["Tables"]["suggestions"]["Insert"]["category"],
     isAnonymous: false,
   });
   if (!parsed.success) {
@@ -84,7 +85,7 @@ export async function submitSuggestion(
         description: parsed.data.description,
         category: parsed.data.category,
       }),
-    { context: { userId: user.id, ipHash: null, clientIdempotencyKey: null } }
+    { context: { userId: user.id, ipHash: null, clientIdempotencyKey: null } },
   );
 
   if (result.kind === "ok" || result.kind === "replayed") {
@@ -117,7 +118,7 @@ interface VoteWorkInput {
 
 const runSuggestionVoteWork = async (
   _ctx: AttemptContext,
-  data: VoteWorkInput
+  data: VoteWorkInput,
 ): Promise<AttemptOutcome<{ toggled: "added" | "removed" }>> => {
   const admin = createAdminClient();
   if (data.alreadyVoted) {
@@ -135,7 +136,7 @@ const runSuggestionVoteWork = async (
     suggestion_id: data.suggestionId,
     user_id: data.userId,
   };
-  const { error } = await admin.from("suggestion_votes").insert(insertRow as never);
+  const { error } = await admin.from("suggestion_votes").insert(insertRow);
   if (error) {
     return { kind: "retryable", error: error.message };
   }
@@ -163,7 +164,7 @@ export async function upvoteSuggestion(suggestionId: string) {
         userId: user.id,
         alreadyVoted,
       }),
-    { context: { userId: user.id, ipHash: null, clientIdempotencyKey: null } }
+    { context: { userId: user.id, ipHash: null, clientIdempotencyKey: null } },
   );
 
   if (result.kind === "ok" || result.kind === "replayed") {

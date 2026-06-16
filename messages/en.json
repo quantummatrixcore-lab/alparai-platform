@@ -883,6 +883,31 @@
     "commitmentText2": "We do not accept payment to alter incident records. Providers may submit factual corrections through the official response process only.",
     "commitmentText3": "Our moderation team operates independently. No AI provider has the ability to suppress or alter published incident reports."
   },
+  "respond": {
+    "title": "Submit Provider Response",
+    "subtitle": "Provide your company's official statement or clarification regarding this incident.",
+    "incident_referenced": "Referenced Incident",
+    "official_representation": "Official Representative",
+    "name_label": "Your Name",
+    "name_placeholder": "e.g. Jane Doe",
+    "role_label": "Your Role",
+    "role_placeholder": "e.g. Head of Communications",
+    "response_label": "Official Statement",
+    "response_placeholder": "State your organization's position, mitigation steps taken, or corrections...",
+    "submit_button": "Submit Official Response",
+    "success_title": "Response Submitted Successfully",
+    "success_desc": "Your official response has been published and pinned to the incident detail page.",
+    "success_toast": "Official response successfully published",
+    "invalid_token": "Invalid or Expired Link",
+    "invalid_token_desc": "This link is either invalid, has expired, or is not authorized to submit responses for this incident.",
+    "errors": {
+      "incident_not_found": "Referenced incident could not be found.",
+      "provider_not_associated": "No AI provider is associated with this incident.",
+      "provider_not_found": "The associated provider could not be found.",
+      "provider_no_contact_email": "The associated provider does not have a verified contact email.",
+      "invalid_token": "The verification token is invalid or expired."
+    }
+  },
   "errors": {
     "rateLimited": "Too many requests. Please try again in {seconds} seconds.",
     "botDetected": "Bot verification failed. Please try again.",

@@ -16,6 +16,7 @@ export const RATE_LIMIT_KEYS = {
   model_review: "ratelimit:model_review",
   model_feature_request: "ratelimit:model_feature",
   dilemma_vote: "ratelimit:dilemma_vote",
+  incident_vote: "ratelimit:incident_vote",
 } as const;
 
 let _redis: Redis | null = null;
@@ -105,12 +106,18 @@ function getLimiters(): Record<string, Ratelimit> {
       analytics: true,
       prefix: "alpar",
     }),
+    [RATE_LIMIT_KEYS.incident_vote]: new Ratelimit({
+      redis: _redis,
+      limiter: Ratelimit.slidingWindow(20, "1 m"),
+      analytics: true,
+      prefix: "alpar",
+    }),
   };
   return _limiters;
 }
 
 export async function checkRateLimit(
-  key: string
+  key: string,
 ): Promise<{ ok: boolean; retryAfter?: number; remaining?: number }> {
   const limiters = getLimiters();
   const parts = key.split(":");

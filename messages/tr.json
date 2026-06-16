@@ -883,6 +883,31 @@
     "commitmentText2": "Olay kayıtlarını değiştirmek için ödeme kabul etmiyoruz. Sağlayıcılar, yalnızca resmi yanıt süreci aracılığıyla olgusal düzeltmeler gönderebilir.",
     "commitmentText3": "Moderasyon ekibimiz bağımsız olarak çalışır. Hiçbir yapay zeka sağlayıcısı yayınlanan olay raporlarını kaldıramaz veya değiştiremez."
   },
+  "respond": {
+    "title": "Sağlayıcı Yanıtı Gönder",
+    "subtitle": "Bu olayla ilgili şirketinizin resmi açıklamasını veya düzeltmesini sağlayın.",
+    "incident_referenced": "Atıfta Bulunulan Olay",
+    "official_representation": "Resmi Temsilci",
+    "name_label": "Adınız Soyadınız",
+    "name_placeholder": "Örn. Ahmet Yılmaz",
+    "role_label": "Göreviniz",
+    "role_placeholder": "Örn. İletişim Direktörü",
+    "response_label": "Resmi Açıklama",
+    "response_placeholder": "Kuruluşunuzun pozisyonunu, alınan önlemleri veya düzeltmeleri belirtin...",
+    "submit_button": "Resmi Yanıtı Gönder",
+    "success_title": "Yanıt Başarıyla Gönderildi",
+    "success_desc": "Resmi yanıtınız yayınlandı ve olayın detay sayfasına sabitlendi.",
+    "success_toast": "Resmi yanıt başarıyla yayınlandı",
+    "invalid_token": "Geçersiz veya Süresi Dolan Bağlantı",
+    "invalid_token_desc": "Bu bağlantı geçersiz, süresi dolmuş veya bu olay için yanıt göndermeye yetkilendirilmemiş.",
+    "errors": {
+      "incident_not_found": "Atıfta bulunulan olay bulunamadı.",
+      "provider_not_associated": "Bu olayla ilişkilendirilmiş bir yapay zeka sağlayıcısı yok.",
+      "provider_not_found": "İlişkili sağlayıcı bulunamadı.",
+      "provider_no_contact_email": "İlişkili sağlayıcının doğrulanmış bir iletişim e-postası yok.",
+      "invalid_token": "Doğrulama belirteci geçersiz veya süresi dolmuş."
+    }
+  },
   "errors": {
     "rateLimited": "Çok fazla istek. Lütfen {seconds} saniye sonra tekrar deneyin.",
     "botDetected": "Bot doğrulaması başarısız oldu. Lütfen tekrar deneyin.",

@@ -1,9 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import "../helpers/setup";
-import {
-  createMockSupabaseClient,
-  createTestUser,
-} from "../helpers/supabase-mock";
+import { createMockSupabaseClient, createTestUser } from "../helpers/supabase-mock";
 
 vi.hoisted(() => {
   vi.doMock("@/lib/supabase/server", () => ({
@@ -36,11 +33,7 @@ vi.hoisted(() => {
 import { createClient, createServerClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import { checkRateLimit } from "@/lib/utils/rate-limit";
-import {
-  signInWithGoogle,
-  signInWithMagicLink,
-  getMe,
-} from "@/actions/auth";
+import { signInWithGoogle, signInWithMagicLink, getMe } from "@/actions/auth";
 
 let mockSupabase: ReturnType<typeof createMockSupabaseClient>;
 let mockUser: ReturnType<typeof createTestUser>;
@@ -77,11 +70,9 @@ describe("signInWithGoogle", () => {
       expect.objectContaining({
         provider: "google",
         options: expect.objectContaining({
-          redirectTo: expect.stringContaining(
-            encodeURIComponent("/dashboard")
-          ),
+          redirectTo: expect.stringContaining(encodeURIComponent("/dashboard")),
         }),
-      })
+      }),
     );
   });
 
@@ -116,7 +107,7 @@ describe("signInWithMagicLink", () => {
     const result = await signInWithMagicLink("user@example.com");
     expect(result.ok).toBe(true);
     expect(mockSupabase.auth.signInWithOtp).toHaveBeenCalledWith(
-      expect.objectContaining({ email: "user@example.com" })
+      expect.objectContaining({ email: "user@example.com" }),
     );
   });
 
@@ -127,6 +118,16 @@ describe("signInWithMagicLink", () => {
     const result = await signInWithMagicLink("user@example.com");
     expect(result.ok).toBe(false);
     expect(result.error).toBe("Rate limit exceeded");
+  });
+
+  it("returns error when rate limited", async () => {
+    vi.mocked(checkRateLimit).mockResolvedValueOnce({
+      ok: false,
+      retryAfter: 60,
+    });
+    const result = await signInWithMagicLink("user@example.com");
+    expect(result.ok).toBe(false);
+    expect(result.error).toContain("Too many");
   });
 });
 
