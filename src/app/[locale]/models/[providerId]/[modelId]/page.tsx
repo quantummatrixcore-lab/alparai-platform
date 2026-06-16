@@ -34,7 +34,7 @@ export default async function ModelDetailPage({ params }: ModelDetailPageProps) 
   const { data: model } = await db
     .from("ai_models")
     .select(
-      "id, name, version, status, released_at, provider_id, ai_providers(id, name, slug, logo_url)"
+      "id, name, version, status, released_at, provider_id, ai_providers(id, name, slug, logo_url)",
     )
     .eq("id", modelId)
     .eq("provider_id", providerId)
@@ -49,7 +49,7 @@ export default async function ModelDetailPage({ params }: ModelDetailPageProps) 
     db
       .from("model_reviews")
       .select(
-        "id, model_id, user_id, is_anonymous, score_overall, score_accuracy, score_safety, score_creativity, score_speed, score_value, title, body, status, helpful_count, created_at, users(username, full_name)"
+        "id, model_id, user_id, is_anonymous, score_overall, score_accuracy, score_safety, score_creativity, score_speed, score_value, title, body, status, helpful_count, created_at, users(username, full_name)",
       )
       .eq("model_id", modelId)
       .eq("status", "published")
@@ -57,7 +57,7 @@ export default async function ModelDetailPage({ params }: ModelDetailPageProps) 
     db
       .from("model_feature_requests")
       .select(
-        "id, model_id, user_id, is_anonymous, title, description, category, status, votes_count, created_at, users(username, full_name)"
+        "id, model_id, user_id, is_anonymous, title, description, category, status, votes_count, created_at, users(username, full_name)",
       )
       .eq("model_id", modelId)
       .order("votes_count", { ascending: false }),
@@ -103,7 +103,7 @@ export default async function ModelDetailPage({ params }: ModelDetailPageProps) 
       countCreativity: 0,
       countSpeed: 0,
       countValue: 0,
-    }
+    },
   );
 
   const reviewsCount = reviews.length;
@@ -182,7 +182,7 @@ export default async function ModelDetailPage({ params }: ModelDetailPageProps) 
             <img
               src={provider.logo_url}
               alt={provider.name}
-              className="border-border-subtle h-16 w-16 rounded-2xl border bg-white object-contain p-2"
+              className="border-border-subtle bg-bg-tertiary h-16 w-16 rounded-2xl border object-contain p-2"
             />
           ) : (
             <div className="bg-bg-tertiary text-fg-muted flex h-16 w-16 items-center justify-center rounded-2xl text-xl font-bold">

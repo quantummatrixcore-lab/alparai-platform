@@ -12,7 +12,7 @@ vi.mock("next-intl", () => ({
 
 // Mock react-dom useFormState and useFormStatus
 vi.mock("react-dom", () => ({
-  useFormState: vi.fn((fn, initial) => [initial, fn]),
+  useFormState: vi.fn((fn, initial) => [initial, fn, false]),
   useFormStatus: vi.fn(() => ({ pending: false })),
 }));
 
@@ -33,7 +33,7 @@ describe("ContactForm Component", () => {
   });
 
   test("renders success state card when state.ok is true", () => {
-    vi.mocked(useFormState).mockImplementationOnce(() => [{ ok: true }, vi.fn()]);
+    vi.mocked(useFormState).mockImplementationOnce(() => [{ ok: true }, vi.fn(), false]);
 
     render(<ContactForm />);
     expect(screen.getByText("sent_title")).toBeDefined();
@@ -45,6 +45,7 @@ describe("ContactForm Component", () => {
     vi.mocked(useFormState).mockImplementationOnce(() => [
       { ok: false, formError: "Invalid submission" },
       vi.fn(),
+      false,
     ]);
 
     render(<ContactForm />);
@@ -62,6 +63,7 @@ describe("ContactForm Component", () => {
         },
       },
       vi.fn(),
+      false,
     ]);
 
     render(<ContactForm />);

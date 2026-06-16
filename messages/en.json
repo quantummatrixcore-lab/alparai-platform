@@ -89,6 +89,7 @@
     "submit_page_title": "Report an incident",
     "submit_page_subtitle": "No login required. You can submit anonymously. PII is masked automatically. A moderator reviews every submission before publication.",
     "anon_badge": "100% Anonymous",
+    "new_badge": "JUST IN",
     "anon_badge_desc": "No email, no name, no tracking. Only what you choose to share.",
     "title_placeholder": "Briefly describe the incident",
     "description_placeholder": "Tell us what happened. What did the AI say or do? When? In what context?",
@@ -137,7 +138,10 @@
     "ai_response": "Official response",
     "ai_response_pending": "Awaiting official response",
     "sign_in_to_submit": "Sign in to submit your report",
-    "sign_in_hint": "Your report is saved in this form. Sign in and it will be submitted automatically."
+    "sign_in_hint": "Your report is saved in this form. Sign in and it will be submitted automatically.",
+    "timeline_reported": "Reported",
+    "timeline_reviewed": "Reviewed",
+    "timeline_published": "Published"
   },
   "categories": {
     "hallucination": "Hallucination",
@@ -352,7 +356,11 @@
     "goHome": "Back to home",
     "goHomeDesc": "The public record of AI behavior",
     "browseDesc": "Browse published AI incidents",
-    "goBack": "Go back"
+    "goBack": "Go back",
+    "rateLimited": "Too many requests. Please try again in {seconds} seconds.",
+    "botDetected": "Bot verification failed. Please try again.",
+    "serverMisconfiguration": "Server error. Please try again later.",
+    "notFound": "Page not found"
   },
   "common": {
     "loading": "Loading…",
@@ -589,6 +597,7 @@
     "cookiesWhatTitle": "What is a cookie?",
     "cookiesWhatText": "A cookie is a small text file that a website stores on your device to remember information between visits. We try to use as few as possible.",
     "cookiesUsedTitle": "Cookies we use",
+    "cookiesTableCaption": "Cookie details table",
     "cookiesColName": "Name",
     "cookiesColPurpose": "Purpose",
     "cookiesColType": "Type",
@@ -899,13 +908,5 @@
       "provider_no_contact_email": "The associated provider does not have a verified contact email.",
       "invalid_token": "The verification token is invalid or expired."
     }
-  },
-  "errors": {
-    "rateLimited": "Too many requests. Please try again in {seconds} seconds.",
-    "botDetected": "Bot verification failed. Please try again.",
-    "serverMisconfiguration": "Server error. Please try again later.",
-    "unexpectedError": "An unexpected error occurred.",
-    "notFound": "Page not found",
-    "notFoundDesc": "The page you're looking for doesn't exist or has been moved."
   }
 }

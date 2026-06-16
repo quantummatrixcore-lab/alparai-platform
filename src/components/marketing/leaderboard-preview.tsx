@@ -7,6 +7,22 @@ import { Trophy, TrendingDown, TrendingUp, Minus } from "lucide-react";
 import { cn, formatNumber } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import type { LeaderboardEntry } from "@/types";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 8 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } },
+};
 
 export function LeaderboardPreview({ entries }: { entries: LeaderboardEntry[] }) {
   const t = useTranslations("leaderboard");
@@ -23,13 +39,21 @@ export function LeaderboardPreview({ entries }: { entries: LeaderboardEntry[] })
       </div>
       <Card variant="glass">
         <CardContent className="p-0">
-          <ol className="divide-border-subtle divide-y">
+          <motion.ol
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-40px" }}
+            className="divide-border-subtle divide-y"
+          >
             {entries.slice(0, 10).map((e, i) => {
               const trend = e.trend > 0 ? "up" : e.trend < 0 ? "down" : "flat";
               return (
-                <li
+                <motion.li
+                  variants={itemVariants}
                   key={e.provider_id}
-                  className="flex items-center gap-3 p-3 transition-colors duration-300 first:rounded-t-xl last:rounded-b-xl hover:bg-white/5"
+                  whileHover={{ x: 4, backgroundColor: "rgba(255, 255, 255, 0.03)" }}
+                  className="flex items-center gap-3 p-3 transition-all duration-300 first:rounded-t-xl last:rounded-b-xl"
                 >
                   <span
                     className={cn(
@@ -40,7 +64,7 @@ export function LeaderboardPreview({ entries }: { entries: LeaderboardEntry[] })
                           ? "bg-fg-muted/15 text-fg-muted"
                           : i === 2
                             ? "bg-warning-700/15 text-warning-700"
-                            : "bg-bg-tertiary text-fg-muted"
+                            : "bg-bg-tertiary text-fg-muted",
                     )}
                   >
                     {i + 1}
@@ -61,7 +85,7 @@ export function LeaderboardPreview({ entries }: { entries: LeaderboardEntry[] })
                       "inline-flex items-center gap-1 text-xs font-medium",
                       trend === "up" && "text-danger-400",
                       trend === "down" && "text-success-500",
-                      trend === "flat" && "text-fg-muted"
+                      trend === "flat" && "text-fg-muted",
                     )}
                   >
                     {trend === "up" && <TrendingUp className="h-3 w-3" />}
@@ -69,10 +93,10 @@ export function LeaderboardPreview({ entries }: { entries: LeaderboardEntry[] })
                     {trend === "flat" && <Minus className="h-3 w-3" />}
                     {Math.abs(e.trend)}
                   </span>
-                </li>
+                </motion.li>
               );
             })}
-          </ol>
+          </motion.ol>
         </CardContent>
       </Card>
     </div>

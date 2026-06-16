@@ -176,7 +176,7 @@ export function HeroSection({
                     {t("founder_title")}
                   </h4>
                   <blockquote className="text-fg-secondary md:text-md mt-1.5 text-base leading-relaxed font-semibold">
-                    "{t("founder_subtitle")}"
+                    “{t("founder_subtitle")}”
                   </blockquote>
                 </div>
               </div>
@@ -216,6 +216,35 @@ export function HeroSection({
   );
 }
 
+function AnimatedValue({ value }: { value: number }) {
+  const [count, setCount] = React.useState(0);
+
+  React.useEffect(() => {
+    let start = 0;
+    const end = value;
+    if (end === 0) return;
+
+    const duration = 1200; // ms
+    const range = end - start;
+    const stepTime = Math.max(16, Math.floor(duration / 60)); // ~60fps
+    const increment = Math.max(1, Math.ceil(range / (duration / stepTime)));
+
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        setCount(end);
+        clearInterval(timer);
+      } else {
+        setCount(start);
+      }
+    }, stepTime);
+
+    return () => clearInterval(timer);
+  }, [value]);
+
+  return <>{count.toLocaleString()}</>;
+}
+
 function StatCard({
   label,
   value,
@@ -234,7 +263,7 @@ function StatCard({
     >
       <div className="absolute top-0 left-0 h-[1px] w-full bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
       <p className="text-fg-primary text-5xl font-black tracking-tighter md:text-6xl">
-        {typeof value === "number" ? value.toLocaleString() : value}
+        {typeof value === "number" ? <AnimatedValue value={value} /> : value}
       </p>
       <p className="text-fg-muted mt-3 text-sm font-bold tracking-[0.2em] uppercase">{label}</p>
     </motion.div>

@@ -89,6 +89,7 @@
     "submit_page_title": "Bir olay bildir",
     "submit_page_subtitle": "Giriş gerekmez. Anonim olarak gönderebilirsiniz. KVT otomatik olarak maskelenir. Her gönderi yayınlanmadan önce bir moderatör tarafından incelenir.",
     "anon_badge": "%100 Anonim",
+    "new_badge": "YENİ",
     "anon_badge_desc": "E-posta yok, isim yok, izleme yok. Sadece paylaşmayı seçtiğiniz bilgiler.",
     "title_placeholder": "Olayı kısaca tanımlayın",
     "description_placeholder": "Ne oldu? AI ne söyledi veya ne yaptı? Ne zaman? Hangi bağlamda?",
@@ -137,7 +138,10 @@
     "ai_response": "Resmi yanıt",
     "ai_response_pending": "Resmi yanıt bekleniyor",
     "sign_in_to_submit": "Raporunuzu göndermek için giriş yapın",
-    "sign_in_hint": "Raporunuz bu formda kaydedilir. Giriş yapın ve otomatik olarak gönderilecektir."
+    "sign_in_hint": "Raporunuz bu formda kaydedilir. Giriş yapın ve otomatik olarak gönderilecektir.",
+    "timeline_reported": "Bildirildi",
+    "timeline_reviewed": "İncelendi",
+    "timeline_published": "Yayınlandı"
   },
   "categories": {
     "hallucination": "Halüsinasyon",
@@ -352,7 +356,11 @@
     "goHome": "Ana sayfaya dön",
     "goHomeDesc": "AI davranışının kamu arşivi",
     "browseDesc": "Yayınlanmış AI olaylarını inceleyin",
-    "goBack": "Geri dön"
+    "goBack": "Geri dön",
+    "rateLimited": "Çok fazla istek. Lütfen {seconds} saniye sonra tekrar deneyin.",
+    "botDetected": "Bot doğrulaması başarısız oldu. Lütfen tekrar deneyin.",
+    "serverMisconfiguration": "Sunucu hatası. Lütfen daha sonra tekrar deneyin.",
+    "notFound": "Sayfa bulunamadı"
   },
   "common": {
     "loading": "Yükleniyor…",
@@ -589,6 +597,7 @@
     "cookiesWhatTitle": "Çerez nedir?",
     "cookiesWhatText": "Çerez, bir web sitesinin ziyaretler arasında bilgileri hatırlamak için cihazınızda sakladığı küçük bir metin dosyasıdır. Mümkün olduğunca az kullanmaya çalışıyoruz.",
     "cookiesUsedTitle": "Kullandığımız çerezler",
+    "cookiesTableCaption": "Çerez ayrıntıları tablosu",
     "cookiesColName": "Ad",
     "cookiesColPurpose": "Amaç",
     "cookiesColType": "Tür",
@@ -899,13 +908,5 @@
       "provider_no_contact_email": "İlişkili sağlayıcının doğrulanmış bir iletişim e-postası yok.",
       "invalid_token": "Doğrulama belirteci geçersiz veya süresi dolmuş."
     }
-  },
-  "errors": {
-    "rateLimited": "Çok fazla istek. Lütfen {seconds} saniye sonra tekrar deneyin.",
-    "botDetected": "Bot doğrulaması başarısız oldu. Lütfen tekrar deneyin.",
-    "serverMisconfiguration": "Sunucu hatası. Lütfen daha sonra tekrar deneyin.",
-    "unexpectedError": "Beklenmedik bir hata oluştu.",
-    "notFound": "Sayfa bulunamadı",
-    "notFoundDesc": "Aradığınız sayfa mevcut değil veya taşınmış."
   }
 }

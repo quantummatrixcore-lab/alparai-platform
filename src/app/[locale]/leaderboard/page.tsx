@@ -173,13 +173,13 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
                       className="text-fg-primary hover:text-brand-400 group flex items-center gap-3 font-medium transition-colors"
                     >
                       {p.logo_url ? (
-                        <div className="border-border-subtle bg-bg-primary relative h-10 w-24 shrink-0 overflow-hidden rounded-md border shadow-sm transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_15px_rgba(231,76,60,0.3)]">
+                        <div className="border-border-subtle bg-bg-primary relative h-10 w-10 shrink-0 overflow-hidden rounded-md border shadow-sm transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_15px_rgba(231,76,60,0.3)]">
                           <Image
                             src={p.logo_url}
                             alt={`${p.name} logo`}
                             fill
-                            className="object-contain p-1"
-                            sizes="96px"
+                            className="object-contain p-1.5"
+                            sizes="40px"
                           />
                         </div>
                       ) : (
