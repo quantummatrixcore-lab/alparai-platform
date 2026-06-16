@@ -7,7 +7,15 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
-export function ShareButtons({ url, title, className }: { url: string; title: string; className?: string }) {
+export function ShareButtons({
+  url,
+  title,
+  className,
+}: {
+  url: string;
+  title: string;
+  className?: string;
+}) {
   const t = useTranslations("incident");
   const [copied, setCopied] = useState(false);
   const fullUrl = React.useMemo(() => {
@@ -21,7 +29,8 @@ export function ShareButtons({ url, title, className }: { url: string; title: st
       setCopied(true);
       toast.success(t("share_copy") + " ✓");
       setTimeout(() => setCopied(false), 2000);
-    } catch {
+    } catch (err) {
+      console.error("Clipboard copy failed:", err);
       toast.error("Copy failed");
     }
   };
@@ -31,15 +40,15 @@ export function ShareButtons({ url, title, className }: { url: string; title: st
 
   return (
     <div className={cn("flex flex-col gap-2", className)}>
-      <p className="text-xs font-medium text-fg-muted uppercase tracking-wider">
-        <Share2 className="inline h-3.5 w-3.5 mr-1" /> {t("share")}
+      <p className="text-fg-muted text-xs font-medium tracking-wider uppercase">
+        <Share2 className="mr-1 inline h-3.5 w-3.5" /> {t("share")}
       </p>
       <div className="flex items-center gap-2">
         <a
           href={xUrl}
           target="_blank"
           rel="noreferrer noopener"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border-subtle bg-bg-secondary text-fg-secondary hover:border-brand-500 hover:text-brand-400"
+          className="border-border-subtle bg-bg-secondary text-fg-secondary hover:border-brand-500 hover:text-brand-400 inline-flex h-9 w-9 items-center justify-center rounded-md border"
           aria-label={t("share_x")}
         >
           <Twitter className="h-4 w-4" />
@@ -48,17 +57,21 @@ export function ShareButtons({ url, title, className }: { url: string; title: st
           href={liUrl}
           target="_blank"
           rel="noreferrer noopener"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border-subtle bg-bg-secondary text-fg-secondary hover:border-brand-500 hover:text-brand-400"
+          className="border-border-subtle bg-bg-secondary text-fg-secondary hover:border-brand-500 hover:text-brand-400 inline-flex h-9 w-9 items-center justify-center rounded-md border"
           aria-label={t("share_linkedin")}
         >
           <Linkedin className="h-4 w-4" />
         </a>
         <button
           onClick={onCopy}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border-subtle bg-bg-secondary text-fg-secondary hover:border-brand-500 hover:text-brand-400"
+          className="border-border-subtle bg-bg-secondary text-fg-secondary hover:border-brand-500 hover:text-brand-400 inline-flex h-9 w-9 items-center justify-center rounded-md border"
           aria-label={t("share_copy")}
         >
-          {copied ? <Check className="h-4 w-4 text-success-500" /> : <LinkIcon className="h-4 w-4" />}
+          {copied ? (
+            <Check className="text-success-500 h-4 w-4" />
+          ) : (
+            <LinkIcon className="h-4 w-4" />
+          )}
         </button>
       </div>
     </div>

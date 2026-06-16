@@ -56,7 +56,8 @@ export function ModelFeatureCard({ request }: ModelFeatureCardProps) {
         addSuffix: true,
         locale,
       });
-    } catch {
+    } catch (err) {
+      console.error("Failed to format date:", err);
       return "";
     }
   }, [request.created_at, locale]);

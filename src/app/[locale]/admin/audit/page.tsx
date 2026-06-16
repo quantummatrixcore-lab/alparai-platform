@@ -24,7 +24,7 @@ export default async function AdminAuditPage({ params }: { params: Promise<{ loc
   const admin = createAdminClient();
   const { data } = await admin
     .from("audit_log")
-    .select("*")
+    .select("id, action, entity_type, entity_id, created_at")
     .order("created_at", { ascending: false })
     .limit(100);
 

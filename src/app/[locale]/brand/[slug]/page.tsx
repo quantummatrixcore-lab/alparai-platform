@@ -24,7 +24,7 @@ import { toIncidentListItems } from "@/lib/mappers";
 function calculateTrustScore(
   totalIncidents: number,
   responseCount: number,
-  resolvedCount: number
+  resolvedCount: number,
 ): number {
   if (totalIncidents === 0) return 0;
   const responseRate = responseCount / totalIncidents;
@@ -55,7 +55,7 @@ export default async function BrandPage({
 
   const { data: provider } = await supabase
     .from("ai_providers")
-    .select("*")
+    .select("id, name, slug, description, website_url, contact_email, logo_url, is_verified")
     .eq("slug", slug)
     .maybeSingle();
   if (!provider) notFound();
@@ -66,7 +66,7 @@ export default async function BrandPage({
     supabase
       .from("incidents")
       .select(
-        "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id"
+        "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id",
       )
       .eq("status", "published")
       .eq("ai_provider_id", providerId)

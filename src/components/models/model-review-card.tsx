@@ -47,7 +47,8 @@ export function ModelReviewCard({ review }: ModelReviewCardProps) {
         addSuffix: true,
         locale,
       });
-    } catch {
+    } catch (err) {
+      console.error("Failed to format date:", err);
       return "";
     }
   }, [review.created_at, locale]);
