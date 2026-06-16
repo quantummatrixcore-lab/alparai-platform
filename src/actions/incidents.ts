@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { getLocale } from "next-intl/server";
+import { logger } from "@/lib/utils/logger";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -43,7 +44,8 @@ async function resolveLocale(): Promise<"en" | "tr"> {
   try {
     const loc = await getLocale();
     return loc === "tr" ? "tr" : "en";
-  } catch {
+  } catch (err) {
+    logger.warn("resolveLocale failed, falling back to 'en'", { error: err });
     return "en";
   }
 }

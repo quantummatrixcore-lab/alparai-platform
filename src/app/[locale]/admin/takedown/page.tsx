@@ -28,7 +28,9 @@ export default async function AdminTakedownPage({
   const admin = createAdminClient();
   const { data } = await admin
     .from("takedown_requests")
-    .select("*")
+    .select(
+      "id, reason, details, status, created_at, requester_name, requester_email, organization, requester_organization, country, target_url",
+    )
     .order("created_at", { ascending: false })
     .limit(100);
 
