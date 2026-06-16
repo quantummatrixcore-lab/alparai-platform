@@ -89,7 +89,7 @@ export function StatsCards({ stats }: { stats: AdminStats }) {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-4">
       {cards.map((c) => (
-        <Card key={c.label} className="relative overflow-hidden">
+        <Card key={c.label} variant="glass" interactive className="relative overflow-hidden">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div
