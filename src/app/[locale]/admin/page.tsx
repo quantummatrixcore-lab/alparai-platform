@@ -28,7 +28,7 @@ export default async function AdminDashboardPage({
   const t = await getTranslations({ locale, namespace: "admin" });
   const user = await getCurrentUser();
   if (!user) redirect(`/${locale}/auth/signin?next=/${locale}/admin`);
-  if (user.role !== "moderator" && user.role !== "admin") {
+  if (user.role !== "moderator" && user.role !== "admin" && user.role !== "ceo") {
     redirect(`/${locale}`);
   }
 

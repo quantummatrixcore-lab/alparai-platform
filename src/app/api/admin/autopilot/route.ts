@@ -4,7 +4,7 @@ import { getAdminAutopilotSnapshot, triggerAutopilotWorkerTick } from "@/actions
 const isAdmin = async (): Promise<boolean> => {
   const { getCurrentUser } = await import("@/lib/auth/session");
   const u = await getCurrentUser();
-  return Boolean(u && (u.role === "admin" || u.role === "moderator"));
+  return Boolean(u && (u.role === "admin" || u.role === "moderator" || u.role === "ceo"));
 };
 
 export async function GET(request: Request) {
