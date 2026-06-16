@@ -147,7 +147,7 @@ export default async function AdminDashboardPage({
 
       <div className="mt-8 grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <Card>
+          <Card variant="glass">
             <CardHeader>
               <CardTitle className="inline-flex items-center gap-2">
                 <AlertTriangle className="text-warning-500 h-5 w-5" />
@@ -161,7 +161,7 @@ export default async function AdminDashboardPage({
         </div>
         <div className="space-y-6">
           <QuickActions locale={locale} />
-          <Card>
+          <Card variant="glass">
             <CardHeader>
               <CardTitle className="inline-flex items-center gap-2 text-base">
                 <Clock className="text-fg-muted h-4 w-4" />

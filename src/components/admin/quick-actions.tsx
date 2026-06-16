@@ -37,7 +37,7 @@ export function QuickActions({ locale }: { locale: string }) {
   ];
 
   return (
-    <Card>
+    <Card variant="glass">
       <CardHeader>
         <CardTitle className="inline-flex items-center gap-2 text-base">
           <Activity className="text-brand-400 h-4 w-4" />
@@ -56,8 +56,11 @@ export function QuickActions({ locale }: { locale: string }) {
           </Link>
         ))}
         <div className="border-border-subtle mt-4 border-t pt-3">
-          <div className="text-success-500 flex items-center gap-2 text-xs">
-            <span className="bg-success-500 h-2 w-2 rounded-full" />
+          <div className="text-success-500 flex items-center gap-2 text-xs font-semibold tracking-wider uppercase">
+            <span className="relative flex h-2 w-2">
+              <span className="bg-success-400 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"></span>
+              <span className="bg-success-500 relative inline-flex h-2 w-2 rounded-full"></span>
+            </span>
             {t("all_operational")}
           </div>
         </div>
