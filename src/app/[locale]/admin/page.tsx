@@ -3,11 +3,10 @@ import { redirect } from "next/navigation";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatsCards, type AdminStats } from "@/components/admin/stats-cards";
-import { QuickActions } from "@/components/admin/quick-actions";
 import { ModerationQueue } from "@/components/admin/moderation-queue";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { AlertTriangle, ShieldCheck, Clock } from "lucide-react";
+import { AlertTriangle, ShieldCheck, Activity } from "lucide-react";
 import type { IncidentListItem } from "@/types";
 import { toIncidentListItems } from "@/lib/mappers";
 
@@ -113,26 +112,52 @@ export default async function AdminDashboardPage({
           </Card>
         </div>
         <div className="space-y-6">
-          <QuickActions locale={locale} />
           <Card variant="glass">
-            <CardHeader>
-              <CardTitle className="inline-flex items-center gap-2 text-base">
-                <Clock className="text-fg-muted h-4 w-4" />
-                {t("quick_actions")}
+            <CardHeader className="pb-3">
+              <CardTitle className="inline-flex items-center gap-2 text-base font-bold">
+                <Activity className="text-brand-400 h-4 w-4" />
+                {t("platform_overview")}
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm">
-              <div className="flex items-center justify-between">
-                <span className="text-fg-muted">{t("stats_takedown_requests")}</span>
-                <span className="text-danger-500 font-semibold">{stats.takedown_requests}</span>
+            <CardContent className="space-y-4 text-sm">
+              {/* System Health Pulse Status */}
+              <div className="bg-bg-tertiary/40 border-border-subtle/50 flex items-center justify-between rounded-xl border p-3.5 backdrop-blur-md">
+                <span className="text-fg-secondary text-xs font-semibold tracking-wider uppercase">
+                  {t("system_health") ?? "Sistem Durumu"}
+                </span>
+                <div className="text-success-500 flex items-center gap-2 text-xs font-bold tracking-wider uppercase">
+                  <span className="relative flex h-2 w-2">
+                    <span className="bg-success-400 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"></span>
+                    <span className="bg-success-500 relative inline-flex h-2 w-2 rounded-full"></span>
+                  </span>
+                  {t("all_operational")}
+                </div>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-fg-muted">{t("stats_providers")}</span>
-                <span className="text-brand-400 font-semibold">{stats.providers}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-fg-muted">{t("stats_24h")}</span>
-                <span className="text-accent-400 font-semibold">{stats.recent_24h}</span>
+
+              {/* Stats Rows */}
+              <div className="space-y-3">
+                <div className="bg-bg-tertiary/20 hover:bg-bg-tertiary/30 border-border-subtle flex items-center justify-between rounded-xl border p-3 transition-all">
+                  <span className="text-fg-secondary font-medium">
+                    {t("stats_takedown_requests")}
+                  </span>
+                  <span className="bg-danger-500/10 text-danger-400 border-danger-500/20 rounded-md border px-2 py-0.5 text-xs font-bold">
+                    {stats.takedown_requests}
+                  </span>
+                </div>
+
+                <div className="bg-bg-tertiary/20 hover:bg-bg-tertiary/30 border-border-subtle flex items-center justify-between rounded-xl border p-3 transition-all">
+                  <span className="text-fg-secondary font-medium">{t("stats_providers")}</span>
+                  <span className="bg-brand-500/10 text-brand-300 border-brand-500/20 rounded-md border px-2 py-0.5 text-xs font-bold">
+                    {stats.providers}
+                  </span>
+                </div>
+
+                <div className="bg-bg-tertiary/20 hover:bg-bg-tertiary/30 border-border-subtle flex items-center justify-between rounded-xl border p-3 transition-all">
+                  <span className="text-fg-secondary font-medium">{t("stats_24h")}</span>
+                  <span className="bg-accent-500/10 text-accent-300 border-accent-500/20 rounded-md border px-2 py-0.5 text-xs font-bold">
+                    {stats.recent_24h}
+                  </span>
+                </div>
               </div>
             </CardContent>
           </Card>
