@@ -693,7 +693,8 @@
     "transparencyNumbers": "Platform sayıları",
     "transparencyCommitment": "Taahhüdümüz",
     "analysisTitle": "Ana Analiz",
-    "analysisSubtitle": "Platform iyileştirmesi için AI model analizleri"
+    "analysisSubtitle": "Platform iyileştirmesi için AI model analizleri",
+    "skipToMain": "Ana içeriğe geç"
   },
   "dilemmas": {
     "pageTitle": "Yapay Zeka Dilemmaları",
@@ -849,15 +850,6 @@
     "sort_rating": "En Yüksek Puan",
     "sort_reviews": "En Çok Değerlendirme",
     "sort_features": "En Çok Özellik İsteği"
-  },
-  "legal": {
-    "transparencyTitle": "Şeffaflık Raporu",
-    "transparencyHeading": "ALPAR AI nasıl çalışır",
-    "transparencySubheading": "Güven altyapısı şeffaflık gerektirir. Raporları, moderasyonu ve sağlayıcı yanıtlarını nasıl yönettiğimiz aşağıda açıklanmaktadır.",
-    "transparencyModeration": "Moderasyon süreci",
-    "transparencyNumbers": "Platform rakamları",
-    "transparencyCommitment": "Taahhüdümüz",
-    "skipToMain": "Ana içeriğe geç"
   },
   "transparency": {
     "totalReports": "Toplam rapor",

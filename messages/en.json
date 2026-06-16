@@ -693,7 +693,8 @@
     "transparencyNumbers": "Platform numbers",
     "transparencyCommitment": "Our commitment",
     "analysisTitle": "Master Analysis",
-    "analysisSubtitle": "AI model analyses for platform improvement"
+    "analysisSubtitle": "AI model analyses for platform improvement",
+    "skipToMain": "Skip to main content"
   },
   "dilemmas": {
     "pageTitle": "AI Dilemmas",
@@ -849,15 +850,6 @@
     "sort_rating": "Highest Rating",
     "sort_reviews": "Most Reviews",
     "sort_features": "Most Feature Requests"
-  },
-  "legal": {
-    "transparencyTitle": "Transparency Report",
-    "transparencyHeading": "How ALPAR AI works",
-    "transparencySubheading": "Trust infrastructure requires transparency. Here's how we handle reports, moderation, and provider responses.",
-    "transparencyModeration": "Moderation process",
-    "transparencyNumbers": "Platform numbers",
-    "transparencyCommitment": "Our commitment",
-    "skipToMain": "Skip to main content"
   },
   "transparency": {
     "totalReports": "Total reports",
