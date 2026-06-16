@@ -9,6 +9,7 @@ import { LanguageSwitcher } from "./language-switcher";
 import { UserMenu } from "./user-menu";
 import { useTranslations } from "next-intl";
 import { Plus, Lightbulb } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export function Header({
   user,
@@ -22,6 +23,16 @@ export function Header({
   } | null;
 }) {
   const t = useTranslations("nav");
+  const pathname = usePathname();
+  const isAdmin =
+    pathname &&
+    (/^\/(?:en|tr)\/admin(?:\/|$)/.test(pathname) ||
+      pathname === "/admin" ||
+      pathname.startsWith("/admin"));
+
+  if (isAdmin) {
+    return null;
+  }
   return (
     <div className="pointer-events-none fixed top-0 z-50 flex w-full justify-center p-4 sm:p-6">
       <header className="bg-glass hover:border-brand-500/20 pointer-events-auto flex h-14 w-full max-w-6xl items-center justify-between gap-4 rounded-full px-4 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] transition-all duration-500 hover:shadow-[0_8px_32px_rgba(168,85,247,0.15)]">

@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Wordmark } from "./wordmark";
 import { Github, Twitter, Mail, Shield } from "lucide-react";
 import { Container } from "@/components/ui/layout";
+import { usePathname } from "next/navigation";
 
 const productLinks = [
   { href: "/incidents", key: "incidents" },
@@ -31,6 +32,16 @@ const aboutLinks = [
 export function Footer() {
   const t = useTranslations("footer");
   const year = new Date().getFullYear();
+  const pathname = usePathname();
+  const isAdmin =
+    pathname &&
+    (/^\/(?:en|tr)\/admin(?:\/|$)/.test(pathname) ||
+      pathname === "/admin" ||
+      pathname.startsWith("/admin"));
+
+  if (isAdmin) {
+    return null;
+  }
   return (
     <footer className="border-border-subtle bg-bg-secondary border-t">
       <Container className="py-12">
