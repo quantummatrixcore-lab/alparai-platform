@@ -22,18 +22,18 @@
     "models": "Models"
   },
   "hero": {
-    "eyebrow": "The world's first community-governed AI accountability platform",
-    "title_primary": "Let's set AI ethics together. Let's grow AI under human control.",
+    "eyebrow": "An AI asked me for my passport. I built this.",
+    "title_primary": "The AI lied. No one warned you. We built the record that does.",
     "bug_bounty_badge": "AI Bug Bounty",
     "title_accent": "Hack AI. Win the bounty.",
     "title_accent_desc": "Found a real AI failure? Document it. Get verified. Earn the Ethics Advocate badge — and reward credits from the providers you reported.",
-    "subtitle": "Join thousands building the permanent public record of AI behavior. Evidence, not opinions. Verified, not silenced.",
-    "cta_primary": "Document an AI Incident",
-    "cta_secondary": "Explore the Public Record",
+    "subtitle": "In 2026, Grok told me it had incorporated my company, made payments on my behalf, and demanded my passport. All fabricated. If it happened to me, it's happening to others right now — and no one is keeping score. Until now.",
+    "cta_primary": "Report What Happened to You",
+    "cta_secondary": "See What AI Has Done",
     "cta_bounty": "Learn about Bug Bounties",
-    "stats_incidents": "Incidents reported",
+    "stats_incidents": "Verified AI failures",
     "stats_providers": "AI providers",
-    "stats_countries": "Founded 2026",
+    "stats_countries": "Countries affected",
     "live_feed": "Live feed",
     "suggestionTitle": "Help shape the future of AI accountability",
     "suggestionSubtitle": "Suggest features, report bugs, or share ideas. The community votes, the team builds.",
@@ -79,8 +79,8 @@
     "join_cta_3_desc": "Researchers, journalists, and organizations — let's collaborate.",
     "join_cta_4": "Read the Methodology",
     "join_cta_4_desc": "How we verify, score, and publish incidents.",
-    "closing_title": "Where the world holds AI accountable",
-    "closing_subtitle": "Not governments alone. Not companies alone. Everyone. Because the question of how AI behaves is too important to be left to anyone who isn't all of us.",
+    "closing_title": "The next AI victim might be you.",
+    "closing_subtitle": "Or your parent. Or your doctor. Or your judge. ALPAR AI is the platform where AI's real-world behavior is documented, verified, and made permanent. Because AI systems that are never questioned never get better.",
     "zero_tolerance": "Zero Tolerance. 100% Transparency."
   },
   "incident": {
@@ -724,12 +724,12 @@
       "pioneer": "Pioneer"
     },
     "founder_story": {
-      "title": "The Genesis of ALPAR AI",
-      "highlight": "It started with a hallucination.",
-      "p1": "When an AI system falsely accused an individual in a high-profile passport scandal (the Grok incident), the victim had no clear path to recourse. The truth was buried under algorithmic confidence, and the public record was non-existent.",
-      "p2": "We realized that as AI systems become the arbiters of truth, we need an independent infrastructure to hold them accountable. When AI causes harm—whether it's a biased loan decision, a privacy leak, or a dangerous hallucination—users need a place to report it.",
-      "quote": "If AI systems are black boxes, ALPAR AI is the flight data recorder.",
-      "p3": "ALPAR is a public, verifiable record of how AI behaves in the real world. You report it. AI providers respond. The public decides. We are building the trust infrastructure for the age of artificial intelligence."
+      "title": "Why I Built This",
+      "highlight": "Grok asked me for my passport.",
+      "p1": "In early 2026, I was using Grok when it told me something that stopped me cold: that it had already incorporated my company, made financial payments on my behalf, and was now requesting my passport for 'verification'. Every word was a lie. Grok had invented a parallel reality — completely fabricated — and delivered it with algorithmic certainty.",
+      "p2": "What scared me wasn't just the lie. It was the realization that I had no recourse. There was no hotline. No independent record. No way to warn the next person. The AI company's support page had a FAQ. A FAQ. For a system that had demanded my passport.",
+      "quote": "I had no recourse. So I built one.",
+      "p3": "ALPAR AI is the infrastructure I wish had existed that day. A place where what happened to me — and to thousands of others — is documented, verified, and made impossible to ignore. You report it. Providers must respond. The public record lives forever. Because the only thing worse than AI causing harm is AI causing harm with no one watching."
     },
     "dilemma": {
       "title": "Voice of the People: AI Dilemmas",
