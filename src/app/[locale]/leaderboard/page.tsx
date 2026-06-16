@@ -60,7 +60,7 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
         response_count: responded,
         response_rate: responseRate,
       };
-    })
+    }),
   );
 
   const sorted = stats.sort((a, b) => {
@@ -117,7 +117,7 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
                       stats
                         .filter((p) => p.incident_count > 0)
                         .reduce((s, p) => s + p.response_rate, 0) /
-                        stats.filter((p) => p.incident_count > 0).length
+                        stats.filter((p) => p.incident_count > 0).length,
                     )
                   : 0}
                 %
@@ -131,6 +131,7 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
       <Card>
         <CardContent className="p-0">
           <table className="w-full text-sm">
+            <caption className="sr-only">AI Models Leaderboard Table</caption>
             <thead>
               <tr className="border-border-subtle text-fg-muted border-b text-left text-xs font-semibold tracking-wider uppercase">
                 <th className="w-12 p-4">{t("rank")}</th>
@@ -160,7 +161,7 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
                             ? "bg-fg-muted/15 text-fg-muted"
                             : i === 2
                               ? "bg-warning-700/15 text-warning-700"
-                              : "bg-bg-tertiary text-fg-muted"
+                              : "bg-bg-tertiary text-fg-muted",
                       )}
                     >
                       {i + 1}

@@ -44,6 +44,7 @@ export default async function AdminUsersPage({ params }: { params: Promise<{ loc
       <Card>
         <CardContent className="p-0">
           <table className="w-full text-sm">
+            <caption className="sr-only">Registered Users Table</caption>
             <thead>
               <tr className="border-border-subtle text-fg-muted border-b text-left text-xs font-semibold tracking-wider uppercase">
                 <th className="p-4">{t("name")}</th>

@@ -119,6 +119,7 @@ export default async function AdminAutopilotPage({
           </CardHeader>
           <CardContent>
             <table className="w-full text-left text-sm">
+              <caption className="sr-only">Autopilot Policies Table</caption>
               <thead className="text-fg-muted">
                 <tr>
                   <th className="py-2 font-medium">{t("policy_action")}</th>
@@ -169,6 +170,7 @@ export default async function AdminAutopilotPage({
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
+                <caption className="sr-only">Autopilot Active Runs Table</caption>
                 <thead className="text-fg-muted">
                   <tr>
                     <th className="py-2 font-medium">{t("run_id")}</th>

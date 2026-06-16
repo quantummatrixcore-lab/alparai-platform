@@ -39,6 +39,7 @@ export default async function AdminAuditPage({ params }: { params: Promise<{ loc
       <Card>
         <CardContent className="p-0">
           <table className="w-full text-sm">
+            <caption className="sr-only">System Audit Logs Table</caption>
             <thead>
               <tr className="border-border-subtle text-fg-muted border-b text-left text-xs font-semibold tracking-wider uppercase">
                 <th className="p-4">{t("action")}</th>

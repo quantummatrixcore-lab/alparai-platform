@@ -35,7 +35,7 @@ interface ModerationWorkInput {
 
 const runModerationWork = async (
   _ctx: AttemptContext,
-  data: ModerationWorkInput
+  data: ModerationWorkInput,
 ): Promise<AttemptOutcome<{ id: string; newStatus: string }>> => {
   const admin = createAdminClient();
   const newStatus = data.decision === "approve" ? "published" : "rejected";
@@ -56,7 +56,7 @@ const runModerationWork = async (
 };
 
 export async function moderateIncident(
-  input: z.infer<typeof moderateSchema>
+  input: z.infer<typeof moderateSchema>,
 ): Promise<ModerationResult> {
   const mod = await requireModerator();
   if (!mod) return { ok: false, error: "Forbidden" };
@@ -73,7 +73,7 @@ export async function moderateIncident(
         decision: parsed.data.decision,
         moderationNote: parsed.data.moderationNote ?? null,
       }),
-    { context: { userId: mod.id, ipHash: null, clientIdempotencyKey: null } }
+    { context: { userId: mod.id, ipHash: null, clientIdempotencyKey: null } },
   );
 
   if (result.kind === "ok" || result.kind === "replayed") {
@@ -112,7 +112,7 @@ interface TakedownReviewWorkInput {
 
 const runTakedownReviewWork = async (
   _ctx: AttemptContext,
-  data: TakedownReviewWorkInput
+  data: TakedownReviewWorkInput,
 ): Promise<AttemptOutcome<{ id: string; newStatus: string }>> => {
   const admin = createAdminClient();
   const { error } = await admin
@@ -130,7 +130,7 @@ const runTakedownReviewWork = async (
 };
 
 export async function reviewTakedown(
-  input: z.infer<typeof takedownSchema>
+  input: z.infer<typeof takedownSchema>,
 ): Promise<ModerationResult> {
   const mod = await requireModerator();
   if (!mod) return { ok: false, error: "Forbidden" };
@@ -147,7 +147,7 @@ export async function reviewTakedown(
         reviewerId: mod.id,
         newStatus,
       }),
-    { context: { userId: mod.id, ipHash: null, clientIdempotencyKey: null } }
+    { context: { userId: mod.id, ipHash: null, clientIdempotencyKey: null } },
   );
 
   if (result.kind === "ok" || result.kind === "replayed") {
@@ -174,7 +174,7 @@ export async function reviewTakedown(
 
 const userRoleSchema = z.object({
   userId: z.string().min(1),
-  role: z.enum(["user", "moderator", "admin", "ceo"]),
+  role: z.enum(["user", "moderator"]),
 });
 
 const ROLE_RANK: Record<"user" | "moderator" | "admin" | "ceo", number> = {
@@ -186,7 +186,7 @@ const ROLE_RANK: Record<"user" | "moderator" | "admin" | "ceo", number> = {
 
 function canAssignRole(
   actorRole: "user" | "moderator" | "admin" | "ceo",
-  targetRole: "user" | "moderator" | "admin" | "ceo"
+  targetRole: "user" | "moderator" | "admin" | "ceo",
 ): boolean {
   if (actorRole === "ceo") return true;
   if (actorRole === "admin") return targetRole !== "ceo";
@@ -194,7 +194,7 @@ function canAssignRole(
 }
 
 export async function setUserRole(
-  input: z.infer<typeof userRoleSchema>
+  input: z.infer<typeof userRoleSchema>,
 ): Promise<{ ok: boolean; error?: string }> {
   const admin = await requireAdmin();
   if (!admin) return { ok: false, error: "Forbidden" };
@@ -246,7 +246,7 @@ export async function setUserRole(
 
 export async function promoteUser(
   email: string,
-  role: "user" | "moderator" | "admin" | "ceo"
+  role: "user" | "moderator" | "admin" | "ceo",
 ): Promise<{ ok: boolean; error?: string; userId?: string }> {
   const admin = await requireAdmin();
   if (!admin) return { ok: false, error: "Forbidden" };

@@ -22,6 +22,20 @@ export function CookieBanner() {
     setVisible(false);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        accept("essential");
+      }
+    };
+    if (visible) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [visible]);
+
   if (!visible) return null;
   return (
     <div
