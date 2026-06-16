@@ -8,8 +8,20 @@ function safeNextPath(raw: string | null): string {
   if (!raw) return "/profile";
   try {
     const decoded = decodeURIComponent(raw);
+    if (
+      !decoded.startsWith("/") ||
+      decoded.startsWith("//") ||
+      decoded.includes("\\") ||
+      decoded.includes(":")
+    ) {
+      return "/profile";
+    }
     const url = new URL(decoded, "http://localhost");
     if (url.pathname === "/" || url.pathname === "") return "/profile";
+    const pathRegex = /^\/[a-zA-Z0-9_\-/]*$/;
+    if (!pathRegex.test(url.pathname)) {
+      return "/profile";
+    }
     return url.pathname;
   } catch {
     return "/profile";
@@ -35,7 +47,7 @@ export async function GET(request: NextRequest) {
   const next = safeNextPath(searchParams.get("next"));
   const locale = detectLocale(request);
   const hasLocalePrefix = SUPPORTED_LOCALES.some(
-    (l) => next === `/${l}` || next.startsWith(`/${l}/`)
+    (l) => next === `/${l}` || next.startsWith(`/${l}/`),
   );
   const redirectTo = hasLocalePrefix ? `${origin}${next}` : `${origin}/${locale}${next}`;
 
@@ -47,7 +59,7 @@ export async function GET(request: NextRequest) {
       description: errorDescription,
     });
     return NextResponse.redirect(
-      `${origin}/${locale}/auth/signin?error=oauth&reason=${encodeURIComponent(errorDescription || errorParam)}`
+      `${origin}/${locale}/auth/signin?error=oauth&reason=${encodeURIComponent(errorDescription || errorParam)}`,
     );
   }
 
@@ -62,11 +74,11 @@ export async function GET(request: NextRequest) {
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
           cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
+            response.cookies.set(name, value, options),
           );
         },
       },
-    }
+    },
   );
 
   try {
@@ -80,7 +92,7 @@ export async function GET(request: NextRequest) {
         message: error.message,
       });
       return NextResponse.redirect(
-        `${origin}/${locale}/auth/signin?error=oauth&reason=${encodeURIComponent(error.code ?? "exchange_failed")}`
+        `${origin}/${locale}/auth/signin?error=oauth&reason=${encodeURIComponent(error.code ?? "exchange_failed")}`,
       );
     }
 
@@ -98,7 +110,7 @@ export async function GET(request: NextRequest) {
         message: error.message,
       });
       return NextResponse.redirect(
-        `${origin}/${locale}/auth/signin?error=otp&reason=${encodeURIComponent(error.code ?? "verify_failed")}`
+        `${origin}/${locale}/auth/signin?error=otp&reason=${encodeURIComponent(error.code ?? "verify_failed")}`,
       );
     }
 
