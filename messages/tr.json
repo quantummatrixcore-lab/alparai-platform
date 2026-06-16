@@ -22,18 +22,18 @@
     "models": "Modeller"
   },
   "hero": {
-    "eyebrow": "Dünyanın ilk topluluk yönetimli AI hesap verebilirlik platformu",
-    "title_primary": "Yapay zeka etik kurallarını birlikte koyalım. YZ'yi insan kontrolünde büyütelim.",
+    "eyebrow": "Bir yapay zeka benden pasaportumu istedi. Ben de bunu inşa ettim.",
+    "title_primary": "YZ yalan söyledi. Kimse sizi uyarmadı. Uyaracak kaydı biz tuttuk.",
     "bug_bounty_badge": "AI Bug Bounty",
     "title_accent": "AI Hackle. Ödülü Kap.",
     "title_accent_desc": "Gerçek bir AI hatası mı buldun? Belgele. Doğrulat. Etik Savunucu rozeti kazan — ve bildirdiğin sağlayıcıdan ödül kredisi al.",
-    "subtitle": "AI davranışının kalıcı kamu arşivini oluşturan binlerce kişiye katılın. Kanıt, görüş değil. Doğrulanmış, susturulmamış.",
-    "cta_primary": "Bir AI Olayı Belgele",
-    "cta_secondary": "Kamu Arşivini Keşfet",
+    "subtitle": "2026 yılında Grok bana şirketimi çoktan kurduğunu, adıma finansal ödemeler yaptığını söyledi ve doğrulamak için pasaportumu istedi. Hepsi uydurmaydı. Benim başıma geldiyse şu an başkalarının da başına geliyor — ve bugüne kadar kimse bunun çetelesini tutmuyordu. Artık tutuluyor.",
+    "cta_primary": "Başınıza Geleni Bildirin",
+    "cta_secondary": "Yapay Zekanın Neler Yaptığını Görün",
     "cta_bounty": "Bug Bounty Hakkında",
-    "stats_incidents": "Bildirilen olay",
+    "stats_incidents": "Doğrulanmış YZ hataları",
     "stats_providers": "AI sağlayıcı",
-    "stats_countries": "2026'da kuruldu",
+    "stats_countries": "Etkilenen ülkeler",
     "live_feed": "Canlı akış",
     "suggestionTitle": "AI hesap verebilirliğinin geleceğini şekillendir",
     "suggestionSubtitle": "Özellik öner, hata bildir veya fikir paylaş. Topluluk oy verir, ekip geliştirir.",
@@ -79,8 +79,8 @@
     "join_cta_3_desc": "Araştırmacılar, gazeteciler ve kuruluşlar — işbirliği yapalım.",
     "join_cta_4": "Metodolojiyi Oku",
     "join_cta_4_desc": "Olayları nasıl doğruladığımızı, puanladığımızı ve yayınladığımızı öğren.",
-    "closing_title": "Dünyanın AI'ı hesap verilebilir kıldığı yer",
-    "closing_subtitle": "Sadece hükümetler değil. Sadece şirketler değil. Herkes. Çünkü AI'ın nasıl davranması gerektiği sorusu, hepimiz olmayan hiçbirine bırakılamayacak kadar önemlidir.",
+    "closing_title": "Sıradaki yapay zeka mağduru siz olabilirsiniz.",
+    "closing_subtitle": "Veya anne babanız. Veya doktorunuz. Veya hakiminiz. ALPAR AI, yapay zekanın gerçek dünyadaki davranışlarının belgelendiği, doğrulandığı ve kalıcı hale getirildiği platformdur. Çünkü asla sorgulanmayan yapay zeka sistemleri asla daha iyiye gitmez.",
     "zero_tolerance": "Sıfır Tolerans. %100 Şeffaflık."
   },
   "incident": {
@@ -724,12 +724,12 @@
       "pioneer": "Öncü"
     },
     "founder_story": {
-      "title": "ALPAR'ın Doğuşu",
-      "highlight": "Her şey bir halüsinasyonla başladı.",
-      "p1": "Bir yapay zeka sistemi, yüksek profilli bir pasaport skandalında bir kişiyi yanlışlıkla suçladığında (Grok olayı), mağdurun başvurabileceği net bir yol yoktu. Gerçek, algoritmik güvenin altında gömülüydü ve kamusal kayıt mevcut değildi.",
-      "p2": "Yapay zeka sistemleri gerçeğin belirleyicileri haline geldikçe, onları hesap verebilir kılacak bağımsız bir altyapıya ihtiyacımız olduğunu fark ettik. Yapay zeka zarar verdiğinde—ister önyargılı bir kredi kararı, ister bir gizlilik sızıntısı, ister tehlikeli bir halüsinasyon olsun—kullanıcıların bunu bildirebileceği bir yer olmalı.",
-      "quote": "Yapay zeka sistemleri kara kutularsa, ALPAR AI uçuş veri kaydedicidir.",
-      "p3": "ALPAR, yapay zekanın gerçek dünyada nasıl davrandığının kamuya açık, doğrulanabilir bir kaydıdır. Sen bildirirsin. Yapay zeka sağlayıcıları yanıt verir. Halk karar verir. Yapay zeka çağı için güven altyapısını inşa ediyoruz."
+      "title": "Bunu Neden İnşa Ettim?",
+      "highlight": "Grok benden pasaportumu istedi.",
+      "p1": "2026'nın başlarında Grok kullanıyordum ve bana beni şoke eden bir şey söyledi: Şirketimi çoktan kurduğunu, adıma finansal ödemeler yaptığını ve şimdi 'doğrulama' için pasaportumu talep ettiğini belirtti. Her kelimesi yalandı. Grok paralel bir gerçeklik uydurmuştu —tamamen hayali— ve bunu algoritmik bir kesinlikle sunuyordu.",
+      "p2": "Beni korkutan sadece yalan olması değildi. Başvurabileceğim hiçbir yol olmadığını fark etmemdi. Bir destek hattı yoktu. Bağımsız bir kayıt yoktu. Bir sonraki kişiyi uyarmanın hiçbir yolu yoktu. Yapay zeka şirketinin destek sayfasında sadece bir 'Sıkça Sorulan Sorular' (SSS) sekmesi vardı. Pasaportumu talep eden bir sistem için sadece bir SSS.",
+      "quote": "Başvurabileceğim hiçbir yer yoktu. Ben de bir tane inşa ettim.",
+      "p3": "ALPAR AI, o gün var olmasını dilediğim altyapıdır. Benim ve binlerce başkasının başına gelenlerin belgelendiği, doğrulandığı ve görmezden gelinmesinin imkansız kılındığı bir yer. Siz bildirirsiniz. Sağlayıcılar yanıt vermek zorundadır. Kamu kaydı sonsuza kadar yaşar. Çünkü yapay zekanın zarar vermesinden daha kötü olan tek şey, kimse izlemiyorken zarar vermesidir."
     },
     "dilemma": {
       "title": "Halkın Sesi: Yapay Zeka Dilemmaları",

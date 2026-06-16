@@ -3,7 +3,7 @@
 import * as React from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "@/i18n/routing";
-import { ArrowRight, ShieldAlert, Sparkles, Target, Trophy } from "lucide-react";
+import { ArrowRight, ShieldAlert, Sparkles, Target, Trophy, Quote } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export function HeroSection({
@@ -158,6 +158,39 @@ export function HeroSection({
             </Link>
           </motion.div>
 
+          {/* Founder Quote Strip */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.45, ease: "easeOut" }}
+            className="bg-glass border-danger-500/30 relative mx-auto mt-14 max-w-4xl overflow-hidden rounded-xl border-l-4 p-6 text-left shadow-2xl"
+          >
+            <div className="from-danger-500/5 pointer-events-none absolute inset-0 bg-gradient-to-r to-transparent" />
+            <div className="relative z-10 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+              <div className="flex items-start gap-4">
+                <div className="bg-danger-500/10 border-danger-500/20 text-danger-400 mt-1 shrink-0 rounded-lg border p-2.5 md:mt-0">
+                  <Quote className="h-5 w-5" />
+                </div>
+                <div>
+                  <h4 className="text-fg-primary text-danger-400 text-sm font-black tracking-wide uppercase">
+                    {t("founder_title")}
+                  </h4>
+                  <blockquote className="text-fg-secondary md:text-md mt-1.5 text-base leading-relaxed font-semibold">
+                    "{t("founder_subtitle")}"
+                  </blockquote>
+                </div>
+              </div>
+              <div className="shrink-0 self-end text-right md:self-center">
+                <span className="text-fg-primary block text-sm font-black tracking-wider uppercase">
+                  — Ercüment Erden
+                </span>
+                <span className="text-fg-muted mt-0.5 block text-xs font-bold tracking-widest uppercase">
+                  {t("stats_countries") === "Countries affected" ? "Founder" : "Kurucu"}
+                </span>
+              </div>
+            </div>
+          </motion.div>
+
           {/* Stats */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -175,7 +208,7 @@ export function HeroSection({
               value={totalProviders}
               glowColor="rgba(168,85,247,0.1)"
             />
-            <StatCard label={t("stats_countries")} value="EU" glowColor="rgba(39,174,96,0.1)" />
+            <StatCard label={t("stats_countries")} value="Global" glowColor="rgba(39,174,96,0.1)" />
           </motion.div>
         </div>
       </div>
