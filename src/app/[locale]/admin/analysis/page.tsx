@@ -20,7 +20,7 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
   const t = await getTranslations({ locale, namespace: "admin" });
   const user = await getCurrentUser();
   if (!user) redirect(`/${locale}/auth/signin?next=/${locale}/admin/analysis`);
-  if (user.role !== "admin") {
+  if (user.role !== "admin" && user.role !== "ceo") {
     redirect(`/${locale}`);
   }
 

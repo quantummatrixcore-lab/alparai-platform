@@ -4,9 +4,7 @@ import { Container } from "@/components/ui/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { getCurrentUser } from "@/lib/auth/session";
-import {
-  getAdminAutopilotSnapshot,
-} from "@/actions/admin-autopilot";
+import { getAdminAutopilotSnapshot } from "@/actions/admin-autopilot";
 import { Activity, ShieldCheck, Workflow } from "lucide-react";
 import { WorkerTickButton } from "@/components/admin/autopilot-tick-button";
 
@@ -32,7 +30,7 @@ export default async function AdminAutopilotPage({
   setRequestLocale(locale);
   const user = await getCurrentUser();
   if (!user) redirect(`/${locale}/auth/signin?next=/${locale}/admin/autopilot`);
-  if (user.role !== "admin") redirect(`/${locale}`);
+  if (user.role !== "admin" && user.role !== "ceo") redirect(`/${locale}`);
 
   const t = await getTranslations({ locale, namespace: "autopilot" });
   const result = await getAdminAutopilotSnapshot(100);
@@ -55,8 +53,8 @@ export default async function AdminAutopilotPage({
   return (
     <Container className="py-10">
       <header className="mb-6 flex items-center justify-between">
-        <h1 className="inline-flex items-center gap-2 text-2xl font-bold text-fg-primary">
-          <Activity className="h-6 w-6 text-brand-400" />
+        <h1 className="text-fg-primary inline-flex items-center gap-2 text-2xl font-bold">
+          <Activity className="text-brand-400 h-6 w-6" />
           {t("admin_title")}
         </h1>
         <nav className="flex flex-wrap items-center gap-2 text-sm">
@@ -73,7 +71,7 @@ export default async function AdminAutopilotPage({
           </Link>
         </nav>
       </header>
-      <p className="mb-6 text-fg-muted">{t("admin_subtitle")}</p>
+      <p className="text-fg-muted mb-6">{t("admin_subtitle")}</p>
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-7">
         <Stat label={t("stats_total")} value={stats.total} />
@@ -89,15 +87,15 @@ export default async function AdminAutopilotPage({
         <Card>
           <CardHeader>
             <CardTitle className="inline-flex items-center gap-2">
-              <Workflow className="h-5 w-5 text-brand-400" />
+              <Workflow className="text-brand-400 h-5 w-5" />
               {t("section_breakers")}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="divide-y divide-border-subtle">
+            <ul className="divide-border-subtle divide-y">
               {Object.entries(breakers).map(([name, snap]) => (
                 <li key={name} className="flex items-center justify-between py-2 text-sm">
-                  <span className="font-mono text-fg-secondary">{name}</span>
+                  <span className="text-fg-secondary font-mono">{name}</span>
                   <span className="inline-flex items-center gap-3">
                     <BreakerPill state={snap?.state ?? "closed"} />
                     <span className="text-fg-muted">
@@ -131,8 +129,8 @@ export default async function AdminAutopilotPage({
               </thead>
               <tbody>
                 {policies.map((p) => (
-                  <tr key={p.action} className="border-t border-border-subtle">
-                    <td className="py-2 font-mono text-fg-secondary">{p.action}</td>
+                  <tr key={p.action} className="border-border-subtle border-t">
+                    <td className="text-fg-secondary py-2 font-mono">{p.action}</td>
                     <td className="py-2">{p.onExhaust}</td>
                     <td className="py-2">{p.attempts}</td>
                     <td className="py-2">
@@ -152,7 +150,7 @@ export default async function AdminAutopilotPage({
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-between gap-4">
-            <p className="text-sm text-fg-secondary">
+            <p className="text-fg-secondary text-sm">
               {queue.available ? t("queue_available") : t("queue_unavailable")} · {t("queue_size")}:{" "}
               {queue.size}
             </p>
@@ -167,7 +165,7 @@ export default async function AdminAutopilotPage({
         </CardHeader>
         <CardContent>
           {runs.length === 0 ? (
-            <p className="text-sm text-fg-muted">{t("empty_runs")}</p>
+            <p className="text-fg-muted text-sm">{t("empty_runs")}</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
@@ -184,18 +182,21 @@ export default async function AdminAutopilotPage({
                 </thead>
                 <tbody>
                   {runs.map((r) => (
-                    <tr key={r.id} className="border-t border-border-subtle">
-                      <td className="py-2 font-mono text-xs text-fg-muted">
+                    <tr key={r.id} className="border-border-subtle border-t">
+                      <td className="text-fg-muted py-2 font-mono text-xs">
                         {r.idempotency_key.slice(0, 14)}…
                       </td>
-                      <td className="py-2 font-mono text-fg-secondary">{r.action}</td>
+                      <td className="text-fg-secondary py-2 font-mono">{r.action}</td>
                       <td className="py-2">
                         <RunStatusPill status={r.status} />
                       </td>
                       <td className="py-2">{r.attempts}</td>
                       <td className="py-2">{formatMs(r.duration_ms)}</td>
-                      <td className="py-2 text-fg-muted">{formatTime(r.updated_at)}</td>
-                      <td className="py-2 max-w-[24ch] truncate text-fg-muted" title={r.last_error ?? ""}>
+                      <td className="text-fg-muted py-2">{formatTime(r.updated_at)}</td>
+                      <td
+                        className="text-fg-muted max-w-[24ch] truncate py-2"
+                        title={r.last_error ?? ""}
+                      >
                         {r.last_error ?? "—"}
                       </td>
                     </tr>
@@ -210,7 +211,15 @@ export default async function AdminAutopilotPage({
   );
 }
 
-function Stat({ label, value, accent }: { label: string; value: number | string; accent?: "ok" | "warn" | "danger" }) {
+function Stat({
+  label,
+  value,
+  accent,
+}: {
+  label: string;
+  value: number | string;
+  accent?: "ok" | "warn" | "danger";
+}) {
   const colour =
     accent === "ok"
       ? "text-success-400"
@@ -222,7 +231,7 @@ function Stat({ label, value, accent }: { label: string; value: number | string;
   return (
     <Card>
       <CardContent className="p-4">
-        <p className="text-xs text-fg-muted">{label}</p>
+        <p className="text-fg-muted text-xs">{label}</p>
         <p className={`mt-1 text-2xl font-bold ${colour}`}>{value}</p>
       </CardContent>
     </Card>

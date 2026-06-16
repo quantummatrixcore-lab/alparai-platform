@@ -19,7 +19,7 @@ export default async function AdminAuditPage({ params }: { params: Promise<{ loc
   const t = await getTranslations({ locale, namespace: "admin" });
   const user = await getCurrentUser();
   if (!user) redirect(`/${locale}/auth/signin?next=/${locale}/admin/audit`);
-  if (user.role !== "admin") redirect(`/${locale}/admin`);
+  if (user.role !== "admin" && user.role !== "ceo") redirect(`/${locale}/admin`);
 
   const admin = createAdminClient();
   const { data } = await admin
