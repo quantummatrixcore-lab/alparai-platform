@@ -8,3 +8,4 @@ export { ProviderResponseCard } from "./provider-response-card";
 export { ShareButtons } from "./share-buttons";
 export { TakedownButton } from "./takedown-button";
 export { VoteButtons } from "./vote-buttons";
+export { ProviderResponseForm } from "./provider-response-form";

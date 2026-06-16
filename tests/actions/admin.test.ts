@@ -40,9 +40,13 @@ describe("moderateIncident", () => {
     vi.mocked(requireModerator).mockResolvedValue(mockModerator);
 
     const mockUpdateEq = vi.fn().mockResolvedValue({ data: null, error: null });
+    const mockMaybeSingle = vi.fn().mockResolvedValue({ data: null, error: null });
+    const mockEq = vi.fn().mockReturnValue({ maybeSingle: mockMaybeSingle });
     mockAdminClient.from.mockReturnValue({
       update: vi.fn().mockReturnValue({ eq: mockUpdateEq }),
       select: vi.fn().mockReturnValue({
+        eq: mockEq,
+        maybeSingle: mockMaybeSingle,
         single: vi.fn().mockResolvedValue({ data: null, error: null }),
       }),
       insert: vi.fn().mockReturnValue({

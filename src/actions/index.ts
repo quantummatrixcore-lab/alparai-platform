@@ -11,3 +11,4 @@ export { signInWithGoogle, signInWithMagicLink, signOut, getMe } from "./auth";
 export { submitContact } from "./contact";
 export { getAdminAutopilotSnapshot, triggerAutopilotWorkerTick } from "./admin-autopilot";
 export { moderateIncident, reviewTakedown, setUserRole, promoteUser } from "./admin";
+export { submitProviderResponse } from "./provider-response";

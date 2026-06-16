@@ -62,7 +62,7 @@ function buildFormData(overrides: Record<string, string> = {}): FormData {
   fd.set("title", "A valid incident title here");
   fd.set(
     "description",
-    "This is a detailed description of the AI incident that happened recently with enough detail"
+    "This is a detailed description of the AI incident that happened recently with enough detail",
   );
   fd.set("category", "hallucination");
   fd.set("severity", "medium");
@@ -223,13 +223,11 @@ describe("voteOnIncident", () => {
     mockAdminClient.from.mockReturnValue({
       select: mockSelect,
       delete: vi.fn().mockReturnValue({ eq: mockDeleteOuterEq }),
-      upsert: vi
-        .fn()
-        .mockReturnValue({
-          select: vi
-            .fn()
-            .mockReturnValue({ single: vi.fn().mockResolvedValue({ data: null, error: null }) }),
-        }),
+      upsert: vi.fn().mockReturnValue({
+        select: vi
+          .fn()
+          .mockReturnValue({ single: vi.fn().mockResolvedValue({ data: null, error: null }) }),
+      }),
       insert: vi.fn().mockReturnValue({
         select: vi.fn().mockReturnValue({
           single: vi.fn().mockResolvedValue({ data: null, error: null }),
@@ -294,13 +292,11 @@ describe("voteOnIncident", () => {
     mockAdminClient.from.mockReturnValue({
       select: mockSelect,
       delete: vi.fn().mockReturnValue({ eq: mockDeleteOuterEq }),
-      upsert: vi
-        .fn()
-        .mockReturnValue({
-          select: vi
-            .fn()
-            .mockReturnValue({ single: vi.fn().mockResolvedValue({ data: null, error: null }) }),
-        }),
+      upsert: vi.fn().mockReturnValue({
+        select: vi
+          .fn()
+          .mockReturnValue({ single: vi.fn().mockResolvedValue({ data: null, error: null }) }),
+      }),
       insert: vi.fn().mockReturnValue({
         select: vi.fn().mockReturnValue({
           single: vi.fn().mockResolvedValue({ data: null, error: null }),
@@ -316,5 +312,18 @@ describe("voteOnIncident", () => {
       value: 1,
     });
     expect(result).toEqual({ ok: true });
+  });
+
+  it("returns error when rate limited", async () => {
+    vi.mocked(checkRateLimit).mockResolvedValueOnce({
+      ok: false,
+      retryAfter: 60,
+    });
+    const result = await voteOnIncident({
+      incidentId: "inc-1",
+      value: 1,
+    });
+    expect(result.ok).toBe(false);
+    expect(result.error).toContain("Too many");
   });
 });

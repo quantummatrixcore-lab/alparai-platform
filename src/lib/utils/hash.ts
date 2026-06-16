@@ -22,3 +22,14 @@ export function hashIp(ip: string | null, salt: string = requireIpSalt()): strin
   if (!ip) return null;
   return createHash("sha256").update(`${salt}:${ip}`).digest("hex");
 }
+
+export function generateProviderToken(incidentId: string, email: string): string {
+  const salt = requireIpSalt();
+  return createHash("sha256")
+    .update(`${incidentId}:${email.toLowerCase().trim()}:${salt}`)
+    .digest("hex");
+}
+
+export function verifyProviderToken(incidentId: string, email: string, token: string): boolean {
+  return generateProviderToken(incidentId, email) === token;
+}

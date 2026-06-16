@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import { type EmailOtpType } from "@supabase/supabase-js";
 import { logger } from "@/lib/utils/logger";
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "@/lib/constants";
 import type { Database } from "@/types/database";
@@ -99,7 +100,7 @@ export async function GET(request: NextRequest) {
     if (tokenHash && type) {
       const { error } = await supabase.auth.verifyOtp({
         token_hash: tokenHash,
-        type: type as never,
+        type: type as EmailOtpType, // use EmailOtpType to avoid as never
       });
       if (!error) {
         return response;

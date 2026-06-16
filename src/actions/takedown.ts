@@ -37,7 +37,7 @@ interface TakedownRequestWorkInput {
 
 const runTakedownRequestWork = async (
   _ctx: AttemptContext,
-  data: TakedownRequestWorkInput
+  data: TakedownRequestWorkInput,
 ): Promise<AttemptOutcome<{ id: string }>> => {
   const admin = createAdminClient();
   const insertRow: Database["public"]["Tables"]["takedown_requests"]["Insert"] = {
@@ -49,16 +49,18 @@ const runTakedownRequestWork = async (
   };
   const { data: row, error } = await admin
     .from("takedown_requests")
-    .insert(insertRow as never)
+    .insert(insertRow)
     .select("id")
     .single();
   if (error || !row) {
     return { kind: "retryable", error: error?.message ?? "takedown_request_insert_failed" };
   }
-  return { kind: "success", value: { id: (row as { id: string }).id } };
+  return { kind: "success", value: { id: row.id } };
 };
 
-export async function submitTakedownRequest(input: z.infer<typeof requestSchema>): Promise<TakedownResult> {
+export async function submitTakedownRequest(
+  input: z.infer<typeof requestSchema>,
+): Promise<TakedownResult> {
   const parsed = requestSchema.safeParse(input);
   if (!parsed.success) {
     return { ok: false, error: "Invalid form data" };
@@ -84,7 +86,7 @@ export async function submitTakedownRequest(input: z.infer<typeof requestSchema>
     (ctx) => runTakedownRequestWork(ctx, { parsed: parsed.data, ipHash }),
     {
       context: { userId: null, ipHash, clientIdempotencyKey },
-    }
+    },
   );
 
   if (result.kind === "ok" || result.kind === "replayed") {
@@ -98,7 +100,11 @@ export async function submitTakedownRequest(input: z.infer<typeof requestSchema>
       },
     };
   }
-  if (result.kind === "circuit_open" || result.kind === "budget_exceeded" || result.kind === "exhausted") {
+  if (
+    result.kind === "circuit_open" ||
+    result.kind === "budget_exceeded" ||
+    result.kind === "exhausted"
+  ) {
     return {
       ok: false,
       error: `Failed to submit. Please email ${APP_TAKEDOWN_EMAIL}`,
@@ -128,7 +134,7 @@ interface InlineTakedownWorkInput {
 
 const runInlineTakedownWork = async (
   _ctx: AttemptContext,
-  data: InlineTakedownWorkInput
+  data: InlineTakedownWorkInput,
 ): Promise<AttemptOutcome<{ id: string }>> => {
   const admin = createAdminClient();
   const insertRow: Database["public"]["Tables"]["takedown_requests"]["Insert"] = {
@@ -140,13 +146,13 @@ const runInlineTakedownWork = async (
   };
   const { data: row, error } = await admin
     .from("takedown_requests")
-    .insert(insertRow as never)
+    .insert(insertRow)
     .select("id")
     .single();
   if (error || !row) {
     return { kind: "retryable", error: error?.message ?? "takedown_insert_failed" };
   }
-  return { kind: "success", value: { id: (row as { id: string }).id } };
+  return { kind: "success", value: { id: row.id } };
 };
 
 export async function submitTakedown(input: z.infer<typeof inlineSchema>): Promise<TakedownResult> {
@@ -168,12 +174,7 @@ export async function submitTakedown(input: z.infer<typeof inlineSchema>): Promi
 
   const result = await withAutopilot<{ id: string }>(
     submitTakedownPolicy,
-    [
-      parsed.data.incidentId,
-      parsed.data.contactEmail,
-      parsed.data.reason,
-      user?.id ?? "anon",
-    ],
+    [parsed.data.incidentId, parsed.data.contactEmail, parsed.data.reason, user?.id ?? "anon"],
     (ctx) =>
       runInlineTakedownWork(ctx, {
         parsed: parsed.data,
@@ -181,7 +182,7 @@ export async function submitTakedown(input: z.infer<typeof inlineSchema>): Promi
         requesterName: user?.fullName ?? "Anonymous",
         ipHash,
       }),
-    { context: { userId: user?.id ?? null, ipHash, clientIdempotencyKey } }
+    { context: { userId: user?.id ?? null, ipHash, clientIdempotencyKey } },
   );
 
   if (result.kind === "ok" || result.kind === "replayed") {

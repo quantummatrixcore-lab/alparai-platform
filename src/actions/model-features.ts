@@ -33,7 +33,7 @@ interface ModelFeatureWorkInput {
 
 const runModelFeatureWork = async (
   _ctx: AttemptContext,
-  data: ModelFeatureWorkInput
+  data: ModelFeatureWorkInput,
 ): Promise<AttemptOutcome<{ id: string }>> => {
   const supabase = await createServerClient();
   const insertRow: Database["public"]["Tables"]["model_feature_requests"]["Insert"] = {
@@ -47,19 +47,19 @@ const runModelFeatureWork = async (
   };
   const { data: row, error } = await supabase
     .from("model_feature_requests")
-    .insert(insertRow as never)
+    .insert(insertRow)
     .select("id")
     .single();
 
   if (error || !row) {
     return { kind: "retryable", error: error?.message ?? "model_feature_insert_failed" };
   }
-  return { kind: "success", value: { id: (row as { id: string }).id } };
+  return { kind: "success", value: { id: row.id } };
 };
 
 export async function submitModelFeatureRequest(
   _prev: SubmitModelFeatureRequestState,
-  formData: FormData
+  formData: FormData,
 ): Promise<SubmitModelFeatureRequestState> {
   const user = await getCurrentUser();
   if (!user) {
@@ -97,7 +97,7 @@ export async function submitModelFeatureRequest(
         description: parsed.data.description ?? null,
         category: parsed.data.category,
       }),
-    { context: { userId: user.id, ipHash: null, clientIdempotencyKey: null } }
+    { context: { userId: user.id, ipHash: null, clientIdempotencyKey: null } },
   );
 
   if (result.kind === "ok" || result.kind === "replayed") {
@@ -147,7 +147,7 @@ export async function voteModelFeatureRequest(requestId: string) {
     const { error } = await admin.from("model_feature_votes").insert({
       request_id: requestId,
       user_id: user.id,
-    } as never);
+    });
     if (error) return { ok: false, error: error.message };
     return { ok: true, toggled: "added" as const };
   }

@@ -85,7 +85,7 @@ const slugify = (s: string) =>
 
 const runSubmitWork = async (
   ctx: AttemptContext,
-  data: SubmitWorkInput
+  data: SubmitWorkInput,
 ): Promise<AttemptOutcome<{ id: string }>> => {
   void ctx;
   const { user, ip, raw } = data;
@@ -113,14 +113,14 @@ const runSubmitWork = async (
   const hdrs = await headers();
   const userAgent = hdrs.get("user-agent") ?? null;
 
-  const incidentInsert: Record<string, unknown> = {
+  const incidentInsert: Database["public"]["Tables"]["incidents"]["Insert"] = {
     user_id: user?.id ?? null,
     title: raw.title,
     title_masked: maskedTitle.masked,
     description: raw.description,
     description_masked: maskedDescription.masked,
-    category: raw.category as IncidentSubmissionInput["category"],
-    severity: raw.severity as IncidentSubmissionInput["severity"],
+    category: raw.category as Database["public"]["Enums"]["incident_category"],
+    severity: raw.severity as Database["public"]["Enums"]["incident_severity"],
     ai_provider_id: providerIsCustom ? null : raw.provider_id || null,
     ai_model_id: modelIsCustom ? null : raw.model_id || null,
     provider_custom_name: providerIsCustom ? providerCustom || null : null,
@@ -141,7 +141,7 @@ const runSubmitWork = async (
   };
   const { data: incident, error } = await supabase
     .from("incidents")
-    .insert(incidentInsert as unknown as never)
+    .insert(incidentInsert)
     .select("id")
     .single();
 
@@ -149,49 +149,46 @@ const runSubmitWork = async (
     return { kind: "retryable", error: error?.message ?? "incident_insert_failed" };
   }
 
-  const incidentId = (incident as { id: string }).id;
+  const incidentId = incident.id;
 
   if (providerIsCustom && providerCustom) {
     const admin = createAdminClient();
     const slug = providerCustomSlug || slugify(providerCustom);
     const { data: existing } = await admin
-      .from("ai_providers" as never)
+      .from("ai_providers")
       .select("id")
       .eq("slug", slug)
       .maybeSingle();
     if (!existing) {
       const { data: newProvider } = await admin
-        .from("ai_providers" as never)
+        .from("ai_providers")
         .insert({
           slug,
           name: providerCustom,
           description: "User-submitted provider, pending verification",
           website_url: null,
           is_verified: false,
-        } as never)
+        })
         .select("id")
         .single();
       if (newProvider) {
         await admin
-          .from("incidents" as never)
-          .update({ ai_provider_id: (newProvider as { id: string }).id } as never)
+          .from("incidents")
+          .update({ ai_provider_id: newProvider.id })
           .eq("id", incidentId);
         if (modelCustom) {
           const { data: newModel } = await admin
-            .from("ai_models" as never)
+            .from("ai_models")
             .insert({
-              provider_id: (newProvider as { id: string }).id,
+              provider_id: newProvider.id,
               name: modelCustom,
               version: null,
               status: "active",
-            } as never)
+            })
             .select("id")
             .single();
           if (newModel) {
-            await admin
-              .from("incidents" as never)
-              .update({ ai_model_id: (newModel as { id: string }).id } as never)
-              .eq("id", incidentId);
+            await admin.from("incidents").update({ ai_model_id: newModel.id }).eq("id", incidentId);
           }
         }
       }
@@ -199,7 +196,7 @@ const runSubmitWork = async (
   }
 
   const consentLogEntries: Database["public"]["Tables"]["consent_log"]["Insert"][] = Object.entries(
-    CONSENT_LABELS
+    CONSENT_LABELS,
   ).map(([, dbKey]) => ({
     user_id: user?.id ?? null,
     consent_type: dbKey,
@@ -210,7 +207,7 @@ const runSubmitWork = async (
     ip_hash: hashIp(ip),
   }));
 
-  const consentRes = await supabase.from("consent_log").insert(consentLogEntries as never);
+  const consentRes = await supabase.from("consent_log").insert(consentLogEntries);
   if (consentRes.error) {
     return { kind: "retryable", error: `consent_log_insert_failed: ${consentRes.error.message}` };
   }
@@ -220,7 +217,7 @@ const runSubmitWork = async (
 
 export async function submitIncident(
   _prev: SubmitIncidentState,
-  formData: FormData
+  formData: FormData,
 ): Promise<SubmitIncidentState> {
   const user = await getCurrentUser();
   // Anonymous submissions allowed
@@ -294,7 +291,7 @@ export async function submitIncident(
         ipHash: hashIp(ip),
         clientIdempotencyKey,
       },
-    }
+    },
   );
 
   if (result.kind === "ok") {
@@ -348,7 +345,7 @@ interface VoteWorkInput {
 
 const runVoteWork = async (
   _ctx: AttemptContext,
-  data: VoteWorkInput
+  data: VoteWorkInput,
 ): Promise<AttemptOutcome<{ toggle: "removed" | "set"; newValue: -1 | 0 | 1 }>> => {
   const admin = createAdminClient();
   if (data.value === 0 || data.previous === data.value) {
@@ -367,7 +364,7 @@ const runVoteWork = async (
     user_id: data.userId,
     value: data.value,
   };
-  const { error } = await admin.from("incident_votes").upsert(voteInsert as never, {
+  const { error } = await admin.from("incident_votes").upsert(voteInsert, {
     onConflict: "incident_id,user_id",
   });
   if (error) {
@@ -385,6 +382,15 @@ export async function voteOnIncident({
 }) {
   const user = await getCurrentUser();
   if (!user) return { ok: false, error: "Sign in to vote" };
+
+  const hdrs = await headers();
+  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const rlKey = `${RATE_LIMIT_KEYS.incident_vote}:${user.id}:${ip}`;
+  const rl = await checkRateLimit(rlKey);
+  if (!rl.ok) {
+    return { ok: false, error: `Too many actions. Try again in ${rl.retryAfter}s.` };
+  }
+
   const admin = createAdminClient();
   const { data: existing } = await admin
     .from("incident_votes")
@@ -398,7 +404,7 @@ export async function voteOnIncident({
     voteIncidentPolicy,
     [user.id, incidentId, value],
     (ctx) => runVoteWork(ctx, { incidentId, userId: user.id, value, previous }),
-    { context: { userId: user.id, ipHash: null, clientIdempotencyKey: null } }
+    { context: { userId: user.id, ipHash: null, clientIdempotencyKey: null } },
   );
 
   if (result.kind === "ok" || result.kind === "replayed") {

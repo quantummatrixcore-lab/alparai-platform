@@ -13,6 +13,9 @@ import {
 } from "@/lib/autopilot";
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
 import { requireAdmin } from "@/lib/auth/session";
+import { Resend } from "resend";
+import { generateProviderToken } from "@/lib/utils/hash";
+import { logger } from "@/lib/utils/logger";
 
 export interface ModerationResult {
   ok: boolean;
@@ -52,6 +55,73 @@ const runModerationWork = async (
   if (error) {
     return { kind: "retryable", error: error.message };
   }
+
+  if (newStatus === "published") {
+    try {
+      const { data: incident } = await admin
+        .from("incidents")
+        .select("id, title, title_masked, ai_provider_id")
+        .eq("id", data.incidentId)
+        .maybeSingle();
+
+      if (incident && incident.ai_provider_id) {
+        const { data: provider } = await admin
+          .from("ai_providers")
+          .select("name, contact_email")
+          .eq("id", incident.ai_provider_id)
+          .maybeSingle();
+
+        if (provider && provider.contact_email) {
+          const token = generateProviderToken(incident.id, provider.contact_email);
+          const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://alparai.com";
+          const respondLink = `${appUrl}/en/incidents/${incident.id}/respond?token=${token}`;
+
+          if (process.env.RESEND_API_KEY) {
+            const resend = new Resend(process.env.RESEND_API_KEY);
+            await resend.emails.send({
+              from: "ALPAR AI <noreply@alparai.com>",
+              to: provider.contact_email,
+              subject: `[ALPAR AI] Verification Request: Incident involving ${provider.name}`,
+              text: `Hello ${provider.name} Team,
+
+A new incident involving your AI system has been documented and verified by the ALPAR AI community:
+
+"${incident.title_masked || incident.title}"
+
+Under the "Providers must respond" policy, you are invited to submit an official statement or counter-statement. Your response will be pinned to the top of the incident page and visible to all users.
+
+To submit your official response, please use the secure link below:
+${respondLink}
+
+Note: This link is unique and secure. Do not share it.
+
+Thank you,
+ALPAR AI Accountability Team
+https://alparai.com`,
+            });
+            logger.info("Sent provider notification email via Resend", {
+              incidentId: incident.id,
+              providerEmail: provider.contact_email,
+            });
+          } else {
+            logger.info("Provider email notification simulated (no RESEND_API_KEY)", {
+              incidentId: incident.id,
+              providerName: provider.name,
+              providerEmail: provider.contact_email,
+              respondLink,
+            });
+          }
+        }
+      }
+    } catch (emailErr) {
+      logger.error(
+        "Failed to send provider notification email",
+        { incidentId: data.incidentId },
+        emailErr instanceof Error ? emailErr : undefined,
+      );
+    }
+  }
+
   return { kind: "success", value: { id: data.incidentId, newStatus } };
 };
 

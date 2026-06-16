@@ -33,7 +33,7 @@ interface ModelReviewWorkInput {
 
 const runModelReviewWork = async (
   _ctx: AttemptContext,
-  data: ModelReviewWorkInput
+  data: ModelReviewWorkInput,
 ): Promise<AttemptOutcome<{ id: string }>> => {
   const supabase = await createServerClient();
   const insertRow: Database["public"]["Tables"]["model_reviews"]["Insert"] = {
@@ -52,19 +52,19 @@ const runModelReviewWork = async (
   };
   const { data: row, error } = await supabase
     .from("model_reviews")
-    .insert(insertRow as never)
+    .insert(insertRow)
     .select("id")
     .single();
 
   if (error || !row) {
     return { kind: "retryable", error: error?.message ?? "model_review_insert_failed" };
   }
-  return { kind: "success", value: { id: (row as { id: string }).id } };
+  return { kind: "success", value: { id: row.id } };
 };
 
 export async function submitModelReview(
   _prev: SubmitModelReviewState,
-  formData: FormData
+  formData: FormData,
 ): Promise<SubmitModelReviewState> {
   const user = await getCurrentUser();
   if (!user) {
@@ -114,7 +114,7 @@ export async function submitModelReview(
         title: parsed.data.title ?? null,
         body: parsed.data.body ?? null,
       }),
-    { context: { userId: user.id, ipHash: null, clientIdempotencyKey: null } }
+    { context: { userId: user.id, ipHash: null, clientIdempotencyKey: null } },
   );
 
   if (result.kind === "ok" || result.kind === "replayed") {
@@ -164,7 +164,7 @@ export async function voteModelReview(reviewId: string) {
     const { error } = await admin.from("model_review_votes").insert({
       review_id: reviewId,
       user_id: user.id,
-    } as never);
+    });
     if (error) return { ok: false, error: error.message };
     return { ok: true, toggled: "added" as const };
   }
