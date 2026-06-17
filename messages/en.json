@@ -908,5 +908,16 @@
       "provider_no_contact_email": "The associated provider does not have a verified contact email.",
       "invalid_token": "The verification token is invalid or expired."
     }
+  },
+  "ecosystemPulse": {
+    "title": "Ecosystem Pulse",
+    "subtitle": "What's happening in AI this week",
+    "viewAll": "All Incidents",
+    "pollBadge": "Live Poll",
+    "yes": "Yes",
+    "no": "No",
+    "totalVotes": "{count} votes",
+    "voteCta": "Cast Your Vote",
+    "noPoll": "No active poll at this time."
   }
 }

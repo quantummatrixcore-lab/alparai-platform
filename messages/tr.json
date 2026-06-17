@@ -908,5 +908,16 @@
       "provider_no_contact_email": "İlişkili sağlayıcının doğrulanmış bir iletişim e-postası yok.",
       "invalid_token": "Doğrulama belirteci geçersiz veya süresi dolmuş."
     }
+  },
+  "ecosystemPulse": {
+    "title": "Ekosistem Nabzı",
+    "subtitle": "Bu hafta AI dünyasında neler oluyor",
+    "viewAll": "Tüm Olaylar",
+    "pollBadge": "Canlı Anket",
+    "yes": "Evet",
+    "no": "Hayır",
+    "totalVotes": "{count} oy",
+    "voteCta": "Oyunuzu Kullanın",
+    "noPoll": "Şu an aktif anket bulunmuyor."
   }
 }
