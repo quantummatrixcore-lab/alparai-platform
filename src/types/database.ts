@@ -309,6 +309,54 @@ export type Database = {
         };
         Relationships: [];
       };
+      ecosystem_news: {
+        Row: {
+          id: string;
+          title_en: string;
+          title_tr: string | null;
+          summary_en: string | null;
+          summary_tr: string | null;
+          url: string | null;
+          source: string | null;
+          category: string;
+          severity: string;
+          is_featured: boolean;
+          is_active: boolean;
+          published_at: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          title_en: string;
+          title_tr?: string | null;
+          summary_en?: string | null;
+          summary_tr?: string | null;
+          url?: string | null;
+          source?: string | null;
+          category?: string;
+          severity?: string;
+          is_featured?: boolean;
+          is_active?: boolean;
+          published_at?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          title_en?: string;
+          title_tr?: string | null;
+          summary_en?: string | null;
+          summary_tr?: string | null;
+          url?: string | null;
+          source?: string | null;
+          category?: string;
+          severity?: string;
+          is_featured?: boolean;
+          is_active?: boolean;
+          published_at?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       ai_provider_responses: {
         Row: {
           ai_provider_id: string;

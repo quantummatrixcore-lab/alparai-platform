@@ -10,6 +10,8 @@ import { TrustBar } from "@/components/marketing/trust-bar";
 import { GetInvolved } from "@/components/marketing/get-involved";
 import { ClosingSection } from "@/components/marketing/closing-section";
 import { SuggestFeatureCTA } from "@/components/marketing/cta-suggest-feature";
+import { NewsTicker } from "@/components/marketing/news-ticker";
+import { EcosystemPulse, type EcosystemNewsItem } from "@/components/marketing/ecosystem-pulse";
 import { Container, Section } from "@/components/ui/layout";
 import { PollCard, type Poll } from "@/components/dilemmas/poll-card";
 import { IncidentOfTheWeek } from "@/components/marketing/incident-of-the-week";
@@ -22,49 +24,64 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   setRequestLocale(locale);
   const supabase = await createServerClient();
 
-  const [incidentsResult, incidentsCountResult, providersResult, pollsResult, topUserResult] =
-    await Promise.all([
-      supabase
-        .from("incidents")
-        .select(
-          "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id"
-        )
-        .eq("status", "published")
-        .order("published_at", { ascending: false })
-        .limit(5),
-      supabase
-        .from("incidents")
-        .select("*", { count: "exact", head: true })
-        .eq("status", "published"),
-      supabase
-        .from("ai_providers")
-        .select("id, slug, name, description, logo_url, website_url, is_verified")
-        .order("name"),
-      supabase
-        .from("ai_polls")
-        .select("*")
-        .eq("is_active", true)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .returns<Poll[]>(),
-      supabase
-        .from("users")
-        .select("id, name:full_name, avatar_url, reputation_score, badges")
-        .order("reputation_score", { ascending: false })
-        .limit(1)
-        .returns<Advocate[]>(),
-    ]);
+  const [
+    incidentsResult,
+    incidentsCountResult,
+    providersResult,
+    pollsResult,
+    topUserResult,
+    newsResult,
+  ] = await Promise.all([
+    supabase
+      .from("incidents")
+      .select(
+        "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id",
+      )
+      .eq("status", "published")
+      .order("published_at", { ascending: false })
+      .limit(5),
+    supabase
+      .from("incidents")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "published"),
+    supabase
+      .from("ai_providers")
+      .select("id, slug, name, description, logo_url, website_url, is_verified")
+      .order("name"),
+    supabase
+      .from("ai_polls")
+      .select("*")
+      .eq("is_active", true)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .returns<Poll[]>(),
+    supabase
+      .from("users")
+      .select("id, name:full_name, avatar_url, reputation_score, badges")
+      .order("reputation_score", { ascending: false })
+      .limit(1)
+      .returns<Advocate[]>(),
+    supabase
+      .from("ecosystem_news")
+      .select(
+        "id, title_en, title_tr, summary_en, summary_tr, url, source, category, severity, published_at",
+      )
+      .eq("is_active", true)
+      .order("published_at", { ascending: false })
+      .limit(5)
+      .returns<EcosystemNewsItem[]>(),
+  ]);
 
   const providerMap = new Map(
     ((providersResult.data as Array<{ id: string; slug: string; name: string }>) ?? []).map((p) => [
       p.id,
       p,
-    ])
+    ]),
   );
 
   const incidents: IncidentListItem[] = toIncidentListItems(incidentsResult.data).map((item) => {
     const providerId = (incidentsResult.data as Array<Record<string, unknown>> | null)?.find(
-      (r) => r["id"] === item.id
+      (r) => r["id"] === item.id,
     )?.["ai_provider_id"] as string | null;
     const provider = providerId ? providerMap.get(providerId) : null;
     return {
@@ -85,7 +102,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       for (const row of countData as Array<{ ai_provider_id: string }>) {
         incidentCountsByProvider.set(
           row.ai_provider_id,
-          (incidentCountsByProvider.get(row.ai_provider_id) ?? 0) + 1
+          (incidentCountsByProvider.get(row.ai_provider_id) ?? 0) + 1,
         );
       }
     }
@@ -105,6 +122,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   const topPoll = pollsResult.data?.[0];
   const topAdvocate = topUserResult.data?.[0] ?? null;
+  const ecosystemNews = (newsResult.data ?? []) as EcosystemNewsItem[];
+  const tickerItems = ecosystemNews.map((n) => ({
+    id: n.id,
+    title: n.title_tr ?? n.title_en,
+    severity: n.severity,
+    source: n.source,
+  }));
 
   return (
     <>
@@ -112,6 +136,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         totalIncidents={incidentsCountResult.count ?? 0}
         totalProviders={providersResult.data?.length ?? 0}
       />
+
+      {tickerItems.length > 0 && <NewsTicker items={tickerItems} />}
+
+      <EcosystemPulse news={ecosystemNews} poll={topPoll ?? null} />
 
       <Section className="bg-bg-primary pt-12 pb-6">
         <Container>
