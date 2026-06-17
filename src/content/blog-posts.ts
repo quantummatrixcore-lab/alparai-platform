@@ -200,6 +200,84 @@ Tespit meta verileri ayrı olarak döndürülür, böylece sistem yüksek riskli
 
 KVT Koruyucu AGPL-3.0 altında açık kaynaktır. Herkes örüntüleri denetleyebilir, kendi test paketini çalıştırabilir ve iyileştirmeler önerebilir. Güven altyapısının kendisinin güvenilir olması gerektiğine inanıyoruz.`,
   },
+  {
+    slug: "claude-banned-who-decides-which-ai-we-can-trust",
+    title: "Claude Is Banned. Who Decides Which AI We Can Trust?",
+    title_tr: "Claude Yasaklandı. Hangi AI'ya Güvenebileceğimize Kim Karar Veriyor?",
+    description:
+      "The US Department of Commerce directed Anthropic to restrict Claude Fable 5 and Mythos 5 globally. This is not just a policy story — it's a question of AI accountability infrastructure.",
+    description_tr:
+      "ABD Ticaret Bakanlığı, Anthropic'e Claude Fable 5 ve Mythos 5'i küresel olarak kısıtlamasını emretti. Bu sadece bir politika haberi değil — AI hesap verebilirlik altyapısına dair temel bir sorudur.",
+    date: "2026-06-17",
+    author: "ALPAR AI Editorial",
+    author_tr: "ALPAR AI Editörü",
+    tags: ["regulation", "claude", "ban", "ai-governance", "accountability"],
+    readingTime: 5,
+    content: `## What happened
+
+On June 12, 2026, the US Department of Commerce issued a directive to Anthropic, ordering the company to restrict access to its two latest models — Claude Fable 5 and Mythos 5 — for all foreign nationals. The stated rationale: national security concerns that these models could be jailbroken by China-linked entities to extract sensitive defense-related information.
+
+Anthropic's response was swift and blunt: the company stated it could not distinguish users by nationality. Rather than build nationality detection infrastructure — which would raise its own civil liberties concerns — Anthropic shut down both models **for everyone, globally**.
+
+## Why this matters beyond the headlines
+
+The Claude ban is being reported as a Trump administration national security story. That framing is accurate but incomplete. Beneath the surface, it exposes three structural failures in how AI is currently governed:
+
+**1. No independent audit trail.** Before this ban, there was no public, third-party-verified record of how Claude Fable 5 or Mythos 5 had behaved in high-stakes deployments. The Pentagon had blacklisted Anthropic as a "supply chain risk" in February 2026 — but citizens had no independent source to verify those claims.
+
+**2. Users had no warning.** Millions of users who had integrated Claude into workflows, businesses, and products woke up one morning to find the tool they relied on simply gone. No incident log. No public explanation of what specific behavior triggered the action.
+
+**3. The decision-making is opaque.** Who exactly decided which models were unsafe? Under what standard? With what evidence? These questions remain unanswered — and they will remain unanswered as long as AI accountability is treated as a matter of government decree rather than verifiable public record.
+
+## What AI accountability infrastructure should look like
+
+The Claude ban demonstrates why platforms like ALPAR AI are necessary — not as regulators, but as infrastructure.
+
+When a model is restricted or exhibits dangerous behavior, there should be:
+- A **public incident database** where verified cases of misuse, jailbreaking, or manipulation are documented
+- A **provider transparency score** that tracks how companies respond to reported incidents over time
+- A **community verification layer** so that claims — from both providers and governments — can be independently checked
+
+None of this exists today at global scale. AIID (AI Incident Database) is the closest, but it is an academic project, not a real-time accountability platform.
+
+## What you can do
+
+If Claude or any other AI model has behaved in a way that harmed or misled you, **document it**. Submit a report on ALPAR AI. Anonymous submissions take 60 seconds. Your report becomes part of the permanent public record.
+
+Because the next ban — or the next failure — will be easier to understand if someone kept score.`,
+    content_tr: `## Ne oldu
+
+12 Haziran 2026'da ABD Ticaret Bakanlığı, Anthropic'e en yeni iki modeli — Claude Fable 5 ve Mythos 5 — tüm yabancı uyruklu kullanıcılar için kısıtlamasını emreden bir direktif yayımladı. Gerekçe: bu modellerin Çin bağlantılı kuruluşlar tarafından jailbreak edilerek hassas savunma bilgilerinin elde edilebileceğine dair ulusal güvenlik endişeleri.
+
+Anthropic'in yanıtı hızlı ve doğrudan oldu: şirket, kullanıcıları uyrukla ayırt edemeyeceğini belirtti. Kendi başına sivil özgürlük sorunları doğuracak bir uyruk tespiti altyapısı kurmak yerine Anthropic, her iki modeli de **küresel olarak tüm kullanıcılar için** kapattı.
+
+## Bu neden manşetlerin ötesinde önemli
+
+Claude yasağı bir Trump yönetimi ulusal güvenlik haberi olarak raporlanıyor. Bu çerçeve doğru ama eksik. Yüzeyin altında, AI'ın nasıl yönetildiğine dair üç yapısal başarısızlık gün yüzüne çıkıyor:
+
+**1. Bağımsız denetim izi yok.** Bu yasak öncesinde, Claude Fable 5 veya Mythos 5'in yüksek riskli ortamlarda nasıl davrandığına dair kamuya açık, üçüncü tarafça doğrulanmış bir kayıt bulunmuyordu. Pentagon, Şubat 2026'da Anthropic'i "tedarik zinciri riski" olarak kara listeye almıştı — ama vatandaşların bu iddiaları doğrulayacak bağımsız bir kaynağı yoktu.
+
+**2. Kullanıcılar önceden uyarılmadı.** Claude'u iş akışlarına, şirketlerine ve ürünlerine entegre eden milyonlarca kullanıcı, bir sabah güvendiği aracın ortadan kaybolduğunu gördü. Olay kaydı yok. Hangi spesifik davranışın bu aksiyonu tetiklediğine dair kamuya açık açıklama yok.
+
+**3. Karar alma süreci opak.** Hangi modellerin güvensiz olduğuna tam olarak kim karar verdi? Hangi standarda göre? Hangi kanıta dayanarak? Bu sorular yanıtsız kalıyor — ve AI hesap verebilirliği, doğrulanabilir bir kamu kaydı yerine hükümet kararnamesi olarak ele alındığı sürece yanıtsız kalmaya devam edecek.
+
+## AI hesap verebilirlik altyapısı nasıl görünmeli
+
+Claude yasağı, ALPAR AI gibi platformların neden gerekli olduğunu gösteriyor — düzenleyici olarak değil, altyapı olarak.
+
+Bir model kısıtlandığında veya tehlikeli davranış sergilediğinde şunlar olmalı:
+- Doğrulanmış kötüye kullanım, jailbreak veya manipülasyon vakalarının belgelendiği bir **kamuya açık olay veri tabanı**
+- Şirketlerin zaman içinde raporlanan olaylara nasıl yanıt verdiğini takip eden bir **sağlayıcı şeffaflık skoru**
+- Hem sağlayıcıların hem hükümetlerin iddialarının bağımsız olarak doğrulanabilmesi için bir **topluluk doğrulama katmanı**
+
+Bunların hiçbiri bugün küresel ölçekte mevcut değil. AIID (AI Olay Veri Tabanı) en yakın örnek ama akademik bir proje; gerçek zamanlı bir hesap verebilirlik platformu değil.
+
+## Ne yapabilirsiniz
+
+Claude veya herhangi bir AI modeli sizi zarara uğrattıysa veya yanılttıysa, **belgeleyin**. ALPAR AI'ya bir rapor gönderin. Anonim gönderi 60 saniye sürer. Raporunuz kalıcı kamu arşivinin bir parçası olur.
+
+Çünkü bir sonraki yasak — ya da bir sonraki başarısızlık — eğer biri skor tuttuysa daha kolay anlaşılır.`,
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
