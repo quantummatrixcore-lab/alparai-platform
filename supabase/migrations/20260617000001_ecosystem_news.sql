@@ -27,7 +27,7 @@ create policy "public_read_news"
 create policy "admin_all_news"
   on public.ecosystem_news
   for all
-  using (is_moderator());
+  using (public.is_moderator(auth.uid()));
 
 create index ecosystem_news_published_at_idx on public.ecosystem_news (published_at desc);
 create index ecosystem_news_severity_idx on public.ecosystem_news (severity);
