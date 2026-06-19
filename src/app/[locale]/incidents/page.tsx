@@ -71,7 +71,7 @@ export default async function IncidentsPage({
     .map((item) => {
       const providerId = (incidentsResult.data as Array<Record<string, unknown>> | null)?.find(
         (r) => r["id"] === item.id,
-      )?.[" ai_provider_id"] as string | null;
+      )?.["ai_provider_id"] as string | null;
       const provider = providerId ? providerMap.get(providerId) : null;
       return {
         ...item,

@@ -17,12 +17,23 @@ import { PollCard, type Poll } from "@/components/dilemmas/poll-card";
 import { IncidentOfTheWeek } from "@/components/marketing/incident-of-the-week";
 import { AdvocateOfTheWeek, type Advocate } from "@/components/marketing/advocate-of-the-week";
 import type { IncidentListItem, LeaderboardEntry } from "@/types";
-import { toIncidentListItems } from "@/lib/mappers";
+import { toIncidentListItems, toIncidentListItem } from "@/lib/mappers";
+import { checkAndTriggerNewsSyncPassive } from "@/actions/autopilot-sync";
+import { SocialProof } from "@/components/marketing/social-proof";
+
+function getWeekStartDate(): string {
+  return new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+}
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+
+  // Passive background sync of AI news
+  void checkAndTriggerNewsSyncPassive();
+
   const supabase = await createServerClient();
+  const weekStart = getWeekStartDate();
 
   const [
     incidentsResult,
@@ -31,11 +42,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     pollsResult,
     topUserResult,
     newsResult,
+    topIncidentResult,
   ] = await Promise.all([
     supabase
       .from("incidents")
       .select(
-        "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id",
+        "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, user_id",
       )
       .eq("status", "published")
       .order("published_at", { ascending: false })
@@ -70,6 +82,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       .order("published_at", { ascending: false })
       .limit(5)
       .returns<EcosystemNewsItem[]>(),
+    supabase
+      .from("incidents")
+      .select(
+        "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, user_id",
+      )
+      .eq("status", "published")
+      .gte("created_at", weekStart)
+      .order("upvotes_count", { ascending: false })
+      .limit(1),
   ]);
 
   const providerMap = new Map(
@@ -90,6 +111,43 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       provider_slug: provider?.slug ?? "",
     };
   });
+
+  let incidentOfTheWeek: IncidentListItem | null = null;
+  const topWeeklyIncidentRaw = topIncidentResult.data?.[0];
+  if (topWeeklyIncidentRaw) {
+    const mapped = toIncidentListItem(topWeeklyIncidentRaw);
+    const provider = topWeeklyIncidentRaw.ai_provider_id
+      ? providerMap.get(topWeeklyIncidentRaw.ai_provider_id)
+      : null;
+    incidentOfTheWeek = {
+      ...mapped,
+      provider_name: provider?.name ?? "Unknown",
+      provider_slug: provider?.slug ?? "",
+    };
+  } else {
+    const { data: topOverall } = await supabase
+      .from("incidents")
+      .select(
+        "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, user_id",
+      )
+      .eq("status", "published")
+      .order("upvotes_count", { ascending: false })
+      .limit(1);
+    const topOverallRaw = topOverall?.[0];
+    if (topOverallRaw) {
+      const mapped = toIncidentListItem(topOverallRaw);
+      const provider = topOverallRaw.ai_provider_id
+        ? providerMap.get(topOverallRaw.ai_provider_id)
+        : null;
+      incidentOfTheWeek = {
+        ...mapped,
+        provider_name: provider?.name ?? "Unknown",
+        provider_slug: provider?.slug ?? "",
+      };
+    } else {
+      incidentOfTheWeek = incidents[0] ?? null;
+    }
+  }
 
   const incidentCountsByProvider = new Map<string, number>();
   if (providersResult.data) {
@@ -120,6 +178,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     trend: 0,
   }));
 
+  const topProvidersForHero = [...leaderboard]
+    .sort((a, b) => b.incident_count - a.incident_count)
+    .slice(0, 5)
+    .map((p) => ({
+      name: p.provider_name,
+      count: p.incident_count,
+      slug: p.provider_slug,
+    }));
+
   const topPoll = pollsResult.data?.[0];
   const topAdvocate = topUserResult.data?.[0] ?? null;
   const ecosystemNews = (newsResult.data ?? []) as EcosystemNewsItem[];
@@ -135,16 +202,19 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <HeroSection
         totalIncidents={incidentsCountResult.count ?? 0}
         totalProviders={providersResult.data?.length ?? 0}
+        topProviders={topProvidersForHero}
       />
 
       {tickerItems.length > 0 && <NewsTicker items={tickerItems} />}
+
+      <SocialProof />
 
       <EcosystemPulse news={ecosystemNews} poll={topPoll ?? null} />
 
       <Section className="bg-bg-primary pt-12 pb-6">
         <Container>
           <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-2">
-            <IncidentOfTheWeek incident={incidents[0] ?? null} />
+            <IncidentOfTheWeek incident={incidentOfTheWeek} />
             <AdvocateOfTheWeek advocate={topAdvocate} />
           </div>
         </Container>

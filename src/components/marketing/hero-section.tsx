@@ -170,7 +170,7 @@ export function HeroSection({
                 className="bg-danger-500 h-2 w-2 rounded-full shadow-[0_0_8px_rgba(230,57,70,0.8)]"
               />
               <span className="text-danger-400 text-xs font-black tracking-[0.2em] uppercase">
-                Canlı Veri
+                {t("live_data")}
               </span>
             </div>
 
@@ -202,13 +202,13 @@ export function HeroSection({
             <div className="bg-glass rounded-2xl border border-white/5 p-5 shadow-2xl">
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="text-fg-primary text-sm font-black tracking-wider uppercase">
-                  📊 Skor Tablosu
+                  📊 {t("leaderboard_title")}
                 </h3>
                 <Link
                   href="/leaderboard"
                   className="text-brand-400 hover:text-brand-300 flex items-center gap-1 text-xs font-bold transition-colors"
                 >
-                  Tümü
+                  {t("view_all")}
                   <ArrowRight className="h-3 w-3" />
                 </Link>
               </div>
@@ -245,14 +245,14 @@ export function HeroSection({
                 href="/leaderboard"
                 className="text-fg-muted hover:text-brand-400 mt-4 block text-center text-xs font-medium transition-colors"
               >
-                Tüm Skor Tablosunu Gör →
+                {t("view_full_leaderboard")}
               </Link>
             </div>
 
             {/* Last report indicator */}
             <div className="flex items-center gap-2 px-1">
               <Radio className="text-fg-muted h-3.5 w-3.5" />
-              <span className="text-fg-muted text-xs">Son bildiri: Birkaç dakika önce</span>
+              <span className="text-fg-muted text-xs">{t("last_report")}</span>
             </div>
           </motion.div>
         </div>

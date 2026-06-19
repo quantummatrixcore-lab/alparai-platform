@@ -196,6 +196,61 @@ export default async function TransparencyPage({
       <Card className="mt-8">
         <CardHeader>
           <CardTitle className="text-sm">
+            {t("trustScoreMethodology", { defaultValue: "Trust Score™ Methodology" })}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="text-fg-secondary space-y-4 text-sm">
+          <p>
+            {t("trustScoreMethodologyDesc", {
+              defaultValue:
+                "ALPAR AI calculates a Trust Score for each AI provider on a 0-100 scale to quantify their transparency and accountability to the public.",
+            })}
+          </p>
+
+          <div className="bg-bg-tertiary border-border-subtle mx-auto max-w-xl space-y-2 rounded-xl border p-5 text-center font-mono text-xs">
+            <div className="text-fg-primary text-sm font-bold">Trust Score =</div>
+            <div className="text-brand-400">
+              (Verified Incidents × -5) + (Response Speed × +20) + (Transparency Report × +15) +
+              (User Rating × +10) + (Audit Score × +30)
+            </div>
+            <div className="text-fg-muted pt-2 text-[10px]">
+              * Normalized to a 0–100 scale. Lower scores indicate higher rates of unaddressed AI
+              incidents.
+            </div>
+          </div>
+
+          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div>
+              <h4 className="text-fg-primary text-xs font-bold">Verified Incidents</h4>
+              <p className="text-fg-muted text-[11px]">
+                Negative impact. Each verified incident reduces the provider score.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-fg-primary text-xs font-bold">Response Rate & Speed</h4>
+              <p className="text-fg-muted text-[11px]">
+                Positive impact. Prompt official responses to incidents increase score.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-fg-primary text-xs font-bold">User Ratings</h4>
+              <p className="text-fg-muted text-[11px]">
+                Community evaluations of model features and performance.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-fg-primary text-xs font-bold">Independent Auditing</h4>
+              <p className="text-fg-muted text-[11px]">
+                Credits given for publishing public bias, privacy, and safety audits.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="mt-8">
+        <CardHeader>
+          <CardTitle className="text-sm">
             {t("transparencyCommitment", { defaultValue: "Our commitment" })}
           </CardTitle>
         </CardHeader>

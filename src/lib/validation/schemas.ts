@@ -56,7 +56,7 @@ export const incidentSubmissionSchema = z.object({
         kind: z.enum(["screenshot", "video", "document", "url", "transcript", "other"]),
         containsPii: z.boolean().default(false),
         piiCategories: z.array(z.string()).optional(),
-      })
+      }),
     )
     .max(10, "Maximum 10 evidence files")
     .optional(),
@@ -179,3 +179,13 @@ export const modelFeatureRequestSchema = z.object({
 });
 
 export type ModelFeatureRequestInput = z.infer<typeof modelFeatureRequestSchema>;
+
+// =============================================================================
+// Newsletter Subscription
+// =============================================================================
+export const newsletterSubscriptionSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  locale: z.string().min(2).max(5).default("en"),
+});
+
+export type NewsletterSubscriptionInput = z.infer<typeof newsletterSubscriptionSchema>;

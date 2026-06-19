@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { getAllPosts } from "@/content/blog-posts";
 import { BookOpen, Clock } from "lucide-react";
+import { createServerClient } from "@/lib/supabase/server";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -15,7 +16,33 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "blog" });
-  const posts = getAllPosts();
+
+  const supabase = await createServerClient();
+  const { data: dbPostsRaw } = await supabase
+    .from("blog_posts")
+    .select("slug, title_en, title_tr, content_en, content_tr, published_at, created_at")
+    .eq("status", "published")
+    .order("published_at", { ascending: false });
+
+  const dbPosts = (dbPostsRaw ?? []).map((p) => ({
+    slug: p.slug,
+    title: p.title_en,
+    title_tr: p.title_tr,
+    description: p.content_en.slice(0, 160) + "...",
+    description_tr: p.content_tr.slice(0, 160) + "...",
+    author: "ALPAR AI Autopilot",
+    author_tr: "ALPAR AI Otopilot",
+    date: p.published_at ?? p.created_at,
+    readingTime: Math.max(
+      1,
+      Math.ceil((locale === "tr" ? p.content_tr : p.content_en).split(/\s+/).length / 200),
+    ),
+    tags: ["Report", "Autopilot"],
+  }));
+
+  const posts = [...dbPosts, ...getAllPosts()].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  );
 
   return (
     <Container className="py-12">

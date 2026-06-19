@@ -21,6 +21,7 @@ const legalLinks = [
   { href: "/legal/terms", key: "terms" },
   { href: "/legal/takedown", key: "takedown" },
   { href: "/legal/cookies", key: "cookies" },
+  { href: "/submit/whistleblower", key: "whistleblower" },
 ] as const;
 
 const aboutLinks = [

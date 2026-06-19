@@ -126,6 +126,78 @@ export const submitModelFeatureRequestPolicy: AutopilotPolicy = {
   },
 };
 
+export const syncNewsPolicy: AutopilotPolicy = {
+  config: {
+    action: "syncNews",
+    retry: { ...DEFAULT_RETRY, attempts: 2, baseMs: 1000, maxMs: 5_000 },
+    breaker: { ...DEFAULT_BREAKER, threshold: 5, cooldownMs: 60_000 },
+    budget: { maxMs: 30_000, maxTokens: 4_000 },
+    idempotency: { ...DEFAULT_IDEMPOTENCY, enabled: true, hashInputs: true },
+    onExhaust: "silent_log",
+    redactionFields: ["api_key"],
+  },
+};
+
+export const autoModerateIncidentPolicy: AutopilotPolicy = {
+  config: {
+    action: "autoModerateIncident",
+    retry: { ...DEFAULT_RETRY, attempts: 3, baseMs: 500, maxMs: 4_000 },
+    breaker: { ...DEFAULT_BREAKER, threshold: 10, cooldownMs: 30_000 },
+    budget: { maxMs: 15_000, maxTokens: 2_000 },
+    idempotency: { ...DEFAULT_IDEMPOTENCY, enabled: true, hashInputs: true },
+    onExhaust: "silent_log",
+    redactionFields: [],
+  },
+};
+
+export const subscribeNewsletterPolicy: AutopilotPolicy = {
+  config: {
+    action: "subscribeNewsletter",
+    retry: { ...DEFAULT_RETRY, attempts: 3, baseMs: 500, maxMs: 4_000 },
+    breaker: { ...DEFAULT_BREAKER, threshold: 15, cooldownMs: 30_000 },
+    budget: { maxMs: 5_000, maxTokens: 600 },
+    idempotency: { ...DEFAULT_IDEMPOTENCY, enabled: true, hashInputs: true },
+    onExhaust: "toast_warn",
+    redactionFields: ["password", "token", "secret", "api_key", "email"],
+  },
+};
+
+export const weeklyReportPolicy: AutopilotPolicy = {
+  config: {
+    action: "weeklyReport",
+    retry: { ...DEFAULT_RETRY, attempts: 2, baseMs: 1_500, maxMs: 10_000 },
+    breaker: { ...DEFAULT_BREAKER, threshold: 4, cooldownMs: 120_000 },
+    budget: { maxMs: 60_000, maxTokens: 8_000 },
+    idempotency: { ...DEFAULT_IDEMPOTENCY, enabled: true, hashInputs: true },
+    onExhaust: "silent_log",
+    redactionFields: ["api_key"],
+  },
+};
+
+export const weeklyPollPolicy: AutopilotPolicy = {
+  config: {
+    action: "weeklyPoll",
+    retry: { ...DEFAULT_RETRY, attempts: 2, baseMs: 1_000, maxMs: 8_000 },
+    breaker: { ...DEFAULT_BREAKER, threshold: 4, cooldownMs: 120_000 },
+    budget: { maxMs: 30_000, maxTokens: 4_000 },
+    idempotency: { ...DEFAULT_IDEMPOTENCY, enabled: true, hashInputs: true },
+    onExhaust: "silent_log",
+    redactionFields: ["api_key"],
+  },
+};
+
+export const submitWhistleblowerPolicy: AutopilotPolicy = {
+  config: {
+    action: "submitWhistleblower",
+    retry: { ...DEFAULT_RETRY, attempts: 3, baseMs: 500, maxMs: 4_000 },
+    breaker: { ...DEFAULT_BREAKER, threshold: 10, cooldownMs: 30_000 },
+    budget: { maxMs: 8_000, maxTokens: 1_000 },
+    idempotency: { ...DEFAULT_IDEMPOTENCY, enabled: true, hashInputs: true },
+    onExhaust: "toast_warn",
+    redactionFields: ["password", "token", "secret", "api_key", "encrypted_content"],
+  },
+};
+
 export const policies = {
   submitIncident: submitIncidentPolicy,
   submitContact: submitContactPolicy,
@@ -137,6 +209,12 @@ export const policies = {
   exportUserData: exportDataPolicy,
   submitModelReview: submitModelReviewPolicy,
   submitModelFeatureRequest: submitModelFeatureRequestPolicy,
+  syncNews: syncNewsPolicy,
+  autoModerateIncident: autoModerateIncidentPolicy,
+  subscribeNewsletter: subscribeNewsletterPolicy,
+  weeklyReport: weeklyReportPolicy,
+  weeklyPoll: weeklyPollPolicy,
+  submitWhistleblower: submitWhistleblowerPolicy,
 } as const;
 
 export type AutopilotPolicyName = keyof typeof policies;
@@ -151,7 +229,7 @@ export const policyNames = (): ReadonlyArray<AutopilotPolicyName> =>
 
 export const buildConfig = (
   base: AutopilotConfig,
-  overrides: Partial<AutopilotConfig>
+  overrides: Partial<AutopilotConfig>,
 ): AutopilotConfig => {
   return {
     ...base,
