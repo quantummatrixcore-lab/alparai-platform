@@ -236,8 +236,10 @@ export async function syncNewsAction(): Promise<{ ok: boolean; added?: number }>
   );
 
   if (result.kind === "ok") {
-    revalidatePath("/");
-    revalidatePath("/incidents");
+    try {
+      revalidatePath("/");
+      revalidatePath("/incidents");
+    } catch {}
     return { ok: true, added: result.value.added };
   }
 

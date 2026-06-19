@@ -209,6 +209,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
       <SocialProof />
 
+      <FounderStory />
+
       <EcosystemPulse news={ecosystemNews} poll={topPoll ?? null} />
 
       <Section className="bg-bg-primary pt-12 pb-6">
@@ -238,7 +240,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         </Section>
       )}
 
-      <FounderStory />
       <WhyItMatters />
       <HowItWorks />
       <Section>

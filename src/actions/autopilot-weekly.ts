@@ -17,18 +17,28 @@ interface WeeklyReportResult {
   generated: boolean;
 }
 
-async function fetchWeeklyData(
+export async function fetchWeeklyData(
   admin: ReturnType<typeof createAdminClient>,
 ): Promise<WeeklyReportData> {
   const weekStart = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
-  const { data: incidentsRaw } = await admin
+  let { data: incidentsRaw } = await admin
     .from("incidents")
     .select("id, title_masked, upvotes_count, ai_providers(name)")
     .eq("status", "published")
     .gte("created_at", weekStart)
     .order("upvotes_count", { ascending: false })
     .limit(5);
+
+  if (!incidentsRaw || incidentsRaw.length === 0) {
+    const { data: fallbackIncidents } = await admin
+      .from("incidents")
+      .select("id, title_masked, upvotes_count, ai_providers(name)")
+      .eq("status", "published")
+      .order("upvotes_count", { ascending: false })
+      .limit(5);
+    incidentsRaw = fallbackIncidents;
+  }
 
   const top_incidents = (incidentsRaw ?? []).map((i) => ({
     id: i.id,
@@ -51,13 +61,23 @@ async function fetchWeeklyData(
     trust_score: p.trust_score ?? 0,
   }));
 
-  const { data: newsRaw } = await admin
+  let { data: newsRaw } = await admin
     .from("ecosystem_news")
     .select("title_en, url, source")
     .eq("is_active", true)
     .gte("published_at", weekStart)
     .order("published_at", { ascending: false })
     .limit(3);
+
+  if (!newsRaw || newsRaw.length === 0) {
+    const { data: fallbackNews } = await admin
+      .from("ecosystem_news")
+      .select("title_en, url, source")
+      .eq("is_active", true)
+      .order("published_at", { ascending: false })
+      .limit(3);
+    newsRaw = fallbackNews;
+  }
 
   const top_news = (newsRaw ?? []).map((n) => ({
     title_en: n.title_en ?? "",
@@ -216,8 +236,10 @@ export async function generateWeeklyReportAction(): Promise<{
   );
 
   if (result.kind === "ok") {
-    revalidatePath("/blog");
-    revalidatePath("/admin");
+    try {
+      revalidatePath("/blog");
+      revalidatePath("/admin");
+    } catch {}
     return { ok: true, generated: result.value.generated, blogPostId: result.value.blogPostId };
   }
 
