@@ -11,7 +11,11 @@ export interface PersistedAutopilotRun {
   idempotency_key: string;
 }
 
-const mapResultToStatus = <T>(result: AutopilotResult<T>): string => result.kind;
+const mapResultToStatus = <T>(result: AutopilotResult<T>): string => {
+  if (result.kind === "ok") return "succeeded";
+  if (result.kind === "idempotency_violation") return "replayed";
+  return result.kind;
+};
 
 export const persistAutopilotRun = async <T>(
   action: string,
@@ -19,7 +23,7 @@ export const persistAutopilotRun = async <T>(
   result: AutopilotResult<T>,
   userId: string | null,
   ipHash: string | null,
-  durationMs: number
+  durationMs: number,
 ): Promise<PersistedAutopilotRun | null> => {
   try {
     const admin = createAdminClient();
@@ -50,7 +54,7 @@ export const persistAutopilotRun = async <T>(
           metadata: {},
           updated_at: new Date().toISOString(),
         } as never,
-        { onConflict: "idempotency_key" }
+        { onConflict: "idempotency_key" },
       )
       .select("id, status, attempts, result_id, idempotency_key")
       .single();
@@ -74,7 +78,7 @@ export const persistAutopilotRun = async <T>(
 };
 
 export const findReplay = async (
-  idempotencyKey: IdempotencyKey
+  idempotencyKey: IdempotencyKey,
 ): Promise<PersistedAutopilotRun | null> => {
   try {
     const admin = createAdminClient();
@@ -114,7 +118,7 @@ export const listRecentRuns = async (limit: number): Promise<PersistedAutopilotR
     const { data, error } = (await admin
       .from("autopilot_runs")
       .select(
-        "id, status, attempts, result_id, idempotency_key, action, duration_ms, last_error, created_at, updated_at"
+        "id, status, attempts, result_id, idempotency_key, action, duration_ms, last_error, created_at, updated_at",
       )
       .order("updated_at", { ascending: false })
       .limit(limit)) as unknown as {
@@ -170,7 +174,7 @@ export const summarizeRuns = (runs: PersistedAutopilotRunWithMeta[]): AutopilotR
     byAction[run.action] = (byAction[run.action] ?? 0) + 1;
     byStatus[run.status] = (byStatus[run.status] ?? 0) + 1;
     durations.push(run.duration_ms);
-    if (run.status === "ok") succeeded += 1;
+    if (run.status === "ok" || run.status === "succeeded") succeeded += 1;
     else if (run.status === "exhausted" || run.status === "circuit_open") failed += 1;
     else if (run.status === "budget_exceeded") retried += 1;
     else if (run.status === "replayed") replayed += 1;

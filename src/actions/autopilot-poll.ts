@@ -181,8 +181,10 @@ export async function generateWeeklyPollAction(): Promise<{
   );
 
   if (result.kind === "ok") {
-    revalidatePath("/");
-    revalidatePath("/admin");
+    try {
+      revalidatePath("/");
+      revalidatePath("/admin");
+    } catch {}
     return { ok: true, generated: result.value.generated, pollId: result.value.pollId };
   }
 

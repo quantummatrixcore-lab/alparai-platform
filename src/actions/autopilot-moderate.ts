@@ -222,8 +222,10 @@ export async function autoModerateIncidentAction(
   );
 
   if (result.kind === "ok") {
-    revalidatePath("/incidents");
-    revalidatePath("/admin");
+    try {
+      revalidatePath("/incidents");
+      revalidatePath("/admin");
+    } catch {}
     return { ok: true, score: result.value.score, status: result.value.status };
   }
 
