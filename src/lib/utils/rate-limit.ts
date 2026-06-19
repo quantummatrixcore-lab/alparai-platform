@@ -17,6 +17,7 @@ export const RATE_LIMIT_KEYS = {
   model_feature_request: "ratelimit:model_feature",
   dilemma_vote: "ratelimit:dilemma_vote",
   incident_vote: "ratelimit:incident_vote",
+  whistleblower_submission: "ratelimit:whistleblower_submission",
 } as const;
 
 let _redis: Redis | null = null;
@@ -109,6 +110,12 @@ function getLimiters(): Record<string, Ratelimit> {
     [RATE_LIMIT_KEYS.incident_vote]: new Ratelimit({
       redis: _redis,
       limiter: Ratelimit.slidingWindow(20, "1 m"),
+      analytics: true,
+      prefix: "alpar",
+    }),
+    [RATE_LIMIT_KEYS.whistleblower_submission]: new Ratelimit({
+      redis: _redis,
+      limiter: Ratelimit.slidingWindow(3, "1 d"),
       analytics: true,
       prefix: "alpar",
     }),

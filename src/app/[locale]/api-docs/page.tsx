@@ -120,6 +120,71 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
               </div>
             </CardContent>
           </Card>
+
+          <Card>
+            <CardContent className="p-0">
+              <div className="border-success-500/30 bg-success-500/10 text-success-500 flex items-center gap-2 border-b px-5 py-3 text-xs font-bold tracking-wider uppercase">
+                <span>GET</span>
+                <span className="text-fg-muted font-mono normal-case">/api/v1/providers</span>
+              </div>
+              <div className="space-y-4 p-5">
+                <p className="text-fg-secondary text-sm">{t("providers_desc")}</p>
+                <div className="border-border-subtle bg-bg-secondary overflow-x-auto rounded-md border p-4">
+                  <pre className="text-fg-primary font-mono text-xs leading-relaxed">
+                    {`curl https://alparai.com/api/v1/providers
+
+# Response
+{
+  "data": [
+    {
+      "id": "9a12cf42-...",
+      "name": "OpenAI",
+      "slug": "openai",
+      "website_url": "https://openai.com",
+      "logo_url": "...",
+      "is_verified": true,
+      "trust_score": 88
+    }
+  ],
+  "meta": { "count": 1, "generated_at": "..." }
+}`}
+                  </pre>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-0">
+              <div className="border-success-500/30 bg-success-500/10 text-success-500 flex items-center gap-2 border-b px-5 py-3 text-xs font-bold tracking-wider uppercase">
+                <span>GET</span>
+                <span className="text-fg-muted font-mono normal-case">/api/v1/stats</span>
+              </div>
+              <div className="space-y-4 p-5">
+                <p className="text-fg-secondary text-sm">{t("stats_desc")}</p>
+                <div className="border-border-subtle bg-bg-secondary overflow-x-auto rounded-md border p-4">
+                  <pre className="text-fg-primary font-mono text-xs leading-relaxed">
+                    {`curl https://alparai.com/api/v1/stats
+
+# Response
+{
+  "data": {
+    "total_incidents": 142,
+    "total_providers": 8,
+    "average_trust_score": 76.4,
+    "by_category": {
+      "hallucination": 64,
+      "privacy": 32,
+      "bias": 46
+    }
+  },
+  "meta": { "generated_at": "..." }
+}`}
+                  </pre>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 

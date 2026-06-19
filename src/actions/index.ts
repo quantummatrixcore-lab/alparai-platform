@@ -12,3 +12,7 @@ export { submitContact } from "./contact";
 export { getAdminAutopilotSnapshot, triggerAutopilotWorkerTick } from "./admin-autopilot";
 export { moderateIncident, reviewTakedown, setUserRole, promoteUser } from "./admin";
 export { submitProviderResponse } from "./provider-response";
+export { subscribeNewsletter } from "./newsletter";
+export { generateWeeklyReportAction } from "./autopilot-weekly";
+export { generateWeeklyPollAction } from "./autopilot-poll";
+export { submitWhistleblowerAction } from "./whistleblower";

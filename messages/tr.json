@@ -22,15 +22,20 @@
     "models": "Modeller"
   },
   "hero": {
-    "eyebrow": "Bir yapay zeka benden pasaportumu istedi. Ben de bunu inşa ettim.",
-    "title_primary": "YZ yalan söyledi. Kimse sizi uyarmadı. Uyaracak kaydı biz tuttuk.",
+    "eyebrow": "GÜVEN VE HESAP VEREBİLİRLİK ALTYAPISI",
+    "title_primary": "Yapay Zeka Sizi Yanılttı. Kimse Kayıt Tutmadı. Biz Tuttuk.",
     "bug_bounty_badge": "AI Bug Bounty",
     "title_accent": "AI Hackle. Ödülü Kap.",
     "title_accent_desc": "Gerçek bir AI hatası mı buldun? Belgele. Doğrulat. Etik Savunucu rozeti kazan — ve bildirdiğin sağlayıcıdan ödül kredisi al.",
-    "subtitle": "2026 yılında Grok bana şirketimi çoktan kurduğunu, adıma finansal ödemeler yaptığını söyledi ve doğrulamak için pasaportumu istedi. Hepsi uydurmaydı. Benim başıma geldiyse şu an başkalarının da başına geliyor — ve bugüne kadar kimse bunun çetelesini tutmuyordu. Artık tutuluyor.",
-    "cta_primary": "Başınıza Geleni Bildirin",
-    "cta_secondary": "Yapay Zekanın Neler Yaptığını Görün",
+    "subtitle": "ALPAR AI, yapay zekanın gerçek dünyadaki hatalarını, manipülasyonlarını ve ihlallerini belgeleyen bağımsız ve şeffaf bir güven altyapısıdır. Topluluk doğrular, sağlayıcılar yanıtlar.",
+    "cta_primary": "Olayı Raporla",
+    "cta_secondary": "Sıralamayı Gör",
     "cta_bounty": "Bug Bounty Hakkında",
+    "live_data": "Canlı Veri",
+    "leaderboard_title": "Skor Tablosu",
+    "view_all": "Tümü",
+    "view_full_leaderboard": "Tüm Skor Tablosunu Gör →",
+    "last_report": "Son bildiri: Birkaç dakika önce",
     "stats_incidents": "Doğrulanmış YZ hataları",
     "stats_providers": "AI sağlayıcı",
     "stats_countries": "Etkilenen ülkeler",
@@ -328,6 +333,7 @@
       "terms": "Şartlar",
       "takedown": "Kaldırma",
       "cookies": "Çerezler",
+      "whistleblower": "Anonim İhbar",
       "about": "Hikayemiz",
       "contact": "İletişim",
       "transparency": "Şeffaflık raporu"
@@ -528,6 +534,8 @@
     "endpoints_desc": "Tüm yanıtlar JSON. Hatalar standart hata formatını izler.",
     "list_desc": "Yayınlanmış AI olaylarının sayfalanmış listesini döndürür. İsteğe bağlı sorgu parametreleri: limit (1-100, varsayılan 20), category, severity, provider (serbest metin model adı).",
     "get_desc": "UUID ile tek bir yayınlanmış olayı döndürür. Bulunamazsa veya henüz yayınlanmamışsa 404.",
+    "providers_desc": "Takip edilen AI sağlayıcılarının, bağlantılarının, doğrulama durumlarının ve güncel Güven Puanlarının listesini döndürür.",
+    "stats_desc": "Toplam olay sayısı, sağlayıcı sayısı, kategorilere göre dağılım ve ortalama ekosistem güven puanı dahil olmak üzere toplu platform istatistiklerini döndürür.",
     "spec_title": "OpenAPI 3.0 spesifikasyonu",
     "spec_desc": "Tercih ettiğiniz dilde tipli istemciler oluşturmak için tam OpenAPI spesifikasyonunu indirin.",
     "rate_title": "Hız limitleri",
@@ -545,6 +553,17 @@
     "severity": "Ciddiyet",
     "reward": "Ödül",
     "date": "Tarih"
+  },
+  "whistleblower": {
+    "title": "Anonim İhbar Bildirimi",
+    "subtitle": "Bir yapay zeka şirketinde çalışan mısınız? Güvenlik ihlallerini, önyargıları veya gizlenen olayları güvenli bir şekilde bildirin. Tüm veriler istemci tarafında şifrelenir.",
+    "category": "İhlal Kategorisi",
+    "provider": "Sağlayıcı İpucu (İsteğe Bağlı)",
+    "content": "Gizli Mesaj / İhbar Detayı",
+    "placeholder_content": "Mesajınızı buraya yazın... Ham kod, log çıktıları veya kanıtlar ekleyebilirsiniz.",
+    "encrypt": "Şifrele ve Gönder",
+    "success": "Teşekkürler. İhbarınız alındı ve inceleme sırasına eklendi. Kimliğinizi açığa çıkaracak hiçbir veri kaydedilmemiştir.",
+    "notice": "IP adresinizi, tarayıcı bilgilerinizi veya parmak izi verilerinizi asla kaydetmiyoruz. Bu form Tor Tarayıcı ile uyumludur."
   },
   "about": {
     "mission": "Misyonumuz",
@@ -745,6 +764,17 @@
       "title": "Halkın Sesi: Yapay Zeka Dilemmaları",
       "subtitle": "Bu sorunun cevabı geleceğimizi şekillendirebilir. Oyunuzu verin, topluluğun düşüncesini görün.",
       "critical_question": "Kritik Soru"
+    },
+    "social_proof": {
+      "badge": "Güven ve Güvenilirlik",
+      "title": "Ekosistem Güven Altyapısı",
+      "subtitle": "Yapay zeka hatalarını, önyargılarını ve yasal uyumluluk durumlarını izleyen bağımsız, topluluk odaklı veritabanı.",
+      "pillar1_title": "Doğrulanabilir Kamu Kayıtları",
+      "pillar1_desc": "Bildirilen her olay şifrelenmiş olarak saklanır, kanıtlarla belgelenir ve dışarıya açıkça sorgulanabilir durumdadır.",
+      "pillar2_title": "Sağlayıcı Yanıt Döngüsü",
+      "pillar2_desc": "OpenAI, Google, Anthropic ve diğer sağlayıcılardan doğrulanmış temsilcileri tüm olaylara resmi yanıt vermeye davet ediyoruz.",
+      "pillar3_title": "Yapay Zeka ve İnsan Moderasyonu",
+      "pillar3_desc": "Gönderimler, yayınlanmadan önce otopilot güvenlik modellerimiz tarafından filtrelenir ve uzman insan moderatörlerce doğrulanır."
     }
   },
   "myIncidents": {
@@ -919,5 +949,21 @@
     "totalVotes": "{count} oy",
     "voteCta": "Oyunuzu Kullanın",
     "noPoll": "Şu an aktif anket bulunmuyor."
+  },
+  "share": {
+    "shareOn": "{platform}'da Paylaş",
+    "copyLink": "Bağlantıyı Kopyala",
+    "copied": "Kopyalandı!",
+    "shareThisIncident": "Bu olayı paylaş",
+    "shareLeaderboard": "AI Hesap Verebilirlik Skor Tablosunu Paylaş"
+  },
+  "newsletter": {
+    "title": "Haftalık AI Raporunu Al",
+    "subtitle": "Her Pazartesi: En önemli yapay zeka hataları, skor tablosu güncellemeleri ve ekosistem haberleri özet olarak e-postanızda.",
+    "placeholder": "E-posta adresinizi girin",
+    "submit": "Abone Ol",
+    "success": "Başarıyla abone olundu!",
+    "success_toast": "Teşekkürler! Aboneliğiniz tamamlandı.",
+    "privacy": "Sıfır spam. İstediğiniz zaman ayrılabilirsiniz."
   }
 }

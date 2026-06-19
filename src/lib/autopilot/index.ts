@@ -50,6 +50,12 @@ export {
   exportDataPolicy,
   submitModelReviewPolicy,
   submitModelFeatureRequestPolicy,
+  syncNewsPolicy,
+  autoModerateIncidentPolicy,
+  subscribeNewsletterPolicy,
+  weeklyReportPolicy,
+  weeklyPollPolicy,
+  submitWhistleblowerPolicy,
   isAutopilotPolicyName,
   getPolicy,
   policyNames,
@@ -113,7 +119,7 @@ const toTelemetry = <T>(
   durationMs: number,
   userId: string | null,
   ipHash: string | null,
-  error: unknown
+  error: unknown,
 ): AutopilotTelemetryPayload =>
   makeTelemetryPayload({
     action: policy.action,
@@ -140,7 +146,7 @@ export const withAutopilot = async <T>(
   policyOrConfig: AutopilotPolicy | AutopilotConfig,
   inputs: ReadonlyArray<unknown>,
   work: (ctx: AttemptContext) => Promise<AttemptOutcome<T>>,
-  options: AutopilotOptions = {}
+  options: AutopilotOptions = {},
 ): Promise<AutopilotResult<T>> => {
   const baseConfig = resolvePolicy(policyOrConfig);
   const config: AutopilotConfig = {
@@ -163,7 +169,7 @@ export const withAutopilot = async <T>(
     config.idempotency,
     config.action,
     inputs,
-    ctx.clientIdempotencyKey
+    ctx.clientIdempotencyKey,
   );
 
   if (config.idempotency.enabled) {
@@ -190,7 +196,7 @@ export const withAutopilot = async <T>(
     emitTelemetry(
       toTelemetry(config, exhausted, 0, 0, ctx.userId, ctx.ipHash, null),
       exhausted,
-      null
+      null,
     );
     return exhausted;
   }
@@ -216,7 +222,7 @@ export const withAutopilot = async <T>(
       emitTelemetry(
         toTelemetry(config, budget, attempts, Date.now() - start, ctx.userId, ctx.ipHash, null),
         budget,
-        null
+        null,
       );
       clearTimeout(timer);
       await persistAutopilotRun(
@@ -225,7 +231,7 @@ export const withAutopilot = async <T>(
         budget,
         ctx.userId,
         ctx.ipHash,
-        Date.now() - start
+        Date.now() - start,
       );
       return budget;
     }
@@ -239,7 +245,7 @@ export const withAutopilot = async <T>(
       emitTelemetry(
         toTelemetry(config, budget, attempts, Date.now() - start, ctx.userId, ctx.ipHash, null),
         budget,
-        null
+        null,
       );
       clearTimeout(timer);
       await persistAutopilotRun(
@@ -248,7 +254,7 @@ export const withAutopilot = async <T>(
         budget,
         ctx.userId,
         ctx.ipHash,
-        Date.now() - start
+        Date.now() - start,
       );
       return budget;
     }
@@ -281,7 +287,7 @@ export const withAutopilot = async <T>(
         emitTelemetry(
           toTelemetry(config, ok, i, ok.durationMs, ctx.userId, ctx.ipHash, null),
           ok,
-          null
+          null,
         );
         await persistAutopilotRun(
           config.action,
@@ -289,7 +295,7 @@ export const withAutopilot = async <T>(
           ok,
           ctx.userId,
           ctx.ipHash,
-          ok.durationMs
+          ok.durationMs,
         );
         return ok;
       }
@@ -311,10 +317,10 @@ export const withAutopilot = async <T>(
             exhausted.durationMs,
             ctx.userId,
             ctx.ipHash,
-            outcome.error
+            outcome.error,
           ),
           exhausted,
-          outcome.error
+          outcome.error,
         );
         await persistAutopilotRun(
           config.action,
@@ -322,7 +328,7 @@ export const withAutopilot = async <T>(
           exhausted,
           ctx.userId,
           ctx.ipHash,
-          exhausted.durationMs
+          exhausted.durationMs,
         );
         return exhausted;
       }
@@ -344,7 +350,7 @@ export const withAutopilot = async <T>(
         emitTelemetry(
           toTelemetry(config, exhausted, i, exhausted.durationMs, ctx.userId, ctx.ipHash, err),
           exhausted,
-          err
+          err,
         );
         await persistAutopilotRun(
           config.action,
@@ -352,7 +358,7 @@ export const withAutopilot = async <T>(
           exhausted,
           ctx.userId,
           ctx.ipHash,
-          exhausted.durationMs
+          exhausted.durationMs,
         );
         return exhausted;
       }
@@ -387,10 +393,10 @@ export const withAutopilot = async <T>(
       exhausted.durationMs,
       ctx.userId,
       ctx.ipHash,
-      lastError
+      lastError,
     ),
     exhausted,
-    lastError
+    lastError,
   );
   await persistAutopilotRun(
     config.action,
@@ -398,7 +404,7 @@ export const withAutopilot = async <T>(
     exhausted,
     ctx.userId,
     ctx.ipHash,
-    exhausted.durationMs
+    exhausted.durationMs,
   );
 
   if (config.onExhaust === "escalate_admin") {

@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/layout";
 import { Link } from "@/i18n/routing";
 import { getAllPosts, getPostBySlug } from "@/content/blog-posts";
 import { ArrowLeft, Calendar, Clock, User } from "lucide-react";
+import { createServerClient } from "@/lib/supabase/server";
 
 export async function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
@@ -16,16 +17,43 @@ export async function generateMetadata({
 }) {
   const { locale, slug } = await params;
   const post = getPostBySlug(slug);
-  if (!post) return {};
-  return {
-    title: post.title,
-    description: post.description,
-    openGraph: {
+  if (post) {
+    return {
       title: post.title,
       description: post.description,
+      openGraph: {
+        title: post.title,
+        description: post.description,
+        type: "article",
+        publishedTime: post.date,
+        authors: [post.author],
+        locale,
+      },
+    };
+  }
+
+  const supabase = await createServerClient();
+  const { data: dbPost } = await supabase
+    .from("blog_posts")
+    .select("title_en, title_tr, content_en, content_tr, published_at, created_at")
+    .eq("slug", slug)
+    .eq("status", "published")
+    .maybeSingle();
+
+  if (!dbPost) return {};
+
+  const title = locale === "tr" ? dbPost.title_tr : dbPost.title_en;
+  const content = locale === "tr" ? dbPost.content_tr : dbPost.content_en;
+  const desc = content.slice(0, 155) + "...";
+  return {
+    title,
+    description: desc,
+    openGraph: {
+      title,
+      description: desc,
       type: "article",
-      publishedTime: post.date,
-      authors: [post.author],
+      publishedTime: dbPost.published_at ?? dbPost.created_at,
+      authors: ["ALPAR AI Autopilot"],
       locale,
     },
   };
@@ -93,13 +121,44 @@ export default async function BlogPostPage({
   const { locale, slug } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "blog" });
-  const post = getPostBySlug(slug);
-  if (!post) notFound();
 
-  const title = locale === "tr" ? post.title_tr : post.title;
-  const description = locale === "tr" ? post.description_tr : post.description;
-  const author = locale === "tr" && post.author_tr ? post.author_tr : post.author;
-  const content = locale === "tr" ? post.content_tr : post.content;
+  const staticPost = getPostBySlug(slug);
+  let title = "";
+  let description = "";
+  let author = "";
+  let content = "";
+  let date = "";
+  let readingTime = 1;
+  let tags: string[] = [];
+
+  if (staticPost) {
+    title = locale === "tr" ? staticPost.title_tr : staticPost.title;
+    description = locale === "tr" ? staticPost.description_tr : staticPost.description;
+    author = locale === "tr" && staticPost.author_tr ? staticPost.author_tr : staticPost.author;
+    content = locale === "tr" ? staticPost.content_tr : staticPost.content;
+    date = staticPost.date;
+    readingTime = staticPost.readingTime;
+    tags = staticPost.tags;
+  } else {
+    const supabase = await createServerClient();
+    const { data: dbPost } = await supabase
+      .from("blog_posts")
+      .select("title_en, title_tr, content_en, content_tr, published_at, created_at")
+      .eq("slug", slug)
+      .eq("status", "published")
+      .maybeSingle();
+
+    if (!dbPost) notFound();
+
+    title = locale === "tr" ? dbPost.title_tr : dbPost.title_en;
+    content = locale === "tr" ? dbPost.content_tr : dbPost.content_en;
+    description = content.slice(0, 160) + "...";
+    author = locale === "tr" ? "ALPAR AI Otopilot" : "ALPAR AI Autopilot";
+    date = dbPost.published_at ?? dbPost.created_at;
+    readingTime = Math.max(1, Math.ceil(content.split(/\s+/).length / 200));
+    tags = ["Report", "Autopilot"];
+  }
+
   const html = renderMarkdown(content);
 
   return (
@@ -125,8 +184,8 @@ export default async function BlogPostPage({
             </span>
             <span className="inline-flex items-center gap-1.5">
               <Calendar className="h-4 w-4" />
-              <time dateTime={post.date}>
-                {new Date(post.date).toLocaleDateString(locale, {
+              <time dateTime={date}>
+                {new Date(date).toLocaleDateString(locale, {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
@@ -135,11 +194,11 @@ export default async function BlogPostPage({
             </span>
             <span className="inline-flex items-center gap-1.5">
               <Clock className="h-4 w-4" />
-              {post.readingTime} {t("min")}
+              {readingTime} {t("min")}
             </span>
           </div>
           <div className="flex flex-wrap gap-1.5">
-            {post.tags.map((tag) => (
+            {tags.map((tag) => (
               <span
                 key={tag}
                 className="bg-bg-tertiary text-fg-muted rounded px-2 py-0.5 text-xs font-semibold tracking-wider uppercase"

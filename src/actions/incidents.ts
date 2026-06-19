@@ -297,11 +297,17 @@ export async function submitIncident(
   );
 
   if (result.kind === "ok") {
+    const incidentId = result.value.id;
+    import("@/actions/autopilot-moderate").then(({ autoModerateIncidentAction }) => {
+      autoModerateIncidentAction(incidentId).catch((err) => {
+        logger.error("Async auto-moderation failed", err);
+      });
+    });
     revalidatePath("/incidents");
     revalidatePath("/admin");
     return {
       ok: true,
-      incidentId: result.value.id,
+      incidentId,
       autopilot: {
         attempts: attemptsOf(result),
         durationMs: durationOf(result),
@@ -310,7 +316,19 @@ export async function submitIncident(
     };
   }
   if (result.kind === "replayed") {
-    const replayId = typeof result.value === "string" ? result.value : undefined;
+    const replayId =
+      typeof result.value === "string" ? result.value : (result.value as { id?: string })?.id;
+    if (replayId) {
+      import("@/actions/autopilot-moderate").then(({ autoModerateIncidentAction }) => {
+        autoModerateIncidentAction(replayId).catch((err) => {
+          logger.error(
+            "Async auto-moderation for replay failed",
+            undefined,
+            err instanceof Error ? err : undefined,
+          );
+        });
+      });
+    }
     return {
       ok: true,
       incidentId: replayId,

@@ -10,6 +10,12 @@ import {
   exportDataPolicy,
   submitModelReviewPolicy,
   submitModelFeatureRequestPolicy,
+  syncNewsPolicy,
+  autoModerateIncidentPolicy,
+  subscribeNewsletterPolicy,
+  weeklyReportPolicy,
+  weeklyPollPolicy,
+  submitWhistleblowerPolicy,
   policies,
   isAutopilotPolicyName,
   getPolicy,
@@ -18,8 +24,8 @@ import {
 } from "@/lib/autopilot/policies";
 
 describe("autopilot policies", () => {
-  it("exposes 10 named policies", () => {
-    expect(policyNames().length).toBe(10);
+  it("exposes 16 named policies", () => {
+    expect(policyNames().length).toBe(16);
   });
 
   it("each policy has a unique action", () => {
@@ -86,5 +92,35 @@ describe("autopilot policies", () => {
   it("submitModelFeatureRequestPolicy has standard retry config", () => {
     expect(submitModelFeatureRequestPolicy.config.action).toBe("submitModelFeatureRequest");
     expect(submitModelFeatureRequestPolicy.config.onExhaust).toBe("toast_warn");
+  });
+
+  it("syncNewsPolicy has standard config", () => {
+    expect(syncNewsPolicy.config.action).toBe("syncNews");
+    expect(syncNewsPolicy.config.onExhaust).toBe("silent_log");
+  });
+
+  it("autoModerateIncidentPolicy has standard config", () => {
+    expect(autoModerateIncidentPolicy.config.action).toBe("autoModerateIncident");
+    expect(autoModerateIncidentPolicy.config.onExhaust).toBe("silent_log");
+  });
+
+  it("subscribeNewsletterPolicy has standard config", () => {
+    expect(subscribeNewsletterPolicy.config.action).toBe("subscribeNewsletter");
+    expect(subscribeNewsletterPolicy.config.onExhaust).toBe("toast_warn");
+  });
+
+  it("weeklyReportPolicy has standard config", () => {
+    expect(weeklyReportPolicy.config.action).toBe("weeklyReport");
+    expect(weeklyReportPolicy.config.onExhaust).toBe("silent_log");
+  });
+
+  it("weeklyPollPolicy has standard config", () => {
+    expect(weeklyPollPolicy.config.action).toBe("weeklyPoll");
+    expect(weeklyPollPolicy.config.onExhaust).toBe("silent_log");
+  });
+
+  it("submitWhistleblowerPolicy has standard config", () => {
+    expect(submitWhistleblowerPolicy.config.action).toBe("submitWhistleblower");
+    expect(submitWhistleblowerPolicy.config.onExhaust).toBe("toast_warn");
   });
 });

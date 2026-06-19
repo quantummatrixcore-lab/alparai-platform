@@ -7,6 +7,7 @@ import { Trophy, MessageSquare, TrendingUp, TrendingDown } from "lucide-react";
 import { cn, formatNumber } from "@/lib/utils";
 import { Link } from "@/i18n/routing";
 import { ProviderLogo } from "@/components/leaderboard/provider-logo";
+import { ShareButtons } from "@/components/incidents/share-buttons";
 import Image from "next/image";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -72,12 +73,17 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
 
   return (
     <Container className="py-10">
-      <header className="mb-8">
-        <h1 className="text-fg-primary inline-flex items-center gap-2 text-3xl font-bold tracking-tight">
-          <Trophy className="text-warning-500 h-7 w-7" />
-          {t("title")}
-        </h1>
-        <p className="text-fg-muted mt-2 text-sm">{t("subtitle")}</p>
+      <header className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+          <h1 className="text-fg-primary inline-flex items-center gap-2 text-3xl font-bold tracking-tight">
+            <Trophy className="text-warning-500 h-7 w-7" />
+            {t("title")}
+          </h1>
+          <p className="text-fg-muted mt-2 text-sm">{t("subtitle")}</p>
+        </div>
+        <div className="shrink-0">
+          <ShareButtons url="/leaderboard" title={t("title")} />
+        </div>
       </header>
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">

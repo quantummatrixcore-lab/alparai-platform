@@ -273,6 +273,102 @@ export type Database = {
           },
         ];
       };
+      newsletter_subscribers: {
+        Row: {
+          id: string;
+          email: string;
+          locale: string | null;
+          confirmed: boolean;
+          subscribed_at: string;
+          unsubscribed_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          email: string;
+          locale?: string | null;
+          confirmed?: boolean;
+          subscribed_at?: string;
+          unsubscribed_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          email?: string;
+          locale?: string | null;
+          confirmed?: boolean;
+          subscribed_at?: string;
+          unsubscribed_at?: string | null;
+        };
+        Relationships: [];
+      };
+      blog_posts: {
+        Row: {
+          id: string;
+          slug: string;
+          title_en: string;
+          title_tr: string;
+          content_en: string;
+          content_tr: string;
+          status: "draft" | "published";
+          generated_by: string | null;
+          published_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          title_en: string;
+          title_tr: string;
+          content_en: string;
+          content_tr: string;
+          status?: "draft" | "published";
+          generated_by?: string | null;
+          published_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          title_en?: string;
+          title_tr?: string;
+          content_en?: string;
+          content_tr?: string;
+          status?: "draft" | "published";
+          generated_by?: string | null;
+          published_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      whistleblower_submissions: {
+        Row: {
+          id: string;
+          encrypted_content: string;
+          category: string;
+          provider_hint: string | null;
+          submitted_at: string;
+          status: "pending" | "reviewing" | "verified" | "closed";
+        };
+        Insert: {
+          id?: string;
+          encrypted_content: string;
+          category: string;
+          provider_hint?: string | null;
+          submitted_at?: string;
+          status?: "pending" | "reviewing" | "verified" | "closed";
+        };
+        Update: {
+          id?: string;
+          encrypted_content?: string;
+          category?: string;
+          provider_hint?: string | null;
+          submitted_at?: string;
+          status?: "pending" | "reviewing" | "verified" | "closed";
+        };
+        Relationships: [];
+      };
       ai_polls: {
         Row: {
           category: string;
@@ -425,6 +521,7 @@ export type Database = {
           name: string;
           slug: string;
           website_url: string | null;
+          trust_score: number;
         };
         Insert: {
           contact_email?: string | null;
@@ -436,6 +533,7 @@ export type Database = {
           name: string;
           slug: string;
           website_url?: string | null;
+          trust_score?: number;
         };
         Update: {
           contact_email?: string | null;
@@ -447,6 +545,7 @@ export type Database = {
           name?: string;
           slug?: string;
           website_url?: string | null;
+          trust_score?: number;
         };
         Relationships: [];
       };
@@ -735,6 +834,10 @@ export type Database = {
           user_agent: string | null;
           user_id: string | null;
           views_count: number;
+          ai_moderation_score: number | null;
+          ai_moderation_reason: string | null;
+          title_tr: string | null;
+          description_tr: string | null;
         };
         Insert: {
           ai_model_id?: string | null;
@@ -772,6 +875,10 @@ export type Database = {
           user_agent?: string | null;
           user_id?: string | null;
           views_count?: number;
+          ai_moderation_score?: number | null;
+          ai_moderation_reason?: string | null;
+          title_tr?: string | null;
+          description_tr?: string | null;
         };
         Update: {
           ai_model_id?: string | null;
@@ -809,6 +916,10 @@ export type Database = {
           user_agent?: string | null;
           user_id?: string | null;
           views_count?: number;
+          ai_moderation_score?: number | null;
+          ai_moderation_reason?: string | null;
+          title_tr?: string | null;
+          description_tr?: string | null;
         };
         Relationships: [
           {

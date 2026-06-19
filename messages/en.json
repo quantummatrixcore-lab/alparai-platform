@@ -22,15 +22,20 @@
     "models": "Models"
   },
   "hero": {
-    "eyebrow": "An AI asked me for my passport. I built this.",
-    "title_primary": "The AI lied. No one warned you. We built the record that does.",
+    "eyebrow": "TRUST AND ACCOUNTABILITY INFRASTRUCTURE",
+    "title_primary": "AI Lied to You. Nobody Was Tracking It. We Were.",
     "bug_bounty_badge": "AI Bug Bounty",
     "title_accent": "Hack AI. Win the bounty.",
     "title_accent_desc": "Found a real AI failure? Document it. Get verified. Earn the Ethics Advocate badge — and reward credits from the providers you reported.",
-    "subtitle": "In 2026, Grok told me it had incorporated my company, made payments on my behalf, and demanded my passport. All fabricated. If it happened to me, it's happening to others right now — and no one is keeping score. Until now.",
-    "cta_primary": "Report What Happened to You",
-    "cta_secondary": "See What AI Has Done",
+    "subtitle": "ALPAR AI is an independent, transparent trust infrastructure documenting real-world AI failures, biases, and manipulations. Verified by the community, responded by the providers.",
+    "cta_primary": "Report an Incident",
+    "cta_secondary": "See Rankings",
     "cta_bounty": "Learn about Bug Bounties",
+    "live_data": "Live Data",
+    "leaderboard_title": "Leaderboard",
+    "view_all": "View All",
+    "view_full_leaderboard": "See Full Leaderboard →",
+    "last_report": "Last report: Just now",
     "stats_incidents": "Verified AI failures",
     "stats_providers": "AI providers",
     "stats_countries": "Countries affected",
@@ -328,6 +333,7 @@
       "terms": "Terms",
       "takedown": "Takedown",
       "cookies": "Cookies",
+      "whistleblower": "Whistleblower program",
       "about": "Our story",
       "contact": "Contact",
       "transparency": "Transparency report"
@@ -528,6 +534,8 @@
     "endpoints_desc": "All responses are JSON. Errors follow the standard error format.",
     "list_desc": "Returns a paginated list of published AI incidents. Optional query parameters: limit (1-100, default 20), category, severity, provider (free-text model name).",
     "get_desc": "Returns a single published incident by UUID. 404 if not found or not yet published.",
+    "providers_desc": "Returns a list of tracked AI providers, their slugs, verified status, and current Trust Score.",
+    "stats_desc": "Returns aggregate platform statistics including total incident count, provider count, category breakdown, and average ecosystem trust score.",
     "spec_title": "OpenAPI 3.0 specification",
     "spec_desc": "Download the full OpenAPI spec to generate typed clients in your language of choice.",
     "rate_title": "Rate limits",
@@ -545,6 +553,17 @@
     "severity": "Severity",
     "reward": "Reward",
     "date": "Date"
+  },
+  "whistleblower": {
+    "title": "Anonymous Whistleblower Submission",
+    "subtitle": "Are you an insider at an AI company? Report safety violations, biases, or hidden incidents securely. All data is client-side encrypted.",
+    "category": "Violation Category",
+    "provider": "Provider Hint (Optional)",
+    "content": "Secret Message / Evidence",
+    "placeholder_content": "Write your message here... You can also paste raw code, logs, or evidence.",
+    "encrypt": "Encrypt & Submit",
+    "success": "Thank you. Your submission was received and queued for review. No identifiable metadata has been saved.",
+    "notice": "We do not log your IP, your user agent, or any fingerprinting data. This form is Tor Browser compatible."
   },
   "about": {
     "mission": "Our mission",
@@ -745,6 +764,17 @@
       "title": "Voice of the People: AI Dilemmas",
       "subtitle": "The answer to this question may shape our future. Cast your vote and see what the community thinks.",
       "critical_question": "Critical Question"
+    },
+    "social_proof": {
+      "badge": "Trust & Credibility",
+      "title": "Ecosystem Trust Infrastructure",
+      "subtitle": "Independent, community-driven database tracking real-world AI failures, biases, and regulatory compliance.",
+      "pillar1_title": "Verifiable Public Records",
+      "pillar1_desc": "Every reported incident is cryptographically stored, documented with evidence, and openly queryable.",
+      "pillar2_title": "Provider Response Loop",
+      "pillar2_desc": "We invite verified representatives from OpenAI, Google, Anthropic, and others to officially respond to all incidents.",
+      "pillar3_title": "AI & Human Moderation",
+      "pillar3_desc": "Submissions are filtered by our autopilot safety models and verified by expert human moderators before publication."
     }
   },
   "myIncidents": {
@@ -919,5 +949,21 @@
     "totalVotes": "{count} votes",
     "voteCta": "Cast Your Vote",
     "noPoll": "No active poll at this time."
+  },
+  "share": {
+    "shareOn": "Share on {platform}",
+    "copyLink": "Copy Link",
+    "copied": "Copied!",
+    "shareThisIncident": "Share this incident",
+    "shareLeaderboard": "Share the AI Accountability Leaderboard"
+  },
+  "newsletter": {
+    "title": "Get the Weekly AI Accountability Report",
+    "subtitle": "Every Monday: The most critical AI failures, leaderboard updates, and ecosystem news summarized in your inbox.",
+    "placeholder": "Enter your email address",
+    "submit": "Subscribe",
+    "success": "Subscribed successfully!",
+    "success_toast": "Thank you! You are now subscribed.",
+    "privacy": "Zero spam. Unsubscribe at any time."
   }
 }
