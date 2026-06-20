@@ -140,83 +140,97 @@ export default async function ModelsPage({ params, searchParams }: ModelPageProp
       </form>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredModels.map((model) => {
-          const provider = model.ai_providers as {
-            id: string;
-            name: string;
-            slug: string;
-            logo_url: string | null;
-          } | null;
-          const stats = reviewStats[model.id] || { total: 0, count: 0 };
-          const avgScore = stats.count > 0 ? stats.total / stats.count : 0;
-          const featuresCount = featureStats[model.id] || 0;
+        {filteredModels.length === 0 ? (
+          <div className="col-span-full flex flex-col items-center justify-center py-24 text-center">
+            <div className="bg-brand-500/10 mb-4 flex h-16 w-16 items-center justify-center rounded-2xl">
+              <Lightbulb className="text-brand-400 h-8 w-8" />
+            </div>
+            <h3 className="text-fg-primary mb-2 text-xl font-bold">
+              {search ? t("no_results_title") : t("empty_title")}
+            </h3>
+            <p className="text-fg-muted max-w-sm text-sm">
+              {search ? t("no_results_subtitle") : t("empty_subtitle")}
+            </p>
+          </div>
+        ) : (
+          filteredModels.map((model) => {
+            const provider = model.ai_providers as {
+              id: string;
+              name: string;
+              slug: string;
+              logo_url: string | null;
+            } | null;
+            const stats = reviewStats[model.id] || { total: 0, count: 0 };
+            const avgScore = stats.count > 0 ? stats.total / stats.count : 0;
+            const featuresCount = featureStats[model.id] || 0;
 
-          return (
-            <Link
-              key={model.id}
-              href={`/${locale}/models/${model.provider_id}/${model.id}`}
-              className="group border-border-subtle bg-bg-secondary/40 hover:bg-bg-secondary/60 hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border p-6 shadow-lg transition duration-300"
-            >
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    {provider?.logo_url ? (
-                      <img
-                        src={provider.logo_url}
-                        alt={provider.name}
-                        className="bg-bg-tertiary h-8 w-8 rounded-lg object-contain p-1"
-                      />
-                    ) : (
-                      <div className="bg-bg-tertiary text-fg-muted flex h-8 w-8 items-center justify-center rounded-lg text-xs font-bold">
-                        {provider?.name?.[0] || "AI"}
-                      </div>
-                    )}
-                    <span className="text-fg-secondary text-sm font-semibold">
-                      {provider?.name || "Unknown Provider"}
+            return (
+              <Link
+                key={model.id}
+                href={`/${locale}/models/${model.provider_id}/${model.id}`}
+                className="group border-border-subtle bg-bg-secondary/40 hover:bg-bg-secondary/60 hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border p-6 shadow-lg transition duration-300"
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      {provider?.logo_url ? (
+                        <img
+                          src={provider.logo_url}
+                          alt={provider.name}
+                          className="bg-bg-tertiary h-8 w-8 rounded-lg object-contain p-1"
+                        />
+                      ) : (
+                        <div className="bg-bg-tertiary text-fg-muted flex h-8 w-8 items-center justify-center rounded-lg text-xs font-bold">
+                          {provider?.name?.[0] || "AI"}
+                        </div>
+                      )}
+                      <span className="text-fg-secondary text-sm font-semibold">
+                        {provider?.name || "Unknown Provider"}
+                      </span>
+                    </div>
+                    <Badge variant={statusVariants[model.status] || "default"} size="sm">
+                      {t(model.status)}
+                    </Badge>
+                  </div>
+
+                  <div className="space-y-1">
+                    <h3 className="text-fg-primary group-hover:text-brand-400 flex items-center justify-between text-xl font-bold transition-colors">
+                      {model.name}
+                      <ChevronRight className="text-fg-muted group-hover:text-brand-400 h-5 w-5 transition-all group-hover:translate-x-1" />
+                    </h3>
+                    <p className="text-fg-muted text-xs">
+                      {model.version && t("version", { version: model.version })}
+                      {model.released_at && ` • ${t("released", { date: model.released_at })}`}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="border-border-subtle text-fg-secondary mt-6 flex items-center justify-between border-t pt-4 text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <Star
+                      className={`h-4 w-4 ${avgScore > 0 ? "fill-brand-400 text-brand-400" : "text-border-strong"}`}
+                    />
+                    <span className="text-fg-primary font-bold">
+                      {avgScore > 0 ? avgScore.toFixed(1) : "-"}
                     </span>
+                    <span className="text-fg-muted">({stats.count})</span>
                   </div>
-                  <Badge variant={statusVariants[model.status] || "default"} size="sm">
-                    {t(model.status)}
-                  </Badge>
-                </div>
 
-                <div className="space-y-1">
-                  <h3 className="text-fg-primary group-hover:text-brand-400 flex items-center justify-between text-xl font-bold transition-colors">
-                    {model.name}
-                    <ChevronRight className="text-fg-muted group-hover:text-brand-400 h-5 w-5 transition-all group-hover:translate-x-1" />
-                  </h3>
-                  <p className="text-fg-muted text-xs">
-                    {model.version && t("version", { version: model.version })}
-                    {model.released_at && ` • ${t("released", { date: model.released_at })}`}
-                  </p>
-                </div>
-              </div>
-
-              <div className="border-border-subtle text-fg-secondary mt-6 flex items-center justify-between border-t pt-4 text-xs">
-                <div className="flex items-center gap-1.5">
-                  <Star
-                    className={`h-4 w-4 ${avgScore > 0 ? "fill-brand-400 text-brand-400" : "text-border-strong"}`}
-                  />
-                  <span className="text-fg-primary font-bold">
-                    {avgScore > 0 ? avgScore.toFixed(1) : "-"}
-                  </span>
-                  <span className="text-fg-muted">({stats.count})</span>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1">
-                    <MessageSquare className="text-fg-muted h-3.5 w-3.5" />
-                    <span>{stats.count}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Lightbulb className="text-fg-muted h-3.5 w-3.5" />
-                    <span>{featuresCount}</span>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-1">
+                      <MessageSquare className="text-fg-muted h-3.5 w-3.5" />
+                      <span>{stats.count}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Lightbulb className="text-fg-muted h-3.5 w-3.5" />
+                      <span>{featuresCount}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-          );
-        })}
+              </Link>
+            );
+          })
+        )}
       </div>
     </div>
   );

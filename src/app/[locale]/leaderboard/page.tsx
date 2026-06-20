@@ -65,10 +65,15 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
   );
 
   const sorted = stats.sort((a, b) => {
-    if (a.incident_count === 0 && b.incident_count === 0) return 0;
+    if (a.incident_count === 0 && b.incident_count === 0) return a.name.localeCompare(b.name);
     if (a.incident_count === 0) return 1;
     if (b.incident_count === 0) return -1;
-    return b.response_rate - a.response_rate;
+    // Composite accountability score: response_rate weighted by sqrt of incident count
+    // Higher incidents with high response rate = truly accountable
+    const scoreA = a.response_rate * Math.sqrt(a.incident_count);
+    const scoreB = b.response_rate * Math.sqrt(b.incident_count);
+    if (scoreB !== scoreA) return scoreB - scoreA;
+    return b.incident_count - a.incident_count;
   });
 
   return (
