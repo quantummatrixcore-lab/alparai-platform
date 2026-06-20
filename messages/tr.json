@@ -897,7 +897,11 @@
     "sort_name": "İsim",
     "sort_rating": "En Yüksek Puan",
     "sort_reviews": "En Çok Değerlendirme",
-    "sort_features": "En Çok Özellik İsteği"
+    "sort_features": "En Çok Özellik İsteği",
+    "empty_title": "Henüz model yok",
+    "empty_subtitle": "Yapay zeka modelleri kayıt defterine eklendikçe burada görünecek.",
+    "no_results_title": "Sonuç bulunamadı",
+    "no_results_subtitle": "Farklı bir arama terimi deneyin veya filtreyi temizleyin."
   },
   "transparency": {
     "totalReports": "Toplam rapor",

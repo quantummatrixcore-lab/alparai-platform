@@ -897,7 +897,11 @@
     "sort_name": "Name",
     "sort_rating": "Highest Rating",
     "sort_reviews": "Most Reviews",
-    "sort_features": "Most Feature Requests"
+    "sort_features": "Most Feature Requests",
+    "empty_title": "No models yet",
+    "empty_subtitle": "AI models will appear here as they are added to the registry.",
+    "no_results_title": "No results found",
+    "no_results_subtitle": "Try a different search term or clear the filter."
   },
   "transparency": {
     "totalReports": "Total reports",

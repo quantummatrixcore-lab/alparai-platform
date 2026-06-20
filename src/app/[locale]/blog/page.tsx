@@ -6,6 +6,15 @@ import { getAllPosts } from "@/content/blog-posts";
 import { BookOpen, Clock } from "lucide-react";
 import { createServerClient } from "@/lib/supabase/server";
 
+const CARD_GRADIENTS = [
+  "from-brand-600/80 via-purple-600/60 to-rose-600/80",
+  "from-blue-600/80 via-cyan-500/60 to-teal-600/80",
+  "from-amber-600/80 via-orange-500/60 to-rose-600/80",
+  "from-emerald-600/80 via-teal-500/60 to-cyan-600/80",
+  "from-violet-600/80 via-purple-500/60 to-pink-600/80",
+  "from-indigo-600/80 via-blue-500/60 to-cyan-600/80",
+];
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "blog" });
@@ -58,16 +67,32 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
       </header>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {posts.map((post) => {
+        {posts.map((post, idx) => {
           const title = locale === "tr" ? post.title_tr : post.title;
           const description = locale === "tr" ? post.description_tr : post.description;
+          const gradient = CARD_GRADIENTS[idx % CARD_GRADIENTS.length];
           return (
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}
-              className="group focus-visible:ring-brand-500 rounded-lg focus-visible:ring-2 focus-visible:outline-none"
+              className="group focus-visible:ring-brand-500 rounded-xl focus-visible:ring-2 focus-visible:outline-none"
             >
-              <Card className="group-hover:border-brand-500/40 h-full transition-all group-hover:-translate-y-1">
+              <Card className="group-hover:border-brand-500/40 h-full overflow-hidden transition-all group-hover:-translate-y-1">
+                <div
+                  className={`relative h-40 w-full bg-gradient-to-br ${gradient} flex items-end overflow-hidden p-4`}
+                >
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.08),transparent_70%)]" />
+                  <div className="flex flex-wrap gap-1.5">
+                    {post.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded bg-black/30 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-white/90 uppercase backdrop-blur-sm"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
                 <CardContent className="space-y-3 p-6">
                   <div className="text-fg-muted flex items-center gap-3 text-xs">
                     <time dateTime={post.date}>
@@ -86,16 +111,6 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
                     {title}
                   </h2>
                   <p className="text-fg-muted line-clamp-3 text-sm">{description}</p>
-                  <div className="flex flex-wrap gap-1.5 pt-2">
-                    {post.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="bg-bg-tertiary text-fg-muted rounded px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
                 </CardContent>
               </Card>
             </Link>
