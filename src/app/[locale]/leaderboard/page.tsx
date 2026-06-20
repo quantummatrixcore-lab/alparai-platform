@@ -136,99 +136,101 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
 
       <Card>
         <CardContent className="p-0">
-          <table className="w-full text-sm">
-            <caption className="sr-only">AI Models Leaderboard Table</caption>
-            <thead>
-              <tr className="border-border-subtle text-fg-muted border-b text-left text-xs font-semibold tracking-wider uppercase">
-                <th className="w-12 p-4">{t("rank")}</th>
-                <th className="p-4">{t("provider")}</th>
-                <th className="p-4 text-right">{t("incidents")}</th>
-                <th className="p-4 text-right">
-                  <span className="inline-flex items-center gap-1">
-                    <MessageSquare className="h-3 w-3" />
-                    {t("responses")}
-                  </span>
-                </th>
-                <th className="p-4 text-right">
-                  <span className="inline-flex items-center gap-1">{t("responseRate")}</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-border-subtle divide-y">
-              {sorted.map((p, i) => (
-                <tr key={p.id} className="hover:bg-bg-tertiary/30">
-                  <td className="p-4">
-                    <span
-                      className={cn(
-                        "inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold",
-                        i === 0
-                          ? "bg-warning-500/15 text-warning-500"
-                          : i === 1
-                            ? "bg-fg-muted/15 text-fg-muted"
-                            : i === 2
-                              ? "bg-warning-700/15 text-warning-700"
-                              : "bg-bg-tertiary text-fg-muted",
-                      )}
-                    >
-                      {i + 1}
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <caption className="sr-only">AI Models Leaderboard Table</caption>
+              <thead>
+                <tr className="border-border-subtle text-fg-muted border-b text-left text-xs font-semibold tracking-wider uppercase">
+                  <th className="w-12 p-4">{t("rank")}</th>
+                  <th className="p-4">{t("provider")}</th>
+                  <th className="p-4 text-right">{t("incidents")}</th>
+                  <th className="p-4 text-right">
+                    <span className="inline-flex items-center gap-1">
+                      <MessageSquare className="h-3 w-3" />
+                      {t("responses")}
                     </span>
-                  </td>
-                  <td className="p-4">
-                    <Link
-                      href={`/brand/${p.slug}`}
-                      className="text-fg-primary hover:text-brand-400 group flex items-center gap-3 font-medium transition-colors"
-                    >
-                      {p.logo_url ? (
-                        <div className="border-border-subtle bg-bg-primary relative h-10 w-10 shrink-0 overflow-hidden rounded-md border shadow-sm transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_15px_rgba(231,76,60,0.3)]">
-                          <Image
-                            src={p.logo_url}
-                            alt={`${p.name} logo`}
-                            fill
-                            className="object-contain p-1.5"
-                            sizes="40px"
-                          />
-                        </div>
-                      ) : (
-                        <div className="border-border-subtle bg-bg-primary relative h-10 w-10 shrink-0 overflow-hidden rounded-md border shadow-sm">
-                          <ProviderLogo src={null} name={p.name} />
-                        </div>
-                      )}
-                      <span className="text-fg-primary">{p.name}</span>
-                    </Link>
-                  </td>
-                  <td className="text-fg-secondary p-4 text-right">
-                    {formatNumber(p.incident_count)}
-                  </td>
-                  <td className="text-fg-secondary p-4 text-right">
-                    {formatNumber(p.response_count)}
-                  </td>
-                  <td className="p-4 text-right">
-                    {p.incident_count > 0 ? (
-                      <Badge
-                        variant={
-                          p.response_rate >= 80
-                            ? "success"
-                            : p.response_rate >= 50
-                              ? "warning"
-                              : "danger"
-                        }
-                        size="sm"
-                      >
-                        {p.response_rate >= 80 ? (
-                          <TrendingUp className="mr-1 h-3 w-3" />
-                        ) : p.response_rate < 50 ? (
-                          <TrendingDown className="mr-1 h-3 w-3" />
-                        ) : null}
-                        {p.response_rate}%
-                      </Badge>
-                    ) : (
-                      <span className="text-fg-muted text-xs">—</span>
-                    )}
-                  </td>
+                  </th>
+                  <th className="p-4 text-right">
+                    <span className="inline-flex items-center gap-1">{t("responseRate")}</span>
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-border-subtle divide-y">
+                {sorted.map((p, i) => (
+                  <tr key={p.id} className="hover:bg-bg-tertiary/30">
+                    <td className="p-4">
+                      <span
+                        className={cn(
+                          "inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold",
+                          i === 0
+                            ? "bg-warning-500/15 text-warning-500"
+                            : i === 1
+                              ? "bg-fg-muted/15 text-fg-muted"
+                              : i === 2
+                                ? "bg-warning-700/15 text-warning-700"
+                                : "bg-bg-tertiary text-fg-muted",
+                        )}
+                      >
+                        {i + 1}
+                      </span>
+                    </td>
+                    <td className="p-4">
+                      <Link
+                        href={`/brand/${p.slug}`}
+                        className="text-fg-primary hover:text-brand-400 group flex items-center gap-3 font-medium transition-colors"
+                      >
+                        {p.logo_url ? (
+                          <div className="border-border-subtle bg-bg-primary relative h-10 w-10 shrink-0 overflow-hidden rounded-md border shadow-sm transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_15px_rgba(231,76,60,0.3)]">
+                            <Image
+                              src={p.logo_url}
+                              alt={`${p.name} logo`}
+                              fill
+                              className="object-contain p-1.5"
+                              sizes="40px"
+                            />
+                          </div>
+                        ) : (
+                          <div className="border-border-subtle bg-bg-primary relative h-10 w-10 shrink-0 overflow-hidden rounded-md border shadow-sm">
+                            <ProviderLogo src={null} name={p.name} />
+                          </div>
+                        )}
+                        <span className="text-fg-primary">{p.name}</span>
+                      </Link>
+                    </td>
+                    <td className="text-fg-secondary p-4 text-right">
+                      {formatNumber(p.incident_count)}
+                    </td>
+                    <td className="text-fg-secondary p-4 text-right">
+                      {formatNumber(p.response_count)}
+                    </td>
+                    <td className="p-4 text-right">
+                      {p.incident_count > 0 ? (
+                        <Badge
+                          variant={
+                            p.response_rate >= 80
+                              ? "success"
+                              : p.response_rate >= 50
+                                ? "warning"
+                                : "danger"
+                          }
+                          size="sm"
+                        >
+                          {p.response_rate >= 80 ? (
+                            <TrendingUp className="mr-1 h-3 w-3" />
+                          ) : p.response_rate < 50 ? (
+                            <TrendingDown className="mr-1 h-3 w-3" />
+                          ) : null}
+                          {p.response_rate}%
+                        </Badge>
+                      ) : (
+                        <span className="text-fg-muted text-xs">—</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </CardContent>
       </Card>
     </Container>
