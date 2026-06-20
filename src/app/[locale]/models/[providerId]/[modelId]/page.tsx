@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Star, MessageSquare, Lightbulb, ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createServerClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import { Badge } from "@/components/ui/badge";
 import { ModelScoreDisplay } from "@/components/models/model-score-display";
@@ -27,7 +27,7 @@ interface ModelDetailPageProps {
 export default async function ModelDetailPage({ params }: ModelDetailPageProps) {
   const { locale, providerId, modelId } = await params;
   const t = await getTranslations({ locale, namespace: "models" });
-  const db = createAdminClient();
+  const db = await createServerClient();
   const user = await getCurrentUser();
 
   // Fetch model details
