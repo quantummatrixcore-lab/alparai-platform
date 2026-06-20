@@ -3,7 +3,7 @@ import { Container } from "@/components/ui/layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { createServerClient } from "@/lib/supabase/server";
-import { Trophy, Award, Sparkles, Clock, DollarSign } from "lucide-react";
+import { Trophy, Award, Sparkles, Clock, DollarSign, Plus } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { formatDate } from "@/lib/utils";
 
@@ -49,7 +49,7 @@ export default async function BountiesPage({ params }: { params: Promise<{ local
   const { data } = await supabase
     .from("bug_bounties" as never)
     .select(
-      "id, severity_score, estimated_reward_cents, status, created_at, notes, incident_id, reporter_id, provider_id, incidents(title_masked, title_tr, category, severity), ai_providers(name, slug, logo_url), reporter:user_profiles!bug_bounties_reporter_id_fkey(full_name, email)" as never
+      "id, severity_score, estimated_reward_cents, status, created_at, notes, incident_id, reporter_id, provider_id, incidents(title_masked, title_tr, category, severity), ai_providers(name, slug, logo_url), reporter:user_profiles!bug_bounties_reporter_id_fkey(full_name, email)" as never,
     )
     .in("status", ["validated", "paid", "open"] as never)
     .order("created_at", { ascending: false })
@@ -92,9 +92,41 @@ export default async function BountiesPage({ params }: { params: Promise<{ local
       <Card>
         <CardContent className="p-0">
           {items.length === 0 ? (
-            <div className="text-fg-muted p-12 text-center">
-              <Trophy className="text-warning-500 mx-auto mb-3 h-10 w-10" />
-              <p className="text-sm">{t("empty")}</p>
+            <div className="mx-auto max-w-4xl p-8 text-center md:p-12">
+              <Trophy className="text-warning-400 mx-auto mb-4 h-12 w-12 drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]" />
+              <h2 className="text-fg-primary mb-3 text-2xl font-black">{t("program_title")}</h2>
+              <p className="text-fg-secondary mx-auto mb-8 max-w-2xl text-sm leading-relaxed">
+                {t("program_desc")}
+              </p>
+
+              <div className="mb-10 grid grid-cols-1 gap-6 text-left md:grid-cols-3">
+                <div className="border-border-subtle bg-bg-secondary/20 rounded-xl border p-5">
+                  <h3 className="text-fg-primary mb-2 text-base font-bold">
+                    {t("program_step1_title")}
+                  </h3>
+                  <p className="text-fg-muted text-xs leading-relaxed">{t("program_step1_desc")}</p>
+                </div>
+                <div className="border-border-subtle bg-bg-secondary/20 rounded-xl border p-5">
+                  <h3 className="text-fg-primary mb-2 text-base font-bold">
+                    {t("program_step2_title")}
+                  </h3>
+                  <p className="text-fg-muted text-xs leading-relaxed">{t("program_step2_desc")}</p>
+                </div>
+                <div className="border-border-subtle bg-bg-secondary/20 rounded-xl border p-5">
+                  <h3 className="text-fg-primary mb-2 text-base font-bold">
+                    {t("program_step3_title")}
+                  </h3>
+                  <p className="text-fg-muted text-xs leading-relaxed">{t("program_step3_desc")}</p>
+                </div>
+              </div>
+
+              <Link
+                href="/submit"
+                className="group bg-warning-500 hover:bg-warning-400 relative inline-flex h-11 items-center justify-center gap-2 rounded-full px-8 text-sm font-black text-black shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(245,158,11,0.5)]"
+              >
+                <Plus className="h-4 w-4" />
+                {t("program_cta")}
+              </Link>
             </div>
           ) : (
             <div className="divide-border-subtle divide-y">

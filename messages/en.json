@@ -552,7 +552,16 @@
     "empty": "No bounties yet. Be the first to report a verified AI incident.",
     "severity": "Severity",
     "reward": "Reward",
-    "date": "Date"
+    "date": "Date",
+    "program_title": "Upcoming: AI Bug Bounty Program",
+    "program_desc": "ALPAR AI is launching a community-governed AI Bug Bounty Program. By documenting and submitting real-world AI failures, biases, or security flaws, you can earn reputation points, exclusive badges, and cash rewards once the program goes live.",
+    "program_step1_title": "1. Find a Failure",
+    "program_step1_desc": "Interact with AI models (ChatGPT, Gemini, Claude, etc.) and identify hallucinations, critical biases, privacy leaks, or security bypasses.",
+    "program_step2_title": "2. Document & Report",
+    "program_step2_desc": "Take screenshots, copy transcripts, and submit them using our secure reporting form. Automated PII masking protects your privacy.",
+    "program_step3_title": "3. Earn Rewards",
+    "program_step3_desc": "Once verified by the community and acknowledged by the provider, you earn Ethics Advocate credits, reputation points, and reward bounties.",
+    "program_cta": "Report an Incident Now"
   },
   "whistleblower": {
     "title": "Anonymous Whistleblower Submission",
