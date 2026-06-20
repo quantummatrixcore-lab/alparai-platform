@@ -85,13 +85,21 @@ export default async function IncidentDetailPage({
     };
   }
 
+  const supabaseUrl =
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "https://azszpzyvxjduhemkjsdh.supabase.co";
   const evidence: EvidenceItem[] = ((evidenceRes.data as Array<Record<string, unknown>>) ?? []).map(
-    (e) => ({
-      id: e["id"] as string,
-      file_name: e["file_name"] as string,
-      file_url: e["file_path"] as string,
-      file_type: (e["mime_type"] as string) ?? "application/octet-stream",
-    })
+    (e) => {
+      const pathStr = e["file_path"] as string;
+      const fileUrl = pathStr.startsWith("http")
+        ? pathStr
+        : `${supabaseUrl}/storage/v1/object/public/evidence/${pathStr}`;
+      return {
+        id: e["id"] as string,
+        file_name: e["file_name"] as string,
+        file_url: fileUrl,
+        file_type: (e["mime_type"] as string) ?? "application/octet-stream",
+      };
+    },
   );
 
   const r = incidentRow as Record<string, unknown>;
