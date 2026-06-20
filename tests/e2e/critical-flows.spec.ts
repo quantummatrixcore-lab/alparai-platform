@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem(
       "alpar_cookie_consent",
-      JSON.stringify({ level: "all", at: Date.now() })
+      JSON.stringify({ level: "all", at: Date.now() }),
     );
   });
 });
@@ -17,9 +17,7 @@ test.describe("Home page", () => {
   test("renders hero, live feed, and leaderboard", async ({ page }) => {
     await page.goto("/en");
     await expect(page).toHaveTitle(/ALPAR AI/);
-    await expect(
-      page.getByRole("heading", { name: /Let's set AI ethics together/i })
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: /AI Lied to You/i })).toBeVisible();
     await expect(page.getByText(/live feed/i)).toBeVisible();
     await expect(page.getByRole("link", { name: /leaderboard/i }).first()).toBeVisible();
   });
@@ -30,7 +28,7 @@ test.describe("Home page", () => {
       return;
     }
     await page.goto("/en");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
     const switcher = page.getByRole("link", { name: /switch language/i });
     if (!(await switcher.isVisible())) {
       test.skip();
