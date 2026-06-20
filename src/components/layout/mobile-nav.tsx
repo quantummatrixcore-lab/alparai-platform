@@ -5,8 +5,9 @@ import { Link, usePathname } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Plus } from "lucide-react";
 import { Wordmark } from "./wordmark";
+import { LanguageSwitcher } from "./language-switcher";
 
 const links = [
   { href: "/", key: "home" },
@@ -86,7 +87,7 @@ export function MobileNav() {
                     "focus-visible:ring-brand-500 rounded-md px-4 py-3 text-base font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none",
                     isActive
                       ? "bg-bg-tertiary text-brand-400"
-                      : "text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary"
+                      : "text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary",
                   )}
                 >
                   {t(link.key)}
@@ -94,6 +95,19 @@ export function MobileNav() {
               );
             })}
           </nav>
+          <div className="border-border-subtle bg-bg-secondary/50 flex flex-col gap-4 border-t p-4">
+            <Link
+              href="/submit"
+              className="from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 flex h-11 items-center justify-center gap-2 rounded-full bg-gradient-to-r px-6 text-sm font-bold text-white shadow-lg transition-all"
+            >
+              <Plus className="h-4 w-4" aria-hidden="true" />
+              {t("report")}
+            </Link>
+            <div className="flex items-center justify-between">
+              <span className="text-fg-muted text-xs">Language / Dil</span>
+              <LanguageSwitcher />
+            </div>
+          </div>
         </div>
       )}
     </div>
