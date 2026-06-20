@@ -345,14 +345,3 @@ body {
     border: 1px solid currentColor;
   }
 }
-
-/* ===========================================================================
-   Layout Adjustment for Fixed Header on Subpages
-   =========================================================================== */
-main#main-content {
-  padding-top: 6rem; /* 96px to clear fixed header */
-}
-
-main#main-content:has(section.relative.overflow-hidden.pt-24) {
-  padding-top: 0;
-}
