@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { createServerClient } from "@/lib/supabase/server";
 import { APP_URL } from "@/lib/constants";
+import { getAllPosts } from "@/content/blog-posts";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const locales = ["en", "tr"] as const;
@@ -32,6 +33,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     { url: `${APP_URL}/models`, lastModified: new Date(), changeFrequency: "daily", priority: 0.8 },
+    {
+      url: `${APP_URL}/blog`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.8,
+    },
     {
       url: `${APP_URL}/suggestions`,
       lastModified: new Date(),
@@ -80,8 +87,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ({
           ...route,
           url: route.url.replace(`${APP_URL}`, `${APP_URL}/${l}`),
-        }) as MetadataRoute.Sitemap[number]
-    )
+        }) as MetadataRoute.Sitemap[number],
+    ),
   );
 
   if (incidents) {
@@ -121,6 +128,39 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: new Date(),
         changeFrequency: "daily",
         priority: 0.7,
+      });
+    }
+  }
+
+  const staticPosts = getAllPosts();
+  const { data: dbPosts } = await supabase
+    .from("blog_posts")
+    .select("slug, published_at, created_at")
+    .eq("status", "published");
+
+  const allPostSlugs = new Map<string, Date>();
+
+  for (const post of staticPosts) {
+    allPostSlugs.set(post.slug, new Date(post.date));
+  }
+
+  if (dbPosts) {
+    for (const post of (dbPosts as Array<{
+      slug: string;
+      published_at: string | null;
+      created_at: string;
+    }>) ?? []) {
+      allPostSlugs.set(post.slug, new Date(post.published_at ?? post.created_at));
+    }
+  }
+
+  for (const [slug, date] of allPostSlugs.entries()) {
+    for (const locale of locales) {
+      base.push({
+        url: `${APP_URL}/${locale}/blog/${slug}`,
+        lastModified: date,
+        changeFrequency: "monthly",
+        priority: 0.6,
       });
     }
   }
