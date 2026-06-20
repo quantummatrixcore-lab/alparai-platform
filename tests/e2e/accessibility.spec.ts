@@ -5,7 +5,7 @@ test.describe("Accessibility", () => {
     await page.addInitScript(() => {
       window.localStorage.setItem(
         "alpar_cookie_consent",
-        JSON.stringify({ level: "all", at: Date.now() })
+        JSON.stringify({ level: "all", at: Date.now() }),
       );
     });
   });
@@ -16,7 +16,7 @@ test.describe("Accessibility", () => {
       return;
     }
     await page.goto("/en");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
     const skipLink = page.locator("a[href='#main-content']");
     const isPresent = (await skipLink.count()) > 0;
     if (isPresent) {
@@ -56,7 +56,7 @@ test.describe("Accessibility", () => {
       return;
     }
     await page.goto("/en");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
     await page.keyboard.press("Tab");
     const focused = page.locator(":focus");
     await expect(focused).toBeVisible();
@@ -68,7 +68,7 @@ test.describe("Accessibility", () => {
       return;
     }
     await page.goto("/en");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
     const switcher = page.getByRole("link", {
       name: /switch language|dil|language/i,
     });
@@ -87,7 +87,7 @@ test.describe("Accessibility", () => {
       return;
     }
     await page.goto("/en");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
     await page.keyboard.press("Tab");
     const focusedElement = page.locator(":focus");
     await expect(focusedElement).toBeVisible();
