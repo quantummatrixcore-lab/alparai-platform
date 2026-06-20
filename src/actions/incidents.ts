@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { logger } from "@/lib/utils/logger";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -253,7 +253,8 @@ export async function submitIncident(
 
   const requiredConsents = raw.consents.truth && raw.consents.age && raw.consents.terms;
   if (!requiredConsents) {
-    return { ok: false, formError: "You must accept all required consents." };
+    const t = await getTranslations("errors");
+    return { ok: false, formError: t("consent_required") };
   }
 
   const incidentDateISO = raw.incident_date
@@ -401,7 +402,10 @@ export async function voteOnIncident({
   value: 1 | -1 | 0;
 }) {
   const user = await getCurrentUser();
-  if (!user) return { ok: false, error: "Sign in to vote" };
+  if (!user) {
+    const t = await getTranslations("errors");
+    return { ok: false, error: t("sign_in_to_vote") };
+  }
 
   const hdrs = await headers();
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";

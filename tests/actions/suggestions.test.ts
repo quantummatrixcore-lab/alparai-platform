@@ -46,7 +46,7 @@ function buildSuggestionForm(overrides: Record<string, string> = {}): FormData {
   fd.set("title", "Add dark mode support for the platform");
   fd.set(
     "description",
-    "It would be great to have a dark mode option for better accessibility and comfort."
+    "It would be great to have a dark mode option for better accessibility and comfort.",
   );
   fd.set("category", "feature");
   for (const [key, value] of Object.entries(overrides)) {
@@ -76,15 +76,11 @@ describe("submitSuggestion", () => {
           eq: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
-      upsert: vi
-        .fn()
-        .mockReturnValue({
-          select: vi
-            .fn()
-            .mockReturnValue({
-              single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
-            }),
+      upsert: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
         }),
+      }),
     } as ReturnType<typeof mockSupabase.from>);
   });
 
@@ -98,7 +94,7 @@ describe("submitSuggestion", () => {
     vi.mocked(getCurrentUser).mockResolvedValueOnce(null);
     const result = await submitSuggestion({ ok: false }, buildSuggestionForm());
     expect(result.ok).toBe(false);
-    expect(result.error).toContain("Sign in");
+    expect(result.error).toContain("sign_in");
   });
 
   it("returns field errors for short title", async () => {
@@ -125,15 +121,11 @@ describe("submitSuggestion", () => {
           eq: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
-      upsert: vi
-        .fn()
-        .mockReturnValue({
-          select: vi
-            .fn()
-            .mockReturnValue({
-              single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
-            }),
+      upsert: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
         }),
+      }),
     } as ReturnType<typeof mockSupabase.from>);
     const result = await submitSuggestion({ ok: false }, buildSuggestionForm());
     expect(result.ok).toBe(false);
@@ -162,15 +154,11 @@ describe("upvoteSuggestion", () => {
       update: vi.fn().mockReturnValue({
         eq: vi.fn().mockResolvedValue({ data: null, error: null }),
       }),
-      upsert: vi
-        .fn()
-        .mockReturnValue({
-          select: vi
-            .fn()
-            .mockReturnValue({
-              single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
-            }),
+      upsert: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
         }),
+      }),
     } as ReturnType<typeof mockAdminClient.from>);
   });
 
@@ -183,6 +171,6 @@ describe("upvoteSuggestion", () => {
   it("returns error when not authenticated", async () => {
     vi.mocked(getCurrentUser).mockResolvedValueOnce(null);
     const result = await upvoteSuggestion("sug-1");
-    expect(result).toEqual({ ok: false, error: "Sign in to upvote" });
+    expect(result).toEqual({ ok: false, error: "sign_in_to_upvote" });
   });
 });

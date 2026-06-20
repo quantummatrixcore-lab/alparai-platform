@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { Star, MessageSquare, Lightbulb, ChevronRight } from "lucide-react";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createServerClient } from "@/lib/supabase/server";
 import { Badge } from "@/components/ui/badge";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +20,7 @@ export default async function ModelsPage({ params, searchParams }: ModelPageProp
   const { locale } = await params;
   const { search, sort } = await searchParams;
   const t = await getTranslations({ locale, namespace: "models" });
-  const db = createAdminClient();
+  const db = await createServerClient();
 
   // Fetch all models, reviews, and feature requests
   const [modelsRes, reviewsRes, featuresRes] = await Promise.all([

@@ -59,7 +59,7 @@ function buildFeatureForm(overrides: Record<string, string> = {}): FormData {
   fd.set("title", "Native JSON Mode Execution");
   fd.set(
     "description",
-    "We need a reliable structured JSON output mode natively implemented on the model endpoint."
+    "We need a reliable structured JSON output mode natively implemented on the model endpoint.",
   );
   fd.set("category", "feature");
   for (const [key, value] of Object.entries(overrides)) {
@@ -89,7 +89,7 @@ describe("submitModelFeatureRequest", () => {
     vi.mocked(getCurrentUser).mockResolvedValueOnce(null);
     const result = await submitModelFeatureRequest({ ok: false }, buildFeatureForm());
     expect(result.ok).toBe(false);
-    expect(result.error).toContain("Sign in");
+    expect(result.error).toContain("sign_in");
   });
 
   it("fails when validation schema check fails (e.g. title too short)", async () => {

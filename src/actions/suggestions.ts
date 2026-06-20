@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -54,7 +55,8 @@ export async function submitSuggestion(
 ): Promise<SubmitSuggestionState> {
   const user = await getCurrentUser();
   if (!user) {
-    return { ok: false, error: "Sign in to suggest a feature" };
+    const t = await getTranslations("errors");
+    return { ok: false, error: t("sign_in_to_suggest") };
   }
   const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.suggestion_submission}:${user.id}`);
   if (!rl.ok) {
@@ -145,7 +147,10 @@ const runSuggestionVoteWork = async (
 
 export async function upvoteSuggestion(suggestionId: string) {
   const user = await getCurrentUser();
-  if (!user) return { ok: false, error: "Sign in to upvote" };
+  if (!user) {
+    const t = await getTranslations("errors");
+    return { ok: false, error: t("sign_in_to_upvote") };
+  }
   const admin = createAdminClient();
   const { data: existing } = await admin
     .from("suggestion_votes")

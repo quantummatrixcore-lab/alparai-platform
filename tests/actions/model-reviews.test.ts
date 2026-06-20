@@ -91,7 +91,7 @@ describe("submitModelReview", () => {
     vi.mocked(getCurrentUser).mockResolvedValueOnce(null);
     const result = await submitModelReview({ ok: false }, buildReviewForm());
     expect(result.ok).toBe(false);
-    expect(result.error).toContain("Sign in");
+    expect(result.error).toContain("sign_in");
   });
 
   it("fails when validation schema check fails (e.g. scoreOverall invalid)", async () => {
