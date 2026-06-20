@@ -755,7 +755,11 @@
     "newBadgeTitle": "NEW BADGE EARNED!",
     "newBadgeDesc": "Added to your profile. Thanks for adding your voice to the community!",
     "voteRecorded": "Your vote has been recorded successfully!",
-    "voteRecordedDesc": "Thanks for adding your voice to the community."
+    "voteRecordedDesc": "Thanks for adding your voice to the community.",
+    "badge_doomsday_prepper": "Doomsday Prepper",
+    "badge_tech_optimist": "Tech Optimist",
+    "badge_observer": "Observer",
+    "badge_earned": "You earned this badge by voting {choice}."
   },
   "marketing": {
     "incident_of_week": {
@@ -985,11 +989,5 @@
     "success": "Subscribed successfully!",
     "success_toast": "Thank you! You are now subscribed.",
     "privacy": "Zero spam. Unsubscribe at any time."
-  },
-  "dilemmas": {
-    "badge_doomsday_prepper": "Doomsday Prepper",
-    "badge_tech_optimist": "Tech Optimist",
-    "badge_observer": "Observer",
-    "badge_earned": "You earned this badge by voting {choice}."
   }
 }
