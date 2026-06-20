@@ -15,6 +15,120 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "why-ai-accountability-matters-2025",
+    title: "Why AI Accountability Matters in 2025",
+    title_tr: "2025'te AI Hesap Verebilirliği Neden Önemli?",
+    description:
+      "As AI systems grow more autonomous, the need for community-driven tracking and verification becomes critical. Here is why independent documentation is the future.",
+    description_tr:
+      "Yapay zeka sistemleri daha otonom hale geldikçe, topluluk odaklı takip ve doğrulama kritik bir ihtiyaç haline geliyor. Bağımsız belgelemenin neden gelecek olduğunu keşfedin.",
+    date: "2025-06-20",
+    author: "ALPAR AI Research",
+    author_tr: "ALPAR AI Araştırma",
+    tags: ["opinion", "ai-ethics", "governance"],
+    readingTime: 3,
+    content: `## The Rise of Autonomous Systems
+
+In 2025, artificial intelligence has moved from simple chat interfaces to agentic systems capable of executing multi-step tasks in our daily lives. They handle scheduling, drafts, financial transactions, and code execution. This autonomy, however, comes with a severe lack of public oversight.
+
+When an AI system makes a mistake today, it doesn't just output a funny hallucination—it can misallocate funds, make incorrect legal assertions, or leak private data.
+
+## The Case for Independent Documentation
+
+Currently, the primary source of safety evaluations comes from the AI providers themselves. This self-grading mechanism is fundamentally flawed:
+1. **Selection Bias**: Companies highlight successes and downplay or hide system failures.
+2. **Lack of Standardized Testing**: Each provider uses their own benchmarks, making comparisons difficult.
+3. **No External Verification**: Third-party researchers struggle to audit closed-source models without independent records.
+
+An independent, community-driven database of verified AI failures is the only way to build a realistic picture of AI safety and reliability. By documenting these incidents in a permanent public record, we create a transparent history that forces providers to improve and allows users to make informed choices.
+
+## The Future of Trust
+
+At ALPAR AI, we believe trust is earned through verification. As we move further into 2025, independent trust infrastructure will become the bedrock of the AI ecosystem, protecting human agency and ensuring technology remains accountable.`,
+    content_tr: `## Otonom Sistemlerin Yükselişi
+
+2025 yılında yapay zeka, basit sohbet arayüzlerinden günlük hayatımızda çok adımlı görevleri yerine getirebilen otonom sistemlere doğru evrildi. Planlama, taslak hazırlama, finansal işlemler ve kod yürütme süreçlerini yönetiyorlar. Ancak bu otonomluk, ciddi bir denetim eksikliğiyle birlikte geliyor.
+
+Bugün bir yapay zeka sistemi hata yaptığında, sadece komik bir halüsinasyon üretmekle kalmıyor; bütçeleri yanlış yönlendirebiliyor, yanlış hukuki iddialarda bulunabiliyor ya da kişisel verileri sızdırabiliyor.
+
+## Bağımsız Belgelemenin Önemi
+
+Günümüzde yapay zeka güvenlik değerlendirmelerinin birincil kaynağı, geliştirici şirketlerin kendi beyanlarıdır. Bu kendi kendini değerlendirme mekanizması temelde kusurludur:
+1. **Seçici Raporlama**: Şirketler başarıları öne çıkarırken sistem hatalarını gizleme eğilimindedir.
+2. **Standart Testlerin Yokluğu**: Her sağlayıcı kendi test kriterlerini kullanarak karşılaştırmayı zorlaştırır.
+3. **Dış Doğrulamanın Olmaması**: Üçüncü taraf araştırmacılar, bağımsız kayıtlar olmadan kapalı kaynak kodlu modelleri denetlemekte zorlanır.
+
+Doğrulanmış yapay zeka hatalarının bağımsız, topluluk odaklı bir veritabanı, yapay zeka güvenliği ve güvenilirliğinin gerçekçi bir resmini oluşturmanın tek yoludur. Bu olayları kalıcı bir kamu arşivinde belgeleyerek, sağlayıcıları gelişmeye zorlayan ve kullanıcıların bilinçli seçimler yapmasını sağlayan şeffaf bir geçmiş oluşturuyoruz.
+
+## Güvenin Geleceği
+
+ALPAR AI olarak güvenin ancak doğrulama yoluyla kazanılabileceğine inanıyoruz. 2025 yılı ilerledikçe, bağımsız güven altyapısı yapay zeka ekosisteminin temeli haline gelecek; insan iradesini koruyacak ve teknolojinin hesap verebilir kalmasını sağlayacaktır.`,
+  },
+  {
+    slug: "how-to-report-ai-incident",
+    title: "How to Report an AI Incident: A Step-by-Step Guide",
+    title_tr: "Bir AI Olayı Nasıl Bildirilir: Adım Adım Rehber",
+    description:
+      "Found an AI failure, bias, or safety issue? Learn how to document and submit it securely to our community-governed database.",
+    description_tr:
+      "Bir yapay zeka hatası, yanlılığı veya güvenlik sorunu mu buldunuz? Bunu nasıl belgeleyeceğinizi ve güvenli bir şekilde topluluk veritabanımıza göndereceğinizi öğrenin.",
+    date: "2025-06-19",
+    author: "ALPAR AI Guide",
+    author_tr: "ALPAR AI Rehber",
+    tags: ["guide", "incidents", "tutorial"],
+    readingTime: 3,
+    content: `## Step 1: Capture the Evidence
+
+The most important part of any incident report is verifiable evidence. Whenever you encounter an AI failure:
+- **Screenshots**: Take clear screenshots showing both the prompt you entered and the complete response of the AI. Include model names or system details if visible.
+- **Transcripts**: Copy the exact text of the conversation.
+- **Files/Metadata**: Note down the date, time, and the specific application or API version you were using.
+
+## Step 2: Access the Report Form
+
+Navigate to the [Report Incident](/submit) page. You can access this directly from the main navigation menu or by clicking the prominent "Report Incident" button.
+
+## Step 3: Describe the Incident
+
+Fill out the report form with key details:
+- **Title**: Write a brief, descriptive title summarizing what went wrong.
+- **Description**: Explain what happened. What was the expected output, and what did the AI actually do? Mention any real-world impact or risk involved.
+- **Category & Severity**: Classify the incident (e.g., Hallucination, Bias, Privacy) and select the appropriate severity level.
+
+## Step 4: Choose Your Privacy Settings
+
+ALPAR AI respects your privacy. You can choose to publish your report:
+- **Anonymously**: Your account details (if logged in) or identity will never be visible.
+- **Publicly**: Your profile name will be associated with the report, building your reputation as an AI ethics advocate.
+
+Before submitting, check the box to confirm you accept our terms and privacy policy. Our automated PII Guardian will automatically redact sensitive personal data like emails or phone numbers before storage.`,
+    content_tr: `## Adım 1: Kanıtları Toplayın
+
+Herhangi bir olay raporunun en önemli kısmı doğrulanabilir kanıtlardır. Bir yapay zeka hatasıyla karşılaştığınızda:
+- **Ekran Görüntüleri**: Girdiğiniz istemi (prompt) ve yapay zekanın verdiği yanıtı gösteren net ekran görüntüleri alın. Varsa model adını ve sistem detaylarını dahil edin.
+- **Metin Transkriptleri**: Görüşmenin tam metnini kopyalayın.
+- **Meta Veriler**: Karşılaştığınız tarihi, saati ve kullandığınız uygulamanın veya API'nin sürümünü not edin.
+
+## Adım 2: Rapor Formuna Erişin
+
+[Olay Bildir](/submit) sayfasına gidin. Buraya ana navigasyon menüsünden veya "Olay Bildir" butonuna tıklayarak ulaşabilirsiniz.
+
+## Adım 3: Olayı Tanımlayın
+
+Formu temel detaylarla doldurun:
+- **Başlık**: Sorunu özetleyen kısa ve açıklayıcı bir başlık yazın.
+- **Açıklama**: Ne olduğunu açıklayın. Beklenen çıktı neydi ve yapay zeka gerçekte ne yaptı? Varsa bunun gerçek dünyadaki etkilerini veya oluşturduğu riskleri belirtin.
+- **Kategori ve Ciddiyet**: Olayı sınıflandırın (örn. Halüsinasyon, Yanlılık, Gizlilik İhlali) ve uygun ciddiyet seviyesini seçin.
+
+## Adım 4: Gizlilik Ayarlarınızı Seçin
+
+ALPAR AI gizliliğinize saygı duyar. Raporunuzu şu şekillerde yayınlamayı seçebilirsiniz:
+- **Anonim Olarak**: Hesap detaylarınız (giriş yaptıysanız) veya kimliğiniz asla kamuya açık görünmez.
+- **Kamuya Açık**: Profil adınız raporla ilişkilendirilir ve yapay zeka etiği savunucusu olarak itibarınızı güçlendirir.
+
+Göndermeden önce, koşullarımızı ve gizlilik politikamızı onayladığınız kutucuğu işaretleyin. Otomatik KVT Koruyucumuz (PII Guardian), e-posta veya telefon numarası gibi hassas kişisel verileri veritabanına kaydedilmeden önce sansürleyecektir.`,
+  },
+  {
     slug: "why-ai-accountability-needs-a-public-record",
     title: "Why AI accountability needs a public record",
     title_tr: "AI hesap verebilirliği neden bir kamu arşivine ihtiyaç duyar",
