@@ -552,7 +552,16 @@
     "empty": "Henüz ödül yok. İlk doğrulanmış AI olayını bildiren siz olun.",
     "severity": "Ciddiyet",
     "reward": "Ödül",
-    "date": "Tarih"
+    "date": "Tarih",
+    "program_title": "Yakında: AI Hata Ödülü (Bug Bounty) Programı",
+    "program_desc": "ALPAR AI, topluluk tarafından yönetilen bir Yapay Zeka Hata Ödülü Programı başlatıyor. Gerçek dünyadaki yapay zeka hatalarını, yanlılıklarını veya güvenlik açıklarını belgeleyip bildirerek itibar puanları, özel rozetler ve program yayına girdiğinde nakit ödüller kazanabilirsiniz.",
+    "program_step1_title": "1. Hatayı Bulun",
+    "program_step1_desc": "Yapay zeka modelleriyle (ChatGPT, Gemini, Claude vb.) etkileşime girerek halüsinasyonları, kritik yanlılıkları, gizlilik sızıntılarını veya güvenlik açıklarını tespit edin.",
+    "program_step2_title": "2. Belgeleyin ve Bildirin",
+    "program_step2_desc": "Ekran görüntüleri alın, görüşme metinlerini kopyalayın ve güvenli formumuzu kullanarak gönderin. Otomatik KVT maskeleme gizliliğinizi korur.",
+    "program_step3_title": "3. Ödülleri Kazanın",
+    "program_step3_desc": "Gönderiniz topluluk tarafından doğrulanıp sağlayıcı tarafından onaylandığında, Etik Savunucusu kredileri, itibar puanları ve hata ödülleri kazanırsınız.",
+    "program_cta": "Şimdi bir Olay Bildir"
   },
   "whistleblower": {
     "title": "Anonim İhbar Bildirimi",
