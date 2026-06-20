@@ -755,7 +755,11 @@
     "newBadgeTitle": "YENİ ROZET KAZANDINIZ!",
     "newBadgeDesc": "Profilinize eklendi. Topluluğun sesine katıldığınız için teşekkürler!",
     "voteRecorded": "Oyunuz başarıyla kaydedildi!",
-    "voteRecordedDesc": "Topluluğun sesine katıldığınız için teşekkürler."
+    "voteRecordedDesc": "Topluluğun sesine katıldığınız için teşekkürler.",
+    "badge_doomsday_prepper": "Kıyamet Hazırlıkçısı",
+    "badge_tech_optimist": "Teknoloji İyimseri",
+    "badge_observer": "Gözlemci",
+    "badge_earned": "\"{choice}\" oyu vererek bu rozeti kazandınız."
   },
   "marketing": {
     "incident_of_week": {
@@ -985,11 +989,5 @@
     "success": "Başarıyla abone olundu!",
     "success_toast": "Teşekkürler! Aboneliğiniz tamamlandı.",
     "privacy": "Sıfır spam. İstediğiniz zaman ayrılabilirsiniz."
-  },
-  "dilemmas": {
-    "badge_doomsday_prepper": "Kıyamet Hazırlıkçısı",
-    "badge_tech_optimist": "Teknoloji İyimseri",
-    "badge_observer": "Gözlemci",
-    "badge_earned": "\"{choice}\" oyu vererek bu rozeti kazandınız."
   }
 }
