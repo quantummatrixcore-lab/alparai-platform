@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import type * as retryModule from "@/lib/autopilot/retry";
 import "../helpers/setup";
 import { createMockSupabaseClient, createTestUser } from "../helpers/supabase-mock";
 
@@ -25,6 +26,13 @@ vi.hoisted(() => {
   vi.doMock("@/lib/pii/guardian", () => ({
     maskPII: vi.fn(),
   }));
+  vi.doMock("@/lib/autopilot/retry", async (importOriginal) => {
+    const original = await importOriginal<typeof retryModule>();
+    return {
+      ...original,
+      sleep: vi.fn().mockResolvedValue(undefined),
+    };
+  });
 });
 
 import { createClient, createServerClient } from "@/lib/supabase/server";
