@@ -19,7 +19,8 @@
     "dashboard": "Dashboard",
     "admin": "Admin",
     "profile": "Profile",
-    "models": "Models"
+    "models": "Models",
+    "language_switcher": "Language"
   },
   "hero": {
     "eyebrow": "TRUST AND ACCOUNTABILITY INFRASTRUCTURE",
@@ -366,7 +367,13 @@
     "rateLimited": "Too many requests. Please try again in {seconds} seconds.",
     "botDetected": "Bot verification failed. Please try again.",
     "serverMisconfiguration": "Server error. Please try again later.",
-    "notFound": "Page not found"
+    "notFound": "Page not found",
+    "sign_in_to_vote": "Sign in to vote",
+    "sign_in_to_suggest": "Sign in to suggest a feature",
+    "sign_in_to_upvote": "Sign in to upvote",
+    "sign_in_to_review": "Sign in to submit a review",
+    "sign_in_to_feature": "Sign in to submit a feature request",
+    "consent_required": "You must accept all required consents."
   },
   "common": {
     "loading": "Loading…",
@@ -978,5 +985,11 @@
     "success": "Subscribed successfully!",
     "success_toast": "Thank you! You are now subscribed.",
     "privacy": "Zero spam. Unsubscribe at any time."
+  },
+  "dilemmas": {
+    "badge_doomsday_prepper": "Doomsday Prepper",
+    "badge_tech_optimist": "Tech Optimist",
+    "badge_observer": "Observer",
+    "badge_earned": "You earned this badge by voting {choice}."
   }
 }

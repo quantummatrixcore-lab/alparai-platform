@@ -26,3 +26,9 @@ vi.mock("next/headers", () => ({
 }));
 
 vi.mock("server-only", () => ({}));
+
+vi.mock("next-intl/server", () => ({
+  getTranslations: vi.fn().mockResolvedValue((key: string) => key),
+  getLocale: vi.fn().mockResolvedValue("en"),
+  setRequestLocale: vi.fn(),
+}));

@@ -126,7 +126,7 @@ describe("submitIncident", () => {
     fd.delete("consent_truth");
     const result = await submitIncident({ ok: false }, fd);
     expect(result.ok).toBe(false);
-    expect(result.formError).toContain("consents");
+    expect(result.formError).toContain("consent");
   });
 
   it("returns field errors for invalid title (too short)", async () => {
@@ -245,7 +245,7 @@ describe("voteOnIncident", () => {
       incidentId: "inc-1",
       value: 1,
     });
-    expect(result).toEqual({ ok: false, error: "Sign in to vote" });
+    expect(result).toEqual({ ok: false, error: "sign_in_to_vote" });
   });
 
   it("successfully upvotes an incident", async () => {

@@ -19,7 +19,8 @@
     "dashboard": "Kontrol paneli",
     "admin": "Yönetim",
     "profile": "Profil",
-    "models": "Modeller"
+    "models": "Modeller",
+    "language_switcher": "Dil"
   },
   "hero": {
     "eyebrow": "GÜVEN VE HESAP VEREBİLİRLİK ALTYAPISI",
@@ -366,7 +367,13 @@
     "rateLimited": "Çok fazla istek. Lütfen {seconds} saniye sonra tekrar deneyin.",
     "botDetected": "Bot doğrulaması başarısız oldu. Lütfen tekrar deneyin.",
     "serverMisconfiguration": "Sunucu hatası. Lütfen daha sonra tekrar deneyin.",
-    "notFound": "Sayfa bulunamadı"
+    "notFound": "Sayfa bulunamadı",
+    "sign_in_to_vote": "Oy vermek için giriş yapın",
+    "sign_in_to_suggest": "Özellik önermek için giriş yapın",
+    "sign_in_to_upvote": "Oylama yapmak için giriş yapın",
+    "sign_in_to_review": "İnceleme göndermek için giriş yapın",
+    "sign_in_to_feature": "Özellik isteği göndermek için giriş yapın",
+    "consent_required": "Tüm zorunlu onayları kabul etmelisiniz."
   },
   "common": {
     "loading": "Yükleniyor…",
@@ -978,5 +985,11 @@
     "success": "Başarıyla abone olundu!",
     "success_toast": "Teşekkürler! Aboneliğiniz tamamlandı.",
     "privacy": "Sıfır spam. İstediğiniz zaman ayrılabilirsiniz."
+  },
+  "dilemmas": {
+    "badge_doomsday_prepper": "Kıyamet Hazırlıkçısı",
+    "badge_tech_optimist": "Teknoloji İyimseri",
+    "badge_observer": "Gözlemci",
+    "badge_earned": "\"{choice}\" oyu vererek bu rozeti kazandınız."
   }
 }

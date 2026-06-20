@@ -1,6 +1,7 @@
 "use server";
 
 import { headers } from "next/headers";
+import { getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hashIp } from "@/lib/utils/hash";
@@ -11,7 +12,7 @@ import { logger } from "@/lib/utils/logger";
 export async function submitVote(
   pollId: string,
   choice: "yes" | "no" | "unsure",
-  turnstileToken: string
+  turnstileToken: string,
 ) {
   try {
     // 1. Verify Turnstile — no test key fallback in production
@@ -85,7 +86,7 @@ export async function submitVote(
       logger.error(
         "Poll count increment error",
         { pollId, choice },
-        rpcError instanceof Error ? rpcError : undefined
+        rpcError instanceof Error ? rpcError : undefined,
       );
     }
 
@@ -93,19 +94,18 @@ export async function submitVote(
     let awardedBadge = null;
     let badgeIcon = null;
     if (userId) {
-      const badgeName =
-        choice === "yes"
-          ? "Kıyamet Hazırlıkçısı"
-          : choice === "no"
-            ? "Teknoloji İyimseri"
-            : "Gözlemci";
+      const badgeKey =
+        choice === "yes" ? "doomsday_prepper" : choice === "no" ? "tech_optimist" : "observer";
       badgeIcon = choice === "yes" ? "🛡️" : choice === "no" ? "🌟" : "👁️";
+      const t = await getTranslations("dilemmas");
+      const badgeName = t(`badge_${badgeKey}`);
+      const description = t("badge_earned", { choice: choice.toUpperCase() });
 
       const { error: badgeError } = await supabaseAdmin.from("user_badges").insert({
         user_id: userId,
         badge_name: badgeName,
         badge_icon: badgeIcon,
-        description: `"${choice.toUpperCase()}" oyu vererek bu rozeti kazandınız.`,
+        description,
       });
 
       if (!badgeError) {

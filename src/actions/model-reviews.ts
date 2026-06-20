@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -68,7 +69,8 @@ export async function submitModelReview(
 ): Promise<SubmitModelReviewState> {
   const user = await getCurrentUser();
   if (!user) {
-    return { ok: false, error: "Sign in to submit a review" };
+    const t = await getTranslations("errors");
+    return { ok: false, error: t("sign_in_to_review") };
   }
 
   const modelId = String(formData.get("modelId") ?? "");
@@ -142,7 +144,10 @@ export async function submitModelReview(
 
 export async function voteModelReview(reviewId: string) {
   const user = await getCurrentUser();
-  if (!user) return { ok: false, error: "Sign in to vote" };
+  if (!user) {
+    const t = await getTranslations("errors");
+    return { ok: false, error: t("sign_in_to_vote") };
+  }
 
   const admin = createAdminClient();
   const { data: existing } = await admin
