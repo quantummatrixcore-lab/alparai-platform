@@ -24,7 +24,7 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
 
   const { data: providers } = await supabase
     .from("ai_providers")
-    .select("id, slug, name, logo_url, is_verified, website_url")
+    .select("id, slug, name, logo_url, is_verified, website_url, trust_score")
     .order("name");
 
   const stats = await Promise.all(
@@ -36,6 +36,7 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
         logo_url: string | null;
         is_verified: boolean;
         website_url: string | null;
+        trust_score: number | null;
       }>) ?? []
     ).map(async (p) => {
       const [{ count: incidentCount }, { count: responseCount }] = await Promise.all([
@@ -60,20 +61,18 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
         incident_count: total,
         response_count: responded,
         response_rate: responseRate,
+        trust_score: p.trust_score ?? 70,
       };
     }),
   );
 
   const sorted = stats.sort((a, b) => {
-    if (a.incident_count === 0 && b.incident_count === 0) return a.name.localeCompare(b.name);
-    if (a.incident_count === 0) return 1;
-    if (b.incident_count === 0) return -1;
-    // Composite accountability score: response_rate weighted by sqrt of incident count
-    // Higher incidents with high response rate = truly accountable
-    const scoreA = a.response_rate * Math.sqrt(a.incident_count);
-    const scoreB = b.response_rate * Math.sqrt(b.incident_count);
+    const scoreA = a.trust_score ?? 70;
+    const scoreB = b.trust_score ?? 70;
     if (scoreB !== scoreA) return scoreB - scoreA;
-    return b.incident_count - a.incident_count;
+    // Secondary sort: incident count ascending or name
+    if (a.incident_count !== b.incident_count) return a.incident_count - b.incident_count;
+    return a.name.localeCompare(b.name);
   });
 
   return (
@@ -158,6 +157,7 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
                   <th className="p-4 text-right">
                     <span className="inline-flex items-center gap-1">{t("responseRate")}</span>
                   </th>
+                  <th className="p-4 text-right">{t("trustScore")}</th>
                 </tr>
               </thead>
               <tbody className="divide-border-subtle divide-y">
@@ -230,6 +230,20 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
                       ) : (
                         <span className="text-fg-muted text-xs">—</span>
                       )}
+                    </td>
+                    <td className="p-4 text-right font-mono">
+                      <span
+                        className={cn(
+                          "inline-flex rounded px-2 py-0.5 text-xs font-bold",
+                          p.trust_score >= 90
+                            ? "bg-success-500/10 text-success-400 border-success-500/20 border"
+                            : p.trust_score >= 75
+                              ? "bg-warning-500/10 text-warning-400 border-warning-500/20 border"
+                              : "bg-danger-500/10 text-danger-400 border-danger-500/20 border",
+                        )}
+                      >
+                        {p.trust_score}/100
+                      </span>
                     </td>
                   </tr>
                 ))}

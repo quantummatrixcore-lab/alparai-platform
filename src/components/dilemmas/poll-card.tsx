@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { submitVote } from "@/actions/dilemmas";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 export type Poll = {
   id: string;
@@ -15,12 +15,24 @@ export type Poll = {
   yes_count: number;
   no_count: number;
   unsure_count: number;
+  title_tr?: string | null;
+  title_en?: string | null;
+  description_tr?: string | null;
+  description_en?: string | null;
 };
 
 export function PollCard({ poll }: { poll: Poll }) {
   const t = useTranslations("dilemmas");
+  const locale = useLocale();
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [isVoting, setIsVoting] = useState(false);
+
+  const localizedTitle =
+    locale === "tr" ? poll.title_tr || poll.title : poll.title_en || poll.title;
+  const localizedDescription =
+    locale === "tr"
+      ? poll.description_tr || poll.description
+      : poll.description_en || poll.description;
 
   const totalVotes = poll.yes_count + poll.no_count + poll.unsure_count;
   const yesPercent = totalVotes > 0 ? Math.round((poll.yes_count / totalVotes) * 100) : 0;
@@ -63,8 +75,8 @@ export function PollCard({ poll }: { poll: Poll }) {
           <div className="bg-brand-500/10 text-brand-400 border-brand-500/20 mb-4 inline-block rounded-full border px-3 py-1 text-xs font-bold tracking-widest uppercase">
             {t("criticalQuestion")}
           </div>
-          <h3 className="text-fg-primary mb-4 text-2xl font-extrabold">{poll.title}</h3>
-          <p className="text-fg-secondary mb-8 text-sm leading-relaxed">{poll.description}</p>
+          <h3 className="text-fg-primary mb-4 text-2xl font-extrabold">{localizedTitle}</h3>
+          <p className="text-fg-secondary mb-8 text-sm leading-relaxed">{localizedDescription}</p>
         </div>
 
         <div className="space-y-6">

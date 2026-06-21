@@ -52,7 +52,7 @@ export function Header({
         <div className="flex items-center gap-2">
           <LanguageSwitcher className="hidden sm:inline-flex" />
           <Link
-            href="/suggestions"
+            href="/dilemmas"
             className="border-border-subtle/50 text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary focus-visible:ring-brand-500 focus-visible:ring-offset-bg-primary hidden h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-semibold transition-all hover:shadow-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:inline-flex"
           >
             <Lightbulb className="text-warning-400 h-3.5 w-3.5" aria-hidden="true" />

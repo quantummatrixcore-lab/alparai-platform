@@ -40,6 +40,7 @@ const eslintConfig = defineConfig([
     "test-results/**",
     "scripts/**",
     ".browser_profile/**",
+    "scratch/**",
   ]),
 ]);
 

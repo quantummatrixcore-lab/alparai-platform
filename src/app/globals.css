@@ -146,8 +146,9 @@
   --color-fg-muted: var(--fg-muted);
   --color-fg-disabled: var(--fg-disabled);
 
-  --font-sans: "Inter", var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-mono: "JetBrains Mono", var(--font-geist-mono), ui-monospace, monospace;
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
 }
 
 /* ===========================================================================
@@ -164,12 +165,25 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+}
+
 body {
   background-color: var(--bg-primary);
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.007) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.007) 1px, transparent 1px);
-  background-size: 48px 48px;
+    radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.003) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.003) 1px, transparent 1px);
+  background-size:
+    24px 24px,
+    48px 48px,
+    48px 48px;
   color: var(--fg-primary);
   font-family: var(--font-sans);
   font-feature-settings:

@@ -35,7 +35,7 @@ export function NewSuggestionForm() {
     if (state.ok) {
       toast.success("Suggestion submitted");
       setDone(true);
-      const timer = setTimeout(() => router.push("/suggestions"), 1200);
+      const timer = setTimeout(() => router.push("/dilemmas?tab=suggestions"), 1200);
       return () => clearTimeout(timer);
     }
     if (state.error) {
