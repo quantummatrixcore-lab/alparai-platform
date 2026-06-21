@@ -44,6 +44,7 @@ export default async function BountiesPage({ params }: { params: Promise<{ local
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "bounties" });
+  const tCommon = await getTranslations({ locale, namespace: "common" });
   const supabase = await createServerClient();
 
   const { data } = await supabase
@@ -135,6 +136,7 @@ export default async function BountiesPage({ params }: { params: Promise<{ local
                   key={b.id}
                   bounty={b}
                   locale={locale}
+                  unknownLabel={tCommon("unknown")}
                   tLabel={{
                     severity: t("severity"),
                     reward: t("reward"),
@@ -183,10 +185,12 @@ function BountyRow({
   bounty,
   locale,
   tLabel,
+  unknownLabel,
 }: {
   bounty: BountyListItem;
   locale: string;
   tLabel: { severity: string; reward: string; date: string };
+  unknownLabel: string;
 }) {
   const status = bounty.status;
   const statusVariant =
@@ -220,7 +224,7 @@ function BountyRow({
         <div className="min-w-0">
           <p className="text-fg-primary line-clamp-1 text-sm font-semibold">{incidentTitle}</p>
           <p className="text-fg-muted text-xs">
-            {bounty.ai_providers?.name ?? "Unknown"} ·{" "}
+            {bounty.ai_providers?.name ?? unknownLabel} ·{" "}
             {bounty.reporter?.full_name ?? bounty.reporter?.email ?? "anon"}
           </p>
         </div>

@@ -2,6 +2,7 @@
   "app": {
     "name": "ALPAR AI",
     "tagline": "The world's first community-governed AI ethics platform",
+    "title": "ALPAR AI — Trust infrastructure for AI accountability",
     "description": "Where humanity documents, verifies, and holds AI accountable. Report AI failures, see provider responses, build the public record."
   },
   "nav": {
@@ -360,6 +361,7 @@
     "somethingWentWrong": "Something went wrong",
     "unexpectedError": "An unexpected error occurred. Please try again.",
     "tryAgain": "Try again",
+    "error_id": "Error ID: {id}",
     "goHome": "Back to home",
     "goHomeDesc": "The public record of AI behavior",
     "browseDesc": "Browse published AI incidents",
@@ -410,7 +412,10 @@
     "en": "English",
     "switchToEnglish": "EN",
     "switchToTurkish": "TR",
-    "skipToContent": "Skip to main content"
+    "skipToContent": "Skip to main content",
+    "unknown": "Unknown",
+    "unknown_provider": "Unknown Provider",
+    "unknown_error": "Unknown error"
   },
   "autopilot": {
     "title": "Self-healing submission",
@@ -836,13 +841,13 @@
     "pendingReview": "Pending review",
     "providerResponseRate": "Provider response rate",
     "submit": "Submit",
-    "submitDesc": "Anyone can report an incident. PII is automatically masked before storage.",
+    "submitDesc": "Users submit incident reports with evidence, AI output screenshots, and context.",
     "review": "Review",
-    "reviewDesc": "Volunteer moderators review every submission for accuracy, not opinion.",
+    "reviewDesc": "Moderators verify claims, check for PII, and assess severity within 72 hours.",
     "publish": "Publish",
-    "publishDesc": "Approved incidents are published publicly. The AI provider is notified.",
-    "respond": "Respond",
-    "respondDesc": "AI providers can post an official response. Identity is verified before publishing.",
+    "publishDesc": "Verified incidents are published to the public record with full anonymisation.",
+    "respond": "Provider response",
+    "respondDesc": "AI providers can submit an official response visible alongside the incident.",
     "registeredUsers": "Registered users",
     "aiProvidersTracked": "AI providers tracked",
     "incidentsReported": "Incidents reported",
@@ -850,9 +855,9 @@
     "pendingModeration": "Pending moderation",
     "providerResponses": "Provider responses",
     "takedownRequests": "Takedown requests",
-    "commitmentText1": "ALPAR AI is a transparency platform. We believe that accountability starts with openness. Every number on this page is live and accurate.",
-    "commitmentText2": "We do not suppress, delay, or selectively publish incidents. Every submitted report that meets our guidelines is published. Moderators cannot remove content based on pressure from AI providers.",
-    "commitmentText3": "This platform is open source under AGPL-3.0. Anyone can audit the code, run an instance, or contribute. We believe trust infrastructure should itself be trustworthy."
+    "commitmentText1": "ALPAR AI is committed to operating with full transparency. Every moderation decision follows a documented process, and aggregate statistics are published monthly.",
+    "commitmentText2": "We do not accept payment to alter incident records. Providers may submit factual corrections through the official response process only.",
+    "commitmentText3": "Our moderation team operates independently. No AI provider has the ability to suppress or alter published incident reports."
   },
   "models": {
     "page_title": "AI Models Directory",
@@ -912,31 +917,9 @@
     "empty_title": "No models yet",
     "empty_subtitle": "AI models will appear here as they are added to the registry.",
     "no_results_title": "No results found",
-    "no_results_subtitle": "Try a different search term or clear the filter."
-  },
-  "transparency": {
-    "totalReports": "Total reports",
-    "publishRate": "Publish rate",
-    "pendingReview": "Pending review",
-    "providerResponseRate": "Provider response rate",
-    "submit": "Submit",
-    "submitDesc": "Users submit incident reports with evidence, AI output screenshots, and context.",
-    "review": "Review",
-    "reviewDesc": "Moderators verify claims, check for PII, and assess severity within 72 hours.",
-    "publish": "Publish",
-    "publishDesc": "Verified incidents are published to the public record with full anonymisation.",
-    "respond": "Provider response",
-    "respondDesc": "AI providers can submit an official response visible alongside the incident.",
-    "registeredUsers": "Registered users",
-    "aiProvidersTracked": "AI providers tracked",
-    "incidentsReported": "Incidents reported",
-    "publishedLabel": "Published",
-    "pendingModeration": "Pending moderation",
-    "providerResponses": "Provider responses",
-    "takedownRequests": "Takedown requests",
-    "commitmentText1": "ALPAR AI is committed to operating with full transparency. Every moderation decision follows a documented process, and aggregate statistics are published monthly.",
-    "commitmentText2": "We do not accept payment to alter incident records. Providers may submit factual corrections through the official response process only.",
-    "commitmentText3": "Our moderation team operates independently. No AI provider has the ability to suppress or alter published incident reports."
+    "no_results_subtitle": "Try a different search term or clear the filter.",
+    "unknown_provider": "Unknown Provider",
+    "sign_in_button": "Sign In"
   },
   "respond": {
     "title": "Submit Provider Response",

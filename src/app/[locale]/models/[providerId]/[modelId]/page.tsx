@@ -16,6 +16,23 @@ import { APP_URL } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({ params }: ModelDetailPageProps) {
+  const { locale, modelId, providerId } = await params;
+  const t = await getTranslations({ locale, namespace: "models" });
+  const db = await createServerClient();
+  const { data: model } = await db
+    .from("ai_models")
+    .select("name, ai_providers(name)")
+    .eq("id", modelId)
+    .eq("provider_id", providerId)
+    .single();
+  const providerName = (model?.ai_providers as { name: string } | null)?.name;
+  return {
+    title: model ? `${model.name} — ${providerName ?? t("unknown_provider")}` : t("page_title"),
+    description: t("page_subtitle"),
+  };
+}
+
 interface ModelDetailPageProps {
   params: Promise<{
     locale: string;
@@ -192,7 +209,7 @@ export default async function ModelDetailPage({ params }: ModelDetailPageProps) 
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-fg-muted text-sm font-medium">
-                {provider?.name || "Unknown Provider"}
+                {provider?.name || t("unknown_provider")}
               </span>
               <Badge variant={statusVariants[model.status] || "default"} size="sm">
                 {t(model.status)}
@@ -244,7 +261,7 @@ export default async function ModelDetailPage({ params }: ModelDetailPageProps) 
                 href={`/${locale}/auth/signin`}
                 className="bg-brand-500 hover:bg-brand-600 inline-block rounded-xl px-6 py-2.5 font-bold text-white transition duration-200"
               >
-                Sign In
+                {t("sign_in_button")}
               </Link>
             </div>
           )}

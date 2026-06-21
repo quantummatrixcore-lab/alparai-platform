@@ -27,6 +27,7 @@ export default async function IncidentsPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "incident" });
+  const tCommon = await getTranslations({ locale, namespace: "common" });
   const { q, category, severity } = await searchParams;
   const supabase = await createServerClient();
 
@@ -75,7 +76,7 @@ export default async function IncidentsPage({
       const provider = providerId ? providerMap.get(providerId) : null;
       return {
         ...item,
-        provider_name: provider?.name ?? "Unknown",
+        provider_name: provider?.name ?? tCommon("unknown"),
         provider_slug: provider?.slug ?? "",
       };
     })

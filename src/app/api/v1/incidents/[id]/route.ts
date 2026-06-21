@@ -5,7 +5,11 @@ import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { headers } from "next/headers";
 import { logger } from "@/lib/utils/logger";
 
-const ALLOWED_ORIGINS = ["https://alparai.com", "https://www.alparai.com", "http://localhost:3000"];
+const ALLOWED_ORIGINS = [
+  "https://alparai.com",
+  "https://www.alparai.com",
+  ...(process.env.NODE_ENV === "development" ? ["http://localhost:3000"] : []),
+];
 
 function corsHeaders(origin: string | null) {
   const allowedOrigin =
@@ -31,7 +35,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   if (!rl.ok) {
     return NextResponse.json(
       { error: "rate_limited", retryAfter: rl.retryAfter },
-      { status: 429, headers: corsHeaders(origin) }
+      { status: 429, headers: corsHeaders(origin) },
     );
   }
 
@@ -40,7 +44,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   const { data, error } = await supabase
     .from("incidents")
     .select(
-      "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, ai_models(name)"
+      "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, ai_models(name)",
     )
     .eq("id", id)
     .eq("status", "published")
@@ -50,7 +54,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     logger.error("API v1 incident by id error", { id }, error instanceof Error ? error : undefined);
     return NextResponse.json(
       { error: "internal_error" },
-      { status: 500, headers: corsHeaders(origin) }
+      { status: 500, headers: corsHeaders(origin) },
     );
   }
   if (!data) {
@@ -80,6 +84,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
         ...corsHeaders(origin),
         "Cache-Control": "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400",
       },
-    }
+    },
   );
 }

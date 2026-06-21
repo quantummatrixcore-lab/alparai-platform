@@ -33,6 +33,7 @@ export default async function AdminAutopilotPage({
   if (user.role !== "admin" && user.role !== "ceo") redirect(`/${locale}`);
 
   const t = await getTranslations({ locale, namespace: "autopilot" });
+  const tCommon = await getTranslations({ locale, namespace: "common" });
   const result = await getAdminAutopilotSnapshot(100);
   if (!result.ok || !result.snapshot) {
     return (
@@ -42,7 +43,7 @@ export default async function AdminAutopilotPage({
             <CardTitle>{t("admin_title")}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-fg-muted">{result.error ?? "Unknown error"}</p>
+            <p className="text-fg-muted">{result.error ?? tCommon("unknown_error")}</p>
           </CardContent>
         </Card>
       </Container>

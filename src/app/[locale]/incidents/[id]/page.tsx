@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -33,6 +33,7 @@ export default async function IncidentDetailPage({
 }) {
   const { locale, id } = await params;
   setRequestLocale(locale);
+  const tCommon = await getTranslations({ locale, namespace: "common" });
   const supabase = await createServerClient();
   const admin = createAdminClient();
 
@@ -119,7 +120,7 @@ export default async function IncidentDetailPage({
     upvotes: (r["upvotes_count"] as number) ?? 0,
     downvotes: 0,
     author_name: null,
-    provider_name: providerData?.name ?? "Unknown",
+    provider_name: providerData?.name ?? tCommon("unknown"),
     provider_slug: providerData?.slug ?? "",
     model_name: modelData?.name ?? null,
     language: (r["language"] as string) ?? "en",
