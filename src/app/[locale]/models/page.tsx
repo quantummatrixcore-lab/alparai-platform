@@ -6,6 +6,15 @@ import { Badge } from "@/components/ui/badge";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({ params }: ModelPageProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "models" });
+  return {
+    title: t("page_title"),
+    description: t("page_subtitle"),
+  };
+}
+
 interface ModelPageProps {
   params: Promise<{
     locale: string;
@@ -185,7 +194,7 @@ export default async function ModelsPage({ params, searchParams }: ModelPageProp
                         </div>
                       )}
                       <span className="text-fg-secondary text-sm font-semibold">
-                        {provider?.name || "Unknown Provider"}
+                        {provider?.name || t("unknown_provider")}
                       </span>
                     </div>
                     <Badge variant={statusVariants[model.status] || "default"} size="sm">

@@ -25,6 +25,15 @@ function getWeekStartDate(): string {
   return new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 }
 
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "app" });
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
+
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
@@ -33,6 +42,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   void checkAndTriggerNewsSyncPassive();
 
   const supabase = await createServerClient();
+  const tCommon = await getTranslations({ locale, namespace: "common" });
   const weekStart = getWeekStartDate();
 
   const [
@@ -107,7 +117,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     const provider = providerId ? providerMap.get(providerId) : null;
     return {
       ...item,
-      provider_name: provider?.name ?? "Unknown",
+      provider_name: provider?.name ?? tCommon("unknown"),
       provider_slug: provider?.slug ?? "",
     };
   });
@@ -121,7 +131,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       : null;
     incidentOfTheWeek = {
       ...mapped,
-      provider_name: provider?.name ?? "Unknown",
+      provider_name: provider?.name ?? tCommon("unknown"),
       provider_slug: provider?.slug ?? "",
     };
   } else {
@@ -141,7 +151,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         : null;
       incidentOfTheWeek = {
         ...mapped,
-        provider_name: provider?.name ?? "Unknown",
+        provider_name: provider?.name ?? tCommon("unknown"),
         provider_slug: provider?.slug ?? "",
       };
     } else {

@@ -2,6 +2,7 @@
   "app": {
     "name": "ALPAR AI",
     "tagline": "Dünyanın ilk topluluk yönetimli AI etik platformu",
+    "title": "ALPAR AI — Yapay zeka hesap verebilirliği için güven altyapısı",
     "description": "İnsanlığın AI'ı belgelediği, doğruladığı ve hesap verilebilir kıldığı yer. AI hatalarını bildir, sağlayıcı yanıtlarını gör, kamuya açık kaydı oluştur."
   },
   "nav": {
@@ -360,6 +361,7 @@
     "somethingWentWrong": "Bir şeyler ters gitti",
     "unexpectedError": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.",
     "tryAgain": "Tekrar dene",
+    "error_id": "Hata ID: {id}",
     "goHome": "Ana sayfaya dön",
     "goHomeDesc": "AI davranışının kamu arşivi",
     "browseDesc": "Yayınlanmış AI olaylarını inceleyin",
@@ -410,7 +412,10 @@
     "en": "İngilizce",
     "switchToEnglish": "EN",
     "switchToTurkish": "TR",
-    "skipToContent": "İçeriğe atla"
+    "skipToContent": "İçeriğe atla",
+    "unknown": "Bilinmiyor",
+    "unknown_provider": "Bilinmeyen Sağlayıcı",
+    "unknown_error": "Bilinmeyen hata"
   },
   "autopilot": {
     "title": "Kendini iyileştiren gönderim",
@@ -832,27 +837,27 @@
   },
   "transparency": {
     "totalReports": "Toplam rapor",
-    "publishRate": "Yayın oranı",
-    "pendingReview": "İncelenmeyi bekleyen",
+    "publishRate": "Yayınlanma oranı",
+    "pendingReview": "İnceleme bekliyor",
     "providerResponseRate": "Sağlayıcı yanıt oranı",
     "submit": "Gönder",
-    "submitDesc": "Herkes bir olayı bildirebilir. KVT, depolama öncesi otomatik olarak maskelenir.",
+    "submitDesc": "Kullanıcılar kanıt, yapay zeka çıktı ekran görüntüleri ve bağlamla birlikte olay raporları gönderir.",
     "review": "İncele",
-    "reviewDesc": "Gönüllü moderatörler her gönderiyi doğruluk için inceler, görüş için değil.",
+    "reviewDesc": "Moderatörler 72 saat içinde iddiaları doğrular, KVK kontrolü yapar ve ciddiyet seviyesini değerlendirir.",
     "publish": "Yayınla",
-    "publishDesc": "Onaylanan olaylar kamuya açık olarak yayınlanır. Yapay zeka sağlayıcısına bildirilir.",
-    "respond": "Yanıt Ver",
-    "respondDesc": "Yapay zeka sağlayıcıları resmi bir yanıt yayınlayabilir. Kimlik, yayınlanmadan önce doğrulanır.",
+    "publishDesc": "Doğrulanan olaylar tam anonimleştirmeyle kamuya açık kayda eklenir.",
+    "respond": "Sağlayıcı yanıtı",
+    "respondDesc": "Yapay zeka sağlayıcıları, olayla birlikte görünen resmi bir yanıt gönderebilir.",
     "registeredUsers": "Kayıtlı kullanıcılar",
     "aiProvidersTracked": "Takip edilen yapay zeka sağlayıcıları",
-    "incidentsReported": "Bildirilen olaylar",
-    "publishedLabel": "Yayınlanan",
-    "pendingModeration": "Moderasyon bekleyen",
+    "incidentsReported": "Raporlanan olaylar",
+    "publishedLabel": "Yayınlandı",
+    "pendingModeration": "Moderasyon bekliyor",
     "providerResponses": "Sağlayıcı yanıtları",
     "takedownRequests": "Kaldırma talepleri",
-    "commitmentText1": "ALPAR AI bir şeffaflık platformudur. Hesap verebilirliğin şeffaflıkla başladığına inanıyoruz. Bu sayfadaki her rakam canlı ve doğrudur.",
-    "commitmentText2": "Olayları bastırmıyor, ertelemiyor veya seçici olarak yayınlamıyoruz. Kılavuzlarımıza uyan her gönderilen rapor yayınlanır. Moderatörler sağlayıcıların baskısıyla içerik kaldıramaz.",
-    "commitmentText3": "Bu platform AGPL-3.0 kapsamında açık kaynaklıdır. Herkes kodu denetleyebilir, bir örnek çalıştırabilir veya katkıda bulunabilir. Güven altyapısının kendisinin de güvenilir olması gerektiğine inanıyoruz."
+    "commitmentText1": "ALPAR AI, tam şeffaflıkla faaliyet göstermeyi taahhüt eder. Her moderasyon kararı belgelenmiş bir süreci takip eder ve toplu istatistikler aylık olarak yayınlanır.",
+    "commitmentText2": "Olay kayıtlarını değiştirmek için ödeme kabul etmiyoruz. Sağlayıcılar, yalnızca resmi yanıt süreci aracılığıyla olgusal düzeltmeler gönderebilir.",
+    "commitmentText3": "Moderasyon ekibimiz bağımsız olarak çalışır. Hiçbir yapay zeka sağlayıcısı yayınlanan olay raporlarını kaldıramaz veya değiştiremez."
   },
   "models": {
     "page_title": "AI Modelleri Dizini",
@@ -912,31 +917,9 @@
     "empty_title": "Henüz model yok",
     "empty_subtitle": "Yapay zeka modelleri kayıt defterine eklendikçe burada görünecek.",
     "no_results_title": "Sonuç bulunamadı",
-    "no_results_subtitle": "Farklı bir arama terimi deneyin veya filtreyi temizleyin."
-  },
-  "transparency": {
-    "totalReports": "Toplam rapor",
-    "publishRate": "Yayınlanma oranı",
-    "pendingReview": "İnceleme bekliyor",
-    "providerResponseRate": "Sağlayıcı yanıt oranı",
-    "submit": "Gönder",
-    "submitDesc": "Kullanıcılar kanıt, yapay zeka çıktı ekran görüntüleri ve bağlamla birlikte olay raporları gönderir.",
-    "review": "İncele",
-    "reviewDesc": "Moderatörler 72 saat içinde iddiaları doğrular, KVK kontrolü yapar ve ciddiyet seviyesini değerlendirir.",
-    "publish": "Yayınla",
-    "publishDesc": "Doğrulanan olaylar tam anonimleştirmeyle kamuya açık kayda eklenir.",
-    "respond": "Sağlayıcı yanıtı",
-    "respondDesc": "Yapay zeka sağlayıcıları, olayla birlikte görünen resmi bir yanıt gönderebilir.",
-    "registeredUsers": "Kayıtlı kullanıcılar",
-    "aiProvidersTracked": "Takip edilen yapay zeka sağlayıcıları",
-    "incidentsReported": "Raporlanan olaylar",
-    "publishedLabel": "Yayınlandı",
-    "pendingModeration": "Moderasyon bekliyor",
-    "providerResponses": "Sağlayıcı yanıtları",
-    "takedownRequests": "Kaldırma talepleri",
-    "commitmentText1": "ALPAR AI, tam şeffaflıkla faaliyet göstermeyi taahhüt eder. Her moderasyon kararı belgelenmiş bir süreci takip eder ve toplu istatistikler aylık olarak yayınlanır.",
-    "commitmentText2": "Olay kayıtlarını değiştirmek için ödeme kabul etmiyoruz. Sağlayıcılar, yalnızca resmi yanıt süreci aracılığıyla olgusal düzeltmeler gönderebilir.",
-    "commitmentText3": "Moderasyon ekibimiz bağımsız olarak çalışır. Hiçbir yapay zeka sağlayıcısı yayınlanan olay raporlarını kaldıramaz veya değiştiremez."
+    "no_results_subtitle": "Farklı bir arama terimi deneyin veya filtreyi temizleyin.",
+    "unknown_provider": "Bilinmeyen Sağlayıcı",
+    "sign_in_button": "Giriş Yap"
   },
   "respond": {
     "title": "Sağlayıcı Yanıtı Gönder",
