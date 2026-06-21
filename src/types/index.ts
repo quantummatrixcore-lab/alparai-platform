@@ -121,6 +121,7 @@ export interface LeaderboardEntry {
   resolved_count: number;
   avg_severity: number;
   trend: number;
+  trust_score?: number;
 }
 
 export interface TakedownRequestItem {

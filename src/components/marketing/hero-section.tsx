@@ -304,7 +304,7 @@ function LiveStatCard({
       className="rounded-xl p-3 text-center"
       style={{ boxShadow: `inset 0 0 20px ${glowColor}` }}
     >
-      <p className={`text-3xl font-black tracking-tighter ${accentClass}`}>
+      <p className={`font-mono text-3xl font-black tracking-tight ${accentClass}`}>
         <AnimatedValue value={value} />
       </p>
       <p className="text-fg-muted mt-1 text-[10px] leading-tight font-bold tracking-[0.15em] uppercase">
@@ -344,14 +344,14 @@ function ProviderBar({
   return (
     <div className="flex items-center gap-3">
       <span
-        className={`w-4 text-center text-xs font-black ${rankColors[rank - 1] ?? "text-fg-muted"}`}
+        className={`w-4 text-center font-mono text-xs font-black ${rankColors[rank - 1] ?? "text-fg-muted"}`}
       >
         #{rank}
       </span>
       <div className="flex-1">
         <div className="mb-1 flex items-center justify-between">
           <span className="text-fg-primary text-xs font-bold">{name}</span>
-          <span className="text-fg-muted text-xs">{count.toLocaleString()}</span>
+          <span className="text-fg-muted font-mono text-xs">{count.toLocaleString()}</span>
         </div>
         <div className="bg-bg-tertiary h-1.5 w-full overflow-hidden rounded-full">
           <motion.div

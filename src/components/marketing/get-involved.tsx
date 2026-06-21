@@ -20,7 +20,7 @@ const ctas = [
     icon: Award,
     titleKey: "join_cta_2",
     descKey: "join_cta_2_desc",
-    href: "/suggestions",
+    href: "/dilemmas?tab=suggestions",
     primary: false,
   },
   {

@@ -185,7 +185,7 @@
   },
   "leaderboard": {
     "title": "Yapay Zeka Sağlayıcı Sıralaması",
-    "subtitle": "Bildirilen olaylara göre sıralanır (düşük iyidir)",
+    "subtitle": "Güven Skoruna göre sıralanır (yüksek iyidir)",
     "rank": "Sıra",
     "provider": "Yapay Zeka Sağlayıcısı",
     "incidents": "Olaylar",
@@ -193,6 +193,7 @@
     "avg_severity": "Ort. ciddiyet",
     "responses": "Yanıtlar",
     "responseRate": "Yanıt Oranı",
+    "trustScore": "Güven Skoru",
     "providersTracked": "Takip edilen sağlayıcılar",
     "totalResponses": "Toplam yanıt",
     "avgResponseRate": "Ort. yanıt oranı",

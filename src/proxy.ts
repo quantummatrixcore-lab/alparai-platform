@@ -1,5 +1,5 @@
 /**
- * Next.js middleware — combines i18n routing + Supabase session refresh.
+ * Next.js proxy — combines i18n routing + Supabase session refresh.
  */
 
 import { NextRequest } from "next/server";

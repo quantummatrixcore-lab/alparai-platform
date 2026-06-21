@@ -68,7 +68,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       .eq("status", "published"),
     supabase
       .from("ai_providers")
-      .select("id, slug, name, description, logo_url, website_url, is_verified")
+      .select("id, slug, name, description, logo_url, website_url, is_verified, trust_score")
       .order("name"),
     supabase
       .from("ai_polls")
@@ -178,24 +178,30 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   const leaderboard: LeaderboardEntry[] = (
     (providersResult.data as Array<Record<string, unknown>>) ?? []
-  ).map((p) => ({
-    provider_id: p["id"] as string,
-    provider_name: (p["name"] as string) ?? "",
-    provider_slug: (p["slug"] as string) ?? "",
-    incident_count: incidentCountsByProvider.get(p["id"] as string) ?? 0,
-    resolved_count: 0,
-    avg_severity: 0,
-    trend: 0,
-  }));
-
-  const topProvidersForHero = [...leaderboard]
-    .sort((a, b) => b.incident_count - a.incident_count)
-    .slice(0, 5)
+  )
     .map((p) => ({
-      name: p.provider_name,
-      count: p.incident_count,
-      slug: p.provider_slug,
-    }));
+      provider_id: p["id"] as string,
+      provider_name: (p["name"] as string) ?? "",
+      provider_slug: (p["slug"] as string) ?? "",
+      incident_count: incidentCountsByProvider.get(p["id"] as string) ?? 0,
+      resolved_count: 0,
+      avg_severity: 0,
+      trend: 0,
+      trust_score: (p["trust_score"] as number) ?? 70,
+    }))
+    .sort((a, b) => {
+      const scoreA = a.trust_score ?? 70;
+      const scoreB = b.trust_score ?? 70;
+      if (scoreB !== scoreA) return scoreB - scoreA;
+      if (a.incident_count !== b.incident_count) return a.incident_count - b.incident_count;
+      return a.provider_name.localeCompare(b.provider_name);
+    });
+
+  const topProvidersForHero = [...leaderboard].slice(0, 5).map((p) => ({
+    name: p.provider_name,
+    count: p.incident_count,
+    slug: p.provider_slug,
+  }));
 
   const topPoll = pollsResult.data?.[0];
   const topAdvocate = topUserResult.data?.[0] ?? null;

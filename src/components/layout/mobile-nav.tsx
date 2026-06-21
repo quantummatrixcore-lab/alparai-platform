@@ -15,7 +15,7 @@ const links = [
   { href: "/models", key: "models" },
   { href: "/leaderboard", key: "leaderboard" },
   { href: "/blog", key: "blog" },
-  { href: "/suggestions", key: "suggestions" },
+  { href: "/dilemmas", key: "suggestions" },
   { href: "/about", key: "about" },
   { href: "/contact", key: "contact" },
 ] as const;

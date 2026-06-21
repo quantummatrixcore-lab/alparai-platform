@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 import { ProviderCombobox, type ComboboxOption } from "@/components/ui/provider-combobox";
 import { ModelAutocomplete, type ModelOption } from "@/components/ui/model-autocomplete";
 import { EvidenceUploader, SubmitButton } from "./evidence-uploader";
@@ -15,6 +16,7 @@ import { Shield, CheckCircle2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { submitIncident, type SubmitIncidentState } from "@/actions/incidents";
+import { GoogleSignInButton } from "@/components/auth/auth-buttons";
 import type { AIProvider, AIModel, IncidentCategory, IncidentSeverity } from "@/types";
 
 const initialState: SubmitIncidentState = { ok: false };
@@ -22,9 +24,11 @@ const initialState: SubmitIncidentState = { ok: false };
 export function IncidentForm({
   providers,
   models,
+  isLoggedIn = false,
 }: {
   providers: AIProvider[];
   models: AIModel[];
+  isLoggedIn?: boolean;
 }) {
   const t = useTranslations("incident");
   const tCat = useTranslations("categories");
@@ -68,6 +72,50 @@ export function IncidentForm({
       active = false;
     };
   }, [title, description]);
+
+  if (state.ok) {
+    return (
+      <div className="space-y-6 px-4 py-12 text-center">
+        <div className="bg-success-500/10 border-success-500/20 mx-auto flex h-16 w-16 items-center justify-center rounded-full border">
+          <CheckCircle2 className="text-success-500 h-10 w-10 animate-pulse" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-fg-primary text-3xl font-extrabold tracking-tight">
+            {t("submitted")}
+          </h2>
+          <p className="text-fg-muted mx-auto max-w-md text-sm leading-relaxed">
+            {t("submit_success_subtitle", {
+              defaultValue:
+                "Your report has been successfully recorded and sent to moderation. It will be published after review.",
+            })}
+          </p>
+        </div>
+
+        {!isLoggedIn && (
+          <div className="border-brand-500/20 bg-brand-500/5 mx-auto max-w-md space-y-4 rounded-xl border p-6">
+            <h3 className="text-fg-primary text-sm font-semibold">
+              {t("claim_badge_title", { defaultValue: "Claim Your Whistleblower Badge" })}
+            </h3>
+            <p className="text-fg-muted text-xs leading-relaxed">
+              {t("claim_badge_desc", {
+                defaultValue:
+                  "Complete your account with Google in one click to track your incident, receive real-time status updates, and earn the exclusive Reporter badge.",
+              })}
+            </p>
+            <div className="flex justify-center pt-2">
+              <GoogleSignInButton next={`/my-incidents`} className="w-full justify-center" />
+            </div>
+          </div>
+        )}
+
+        <div className="pt-4">
+          <Button variant="outline" onClick={() => (window.location.href = "/incidents")}>
+            {t("view_all_incidents", { defaultValue: "View All Incidents" })}
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   const categoryOptions = (
     Object.keys({

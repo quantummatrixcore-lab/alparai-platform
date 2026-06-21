@@ -3,6 +3,7 @@ import { createServerClient } from "@/lib/supabase/server";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { IncidentForm } from "@/components/incidents/incident-form";
+import { getCurrentUser } from "@/lib/auth/session";
 import { ShieldCheck } from "lucide-react";
 import type { AIProvider, AIModel } from "@/types";
 
@@ -15,6 +16,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function SubmitPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+
+  const user = await getCurrentUser();
+  const isLoggedIn = !!user;
 
   const t = await getTranslations({ locale, namespace: "incident" });
   const supabase = await createServerClient();
@@ -57,7 +61,7 @@ export default async function SubmitPage({ params }: { params: Promise<{ locale:
 
       <Card variant="elevated">
         <CardContent>
-          <IncidentForm providers={providers} models={models} />
+          <IncidentForm providers={providers} models={models} isLoggedIn={isLoggedIn} />
         </CardContent>
       </Card>
     </Container>

@@ -1,3 +1,5 @@
+export const revalidate = 3600; // Revalidate every hour
+
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { Container } from "@/components/ui/layout";

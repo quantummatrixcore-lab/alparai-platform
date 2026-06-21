@@ -185,7 +185,7 @@
   },
   "leaderboard": {
     "title": "AI Provider Leaderboard",
-    "subtitle": "Ranked by reported incidents (lower is better)",
+    "subtitle": "Ranked by Trust Score (higher is better)",
     "rank": "Rank",
     "provider": "AI Provider",
     "incidents": "Incidents",
@@ -193,6 +193,7 @@
     "avg_severity": "Avg. severity",
     "responses": "Responses",
     "responseRate": "Response Rate",
+    "trustScore": "Trust Score",
     "providersTracked": "Providers tracked",
     "totalResponses": "Total responses",
     "avgResponseRate": "Avg response rate",

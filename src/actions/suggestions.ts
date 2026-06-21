@@ -92,6 +92,7 @@ export async function submitSuggestion(
 
   if (result.kind === "ok" || result.kind === "replayed") {
     revalidatePath("/suggestions");
+    revalidatePath("/dilemmas");
     return {
       ok: true,
       autopilot: {
@@ -174,6 +175,7 @@ export async function upvoteSuggestion(suggestionId: string) {
 
   if (result.kind === "ok" || result.kind === "replayed") {
     revalidatePath("/suggestions");
+    revalidatePath("/dilemmas");
     return { ok: true };
   }
   return { ok: false, error: "vote_failed" };

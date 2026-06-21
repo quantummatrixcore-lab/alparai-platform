@@ -28,7 +28,7 @@ export const NAV_LINKS = [
   { href: "/", labelKey: "nav.home" },
   { href: "/leaderboard", labelKey: "nav.leaderboard" },
   { href: "/submit", labelKey: "nav.report" },
-  { href: "/suggestions", labelKey: "nav.suggestions" },
+  { href: "/dilemmas?tab=suggestions", labelKey: "nav.suggestions" },
   { href: "/about", labelKey: "nav.about" },
 ] as const;
 
@@ -37,7 +37,7 @@ export const FOOTER_LINKS = {
     { href: "/", labelKey: "footer.home" },
     { href: "/submit", labelKey: "footer.report" },
     { href: "/leaderboard", labelKey: "footer.leaderboard" },
-    { href: "/suggestions", labelKey: "footer.suggestions" },
+    { href: "/dilemmas?tab=suggestions", labelKey: "footer.suggestions" },
   ],
   legal: [
     { href: "/legal/privacy", labelKey: "footer.privacy" },
