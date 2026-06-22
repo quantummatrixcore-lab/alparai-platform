@@ -43,9 +43,9 @@
     "prepare": "husky || true"
   },
   "dependencies": {
-    "@marsidev/react-turnstile": "^1.5.2",
-    "@supabase/ssr": "^0.8.0",
-    "@supabase/supabase-js": "^2.97.0",
+    "@marsidev/react-turnstile": "^1.5.3",
+    "@supabase/ssr": "^0.12.0",
+    "@supabase/supabase-js": "^2.108.2",
     "@upstash/ratelimit": "^2.0.5",
     "@upstash/redis": "^1.34.3",
     "@vercel/analytics": "^2.0.1",
@@ -56,8 +56,8 @@
     "lucide-react": "^0.460.0",
     "next": "^16.2.9",
     "next-intl": "^4.13.0",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
     "resend": "^4.0.1",
     "server-only": "^0.0.1",
     "sonner": "^1.7.0",
