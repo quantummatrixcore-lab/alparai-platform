@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { SignInForm } from "@/components/auth/sign-in-form";
 import { AlertCircle, Mail } from "lucide-react";
 import { Link } from "@/i18n/routing";
+import { Logo } from "@/components/layout/logo";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -54,8 +55,11 @@ export default async function SignInPage({
       <div className="w-full max-w-md">
         {/* Brand */}
         <div className="mb-8 text-center">
-          <div className="from-brand-500 to-accent-600 shadow-brand-500/25 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br shadow-lg">
-            <Mail className="h-8 w-8 text-white" aria-hidden="true" />
+          <div className="mx-auto mb-4 flex justify-center">
+            <Logo
+              size="xl"
+              className="drop-shadow-[0_0_25px_rgba(168,85,247,0.35)] filter transition-all duration-500 hover:scale-105"
+            />
           </div>
           <h1 className="text-fg-primary text-2xl font-bold tracking-tight">{t("signin_title")}</h1>
           <p className="text-fg-muted mt-2 text-sm">{t("tagline")}</p>

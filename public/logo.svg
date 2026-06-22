@@ -2,78 +2,153 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 64" width="240" height="64" role="img" aria-label="ALPAR AI">
   <title>ALPAR AI</title>
   <defs>
-    <linearGradient id="alpar-shield" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#7c3aed"/>
-      <stop offset="0.55" stop-color="#5b21b6"/>
-      <stop offset="1" stop-color="#0e0e1a"/>
+    <!-- Left Shield neon border gradient (Fuchsia -> Purple) -->
+    <linearGradient id="logo-left-grad" x1="50" y1="20" x2="26" y2="84" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#d946ef" />
+      <stop offset="100%" stop-color="#a855f7" />
     </linearGradient>
-    <linearGradient id="alpar-accent" x1="0" y1="0" x2="0" y2="64" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#a78bfa"/>
-      <stop offset="1" stop-color="#5b21b6"/>
+    
+    <!-- Right Tech circuits gradient (Cyan -> Teal/Blue) -->
+    <linearGradient id="logo-right-grad" x1="50" y1="30" x2="85" y2="68" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#22d3ee" />
+      <stop offset="100%" stop-color="#06b6d4" />
     </linearGradient>
-    <linearGradient id="alpar-text" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#e9d5ff"/>
-      <stop offset="0.55" stop-color="#ffffff"/>
-      <stop offset="1" stop-color="#a78bfa"/>
+    
+    <!-- Shield glassmorphism body fill gradient -->
+    <linearGradient id="logo-shield-fill-grad" x1="50" y1="20" x2="26" y2="84" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#c084fc" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#0a0f1e" stop-opacity="0.55" />
     </linearGradient>
+    
+    <!-- Center divider/sword column gradient -->
+    <linearGradient id="logo-center-grad" x1="50" y1="20" x2="50" y2="84" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#c084fc" />
+    </linearGradient>
+
+    <!-- Wordmark text gradient (White -> Light Purple) -->
+    <linearGradient id="alpar-text-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#cbd5e1" />
+    </linearGradient>
+
+    <!-- Premium neon glow effect -->
+    <filter id="logo-glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2.5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
   </defs>
 
-  <!-- Icon: shield with AI circuit motif -->
-  <g transform="translate(0,0)">
-    <!-- Shield silhouette: 56x56, centered in 0..64 box -->
+  <!-- Icon: New Shield & Tech motif scaled to 56px inside 64px box -->
+  <g transform="translate(4, 4) scale(0.56)">
+    <!-- Left Shield Half -->
     <path
-      d="M32 4 L58 14 V32 C58 46 47 56 32 60 C17 56 6 46 6 32 V14 Z"
-      fill="url(#alpar-shield)"
-      stroke="#a78bfa"
-      stroke-width="1.5"
-      stroke-linejoin="round"
-    />
-    <!-- Inner panel border -->
-    <path
-      d="M32 9 L53 17 V32 C53 43 44 52 32 55 C20 52 11 43 11 32 V17 Z"
-      fill="none"
-      stroke="#a78bfa"
-      stroke-opacity="0.35"
-      stroke-width="1"
+      d="M 50,20 C 35,21.5 27.5,24 26,26 V 48 C 26,68 38,78 50,84 Z"
+      fill="url(#logo-shield-fill-grad)"
+      stroke="url(#logo-left-grad)"
+      stroke-width="3.2"
       stroke-linejoin="round"
     />
 
-    <!-- AI circuit motif inside shield -->
-    <!-- Central node (CPU/brain) -->
-    <rect x="28" y="28" width="8" height="8" rx="1.2" fill="#0e0e1a" stroke="#a78bfa" stroke-width="1"/>
-    <circle cx="32" cy="32" r="1.2" fill="#a78bfa"/>
+    <!-- Scales of Justice inside Left Shield -->
+    <path
+      d="M 50,35 H 38"
+      stroke="url(#logo-left-grad)"
+      stroke-width="2.2"
+      stroke-linecap="round"
+      opacity="0.9"
+    />
+    <path
+      d="M 38,35 L 31,51 H 45 Z"
+      stroke="url(#logo-left-grad)"
+      stroke-width="1.8"
+      stroke-linejoin="round"
+      fill="#d946ef"
+      fill-opacity="0.06"
+    />
+    <path
+      d="M 29,51 H 47"
+      stroke="url(#logo-left-grad)"
+      stroke-width="2.5"
+      stroke-linecap="round"
+    />
 
-    <!-- Horizontal circuit lines (left and right) -->
-    <path d="M14 32 H25" stroke="url(#alpar-accent)" stroke-width="1.4" stroke-linecap="round"/>
-    <path d="M14 26 H22" stroke="#a78bfa" stroke-opacity="0.7" stroke-width="1" stroke-linecap="round"/>
-    <path d="M14 38 H22" stroke="#a78bfa" stroke-opacity="0.7" stroke-width="1" stroke-linecap="round"/>
+    <!-- Right Circuits -->
+    <path
+      d="M 50,30 H 68 L 74,24 H 82"
+      stroke="url(#logo-right-grad)"
+      stroke-width="2.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      filter="url(#logo-glow)"
+    />
+    <circle
+      cx="85"
+      cy="24"
+      r="3.5"
+      fill="#ffffff"
+      stroke="#22d3ee"
+      stroke-width="1.8"
+      filter="url(#logo-glow)"
+    />
 
-    <path d="M39 32 H50" stroke="url(#alpar-accent)" stroke-width="1.4" stroke-linecap="round"/>
-    <path d="M42 26 H50" stroke="#a78bfa" stroke-opacity="0.7" stroke-width="1" stroke-linecap="round"/>
-    <path d="M42 38 H50" stroke="#a78bfa" stroke-opacity="0.7" stroke-width="1" stroke-linecap="round"/>
+    <path
+      d="M 50,48 H 68 L 74,42 H 82"
+      stroke="url(#logo-right-grad)"
+      stroke-width="2.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      filter="url(#logo-glow)"
+    />
+    <circle
+      cx="85"
+      cy="42"
+      r="3.5"
+      fill="#ffffff"
+      stroke="#22d3ee"
+      stroke-width="1.8"
+      filter="url(#logo-glow)"
+    />
 
-    <!-- Circuit node dots (left side) -->
-    <circle cx="14" cy="26" r="1.4" fill="#a78bfa"/>
-    <circle cx="14" cy="32" r="1.6" fill="#e9d5ff"/>
-    <circle cx="14" cy="38" r="1.4" fill="#a78bfa"/>
+    <path
+      d="M 50,62 H 68 L 74,68 H 82"
+      stroke="url(#logo-right-grad)"
+      stroke-width="2.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      filter="url(#logo-glow)"
+    />
+    <circle
+      cx="85"
+      cy="68"
+      r="3.5"
+      fill="#ffffff"
+      stroke="#22d3ee"
+      stroke-width="1.8"
+      filter="url(#logo-glow)"
+    />
 
-    <!-- Circuit node dots (right side) -->
-    <circle cx="50" cy="26" r="1.4" fill="#a78bfa"/>
-    <circle cx="50" cy="32" r="1.6" fill="#e9d5ff"/>
-    <circle cx="50" cy="38" r="1.4" fill="#a78bfa"/>
-
-    <!-- Vertical connector (top) -->
-    <path d="M32 14 V25" stroke="url(#alpar-accent)" stroke-width="1.4" stroke-linecap="round"/>
-    <circle cx="32" cy="14" r="1.6" fill="#e9d5ff"/>
-
-    <!-- Vertical connector (bottom) -->
-    <path d="M32 39 V48" stroke="url(#alpar-accent)" stroke-width="1.4" stroke-linecap="round"/>
-    <circle cx="32" cy="48" r="1.6" fill="#e9d5ff"/>
+    <!-- Center Column -->
+    <path
+      d="M 50,20 V 84"
+      stroke="url(#logo-center-grad)"
+      stroke-width="3.5"
+      stroke-linecap="round"
+    />
+    <path
+      d="M 42,78 H 58"
+      stroke="url(#logo-center-grad)"
+      stroke-width="3.5"
+      stroke-linecap="round"
+    />
   </g>
 
   <!-- Wordmark -->
   <g transform="translate(72, 0)" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif" font-weight="900" letter-spacing="-0.5">
-    <text x="0" y="38" font-size="28" fill="url(#alpar-text)">ALPAR</text>
-    <text x="86" y="38" font-size="28" font-weight="500" fill="#a78bfa" letter-spacing="0.5">AI</text>
+    <text x="0" y="38" font-size="28" fill="url(#alpar-text-grad)">ALPAR</text>
+    <text x="86" y="38" font-size="28" font-weight="500" fill="#22d3ee" letter-spacing="0.5">AI</text>
   </g>
 </svg>
