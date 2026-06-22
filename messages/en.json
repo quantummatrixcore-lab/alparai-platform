@@ -148,7 +148,9 @@
     "sign_in_hint": "Your report is saved in this form. Sign in and it will be submitted automatically.",
     "timeline_reported": "Reported",
     "timeline_reviewed": "Reviewed",
-    "timeline_published": "Published"
+    "timeline_published": "Published",
+    "piiProtectedTitle": "PII protected",
+    "piiProtectedDesc": "Personal information such as emails, phone numbers, IDs and access tokens are automatically masked before publication."
   },
   "categories": {
     "hallucination": "Hallucination",

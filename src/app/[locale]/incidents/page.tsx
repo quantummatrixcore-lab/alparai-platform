@@ -34,7 +34,7 @@ export default async function IncidentsPage({
   let query = supabase
     .from("incidents")
     .select(
-      "id, title_masked, description_masked, title_tr, description_tr, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id",
+      "id, title_masked, description_masked, title_tr, description_tr, severity, status, category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, user_id",
     )
     .eq("status", "published")
     .order("published_at", { ascending: false })

@@ -59,22 +59,26 @@ export function SocialProof() {
           })}
         </div>
 
-        <div className="border-border-subtle/30 mt-12 border-t pt-8 text-center">
-          <p className="text-fg-muted mb-6 text-xs font-semibold tracking-widest uppercase">
-            Featured / Cited In
+        <div className="border-border-subtle/30 mt-12 border-t pt-8">
+          <p className="text-fg-muted mb-6 text-center text-xs font-semibold tracking-widest uppercase">
+            Platform Trust Signals
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 opacity-50 grayscale transition-all duration-300 hover:grayscale-0 md:gap-16">
-            <span className="text-fg-primary font-sans text-base font-black tracking-tight">
-              MIT TECH REVIEW
+          <div className="text-fg-muted flex flex-wrap items-center justify-center gap-6 text-xs font-semibold md:gap-10">
+            <span className="flex items-center gap-1.5">
+              <Shield className="text-success-500 h-3.5 w-3.5" />
+              AGPL-3.0 Open Source
             </span>
-            <span className="text-fg-primary font-sans text-base font-black tracking-tight">
-              STANFORD UNIVERSITY
+            <span className="flex items-center gap-1.5">
+              <Shield className="text-accent-400 h-3.5 w-3.5" />
+              EU Data Hosting
             </span>
-            <span className="text-fg-primary font-sans text-base font-black tracking-tight">
-              WEBRAZZI
+            <span className="flex items-center gap-1.5">
+              <Shield className="text-brand-400 h-3.5 w-3.5" />
+              KVKK + GDPR Compliant
             </span>
-            <span className="text-fg-primary font-sans text-base font-black tracking-tight">
-              ARS TECHNICA
+            <span className="flex items-center gap-1.5">
+              <Shield className="text-warning-400 h-3.5 w-3.5" />
+              Community Verified
             </span>
           </div>
         </div>
