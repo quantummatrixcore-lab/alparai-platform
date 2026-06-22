@@ -160,7 +160,8 @@
     "timeline_reviewed": "Reviewed",
     "timeline_published": "Published",
     "piiProtectedTitle": "PII protected",
-    "piiProtectedDesc": "Personal information such as emails, phone numbers, IDs and access tokens are automatically masked before publication."
+    "piiProtectedDesc": "Personal information such as emails, phone numbers, IDs and access tokens are automatically masked before publication.",
+    "draft_restored": "Draft restored from your last session."
   },
   "categories": {
     "hallucination": "Hallucination",

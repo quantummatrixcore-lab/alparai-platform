@@ -82,4 +82,77 @@ describe("PII Guardian", () => {
       expect(r.detections.length).toBeGreaterThanOrEqual(2);
     });
   });
+
+  describe("TC Kimlik checksum", () => {
+    it("detects a valid TC Kimlik (10000000146)", () => {
+      expect(hasPII("TC No: 10000000146")).toBe(true);
+      expect(detectPIITypes("TC No: 10000000146")).toContain("tc_kimlik");
+    });
+
+    it("masks a valid TC Kimlik", () => {
+      const r = maskPII("TC Kimlik: 10000000146");
+      expect(r.masked).not.toContain("10000000146");
+      expect(r.masked).toContain("[REDACTED-TC]");
+      expect(r.redactedCount).toBe(1);
+    });
+
+    it("rejects an invalid TC Kimlik (12345678901)", () => {
+      expect(detectPIITypes("Number 12345678901")).not.toContain("tc_kimlik");
+    });
+
+    it("does not false-positive on random 11-digit numbers", () => {
+      expect(hasPII("Reference: 99887766554")).toBe(false);
+      expect(detectPIITypes("Code 11111111111")).not.toContain("tc_kimlik");
+    });
+
+    it("does not match 11-digit numbers starting with 0", () => {
+      expect(detectPIITypes("ID 01234567890")).not.toContain("tc_kimlik");
+    });
+  });
+
+  describe("IPv6", () => {
+    it("detects a full IPv6 address", () => {
+      expect(hasPII("Server at 2001:0db8:85a3:0000:0000:8a2e:0370:7334")).toBe(true);
+      expect(detectPIITypes("Server at 2001:0db8:85a3:0000:0000:8a2e:0370:7334")).toContain("ipv6");
+    });
+
+    it("masks a full IPv6 address", () => {
+      const r = maskPII("Host: 2001:0db8:85a3:0000:0000:8a2e:0370:7334");
+      expect(r.masked).not.toContain("2001:0db8");
+      expect(r.masked).toContain("[REDACTED-IP]");
+    });
+
+    it("detects loopback ::1", () => {
+      expect(detectPIITypes("localhost ::1")).toContain("ipv6");
+    });
+
+    it("detects abbreviated IPv6", () => {
+      expect(detectPIITypes("addr fe80::1")).toContain("ipv6");
+    });
+  });
+
+  describe("Turkish Tax ID (Vergi Kimlik)", () => {
+    it("detects 'Vergi No: 1234567890'", () => {
+      expect(hasPII("Vergi No: 1234567890")).toBe(true);
+      expect(detectPIITypes("Vergi No: 1234567890")).toContain("vergi_kimlik");
+    });
+
+    it("masks tax ID with keyword context", () => {
+      const r = maskPII("Firma VKN: 9876543210");
+      expect(r.masked).not.toContain("9876543210");
+      expect(r.masked).toContain("[REDACTED-TAX-ID]");
+    });
+
+    it("detects 'tax id 1234567890'", () => {
+      expect(detectPIITypes("tax id 1234567890")).toContain("vergi_kimlik");
+    });
+
+    it("detects 'vergi kimlik numarası: 1234567890'", () => {
+      expect(detectPIITypes("vergi kimlik numarası: 1234567890")).toContain("vergi_kimlik");
+    });
+
+    it("does not detect a bare 10-digit number without context", () => {
+      expect(detectPIITypes("Order 1234567890")).not.toContain("vergi_kimlik");
+    });
+  });
 });

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useFormState } from "react-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
@@ -16,6 +16,7 @@ import { Shield, CheckCircle2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { submitIncident, type SubmitIncidentState } from "@/actions/incidents";
+import { useFormAutosave, clearDraft } from "@/hooks/use-form-autosave";
 import { GoogleSignInButton } from "@/components/auth/auth-buttons";
 import type { AIProvider, AIModel, IncidentCategory, IncidentSeverity } from "@/types";
 
@@ -48,8 +49,63 @@ export function IncidentForm({
     terms: false,
   });
 
+  const DRAFT_KEY = "alpar_incident_draft";
+
+  type IncidentDraft = {
+    title: string;
+    description: string;
+    selectedProvider: string;
+    customProviderName: string;
+    selectedModel: string;
+    customModelName: string;
+    isAnonymous: boolean;
+  };
+
+  const draftValues = useMemo<IncidentDraft>(
+    () => ({
+      title,
+      description,
+      selectedProvider,
+      customProviderName,
+      selectedModel,
+      customModelName,
+      isAnonymous,
+    }),
+    [
+      title,
+      description,
+      selectedProvider,
+      customProviderName,
+      selectedModel,
+      customModelName,
+      isAnonymous,
+    ],
+  );
+
+  const handleRestore = useCallback((saved: IncidentDraft) => {
+    setTitle(saved.title);
+    setDescription(saved.description);
+    setSelectedProvider(saved.selectedProvider);
+    setCustomProviderName(saved.customProviderName);
+    setSelectedModel(saved.selectedModel);
+    setCustomModelName(saved.customModelName);
+    setIsAnonymous(saved.isAnonymous);
+  }, []);
+
+  const handleRestoreNotify = useCallback(() => {
+    toast.info(t("draft_restored"));
+  }, [t]);
+
+  useFormAutosave<IncidentDraft>({
+    key: DRAFT_KEY,
+    values: draftValues,
+    onRestore: handleRestore,
+    onRestoreNotify: handleRestoreNotify,
+  });
+
   useEffect(() => {
     if (state.ok) {
+      clearDraft(DRAFT_KEY);
       toast.success(t("submitted"));
     } else if (state.error) {
       toast.error(state.error);

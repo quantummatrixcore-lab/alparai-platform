@@ -160,7 +160,8 @@
     "timeline_reviewed": "İncelendi",
     "timeline_published": "Yayınlandı",
     "piiProtectedTitle": "Kişisel veriler korunuyor",
-    "piiProtectedDesc": "E-posta, telefon numarası, kimlik ve erişim belirteci gibi kişisel bilgiler yayınlanmadan önce otomatik olarak maskelenir."
+    "piiProtectedDesc": "E-posta, telefon numarası, kimlik ve erişim belirteci gibi kişisel bilgiler yayınlanmadan önce otomatik olarak maskelenir.",
+    "draft_restored": "Taslak son oturumunuzdan geri yüklendi."
   },
   "categories": {
     "hallucination": "Halüsinasyon",
