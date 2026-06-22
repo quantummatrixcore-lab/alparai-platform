@@ -25,6 +25,7 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
   const { data: providers } = await supabase
     .from("ai_providers")
     .select("id, slug, name, logo_url, is_verified, website_url, trust_score")
+    .neq("slug", "alpar-autopilot")
     .order("name");
 
   const stats = await Promise.all(

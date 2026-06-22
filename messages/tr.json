@@ -148,7 +148,9 @@
     "sign_in_hint": "Raporunuz bu formda kaydedilir. Giriş yapın ve otomatik olarak gönderilecektir.",
     "timeline_reported": "Bildirildi",
     "timeline_reviewed": "İncelendi",
-    "timeline_published": "Yayınlandı"
+    "timeline_published": "Yayınlandı",
+    "piiProtectedTitle": "Kişisel veriler korunuyor",
+    "piiProtectedDesc": "E-posta, telefon numarası, kimlik ve erişim belirteci gibi kişisel bilgiler yayınlanmadan önce otomatik olarak maskelenir."
   },
   "categories": {
     "hallucination": "Halüsinasyon",

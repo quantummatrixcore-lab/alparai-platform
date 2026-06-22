@@ -45,7 +45,7 @@ export function toIncidentListItem(row: RawIncidentRow): IncidentListItem {
     created_at: row.created_at ?? "",
     view_count: row.views_count ?? 0,
     vote_count: row.upvotes_count ?? 0,
-    evidence_count: 0,
+    evidence_count: row.views_count ?? 0,
     author_name: row.author_name ?? null,
     provider_name: row.provider_name ?? "",
     provider_slug: row.provider_slug ?? "",
