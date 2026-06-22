@@ -262,11 +262,17 @@ export function HeroSection({
 }
 
 function AnimatedValue({ value }: { value: number | string }) {
-  const [count, setCount] = React.useState(0);
   const numVal = typeof value === "number" ? value : 0;
+  const [count, setCount] = React.useState(numVal);
+  const [isMounted, setIsMounted] = React.useState(false);
 
   React.useEffect(() => {
-    if (numVal === 0) return;
+    setIsMounted(true);
+    setCount(0);
+  }, []);
+
+  React.useEffect(() => {
+    if (!isMounted || numVal === 0) return;
     let start = 0;
     const duration = 1200;
     const range = numVal;
@@ -282,7 +288,7 @@ function AnimatedValue({ value }: { value: number | string }) {
       }
     }, stepTime);
     return () => clearInterval(timer);
-  }, [numVal]);
+  }, [numVal, isMounted]);
 
   if (typeof value === "string") return <>{value}</>;
   return <>{count.toLocaleString()}</>;
