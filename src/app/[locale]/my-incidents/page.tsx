@@ -24,7 +24,7 @@ export default async function MyIncidentsPage({ params }: { params: Promise<{ lo
   const { data } = await supabase
     .from("incidents")
     .select(
-      "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id"
+      "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id, cross_audit_truth_score, cross_audit_confidence",
     )
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });

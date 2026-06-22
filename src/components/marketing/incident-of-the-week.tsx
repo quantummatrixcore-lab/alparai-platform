@@ -34,7 +34,7 @@ export function IncidentOfTheWeek({ incident }: { incident: IncidentListItem | n
           <AlertTriangle className="h-32 w-32" />
         </motion.div>
         <CardContent className="p-6 sm:p-8">
-          <div className="mb-4 flex items-center gap-2">
+          <div className="mb-4 flex flex-wrap items-center gap-2">
             <span className="bg-danger-500/10 text-danger-400 border-danger-500/20 inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-xs font-bold tracking-widest uppercase">
               <TrendingUp className="h-4 w-4" />
               {t("title")}
@@ -42,6 +42,20 @@ export function IncidentOfTheWeek({ incident }: { incident: IncidentListItem | n
             <Badge variant="outline" className="border-border-strong text-fg-muted">
               {incident.category}
             </Badge>
+            {incident.cross_audit_truth_score !== null && (
+              <Badge
+                variant={
+                  incident.cross_audit_truth_score >= 80
+                    ? "success"
+                    : incident.cross_audit_truth_score >= 50
+                      ? "warning"
+                      : "danger"
+                }
+                className="font-bold"
+              >
+                TruthScore: {incident.cross_audit_truth_score}%
+              </Badge>
+            )}
           </div>
 
           <Link
