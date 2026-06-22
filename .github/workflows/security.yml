@@ -16,7 +16,7 @@ jobs:
     name: Dependency Audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v4
         with:
           version: 9.12.0
@@ -33,7 +33,7 @@ jobs:
     name: Secrets Scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Scan for secrets in history
@@ -46,7 +46,7 @@ jobs:
     name: No env files in commit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Verify .env files are not tracked
         run: |
           if git ls-files | grep -E "^\.env(\.|$)" | grep -v "^\.env\.example$" | grep -v "^\.env\.backup$"; then
