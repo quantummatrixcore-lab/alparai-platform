@@ -23,23 +23,19 @@ export function Wordmark({
 }: WordmarkProps) {
   const { logo, text } = sizeMap[size];
   return (
-    <div
-      className={cn("inline-flex items-center gap-2.5", className)}
-      {...props}
-    >
+    <div className={cn("inline-flex items-center gap-2.5", className)} {...props}>
       <Logo size={logo} />
       <div className="flex flex-col leading-none">
-        <span
-          className={cn(
-            "font-bold tracking-tight",
-            text,
-            "bg-gradient-to-r from-brand-300 via-brand-400 to-brand-500 bg-clip-text text-transparent"
-          )}
-        >
-          ALPAR AI
+        <span className={cn("flex items-center gap-1.5 font-bold tracking-tight", text)}>
+          <span className="to-brand-100 bg-gradient-to-r from-white via-slate-100 bg-clip-text text-transparent">
+            ALPAR
+          </span>
+          <span className="from-accent-300 to-accent-500 bg-gradient-to-r bg-clip-text text-transparent">
+            AI
+          </span>
         </span>
         {showTagline && (
-          <span className="mt-0.5 text-[10px] uppercase tracking-widest text-fg-muted">
+          <span className="text-fg-muted mt-0.5 text-[10px] tracking-widest uppercase">
             {tagline ?? "Trust Infrastructure"}
           </span>
         )}
