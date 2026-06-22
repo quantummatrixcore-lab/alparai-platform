@@ -66,7 +66,7 @@ export default async function BrandPage({
     supabase
       .from("incidents")
       .select(
-        "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, user_id",
+        "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, user_id, cross_audit_truth_score, cross_audit_confidence",
       )
       .eq("status", "published")
       .eq("ai_provider_id", providerId)
