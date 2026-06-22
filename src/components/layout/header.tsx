@@ -8,7 +8,7 @@ import { MobileNav } from "./mobile-nav";
 import { LanguageSwitcher } from "./language-switcher";
 import { UserMenu } from "./user-menu";
 import { useTranslations } from "next-intl";
-import { Plus, Lightbulb, Coins } from "lucide-react";
+import { Plus } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export function Header({
@@ -49,26 +49,11 @@ export function Header({
             <Nav />
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <LanguageSwitcher className="hidden sm:inline-flex" />
           <Link
-            href="/bounties"
-            className="relative hidden h-9 items-center gap-1.5 rounded-full border-orange-500/30 bg-gradient-to-r from-orange-600 to-amber-500 px-4 text-xs font-bold text-white shadow-[0_0_15px_rgba(249,115,22,0.35)] transition-all hover:scale-105 hover:from-orange-500 hover:to-amber-400 hover:shadow-[0_0_25px_rgba(249,115,22,0.6)] focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:outline-none sm:inline-flex"
-          >
-            <span className="absolute -inset-0.5 -z-10 animate-pulse rounded-full bg-gradient-to-r from-orange-600 to-amber-500 opacity-60 blur-xs"></span>
-            <Coins className="h-3.5 w-3.5 animate-bounce text-amber-100" aria-hidden="true" />
-            {t("bounties")}
-          </Link>
-          <Link
-            href="/dilemmas"
-            className="border-border-subtle/50 text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary focus-visible:ring-brand-500 focus-visible:ring-offset-bg-primary hidden h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-semibold transition-all hover:shadow-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:inline-flex"
-          >
-            <Lightbulb className="text-warning-400 h-3.5 w-3.5" aria-hidden="true" />
-            {t("suggestions")}
-          </Link>
-          <Link
             href="/submit"
-            className="from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 focus-visible:ring-brand-500 hidden h-9 items-center gap-1.5 rounded-full bg-gradient-to-r px-4 text-xs font-bold text-white shadow-[0_0_15px_rgba(168,85,247,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_25px_rgba(168,85,247,0.6)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:inline-flex"
+            className="from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 focus-visible:ring-brand-500 hidden h-9 items-center gap-1.5 rounded-full bg-gradient-to-r px-4.5 text-xs font-bold text-white shadow-[0_0_15px_rgba(168,85,247,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_25px_rgba(168,85,247,0.6)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:inline-flex"
           >
             <Plus className="h-3.5 w-3.5" aria-hidden="true" />
             {t("report")}

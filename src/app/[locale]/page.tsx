@@ -15,7 +15,7 @@ import { SuggestFeatureCTA } from "@/components/marketing/cta-suggest-feature";
 import { NewsTicker } from "@/components/marketing/news-ticker";
 import { EcosystemPulse, type EcosystemNewsItem } from "@/components/marketing/ecosystem-pulse";
 import { Container, Section } from "@/components/ui/layout";
-import { PollCard, type Poll } from "@/components/dilemmas/poll-card";
+import type { Poll } from "@/components/dilemmas/poll-card";
 import { IncidentOfTheWeek } from "@/components/marketing/incident-of-the-week";
 import { AdvocateOfTheWeek, type Advocate } from "@/components/marketing/advocate-of-the-week";
 import type { IncidentListItem, LeaderboardEntry } from "@/types";
@@ -262,24 +262,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
         </Container>
       </Section>
-
-      {topPoll && (
-        <Section className="bg-bg-secondary border-brand-500/10 border-y">
-          <Container>
-            <div className="mx-auto mb-8 max-w-4xl text-center">
-              <h2 className="bg-gradient-brand bg-clip-text text-3xl font-extrabold text-transparent">
-                {(await getTranslations({ locale, namespace: "dilemmas" }))("title")}
-              </h2>
-              <p className="text-fg-muted mt-2">
-                {(await getTranslations({ locale, namespace: "dilemmas" }))("description")}
-              </p>
-            </div>
-            <div className="mx-auto max-w-2xl">
-              <PollCard poll={topPoll} />
-            </div>
-          </Container>
-        </Section>
-      )}
 
       <WhyItMatters />
       <HowItWorks />

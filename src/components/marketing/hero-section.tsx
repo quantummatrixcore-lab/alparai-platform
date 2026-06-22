@@ -3,8 +3,9 @@
 import * as React from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "@/i18n/routing";
-import { ArrowRight, ShieldAlert, Target, Trophy, Quote, Sparkles, Radio } from "lucide-react";
+import { ArrowRight, ShieldAlert, Target, Trophy, Quote, Radio } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Container } from "@/components/ui/layout";
 
 export function HeroSection({
   totalIncidents = 0,
@@ -44,7 +45,7 @@ export function HeroSection({
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_0%,#000_20%,transparent_100%)] bg-[size:64px_64px]" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-[1440px] px-6 lg:px-12">
+      <Container className="relative z-10">
         {/* 2-Column Split Layout */}
         <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[55fr_45fr]">
           {/* LEFT: Manifesto Column */}
@@ -103,31 +104,6 @@ export function HeroSection({
                 {t("cta_secondary")}
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-2" />
               </Link>
-            </motion.div>
-
-            {/* Bug Bounty badge — compact */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-              className="mt-8"
-            >
-              <div className="bg-glass border-warning-500/20 inline-flex items-center gap-3 rounded-xl px-5 py-3 shadow-lg">
-                <div className="border-warning-500/40 bg-warning-500/15 text-warning-400 inline-flex items-center gap-1.5 rounded-sm border px-2 py-1 text-[10px] font-black tracking-[0.2em] uppercase">
-                  <Sparkles className="h-3 w-3" />
-                  {t("bug_bounty_badge", { defaultValue: "Bug Bounty" })}
-                </div>
-                <span className="from-warning-300 to-warning-500 bg-gradient-to-r bg-clip-text text-sm font-black text-transparent">
-                  {t("title_accent")}
-                </span>
-                <Link
-                  href="/bounties"
-                  className="text-warning-400 hover:text-warning-300 inline-flex items-center gap-1 text-xs font-bold"
-                >
-                  <Trophy className="h-3.5 w-3.5" />
-                  <ArrowRight className="h-3 w-3" />
-                </Link>
-              </div>
             </motion.div>
 
             {/* Founder Quote */}
@@ -246,9 +222,46 @@ export function HeroSection({
               <Radio className="text-fg-muted h-3.5 w-3.5" />
               <span className="text-fg-muted text-xs">{t("last_report")}</span>
             </div>
+
+            {/* Bug Bounty Panel */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.5 }}
+              className="bg-glass border-warning-500/20 hover:border-warning-500/40 border-t-warning-500/50 relative overflow-hidden rounded-2xl border border-t-2 p-6 shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(249,115,22,0.12)]"
+            >
+              <div className="bg-warning-500/10 absolute -top-6 -right-6 -z-10 h-24 w-24 rounded-full blur-xl" />
+              <div className="flex items-start gap-4">
+                <div className="bg-warning-500/15 border-warning-500/25 text-warning-400 shrink-0 rounded-xl border p-3">
+                  <Trophy className="h-6 w-6" />
+                </div>
+                <div className="flex-1 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="border-warning-500/40 bg-warning-500/15 text-warning-400 rounded-sm border px-2 py-0.5 text-[9px] font-black tracking-[0.2em] uppercase">
+                      {t("bug_bounty_badge", { defaultValue: "Bug Bounty" })}
+                    </span>
+                  </div>
+                  <h4 className="from-warning-200 to-warning-400 bg-gradient-to-r bg-clip-text text-base font-black tracking-tight text-transparent">
+                    {t("title_accent")}
+                  </h4>
+                  <p className="text-fg-secondary text-xs leading-relaxed">
+                    {t("title_accent_desc")}
+                  </p>
+                  <div className="pt-2">
+                    <Link
+                      href="/bounties"
+                      className="bg-warning-500 hover:bg-warning-400 focus-visible:ring-warning-500 inline-flex h-9 items-center gap-2 rounded-lg px-4 text-xs font-bold text-white shadow-lg transition-all hover:scale-105"
+                    >
+                      {t("bug_bounty_badge", { defaultValue: "Bug Bounty" })} {t("view_all") ?? "→"}
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }
