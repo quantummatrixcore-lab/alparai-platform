@@ -16,9 +16,19 @@
  * Pure-function: no I/O, no dependencies. Safe for edge runtime.
  */
 
-const PATTERNS: ReadonlyArray<{ name: string; re: RegExp; mask: string; luhn?: boolean }> = [
-  // Turkish National ID — 11 digits, first ≠ 0
-  { name: "tc_kimlik", re: /\b[1-9]\d{10}\b/g, mask: "[REDACTED-TC]" },
+const PATTERNS: ReadonlyArray<{
+  name: string;
+  re: RegExp;
+  mask: string;
+  luhn?: boolean;
+  tcKimlik?: boolean;
+}> = [
+  { name: "tc_kimlik", re: /\b[1-9]\d{10}\b/g, mask: "[REDACTED-TC]", tcKimlik: true },
+  {
+    name: "vergi_kimlik",
+    re: /(?:(?:vergi|VKN|tax)\s*(?:kimlik|id|number|no|numaras\u0131)?\s*(?:no|numaras\u0131)?\s*[:.]?\s*)\d{10}\b/gi,
+    mask: "[REDACTED-TAX-ID]",
+  },
   // Turkish phone (mobile + landline)
   {
     name: "phone_tr",
@@ -50,10 +60,14 @@ const PATTERNS: ReadonlyArray<{ name: string; re: RegExp; mask: string; luhn?: b
     mask: "[REDACTED-CARD]",
     luhn: true,
   },
-  // IPv4
   {
     name: "ipv4",
     re: /\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d?\d)\b/g,
+    mask: "[REDACTED-IP]",
+  },
+  {
+    name: "ipv6",
+    re: /(?:^|(?<=\s))(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}(?=$|\s)|(?:^|(?<=\s))(?:[0-9a-fA-F]{1,4}:){1,7}:|::(?:[0-9a-fA-F]{1,4}:){0,5}[0-9a-fA-F]{1,4}(?=$|\s)/g,
     mask: "[REDACTED-IP]",
   },
   // URLs with tokens / API keys
@@ -107,12 +121,14 @@ export function maskPII(input: string): PiiScanResult {
   const detectionMap = new Map<string, PiiDetection>();
   let totalRedactions = 0;
 
-  for (const { name, re, mask, luhn } of PATTERNS) {
+  for (const { name, re, mask, luhn, tcKimlik } of PATTERNS) {
     re.lastIndex = 0;
     const matches = [...input.matchAll(re)];
     if (matches.length === 0) continue;
 
-    const validMatches = luhn ? matches.filter((m) => isLuhnValid(m[0])) : matches;
+    let validMatches = matches;
+    if (luhn) validMatches = validMatches.filter((m) => isLuhnValid(m[0]));
+    if (tcKimlik) validMatches = validMatches.filter((m) => isTcKimlikValid(m[0]));
     if (validMatches.length === 0) continue;
 
     const samples: string[] = [];
@@ -149,9 +165,16 @@ export function maskPII(input: string): PiiScanResult {
  */
 export function hasPII(input: string): boolean {
   if (!input) return false;
-  return PATTERNS.some(({ re }) => {
+  return PATTERNS.some(({ re, luhn, tcKimlik }) => {
     re.lastIndex = 0;
-    return re.test(input);
+    if (!re.test(input)) return false;
+    if (luhn || tcKimlik) {
+      re.lastIndex = 0;
+      const matches = [...input.matchAll(re)];
+      const validator = luhn ? isLuhnValid : isTcKimlikValid;
+      return matches.some((m) => validator(m[0]));
+    }
+    return true;
   });
 }
 
@@ -161,13 +184,14 @@ export function hasPII(input: string): boolean {
 export function detectPIITypes(input: string): string[] {
   if (!input) return [];
   const types: string[] = [];
-  for (const { name, re, luhn } of PATTERNS) {
+  for (const { name, re, luhn, tcKimlik } of PATTERNS) {
     re.lastIndex = 0;
     if (!re.test(input)) continue;
-    if (luhn) {
+    if (luhn || tcKimlik) {
       re.lastIndex = 0;
       const matches = [...input.matchAll(re)];
-      if (matches.some((m) => isLuhnValid(m[0]))) types.push(name);
+      const validator = luhn ? isLuhnValid : isTcKimlikValid;
+      if (matches.some((m) => validator(m[0]))) types.push(name);
     } else {
       types.push(name);
     }
@@ -198,4 +222,29 @@ function isLuhnValid(cardNumber: string): boolean {
     isEven = !isEven;
   }
   return sum % 10 === 0;
+}
+
+function isTcKimlikValid(raw: string): boolean {
+  const digits = raw.replace(/\D/g, "");
+  if (digits.length !== 11) return false;
+  if (digits[0] === "0") return false;
+
+  const d: number[] = [];
+  for (let i = 0; i < 11; i++) {
+    d.push(parseInt(digits[i] ?? "0", 10));
+  }
+
+  const oddSum = (d[0] ?? 0) + (d[2] ?? 0) + (d[4] ?? 0) + (d[6] ?? 0) + (d[8] ?? 0);
+  const evenSum = (d[1] ?? 0) + (d[3] ?? 0) + (d[5] ?? 0) + (d[7] ?? 0);
+  const d10Raw = (oddSum * 7 - evenSum) % 10;
+  const d10Check = d10Raw < 0 ? d10Raw + 10 : d10Raw;
+  if (d10Check !== d[9]) return false;
+
+  let sumFirst10 = 0;
+  for (let i = 0; i < 10; i++) {
+    sumFirst10 += d[i] ?? 0;
+  }
+  if (sumFirst10 % 10 !== d[10]) return false;
+
+  return true;
 }
