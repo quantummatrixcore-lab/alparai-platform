@@ -14,6 +14,7 @@ import {
 import { Link } from "@/i18n/routing";
 import { useTranslations, useLocale } from "next-intl";
 import { Container, Section } from "@/components/ui/layout";
+import { PollCard, type Poll } from "@/components/dilemmas/poll-card";
 
 export type EcosystemNewsItem = {
   id: string;
@@ -26,14 +27,6 @@ export type EcosystemNewsItem = {
   category: string;
   severity: "critical" | "high" | "medium" | "low";
   published_at: string;
-};
-
-export type EcosystemPoll = {
-  id: string;
-  title: string;
-  yes_count: number;
-  no_count: number;
-  unsure_count: number;
 };
 
 const CATEGORY_ICONS: Record<string, React.ElementType> = {
@@ -71,13 +64,7 @@ const SEVERITY_CONFIG = {
   },
 };
 
-export function EcosystemPulse({
-  news,
-  poll,
-}: {
-  news: EcosystemNewsItem[];
-  poll: EcosystemPoll | null;
-}) {
+export function EcosystemPulse({ news, poll }: { news: EcosystemNewsItem[]; poll: Poll | null }) {
   const locale = useLocale();
   const t = useTranslations("ecosystemPulse");
 
@@ -86,10 +73,6 @@ export function EcosystemPulse({
 
   const getSummary = (item: EcosystemNewsItem) =>
     locale === "tr" && item.summary_tr ? item.summary_tr : item.summary_en;
-
-  const totalVotes = poll ? poll.yes_count + poll.no_count + poll.unsure_count : 0;
-  const yesPercent = totalVotes > 0 ? Math.round((poll!.yes_count / totalVotes) * 100) : 0;
-  const noPercent = totalVotes > 0 ? Math.round((poll!.no_count / totalVotes) * 100) : 0;
 
   return (
     <Section className="bg-bg-secondary border-brand-500/10 border-y">
@@ -119,7 +102,7 @@ export function EcosystemPulse({
           </Link>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_380px]">
           {/* News Feed */}
           <div className="space-y-3">
             {news.map((item, i) => {
@@ -194,56 +177,7 @@ export function EcosystemPulse({
             className="h-fit"
           >
             {poll ? (
-              <div className="bg-bg-primary/60 border-brand-500/20 rounded-xl border p-6">
-                <div className="mb-3 flex items-center gap-2">
-                  <span className="bg-brand-500/10 text-brand-400 border-brand-500/20 rounded-sm border px-2 py-0.5 text-[10px] font-black tracking-[0.2em] uppercase">
-                    {t("pollBadge")}
-                  </span>
-                </div>
-                <h3 className="text-fg-primary mb-4 text-base leading-snug font-black">
-                  {poll.title}
-                </h3>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs font-bold">
-                    <span className="text-success-400 uppercase">{t("yes")}</span>
-                    <span className="text-danger-400 uppercase">{t("no")}</span>
-                  </div>
-                  <div className="bg-bg-tertiary flex h-7 w-full overflow-hidden rounded-md border border-white/5">
-                    <div
-                      className="bg-success-500/80 flex items-center justify-start px-2 transition-all duration-1000"
-                      style={{ width: `${yesPercent}%` }}
-                    >
-                      {yesPercent > 10 && (
-                        <span className="text-xs font-bold text-white drop-shadow">
-                          %{yesPercent}
-                        </span>
-                      )}
-                    </div>
-                    <div
-                      className="bg-danger-500/80 flex items-center justify-end px-2 transition-all duration-1000"
-                      style={{ width: `${noPercent}%` }}
-                    >
-                      {noPercent > 10 && (
-                        <span className="text-xs font-bold text-white drop-shadow">
-                          %{noPercent}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <p className="text-fg-muted text-center text-xs">
-                    {t("totalVotes", { count: totalVotes.toLocaleString() })}
-                  </p>
-                </div>
-
-                <Link
-                  href="/#poll"
-                  className="bg-brand-500/10 hover:bg-brand-500/20 border-brand-500/30 text-brand-400 mt-4 flex w-full items-center justify-center gap-2 rounded-lg border py-2.5 text-sm font-bold transition-all"
-                >
-                  {t("voteCta")}
-                  <ChevronRight className="h-4 w-4" />
-                </Link>
-              </div>
+              <PollCard poll={poll} />
             ) : (
               <div className="bg-bg-primary/60 border-bg-tertiary rounded-xl border p-6 text-center">
                 <p className="text-fg-muted text-sm">{t("noPoll")}</p>

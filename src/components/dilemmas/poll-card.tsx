@@ -131,17 +131,15 @@ export function PollCard({ poll }: { poll: Poll }) {
             </div>
           </div>
 
-          {/* Turnstile Widget */}
-          <div className="flex justify-center pt-2">
-            <Turnstile
-              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
-              onSuccess={(token) => setTurnstileToken(token)}
-              options={{
-                theme: "dark",
-                size: "compact",
-              }}
-            />
-          </div>
+          {/* Turnstile Widget (Invisible) */}
+          <Turnstile
+            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "2x00000000000000000000AB"}
+            onSuccess={(token) => setTurnstileToken(token)}
+            options={{
+              theme: "dark",
+              size: "invisible",
+            }}
+          />
 
           {/* Action buttons */}
           <div className="grid grid-cols-3 gap-3 pt-2">

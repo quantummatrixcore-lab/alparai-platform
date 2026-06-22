@@ -4,7 +4,7 @@ import * as React from "react";
 import { Link, usePathname } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-import { Home, FileText, BarChart3, BookOpen, Cpu } from "lucide-react";
+import { FileText, BarChart3, BookOpen, Cpu, Coins, Lightbulb } from "lucide-react";
 import { motion } from "framer-motion";
 import type { ComponentType } from "react";
 
@@ -15,10 +15,11 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { href: "/", labelKey: "home", icon: Home },
   { href: "/incidents", labelKey: "incidents", icon: FileText },
   { href: "/models", labelKey: "models", icon: Cpu },
   { href: "/leaderboard", labelKey: "leaderboard", icon: BarChart3 },
+  { href: "/bounties", labelKey: "bounties", icon: Coins },
+  { href: "/dilemmas", labelKey: "suggestions", icon: Lightbulb },
   { href: "/blog", labelKey: "blog", icon: BookOpen },
 ];
 
@@ -36,7 +37,7 @@ export function Nav({ className }: { className?: string }) {
             href={item.href}
             className={cn(
               "focus-visible:ring-brand-500 relative inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-semibold transition-colors duration-300 outline-none focus-visible:ring-2",
-              isActive ? "text-brand-400" : "text-fg-secondary hover:text-fg-primary"
+              isActive ? "text-brand-400" : "text-fg-secondary hover:text-fg-primary",
             )}
             aria-current={isActive ? "page" : undefined}
           >
