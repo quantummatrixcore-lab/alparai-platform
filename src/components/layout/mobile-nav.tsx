@@ -14,6 +14,7 @@ const links = [
   { href: "/incidents", key: "incidents" },
   { href: "/models", key: "models" },
   { href: "/leaderboard", key: "leaderboard" },
+  { href: "/bounties", key: "bounties" },
   { href: "/blog", key: "blog" },
   { href: "/dilemmas", key: "suggestions" },
   { href: "/about", key: "about" },

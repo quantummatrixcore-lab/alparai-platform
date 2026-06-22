@@ -8,12 +8,12 @@ ALPAR AI ("Veri Sorumlusu" sıfatıyla) aşağıdaki kişisel verileri işler.
 
 ## İşlenen veri kategorileri
 
-| Kategori        | Veri türü                                | İşleme amacı                              | Hukuki sebep (KVKK m.5/6)         |
-| --------------- | ---------------------------------------- | ----------------------------------------- | --------------------------------- |
-| Kimlik          | Ad, e-posta, OAuth sağlayıcı meta verisi | Hesap oluşturma, oturum yönetimi           | Açık rıza (m.5/1)                |
-| İçerik          | Olay başlık/açıklaması, kanıt dosyaları  | Platform işletme, moderasyon              | Açık rıza (m.5/1) + Meşru menfaat|
-| İletişim        | IP, kullanıcı aracısı (hash'lenmiş)      | Güvenlik, hız sınırlaması, kötüye kullanım| Meşru menfaat (m.5/2-f)          |
-| Çerez           | Oturum çerezi, tercih çerezi             | Oturum yönetimi, kullanıcı tercihleri     | Açık rıza (m.5/1)                |
+| Kategori | Veri türü                                | İşleme amacı                               | Hukuki sebep (KVKK m.5/6)         |
+| -------- | ---------------------------------------- | ------------------------------------------ | --------------------------------- |
+| Kimlik   | Ad, e-posta, OAuth sağlayıcı meta verisi | Hesap oluşturma, oturum yönetimi           | Açık rıza (m.5/1)                 |
+| İçerik   | Olay başlık/açıklaması, kanıt dosyaları  | Platform işletme, moderasyon               | Açık rıza (m.5/1) + Meşru menfaat |
+| İletişim | IP, kullanıcı aracısı (hash'lenmiş)      | Güvenlik, hız sınırlaması, kötüye kullanım | Meşru menfaat (m.5/2-f)           |
+| Çerez    | Oturum çerezi, tercih çerezi             | Oturum yönetimi, kullanıcı tercihleri      | Açık rıza (m.5/1)                 |
 
 ## Maskeleme (PII Guardian)
 
@@ -39,7 +39,7 @@ Başvurular, depolanmadan önce **PII Guardian** tarafından taranır. Tespit ed
 
 ## Başvuru
 
-Haklarınızı kullanmak için **privacy@alparai.online** adresine kimliğinizi tevsik eden belge ile yazılı başvuru yapın. 30 gün içinde yanıtlanır.
+Haklarınızı kullanmak için **privacy@alparai.com** adresine kimliğinizi tevsik eden belge ile yazılı başvuru yapın. 30 gün içinde yanıtlanır.
 
 KVKK Kurulu'na şikâyet hakkınız saklıdır (https://www.kvkk.gov.tr).
 

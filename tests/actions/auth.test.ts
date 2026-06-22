@@ -25,7 +25,7 @@ vi.hoisted(() => {
     },
   }));
   vi.doMock("@/lib/constants", () => ({
-    APP_URL: "https://test.alparai.online",
+    APP_URL: "https://test.alparai.com",
     APP_NAME: "ALPAR AI",
   }));
 });

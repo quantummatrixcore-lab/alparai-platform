@@ -41,6 +41,8 @@ export interface IncidentListItem {
   author_name: string | null;
   provider_name: string;
   provider_slug: string;
+  cross_audit_truth_score: number | null;
+  cross_audit_confidence: number | null;
 }
 
 export interface IncidentDetail {
@@ -63,6 +65,10 @@ export interface IncidentDetail {
   provider_slug: string;
   model_name: string | null;
   language: string;
+  cross_audit_truth_score: number | null;
+  cross_audit_confidence: number | null;
+  cross_audit_reasoning: string | null;
+  cross_audit_model: string | null;
 }
 
 export interface EvidenceItem {

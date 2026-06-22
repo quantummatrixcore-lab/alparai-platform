@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, FileText, Clock, Eye, Globe, Tag } from "lucide-react";
+import { Building2, FileText, Clock, Eye, Globe, Tag, Shield } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
-import { formatDate, formatRelativeTime } from "@/lib/utils";
+import { formatDate, formatRelativeTime, cn } from "@/lib/utils";
 import { VoteButtons } from "./vote-buttons";
 import { ProviderResponseCard } from "./provider-response-card";
 import { ShareButtons } from "./share-buttons";
@@ -56,6 +56,20 @@ export function IncidentDetailView({
               {incident.severity}
             </UIBadge>
             <UIBadge variant="outline">{tCat(incident.category)}</UIBadge>
+            {incident.cross_audit_truth_score !== null && (
+              <UIBadge
+                variant={
+                  incident.cross_audit_truth_score >= 80
+                    ? "success"
+                    : incident.cross_audit_truth_score >= 50
+                      ? "warning"
+                      : "danger"
+                }
+                className="font-bold"
+              >
+                TruthScore: {incident.cross_audit_truth_score}%
+              </UIBadge>
+            )}
             <UIBadge variant="muted">
               <Building2 className="h-3 w-3" /> {incident.provider_name}
             </UIBadge>
@@ -94,6 +108,71 @@ export function IncidentDetailView({
           </CardContent>
         </Card>
 
+        {incident.cross_audit_truth_score !== null && (
+          <Card className="border-brand-500/20 bg-brand-500/5 border shadow-[0_0_30px_rgba(168,85,247,0.05)]">
+            <CardHeader className="border-border-subtle border-b pb-4">
+              <div className="flex items-center justify-between gap-4">
+                <CardTitle className="text-brand-400 flex items-center gap-2">
+                  <Shield className="h-5 w-5" />
+                  {t("cross_audit_report_title", {
+                    defaultValue: "Autonomous AI Cross-Audit Report",
+                  })}
+                </CardTitle>
+                <div className="flex items-center gap-2">
+                  <span className="text-fg-muted text-xs">Confidence:</span>
+                  <UIBadge variant="brand" className="font-mono">
+                    {Math.round((incident.cross_audit_confidence ?? 0) * 100)}%
+                  </UIBadge>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4 pt-6">
+              <div className="bg-bg-secondary/40 flex flex-col justify-between gap-4 rounded-xl border border-white/5 p-5 sm:flex-row sm:items-center">
+                <div>
+                  <h4 className="text-fg-primary text-base font-bold">
+                    {t("truth_score", { defaultValue: "TruthScore" })}
+                  </h4>
+                  <p className="text-fg-muted mt-1 text-xs">
+                    Calculated using multi-model consensus and semantic audit engines.
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <span
+                      className={cn(
+                        "font-mono text-3xl font-black",
+                        incident.cross_audit_truth_score >= 80
+                          ? "text-success-400"
+                          : incident.cross_audit_truth_score >= 50
+                            ? "text-warning-400"
+                            : "text-danger-400",
+                      )}
+                    >
+                      {incident.cross_audit_truth_score}/100
+                    </span>
+                  </div>
+                </div>
+              </div>
+              {incident.cross_audit_reasoning && (
+                <div className="space-y-2">
+                  <h4 className="text-fg-primary text-sm font-bold">
+                    {t("cross_audit_reasoning", { defaultValue: "Adjudication Reasoning" })}
+                  </h4>
+                  <p className="text-fg-secondary bg-bg-secondary/20 rounded-lg border border-white/5 p-4 text-sm leading-relaxed whitespace-pre-wrap">
+                    {incident.cross_audit_reasoning}
+                  </p>
+                </div>
+              )}
+              {incident.cross_audit_model && (
+                <div className="text-fg-muted flex items-center justify-between border-t border-white/5 pt-2 text-[11px]">
+                  <span>Auditor Engine:</span>
+                  <span className="font-mono font-bold">{incident.cross_audit_model}</span>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
         {evidence.length > 0 && (
           <Card>
             <CardHeader>
@@ -130,7 +209,7 @@ export function IncidentDetailView({
                     <FileText className="h-4 w-4 shrink-0" />
                     <span className="truncate">{e.file_name}</span>
                   </a>
-                )
+                ),
               )}
             </CardContent>
           </Card>
@@ -148,12 +227,7 @@ export function IncidentDetailView({
             <CardContent className="flex items-center justify-between gap-3 py-6">
               <div>
                 <p className="text-fg-primary text-sm font-medium">{t("ai_response_pending")}</p>
-                <p className="text-fg-muted text-xs">
-                  {tCommon("aiResponseDesc", {
-                    defaultValue:
-                      "AI providers are notified of new reports and have the right to respond.",
-                  })}
-                </p>
+                <p className="text-fg-muted text-xs">{tCommon("aiResponseDesc")}</p>
               </div>
             </CardContent>
           </Card>
@@ -175,14 +249,12 @@ export function IncidentDetailView({
         </div>
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm">
-              {tCommon("details", { defaultValue: "Details" })}
-            </CardTitle>
+            <CardTitle className="text-sm">{tCommon("details")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
             <Row
               icon={<Building2 className="h-3.5 w-3.5" />}
-              label="Provider"
+              label={tCommon("provider")}
               value={
                 <Link
                   href={`/brand/${incident.provider_slug}`}
@@ -194,7 +266,7 @@ export function IncidentDetailView({
             />
             <Row
               icon={<Tag className="h-3.5 w-3.5" />}
-              label="Category"
+              label={t("category")}
               value={tCat(incident.category)}
             />
             <Row

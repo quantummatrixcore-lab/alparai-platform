@@ -1,55 +1,37 @@
-## Summary
+## Description
 
-<!-- Brief description of the changes -->
+Please provide a brief description of the changes introduced by this Pull Request. Explain the problem being solved and how your implementation addresses it.
 
 ## Type of Change
 
-- [ ] 🐛 Bug fix (non-breaking change that fixes an issue)
-- [ ] ✨ New feature (non-breaking change that adds functionality)
-- [ ] 💥 Breaking change (fix or feature that would cause existing functionality to change)
-- [ ] 📝 Documentation update
-- [ ] ♻️ Refactor (no functional changes)
-- [ ] ⚡ Performance improvement
-- [ ] 🧪 Test update
-- [ ] 🔧 CI/CD update
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Refactoring / Code Cleanup (no functional changes)
+- [ ] Documentation update
 
-## Affected Areas
+## Related Issues
 
-<!-- Check all that apply -->
+Please link any related issues or audit points here (e.g., `Closes #123` or `Addresses Audit Point P1-1`).
 
-- [ ] Authentication (signin, OAuth, magic link)
-- [ ] Incident submission
-- [ ] Leaderboard
-- [ ] Bounty system
-- [ ] Blog / Content
-- [ ] i18n (EN/TR translations)
-- [ ] UI / Styling
-- [ ] Database / Migrations
-- [ ] API endpoints
-- [ ] Configuration / Infrastructure
+## Verification & Testing
 
-## Testing
+### Automated Tests
 
-<!-- What was tested, how was it tested -->
+Describe the automated tests you ran to verify these changes.
 
-- [ ] Unit tests pass locally
-- [ ] Typecheck passes locally
-- [ ] Lint passes locally
-- [ ] Build succeeds locally
-- [ ] Manual testing done
-- [ ] New test added (if applicable)
+- [ ] `pnpm lint` passed without warnings
+- [ ] `pnpm typecheck` passed without errors
+- [ ] `pnpm test` passed with all unit tests succeeding
 
-## Screenshots
+### Manual Verification
 
-<!-- If applicable, add screenshots to help explain your changes -->
+Describe any manual testing performed (e.g. tested on localhost, verified responsive UI on Chrome/Firefox).
 
 ## Checklist
 
-- [ ] Code follows project conventions
-- [ ] No console.log / debug code left
-- [ ] No new type errors introduced
-- [ ] No new lint warnings
-- [ ] i18n keys added for both EN and TR
-- [ ] Database migration included (if schema changed)
-- [ ] Self-reviewed the code
-- [ ] No secrets or API keys in code
+- [ ] My code follows the code style and conventions of this project.
+- [ ] I have performed a self-review of my own code.
+- [ ] I have commented my code, particularly in hard-to-understand areas (if applicable).
+- [ ] My changes generate no new warnings or console errors.
+- [ ] New and existing unit tests pass locally with my changes.

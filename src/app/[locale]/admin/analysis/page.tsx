@@ -1,10 +1,10 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { Container } from "@/components/ui/layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCurrentUser } from "@/lib/auth/session";
-import { FileText, Lock, AlertTriangle } from "lucide-react";
+import { FileText } from "lucide-react";
 import { Link } from "@/i18n/routing";
+import { AnalysisDashboardClient } from "@/components/admin/analysis-dashboard-client";
 import fs from "fs";
 import path from "path";
 
@@ -24,34 +24,55 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
     redirect(`/${locale}`);
   }
 
-  const filePath = path.join(process.cwd(), "docs", "MASTER-ANALYSIS.md");
-  let content = "";
+  // Load structured audit registry JSON
+  const registryPath = path.join(process.cwd(), "docs", "ai-audit", "audit-registry.json");
+  let registryData = null;
   try {
-    content = fs.readFileSync(filePath, "utf-8");
+    const rawRegistry = fs.readFileSync(registryPath, "utf-8");
+    registryData = JSON.parse(rawRegistry);
   } catch {
-    content = "# MASTER-ANALYSIS.md not found\n\nThe analysis file has not been created yet.";
+    // Fallback if not created yet or fails to parse
+    registryData = {
+      metadata: {
+        project: "ALPAR AI",
+        created: "2026-06-08",
+        last_updated: "2026-06-22",
+        total_models: 0,
+        scoring_weights: {},
+      },
+      audits: [],
+      consensus_findings: { unanimous: [], strong_consensus: [] },
+      p0_tracker: [],
+      score_evolution: [],
+    };
   }
 
-  const sections = content.split(/^### ANALYSIS #/m).filter(Boolean);
+  // Load raw Markdown analyses
+  const masterPath = path.join(process.cwd(), "docs", "MASTER-ANALYSIS.md");
+  let masterContent = "";
+  try {
+    masterContent = fs.readFileSync(masterPath, "utf-8");
+  } catch {
+    masterContent = "# MASTER-ANALYSIS.md not found\n\nThe analysis file has not been created yet.";
+  }
+
+  const sections = masterContent.split(/^### ANALYSIS #/m).filter(Boolean);
   const promptSection = sections[0] ?? "";
   const analyses = sections.slice(1);
 
-  const pendingCount = analyses.filter((a) => a.includes("[PENDING:")).length;
-  const completedCount = analyses.length - pendingCount;
-
   return (
     <Container className="py-10">
-      <header className="mb-8 flex items-center justify-between">
+      <header className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
           <h1 className="text-fg-primary inline-flex items-center gap-2 text-2xl font-bold">
             <FileText className="text-brand-400 h-6 w-6" />
             {t("analysisHeading")}
           </h1>
           <p className="text-fg-muted mt-1 text-sm">
-            {t("analysisStats", { completedCount, pendingCount, totalCount: 13 })}
+            Consolidated Multi-Model AI Auditing & Vulnerability Tracker
           </p>
         </div>
-        <nav className="hidden items-center gap-1 text-sm md:flex">
+        <nav className="flex items-center gap-1 text-sm">
           <Link
             href={`/${locale}/admin` as never}
             className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
@@ -64,78 +85,25 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
           >
             {t("moderation")}
           </Link>
-          <Link
-            href={`/${locale}/admin/analysis` as never}
-            className="bg-bg-tertiary text-brand-400 rounded-md px-3 py-1.5"
-          >
+          <span className="bg-bg-tertiary text-brand-400 rounded-md px-3 py-1.5 font-medium">
             {t("analysis")}
-          </Link>
+          </span>
         </nav>
       </header>
 
-      <Card variant="default" className="border-warning-500/30 bg-warning-500/5 mb-6">
-        <CardContent className="flex items-start gap-3 py-4">
-          <AlertTriangle className="text-warning-500 mt-0.5 h-4 w-4 shrink-0" />
-          <div>
-            <p className="text-fg-primary text-sm font-medium">{t("immutableTitle")}</p>
-            <p className="text-fg-muted text-xs">{t("immutableDesc")}</p>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="space-y-6">
-        {promptSection && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="inline-flex items-center gap-2 text-sm">
-                <Lock className="text-brand-400 h-4 w-4" />
-                {t("masterPrompt")}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="prose prose-invert prose-sm text-fg-secondary max-w-none whitespace-pre-wrap">
-                {promptSection.trim()}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        <h2 className="text-fg-primary text-lg font-semibold">{t("aiModelAnalyses")}</h2>
-
-        {analyses.map((analysis, i) => {
-          const isPending = analysis.includes("[PENDING:");
-          const modelMatch = analysis.match(/^\s*(.+?)\n/);
-          const modelName = modelMatch?.[1]?.replace(/\]/g, "").trim() ?? `Model ${i + 1}`;
-
-          return (
-            <Card
-              key={i}
-              variant={isPending ? "default" : "elevated"}
-              className={isPending ? "border-border-subtle opacity-60" : ""}
-            >
-              <CardHeader>
-                <CardTitle className="inline-flex items-center gap-2 text-sm">
-                  {isPending ? (
-                    <span className="bg-bg-tertiary h-2 w-2 rounded-full" />
-                  ) : (
-                    <span className="bg-success-500 h-2 w-2 rounded-full" />
-                  )}
-                  #{i + 1} — {modelName}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isPending ? (
-                  <p className="text-fg-muted text-sm italic">{t("analysisPending")}</p>
-                ) : (
-                  <div className="prose prose-invert prose-sm text-fg-secondary max-w-none whitespace-pre-wrap">
-                    {analysis.trim()}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+      <AnalysisDashboardClient
+        registryData={registryData}
+        promptSection={promptSection}
+        analyses={analyses}
+        translations={{
+          analysisHeading: t("analysisHeading"),
+          masterPrompt: t("masterPrompt"),
+          aiModelAnalyses: t("aiModelAnalyses"),
+          dashboard: t("dashboard"),
+          moderation: t("moderation"),
+          analysis: t("analysis"),
+        }}
+      />
     </Container>
   );
 }

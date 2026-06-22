@@ -15,14 +15,11 @@ export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  type UserProfile = Pick<
-    Database["public"]["Tables"]["users"]["Row"],
-    "id" | "email" | "full_name" | "avatar_url" | "role" | "is_verified" | "created_at"
-  >;
+  type UserProfile = Omit<Database["public"]["Tables"]["users"]["Row"], "email">;
 
   const { data: profile } = await supabase
     .from("users")
-    .select("id, email, full_name, avatar_url, role, is_verified, created_at")
+    .select("id, full_name, avatar_url, role, is_verified, created_at")
     .eq("id", user.id)
     .single<UserProfile>();
 
@@ -30,7 +27,7 @@ export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
 
   return {
     id: profile.id,
-    email: profile.email,
+    email: user.email ?? "",
     fullName: profile.full_name,
     avatarUrl: profile.avatar_url,
     role: profile.role,

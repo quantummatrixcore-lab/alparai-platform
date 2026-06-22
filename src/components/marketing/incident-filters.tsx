@@ -3,9 +3,10 @@
 import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Search } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "@/i18n/routing";
 import { INCIDENT_CATEGORIES, SEVERITY_LEVELS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -13,27 +14,42 @@ import { cn } from "@/lib/utils";
 export function IncidentFilters({
   defaultCategory,
   defaultSeverity,
+  defaultQ = "",
+  defaultSort = "newest",
   basePath = "/incidents",
 }: {
   defaultCategory?: string;
   defaultSeverity?: string;
+  defaultQ?: string;
+  defaultSort?: string;
   basePath?: string;
 }) {
   const t = useTranslations("incident");
   const tCat = useTranslations("categories");
   const tCommon = useTranslations("common");
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState(defaultQ);
   const [category, setCategory] = useState(defaultCategory ?? "");
   const [severity, setSeverity] = useState(defaultSeverity ?? "");
+  const [sort, setSort] = useState(defaultSort);
+
+  // Sync state if URL query parameters change (e.g. from popstate or back button)
+  useEffect(() => {
+    setQ(defaultQ);
+  }, [defaultQ]);
+
+  useEffect(() => {
+    setSort(defaultSort);
+  }, [defaultSort]);
 
   const submitHref = useMemo(() => {
     const params = new URLSearchParams();
     if (q) params.set("q", q);
     if (category) params.set("category", category);
     if (severity) params.set("severity", severity);
+    if (sort && sort !== "newest") params.set("sort", sort);
     const qs = params.toString();
     return qs ? `${basePath}?${qs}` : basePath;
-  }, [q, category, severity, basePath]);
+  }, [q, category, severity, sort, basePath]);
 
   return (
     <Card>
@@ -43,7 +59,7 @@ export function IncidentFilters({
       <CardContent className="space-y-4">
         <div className="relative">
           <Search
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-fg-muted"
+            className="text-fg-muted pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"
             aria-hidden="true"
           />
           <Input
@@ -52,6 +68,19 @@ export function IncidentFilters({
             value={q}
             onChange={(e) => setQ(e.target.value)}
             leftIcon={<Search className="h-4 w-4" />}
+          />
+        </div>
+        <div className="space-y-1.5">
+          <label className="text-fg-primary block text-sm font-medium">{t("sort_by")}</label>
+          <Select
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            options={[
+              { value: "newest", label: t("sort_newest") },
+              { value: "votes", label: t("sort_votes") },
+              { value: "views", label: t("sort_views") },
+              { value: "truth_score", label: t("sort_truth_score") },
+            ]}
           />
         </div>
         <div className="grid grid-cols-2 gap-2">
@@ -90,7 +119,7 @@ export function IncidentFilters({
         </div>
         <Link
           href={submitHref as never}
-          className="inline-flex h-10 w-full items-center justify-center rounded-md bg-brand-500 px-4 text-sm font-semibold text-white hover:bg-brand-600"
+          className="bg-brand-500 hover:bg-brand-600 inline-flex h-10 w-full items-center justify-center rounded-md px-4 text-sm font-semibold text-white"
         >
           {tCommon("search")}
         </Link>
@@ -113,10 +142,10 @@ function CategoryPill({
     <button
       onClick={onClick}
       className={cn(
-        "rounded-md border px-3 py-1.5 text-xs font-medium transition-colors text-left",
+        "rounded-md border px-3 py-1.5 text-left text-xs font-medium transition-colors",
         active
           ? "border-brand-500 bg-brand-500/10 text-brand-300"
-          : "border-border-subtle bg-bg-tertiary text-fg-muted hover:border-border-strong"
+          : "border-border-subtle bg-bg-tertiary text-fg-muted hover:border-border-strong",
       )}
     >
       {label}
@@ -138,10 +167,8 @@ function SeverityChip({
     <button
       onClick={onClick}
       className={cn(
-        "rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wider transition-colors",
-        active
-          ? "bg-brand-500 text-white"
-          : "bg-bg-tertiary text-fg-muted hover:bg-bg-elevated"
+        "rounded-full px-3 py-1 text-xs font-medium tracking-wider uppercase transition-colors",
+        active ? "bg-brand-500 text-white" : "bg-bg-tertiary text-fg-muted hover:bg-bg-elevated",
       )}
     >
       {label}

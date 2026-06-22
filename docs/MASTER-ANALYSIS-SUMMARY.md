@@ -1,36 +1,49 @@
 # ALPAR AI — MASTER ANALYSIS SUMMARY
 
-> ⚠️ **Bu dosya, 13 AI modelinin tam analizlerinin derlenmiş özetidir.**
-> Tam analizler için `MASTER-ANALYSIS.md` dosyasına bakın.
+> ⚠️ **Bu dosya, 16 AI modelinin tam analizlerinin derlenmiş özetidir (13 Başlangıç + 3 Yeni 360° Denetim).**
+> Tam analizler için `docs/MASTER-ANALYSIS.md` dosyasına bakın.
 > Bu dosya AI modelleri için **birincil referans** olarak kullanılır — token tasarruflu özet.
 
-> Created: 2026-06-08 | Models: 13 | Last updated: 2026-06-08
+> Created: 2026-06-08 | Models: 16 | Last updated: 2026-06-22
 
 ---
 
 ## GENEL SKOR TABLOSU
 
+### Round 1 — 8 Haziran 2026 (Genel Analiz)
+
 | #   | Model               | Vision | Message | UX/UI | Tech | Legal | Revenue | Growth | Traction | Investor | Impact | **TOTAL**  |
 | --- | ------------------- | ------ | ------- | ----- | ---- | ----- | ------- | ------ | -------- | -------- | ------ | ---------- |
 | 1   | Grok 4 (xAI)        | 82     | 68      | 71    | 85   | 88    | 76      | 65     | 42       | 55       | 91     | **703**    |
-| 2   | GPT-5.5 (ChatGPT)   | 45     | 30      | 40    | 75   | 80    | 50      | 25     | 10       | 20       | 90     | **465**    |
-| 3   | Claude Sonnet 4.6   | 45     | 30      | 40    | 75   | 80    | 50      | 25     | 10       | 20       | 90     | **376**    |
-| 4   | opencode/mimo       | 45     | 30      | 40    | 75   | 80    | 50      | 25     | 10       | 20       | 90     | **345**    |
-| 5   | Gemini 3.x          | 45     | 30      | 40    | 75   | 80    | 50      | 25     | 10       | 20       | 90     | **280**    |
-| 6   | Qwen (Alibaba)      | 45     | 30      | 40    | 75   | 80    | 50      | 25     | 10       | 20       | 90     | **465**    |
-| 7   | DeepSeek V4         | 28     | 18      | 22    | 48   | 42    | 15      | 8      | 5        | 8        | 35     | **229**    |
-| 8   | Kimi K2.6           | 18     | 15      | 22    | 55   | 48    | 12      | 14     | 5        | 8        | 35     | **232**    |
-| 9   | Mistral             | 45     | 25      | 35    | 70   | 60    | 20      | 10     | 5        | 15       | 80     | **370**    |
-| 10  | Perplexity          | 68     | 54      | 49    | 74   | 71    | 57      | 40     | 22       | 36       | 83     | **554**    |
-| 11  | Copilot (Microsoft) | 64     | 52      | 58    | 62   | 56    | 48      | 46     | 30       | 34       | 70     | **520**    |
-| 12  | Minimax (Mavis)     | 32     | 28      | 38    | —    | —     | —       | —      | —        | —        | —      | **98/400** |
-| 13  | Meta (Llama 4)      | 35     | 25      | 30    | 55   | 60    | 15      | 20     | 5        | 10       | 40     | **295**    |
+| 2   | Perplexity          | 68     | 54      | 49    | 74   | 71    | 57      | 40     | 22       | 36       | 83     | **554**    |
+| 3   | Copilot (Microsoft) | 64     | 52      | 58    | 62   | 56    | 48      | 46     | 30       | 34       | 70     | **520**    |
+| 4   | GPT-5.5 (ChatGPT)   | 45     | 30      | 40    | 75   | 80    | 50      | 25     | 10       | 20       | 90     | **465**    |
+| 5   | Qwen (Alibaba)      | 45     | 30      | 40    | 75   | 80    | 50      | 25     | 10       | 20       | 90     | **465**    |
+| 6   | Claude Sonnet 4.6   | 45     | 30      | 40    | 75   | 80    | 50      | 25     | 10       | 20       | 90     | **376**    |
+| 7   | Mistral             | 45     | 25      | 35    | 70   | 60    | 20      | 10     | 5        | 15       | 80     | **370**    |
+| 8   | opencode/mimo       | 45     | 30      | 40    | 75   | 80    | 50      | 25     | 10       | 20       | 90     | **345**    |
+| 9   | Meta (Llama 4)      | 35     | 25      | 30    | 55   | 60    | 15      | 20     | 5        | 10       | 40     | **295**    |
+| 10  | Gemini 3.x          | 45     | 30      | 40    | 75   | 80    | 50      | 25     | 10       | 20       | 90     | **280**    |
+| 11  | Kimi K2.6           | 18     | 15      | 22    | 55   | 48    | 12      | 14     | 5        | 8        | 35     | **232**    |
+| 12  | DeepSeek V4         | 28     | 18      | 22    | 48   | 42    | 15      | 8      | 5        | 8        | 35     | **229**    |
+| 13  | Minimax (Mavis)     | 32     | 28      | 38    | —    | —     | —       | —      | —        | —        | —      | **98/400** |
 
-**Ortamalar (tam analizler):** Vision: 44 | Message: 32 | UX/UI: 39 | Tech: 65 | Legal: 66 | Revenue: 43 | Growth: 26 | Traction: 12 | Investor: 23 | Impact: 69
+### Round 2 — 22 Haziran 2026 (360° Derin Denetim)
 
-**En yüksek skor:** Grok 4 — 703/1000
-**En düşük skor:** DeepSeek V4 — 229/1000
-**Ortalama (kısmi hariç):** ~400/1000
+| #   | Model                | UX  | Tech | Data | Content | Conv | SEO | Legal | i18n | ProjMgt | Community | **TOTAL** |
+| --- | -------------------- | --- | ---- | ---- | ------- | ---- | --- | ----- | ---- | ------- | --------- | --------- |
+| 14  | Minimax v6 (360°)    | 68  | 72   | 58   | 50      | 70   | 45  | 82    | 28   | 18      | 25        | **516**   |
+| 15  | Claude Sonnet (360°) | 48  | 52   | 28   | 62      | 35   | 55  | 50    | 18   | 25      | 38        | **411**   |
+| 16  | DeepSeek v4 (360°)   | 42  | 60   | 35   | 45      | 28   | 40  | 48    | 25   | 15      | 32        | **365**   |
+
+> **Not:** Round 2 farklı kategori ağırlıkları ve daha katı bir puanlama yapısı kullanmıştır.
+
+**Round 1 Ortalamaları:** Vision: 44 | Message: 32 | UX/UI: 39 | Tech: 65 | Legal: 66 | Revenue: 43 | Growth: 26 | Traction: 12 | Investor: 23 | Impact: 69
+**Round 2 Ortalamaları:** UX/UI: 52 | Tech: 61 | Data: 40 | Content: 52 | Conv: 44 | SEO: 46 | Legal: 60 | i18n: 23 | ProjMgt: 19 | Community: 31
+
+**En yüksek skor:** Grok 4 — 703/1000 (R1) | Minimax v6 — 516/1000 (R2)
+**Ortalama (Round 1):** ~400/1000
+**Ortalama (Round 2):** ~430/1000 (3 P0 çözüldü, yeni P0'lar eklendi)
 
 ---
 
@@ -97,20 +110,23 @@ Societal Impact:          69/100  ███████████████�
 
 ## BENZERSİZ TESPİTLER (Her modelden 1'er cümle)
 
-| Model          | Benzersiz Tespit                                                                                                   |
-| -------------- | ------------------------------------------------------------------------------------------------------------------ |
-| **Grok 4**     | "Alpari trademark çakışması riski var — domain benzerliği hukuki tehlike yaratabilir."                             |
-| **GPT-5.5**    | "Lloyd's ile veri ortaklığı için minimum 10.000 doğrulanmış incident gerekiyor — bu eşiğe ulaşmak 24-36 ay sürer." |
-| **Claude 4.6** | "AGPL-3.0 lisansı topluluk güvenini artırır ama kurumsal satışları boğabilir — dual licensing değerlendirilmeli."  |
-| **Gemini 3.x** | "Supabase free tier 500MB ile sınırlı — 1M MAU'da write amplification ve moderation queue darboğaz olur."          |
-| **Qwen**       | "Bu model kendini 'Claude (Anthropic)' olarak imzalamış — kimlik karışıklığı AI hesabı sorunu."                    |
-| **DeepSeek**   | "PII Guardian sadece regex tabanlı — adversarial image upload ve prompt injection eksik."                          |
-| **Kimi K2.6**  | "SLAPP davaları en büyük yasal risk — US 501(c)(3) vakfı kurulmalı, yargı yetkisi EU'ya taşınmalı."                |
-| **Mistral**    | "Crash Test Challenge fikri: topluluk AI'ları kırarak ödül kazansın — gamification + güvenlik araştırması."        |
-| **Perplexity** | "AGPL, Fortune 500 hukuk departmanları tarafından engellenebilir — dual licensing zorunlu."                        |
-| **Copilot**    | "Escrow/IPFS ile kanıt depolama — sigorta şirketleri için kanıt zinciri şart."                                     |
-| **Minimax**    | "Footer 'Built with care' cümlesi boş kalori — 'Open source. Independent. Yours.' daha güçlü."                     |
-| **Meta**       | "HackerOne $1B+, Trustpilot $1.4B IPO, Recorded Future $2.65B — AI risk verisi bu ölçekte değerli."                |
+| Model               | Benzersiz Tespit                                                                                                     |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Grok 4**          | "Alpari trademark çakışması riski var — domain benzerliği hukuki tehlike yaratabilir."                               |
+| **GPT-5.5**         | "Lloyd's ile veri ortaklığı için minimum 10.000 doğrulanmış incident gerekiyor — bu eşiğe ulaşmak 24-36 ay sürer."   |
+| **Claude 4.6**      | "AGPL-3.0 lisansı topluluk güvenini artırır ama kurumsal satışları boğabilir — dual licensing değerlendirilmeli."    |
+| **Gemini 3.x**      | "Supabase free tier 500MB ile sınırlı — 1M MAU'da write amplification ve moderation queue darboğaz olur."            |
+| **Qwen**            | "Bu model kendini 'Claude (Anthropic)' olarak imzalamış — kimlik karışıklığı AI hesabı sorunu."                      |
+| **DeepSeek**        | "PII Guardian sadece regex tabanlı — adversarial image upload ve prompt injection eksik."                            |
+| **Kimi K2.6**       | "SLAPP davaları en büyük yasal risk — US 501(c)(3) vakfı kurulmalı, yargı yetkisi EU'ya taşınmalı."                  |
+| **Mistral**         | "Crash Test Challenge fikri: topluluk AI'ları kırarak ödül kazansın — gamification + güvenlik araştırması."          |
+| **Perplexity**      | "AGPL, Fortune 500 hukuk departmanları tarafından engellenebilir — dual licensing zorunlu."                          |
+| **Copilot**         | "Escrow/IPFS ile kanıt depolama — sigorta şirketleri için kanıt zinciri şart."                                       |
+| **Minimax**         | "Footer 'Built with care' cümlesi boş kalori — 'Open source. Independent. Yours.' daha güçlü."                       |
+| **Meta**            | "HackerOne $1B+, Trustpilot $1.4B IPO, Recorded Future $2.65B — AI risk verisi bu ölçekte değerli."                  |
+| **Minimax (360°)**  | "3 P0 blocker çözülmüş (Transparency 404, Login wall, Contact i18n) ama brand sayfalarında 0 incident devam ediyor." |
+| **Claude (360°)**   | "Frankenstein deployment — dual design system (iki repo, iki layout) marka güvenini sarsıyor."                       |
+| **DeepSeek (360°)** | "Mobil UX optimizasyon açığı, i18n dil geçişlerinde yönlendirme ve Imprint sayfası eksikliği."                       |
 
 ---
 

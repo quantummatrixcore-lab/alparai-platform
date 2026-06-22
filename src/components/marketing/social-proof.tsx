@@ -61,24 +61,24 @@ export function SocialProof() {
 
         <div className="border-border-subtle/30 mt-12 border-t pt-8">
           <p className="text-fg-muted mb-6 text-center text-xs font-semibold tracking-widest uppercase">
-            Platform Trust Signals
+            {t("trust_signals_title", { defaultValue: "Platform Trust Signals" })}
           </p>
           <div className="text-fg-muted flex flex-wrap items-center justify-center gap-6 text-xs font-semibold md:gap-10">
             <span className="flex items-center gap-1.5">
               <Shield className="text-success-500 h-3.5 w-3.5" />
-              AGPL-3.0 Open Source
+              {t("signal_open_source", { defaultValue: "AGPL-3.0 Open Source" })}
             </span>
             <span className="flex items-center gap-1.5">
               <Shield className="text-accent-400 h-3.5 w-3.5" />
-              EU Data Hosting
+              {t("signal_eu_hosting", { defaultValue: "EU Data Hosting" })}
             </span>
             <span className="flex items-center gap-1.5">
               <Shield className="text-brand-400 h-3.5 w-3.5" />
-              KVKK + GDPR Compliant
+              {t("signal_compliant", { defaultValue: "KVKK + GDPR Compliant" })}
             </span>
             <span className="flex items-center gap-1.5">
               <Shield className="text-warning-400 h-3.5 w-3.5" />
-              Community Verified
+              {t("signal_community_verified", { defaultValue: "Community Verified" })}
             </span>
           </div>
         </div>

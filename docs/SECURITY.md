@@ -4,20 +4,20 @@
 
 ## Defense in depth
 
-| Layer              | Mechanism                                                    |
-| ------------------ | ------------------------------------------------------------ |
-| Transport          | HTTPS only, HSTS preload, `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload` |
-| Framing            | `X-Frame-Options: DENY` + `frame-ancestors 'none'` in CSP    |
-| MIME               | `X-Content-Type-Options: nosniff`                            |
-| Referrer           | `Referrer-Policy: strict-origin-when-cross-origin`           |
-| Permissions        | `camera=(), microphone=(), geolocation=(), interest-cohort=()` |
-| Script source      | CSP `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.supabase.co https://*.sentry.io` |
-| Style source       | CSP `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com` |
-| Image source       | CSP `img-src 'self' data: blob: https://*.supabase.co https://*.googleusercontent.com` |
-| Connection         | CSP `connect-src 'self' https://*.supabase.co https://*.sentry.io wss://*.supabase.co` |
-| Object             | CSP `object-src 'none'`                                      |
-| Base               | CSP `base-uri 'self'`                                        |
-| Form               | CSP `form-action 'self'`                                     |
+| Layer         | Mechanism                                                                                           |
+| ------------- | --------------------------------------------------------------------------------------------------- |
+| Transport     | HTTPS only, HSTS preload, `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload` |
+| Framing       | `X-Frame-Options: DENY` + `frame-ancestors 'none'` in CSP                                           |
+| MIME          | `X-Content-Type-Options: nosniff`                                                                   |
+| Referrer      | `Referrer-Policy: strict-origin-when-cross-origin`                                                  |
+| Permissions   | `camera=(), microphone=(), geolocation=(), interest-cohort=()`                                      |
+| Script source | CSP `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.supabase.co https://*.sentry.io`     |
+| Style source  | CSP `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`                                 |
+| Image source  | CSP `img-src 'self' data: blob: https://*.supabase.co https://*.googleusercontent.com`              |
+| Connection    | CSP `connect-src 'self' https://*.supabase.co https://*.sentry.io wss://*.supabase.co`              |
+| Object        | CSP `object-src 'none'`                                                                             |
+| Base          | CSP `base-uri 'self'`                                                                               |
+| Form          | CSP `form-action 'self'`                                                                            |
 
 ## Authentication
 
@@ -55,12 +55,12 @@ If PII is detected, the raw text is **not stored** in the public columns. Only t
 
 ## Rate limiting
 
-| Action              | Limit            | Key                          |
-| ------------------- | ---------------- | ---------------------------- |
-| Submit incident     | 5 / hour         | `user_id:ip`                 |
-| Submit suggestion   | 10 / day         | `user_id`                    |
-| Sign in             | 10 / 15 min      | `ip`                         |
-| API general         | 100 / min        | `ip`                         |
+| Action            | Limit       | Key          |
+| ----------------- | ----------- | ------------ |
+| Submit incident   | 5 / hour    | `user_id:ip` |
+| Submit suggestion | 10 / day    | `user_id`    |
+| Sign in           | 10 / 15 min | `ip`         |
+| API general       | 100 / min   | `ip`         |
 
 If Upstash is not configured, the rate limiter fails open (allows) and logs a warning. **Configure Upstash in production.**
 
@@ -68,7 +68,7 @@ If Upstash is not configured, the rate limiter fails open (allows) and logs a wa
 
 - Supabase Storage with two buckets: `evidence` (public read, 10MB cap) and `avatars` (authenticated, 2MB cap).
 - Signed URLs only.
-- MIME allowlist: image/*, video/*, application/pdf.
+- MIME allowlist: image/_, video/_, application/pdf.
 - SHA-256 hash stored in `evidence.sha256_hash` for integrity.
 
 ## Secrets
@@ -83,4 +83,4 @@ Every moderator / admin write goes to `audit_log` (entity_type, entity_id, befor
 
 ## Reporting a vulnerability
 
-Email **security@alparai.online** (PGP key on request). We aim to acknowledge within 48 hours and patch critical issues within 7 days.
+Email **security@alparai.com** (PGP key on request). We aim to acknowledge within 48 hours and patch critical issues within 7 days.

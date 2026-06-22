@@ -56,7 +56,7 @@ export default async function BrandPage({
   const { data: provider } = await supabase
     .from("ai_providers")
     .select("id, name, slug, description, website_url, contact_email, logo_url, is_verified")
-    .eq("slug", slug)
+    .eq("slug", slug.toLowerCase())
     .maybeSingle();
   if (!provider) notFound();
 

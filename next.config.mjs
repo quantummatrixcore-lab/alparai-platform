@@ -80,6 +80,23 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: "/:locale/suggestions",
+        destination: "/:locale/dilemmas",
+        permanent: true,
+      },
+    ];
+  },
 };
 
-export default nextConfig;
+import { withSentryConfig } from "@sentry/nextjs";
+
+export default withSentryConfig(nextConfig, {
+  silent: true,
+  widenClientSandbox: true,
+  hideSourceMaps: true,
+  disableLogger: true,
+  automaticVercelMonitors: true,
+});

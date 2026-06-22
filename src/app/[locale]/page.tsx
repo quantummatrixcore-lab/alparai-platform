@@ -55,18 +55,19 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     topUserResult,
     newsResult,
     topIncidentResult,
+    countriesResult,
   ] = await Promise.all([
     supabase
       .from("incidents")
       .select(
-        "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, user_id",
+        "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, user_id, cross_audit_truth_score, cross_audit_confidence",
       )
       .eq("status", "published")
       .order("published_at", { ascending: false })
       .limit(5),
     supabase
       .from("incidents")
-      .select("*", { count: "exact", head: true })
+      .select("id", { count: "exact", head: true })
       .eq("status", "published"),
     supabase
       .from("ai_providers")
@@ -97,13 +98,28 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     supabase
       .from("incidents")
       .select(
-        "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, user_id",
+        "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, user_id, cross_audit_truth_score, cross_audit_confidence",
       )
       .eq("status", "published")
       .gte("created_at", weekStart)
       .order("upvotes_count", { ascending: false })
       .limit(1),
+    supabase
+      .from("incidents")
+      .select("location_country")
+      .eq("status", "published")
+      .not("location_country", "is", null),
   ]);
+
+  if (incidentsCountResult.error) {
+    console.error("Supabase error for incidents count:", incidentsCountResult.error);
+  }
+  if (countriesResult.error) {
+    console.error("Supabase error for countries count:", countriesResult.error);
+  }
+  if (incidentsResult.error) {
+    console.error("Supabase error for incidents list:", incidentsResult.error);
+  }
 
   const providerMap = new Map(
     ((providersResult.data as Array<{ id: string; slug: string; name: string }>) ?? []).map((p) => [
@@ -205,6 +221,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     slug: p.provider_slug,
   }));
 
+  const uniqueCountriesCount = new Set(
+    ((countriesResult.data as Array<{ location_country: string | null }>) ?? [])
+      .map((c) => c.location_country)
+      .filter(Boolean),
+  ).size;
+
   const topPoll = pollsResult.data?.[0];
   const topAdvocate = topUserResult.data?.[0] ?? null;
   const ecosystemNews = (newsResult.data ?? []) as EcosystemNewsItem[];
@@ -220,6 +242,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <HeroSection
         totalIncidents={incidentsCountResult.count ?? 0}
         totalProviders={providersResult.data?.length ?? 0}
+        totalCountries={uniqueCountriesCount}
         topProviders={topProvidersForHero}
       />
 
