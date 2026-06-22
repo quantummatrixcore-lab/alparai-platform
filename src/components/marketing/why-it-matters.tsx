@@ -17,7 +17,7 @@ const stats = [
     bgClass: "from-danger-500/10 to-transparent",
     iconBgClass: "bg-danger-500/10 border-danger-500/20",
     badgeClass: "bg-danger-500/15 text-danger-400 border-danger-500/30",
-    statDisplay: "%10–20",
+    displayKey: "why_stat_1_display",
   },
   {
     icon: CheckCircle,
@@ -29,7 +29,7 @@ const stats = [
     bgClass: "from-warning-500/8 to-transparent",
     iconBgClass: "bg-warning-500/10 border-warning-500/20",
     badgeClass: "bg-warning-500/15 text-warning-400 border-warning-500/30",
-    statDisplay: "%96",
+    displayKey: "why_stat_2_display",
   },
   {
     icon: ShieldOff,
@@ -41,7 +41,7 @@ const stats = [
     bgClass: "from-brand-500/8 to-transparent",
     iconBgClass: "bg-brand-500/10 border-brand-500/20",
     badgeClass: "bg-brand-500/15 text-brand-400 border-brand-500/30",
-    statDisplay: "SIFIR",
+    displayKey: "why_stat_3_display",
   },
 ] as const;
 
@@ -104,7 +104,7 @@ export function WhyItMatters() {
                   <div
                     className={`mb-3 inline-block rounded-sm border px-3 py-1 text-3xl font-black tracking-tight ${stat.badgeClass}`}
                   >
-                    {stat.statDisplay}
+                    {t(stat.displayKey)}
                   </div>
 
                   {/* Title */}

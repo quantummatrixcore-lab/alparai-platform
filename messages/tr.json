@@ -21,6 +21,7 @@
     "admin": "Yönetim",
     "profile": "Profil",
     "models": "Modeller",
+    "bounties": "Bug Bounty",
     "language_switcher": "Dil"
   },
   "hero": {
@@ -48,6 +49,10 @@
     "bounty_desc": "En çok katkı sağlayanlar Platin statü, özel rozetler ve yeni özelliklere erken erişim kazanır. Uzmanlığınız yapay zeka hesap verebilirliği standartını belirler.",
     "founder_title": "ALPAR'ın arkasındaki hikaye",
     "founder_subtitle": "2026'da bir AI şirketimi kurduğunu, ödemeler yaptığını ve pasaportumu istediğini söyledi. Hepsi uydurmaydı. ALPAR AI'ı bu yaradan kurdum — ki kimse AI manipülasyonuyla yalnız kalmasın.",
+    "founder_signature": "— Ercüment Erden, Kurucu",
+    "why_stat_1_display": "%10-20",
+    "why_stat_2_display": "%96",
+    "why_stat_3_display": "SIFIR",
     "why_title": "Neden önemli",
     "why_subtitle": "AI, onu yöneten kurallardan daha hızlı ilerliyor. İşte dünyanın neden şimdi ALPAR'a ihtiyacı var.",
     "why_stat_1_title": "%10-20 yok olma riski",
@@ -133,6 +138,11 @@
     "view_details": "Detayları gör",
     "by": "tarafından",
     "ago": "önce",
+    "sort_by": "Sıralama",
+    "sort_newest": "En Yeni",
+    "sort_votes": "En Çok Oy Alan",
+    "sort_views": "En Çok Görüntülenen",
+    "sort_truth_score": "En Yüksek Doğruluk Skoru",
     "no_incidents": "AI'ı hesap verilebilir kılan ilk kişi ol. Bir olay bildir ve sonraki kişiyi koru.",
     "loading": "Olaylar yükleniyor…",
     "share": "Paylaş",
@@ -746,7 +756,17 @@
     "transparencyCommitment": "Taahhüdümüz",
     "analysisTitle": "Ana Analiz",
     "analysisSubtitle": "Platform iyileştirmesi için AI model analizleri",
-    "skipToMain": "Ana içeriğe geç"
+    "skipToMain": "Ana içeriğe geç",
+    "imprintTitle": "Künye (Legal Açıklama)",
+    "imprintOperator": "Platform İşletmecisi",
+    "imprintOperatorText": "ALPAR AI, Ercüment Erden (Kurucu ve Sahip) tarafından işletilmektedir. Platform şu anda sivil bir topluluk/güven altyapısı girişimi olup, tüzel kişilik tescil süreci devam etmektedir.",
+    "imprintContact": "İletişim Bilgileri",
+    "imprintEmail": "E-posta: contact@alparai.com",
+    "imprintAddress": "Adres: İstanbul, Türkiye (Tüzel kişilik tescili tamamlandığında tam posta adresi güncellenecektir).",
+    "imprintRepresentation": "Yasal Temsil",
+    "imprintRepresentationText": "Ercüment Erden tarafından temsil edilmektedir.",
+    "imprintDisclaimer": "Sorumluluk Reddi",
+    "imprintDisclaimerText": "Bu platformun içeriği kullanıcılar tarafından sağlanmaktadır. ALPAR AI, AB E-Ticaret Direktifi Madde 14 kapsamında aracı hizmet sağlayıcı olarak hareket eder ve kullanıcılar tarafından oluşturulan içeriklerden sorumlu değildir."
   },
   "dilemmas": {
     "pageTitle": "Yapay Zeka Dilemmaları",
@@ -802,7 +822,12 @@
       "pillar2_title": "Sağlayıcı Yanıt Döngüsü",
       "pillar2_desc": "OpenAI, Google, Anthropic ve diğer sağlayıcılardan doğrulanmış temsilcileri tüm olaylara resmi yanıt vermeye davet ediyoruz.",
       "pillar3_title": "Yapay Zeka ve İnsan Moderasyonu",
-      "pillar3_desc": "Gönderimler, yayınlanmadan önce otopilot güvenlik modellerimiz tarafından filtrelenir ve uzman insan moderatörlerce doğrulanır."
+      "pillar3_desc": "Gönderimler, yayınlanmadan önce otopilot güvenlik modellerimiz tarafından filtrelenir ve uzman insan moderatörlerce doğrulanır.",
+      "trust_signals_title": "Platform Güven Sinyalleri",
+      "signal_open_source": "AGPL-3.0 Açık Kaynak",
+      "signal_eu_hosting": "AB Veri Barındırma",
+      "signal_compliant": "KVKK + GDPR Uyumlu",
+      "signal_community_verified": "Topluluk Tarafından Doğrulanmış"
     }
   },
   "myIncidents": {

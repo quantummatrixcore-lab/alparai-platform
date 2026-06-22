@@ -14,7 +14,7 @@ vi.hoisted(() => {
     getCurrentUser: vi.fn(),
   }));
   vi.doMock("@/lib/constants", () => ({
-    APP_TAKEDOWN_EMAIL: "takedown@alparai.online",
+    APP_TAKEDOWN_EMAIL: "takedown@alparai.com",
   }));
   vi.doMock("@/lib/utils/rate-limit", () => ({
     checkRateLimit: vi.fn().mockResolvedValue({ ok: true }),
@@ -63,21 +63,17 @@ describe("submitTakedownRequest", () => {
           eq: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
-      upsert: vi
-        .fn()
-        .mockReturnValue({
-          select: vi
-            .fn()
-            .mockReturnValue({
-              single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
-            }),
+      upsert: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
         }),
+      }),
     } as ReturnType<typeof mockAdminClient.from>);
   });
 
   it("submits a valid takedown request", async () => {
     const result = await submitTakedownRequest({
-      target_url: "https://alparai.online/incidents/123",
+      target_url: "https://alparai.com/incidents/123",
       reason: "Copyright infringement on this content",
       details:
         "The content posted contains copyrighted material that belongs to our organization without permission.",
@@ -119,18 +115,14 @@ describe("submitTakedownRequest", () => {
           eq: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
-      upsert: vi
-        .fn()
-        .mockReturnValue({
-          select: vi
-            .fn()
-            .mockReturnValue({
-              single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
-            }),
+      upsert: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
         }),
+      }),
     } as ReturnType<typeof mockAdminClient.from>);
     const result = await submitTakedownRequest({
-      target_url: "https://alparai.online/incidents/123",
+      target_url: "https://alparai.com/incidents/123",
       reason: "Copyright infringement on this content",
       details:
         "The content posted contains copyrighted material that belongs to our organization without permission.",
@@ -163,15 +155,11 @@ describe("submitTakedown", () => {
           eq: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
-      upsert: vi
-        .fn()
-        .mockReturnValue({
-          select: vi
-            .fn()
-            .mockReturnValue({
-              single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
-            }),
+      upsert: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
         }),
+      }),
     } as ReturnType<typeof mockAdminClient.from>);
   });
 

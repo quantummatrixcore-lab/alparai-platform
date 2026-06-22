@@ -21,6 +21,7 @@
     "admin": "Admin",
     "profile": "Profile",
     "models": "Models",
+    "bounties": "Bug Bounty",
     "language_switcher": "Language"
   },
   "hero": {
@@ -48,6 +49,10 @@
     "bounty_desc": "Top contributors earn Platinum status, exclusive badges, and early access to new features. Your expertise shapes the AI accountability standard.",
     "founder_title": "The story behind ALPAR",
     "founder_subtitle": "In 2026, an AI told me it had incorporated my company, made payments on my behalf, and requested my passport. All of it was fabricated. I built ALPAR AI from that wound — so no one faces AI manipulation alone.",
+    "founder_signature": "— Ercüment Erden, Founder",
+    "why_stat_1_display": "10-20%",
+    "why_stat_2_display": "96%",
+    "why_stat_3_display": "ZERO",
     "why_title": "Why this matters",
     "why_subtitle": "AI is advancing faster than the rules that govern it. Here's why the world needs ALPAR now.",
     "why_stat_1_title": "10-20% extinction risk",
@@ -133,6 +138,11 @@
     "view_details": "View details",
     "by": "by",
     "ago": "ago",
+    "sort_by": "Sort by",
+    "sort_newest": "Newest",
+    "sort_votes": "Most Upvoted",
+    "sort_views": "Most Viewed",
+    "sort_truth_score": "Highest TruthScore",
     "no_incidents": "Be the first to hold AI accountable. Report an incident and protect the next person.",
     "loading": "Loading incidents…",
     "share": "Share",
@@ -746,7 +756,17 @@
     "transparencyCommitment": "Our commitment",
     "analysisTitle": "Master Analysis",
     "analysisSubtitle": "AI model analyses for platform improvement",
-    "skipToMain": "Skip to main content"
+    "skipToMain": "Skip to main content",
+    "imprintTitle": "Imprint (Legal Disclosure)",
+    "imprintOperator": "Operator of the Platform",
+    "imprintOperatorText": "ALPAR AI is operated by Ercüment Erden (Founder & Owner). The platform is currently a community-driven trust infrastructure initiative, with legal entity registration in progress.",
+    "imprintContact": "Contact Information",
+    "imprintEmail": "Email: contact@alparai.com",
+    "imprintAddress": "Address: Istanbul, Turkey (Full postal address will be updated upon formal incorporation).",
+    "imprintRepresentation": "Legal Representation",
+    "imprintRepresentationText": "Represented by Ercüment Erden.",
+    "imprintDisclaimer": "Disclaimer",
+    "imprintDisclaimerText": "The contents of this platform are user-submitted. ALPAR AI acts as an intermediary host according to Article 14 of the EU E-Commerce Directive and is not responsible for user-generated content."
   },
   "dilemmas": {
     "pageTitle": "AI Dilemmas",
@@ -802,7 +822,12 @@
       "pillar2_title": "Provider Response Loop",
       "pillar2_desc": "We invite verified representatives from OpenAI, Google, Anthropic, and others to officially respond to all incidents.",
       "pillar3_title": "AI & Human Moderation",
-      "pillar3_desc": "Submissions are filtered by our autopilot safety models and verified by expert human moderators before publication."
+      "pillar3_desc": "Submissions are filtered by our autopilot safety models and verified by expert human moderators before publication.",
+      "trust_signals_title": "Platform Trust Signals",
+      "signal_open_source": "AGPL-3.0 Open Source",
+      "signal_eu_hosting": "EU Data Hosting",
+      "signal_compliant": "KVKK + GDPR Compliant",
+      "signal_community_verified": "Community Verified"
     }
   },
   "myIncidents": {

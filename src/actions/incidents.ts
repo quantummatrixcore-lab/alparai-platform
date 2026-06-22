@@ -304,6 +304,15 @@ export async function submitIncident(
         logger.error("Async auto-moderation failed", err);
       });
     });
+    import("@/lib/ai/cross-audit-engine").then(({ runCrossAudit }) => {
+      runCrossAudit(incidentId).catch((err) => {
+        logger.error(
+          "[CrossAudit] Async cross-audit pipeline failed",
+          { incidentId },
+          err instanceof Error ? err : undefined,
+        );
+      });
+    });
     revalidatePath("/incidents");
     revalidatePath("/admin");
     return {

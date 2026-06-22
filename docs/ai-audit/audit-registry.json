@@ -1,0 +1,556 @@
+{
+  "metadata": {
+    "project": "ALPAR AI",
+    "created": "2026-06-08",
+    "last_updated": "2026-06-22",
+    "total_models": 16,
+    "audit_rounds": [
+      { "round": 1, "date": "2026-06-08", "models": 13, "type": "initial" },
+      { "round": 2, "date": "2026-06-22", "models": 3, "type": "360-degree" }
+    ],
+    "scoring_weights": {
+      "vision_mission": 100,
+      "message_content": 100,
+      "ux_ui_design": 150,
+      "technical_architecture": 150,
+      "legal_compliance": 100,
+      "business_model": 100,
+      "growth_viral": 100,
+      "traction_social_proof": 100,
+      "investor_readiness": 100,
+      "societal_impact": 100
+    }
+  },
+  "audits": [
+    {
+      "model_id": "grok-4",
+      "model_name": "Grok 4",
+      "provider": "xAI",
+      "audit_date": "2026-06-08",
+      "audit_type": "initial",
+      "scores": {
+        "vision_mission": 82,
+        "message_content": 68,
+        "ux_ui_design": 71,
+        "technical_architecture": 85,
+        "legal_compliance": 88,
+        "business_model": 76,
+        "growth_viral": 65,
+        "traction_social_proof": 42,
+        "investor_readiness": 55,
+        "societal_impact": 91,
+        "total": 703,
+        "total_max": 1000
+      },
+      "unique_insight": "Alpari trademark çakışması riski — domain benzerliği hukuki tehlike.",
+      "key_recommendations": ["Trademark araştırması yap", "Hukuki danışmanlık al"]
+    },
+    {
+      "model_id": "perplexity",
+      "model_name": "Perplexity Pro",
+      "provider": "Perplexity",
+      "audit_date": "2026-06-08",
+      "audit_type": "initial",
+      "scores": {
+        "vision_mission": 68,
+        "message_content": 54,
+        "ux_ui_design": 49,
+        "technical_architecture": 74,
+        "legal_compliance": 71,
+        "business_model": 57,
+        "growth_viral": 40,
+        "traction_social_proof": 22,
+        "investor_readiness": 36,
+        "societal_impact": 83,
+        "total": 554,
+        "total_max": 1000
+      },
+      "unique_insight": "AGPL Fortune 500 hukuk departmanlarınca engellenebilir — dual licensing düşünülebilir.",
+      "key_recommendations": ["AGPL v3 risk analizi yap", "Dual-licensing modelini tasarla"]
+    },
+    {
+      "model_id": "copilot",
+      "model_name": "Copilot",
+      "provider": "Microsoft",
+      "audit_date": "2026-06-08",
+      "audit_type": "initial",
+      "scores": {
+        "vision_mission": 64,
+        "message_content": 52,
+        "ux_ui_design": 58,
+        "technical_architecture": 62,
+        "legal_compliance": 56,
+        "business_model": 48,
+        "growth_viral": 46,
+        "traction_social_proof": 30,
+        "investor_readiness": 34,
+        "societal_impact": 70,
+        "total": 520,
+        "total_max": 1000
+      },
+      "unique_insight": "Escrow/IPFS kanıt depolama — sigorta şirketleri için kanıt zinciri gereksinimi.",
+      "key_recommendations": [
+        "IPFS entegrasyon fizibilitesi yap",
+        "Kanıt zinciri standartlarını araştır"
+      ]
+    },
+    {
+      "model_id": "gpt-5.5",
+      "model_name": "GPT-5.5",
+      "provider": "OpenAI",
+      "audit_date": "2026-06-08",
+      "audit_type": "initial",
+      "scores": {
+        "vision_mission": 45,
+        "message_content": 30,
+        "ux_ui_design": 40,
+        "technical_architecture": 75,
+        "legal_compliance": 80,
+        "business_model": 50,
+        "growth_viral": 25,
+        "traction_social_proof": 10,
+        "investor_readiness": 20,
+        "societal_impact": 90,
+        "total": 465,
+        "total_max": 1000
+      },
+      "unique_insight": "Lloyd's ortaklığı için min 10K verified incident gerekli — 24-36 ay hedefi olmalı.",
+      "key_recommendations": [
+        "Lloyd's uyumluluk kriterlerini incele",
+        "Incident doğrulama altyapısı kur"
+      ]
+    },
+    {
+      "model_id": "qwen",
+      "model_name": "Qwen 2.5",
+      "provider": "Alibaba",
+      "audit_date": "2026-06-08",
+      "audit_type": "initial",
+      "scores": {
+        "vision_mission": 45,
+        "message_content": 30,
+        "ux_ui_design": 40,
+        "technical_architecture": 75,
+        "legal_compliance": 80,
+        "business_model": 50,
+        "growth_viral": 25,
+        "traction_social_proof": 10,
+        "investor_readiness": 20,
+        "societal_impact": 90,
+        "total": 465,
+        "total_max": 1000
+      },
+      "unique_insight": "Kendini 'Claude (Anthropic)' olarak imzalamış — AI kimlik karışıklığı.",
+      "key_recommendations": ["Model sistem komutlarını temizle", "Metadata tutarlılığını sağla"]
+    },
+    {
+      "model_id": "claude-4.6",
+      "model_name": "Claude Sonnet 4.6",
+      "provider": "Anthropic",
+      "audit_date": "2026-06-08",
+      "audit_type": "initial",
+      "scores": {
+        "vision_mission": 45,
+        "message_content": 30,
+        "ux_ui_design": 40,
+        "technical_architecture": 75,
+        "legal_compliance": 80,
+        "business_model": 50,
+        "growth_viral": 25,
+        "traction_social_proof": 10,
+        "investor_readiness": 20,
+        "societal_impact": 90,
+        "total": 376,
+        "total_max": 1000
+      },
+      "unique_insight": "AGPL-3.0 topluluk güvenini artırır ama kurumsal satışları boğabilir.",
+      "key_recommendations": ["Kurumsal lisanslama modeli (SaaS vs self-hosted) planla"]
+    },
+    {
+      "model_id": "mistral",
+      "model_name": "Mistral Large",
+      "provider": "Mistral",
+      "audit_date": "2026-06-08",
+      "audit_type": "initial",
+      "scores": {
+        "vision_mission": 45,
+        "message_content": 25,
+        "ux_ui_design": 35,
+        "technical_architecture": 70,
+        "legal_compliance": 60,
+        "business_model": 20,
+        "growth_viral": 10,
+        "traction_social_proof": 5,
+        "investor_readiness": 15,
+        "societal_impact": 80,
+        "total": 370,
+        "total_max": 1000
+      },
+      "unique_insight": "Crash Test Challenge fikri — topluluk AI'ları kırarak ödül kazansın.",
+      "key_recommendations": ["Hacking challenge veya Bug Bounty programı duyur"]
+    },
+    {
+      "model_id": "mimo",
+      "model_name": "opencode/mimo",
+      "provider": "Mimo",
+      "audit_date": "2026-06-08",
+      "audit_type": "initial",
+      "scores": {
+        "vision_mission": 45,
+        "message_content": 30,
+        "ux_ui_design": 40,
+        "technical_architecture": 75,
+        "legal_compliance": 80,
+        "business_model": 50,
+        "growth_viral": 25,
+        "traction_social_proof": 10,
+        "investor_readiness": 20,
+        "societal_impact": 90,
+        "total": 345,
+        "total_max": 1000
+      },
+      "unique_insight": "Mevcut layout'ta bitmemiş Next.js hydration sorunları UI kırılmalarına yol açıyor.",
+      "key_recommendations": ["Layout ve hydration hatalarını düzelt"]
+    },
+    {
+      "model_id": "llama-4",
+      "model_name": "Meta Llama 4",
+      "provider": "Meta",
+      "audit_date": "2026-06-08",
+      "audit_type": "initial",
+      "scores": {
+        "vision_mission": 35,
+        "message_content": 25,
+        "ux_ui_design": 30,
+        "technical_architecture": 55,
+        "legal_compliance": 60,
+        "business_model": 15,
+        "growth_viral": 20,
+        "traction_social_proof": 5,
+        "investor_readiness": 10,
+        "societal_impact": 40,
+        "total": 295,
+        "total_max": 1000
+      },
+      "unique_insight": "HackerOne $1B+, Trustpilot $1.4B IPO — AI risk verisi bu ölçekte ticari değere sahip.",
+      "key_recommendations": ["Veri seti ticarileştirme vizyonu geliştir"]
+    },
+    {
+      "model_id": "gemini-3.x",
+      "model_name": "Gemini 3.x",
+      "provider": "Google",
+      "audit_date": "2026-06-08",
+      "audit_type": "initial",
+      "scores": {
+        "vision_mission": 45,
+        "message_content": 30,
+        "ux_ui_design": 40,
+        "technical_architecture": 75,
+        "legal_compliance": 80,
+        "business_model": 50,
+        "growth_viral": 25,
+        "traction_social_proof": 10,
+        "investor_readiness": 20,
+        "societal_impact": 90,
+        "total": 280,
+        "total_max": 1000
+      },
+      "unique_insight": "Supabase free tier 500MB limiti — 1M MAU'da write amplification sorunu yaşanır.",
+      "key_recommendations": ["DB optimizasyonları yap", "Pro plan bütçesi planla"]
+    },
+    {
+      "model_id": "kimi",
+      "model_name": "Kimi K2.6",
+      "provider": "Moonshot",
+      "audit_date": "2026-06-08",
+      "audit_type": "initial",
+      "scores": {
+        "vision_mission": 18,
+        "message_content": 15,
+        "ux_ui_design": 22,
+        "technical_architecture": 55,
+        "legal_compliance": 48,
+        "business_model": 12,
+        "growth_viral": 14,
+        "traction_social_proof": 5,
+        "investor_readiness": 8,
+        "societal_impact": 35,
+        "total": 232,
+        "total_max": 1000
+      },
+      "unique_insight": "SLAPP davaları en büyük yasal risk — US 501(c)(3) vakfı koruma kalkanı sağlayabilir.",
+      "key_recommendations": ["Sivil toplum kuruluşu statüsünü değerlendir"]
+    },
+    {
+      "model_id": "deepseek-v4",
+      "model_name": "DeepSeek V4",
+      "provider": "DeepSeek",
+      "audit_date": "2026-06-08",
+      "audit_type": "initial",
+      "scores": {
+        "vision_mission": 28,
+        "message_content": 18,
+        "ux_ui_design": 22,
+        "technical_architecture": 48,
+        "legal_compliance": 42,
+        "business_model": 15,
+        "growth_viral": 8,
+        "traction_social_proof": 5,
+        "investor_readiness": 8,
+        "societal_impact": 35,
+        "total": 229,
+        "total_max": 1000
+      },
+      "unique_insight": "PII Guardian sadece regex tabanlı — adversarial image/text sızıntılarına karşı yetersiz.",
+      "key_recommendations": ["PII korumasını LLM bazlı veya gelişmiş modellerle güçlendir"]
+    },
+    {
+      "model_id": "minimax-initial",
+      "model_name": "Minimax (Mavis)",
+      "provider": "MiniMax",
+      "audit_date": "2026-06-08",
+      "audit_type": "initial",
+      "scores": {
+        "vision_mission": 32,
+        "message_content": 28,
+        "ux_ui_design": 38,
+        "technical_architecture": 0,
+        "legal_compliance": 0,
+        "business_model": 0,
+        "growth_viral": 0,
+        "traction_social_proof": 0,
+        "investor_readiness": 0,
+        "societal_impact": 0,
+        "total": 98,
+        "total_max": 400
+      },
+      "unique_insight": "Footer 'Built with care' boş kalori — 'Open source. Independent. Yours.' olmalı.",
+      "key_recommendations": ["Footer sloganını yenile"]
+    },
+    {
+      "model_id": "minimax-360-v6",
+      "model_name": "Minimax v6 (360°)",
+      "provider": "MiniMax",
+      "audit_date": "2026-06-22",
+      "audit_type": "360-degree",
+      "scores": {
+        "vision_mission": 48,
+        "message_content": 50,
+        "ux_ui_design": 68,
+        "technical_architecture": 72,
+        "legal_compliance": 82,
+        "business_model": 42,
+        "growth_viral": 25,
+        "traction_social_proof": 58,
+        "investor_readiness": 18,
+        "societal_impact": 53,
+        "total": 516,
+        "total_max": 1000
+      },
+      "unique_insight": "3 P0 blocker çözülmüş (Transparency 404, Login wall, Contact i18n), Dora Elite skoru %52.",
+      "key_recommendations": [
+        "Brand sayfalarında 0 incident gösterimi hatasını gider",
+        "Hero sayaç bug'ını çöz",
+        "Dilemmas sayfası cold start oylama seed'ini ekle"
+      ]
+    },
+    {
+      "model_id": "claude-360-v1",
+      "model_name": "Claude Sonnet (360°)",
+      "provider": "Anthropic",
+      "audit_date": "2026-06-22",
+      "audit_type": "360-degree",
+      "scores": {
+        "vision_mission": 42,
+        "message_content": 62,
+        "ux_ui_design": 48,
+        "technical_architecture": 52,
+        "legal_compliance": 50,
+        "business_model": 30,
+        "growth_viral": 28,
+        "traction_social_proof": 38,
+        "investor_readiness": 22,
+        "societal_impact": 39,
+        "total": 411,
+        "total_max": 1000
+      },
+      "unique_insight": "Frankenstein deployment — dual design system (iki repo, iki layout) marka güvenini sarsıyor.",
+      "key_recommendations": [
+        "Design system unification sprint başlat",
+        "Leaderboard sayfalarını SSR/ISR modeline taşı",
+        "About sayfasında kurucu hikayesini entegre et"
+      ]
+    },
+    {
+      "model_id": "deepseek-360-v4",
+      "model_name": "DeepSeek v4 (360°)",
+      "provider": "DeepSeek",
+      "audit_date": "2026-06-22",
+      "audit_type": "360-degree",
+      "scores": {
+        "vision_mission": 40,
+        "message_content": 45,
+        "ux_ui_design": 42,
+        "technical_architecture": 60,
+        "legal_compliance": 48,
+        "business_model": 25,
+        "growth_viral": 20,
+        "traction_social_proof": 28,
+        "investor_readiness": 15,
+        "societal_impact": 42,
+        "total": 365,
+        "total_max": 1000
+      },
+      "unique_insight": "Mobil UX optimizasyon açığı, i18n dil geçişlerinde yönlendirme hataları.",
+      "key_recommendations": [
+        "Mobil görünümde incident listesini kart yapısına dönüştür",
+        "Dil geçişi (Language Switcher) bileşenini navigasyona ekle",
+        "Imprint (Künye) sayfasını yasal zorunluluk olarak ekle"
+      ]
+    }
+  ],
+  "consensus_findings": {
+    "unanimous": [
+      {
+        "finding": "Zero social proof = zero conversion (Sayaç bug'ı)",
+        "model_count": "16/16",
+        "status": "open"
+      },
+      {
+        "finding": "Founder story missing from site (Kurucu hikayesi yok)",
+        "model_count": "16/16",
+        "status": "open"
+      },
+      {
+        "finding": "Homepage copy emotional arc missing (Fear-Empathy-Solution-Action eksik)",
+        "model_count": "16/16",
+        "status": "open"
+      }
+    ],
+    "strong_consensus": [
+      {
+        "finding": "Login wall kills cold-start conversion",
+        "model_count": "12/16",
+        "status": "resolved"
+      },
+      {
+        "finding": "Dual design system erodes trust (Bitmemiş layout göçü)",
+        "model_count": "16/16",
+        "status": "open"
+      },
+      { "finding": "Transparency Report 404 error", "model_count": "10/16", "status": "resolved" },
+      { "finding": "Contact form i18n key leakage", "model_count": "8/16", "status": "resolved" }
+    ]
+  },
+  "p0_tracker": [
+    {
+      "id": "P0-001",
+      "title": "Hero sayaç 0 gösteriyor",
+      "category": "data",
+      "status": "open",
+      "first_reported": "2026-06-08",
+      "model_count": 5,
+      "effort": "30 dk"
+    },
+    {
+      "id": "P0-002",
+      "title": "Transparency Report 404",
+      "category": "ui",
+      "status": "resolved",
+      "first_reported": "2026-06-08",
+      "resolved_date": "2026-06-22",
+      "model_count": 10
+    },
+    {
+      "id": "P0-003",
+      "title": "Contact form i18n key sızıntısı",
+      "category": "i18n",
+      "status": "resolved",
+      "first_reported": "2026-06-08",
+      "resolved_date": "2026-06-22",
+      "model_count": 8
+    },
+    {
+      "id": "P0-004",
+      "title": "Submit login wall",
+      "category": "ui",
+      "status": "resolved",
+      "first_reported": "2026-06-08",
+      "resolved_date": "2026-06-22",
+      "model_count": 12
+    },
+    {
+      "id": "P0-005",
+      "title": "Brand sayfaları 0 incident gösteriyor",
+      "category": "data",
+      "status": "open",
+      "first_reported": "2026-06-22",
+      "model_count": 3,
+      "effort": "2 saat"
+    },
+    {
+      "id": "P0-006",
+      "title": "Dual design system (iki repo, iki layout)",
+      "category": "ui",
+      "status": "open",
+      "first_reported": "2026-06-08",
+      "model_count": 16,
+      "effort": "2-3 hafta"
+    },
+    {
+      "id": "P0-007",
+      "title": "About sayfasında founder hikâyesi yok",
+      "category": "ui",
+      "status": "open",
+      "first_reported": "2026-06-08",
+      "model_count": 16,
+      "effort": "3 saat"
+    },
+    {
+      "id": "P0-008",
+      "title": "Dual email domain (@alparai.com vs @alparai.online)",
+      "category": "legal",
+      "status": "open",
+      "first_reported": "2026-06-22",
+      "model_count": 3,
+      "effort": "1 saat"
+    },
+    {
+      "id": "P0-009",
+      "title": "Imprint (Künye) sayfası yok",
+      "category": "legal",
+      "status": "open",
+      "first_reported": "2026-06-22",
+      "model_count": 3,
+      "effort": "2 saat"
+    },
+    {
+      "id": "P0-010",
+      "title": "Dilemmas cold start (8/9 soru 0 oy)",
+      "category": "ui",
+      "status": "open",
+      "first_reported": "2026-06-22",
+      "model_count": 3,
+      "effort": "1 hafta"
+    }
+  ],
+  "score_evolution": [
+    {
+      "date": "2026-06-08",
+      "round": 1,
+      "average_score": 400,
+      "highest": 703,
+      "lowest": 229,
+      "model_count": 13
+    },
+    {
+      "date": "2026-06-22",
+      "round": 2,
+      "average_score": 430,
+      "highest": 516,
+      "lowest": 365,
+      "model_count": 3,
+      "note": "360° deep audit — daha katı puanlama, 3 P0 çözülmüş"
+    }
+  ]
+}

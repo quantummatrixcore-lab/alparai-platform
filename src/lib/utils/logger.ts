@@ -39,6 +39,8 @@ function shouldLog(level: LogLevel): boolean {
   return true;
 }
 
+import * as Sentry from "@sentry/nextjs";
+
 function log(level: LogLevel, message: string, context?: LogContext, error?: Error) {
   if (!shouldLog(level)) return;
   const entry: LogEntry = {
@@ -51,8 +53,22 @@ function log(level: LogLevel, message: string, context?: LogContext, error?: Err
   const formatted = formatEntry(entry);
   if (level === "error") {
     console.error(formatted);
+    try {
+      if (error) {
+        Sentry.captureException(error, { extra: context });
+      } else {
+        Sentry.captureMessage(message, { level: "error", extra: context });
+      }
+    } catch (sentryErr) {
+      console.error("[Logger] Failed to report to Sentry:", sentryErr);
+    }
   } else if (level === "warn") {
     console.warn(formatted);
+    try {
+      Sentry.captureMessage(message, { level: "warning", extra: context });
+    } catch (sentryErr) {
+      console.error("[Logger] Failed to report warn to Sentry:", sentryErr);
+    }
   } else {
     console.info(formatted);
   }

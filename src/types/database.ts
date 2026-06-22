@@ -838,6 +838,12 @@ export type Database = {
           ai_moderation_reason: string | null;
           title_tr: string | null;
           description_tr: string | null;
+          cross_audit_truth_score: number | null;
+          cross_audit_confidence: number | null;
+          cross_audit_reasoning: string | null;
+          cross_audit_model: string | null;
+          cross_audit_triage_models: string[] | null;
+          cross_audit_completed_at: string | null;
         };
         Insert: {
           ai_model_id?: string | null;
@@ -879,6 +885,12 @@ export type Database = {
           ai_moderation_reason?: string | null;
           title_tr?: string | null;
           description_tr?: string | null;
+          cross_audit_truth_score?: number | null;
+          cross_audit_confidence?: number | null;
+          cross_audit_reasoning?: string | null;
+          cross_audit_model?: string | null;
+          cross_audit_triage_models?: string[] | null;
+          cross_audit_completed_at?: string | null;
         };
         Update: {
           ai_model_id?: string | null;
@@ -920,6 +932,12 @@ export type Database = {
           ai_moderation_reason?: string | null;
           title_tr?: string | null;
           description_tr?: string | null;
+          cross_audit_truth_score?: number | null;
+          cross_audit_confidence?: number | null;
+          cross_audit_reasoning?: string | null;
+          cross_audit_model?: string | null;
+          cross_audit_triage_models?: string[] | null;
+          cross_audit_completed_at?: string | null;
         };
         Relationships: [
           {

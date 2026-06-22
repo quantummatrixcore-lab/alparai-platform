@@ -9,10 +9,12 @@ import { useTranslations } from "next-intl";
 export function HeroSection({
   totalIncidents = 0,
   totalProviders = 0,
+  totalCountries = 0,
   topProviders = [],
 }: {
   totalIncidents?: number;
   totalProviders?: number;
+  totalCountries?: number;
   topProviders?: Array<{ name: string; count: number; slug: string }>;
 }) {
   const t = useTranslations("hero");
@@ -148,7 +150,7 @@ export function HeroSection({
                     "{t("founder_subtitle")}"
                   </blockquote>
                   <p className="text-fg-muted mt-2 text-xs font-bold tracking-wider uppercase">
-                    — Ercüment Erden, Kurucu
+                    {t("founder_signature", { defaultValue: "— Ercüment Erden, Founder" })}
                   </p>
                 </div>
               </div>
@@ -190,7 +192,7 @@ export function HeroSection({
                   accentClass="text-brand-400"
                 />
                 <LiveStatCard
-                  value="47"
+                  value={totalCountries}
                   label={t("stats_countries")}
                   glowColor="rgba(39,174,96,0.15)"
                   accentClass="text-success-400"
@@ -213,33 +215,23 @@ export function HeroSection({
                 </Link>
               </div>
               <div className="space-y-2.5">
-                {topProviders.length > 0
-                  ? topProviders
-                      .slice(0, 5)
-                      .map((p, i) => (
-                        <ProviderBar
-                          key={p.slug}
-                          rank={i + 1}
-                          name={p.name}
-                          count={p.count}
-                          maxCount={topProviders[0]?.count ?? 1}
-                        />
-                      ))
-                  : [
-                      { name: "ChatGPT", count: 847 },
-                      { name: "Gemini", count: 612 },
-                      { name: "Grok", count: 441 },
-                      { name: "Claude", count: 318 },
-                      { name: "Copilot", count: 204 },
-                    ].map((p, i) => (
+                {topProviders.length > 0 ? (
+                  topProviders
+                    .slice(0, 5)
+                    .map((p, i) => (
                       <ProviderBar
-                        key={p.name}
+                        key={p.slug}
                         rank={i + 1}
                         name={p.name}
                         count={p.count}
-                        maxCount={847}
+                        maxCount={topProviders[0]?.count ?? 1}
                       />
-                    ))}
+                    ))
+                ) : (
+                  <p className="text-fg-muted py-4 text-center text-xs font-medium">
+                    {t("no_providers_data", { defaultValue: "No tracking data available yet." })}
+                  </p>
+                )}
               </div>
               <Link
                 href="/leaderboard"
@@ -331,7 +323,7 @@ function ProviderBar({
   count: number;
   maxCount: number;
 }) {
-  const pct = Math.round((count / maxCount) * 100);
+  const pct = maxCount > 0 ? Math.round((count / maxCount) * 100) : 0;
   const rankColors = [
     "text-danger-400",
     "text-warning-400",

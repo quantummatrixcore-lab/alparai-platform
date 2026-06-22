@@ -28,44 +28,64 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
     .neq("slug", "alpar-autopilot")
     .order("name");
 
-  const stats = await Promise.all(
-    (
-      (providers as Array<{
-        id: string;
-        slug: string;
-        name: string;
-        logo_url: string | null;
-        is_verified: boolean;
-        website_url: string | null;
-        trust_score: number | null;
-      }>) ?? []
-    ).map(async (p) => {
-      const [{ count: incidentCount }, { count: responseCount }] = await Promise.all([
-        supabase
-          .from("incidents")
-          .select("*", { count: "exact", head: true })
-          .eq("ai_provider_id", p.id)
-          .eq("status", "published"),
-        supabase
-          .from("ai_provider_responses")
-          .select("*", { count: "exact", head: true })
-          .eq("ai_provider_id", p.id)
-          .eq("is_published", true),
-      ]);
+  // Bulk fetch published incidents and published responses to count in memory
+  const { data: incidents } = await supabase
+    .from("incidents")
+    .select("ai_provider_id")
+    .eq("status", "published");
 
-      const total = incidentCount ?? 0;
-      const responded = responseCount ?? 0;
-      const responseRate = total > 0 ? Math.round((responded / total) * 100) : 0;
+  const { data: responses } = await supabase
+    .from("ai_provider_responses")
+    .select("ai_provider_id")
+    .eq("is_published", true);
 
-      return {
-        ...p,
-        incident_count: total,
-        response_count: responded,
-        response_rate: responseRate,
-        trust_score: p.trust_score ?? 70,
-      };
-    }),
-  );
+  const incidentCountsMap = new Map<string, number>();
+  if (incidents) {
+    for (const incident of incidents) {
+      if (incident.ai_provider_id) {
+        incidentCountsMap.set(
+          incident.ai_provider_id,
+          (incidentCountsMap.get(incident.ai_provider_id) ?? 0) + 1,
+        );
+      }
+    }
+  }
+
+  const responseCountsMap = new Map<string, number>();
+  if (responses) {
+    for (const resp of responses) {
+      if (resp.ai_provider_id) {
+        responseCountsMap.set(
+          resp.ai_provider_id,
+          (responseCountsMap.get(resp.ai_provider_id) ?? 0) + 1,
+        );
+      }
+    }
+  }
+
+  const stats = (
+    (providers as Array<{
+      id: string;
+      slug: string;
+      name: string;
+      logo_url: string | null;
+      is_verified: boolean;
+      website_url: string | null;
+      trust_score: number | null;
+    }>) ?? []
+  ).map((p) => {
+    const total = incidentCountsMap.get(p.id) ?? 0;
+    const responded = responseCountsMap.get(p.id) ?? 0;
+    const responseRate = total > 0 ? Math.round((responded / total) * 100) : 0;
+
+    return {
+      ...p,
+      incident_count: total,
+      response_count: responded,
+      response_rate: responseRate,
+      trust_score: p.trust_score ?? 70,
+    };
+  });
 
   const sorted = stats.sort((a, b) => {
     const scoreA = a.trust_score ?? 70;

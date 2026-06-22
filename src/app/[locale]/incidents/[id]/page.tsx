@@ -124,6 +124,10 @@ export default async function IncidentDetailPage({
     provider_slug: providerData?.slug ?? "",
     model_name: modelData?.name ?? null,
     language: (r["language"] as string) ?? "en",
+    cross_audit_truth_score: (r["cross_audit_truth_score"] as number | null) ?? null,
+    cross_audit_confidence: (r["cross_audit_confidence"] as number | null) ?? null,
+    cross_audit_reasoning: (r["cross_audit_reasoning"] as string | null) ?? null,
+    cross_audit_model: (r["cross_audit_model"] as string | null) ?? null,
   };
 
   let userVote: -1 | 0 | 1 = 0;

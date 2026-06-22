@@ -104,6 +104,20 @@ export function IncidentCard({
                 {incident.provider_name}
               </Badge>
               <Badge variant="outline">{tCat(incident.category)}</Badge>
+              {incident.cross_audit_truth_score !== null && (
+                <Badge
+                  variant={
+                    incident.cross_audit_truth_score >= 80
+                      ? "success"
+                      : incident.cross_audit_truth_score >= 50
+                        ? "warning"
+                        : "danger"
+                  }
+                  className="font-bold"
+                >
+                  TruthScore: {incident.cross_audit_truth_score}%
+                </Badge>
+              )}
             </div>
             {incident.is_anonymous && (
               <Badge variant="muted" size="sm">
