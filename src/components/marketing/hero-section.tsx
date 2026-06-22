@@ -106,31 +106,7 @@ export function HeroSection({
               </Link>
             </motion.div>
 
-            {/* Founder Quote */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.45 }}
-              className="bg-glass border-danger-500/30 relative mt-8 overflow-hidden rounded-xl border-l-4 p-5"
-            >
-              <div className="from-danger-500/5 pointer-events-none absolute inset-0 bg-gradient-to-r to-transparent" />
-              <div className="relative z-10 flex items-start gap-3">
-                <div className="bg-danger-500/10 border-danger-500/20 text-danger-400 mt-0.5 shrink-0 rounded-lg border p-2">
-                  <Quote className="h-4 w-4" />
-                </div>
-                <div>
-                  <h4 className="text-danger-400 mb-1 text-xs font-black tracking-wide uppercase">
-                    {t("founder_title")}
-                  </h4>
-                  <blockquote className="text-fg-secondary text-sm leading-relaxed font-semibold">
-                    "{t("founder_subtitle")}"
-                  </blockquote>
-                  <p className="text-fg-muted mt-2 text-xs font-bold tracking-wider uppercase">
-                    {t("founder_signature", { defaultValue: "— Ercüment Erden, Founder" })}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
+            {/* Founder Quote will be rendered in the bottom row */}
           </div>
 
           {/* RIGHT: Live Data Panel */}
@@ -222,45 +198,71 @@ export function HeroSection({
               <Radio className="text-fg-muted h-3.5 w-3.5" />
               <span className="text-fg-muted text-xs">{t("last_report")}</span>
             </div>
-
-            {/* Bug Bounty Panel */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.5 }}
-              className="bg-glass border-warning-500/20 hover:border-warning-500/40 border-t-warning-500/50 relative overflow-hidden rounded-2xl border border-t-2 p-6 shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(249,115,22,0.12)]"
-            >
-              <div className="bg-warning-500/10 absolute -top-6 -right-6 -z-10 h-24 w-24 rounded-full blur-xl" />
-              <div className="flex items-start gap-4">
-                <div className="bg-warning-500/15 border-warning-500/25 text-warning-400 shrink-0 rounded-xl border p-3">
-                  <Trophy className="h-6 w-6" />
-                </div>
-                <div className="flex-1 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="border-warning-500/40 bg-warning-500/15 text-warning-400 rounded-sm border px-2 py-0.5 text-[9px] font-black tracking-[0.2em] uppercase">
-                      {t("bug_bounty_badge", { defaultValue: "Bug Bounty" })}
-                    </span>
-                  </div>
-                  <h4 className="from-warning-200 to-warning-400 bg-gradient-to-r bg-clip-text text-base font-black tracking-tight text-transparent">
-                    {t("title_accent")}
-                  </h4>
-                  <p className="text-fg-secondary text-xs leading-relaxed">
-                    {t("title_accent_desc")}
-                  </p>
-                  <div className="pt-2">
-                    <Link
-                      href="/bounties"
-                      className="bg-warning-500 hover:bg-warning-400 focus-visible:ring-warning-500 inline-flex h-9 items-center gap-2 rounded-lg px-4 text-xs font-bold text-white shadow-lg transition-all hover:scale-105"
-                    >
-                      {t("bug_bounty_badge", { defaultValue: "Bug Bounty" })} {t("view_all") ?? "→"}
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
           </motion.div>
         </div>
+
+        {/* Bottom Section: Side-by-Side Highlight Cards (Perfect Symmetry) */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="mt-12 grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2"
+        >
+          {/* Left: Founder Story Card */}
+          <div className="bg-glass border-danger-500/30 relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border-l-4 p-6 shadow-2xl">
+            <div className="from-danger-500/5 pointer-events-none absolute inset-0 bg-gradient-to-r to-transparent" />
+            <div className="relative z-10 flex items-start gap-4">
+              <div className="bg-danger-500/10 border-danger-500/20 text-danger-400 mt-0.5 shrink-0 rounded-lg border p-2">
+                <Quote className="h-4 w-4" />
+              </div>
+              <div className="space-y-2">
+                <h4 className="text-danger-400 text-xs font-black tracking-wide uppercase">
+                  {t("founder_title")}
+                </h4>
+                <blockquote className="text-fg-secondary text-sm leading-relaxed font-semibold">
+                  "{t("founder_subtitle")}"
+                </blockquote>
+              </div>
+            </div>
+            <div className="relative z-10 mt-6 pl-14">
+              <p className="text-fg-muted text-xs font-bold tracking-wider uppercase">
+                {t("founder_signature", { defaultValue: "— Ercüment Erden, Founder" })}
+              </p>
+            </div>
+          </div>
+
+          {/* Right: Bug Bounty Card */}
+          <div className="bg-glass border-warning-500/20 hover:border-warning-500/40 border-t-warning-500/50 relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-t-2 p-6 shadow-2xl transition-all duration-300 hover:shadow-[0_0_40px_rgba(249,115,22,0.12)]">
+            <div className="bg-warning-500/10 absolute -top-6 -right-6 -z-10 h-24 w-24 rounded-full blur-xl" />
+            <div className="flex items-start gap-4">
+              <div className="bg-warning-500/15 border-warning-500/25 text-warning-400 shrink-0 rounded-xl border p-3">
+                <Trophy className="h-6 w-6" />
+              </div>
+              <div className="flex-grow space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="border-warning-500/40 bg-warning-500/15 text-warning-400 rounded-sm border px-2 py-0.5 text-[9px] font-black tracking-[0.2em] uppercase">
+                    {t("bug_bounty_badge", { defaultValue: "Bug Bounty" })}
+                  </span>
+                </div>
+                <h4 className="from-warning-200 to-warning-400 bg-gradient-to-r bg-clip-text text-base font-black tracking-tight text-transparent">
+                  {t("title_accent")}
+                </h4>
+                <p className="text-fg-secondary text-xs leading-relaxed">
+                  {t("title_accent_desc")}
+                </p>
+              </div>
+            </div>
+            <div className="mt-6 pl-14">
+              <Link
+                href="/bounties"
+                className="bg-warning-500 hover:bg-warning-400 focus-visible:ring-warning-500 inline-flex h-9 items-center gap-2 rounded-lg px-4 text-xs font-bold text-white shadow-lg transition-all hover:scale-105"
+              >
+                {t("bug_bounty_badge", { defaultValue: "Bug Bounty" })} {t("view_all") ?? "→"}
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          </div>
+        </motion.div>
       </Container>
     </section>
   );
