@@ -127,9 +127,12 @@ export function AnalysisDashboardClient({
   const resolvedP0Count = p0Tracker.filter((b) => b.status === "resolved").length;
 
   const evolution = registryData.score_evolution;
-  const r1Avg = evolution.find((e) => e.round === 1)?.average_score ?? 400;
-  const r2Avg = evolution.find((e) => e.round === 2)?.average_score ?? 430;
-  const scoreDiff = r2Avg - r1Avg;
+  const latestRound = evolution[evolution.length - 1];
+  const previousRound = evolution.length > 1 ? evolution[evolution.length - 2] : null;
+
+  const currentAvg = latestRound?.average_score ?? 400;
+  const previousAvg = previousRound?.average_score ?? 400;
+  const scoreDiff = currentAvg - previousAvg;
 
   const handleNextInsight = () => {
     setCarouselIndex((prev) => (prev + 1) % registryData.audits.length);
@@ -229,7 +232,7 @@ export function AnalysisDashboardClient({
                   {t("average_score")}
                 </p>
                 <div className="mt-2 flex items-baseline gap-2">
-                  <span className="text-3xl font-extrabold text-white">{r2Avg}</span>
+                  <span className="text-3xl font-extrabold text-white">{currentAvg}</span>
                   <span className="text-fg-muted text-sm">/ 1000</span>
                 </div>
                 <div className="mt-2 flex items-center gap-1 text-xs text-emerald-400">
@@ -252,7 +255,9 @@ export function AnalysisDashboardClient({
                   <span className="text-fg-muted text-sm">{t("frontiers")}</span>
                 </div>
                 <div className="text-fg-muted mt-2 flex items-center gap-1 text-xs">
-                  <span>Round 1: 13 | Round 2: 3</span>
+                  <span>
+                    {evolution.map((e) => `Round ${e.round}: ${e.model_count}`).join(" | ")}
+                  </span>
                 </div>
               </CardContent>
             </Card>
