@@ -21,24 +21,24 @@ interface Props {
   initialKeys: ApiKeyRow[];
 }
 
-const PROVIDERS = [
-  {
-    value: "openrouter",
-    name: "OpenRouter",
-    description: "Consolidated access to models (DeepSeek, Llama, Qwen)",
-  },
-  { value: "cohere", name: "Cohere", description: "Command R and Command R+ models" },
-  { value: "huggingface", name: "HuggingFace", description: "Inference API endpoint models" },
-  { value: "google", name: "Google Gemini", description: "Gemini 1.5 Flash / Pro models" },
-  { value: "blackbox", name: "Blackbox AI", description: "Blackbox coding assistant models" },
-];
-
 export function ApiKeysClient({ initialKeys }: Props) {
   const t = useTranslations("admin");
   const [keys, setKeys] = useState<ApiKeyRow[]>(initialKeys);
   const [provider, setProvider] = useState("openrouter");
   const [apiKey, setApiKey] = useState("");
   const [pending, start] = useTransition();
+
+  const providers = [
+    {
+      value: "openrouter",
+      name: "OpenRouter",
+      description: t("openrouter_desc"),
+    },
+    { value: "cohere", name: "Cohere", description: t("cohere_desc") },
+    { value: "huggingface", name: "HuggingFace", description: t("huggingface_desc") },
+    { value: "google", name: "Google Gemini", description: t("google_desc") },
+    { value: "blackbox", name: "Blackbox AI", description: t("blackbox_desc") },
+  ];
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,13 +67,13 @@ export function ApiKeysClient({ initialKeys }: Props) {
         }
         setKeys(newKeys);
       } else {
-        toast.error(res.error ?? "Failed to save key");
+        toast.error(res.error ?? t("save_failed"));
       }
     });
   };
 
   const handleDelete = (prov: string) => {
-    if (!confirm(`Are you sure you want to delete the API key for ${prov}?`)) return;
+    if (!confirm(t("delete_confirm", { provider: prov }))) return;
 
     start(async () => {
       const res = await deleteApiKey(prov);
@@ -81,7 +81,7 @@ export function ApiKeysClient({ initialKeys }: Props) {
         toast.success(t("key_deleted"));
         setKeys(keys.filter((k) => k.provider !== prov));
       } else {
-        toast.error(res.error ?? "Failed to delete key");
+        toast.error(res.error ?? t("delete_failed"));
       }
     });
   };
@@ -108,14 +108,14 @@ export function ApiKeysClient({ initialKeys }: Props) {
                   onChange={(e) => setProvider(e.target.value)}
                   className="border-border-subtle bg-bg-primary focus:ring-brand-500 w-full rounded-xl border px-3.5 py-2.5 text-sm focus:ring-2 focus:outline-none"
                 >
-                  {PROVIDERS.map((p) => (
+                  {providers.map((p) => (
                     <option key={p.value} value={p.value}>
                       {p.name}
                     </option>
                   ))}
                 </select>
                 <p className="text-fg-muted mt-1 text-xs">
-                  {PROVIDERS.find((p) => p.value === provider)?.description}
+                  {providers.find((p) => p.value === provider)?.description}
                 </p>
               </div>
 
@@ -134,7 +134,7 @@ export function ApiKeysClient({ initialKeys }: Props) {
               </div>
 
               <Button type="submit" className="w-full" isLoading={pending} disabled={!apiKey}>
-                {t("save")}
+                {t("save") ?? "Save"}
               </Button>
             </form>
           </CardContent>
@@ -152,7 +152,7 @@ export function ApiKeysClient({ initialKeys }: Props) {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {PROVIDERS.map((p) => {
+              {providers.map((p) => {
                 const configRow = keys.find((k) => k.provider === p.value);
                 return (
                   <div
@@ -177,7 +177,7 @@ export function ApiKeysClient({ initialKeys }: Props) {
                       {configRow ? (
                         <>
                           <Badge variant="success" dot className="px-2.5 py-1 text-xs">
-                            Active
+                            {t("api_keys_active")}
                           </Badge>
                           <Button
                             variant="danger"
@@ -186,12 +186,12 @@ export function ApiKeysClient({ initialKeys }: Props) {
                             onClick={() => handleDelete(p.value)}
                             isLoading={pending}
                           >
-                            {t("delete")}
+                            {t("delete") ?? "Delete"}
                           </Button>
                         </>
                       ) : (
                         <Badge variant="warning" dot className="px-2.5 py-1 text-xs">
-                          Not Configured
+                          {t("api_keys_not_configured")}
                         </Badge>
                       )}
                     </div>
