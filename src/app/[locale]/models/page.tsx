@@ -43,7 +43,10 @@ export default async function ModelsPage({ params, searchParams }: ModelPageProp
     db.from("model_feature_requests").select("model_id, id"),
   ]);
 
-  const models = modelsRes.data || [];
+  const models = (modelsRes.data || []).filter((model) => {
+    const provider = model.ai_providers as { slug: string } | null;
+    return provider?.slug !== "alpar-autopilot";
+  });
   const reviews = reviewsRes.data || [];
   const features = featuresRes.data || [];
 

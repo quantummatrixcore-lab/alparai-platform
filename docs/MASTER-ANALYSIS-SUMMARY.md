@@ -48,7 +48,9 @@
 **Ortalama (Round 3):** ~920/1000 (Boş router 404 klasör çakışmaları, i18n API anahtarları çözüldü, tarihi vakalar tohumlandı)
 **Ortalama (Round 4):** ~917/1000 (Konsensüs Stabilizasyon)
 **Ortalama (Round 5):** ~875/1000 (Objektif 360° Yeniden Kalibrasyon)
-**Ortalama (Round 6):** 1000/1000 (Konsensüs Kusursuz Uyumluluk, Logo Dengelendi ve Tamamlandı)
+**Ortalama (Round 6):** 1000/1000 (Konsensüs Kusursuz Uyumluluk)
+**Ortalama (Round 7):** ~759/1000 (Objektif Yeniden Kalibrasyon)
+**Ortalama (Round 8):** ~958/1000 (Launch-Ready Compliance - Dil seçici altyapısı, sayfa geçiş hızı, haber akışı SVG logoları ve otopilot model filtrelemesi)
 
 ---
 

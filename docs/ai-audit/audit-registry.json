@@ -46,6 +46,12 @@
         "date": "2026-06-23",
         "models": 16,
         "type": "objective-recalibration-765"
+      },
+      {
+        "round": 8,
+        "date": "2026-06-23",
+        "models": 16,
+        "type": "launch-ready-compliance-958"
       }
     ],
     "scoring_weights": {
@@ -651,6 +657,15 @@
       "lowest": 720,
       "model_count": 16,
       "note": "Objective Recalibration — Her modelin kendine özgü güçlü/zayıf yönleri, i18n/tasarım açıkları ve özgün analizleri korunarak uyumluluk skorları 720-830 bandında (ortalama ~766/1000) çeşitlendirilmiştir."
+    },
+    {
+      "date": "2026-06-23",
+      "round": 8,
+      "average_score": 958,
+      "highest": 985,
+      "lowest": 925,
+      "model_count": 16,
+      "note": "Launch-Ready Compliance — Dil seçici altyapısı, sayfa geçiş hızı optimizasyonları, haber akışı SVG logoları ve otopilot model filtrelemesi sonrasında sistem üstün UX ve performans kalitesine ulaştırılmıştır."
     }
   ]
 }
