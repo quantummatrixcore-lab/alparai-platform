@@ -160,3 +160,42 @@ export function ModelJsonLd({
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
   );
 }
+
+export function BlogArticleJsonLd({
+  title,
+  description,
+  datePublished,
+  url,
+  authorName,
+  image,
+}: {
+  title: string;
+  description: string;
+  datePublished: string;
+  url: string;
+  authorName: string;
+  image?: string;
+}) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    mainEntityOfPage: url,
+    headline: title,
+    description: description,
+    ...(image && { image }),
+    datePublished: datePublished,
+    author: {
+      "@type": "Person",
+      name: authorName,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: APP_NAME,
+      logo: `${APP_URL}/icons/android-chrome-512x512.png`,
+    },
+    inLanguage: ["en", "tr"],
+  };
+  return (
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
+  );
+}

@@ -5,6 +5,8 @@ import { Link } from "@/i18n/routing";
 import { getAllPosts, getPostBySlug } from "@/content/blog-posts";
 import { ArrowLeft, Calendar, Clock, User } from "lucide-react";
 import { createServerClient } from "@/lib/supabase/server";
+import { BlogArticleJsonLd } from "@/components/seo/json-ld";
+import { APP_URL } from "@/lib/constants";
 
 export async function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
@@ -167,6 +169,13 @@ export default async function BlogPostPage({
 
   return (
     <Container size="narrow" className="py-12">
+      <BlogArticleJsonLd
+        title={title}
+        description={description}
+        datePublished={date}
+        url={`${APP_URL}/${locale}/blog/${slug}`}
+        authorName={author}
+      />
       <Link
         href="/blog"
         className="text-fg-muted hover:text-brand-400 mb-8 inline-flex items-center gap-2 text-sm font-semibold"
