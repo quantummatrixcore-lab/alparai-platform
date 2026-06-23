@@ -463,7 +463,8 @@
       "whistleblower": "Anonim İhbar",
       "about": "Hikayemiz",
       "contact": "İletişim",
-      "transparency": "Şeffaflık raporu"
+      "transparency": "Şeffaflık raporu",
+      "dilemmas": "İkilemler"
     },
     "rights": "Tüm hakları saklıdır.",
     "platformStatus": "Aracı platform. Kullanıcı tarafından gönderilen içerik."
@@ -756,7 +757,9 @@
     "openSourceText": "ALPAR, AGPL-3.0 altında lisanslanmıştır. Herkes kodu denetleyebilir, bir örnek çalıştırabilir veya katkıda bulunabilir. Güven altyapısının kendisinin de güvenilir olması gerektiğine inanıyoruz.",
     "principlesTitle": "Temel İlkelerimiz",
     "principlesSubtitle": "ALPAR AI'ın yapay zeka hesap verebilirliğinin merkeziyetsiz geleceğini nasıl inşa ettiğini inceleyin.",
-    "description": "ALPAR AI, misyonumuz, ekibimiz ve yapay zeka güven altyapımız hakkında bilgi edinin."
+    "description": "ALPAR AI, misyonumuz, ekibimiz ve yapay zeka güven altyapımız hakkında bilgi edinin.",
+    "teamTitle": "Ekibimiz",
+    "teamSubtitle": "Yapay zeka hesap verebilirliğine adanmış bağımsız bir araştırmacı ve mühendis ekibiyiz. Tarafsız takibi sağlamak için büyük yapay zeka laboratuvarlarından bağımsız çalışıyoruz."
   },
   "legal": {
     "termsTitle": "Kullanım Koşulları",

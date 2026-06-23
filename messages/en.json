@@ -463,7 +463,8 @@
       "whistleblower": "Whistleblower program",
       "about": "Our story",
       "contact": "Contact",
-      "transparency": "Transparency report"
+      "transparency": "Transparency report",
+      "dilemmas": "Dilemmas"
     },
     "rights": "All rights reserved.",
     "platformStatus": "Intermediary platform. User-submitted content."
@@ -756,7 +757,9 @@
     "openSourceText": "ALPAR is licensed under AGPL-3.0. Anyone can audit the code, run an instance, or contribute. We believe trust infrastructure should itself be trustworthy.",
     "principlesTitle": "Our Core Principles",
     "principlesSubtitle": "How ALPAR AI is building the decentralized future of artificial intelligence accountability.",
-    "description": "Learn about ALPAR AI, our mission, team and trust infrastructure for AI."
+    "description": "Learn about ALPAR AI, our mission, team and trust infrastructure for AI.",
+    "teamTitle": "Our Team",
+    "teamSubtitle": "We are a small, independent team of researchers and engineers dedicated to AI accountability. We operate independently from major AI labs to ensure impartial tracking."
   },
   "legal": {
     "termsTitle": "Terms of Service",

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { motion } from "framer-motion";
 import { Container } from "@/components/ui/layout";
 import { Home, FileSearch, ArrowLeft, AlertCircle } from "lucide-react";
