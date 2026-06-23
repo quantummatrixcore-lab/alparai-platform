@@ -1116,7 +1116,15 @@
     "no_results_title": "No results found",
     "no_results_subtitle": "Try a different search term or clear the filter.",
     "unknown_provider": "Unknown Provider",
-    "sign_in_button": "Sign In"
+    "sign_in_button": "Sign In",
+    "reviews": "{count, plural, =1 {review} other {reviews}}",
+    "suggestions_label": "suggestions",
+    "table_model_name": "Model",
+    "table_provider": "Provider",
+    "table_status": "Status",
+    "table_rating": "Rating",
+    "table_reviews": "Reviews",
+    "table_suggestions": "Suggestions"
   },
   "respond": {
     "title": "Submit Provider Response",
