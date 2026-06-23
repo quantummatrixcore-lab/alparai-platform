@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { useTransition, useState } from "react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 import { CheckCircle2, Loader2, Mail } from "lucide-react";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,11 +27,16 @@ export function GoogleSignInButton({
   return (
     <Button
       type="button"
-      variant="secondary"
+      variant="ghost"
       size="lg"
       isLoading={pending}
       disabled={disabled}
-      className={className}
+      className={cn(
+        "w-full border border-white/[0.08] bg-white/[0.03] hover:border-white/[0.16] hover:bg-white/[0.07] active:bg-white/[0.1]",
+        "rounded-xl text-sm font-semibold tracking-wide text-white shadow-lg transition-all duration-300",
+        "hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(168,85,247,0.18)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-none",
+        className,
+      )}
       onClick={() => {
         start(async () => {
           const res = await signInWithGoogle(next);
@@ -39,7 +45,12 @@ export function GoogleSignInButton({
         });
       }}
     >
-      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <svg
+        className="mr-1 h-5 w-5 shrink-0"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        aria-hidden="true"
+      >
         <path
           d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
           fill="#4285F4"
@@ -186,27 +197,30 @@ export function EmailMagicLinkForm({
       <label htmlFor="magic-email" className="text-fg-secondary mb-1.5 block text-xs font-medium">
         {t("email_label")}
       </label>
-      <div className="flex gap-2">
-        <input
-          id="magic-email"
-          name="email"
-          type="email"
-          required
-          inputMode="email"
-          autoComplete="email"
-          placeholder="you@example.com"
-          value={emailValue}
-          onChange={(e) => {
-            setEmailValue(e.target.value);
-            if (validationError) setValidationError(null);
-          }}
-          disabled={disabled || state?.status === "sending"}
-          aria-invalid={validationError ? true : undefined}
-          aria-describedby={validationError ? "magic-email-error" : undefined}
-          className="border-border-subtle bg-bg-secondary focus:ring-brand-500 flex-1 rounded-md border px-3 py-2 text-sm focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
-        />
+      <div className="space-y-3">
+        <div className="relative">
+          <input
+            id="magic-email"
+            name="email"
+            type="email"
+            required
+            inputMode="email"
+            autoComplete="email"
+            placeholder="you@example.com"
+            value={emailValue}
+            onChange={(e) => {
+              setEmailValue(e.target.value);
+              if (validationError) setValidationError(null);
+            }}
+            disabled={disabled || state?.status === "sending"}
+            aria-invalid={validationError ? true : undefined}
+            aria-describedby={validationError ? "magic-email-error" : undefined}
+            className="focus:border-brand-500/80 focus:ring-brand-500/20 w-full rounded-xl border border-white/[0.08] bg-white/[0.02] px-4 py-3 text-sm text-white placeholder-white/30 transition-all hover:bg-white/[0.04] focus:bg-white/[0.05] focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          />
+        </div>
         <Button
           type="submit"
+          className="from-brand-600 hover:from-brand-500 active:from-brand-700 h-11 w-full rounded-xl bg-gradient-to-r to-indigo-600 font-bold tracking-wide text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:to-indigo-500 hover:shadow-[0_0_25px_rgba(168,85,247,0.25)] active:to-indigo-700 disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-none"
           isLoading={state?.status === "sending"}
           disabled={disabled || !emailValue.trim()}
           leftIcon={
