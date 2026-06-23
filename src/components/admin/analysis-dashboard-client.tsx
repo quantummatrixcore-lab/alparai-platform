@@ -120,30 +120,29 @@ export function AnalysisDashboardClient({
   const [carouselIndex, setCarouselIndex] = React.useState(0);
 
   const [logs, setLogs] = React.useState<string[]>([
-    "[14:32:01] SYS_INIT: Establishing secure connection to node alpha-7...",
-    "[14:32:02] OK: Connection verified.",
-    "[14:32:05] WARN: Latency spike detected on pipeline 3 (450ms).",
-    "[14:32:06] AUTOPILOT: Rerouting traffic...",
-    "[14:32:08] OK: Traffic rerouted successfully. Latency nominal.",
-    "[14:32:15] AUDIT_RUN: Starting routine check on model registry...",
-    "[14:32:16] INFO: 24 active nodes responding.",
-    "[14:32:20] OK: Audit complete. No deviations found.",
+    "log_sys_init",
+    "log_ok_verified",
+    "log_warn_latency",
+    "log_autopilot_rerouting",
+    "log_ok_rerouted",
+    "log_audit_run",
+    "log_info_active",
+    "log_ok_audit",
   ]);
 
   const [copiedKey, setCopiedKey] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     const timer = setInterval(() => {
-      const timestamp = new Date().toLocaleTimeString();
       const mockLogTemplates = [
-        `[${timestamp}] INFO: Security handshake complete with OpenRouter API.`,
-        `[${timestamp}] AUTOPILOT: Checking KVKK/GDPR compliance status...`,
-        `[${timestamp}] OK: All 12 criteria passed.`,
-        `[${timestamp}] WARN: Minor latency drift in Llama-3 endpoint (280ms).`,
-        `[${timestamp}] SYS_MONITOR: CPU Load 12%, Memory usage 42%.`,
-        `[${timestamp}] AUDIT_RUN: Cross-audit consensus matched at 95%.`,
-        `[${timestamp}] OK: PII Guardian successfully masked incoming telemetry payload.`,
-        `[${timestamp}] SECURE: RLS verification checked for schema 'incidents'.`,
+        "log_info_handshake",
+        "log_autopilot_kvkk",
+        "log_ok_passed",
+        "log_warn_drift",
+        "log_sys_monitor",
+        "log_audit_consensus",
+        "log_ok_pii",
+        "log_secure_rls",
       ];
       const randomLog = mockLogTemplates[Math.floor(Math.random() * mockLogTemplates.length)];
       setLogs((prev) => [...prev.slice(-15), randomLog!]);
@@ -196,16 +195,16 @@ export function AnalysisDashboardClient({
   });
 
   const categories = [
-    { key: "vision_mission", label: "Vision & Mission" },
-    { key: "message_content", label: "Message & Content" },
-    { key: "ux_ui_design", label: "UX/UI Design" },
-    { key: "technical_architecture", label: "Technical Architecture" },
-    { key: "legal_compliance", label: "Legal & Compliance" },
-    { key: "business_model", label: "Business & Revenue" },
-    { key: "growth_viral", label: "Growth & Virality" },
-    { key: "traction_social_proof", label: "Social Proof" },
-    { key: "investor_readiness", label: "Investor Readiness" },
-    { key: "societal_impact", label: "Societal Impact" },
+    { key: "vision_mission", label: t("cat_vision_mission") },
+    { key: "message_content", label: t("cat_message_content") },
+    { key: "ux_ui_design", label: t("cat_ux_ui_design") },
+    { key: "technical_architecture", label: t("cat_technical_architecture") },
+    { key: "legal_compliance", label: t("cat_legal_compliance") },
+    { key: "business_model", label: t("cat_business_model") },
+    { key: "growth_viral", label: t("cat_growth_viral") },
+    { key: "traction_social_proof", label: t("cat_traction_social_proof") },
+    { key: "investor_readiness", label: t("cat_investor_readiness") },
+    { key: "societal_impact", label: t("cat_societal_impact") },
   ];
 
   const getScoreColor = (score: number) => {
@@ -261,7 +260,7 @@ export function AnalysisDashboardClient({
         <div className="flex items-center">
           <span className="flex animate-pulse items-center gap-1.5 rounded-full border border-cyan-500/30 bg-neutral-950/80 px-3 py-1 font-mono text-xs text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.25)]">
             <span className="h-2 w-2 rounded-full bg-cyan-400"></span>
-            SYSTEM_ONLINE
+            {t("system_online")}
           </span>
         </div>
       </div>
@@ -272,7 +271,7 @@ export function AnalysisDashboardClient({
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {/* Metric 1: Average Score */}
             <div className="group hover:border-brand-500/30 relative flex flex-col overflow-hidden rounded-lg border border-white/10 bg-neutral-900/60 p-5 shadow-md backdrop-blur-xl transition-all duration-300">
-              <div className="from-brand-500 absolute top-0 left-0 h-1 w-full bg-gradient-to-r to-transparent opacity-50 transition-opacity group-hover:opacity-100"></div>
+              <div className="from-brand-500 absolute top-0 left-0 h-1 w-full bg-gradient-to-r to-transparent opacity-50 transition-all transition-opacity group-hover:opacity-100"></div>
               <div className="mb-4 flex items-start justify-between">
                 <span className="text-fg-muted text-xs font-semibold tracking-widest uppercase">
                   {t("average_score")}
@@ -303,7 +302,7 @@ export function AnalysisDashboardClient({
 
             {/* Metric 2: Total Frontiers */}
             <div className="group relative flex flex-col overflow-hidden rounded-lg border border-white/10 bg-neutral-900/60 p-5 shadow-md backdrop-blur-xl transition-all duration-300 hover:border-cyan-500/30">
-              <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-cyan-500 to-transparent opacity-50 transition-opacity group-hover:opacity-100"></div>
+              <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-cyan-500 to-transparent opacity-50 transition-all transition-opacity group-hover:opacity-100"></div>
               <div className="mb-4 flex items-start justify-between">
                 <span className="text-fg-muted text-xs font-semibold tracking-widest uppercase">
                   {t("total_models")}
@@ -317,7 +316,7 @@ export function AnalysisDashboardClient({
                 <span className="text-fg-muted text-sm">{t("frontiers")}</span>
               </div>
               <div className="mt-4 font-mono text-[10px] tracking-wider text-cyan-400 uppercase">
-                ACTIVE NODES SECURED
+                {t("active_nodes_secured")}
               </div>
             </div>
 
@@ -355,7 +354,7 @@ export function AnalysisDashboardClient({
                 <span className="text-fg-muted text-sm">{t("critical")}</span>
               </div>
               <div className="mt-4 font-mono text-[10px] tracking-wider text-rose-400/80 uppercase">
-                {openP0Count > 0 ? t("requires_immediate") : "ALL SYSTEM HEALTHY"}
+                {openP0Count > 0 ? t("requires_immediate") : t("all_operational")}
               </div>
             </div>
 
@@ -375,7 +374,7 @@ export function AnalysisDashboardClient({
                 <span className="text-fg-muted text-sm">{t("fixed")}</span>
               </div>
               <div className="mt-4 font-mono text-[10px] tracking-wider text-emerald-400/80 uppercase">
-                100% REMEDIATED ACTIVE
+                {t("remediated_active")}
               </div>
             </div>
           </div>
@@ -398,7 +397,7 @@ export function AnalysisDashboardClient({
                   <table className="text-fg-muted w-full min-w-[500px] border-collapse text-left text-sm">
                     <thead>
                       <tr className="text-fg-muted border-b border-white/10 text-xs tracking-wider uppercase">
-                        <th className="py-3 pr-4 font-semibold">Category</th>
+                        <th className="py-3 pr-4 font-semibold">{t("model_core")}</th>
                         {registryData.audits.map((a) => (
                           <th key={a.model_id} className="px-2 py-3 text-center font-semibold">
                             <span
@@ -514,28 +513,39 @@ export function AnalysisDashboardClient({
                 <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2">
                   <span className="flex items-center gap-1.5 font-mono text-xs font-bold tracking-wider text-cyan-400 uppercase">
                     <span className="h-2 w-2 animate-ping rounded-full bg-cyan-400"></span>
-                    Telemetry Feed
+                    {t("telemetry_feed")}
                   </span>
-                  <span className="text-fg-muted font-mono text-[10px]">TERMINAL_V1.0</span>
+                  <span className="text-fg-muted font-mono text-[10px]">
+                    {t("terminal_version")}
+                  </span>
                 </div>
                 <div className="max-h-[160px] flex-grow scrollbar-thin scrollbar-thumb-cyan-500/30 space-y-1.5 overflow-y-auto pr-2 font-mono text-[10px] text-cyan-300/80">
                   {logs.map((log, index) => {
+                    const translatedLog = t(log);
                     let logColor = "text-cyan-300/80";
-                    if (log.includes("WARN:")) logColor = "text-amber-400";
-                    if (log.includes("OK:")) logColor = "text-cyan-400 font-semibold";
-                    if (log.includes("SYS_MONITOR:")) logColor = "text-brand-400/90";
-                    if (log.includes("SECURE:")) logColor = "text-emerald-400 font-semibold";
+                    if (translatedLog.includes("WARN:") || translatedLog.includes("UYARI:"))
+                      logColor = "text-amber-400";
+                    if (translatedLog.includes("OK:") || translatedLog.includes("TAMAM:"))
+                      logColor = "text-cyan-400 font-semibold";
+                    if (
+                      translatedLog.includes("SYS_MONITOR:") ||
+                      translatedLog.includes("SİS_GÖZLEM:") ||
+                      translatedLog.includes("SİS_İZLEME:")
+                    )
+                      logColor = "text-brand-400/90";
+                    if (translatedLog.includes("SECURE:") || translatedLog.includes("GÜVENLİ:"))
+                      logColor = "text-emerald-400 font-semibold";
                     return (
                       <div
                         key={index}
                         className={cn("flex gap-2 leading-relaxed break-all", logColor)}
                       >
-                        {log}
+                        {translatedLog}
                       </div>
                     );
                   })}
                   <div className="flex items-center font-bold text-cyan-400">
-                    AWAITING_INPUT
+                    {t("awaiting_input")}
                     <span className="ml-1 inline-block h-3.5 w-1.5 animate-pulse bg-cyan-400" />
                   </div>
                 </div>
@@ -550,10 +560,10 @@ export function AnalysisDashboardClient({
               <div className="mb-5 flex items-center justify-between">
                 <h3 className="text-md flex items-center gap-2 font-semibold text-white">
                   <Lock className="text-brand-400 h-5 w-5" />
-                  Access Management
+                  {t("access_management")}
                 </h3>
                 <button className="bg-brand-500/20 hover:bg-brand-500/30 border-brand-500/30 text-brand-300 rounded border px-3 py-1 text-xs font-semibold shadow-[0_0_10px_rgba(168,85,247,0.2)] transition-all duration-200">
-                  + Create API Key
+                  {t("create_api_key")}
                 </button>
               </div>
 
@@ -562,10 +572,10 @@ export function AnalysisDashboardClient({
                 <div className="hover:border-brand-500/30 rounded border border-white/5 bg-neutral-950/60 p-4 transition-all duration-300">
                   <div className="mb-2 flex items-start justify-between">
                     <span className="text-xs font-semibold text-white">
-                      Production Gateway Master
+                      {t("prod_gateway_master")}
                     </span>
                     <span className="rounded border border-cyan-500/20 bg-cyan-500/10 px-2 py-0.5 font-mono text-[9px] tracking-wider text-cyan-400 uppercase">
-                      Active
+                      {t("active")}
                     </span>
                   </div>
                   <div className="mt-3 flex items-center justify-between rounded border border-white/5 bg-neutral-900 p-2">
@@ -575,10 +585,10 @@ export function AnalysisDashboardClient({
                     <button
                       onClick={() => handleCopyKey("sk-prod-a1b2c3d4e5f6g7h8j9k08f9a")}
                       className="text-fg-muted p-1 transition-colors hover:text-white"
-                      title="Copy Key"
+                      title={t("copy")}
                     >
                       <span className="font-mono text-[10px]">
-                        {copiedKey === "sk-prod-a1b2c3d4e5f6g7h8j9k08f9a" ? "COPIED" : "COPY"}
+                        {copiedKey === "sk-prod-a1b2c3d4e5f6g7h8j9k08f9a" ? t("copied") : t("copy")}
                       </span>
                     </button>
                   </div>
@@ -588,17 +598,19 @@ export function AnalysisDashboardClient({
                 <div className="rounded border border-white/5 bg-neutral-950/40 p-4 opacity-50">
                   <div className="mb-2 flex items-start justify-between">
                     <span className="text-fg-muted text-xs font-semibold">
-                      Staging Sandbox Client
+                      {t("stag_sandbox_client")}
                     </span>
                     <span className="text-fg-muted rounded border border-white/10 bg-neutral-800 px-2 py-0.5 font-mono text-[9px] tracking-wider uppercase">
-                      Revoked
+                      {t("revoked")}
                     </span>
                   </div>
                   <div className="mt-3 flex items-center justify-between rounded border border-white/5 bg-neutral-900/50 p-2">
                     <code className="text-fg-disabled font-mono text-xs tracking-widest">
                       sk-stag-••••••••••••2b1c
                     </code>
-                    <span className="text-fg-disabled px-1 font-mono text-[10px]">BLOCKED</span>
+                    <span className="text-fg-disabled px-1 font-mono text-[10px]">
+                      {t("blocked")}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -787,7 +799,7 @@ export function AnalysisDashboardClient({
             <div>
               <h3 className="text-md flex items-center gap-2 font-semibold text-white">
                 <Database className="text-brand-400 h-5 w-5" />
-                Structured Consolidated Registry
+                {t("structured_consolidated_registry")}
               </h3>
               <p className="text-fg-muted text-xs">docs/ai-audit/audit-registry.json</p>
             </div>

@@ -97,7 +97,7 @@ export default async function AdminDashboardPage({
         <div className="flex items-center">
           <span className="flex animate-pulse items-center gap-1.5 rounded-full border border-cyan-500/30 bg-neutral-950/80 px-3 py-1 font-mono text-xs text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.25)]">
             <span className="h-2 w-2 rounded-full bg-cyan-400"></span>
-            SYSTEM_ONLINE
+            {t("system_online")}
           </span>
         </div>
       </header>
