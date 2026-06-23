@@ -9,7 +9,10 @@ export default async function Image({ params }: { params: Promise<{ locale: stri
   const supabase = createAdminClient();
 
   // Fetch providers
-  const { data: providers } = await supabase.from("ai_providers").select("id, name, logo_url");
+  const { data: providers } = await supabase
+    .from("ai_providers")
+    .select("id, name, logo_url")
+    .neq("slug", "alpar-autopilot");
 
   // Fetch incident count and response count to calculate rate
   const stats = await Promise.all(

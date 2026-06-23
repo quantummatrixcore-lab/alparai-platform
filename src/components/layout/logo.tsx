@@ -31,7 +31,7 @@ export function Logo({ className, size = "md", ...props }: LogoProps) {
         className="block h-full w-full overflow-visible"
       >
         <defs>
-          {/* Left Shield neon border gradient (Fuchsia -> Purple) */}
+          {/* Left Shield elements gradient (Fuchsia -> Purple) */}
           <linearGradient
             id="logo-left-grad"
             x1="50"
@@ -44,7 +44,7 @@ export function Logo({ className, size = "md", ...props }: LogoProps) {
             <stop offset="100%" stopColor="#a855f7" />
           </linearGradient>
 
-          {/* Right Tech circuits gradient (Cyan -> Teal/Blue) */}
+          {/* Right Tech elements gradient (Cyan -> Teal/Blue) */}
           <linearGradient
             id="logo-right-grad"
             x1="50"
@@ -55,6 +55,20 @@ export function Logo({ className, size = "md", ...props }: LogoProps) {
           >
             <stop offset="0%" stopColor="#22d3ee" />
             <stop offset="100%" stopColor="#06b6d4" />
+          </linearGradient>
+
+          {/* Symmetrical border gradient (Fuchsia -> Purple -> Cyan) */}
+          <linearGradient
+            id="logo-border-grad"
+            x1="15"
+            y1="50"
+            x2="85"
+            y2="50"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset="0%" stopColor="#d946ef" />
+            <stop offset="50%" stopColor="#a855f7" />
+            <stop offset="100%" stopColor="#22d3ee" />
           </linearGradient>
 
           {/* Shield glassmorphism body fill gradient */}
@@ -85,7 +99,7 @@ export function Logo({ className, size = "md", ...props }: LogoProps) {
 
           {/* Premium neon glow effect */}
           <filter id="logo-glow" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="2.5" result="blur" />
+            <feGaussianBlur stdDeviation="2" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
@@ -93,145 +107,183 @@ export function Logo({ className, size = "md", ...props }: LogoProps) {
           </filter>
         </defs>
 
-        {/* Full Shield Body for Glassmorphism Fill */}
+        {/* Full Shield Body for Glassmorphism Fill (Symmetric) */}
         <path
-          d="M 50,18 C 30,19.5 17,22 15,24 V 48 C 15,68 30,78 50,84 C 70,78 85,68 85,48 V 24 C 83,22 70,19.5 50,18 Z"
+          d="M 50,15 C 28,17 15,22 15,25 V 50 C 15,70 32,82 50,88 C 68,82 85,70 85,50 V 25 C 85,22 72,17 50,15 Z"
           fill="url(#logo-shield-fill-grad)"
           className="group-hover/logo:fill-opacity-30 transition-all duration-500"
         />
 
-        {/* Left Shield Neon Border (Fuchsia -> Purple) */}
+        {/* Symmetrical Shield Neon Border */}
         <path
-          d="M 50,18 C 30,19.5 17,22 15,24 V 48 C 15,68 30,78 50,84"
-          stroke="url(#logo-left-grad)"
+          d="M 50,15 C 28,17 15,22 15,25 V 50 C 15,70 32,82 50,88 C 68,82 85,70 85,50 V 25 C 85,22 72,17 50,15 Z"
+          stroke="url(#logo-border-grad)"
           strokeWidth="3.2"
           strokeLinejoin="round"
           className="transition-all duration-500 group-hover/logo:stroke-[3.8px]"
         />
 
-        {/* Right Shield Neon Border (Cyan -> Teal/Blue) */}
+        {/* Center Sword / Divider Column (Symmetric) */}
         <path
-          d="M 50,18 C 70,19.5 83,22 85,24 V 48 C 85,68 70,78 50,84"
-          stroke="url(#logo-right-grad)"
-          strokeWidth="3.2"
-          strokeLinejoin="round"
-          className="transition-all duration-500 group-hover/logo:stroke-[3.8px]"
-        />
-
-        {/* Scales of Justice inside Left Shield */}
-        {/* Scale beam */}
-        <path
-          d="M 50,32 H 32"
-          stroke="url(#logo-left-grad)"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-          className="opacity-90 transition-all duration-500 group-hover/logo:opacity-100"
-        />
-        {/* Scale pan cords and shape */}
-        <path
-          d="M 32,32 L 23,52 L 41,52 Z"
-          stroke="url(#logo-left-grad)"
-          strokeWidth="1.8"
-          strokeLinejoin="round"
-          fill="url(#logo-left-grad)"
-          fillOpacity="0.06"
-          className="group-hover/logo:fill-opacity-20 transition-all duration-500 group-hover/logo:stroke-[2.2px]"
-        />
-        {/* Scale pan platform */}
-        <path
-          d="M 20,52 H 44"
-          stroke="url(#logo-left-grad)"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
-        {/* Scale pan saucer */}
-        <path
-          d="M 22,52 C 22,60 42,60 42,52 Z"
-          fill="url(#logo-left-grad)"
-          fillOpacity="0.8"
-          className="group-hover/logo:fill-opacity-95 transition-all duration-500"
-        />
-
-        {/* Right Circuits (AI & Innovation) */}
-        {/* Top Circuit Trace */}
-        <path
-          d="M 50,28 H 68 L 74,22 H 82"
-          stroke="url(#logo-right-grad)"
-          strokeWidth="2.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          filter="url(#logo-glow)"
-          className="transition-all duration-500 group-hover/logo:stroke-[3.5px]"
-        />
-        <circle
-          cx="85"
-          cy="22"
-          r="3.5"
-          fill="#ffffff"
-          stroke="#22d3ee"
-          strokeWidth="1.8"
-          filter="url(#logo-glow)"
-          className="transition-all duration-300 group-hover/logo:scale-110 group-hover/logo:fill-[#22d3ee]"
-        />
-
-        {/* Middle Circuit Trace */}
-        <path
-          d="M 50,48 H 82"
-          stroke="url(#logo-right-grad)"
-          strokeWidth="2.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          filter="url(#logo-glow)"
-          className="transition-all duration-500 group-hover/logo:stroke-[3.5px]"
-        />
-        <circle
-          cx="85"
-          cy="48"
-          r="3.5"
-          fill="#ffffff"
-          stroke="#22d3ee"
-          strokeWidth="1.8"
-          filter="url(#logo-glow)"
-          className="transition-all duration-300 group-hover/logo:scale-110 group-hover/logo:fill-[#22d3ee]"
-        />
-
-        {/* Bottom Circuit Trace */}
-        <path
-          d="M 50,68 H 68 L 74,74 H 82"
-          stroke="url(#logo-right-grad)"
-          strokeWidth="2.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          filter="url(#logo-glow)"
-          className="transition-all duration-500 group-hover/logo:stroke-[3.5px]"
-        />
-        <circle
-          cx="85"
-          cy="74"
-          r="3.5"
-          fill="#ffffff"
-          stroke="#22d3ee"
-          strokeWidth="1.8"
-          filter="url(#logo-glow)"
-          className="transition-all duration-300 group-hover/logo:scale-110 group-hover/logo:fill-[#22d3ee]"
-        />
-
-        {/* Center Sword / Divider Column (Strength & Balance) */}
-        {/* Main blade/shaft */}
-        <path
-          d="M 50,18 V 84"
+          d="M 50,22 V 78"
           stroke="url(#logo-center-grad)"
-          strokeWidth="3.5"
+          strokeWidth="3.2"
           strokeLinecap="round"
-          className="transition-all duration-500 group-hover/logo:stroke-[4px]"
+          className="transition-all duration-500 group-hover/logo:stroke-[3.8px]"
         />
         {/* Hilt / Base pedestal */}
         <path
           d="M 42,78 H 58"
           stroke="url(#logo-center-grad)"
-          strokeWidth="3.5"
+          strokeWidth="3.2"
           strokeLinecap="round"
-          className="transition-all duration-500 group-hover/logo:stroke-[4px]"
+          className="transition-all duration-500 group-hover/logo:stroke-[3.8px]"
+        />
+        {/* Top Finial Node */}
+        <circle
+          cx="50"
+          cy="22"
+          r="2.5"
+          fill="#ffffff"
+          stroke="#a855f7"
+          strokeWidth="1.2"
+          filter="url(#logo-glow)"
+          className="transition-all duration-300 group-hover/logo:scale-110"
+        />
+
+        {/* Symmetrical Scales of Justice */}
+        {/* Scale Beam */}
+        <path
+          d="M 30,36 H 70"
+          stroke="url(#logo-center-grad)"
+          strokeWidth="2.8"
+          strokeLinecap="round"
+          className="transition-all duration-500 group-hover/logo:stroke-[3.2px]"
+        />
+
+        {/* Left Scale Pan */}
+        <path
+          d="M 30,36 L 22,54 L 38,54 Z"
+          stroke="url(#logo-left-grad)"
+          strokeWidth="1.6"
+          strokeLinejoin="round"
+          fill="url(#logo-left-grad)"
+          fillOpacity="0.05"
+          className="group-hover/logo:fill-opacity-15 transition-all duration-500"
+        />
+        <path
+          d="M 18,54 H 42"
+          stroke="url(#logo-left-grad)"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 21,54 C 21,61 39,61 39,54 Z"
+          fill="url(#logo-left-grad)"
+          fillOpacity="0.75"
+          className="group-hover/logo:fill-opacity-90 transition-all duration-500"
+        />
+
+        {/* Right Scale Pan */}
+        <path
+          d="M 70,36 L 62,54 L 78,54 Z"
+          stroke="url(#logo-right-grad)"
+          strokeWidth="1.6"
+          strokeLinejoin="round"
+          fill="url(#logo-right-grad)"
+          fillOpacity="0.05"
+          className="group-hover/logo:fill-opacity-15 transition-all duration-500"
+        />
+        <path
+          d="M 58,54 H 82"
+          stroke="url(#logo-right-grad)"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 61,54 C 61,61 79,61 79,54 Z"
+          fill="url(#logo-right-grad)"
+          fillOpacity="0.75"
+          className="group-hover/logo:fill-opacity-90 transition-all duration-500"
+        />
+
+        {/* Symmetrical AI Tech Circuits (Branching Symmetrically) */}
+        {/* Top Circuit Traces */}
+        <path
+          d="M 50,48 H 36 L 31,43 H 26"
+          stroke="url(#logo-left-grad)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="transition-all duration-500"
+        />
+        <circle
+          cx="23"
+          cy="43"
+          r="2.5"
+          fill="#ffffff"
+          stroke="#d946ef"
+          strokeWidth="1.2"
+          filter="url(#logo-glow)"
+          className="transition-all duration-300 group-hover/logo:scale-110"
+        />
+
+        <path
+          d="M 50,48 H 64 L 69,43 H 74"
+          stroke="url(#logo-right-grad)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="transition-all duration-500"
+        />
+        <circle
+          cx="77"
+          cy="43"
+          r="2.5"
+          fill="#ffffff"
+          stroke="#22d3ee"
+          strokeWidth="1.2"
+          filter="url(#logo-glow)"
+          className="transition-all duration-300 group-hover/logo:scale-110"
+        />
+
+        {/* Bottom Circuit Traces */}
+        <path
+          d="M 50,65 H 38 L 34,70 H 28"
+          stroke="url(#logo-left-grad)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="transition-all duration-500"
+        />
+        <circle
+          cx="25"
+          cy="70"
+          r="2.5"
+          fill="#ffffff"
+          stroke="#d946ef"
+          strokeWidth="1.2"
+          filter="url(#logo-glow)"
+          className="transition-all duration-300 group-hover/logo:scale-110"
+        />
+
+        <path
+          d="M 50,65 H 62 L 66,70 H 72"
+          stroke="url(#logo-right-grad)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="transition-all duration-500"
+        />
+        <circle
+          cx="75"
+          cy="70"
+          r="2.5"
+          fill="#ffffff"
+          stroke="#22d3ee"
+          strokeWidth="1.2"
+          filter="url(#logo-glow)"
+          className="transition-all duration-300 group-hover/logo:scale-110"
         />
       </svg>
     </span>
