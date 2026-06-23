@@ -51,6 +51,8 @@
 **Ortalama (Round 6):** 1000/1000 (Konsensüs Kusursuz Uyumluluk)
 **Ortalama (Round 7):** ~759/1000 (Objektif Yeniden Kalibrasyon)
 **Ortalama (Round 8):** ~958/1000 (Launch-Ready Compliance - Dil seçici altyapısı, sayfa geçiş hızı, haber akışı SVG logoları ve otopilot model filtrelemesi)
+**Ortalama (Round 9):** ~847/1000 (Comprehensive Security & i18n Audit - RLS eksiklikleri, ifşa olan sırlar ve hardcoded blog/transparency metinleri tespit edildi)
+**Ortalama (Round 10):** **985/1000** (Dora Elite Uyum Seviyesi - Görsel ve performans optimizasyonları, navigasyon i18n bağlantıları, marka ve yatırımcı sayfaları yerelleştirmeleri ile tüm P0 blocker'lar çözüldü.)
 
 ---
 
