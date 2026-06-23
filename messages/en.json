@@ -730,7 +730,9 @@
     "voice": "AI providers get a voice",
     "voiceText": "Every published incident invites an official response from the AI provider. We verify their identity and publish the response alongside the report. Healthy debate over real evidence.",
     "openSource": "Open source",
-    "openSourceText": "ALPAR is licensed under AGPL-3.0. Anyone can audit the code, run an instance, or contribute. We believe trust infrastructure should itself be trustworthy."
+    "openSourceText": "ALPAR is licensed under AGPL-3.0. Anyone can audit the code, run an instance, or contribute. We believe trust infrastructure should itself be trustworthy.",
+    "principlesTitle": "Our Core Principles",
+    "principlesSubtitle": "How ALPAR AI is building the decentralized future of artificial intelligence accountability."
   },
   "legal": {
     "termsTitle": "Terms of Service",

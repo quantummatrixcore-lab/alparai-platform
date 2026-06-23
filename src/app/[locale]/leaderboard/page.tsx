@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { Container } from "@/components/ui/layout";
