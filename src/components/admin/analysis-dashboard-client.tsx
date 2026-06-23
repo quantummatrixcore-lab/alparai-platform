@@ -477,7 +477,7 @@ export function AnalysisDashboardClient({
                           {t("unanimous_consensus")}
                         </div>
                         <div className="text-fg-muted font-mono text-[10px]">
-                          ALL AGENTS IN UNISON
+                          {t("all_agents_unison")}
                         </div>
                       </div>
                     </div>
@@ -497,7 +497,7 @@ export function AnalysisDashboardClient({
                           {t("strong_consensus")}
                         </div>
                         <div className="text-fg-muted font-mono text-[10px]">
-                          MAJORITY COMPLIANCE
+                          {t("majority_compliance")}
                         </div>
                       </div>
                     </div>
@@ -853,7 +853,7 @@ export function AnalysisDashboardClient({
                     </h3>
                   </div>
                   {isPending ? (
-                    <p className="text-fg-muted text-sm italic">Analysis pending...</p>
+                    <p className="text-fg-muted text-sm italic">{t("analysisPending")}</p>
                   ) : (
                     <div className="prose prose-invert prose-sm text-fg-secondary max-h-[300px] max-w-none scrollbar-thin overflow-x-auto overflow-y-auto rounded-lg bg-neutral-950 p-4 font-mono text-xs whitespace-pre-wrap">
                       {analysis.trim()}
