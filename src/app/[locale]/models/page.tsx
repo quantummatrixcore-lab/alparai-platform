@@ -1,5 +1,6 @@
-import { getTranslations } from "next-intl/server";
-import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/routing";
+import Image from "next/image";
 import { Star, MessageSquare, Lightbulb, ChevronRight } from "lucide-react";
 import { createServerClient } from "@/lib/supabase/server";
 import { Badge } from "@/components/ui/badge";
@@ -27,6 +28,7 @@ interface ModelPageProps {
 
 export default async function ModelsPage({ params, searchParams }: ModelPageProps) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const { search, sort } = await searchParams;
   const t = await getTranslations({ locale, namespace: "models" });
   const db = await createServerClient();
@@ -194,7 +196,7 @@ export default async function ModelsPage({ params, searchParams }: ModelPageProp
               return (
                 <Link
                   key={model.id}
-                  href={`/${locale}/models/${model.provider_id}/${model.id}`}
+                  href={`/models/${model.provider_id}/${model.id}`}
                   className="group hover:bg-bg-secondary/40 flex flex-col gap-4 p-6 transition duration-200 md:grid md:grid-cols-[2fr_1.2fr_1.2fr_1.2fr_0.8fr_0.8fr_40px] md:items-center md:gap-4 md:px-6 md:py-4"
                 >
                   {/* Model Name & Version */}
@@ -211,10 +213,13 @@ export default async function ModelsPage({ params, searchParams }: ModelPageProp
                   {/* Provider */}
                   <div className="flex items-center gap-2">
                     {provider?.logo_url ? (
-                      <img
+                      <Image
                         src={provider.logo_url}
                         alt={provider.name}
-                        className="bg-bg-tertiary h-6 w-6 rounded-md object-contain p-0.5"
+                        width={24}
+                        height={24}
+                        unoptimized
+                        className="bg-bg-tertiary rounded-md object-contain p-0.5"
                       />
                     ) : (
                       <div className="bg-bg-tertiary text-fg-muted flex h-6 w-6 items-center justify-center rounded-md text-[10px] font-bold">

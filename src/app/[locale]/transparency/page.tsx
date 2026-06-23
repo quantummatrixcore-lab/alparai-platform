@@ -19,7 +19,11 @@ import {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "legal" });
-  return { title: t("transparencyTitle", { defaultValue: "Transparency Report" }) };
+  const tTransparency = await getTranslations({ locale, namespace: "transparency" });
+  return {
+    title: t("transparencyTitle", { defaultValue: "Transparency Report" }),
+    description: tTransparency("description"),
+  };
 }
 
 export default async function TransparencyPage({
@@ -198,52 +202,81 @@ export default async function TransparencyPage({
       <Card className="mt-8">
         <CardHeader>
           <CardTitle className="text-sm">
-            {t("trustScoreMethodology", { defaultValue: "Trust Score™ Methodology" })}
+            {tTransparency("trustScoreMethodology", { defaultValue: "Trust Score™ Methodology" })}
           </CardTitle>
         </CardHeader>
         <CardContent className="text-fg-secondary space-y-4 text-sm">
           <p>
-            {t("trustScoreMethodologyDesc", {
+            {tTransparency("trustScoreMethodologyDesc", {
               defaultValue:
                 "ALPAR AI calculates a Trust Score for each AI provider on a 0-100 scale to quantify their transparency and accountability to the public.",
             })}
           </p>
 
           <div className="bg-bg-tertiary border-border-subtle mx-auto max-w-xl space-y-2 rounded-xl border p-5 text-center font-mono text-xs">
-            <div className="text-fg-primary text-sm font-bold">Trust Score =</div>
+            <div className="text-fg-primary text-sm font-bold">
+              {tTransparency("methodologyFormulaTitle", { defaultValue: "Trust Score =" })}
+            </div>
             <div className="text-brand-400">
-              (Verified Incidents × -5) + (Response Speed × +20) + (Transparency Report × +15) +
-              (User Rating × +10) + (Audit Score × +30)
+              {tTransparency("methodologyFormula", {
+                defaultValue:
+                  "(Verified Incidents × -5) + (Response Speed × +20) + (Transparency Report × +15) + (User Rating × +10) + (Audit Score × +30)",
+              })}
             </div>
             <div className="text-fg-muted pt-2 text-[10px]">
-              * Normalized to a 0–100 scale. Lower scores indicate higher rates of unaddressed AI
-              incidents.
+              {tTransparency("methodologyFormulaNote", {
+                defaultValue:
+                  "* Normalized to a 0–100 scale. Lower scores indicate higher rates of unaddressed AI incidents.",
+              })}
             </div>
           </div>
 
           <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <h4 className="text-fg-primary text-xs font-bold">Verified Incidents</h4>
+              <h4 className="text-fg-primary text-xs font-bold">
+                {tTransparency("methodologyIncidentsTitle", { defaultValue: "Verified Incidents" })}
+              </h4>
               <p className="text-fg-muted text-[11px]">
-                Negative impact. Each verified incident reduces the provider score.
+                {tTransparency("methodologyIncidentsDesc", {
+                  defaultValue:
+                    "Negative impact. Each verified incident reduces the provider score.",
+                })}
               </p>
             </div>
             <div>
-              <h4 className="text-fg-primary text-xs font-bold">Response Rate & Speed</h4>
+              <h4 className="text-fg-primary text-xs font-bold">
+                {tTransparency("methodologyResponseTitle", {
+                  defaultValue: "Response Rate & Speed",
+                })}
+              </h4>
               <p className="text-fg-muted text-[11px]">
-                Positive impact. Prompt official responses to incidents increase score.
+                {tTransparency("methodologyResponseDesc", {
+                  defaultValue:
+                    "Positive impact. Prompt official responses to incidents increase score.",
+                })}
               </p>
             </div>
             <div>
-              <h4 className="text-fg-primary text-xs font-bold">User Ratings</h4>
+              <h4 className="text-fg-primary text-xs font-bold">
+                {tTransparency("methodologyRatingsTitle", { defaultValue: "User Ratings" })}
+              </h4>
               <p className="text-fg-muted text-[11px]">
-                Community evaluations of model features and performance.
+                {tTransparency("methodologyRatingsDesc", {
+                  defaultValue: "Community evaluations of model features and performance.",
+                })}
               </p>
             </div>
             <div>
-              <h4 className="text-fg-primary text-xs font-bold">Independent Auditing</h4>
+              <h4 className="text-fg-primary text-xs font-bold">
+                {tTransparency("methodologyAuditingTitle", {
+                  defaultValue: "Independent Auditing",
+                })}
+              </h4>
               <p className="text-fg-muted text-[11px]">
-                Credits given for publishing public bias, privacy, and safety audits.
+                {tTransparency("methodologyAuditingDesc", {
+                  defaultValue:
+                    "Credits given for publishing public bias, privacy, and safety audits.",
+                })}
               </p>
             </div>
           </div>
@@ -253,7 +286,7 @@ export default async function TransparencyPage({
       <Card className="mt-8">
         <CardHeader>
           <CardTitle className="text-sm">
-            {t("transparencyCommitment", { defaultValue: "Our commitment" })}
+            {tTransparency("transparencyCommitment", { defaultValue: "Our commitment" })}
           </CardTitle>
         </CardHeader>
         <CardContent className="text-fg-secondary space-y-3 text-sm">

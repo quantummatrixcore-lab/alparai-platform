@@ -212,7 +212,8 @@
     "avgResponseRate": "Avg response rate",
     "filter_all": "All Providers",
     "filter_verified": "Verified Only",
-    "filter_with_incidents": "With Incidents"
+    "filter_with_incidents": "With Incidents",
+    "caption": "AI Models Leaderboard Table"
   },
   "auth": {
     "signin_with_google": "Continue with Google",
@@ -405,7 +406,6 @@
     "create_api_key": "+ Create API Key",
     "prod_gateway_master": "Production Gateway Master",
     "stag_sandbox_client": "Staging Sandbox Client",
-    "active": "Active",
     "revoked": "Revoked",
     "copied": "COPIED",
     "copy": "COPY",
@@ -631,7 +631,8 @@
       "sent_title": "Message sent!",
       "sent_desc": "Thank you for reaching out. We'll get back to you soon.",
       "sent_toast": "Message sent successfully"
-    }
+    },
+    "description": "Get in touch with ALPAR AI team."
   },
   "badge": {
     "severity": {
@@ -666,7 +667,29 @@
     "title": "The ALPAR blog",
     "description": "Deep dives, annual reports, and engineering notes on building trust infrastructure for AI accountability.",
     "min": "min read",
-    "back": "Back to all posts"
+    "back": "Back to all posts",
+    "author": "ALPAR AI Autopilot",
+    "tags": {
+      "opinion": "Opinion",
+      "ai-ethics": "AI Ethics",
+      "governance": "Governance",
+      "guide": "Guide",
+      "incidents": "Incidents",
+      "tutorial": "Tutorial",
+      "security": "Security",
+      "privacy": "Privacy",
+      "pii-guardian": "PII Guardian",
+      "regulation": "Regulation",
+      "claude": "Claude",
+      "ban": "Ban",
+      "ai-governance": "AI Governance",
+      "accountability": "Accountability",
+      "transparency": "Transparency",
+      "research": "Research",
+      "annual-report": "Annual Report",
+      "report": "Report",
+      "autopilot": "Autopilot"
+    }
   },
   "api": {
     "eyebrow": "Developer Resources",
@@ -732,7 +755,8 @@
     "openSource": "Open source",
     "openSourceText": "ALPAR is licensed under AGPL-3.0. Anyone can audit the code, run an instance, or contribute. We believe trust infrastructure should itself be trustworthy.",
     "principlesTitle": "Our Core Principles",
-    "principlesSubtitle": "How ALPAR AI is building the decentralized future of artificial intelligence accountability."
+    "principlesSubtitle": "How ALPAR AI is building the decentralized future of artificial intelligence accountability.",
+    "description": "Learn about ALPAR AI, our mission, team and trust infrastructure for AI."
   },
   "legal": {
     "termsTitle": "Terms of Service",
@@ -891,7 +915,10 @@
     "imprintRepresentation": "Legal Representation",
     "imprintRepresentationText": "Represented by Ercüment Erden.",
     "imprintDisclaimer": "Disclaimer",
-    "imprintDisclaimerText": "The contents of this platform are user-submitted. ALPAR AI acts as an intermediary host according to Article 14 of the EU E-Commerce Directive and is not responsible for user-generated content."
+    "imprintDisclaimerText": "The contents of this platform are user-submitted. ALPAR AI acts as an intermediary host according to Article 14 of the EU E-Commerce Directive and is not responsible for user-generated content.",
+    "termsDesc": "ALPAR AI Terms of Service.",
+    "cookiesDesc": "ALPAR AI Cookie Policy.",
+    "privacyDesc": "ALPAR AI Privacy Policy."
   },
   "dilemmas": {
     "pageTitle": "AI Dilemmas",
@@ -1010,7 +1037,22 @@
     "takedownRequests": "Takedown requests",
     "commitmentText1": "ALPAR AI is committed to operating with full transparency. Every moderation decision follows a documented process, and aggregate statistics are published monthly.",
     "commitmentText2": "We do not accept payment to alter incident records. Providers may submit factual corrections through the official response process only.",
-    "commitmentText3": "Our moderation team operates independently. No AI provider has the ability to suppress or alter published incident reports."
+    "commitmentText3": "Our moderation team operates independently. No AI provider has the ability to suppress or alter published incident reports.",
+    "trustScoreMethodology": "Trust Score™ Methodology",
+    "trustScoreMethodologyDesc": "ALPAR AI calculates a Trust Score for each AI provider on a 0-100 scale to quantify their transparency and accountability to the public.",
+    "transparencyCommitment": "Our commitment",
+    "methodologyFormulaTitle": "Trust Score =",
+    "methodologyFormula": "(Verified Incidents × -5) + (Response Speed × +20) + (Transparency Report × +15) + (User Rating × +10) + (Audit Score × +30)",
+    "methodologyFormulaNote": "* Normalized to a 0–100 scale. Lower scores indicate higher rates of unaddressed AI incidents.",
+    "methodologyIncidentsTitle": "Verified Incidents",
+    "methodologyIncidentsDesc": "Negative impact. Each verified incident reduces the provider score.",
+    "methodologyResponseTitle": "Response Rate & Speed",
+    "methodologyResponseDesc": "Positive impact. Prompt official responses to incidents increase score.",
+    "methodologyRatingsTitle": "User Ratings",
+    "methodologyRatingsDesc": "Community evaluations of model features and performance.",
+    "methodologyAuditingTitle": "Independent Auditing",
+    "methodologyAuditingDesc": "Credits given for publishing public bias, privacy, and safety audits.",
+    "description": "ALPAR AI Transparency Report. Real-time metrics on moderation, audit logs, and provider responses."
   },
   "models": {
     "page_title": "AI Models Directory",
@@ -1125,5 +1167,8 @@
     "success": "Subscribed successfully!",
     "success_toast": "Thank you! You are now subscribed.",
     "privacy": "Zero spam. Unsubscribe at any time."
+  },
+  "submit": {
+    "description": "Submit a new AI incident with proof and context."
   }
 }

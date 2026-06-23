@@ -5,7 +5,10 @@ import { LegalLayout } from "@/components/legal/legal-layout";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "legal" });
-  return { title: t("termsTitle") };
+  return {
+    title: t("termsTitle"),
+    description: t("termsDesc"),
+  };
 }
 
 export default async function TermsPage({ params }: { params: Promise<{ locale: string }> }) {

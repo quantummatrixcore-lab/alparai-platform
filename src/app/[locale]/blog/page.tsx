@@ -26,28 +26,6 @@ const CARD_GRADIENTS = [
   "from-indigo-900/50 via-blue-900/30 to-cyan-900/50 border-indigo-500/10",
 ];
 
-const TAG_TRANSLATIONS: Record<string, string> = {
-  opinion: "Görüş",
-  "ai-ethics": "AI Etiği",
-  governance: "Yönetişim",
-  guide: "Rehber",
-  incidents: "Olaylar",
-  tutorial: "Kılavuz",
-  security: "Güvenlik",
-  privacy: "Gizlilik",
-  "pii-guardian": "KVT Koruyucu",
-  regulation: "Düzenleme",
-  claude: "Claude",
-  ban: "Yasak",
-  "ai-governance": "AI Yönetişimi",
-  accountability: "Hesap Verebilirlik",
-  transparency: "Şeffaflık",
-  research: "Araştırma",
-  "annual-report": "Yıllık Rapor",
-  report: "Rapor",
-  autopilot: "Otopilot",
-};
-
 function getPostIcon(slug: string) {
   const s = slug.toLowerCase();
   if (s.includes("accountability-matters")) {
@@ -110,14 +88,14 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
     title_tr: p.title_tr,
     description: p.content_en.slice(0, 160) + "...",
     description_tr: p.content_tr.slice(0, 160) + "...",
-    author: "ALPAR AI Autopilot",
-    author_tr: "ALPAR AI Otopilot",
+    author: t("author"),
+    author_tr: t("author"),
     date: p.published_at ?? p.created_at,
     readingTime: Math.max(
       1,
       Math.ceil((locale === "tr" ? p.content_tr : p.content_en).split(/\s+/).length / 200),
     ),
-    tags: ["Report", "Autopilot"],
+    tags: ["report", "autopilot"],
   }));
 
   const posts = [...dbPosts, ...getAllPosts()].sort(
@@ -168,8 +146,7 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
 
                   <div className="relative z-10 mt-2 flex flex-wrap gap-1.5">
                     {post.tags.map((tag) => {
-                      const displayTag =
-                        locale === "tr" ? TAG_TRANSLATIONS[tag.toLowerCase()] || tag : tag;
+                      const displayTag = t("tags." + tag.toLowerCase(), { defaultValue: tag });
                       return (
                         <span
                           key={tag}

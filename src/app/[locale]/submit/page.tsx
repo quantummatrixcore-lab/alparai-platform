@@ -9,8 +9,13 @@ import type { AIProvider, AIModel } from "@/types";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "nav" });
-  return { title: t("report") };
+  const t = await getTranslations({ locale, namespace: "submit" });
+  return {
+    title: t("title", { defaultValue: "Report AI Failure" }),
+    description: t("description", {
+      defaultValue: "Submit a new AI incident with proof and context.",
+    }),
+  };
 }
 
 export default async function SubmitPage({ params }: { params: Promise<{ locale: string }> }) {
