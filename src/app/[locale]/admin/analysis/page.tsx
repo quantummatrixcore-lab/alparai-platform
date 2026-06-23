@@ -68,9 +68,7 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
             <FileText className="text-brand-400 h-6 w-6" />
             {t("analysisHeading")}
           </h1>
-          <p className="text-fg-muted mt-1 text-sm">
-            Consolidated Multi-Model AI Auditing & Vulnerability Tracker
-          </p>
+          <p className="text-fg-muted mt-1 text-sm">{t("analysisSubheading")}</p>
         </div>
         <nav className="flex items-center gap-1 text-sm">
           <Link

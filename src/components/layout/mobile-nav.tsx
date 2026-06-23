@@ -21,11 +21,20 @@ const links = [
   { href: "/contact", key: "contact" },
 ] as const;
 
-export function MobileNav() {
+export function MobileNav({
+  user,
+}: {
+  user?: {
+    role: "user" | "moderator" | "admin" | "ceo";
+  } | null;
+}) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const t = useTranslations("nav");
   const tCommon = useTranslations("common");
+
+  const isMod = user && (user.role === "moderator" || user.role === "admin" || user.role === "ceo");
+  const activeLinks = isMod ? [...links, { href: "/admin", key: "admin" } as const] : links;
 
   useEffect(() => {
     if (open) {
@@ -48,7 +57,7 @@ export function MobileNav() {
   }, [pathname]);
 
   return (
-    <div className="md:hidden">
+    <div className="lg:hidden">
       <button
         onClick={() => setOpen(true)}
         className="text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary focus-visible:ring-brand-500 inline-flex h-10 w-10 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:outline-none"
@@ -77,7 +86,7 @@ export function MobileNav() {
             </button>
           </div>
           <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-4">
-            {links.map((link) => {
+            {activeLinks.map((link) => {
               const isActive =
                 link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
               return (

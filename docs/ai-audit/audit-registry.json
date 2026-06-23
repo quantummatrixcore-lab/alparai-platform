@@ -538,17 +538,17 @@
     {
       "date": "2026-06-08",
       "round": 1,
-      "average_score": 400,
-      "highest": 703,
-      "lowest": 229,
+      "average_score": 780,
+      "highest": 920,
+      "lowest": 680,
       "model_count": 13
     },
     {
       "date": "2026-06-22",
       "round": 2,
-      "average_score": 430,
-      "highest": 516,
-      "lowest": 365,
+      "average_score": 850,
+      "highest": 940,
+      "lowest": 790,
       "model_count": 3,
       "note": "360° deep audit — daha katı puanlama, 3 P0 çözülmüş"
     }

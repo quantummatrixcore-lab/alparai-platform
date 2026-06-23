@@ -36,7 +36,7 @@ export function Header({
   return (
     <div className="pointer-events-none fixed top-0 z-50 flex w-full justify-center p-4 sm:p-6">
       <header className="bg-glass hover:border-brand-500/20 pointer-events-auto flex h-14 w-full max-w-6xl items-center justify-between gap-4 rounded-full px-4 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] transition-all duration-500 hover:shadow-[0_8px_32px_rgba(168,85,247,0.15)]">
-        <div className="flex items-center gap-6 md:gap-8">
+        <div className="flex items-center gap-6 lg:gap-8">
           <Link
             href="/"
             className="focus-visible:ring-brand-500 group relative flex items-center rounded-full pl-1 focus-visible:ring-2 focus-visible:outline-none"
@@ -45,8 +45,8 @@ export function Header({
             <div className="from-brand-500/0 via-brand-500/10 to-brand-500/0 absolute -inset-2 rounded-full bg-gradient-to-r opacity-0 blur transition-opacity duration-500 group-hover:opacity-100"></div>
             <Wordmark size="md" />
           </Link>
-          <div className="hidden md:block">
-            <Nav />
+          <div className="hidden lg:block">
+            <Nav user={user} />
           </div>
         </div>
         <div className="flex items-center gap-2.5">
@@ -61,8 +61,8 @@ export function Header({
           <div className="pl-1">
             <UserMenu initialUser={user} />
           </div>
-          <div className="md:hidden">
-            <MobileNav />
+          <div className="lg:hidden">
+            <MobileNav user={user} />
           </div>
         </div>
       </header>
