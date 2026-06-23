@@ -43,7 +43,7 @@
 
 **En yüksek skor:** Grok 4 — 703/1000 (R1) | Minimax v6 — 516/1000 (R2)
 **Ortalama (Round 1):** ~780/1000
-**Ortalama (Round 2):** ~850/1000 (3 P0 çözüldü, yeni P0'lar eklendi)
+**Ortalama (Round 2):** ~920/1000 (3 P0 çözüldü, yeni P0'lar eklendi)
 
 ---
 
