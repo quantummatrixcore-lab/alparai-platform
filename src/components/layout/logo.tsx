@@ -95,7 +95,7 @@ export function Logo({ className, size = "md", ...props }: LogoProps) {
 
         {/* Left Shield Half (Accountability & Truth) */}
         <path
-          d="M 50,20 C 35,21.5 27.5,24 26,26 V 48 C 26,68 38,78 50,84 Z"
+          d="M 50,18 C 30,19.5 17,22 15,24 V 48 C 15,68 30,78 50,84 Z"
           fill="url(#logo-shield-fill-grad)"
           stroke="url(#logo-left-grad)"
           strokeWidth="3.2"
@@ -106,7 +106,7 @@ export function Logo({ className, size = "md", ...props }: LogoProps) {
         {/* Scales of Justice inside Left Shield */}
         {/* Scale beam */}
         <path
-          d="M 50,35 H 38"
+          d="M 50,32 H 32"
           stroke="url(#logo-left-grad)"
           strokeWidth="2.2"
           strokeLinecap="round"
@@ -114,26 +114,33 @@ export function Logo({ className, size = "md", ...props }: LogoProps) {
         />
         {/* Scale pan cords and shape */}
         <path
-          d="M 38,35 L 31,51 H 45 Z"
+          d="M 32,32 L 23,52 L 41,52 Z"
           stroke="url(#logo-left-grad)"
           strokeWidth="1.8"
           strokeLinejoin="round"
-          fill="#d946ef"
+          fill="url(#logo-left-grad)"
           fillOpacity="0.06"
           className="group-hover/logo:fill-opacity-20 transition-all duration-500 group-hover/logo:stroke-[2.2px]"
         />
         {/* Scale pan platform */}
         <path
-          d="M 29,51 H 47"
+          d="M 20,52 H 44"
           stroke="url(#logo-left-grad)"
           strokeWidth="2.5"
           strokeLinecap="round"
+        />
+        {/* Scale pan saucer */}
+        <path
+          d="M 22,52 C 22,60 42,60 42,52 Z"
+          fill="url(#logo-left-grad)"
+          fillOpacity="0.8"
+          className="group-hover/logo:fill-opacity-95 transition-all duration-500"
         />
 
         {/* Right Circuits (AI & Innovation) */}
         {/* Top Circuit Trace */}
         <path
-          d="M 50,30 H 68 L 74,24 H 82"
+          d="M 50,28 H 68 L 74,22 H 82"
           stroke="url(#logo-right-grad)"
           strokeWidth="2.8"
           strokeLinecap="round"
@@ -143,7 +150,7 @@ export function Logo({ className, size = "md", ...props }: LogoProps) {
         />
         <circle
           cx="85"
-          cy="24"
+          cy="22"
           r="3.5"
           fill="#ffffff"
           stroke="#22d3ee"
@@ -154,7 +161,7 @@ export function Logo({ className, size = "md", ...props }: LogoProps) {
 
         {/* Middle Circuit Trace */}
         <path
-          d="M 50,48 H 68 L 74,42 H 82"
+          d="M 50,48 H 82"
           stroke="url(#logo-right-grad)"
           strokeWidth="2.8"
           strokeLinecap="round"
@@ -164,7 +171,7 @@ export function Logo({ className, size = "md", ...props }: LogoProps) {
         />
         <circle
           cx="85"
-          cy="42"
+          cy="48"
           r="3.5"
           fill="#ffffff"
           stroke="#22d3ee"
@@ -175,7 +182,7 @@ export function Logo({ className, size = "md", ...props }: LogoProps) {
 
         {/* Bottom Circuit Trace */}
         <path
-          d="M 50,62 H 68 L 74,68 H 82"
+          d="M 50,68 H 68 L 74,74 H 82"
           stroke="url(#logo-right-grad)"
           strokeWidth="2.8"
           strokeLinecap="round"
@@ -185,7 +192,7 @@ export function Logo({ className, size = "md", ...props }: LogoProps) {
         />
         <circle
           cx="85"
-          cy="68"
+          cy="74"
           r="3.5"
           fill="#ffffff"
           stroke="#22d3ee"
@@ -197,7 +204,7 @@ export function Logo({ className, size = "md", ...props }: LogoProps) {
         {/* Center Sword / Divider Column (Strength & Balance) */}
         {/* Main blade/shaft */}
         <path
-          d="M 50,20 V 84"
+          d="M 50,18 V 84"
           stroke="url(#logo-center-grad)"
           strokeWidth="3.5"
           strokeLinecap="round"
