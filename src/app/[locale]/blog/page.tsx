@@ -24,6 +24,28 @@ const CARD_GRADIENTS = [
   "from-indigo-900/50 via-blue-900/30 to-cyan-900/50 border-indigo-500/10",
 ];
 
+const TAG_TRANSLATIONS: Record<string, string> = {
+  opinion: "Görüş",
+  "ai-ethics": "AI Etiği",
+  governance: "Yönetişim",
+  guide: "Rehber",
+  incidents: "Olaylar",
+  tutorial: "Kılavuz",
+  security: "Güvenlik",
+  privacy: "Gizlilik",
+  "pii-guardian": "KVT Koruyucu",
+  regulation: "Düzenleme",
+  claude: "Claude",
+  ban: "Yasak",
+  "ai-governance": "AI Yönetişimi",
+  accountability: "Hesap Verebilirlik",
+  transparency: "Şeffaflık",
+  research: "Araştırma",
+  "annual-report": "Yıllık Rapor",
+  report: "Rapor",
+  autopilot: "Otopilot",
+};
+
 function getPostIcon(slug: string) {
   const s = slug.toLowerCase();
   if (s.includes("accountability-matters")) {
@@ -141,14 +163,18 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
                   </div>
 
                   <div className="relative z-10 mt-2 flex flex-wrap gap-1.5">
-                    {post.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded bg-black/40 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-white/90 uppercase backdrop-blur-sm"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                    {post.tags.map((tag) => {
+                      const displayTag =
+                        locale === "tr" ? TAG_TRANSLATIONS[tag.toLowerCase()] || tag : tag;
+                      return (
+                        <span
+                          key={tag}
+                          className="rounded bg-black/40 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-white/90 uppercase backdrop-blur-sm"
+                        >
+                          {displayTag}
+                        </span>
+                      );
+                    })}
                   </div>
                 </div>
                 <CardContent className="space-y-3 p-6">

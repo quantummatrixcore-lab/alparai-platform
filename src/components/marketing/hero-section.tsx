@@ -232,22 +232,22 @@ export function HeroSection({
           </div>
 
           {/* Right: Bug Bounty Card */}
-          <div className="bg-glass border-warning-500/20 hover:border-warning-500/40 border-t-warning-500/50 relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-t-2 p-6 shadow-2xl transition-all duration-300 hover:shadow-[0_0_40px_rgba(249,115,22,0.12)]">
-            <div className="bg-warning-500/10 absolute -top-6 -right-6 -z-10 h-24 w-24 rounded-full blur-xl" />
+          <div className="bg-glass/60 border-warning-500/30 hover:border-warning-500/50 border-t-warning-500/60 relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-t-2 p-6 shadow-2xl transition-all duration-300 hover:shadow-[0_0_40px_rgba(249,115,22,0.18)]">
+            <div className="bg-warning-500/15 absolute -top-6 -right-6 -z-10 h-24 w-24 rounded-full blur-xl" />
             <div className="flex items-start gap-4">
-              <div className="bg-warning-500/15 border-warning-500/25 text-warning-400 shrink-0 rounded-xl border p-3">
+              <div className="bg-warning-500/20 border-warning-500/30 text-warning-300 shrink-0 rounded-xl border p-3">
                 <Trophy className="h-6 w-6" />
               </div>
               <div className="flex-grow space-y-2">
                 <div className="flex items-center gap-2">
-                  <span className="border-warning-500/40 bg-warning-500/15 text-warning-400 rounded-sm border px-2 py-0.5 text-[9px] font-black tracking-[0.2em] uppercase">
+                  <span className="border-warning-500/40 bg-warning-500/20 text-warning-300 rounded-sm border px-2 py-0.5 text-[9px] font-black tracking-[0.2em] uppercase">
                     {t("bug_bounty_badge", { defaultValue: "Bug Bounty" })}
                   </span>
                 </div>
-                <h4 className="text-warning-400 text-lg font-black tracking-tight">
+                <h4 className="text-warning-300 text-xl font-black tracking-tight drop-shadow-[0_2px_12px_rgba(249,115,22,0.45)]">
                   {t("title_accent")}
                 </h4>
-                <p className="text-fg-secondary text-xs leading-relaxed">
+                <p className="text-xs leading-relaxed font-medium text-white/85">
                   {t("title_accent_desc")}
                 </p>
               </div>
