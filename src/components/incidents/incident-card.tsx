@@ -203,7 +203,7 @@ export function IncidentCard({
                   href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(displayTitle)}&url=${encodeURIComponent(shareUrl)}`}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="text-fg-muted p-0.5 transition-colors hover:text-white"
+                  className="p-0.5 text-zinc-100 transition-colors hover:text-white"
                   aria-label="Share on X"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -217,7 +217,7 @@ export function IncidentCard({
                   href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="text-fg-muted p-0.5 transition-colors hover:text-[#0077b5]"
+                  className="p-0.5 text-[#0077b5] transition-colors hover:text-[#0077b5]/80"
                   aria-label="Share on LinkedIn"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -228,7 +228,7 @@ export function IncidentCard({
                 <motion.button
                   whileHover={{ scale: 1.2, y: -1 }}
                   whileTap={{ scale: 0.9 }}
-                  className="text-fg-muted cursor-pointer p-0.5 transition-colors hover:text-[#e1306c]"
+                  className="cursor-pointer p-0.5 text-[#e1306c] transition-colors hover:text-[#e1306c]/80"
                   aria-label="Copy for Instagram"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -246,7 +246,7 @@ export function IncidentCard({
                   href={`https://api.whatsapp.com/send?text=${encodeURIComponent(displayTitle + " " + shareUrl)}`}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="text-fg-muted p-0.5 transition-colors hover:text-[#25d366]"
+                  className="p-0.5 text-[#25d366] transition-colors hover:text-[#25d366]/80"
                   aria-label="Share on WhatsApp"
                   onClick={(e) => e.stopPropagation()}
                 >
