@@ -1,7 +1,6 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/session";
 import { Container } from "@/components/ui/layout";
 import { IncidentDetailView } from "@/components/incidents/incident-detail";
@@ -35,7 +34,6 @@ export default async function IncidentDetailPage({
   setRequestLocale(locale);
   const tCommon = await getTranslations({ locale, namespace: "common" });
   const supabase = await createServerClient();
-  const admin = createAdminClient();
 
   const { data: incidentRow } = await supabase
     .from("incidents")
@@ -140,13 +138,6 @@ export default async function IncidentDetailPage({
       .maybeSingle();
     if (vote) userVote = (vote as { value: -1 | 0 | 1 }).value;
   }
-
-  // Fire-and-forget view increment
-  void admin
-    .from("incidents")
-    .update({ views_count: ((r["views_count"] as number) ?? 0) + 1 } as never)
-    .eq("id", id)
-    .then(() => null);
 
   return (
     <Container className="py-10">

@@ -7,7 +7,15 @@ import { Link } from "@/i18n/routing";
 import { Card } from "@/components/ui/card";
 import { SeverityBadge, StatusBadge, Badge } from "@/components/ui/badge";
 import type { IncidentListItem, IncidentSeverity, IncidentStatus } from "@/types";
-import { MessageSquare, ThumbsUp, Clock, Building2, CheckCircle2 } from "lucide-react";
+import {
+  MessageSquare,
+  ThumbsUp,
+  Clock,
+  Building2,
+  CheckCircle2,
+  Twitter,
+  Linkedin,
+} from "lucide-react";
 import { motion } from "framer-motion";
 
 export function IncidentCard({
@@ -43,6 +51,12 @@ export function IncidentCard({
       return false;
     }
   }, [incident.created_at]);
+
+  const shareUrl = React.useMemo(() => {
+    const relativeUrl = `/incidents/${incident.id}`;
+    if (typeof window === "undefined") return `https://alparai.com${relativeUrl}`;
+    return `${window.location.origin}${relativeUrl}`;
+  }, [incident.id]);
 
   const severityBorders: Record<IncidentSeverity, string> = {
     low: "border-l-4 border-l-success-500/80 focus-within:border-l-success-500",
@@ -153,6 +167,28 @@ export function IncidentCard({
                 <MessageSquare className="h-3.5 w-3.5" aria-hidden="true" />
                 {incident.evidence_count}
               </span>
+              <div className="ml-1 flex items-center gap-2 border-l border-white/10 pl-3">
+                <a
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(displayTitle)}&url=${encodeURIComponent(shareUrl)}`}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="text-fg-muted hover:text-brand-400 p-0.5 transition-colors"
+                  aria-label="Share on X"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Twitter className="h-3.5 w-3.5" />
+                </a>
+                <a
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="text-fg-muted hover:text-brand-400 p-0.5 transition-colors"
+                  aria-label="Share on LinkedIn"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Linkedin className="h-3.5 w-3.5" />
+                </a>
+              </div>
             </div>
             <span>
               {t("by")} {incident.author_name ?? t("anonymous")}
