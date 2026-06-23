@@ -7,7 +7,10 @@ import { ContactForm } from "@/components/marketing/contact-form";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "contact" });
-  return { title: t("title") };
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
 }
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: string }> }) {

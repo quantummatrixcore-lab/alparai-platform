@@ -6,28 +6,6 @@ import { getAllPosts, getPostBySlug } from "@/content/blog-posts";
 import { ArrowLeft, Calendar, Clock, User } from "lucide-react";
 import { createServerClient } from "@/lib/supabase/server";
 
-const TAG_TRANSLATIONS: Record<string, string> = {
-  opinion: "Görüş",
-  "ai-ethics": "AI Etiği",
-  governance: "Yönetişim",
-  guide: "Rehber",
-  incidents: "Olaylar",
-  tutorial: "Kılavuz",
-  security: "Güvenlik",
-  privacy: "Gizlilik",
-  "pii-guardian": "KVT Koruyucu",
-  regulation: "Düzenleme",
-  claude: "Claude",
-  ban: "Yasak",
-  "ai-governance": "AI Yönetişimi",
-  accountability: "Hesap Verebilirlik",
-  transparency: "Şeffaflık",
-  research: "Araştırma",
-  "annual-report": "Yıllık Rapor",
-  report: "Rapor",
-  autopilot: "Otopilot",
-};
-
 export async function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
 }
@@ -38,6 +16,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: "blog" });
   const post = getPostBySlug(slug);
   if (post) {
     const title = locale === "tr" ? post.title_tr : post.title;
@@ -78,7 +57,7 @@ export async function generateMetadata({
       description: desc,
       type: "article",
       publishedTime: dbPost.published_at ?? dbPost.created_at,
-      authors: ["ALPAR AI Autopilot"],
+      authors: [t("author")],
       locale,
     },
   };
@@ -178,10 +157,10 @@ export default async function BlogPostPage({
     title = locale === "tr" ? dbPost.title_tr : dbPost.title_en;
     content = locale === "tr" ? dbPost.content_tr : dbPost.content_en;
     description = content.slice(0, 160) + "...";
-    author = locale === "tr" ? "ALPAR AI Otopilot" : "ALPAR AI Autopilot";
+    author = t("author");
     date = dbPost.published_at ?? dbPost.created_at;
     readingTime = Math.max(1, Math.ceil(content.split(/\s+/).length / 200));
-    tags = ["Report", "Autopilot"];
+    tags = ["report", "autopilot"];
   }
 
   const html = renderMarkdown(content);
@@ -224,7 +203,7 @@ export default async function BlogPostPage({
           </div>
           <div className="flex flex-wrap gap-1.5">
             {tags.map((tag) => {
-              const displayTag = locale === "tr" ? TAG_TRANSLATIONS[tag.toLowerCase()] || tag : tag;
+              const displayTag = t("tags." + tag.toLowerCase(), { defaultValue: tag });
               return (
                 <span
                   key={tag}

@@ -15,7 +15,10 @@ import Image from "next/image";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "leaderboard" });
-  return { title: t("title") };
+  return {
+    title: t("title"),
+    description: t("subtitle"),
+  };
 }
 
 export default async function LeaderboardPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -165,7 +168,7 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <caption className="sr-only">AI Models Leaderboard Table</caption>
+              <caption className="sr-only">{t("caption")}</caption>
               <thead>
                 <tr className="border-border-subtle text-fg-muted border-b text-left text-xs font-semibold tracking-wider uppercase">
                   <th className="w-12 p-4">{t("rank")}</th>

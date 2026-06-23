@@ -4,7 +4,10 @@ import { LegalLayout } from "@/components/legal/legal-layout";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "legal" });
-  return { title: t("cookiesTitle") };
+  return {
+    title: t("cookiesTitle"),
+    description: t("cookiesDesc"),
+  };
 }
 
 export default async function CookiesPage({ params }: { params: Promise<{ locale: string }> }) {

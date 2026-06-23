@@ -10,7 +10,10 @@ import { FounderStory } from "@/components/marketing/founder-story";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "about" });
-  return { title: t("mission") };
+  return {
+    title: t("mission"),
+    description: t("description"),
+  };
 }
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {

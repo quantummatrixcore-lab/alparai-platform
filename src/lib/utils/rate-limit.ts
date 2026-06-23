@@ -26,6 +26,9 @@ let _limiters: Record<string, Ratelimit> | null = null;
 function getLimiters(): Record<string, Ratelimit> {
   if (_limiters) return _limiters;
   if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("CRITICAL: Upstash Redis environment variables are missing in production.");
+    }
     return {};
   }
   if (!_redis) {

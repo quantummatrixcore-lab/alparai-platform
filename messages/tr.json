@@ -212,7 +212,8 @@
     "avgResponseRate": "Ort. yanıt oranı",
     "filter_all": "Tüm Sağlayıcılar",
     "filter_verified": "Yalnızca Doğrulanmış",
-    "filter_with_incidents": "Olayı Olanlar"
+    "filter_with_incidents": "Olayı Olanlar",
+    "caption": "AI Modelleri Liderlik Tablosu"
   },
   "auth": {
     "signin_with_google": "Google ile devam et",
@@ -405,7 +406,6 @@
     "create_api_key": "+ API Anahtarı Oluştur",
     "prod_gateway_master": "Ana Üretim Geçidi",
     "stag_sandbox_client": "Staging Sandbox İstemcisi",
-    "active": "Aktif",
     "revoked": "İptal Edildi",
     "copied": "KOPYALANDI",
     "copy": "KOPYALA",
@@ -631,7 +631,8 @@
       "sent_title": "Mesaj gönderildi!",
       "sent_desc": "Bizimle iletişime geçtiğiniz için teşekkür ederiz. En kısa sürede size döneceğiz.",
       "sent_toast": "Mesaj başarıyla gönderildi"
-    }
+    },
+    "description": "ALPAR AI ekibiyle iletişime geçin."
   },
   "badge": {
     "severity": {
@@ -666,7 +667,29 @@
     "title": "ALPAR blog",
     "description": "AI hesap verebilirliği için güven altyapısı oluşturma üzerine derin dalışlar, yıllık raporlar ve mühendislik notları.",
     "min": "dk okuma",
-    "back": "Tüm yazılara dön"
+    "back": "Tüm yazılara dön",
+    "author": "ALPAR AI Otopilot",
+    "tags": {
+      "opinion": "Görüş",
+      "ai-ethics": "AI Etiği",
+      "governance": "Yönetişim",
+      "guide": "Rehber",
+      "incidents": "Olaylar",
+      "tutorial": "Kılavuz",
+      "security": "Güvenlik",
+      "privacy": "Gizlilik",
+      "pii-guardian": "KVT Koruyucu",
+      "regulation": "Düzenleme",
+      "claude": "Claude",
+      "ban": "Yasak",
+      "ai-governance": "AI Yönetişimi",
+      "accountability": "Hesap Verebilirlik",
+      "transparency": "Şeffaflık",
+      "research": "Araştırma",
+      "annual-report": "Yıllık Rapor",
+      "report": "Rapor",
+      "autopilot": "Otopilot"
+    }
   },
   "api": {
     "eyebrow": "Geliştirici Kaynakları",
@@ -732,7 +755,8 @@
     "openSource": "Açık kaynak",
     "openSourceText": "ALPAR, AGPL-3.0 altında lisanslanmıştır. Herkes kodu denetleyebilir, bir örnek çalıştırabilir veya katkıda bulunabilir. Güven altyapısının kendisinin de güvenilir olması gerektiğine inanıyoruz.",
     "principlesTitle": "Temel İlkelerimiz",
-    "principlesSubtitle": "ALPAR AI'ın yapay zeka hesap verebilirliğinin merkeziyetsiz geleceğini nasıl inşa ettiğini inceleyin."
+    "principlesSubtitle": "ALPAR AI'ın yapay zeka hesap verebilirliğinin merkeziyetsiz geleceğini nasıl inşa ettiğini inceleyin.",
+    "description": "ALPAR AI, misyonumuz, ekibimiz ve yapay zeka güven altyapımız hakkında bilgi edinin."
   },
   "legal": {
     "termsTitle": "Kullanım Koşulları",
@@ -891,7 +915,10 @@
     "imprintRepresentation": "Yasal Temsil",
     "imprintRepresentationText": "Ercüment Erden tarafından temsil edilmektedir.",
     "imprintDisclaimer": "Sorumluluk Reddi",
-    "imprintDisclaimerText": "Bu platformun içeriği kullanıcılar tarafından sağlanmaktadır. ALPAR AI, AB E-Ticaret Direktifi Madde 14 kapsamında aracı hizmet sağlayıcı olarak hareket eder ve kullanıcılar tarafından oluşturulan içeriklerden sorumlu değildir."
+    "imprintDisclaimerText": "Bu platformun içeriği kullanıcılar tarafından sağlanmaktadır. ALPAR AI, AB E-Ticaret Direktifi Madde 14 kapsamında aracı hizmet sağlayıcı olarak hareket eder ve kullanıcılar tarafından oluşturulan içeriklerden sorumlu değildir.",
+    "termsDesc": "ALPAR AI Kullanım Koşulları.",
+    "cookiesDesc": "ALPAR AI Çerez Politikası.",
+    "privacyDesc": "ALPAR AI Gizlilik Politikası."
   },
   "dilemmas": {
     "pageTitle": "Yapay Zeka Dilemmaları",
@@ -1010,7 +1037,22 @@
     "takedownRequests": "Kaldırma talepleri",
     "commitmentText1": "ALPAR AI, tam şeffaflıkla faaliyet göstermeyi taahhüt eder. Her moderasyon kararı belgelenmiş bir süreci takip eder ve toplu istatistikler aylık olarak yayınlanır.",
     "commitmentText2": "Olay kayıtlarını değiştirmek için ödeme kabul etmiyoruz. Sağlayıcılar, yalnızca resmi yanıt süreci aracılığıyla olgusal düzeltmeler gönderebilir.",
-    "commitmentText3": "Moderasyon ekibimiz bağımsız olarak çalışır. Hiçbir yapay zeka sağlayıcısı yayınlanan olay raporlarını kaldıramaz veya değiştiremez."
+    "commitmentText3": "Moderasyon ekibimiz bağımsız olarak çalışır. Hiçbir yapay zeka sağlayıcısı yayınlanan olay raporlarını kaldıramaz veya değiştiremez.",
+    "trustScoreMethodology": "Güven Puanı™ Metodolojisi",
+    "trustScoreMethodologyDesc": "ALPAR AI, yapay zeka sağlayıcılarının şeffaflığını ve halka karşı hesap verebilirliğini ölçmek için 0-100 ölçeğinde bir Güven Puanı hesaplar.",
+    "transparencyCommitment": "Taahhüdümüz",
+    "methodologyFormulaTitle": "Güven Puanı =",
+    "methodologyFormula": "(Doğrulanmış Olaylar × -5) + (Yanıt Hızı × +20) + (Şeffaflık Raporu × +15) + (Kullanıcı Değerlendirmesi × +10) + (Denetim Puanı × +30)",
+    "methodologyFormulaNote": "* 0–100 ölçeğine göre normalleştirilmiştir. Düşük puanlar, ele alınmamış AI olaylarının yüksek oranını gösterir.",
+    "methodologyIncidentsTitle": "Doğrulanmış Olaylar",
+    "methodologyIncidentsDesc": "Negatif etki. Her doğrulanmış olay, sağlayıcı puanını düşürür.",
+    "methodologyResponseTitle": "Yanıt Oranı ve Hızı",
+    "methodologyResponseDesc": "Pozitif etki. Olaylara verilen hızlı resmi yanıtlar puanı artırır.",
+    "methodologyRatingsTitle": "Kullanıcı Değerlendirmeleri",
+    "methodologyRatingsDesc": "Topluluğun model özellikleri ve performansı hakkındaki değerlendirmeleri.",
+    "methodologyAuditingTitle": "Bağımsız Denetim",
+    "methodologyAuditingDesc": "Kamusal taraflılık, gizlilik ve güvenlik denetimlerinin yayınlanması için verilen krediler.",
+    "description": "ALPAR AI Şeffaflık Raporu. Moderasyon, denetim günlükleri ve sağlayıcı yanıtları hakkında gerçek zamanlı metrikler."
   },
   "models": {
     "page_title": "AI Modelleri Dizini",
@@ -1125,5 +1167,8 @@
     "success": "Başarıyla abone olundu!",
     "success_toast": "Teşekkürler! Aboneliğiniz tamamlandı.",
     "privacy": "Sıfır spam. İstediğiniz zaman ayrılabilirsiniz."
+  },
+  "submit": {
+    "description": "Kanıt ve bağlamla birlikte yeni bir yapay zeka olayı bildirin."
   }
 }
