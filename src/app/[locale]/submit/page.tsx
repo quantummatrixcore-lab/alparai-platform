@@ -26,6 +26,7 @@ export default async function SubmitPage({ params }: { params: Promise<{ locale:
     supabase
       .from("ai_providers")
       .select("id, slug, name, description, logo_url, website_url, is_verified")
+      .neq("slug", "alpar-autopilot")
       .order("is_verified", { ascending: false })
       .order("name"),
     supabase

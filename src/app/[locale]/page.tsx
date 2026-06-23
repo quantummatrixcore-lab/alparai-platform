@@ -197,6 +197,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const leaderboard: LeaderboardEntry[] = (
     (providersResult.data as Array<Record<string, unknown>>) ?? []
   )
+    .filter((p) => p["slug"] !== "alpar-autopilot")
     .map((p) => ({
       provider_id: p["id"] as string,
       provider_name: (p["name"] as string) ?? "",
