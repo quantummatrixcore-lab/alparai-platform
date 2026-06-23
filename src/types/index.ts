@@ -38,6 +38,7 @@ export interface IncidentListItem {
   view_count: number;
   vote_count: number;
   evidence_count: number;
+  affected_count?: number;
   author_name: string | null;
   provider_name: string;
   provider_slug: string;
@@ -60,6 +61,7 @@ export interface IncidentDetail {
   view_count: number;
   upvotes: number;
   downvotes: number;
+  affected_count?: number;
   author_name: string | null;
   provider_name: string;
   provider_slug: string;

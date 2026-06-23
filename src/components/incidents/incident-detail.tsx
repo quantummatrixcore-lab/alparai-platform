@@ -13,6 +13,8 @@ import { Link } from "@/i18n/routing";
 import { TakedownButton } from "./takedown-button";
 import Image from "next/image";
 import { ViewTracker } from "./view-tracker";
+import { AffectedButton } from "./affected-button";
+import { CommentSection, type IncidentComment } from "./comment-section";
 
 export function IncidentDetailView({
   incident,
@@ -20,12 +22,18 @@ export function IncidentDetailView({
   providerResponse,
   userVote,
   isAuthenticated,
+  comments,
+  userAffected,
+  currentUserId,
 }: {
   incident: IncidentDetail;
   evidence: Array<{ id: string; file_name: string; file_url: string; file_type: string }>;
   providerResponse: ProviderResponse | null;
   userVote: -1 | 0 | 1;
   isAuthenticated: boolean;
+  comments: IncidentComment[];
+  userAffected: boolean;
+  currentUserId: string | null;
 }) {
   const t = useTranslations("incident");
   const tCat = useTranslations("categories");
@@ -236,6 +244,15 @@ export function IncidentDetailView({
             </CardContent>
           </Card>
         )}
+
+        <div className="mt-8 border-t border-white/5 pt-8">
+          <CommentSection
+            incidentId={incident.id}
+            comments={comments}
+            currentUserId={currentUserId}
+            isAuthenticated={isAuthenticated}
+          />
+        </div>
       </div>
 
       <aside className="space-y-4">
@@ -251,6 +268,12 @@ export function IncidentDetailView({
             <ShareButtons url={`/incidents/${incident.id}`} title={displayTitle} />
           </div>
         </div>
+        <AffectedButton
+          incidentId={incident.id}
+          initialAffectedCount={incident.affected_count ?? 0}
+          initialUserAffected={userAffected}
+          disabled={!isAuthenticated}
+        />
         <Card>
           <CardHeader>
             <CardTitle className="text-sm">{tCommon("details")}</CardTitle>
