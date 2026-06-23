@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { motion } from "framer-motion";
-import { Radio } from "lucide-react";
+import { Radio, AlertTriangle, ShieldAlert, Cpu, AlertCircle, Building2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type NewsTickerItem = {
   id: string;
@@ -25,7 +26,35 @@ const SEVERITY_DOTS: Record<NewsTickerItem["severity"], string> = {
   low: "bg-fg-muted",
 };
 
+function getSourceIcon(source?: string | null, severity?: string | null) {
+  const src = source?.toLowerCase() || "";
+  if (src.includes("openai") || src.includes("chatgpt")) {
+    return <Cpu className="h-3.5 w-3.5 shrink-0 text-emerald-400" />;
+  }
+  if (src.includes("google") || src.includes("gemini")) {
+    return <Cpu className="h-3.5 w-3.5 shrink-0 text-blue-400" />;
+  }
+  if (src.includes("anthropic") || src.includes("claude")) {
+    return <Cpu className="h-3.5 w-3.5 shrink-0 text-amber-500" />;
+  }
+  if (src.includes("microsoft") || src.includes("bing")) {
+    return <Cpu className="h-3.5 w-3.5 shrink-0 text-cyan-400" />;
+  }
+  if (src.includes("xai") || src.includes("grok")) {
+    return <Cpu className="h-3.5 w-3.5 shrink-0 text-purple-400" />;
+  }
+
+  if (severity === "critical")
+    return <ShieldAlert className="text-danger-400 h-3.5 w-3.5 shrink-0" />;
+  if (severity === "high")
+    return <AlertTriangle className="text-warning-400 h-3.5 w-3.5 shrink-0" />;
+  if (severity === "medium") return <AlertCircle className="text-brand-400 h-3.5 w-3.5 shrink-0" />;
+
+  return <Building2 className="text-fg-muted h-3.5 w-3.5 shrink-0" />;
+}
+
 export function NewsTicker({ items }: { items: NewsTickerItem[] }) {
+  const t = useTranslations("common");
   const displayItems = items.length > 0 ? [...items, ...items] : [];
 
   if (displayItems.length === 0) return null;
@@ -41,7 +70,7 @@ export function NewsTicker({ items }: { items: NewsTickerItem[] }) {
             <Radio className="text-danger-400 h-3.5 w-3.5" />
           </motion.div>
           <span className="text-danger-400 text-[10px] font-black tracking-[0.25em] whitespace-nowrap uppercase">
-            Canlı
+            {t("live")}
           </span>
         </div>
 
@@ -49,7 +78,7 @@ export function NewsTicker({ items }: { items: NewsTickerItem[] }) {
           <motion.div
             animate={{ x: ["0%", "-50%"] }}
             transition={{
-              duration: Math.max(20, displayItems.length * 6),
+              duration: Math.max(10, displayItems.length * 2.5),
               repeat: Infinity,
               ease: "linear",
             }}
@@ -60,9 +89,12 @@ export function NewsTicker({ items }: { items: NewsTickerItem[] }) {
                 <span
                   className={`h-1.5 w-1.5 shrink-0 rounded-full ${SEVERITY_DOTS[item.severity]} inline-block`}
                 />
-                <span className={`text-sm font-semibold ${SEVERITY_COLORS[item.severity]}`}>
-                  {item.title}
-                </span>
+                <div className="flex items-center gap-2">
+                  {getSourceIcon(item.source, item.severity)}
+                  <span className={`text-sm font-semibold ${SEVERITY_COLORS[item.severity]}`}>
+                    {item.title}
+                  </span>
+                </div>
                 {item.source && (
                   <span className="text-fg-muted text-xs font-medium">— {item.source}</span>
                 )}

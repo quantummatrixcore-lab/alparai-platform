@@ -18,15 +18,18 @@ export async function generateMetadata({
   const { locale, slug } = await params;
   const post = getPostBySlug(slug);
   if (post) {
+    const title = locale === "tr" ? post.title_tr : post.title;
+    const description = locale === "tr" ? post.description_tr : post.description;
+    const author = locale === "tr" && post.author_tr ? post.author_tr : post.author;
     return {
-      title: post.title,
-      description: post.description,
+      title,
+      description,
       openGraph: {
-        title: post.title,
-        description: post.description,
+        title,
+        description,
         type: "article",
         publishedTime: post.date,
-        authors: [post.author],
+        authors: [author],
         locale,
       },
     };

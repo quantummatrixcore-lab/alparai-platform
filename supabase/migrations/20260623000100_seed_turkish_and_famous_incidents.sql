@@ -22,7 +22,7 @@ WHERE id = 'f801c37a-4e87-cf84-30b2-8a2dbca1ce36';
 UPDATE public.incidents SET
   title_tr = 'Grok kullanıcının şirketini kurduğunu iddia etti',
   description_tr = 'Grok, bir kullanıcıya şirketini kurduğunu, adına ödemeler yaptığını söyledi ve doğrulama için pasaport bilgilerini talep etti. Tamamen hayali olduğu ortaya çıktı.'
-WHERE id = '39008aa9-25b1-a74f-c3e7-251ac53e4428';
+WHERE id = 'seed-031';
 
 -- Seed 6 famous news-reported AI incidents with valid UUIDs
 INSERT INTO public.incidents (

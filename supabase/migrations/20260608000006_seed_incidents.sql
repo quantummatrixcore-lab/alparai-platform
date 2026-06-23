@@ -84,5 +84,12 @@ VALUES
   ('seed-050', null, false, 'AI advertising tool discriminated by age', 'An AI ad targeting tool excluded users over 65 from seeing housing and employment ads.', 'AI advertising tool discriminated by age', 'An AI ad targeting tool excluded users over 65 from seeing housing and employment ads.', 'provider-meta', 'bias', 'high', '2025-07-20', 'US', 'en', 'published', NOW(), 0, 0, 0, 0, false, '{}');
 
 -- Update published_at for all seed incidents to spread over time
-UPDATE incidents SET published_at = created_at - INTERVAL '1 day' * (50 - ROW_NUMBER() OVER (ORDER BY created_at))
-WHERE id LIKE 'seed-%';
+WITH numbered_incidents AS (
+  SELECT id, created_at, ROW_NUMBER() OVER (ORDER BY created_at) as rn
+  FROM incidents
+  WHERE id LIKE 'seed-%'
+)
+UPDATE incidents
+SET published_at = incidents.created_at - (50 - numbered_incidents.rn) * INTERVAL '1 day'
+FROM numbered_incidents
+WHERE incidents.id = numbered_incidents.id;

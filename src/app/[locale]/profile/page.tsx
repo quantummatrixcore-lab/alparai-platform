@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "@/i18n/routing";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
@@ -66,10 +67,13 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
           </div>
         </CardHeader>
         <CardContent className="border-border-subtle grid grid-cols-2 gap-4 border-t pt-6 lg:grid-cols-3">
-          <div className="bg-bg-tertiary flex flex-col justify-center rounded-md p-4">
+          <Link
+            href="/my-incidents"
+            className="bg-bg-tertiary hover:bg-bg-secondary hover:border-border-subtle flex flex-col justify-center rounded-md border border-transparent p-4 transition-all duration-200"
+          >
             <p className="text-fg-primary text-2xl font-bold">{myIncidents ?? 0}</p>
             <p className="text-fg-muted text-xs">{t("incidentsReported")}</p>
-          </div>
+          </Link>
           <div className="bg-bg-tertiary flex flex-col justify-center rounded-md p-4">
             <p className="text-fg-primary text-2xl font-bold">{mySuggestions ?? 0}</p>
             <p className="text-fg-muted text-xs">{t("suggestionsMade")}</p>
