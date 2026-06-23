@@ -3,17 +3,64 @@ import { Container } from "@/components/ui/layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { getAllPosts } from "@/content/blog-posts";
-import { BookOpen, Clock } from "lucide-react";
+import {
+  BookOpen,
+  Clock,
+  Shield,
+  FileText,
+  Database,
+  AlertTriangle,
+  ShieldAlert,
+  Cpu,
+} from "lucide-react";
 import { createServerClient } from "@/lib/supabase/server";
 
 const CARD_GRADIENTS = [
-  "from-brand-600/80 via-purple-600/60 to-rose-600/80",
-  "from-blue-600/80 via-cyan-500/60 to-teal-600/80",
-  "from-amber-600/80 via-orange-500/60 to-rose-600/80",
-  "from-emerald-600/80 via-teal-500/60 to-cyan-600/80",
-  "from-violet-600/80 via-purple-500/60 to-pink-600/80",
-  "from-indigo-600/80 via-blue-500/60 to-cyan-600/80",
+  "from-brand-900/50 via-purple-900/30 to-rose-900/50 border-brand-500/10",
+  "from-blue-900/50 via-cyan-900/30 to-teal-900/50 border-blue-500/10",
+  "from-amber-900/50 via-orange-900/30 to-rose-900/50 border-amber-500/10",
+  "from-emerald-900/50 via-teal-900/30 to-cyan-900/50 border-emerald-500/10",
+  "from-violet-900/50 via-purple-900/30 to-pink-900/50 border-violet-500/10",
+  "from-indigo-900/50 via-blue-900/30 to-cyan-900/50 border-indigo-500/10",
 ];
+
+function getPostIcon(slug: string) {
+  const s = slug.toLowerCase();
+  if (s.includes("accountability-matters")) {
+    return (
+      <Shield className="text-brand-400 h-10 w-10 transition duration-300 group-hover:scale-110" />
+    );
+  }
+  if (s.includes("report-ai-incident")) {
+    return (
+      <FileText className="h-10 w-10 text-blue-400 transition duration-300 group-hover:scale-110" />
+    );
+  }
+  if (s.includes("public-record")) {
+    return (
+      <Database className="h-10 w-10 text-emerald-400 transition duration-300 group-hover:scale-110" />
+    );
+  }
+  if (s.includes("top-10-ai-incidents")) {
+    return (
+      <AlertTriangle className="h-10 w-10 text-rose-400 transition duration-300 group-hover:scale-110" />
+    );
+  }
+  if (s.includes("pii-guardian")) {
+    return (
+      <ShieldAlert className="text-warning-400 h-10 w-10 transition duration-300 group-hover:scale-110" />
+    );
+  }
+  if (s.includes("claude-banned")) {
+    return (
+      <Cpu className="h-10 w-10 text-purple-400 transition duration-300 group-hover:scale-110" />
+    );
+  }
+
+  return (
+    <BookOpen className="text-brand-400 h-10 w-10 transition duration-300 group-hover:scale-110" />
+  );
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -68,8 +115,11 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {posts.map((post, idx) => {
-          const title = locale === "tr" ? post.title_tr : post.title;
-          const description = locale === "tr" ? post.description_tr : post.description;
+          const title = locale === "tr" ? post.title_tr || post.title : post.title || post.title_tr;
+          const description =
+            locale === "tr"
+              ? post.description_tr || post.description
+              : post.description || post.description_tr;
           const gradient = CARD_GRADIENTS[idx % CARD_GRADIENTS.length];
           return (
             <Link
@@ -77,16 +127,24 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
               href={`/blog/${post.slug}`}
               className="group focus-visible:ring-brand-500 rounded-xl focus-visible:ring-2 focus-visible:outline-none"
             >
-              <Card className="group-hover:border-brand-500/40 h-full overflow-hidden transition-all group-hover:-translate-y-1">
+              <Card className="group-hover:border-brand-500/40 h-full overflow-hidden transition-all duration-350 group-hover:-translate-y-1">
                 <div
-                  className={`relative h-40 w-full bg-gradient-to-br ${gradient} flex items-end overflow-hidden p-4`}
+                  className={`relative h-44 w-full bg-gradient-to-br ${gradient} flex flex-col justify-between overflow-hidden border-b p-4`}
                 >
-                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.08),transparent_70%)]" />
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.06),transparent_70%)]" />
+
+                  {/* Glowing Icon in the middle */}
+                  <div className="relative z-10 flex flex-1 items-center justify-center">
+                    <div className="bg-bg-primary/60 group-hover:bg-bg-primary/80 group-hover:border-brand-500/20 rounded-2xl border border-white/5 p-3 shadow-2xl backdrop-blur-md transition duration-300 group-hover:scale-105">
+                      {getPostIcon(post.slug)}
+                    </div>
+                  </div>
+
+                  <div className="relative z-10 mt-2 flex flex-wrap gap-1.5">
                     {post.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded bg-black/30 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-white/90 uppercase backdrop-blur-sm"
+                        className="rounded bg-black/40 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-white/90 uppercase backdrop-blur-sm"
                       >
                         {tag}
                       </span>

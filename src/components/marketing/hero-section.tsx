@@ -244,7 +244,7 @@ export function HeroSection({
                     {t("bug_bounty_badge", { defaultValue: "Bug Bounty" })}
                   </span>
                 </div>
-                <h4 className="from-warning-200 to-warning-400 bg-gradient-to-r bg-clip-text text-base font-black tracking-tight text-transparent">
+                <h4 className="text-warning-400 text-lg font-black tracking-tight">
                   {t("title_accent")}
                 </h4>
                 <p className="text-fg-secondary text-xs leading-relaxed">

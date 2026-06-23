@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, TrendingUp, ShieldCheck } from "lucide-react";
@@ -12,8 +12,18 @@ import { formatDistanceToNow } from "date-fns";
 
 export function IncidentOfTheWeek({ incident }: { incident: IncidentListItem | null }) {
   const t = useTranslations("marketing.incident_of_week");
+  const locale = useLocale();
 
   if (!incident) return null;
+
+  const displayTitle =
+    locale === "tr" && incident.title_tr && incident.title_tr.length > 0
+      ? incident.title_tr
+      : incident.title_masked;
+  const displayDesc =
+    locale === "tr" && incident.description_tr && incident.description_tr.length > 0
+      ? incident.description_tr
+      : incident.description_masked;
 
   return (
     <div className="group relative w-full">
@@ -62,12 +72,12 @@ export function IncidentOfTheWeek({ incident }: { incident: IncidentListItem | n
             href={`/incidents/${incident.id}`}
             className="focus-visible:ring-brand-500 block rounded-md outline-none focus-visible:ring-2"
           >
-            <h3 className="text-fg-primary group-hover:text-danger-400 relative mb-3 inline-block pb-1 text-2xl leading-tight font-black transition-colors sm:text-3xl">
-              {incident.title_masked}
+            <h3 className="text-fg-primary group-hover:text-brand-400 relative mb-3 inline-block pb-1 text-2xl leading-tight font-black transition-colors sm:text-3xl">
+              {displayTitle}
               <span className="bg-danger-500 absolute bottom-0 left-0 h-[2px] w-0 transition-all duration-300 group-hover:w-full"></span>
             </h3>
             <p className="text-fg-secondary mb-6 line-clamp-3 text-base sm:text-lg">
-              {incident.description_masked}
+              {displayDesc}
             </p>
           </Link>
 

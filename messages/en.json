@@ -513,6 +513,7 @@
     "blackbox_desc": "Blackbox AI coding assistant models"
   },
   "common": {
+    "live": "Live",
     "loading": "Loading…",
     "retry": "Retry",
     "cancel": "Cancel",

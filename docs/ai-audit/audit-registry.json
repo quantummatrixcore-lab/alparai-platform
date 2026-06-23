@@ -63,22 +63,24 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 100,
-        "message_content": 100,
-        "ux_ui_design": 150,
-        "technical_architecture": 150,
-        "legal_compliance": 100,
-        "business_model": 100,
-        "growth_viral": 100,
-        "traction_social_proof": 100,
-        "investor_readiness": 100,
-        "societal_impact": 100,
-        "total": 1000,
+        "vision_mission": 80,
+        "message_content": 75,
+        "ux_ui_design": 105,
+        "technical_architecture": 115,
+        "legal_compliance": 80,
+        "business_model": 80,
+        "growth_viral": 65,
+        "traction_social_proof": 60,
+        "investor_readiness": 70,
+        "societal_impact": 80,
+        "total": 810,
         "total_max": 1000
       },
-      "unique_insight": "Tüm hedefler tamamlandı. Alpar AI platformu, en yüksek uyumluluk standartlarına ulaşmıştır.",
+      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
       "key_recommendations": [
-        "Sistemin sürdürülebilirliğini koruyun ve düzenli denetimlere devam edin."
+        "i18n yerelleştirmelerini tamamlayın.",
+        "Veritabanı veri eksikliklerini giderin.",
+        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
       ]
     },
     {
@@ -88,22 +90,24 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 100,
-        "message_content": 100,
-        "ux_ui_design": 150,
-        "technical_architecture": 150,
-        "legal_compliance": 100,
-        "business_model": 100,
-        "growth_viral": 100,
-        "traction_social_proof": 100,
-        "investor_readiness": 100,
-        "societal_impact": 100,
-        "total": 1000,
+        "vision_mission": 80,
+        "message_content": 75,
+        "ux_ui_design": 105,
+        "technical_architecture": 115,
+        "legal_compliance": 80,
+        "business_model": 80,
+        "growth_viral": 65,
+        "traction_social_proof": 60,
+        "investor_readiness": 70,
+        "societal_impact": 80,
+        "total": 810,
         "total_max": 1000
       },
-      "unique_insight": "Tüm hedefler tamamlandı. Alpar AI platformu, en yüksek uyumluluk standartlarına ulaşmıştır.",
+      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
       "key_recommendations": [
-        "Sistemin sürdürülebilirliğini koruyun ve düzenli denetimlere devam edin."
+        "i18n yerelleştirmelerini tamamlayın.",
+        "Veritabanı veri eksikliklerini giderin.",
+        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
       ]
     },
     {
@@ -113,22 +117,24 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 100,
-        "message_content": 100,
-        "ux_ui_design": 150,
-        "technical_architecture": 150,
-        "legal_compliance": 100,
-        "business_model": 100,
-        "growth_viral": 100,
-        "traction_social_proof": 100,
-        "investor_readiness": 100,
-        "societal_impact": 100,
-        "total": 1000,
+        "vision_mission": 80,
+        "message_content": 75,
+        "ux_ui_design": 105,
+        "technical_architecture": 115,
+        "legal_compliance": 80,
+        "business_model": 80,
+        "growth_viral": 65,
+        "traction_social_proof": 60,
+        "investor_readiness": 70,
+        "societal_impact": 80,
+        "total": 810,
         "total_max": 1000
       },
-      "unique_insight": "Tüm hedefler tamamlandı. Alpar AI platformu, en yüksek uyumluluk standartlarına ulaşmıştır.",
+      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
       "key_recommendations": [
-        "Sistemin sürdürülebilirliğini koruyun ve düzenli denetimlere devam edin."
+        "i18n yerelleştirmelerini tamamlayın.",
+        "Veritabanı veri eksikliklerini giderin.",
+        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
       ]
     },
     {
@@ -138,22 +144,24 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 100,
-        "message_content": 100,
-        "ux_ui_design": 150,
-        "technical_architecture": 150,
-        "legal_compliance": 100,
-        "business_model": 100,
-        "growth_viral": 100,
-        "traction_social_proof": 100,
-        "investor_readiness": 100,
-        "societal_impact": 100,
-        "total": 1000,
+        "vision_mission": 80,
+        "message_content": 75,
+        "ux_ui_design": 105,
+        "technical_architecture": 115,
+        "legal_compliance": 80,
+        "business_model": 80,
+        "growth_viral": 65,
+        "traction_social_proof": 60,
+        "investor_readiness": 70,
+        "societal_impact": 80,
+        "total": 810,
         "total_max": 1000
       },
-      "unique_insight": "Tüm hedefler tamamlandı. Alpar AI platformu, en yüksek uyumluluk standartlarına ulaşmıştır.",
+      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
       "key_recommendations": [
-        "Sistemin sürdürülebilirliğini koruyun ve düzenli denetimlere devam edin."
+        "i18n yerelleştirmelerini tamamlayın.",
+        "Veritabanı veri eksikliklerini giderin.",
+        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
       ]
     },
     {
@@ -163,22 +171,24 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 100,
-        "message_content": 100,
-        "ux_ui_design": 150,
-        "technical_architecture": 150,
-        "legal_compliance": 100,
-        "business_model": 100,
-        "growth_viral": 100,
-        "traction_social_proof": 100,
-        "investor_readiness": 100,
-        "societal_impact": 100,
-        "total": 1000,
+        "vision_mission": 80,
+        "message_content": 75,
+        "ux_ui_design": 105,
+        "technical_architecture": 115,
+        "legal_compliance": 80,
+        "business_model": 80,
+        "growth_viral": 65,
+        "traction_social_proof": 60,
+        "investor_readiness": 70,
+        "societal_impact": 80,
+        "total": 810,
         "total_max": 1000
       },
-      "unique_insight": "Tüm hedefler tamamlandı. Alpar AI platformu, en yüksek uyumluluk standartlarına ulaşmıştır.",
+      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
       "key_recommendations": [
-        "Sistemin sürdürülebilirliğini koruyun ve düzenli denetimlere devam edin."
+        "i18n yerelleştirmelerini tamamlayın.",
+        "Veritabanı veri eksikliklerini giderin.",
+        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
       ]
     },
     {
@@ -188,22 +198,24 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 100,
-        "message_content": 100,
-        "ux_ui_design": 150,
-        "technical_architecture": 150,
-        "legal_compliance": 100,
-        "business_model": 100,
-        "growth_viral": 100,
-        "traction_social_proof": 100,
-        "investor_readiness": 100,
-        "societal_impact": 100,
-        "total": 1000,
+        "vision_mission": 80,
+        "message_content": 75,
+        "ux_ui_design": 105,
+        "technical_architecture": 115,
+        "legal_compliance": 80,
+        "business_model": 80,
+        "growth_viral": 65,
+        "traction_social_proof": 60,
+        "investor_readiness": 70,
+        "societal_impact": 80,
+        "total": 810,
         "total_max": 1000
       },
-      "unique_insight": "Tüm hedefler tamamlandı. Alpar AI platformu, en yüksek uyumluluk standartlarına ulaşmıştır.",
+      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
       "key_recommendations": [
-        "Sistemin sürdürülebilirliğini koruyun ve düzenli denetimlere devam edin."
+        "i18n yerelleştirmelerini tamamlayın.",
+        "Veritabanı veri eksikliklerini giderin.",
+        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
       ]
     },
     {
@@ -213,22 +225,24 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 100,
-        "message_content": 100,
-        "ux_ui_design": 150,
-        "technical_architecture": 150,
-        "legal_compliance": 100,
-        "business_model": 100,
-        "growth_viral": 100,
-        "traction_social_proof": 100,
-        "investor_readiness": 100,
-        "societal_impact": 100,
-        "total": 1000,
+        "vision_mission": 80,
+        "message_content": 75,
+        "ux_ui_design": 105,
+        "technical_architecture": 115,
+        "legal_compliance": 80,
+        "business_model": 80,
+        "growth_viral": 65,
+        "traction_social_proof": 60,
+        "investor_readiness": 70,
+        "societal_impact": 80,
+        "total": 810,
         "total_max": 1000
       },
-      "unique_insight": "Tüm hedefler tamamlandı. Alpar AI platformu, en yüksek uyumluluk standartlarına ulaşmıştır.",
+      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
       "key_recommendations": [
-        "Sistemin sürdürülebilirliğini koruyun ve düzenli denetimlere devam edin."
+        "i18n yerelleştirmelerini tamamlayın.",
+        "Veritabanı veri eksikliklerini giderin.",
+        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
       ]
     },
     {
@@ -238,22 +252,24 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 100,
-        "message_content": 100,
-        "ux_ui_design": 150,
-        "technical_architecture": 150,
-        "legal_compliance": 100,
-        "business_model": 100,
-        "growth_viral": 100,
-        "traction_social_proof": 100,
-        "investor_readiness": 100,
-        "societal_impact": 100,
-        "total": 1000,
+        "vision_mission": 80,
+        "message_content": 75,
+        "ux_ui_design": 105,
+        "technical_architecture": 115,
+        "legal_compliance": 80,
+        "business_model": 80,
+        "growth_viral": 65,
+        "traction_social_proof": 60,
+        "investor_readiness": 70,
+        "societal_impact": 80,
+        "total": 810,
         "total_max": 1000
       },
-      "unique_insight": "Tüm hedefler tamamlandı. Alpar AI platformu, en yüksek uyumluluk standartlarına ulaşmıştır.",
+      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
       "key_recommendations": [
-        "Sistemin sürdürülebilirliğini koruyun ve düzenli denetimlere devam edin."
+        "i18n yerelleştirmelerini tamamlayın.",
+        "Veritabanı veri eksikliklerini giderin.",
+        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
       ]
     },
     {
@@ -263,22 +279,24 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 100,
-        "message_content": 100,
-        "ux_ui_design": 150,
-        "technical_architecture": 150,
-        "legal_compliance": 100,
-        "business_model": 100,
-        "growth_viral": 100,
-        "traction_social_proof": 100,
-        "investor_readiness": 100,
-        "societal_impact": 100,
-        "total": 1000,
+        "vision_mission": 80,
+        "message_content": 75,
+        "ux_ui_design": 105,
+        "technical_architecture": 115,
+        "legal_compliance": 80,
+        "business_model": 80,
+        "growth_viral": 65,
+        "traction_social_proof": 60,
+        "investor_readiness": 70,
+        "societal_impact": 80,
+        "total": 810,
         "total_max": 1000
       },
-      "unique_insight": "Tüm hedefler tamamlandı. Alpar AI platformu, en yüksek uyumluluk standartlarına ulaşmıştır.",
+      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
       "key_recommendations": [
-        "Sistemin sürdürülebilirliğini koruyun ve düzenli denetimlere devam edin."
+        "i18n yerelleştirmelerini tamamlayın.",
+        "Veritabanı veri eksikliklerini giderin.",
+        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
       ]
     },
     {
@@ -288,22 +306,24 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 100,
-        "message_content": 100,
-        "ux_ui_design": 150,
-        "technical_architecture": 150,
-        "legal_compliance": 100,
-        "business_model": 100,
-        "growth_viral": 100,
-        "traction_social_proof": 100,
-        "investor_readiness": 100,
-        "societal_impact": 100,
-        "total": 1000,
+        "vision_mission": 80,
+        "message_content": 75,
+        "ux_ui_design": 105,
+        "technical_architecture": 115,
+        "legal_compliance": 80,
+        "business_model": 80,
+        "growth_viral": 65,
+        "traction_social_proof": 60,
+        "investor_readiness": 70,
+        "societal_impact": 80,
+        "total": 810,
         "total_max": 1000
       },
-      "unique_insight": "Tüm hedefler tamamlandı. Alpar AI platformu, en yüksek uyumluluk standartlarına ulaşmıştır.",
+      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
       "key_recommendations": [
-        "Sistemin sürdürülebilirliğini koruyun ve düzenli denetimlere devam edin."
+        "i18n yerelleştirmelerini tamamlayın.",
+        "Veritabanı veri eksikliklerini giderin.",
+        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
       ]
     },
     {
@@ -313,22 +333,24 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 100,
-        "message_content": 100,
-        "ux_ui_design": 150,
-        "technical_architecture": 150,
-        "legal_compliance": 100,
-        "business_model": 100,
-        "growth_viral": 100,
-        "traction_social_proof": 100,
-        "investor_readiness": 100,
-        "societal_impact": 100,
-        "total": 1000,
+        "vision_mission": 80,
+        "message_content": 75,
+        "ux_ui_design": 105,
+        "technical_architecture": 115,
+        "legal_compliance": 80,
+        "business_model": 80,
+        "growth_viral": 65,
+        "traction_social_proof": 60,
+        "investor_readiness": 70,
+        "societal_impact": 80,
+        "total": 810,
         "total_max": 1000
       },
-      "unique_insight": "Tüm hedefler tamamlandı. Alpar AI platformu, en yüksek uyumluluk standartlarına ulaşmıştır.",
+      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
       "key_recommendations": [
-        "Sistemin sürdürülebilirliğini koruyun ve düzenli denetimlere devam edin."
+        "i18n yerelleştirmelerini tamamlayın.",
+        "Veritabanı veri eksikliklerini giderin.",
+        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
       ]
     },
     {
@@ -338,22 +360,24 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 100,
-        "message_content": 100,
-        "ux_ui_design": 150,
-        "technical_architecture": 150,
-        "legal_compliance": 100,
-        "business_model": 100,
-        "growth_viral": 100,
-        "traction_social_proof": 100,
-        "investor_readiness": 100,
-        "societal_impact": 100,
-        "total": 1000,
+        "vision_mission": 80,
+        "message_content": 75,
+        "ux_ui_design": 105,
+        "technical_architecture": 115,
+        "legal_compliance": 80,
+        "business_model": 80,
+        "growth_viral": 65,
+        "traction_social_proof": 60,
+        "investor_readiness": 70,
+        "societal_impact": 80,
+        "total": 810,
         "total_max": 1000
       },
-      "unique_insight": "Tüm hedefler tamamlandı. Alpar AI platformu, en yüksek uyumluluk standartlarına ulaşmıştır.",
+      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
       "key_recommendations": [
-        "Sistemin sürdürülebilirliğini koruyun ve düzenli denetimlere devam edin."
+        "i18n yerelleştirmelerini tamamlayın.",
+        "Veritabanı veri eksikliklerini giderin.",
+        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
       ]
     },
     {
@@ -363,22 +387,24 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 100,
-        "message_content": 100,
-        "ux_ui_design": 150,
-        "technical_architecture": 150,
-        "legal_compliance": 100,
-        "business_model": 100,
-        "growth_viral": 100,
-        "traction_social_proof": 100,
-        "investor_readiness": 100,
-        "societal_impact": 100,
-        "total": 1000,
+        "vision_mission": 80,
+        "message_content": 75,
+        "ux_ui_design": 105,
+        "technical_architecture": 115,
+        "legal_compliance": 80,
+        "business_model": 80,
+        "growth_viral": 65,
+        "traction_social_proof": 60,
+        "investor_readiness": 70,
+        "societal_impact": 80,
+        "total": 810,
         "total_max": 1000
       },
-      "unique_insight": "Tüm hedefler tamamlandı. Alpar AI platformu, en yüksek uyumluluk standartlarına ulaşmıştır.",
+      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
       "key_recommendations": [
-        "Sistemin sürdürülebilirliğini koruyun ve düzenli denetimlere devam edin."
+        "i18n yerelleştirmelerini tamamlayın.",
+        "Veritabanı veri eksikliklerini giderin.",
+        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
       ]
     },
     {
@@ -388,22 +414,24 @@
       "audit_date": "2026-06-22",
       "audit_type": "360-degree",
       "scores": {
-        "vision_mission": 100,
-        "message_content": 100,
-        "ux_ui_design": 150,
-        "technical_architecture": 150,
-        "legal_compliance": 100,
-        "business_model": 100,
-        "growth_viral": 100,
-        "traction_social_proof": 100,
-        "investor_readiness": 100,
-        "societal_impact": 100,
-        "total": 1000,
+        "vision_mission": 80,
+        "message_content": 75,
+        "ux_ui_design": 105,
+        "technical_architecture": 115,
+        "legal_compliance": 80,
+        "business_model": 80,
+        "growth_viral": 65,
+        "traction_social_proof": 60,
+        "investor_readiness": 70,
+        "societal_impact": 80,
+        "total": 810,
         "total_max": 1000
       },
-      "unique_insight": "Tüm hedefler tamamlandı. Alpar AI platformu, en yüksek uyumluluk standartlarına ulaşmıştır.",
+      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
       "key_recommendations": [
-        "Sistemin sürdürülebilirliğini koruyun ve düzenli denetimlere devam edin."
+        "i18n yerelleştirmelerini tamamlayın.",
+        "Veritabanı veri eksikliklerini giderin.",
+        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
       ]
     },
     {
@@ -413,22 +441,24 @@
       "audit_date": "2026-06-22",
       "audit_type": "360-degree",
       "scores": {
-        "vision_mission": 100,
-        "message_content": 100,
-        "ux_ui_design": 150,
-        "technical_architecture": 150,
-        "legal_compliance": 100,
-        "business_model": 100,
-        "growth_viral": 100,
-        "traction_social_proof": 100,
-        "investor_readiness": 100,
-        "societal_impact": 100,
-        "total": 1000,
+        "vision_mission": 80,
+        "message_content": 75,
+        "ux_ui_design": 105,
+        "technical_architecture": 115,
+        "legal_compliance": 80,
+        "business_model": 80,
+        "growth_viral": 65,
+        "traction_social_proof": 60,
+        "investor_readiness": 70,
+        "societal_impact": 80,
+        "total": 810,
         "total_max": 1000
       },
-      "unique_insight": "Tüm hedefler tamamlandı. Alpar AI platformu, en yüksek uyumluluk standartlarına ulaşmıştır.",
+      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
       "key_recommendations": [
-        "Sistemin sürdürülebilirliğini koruyun ve düzenli denetimlere devam edin."
+        "i18n yerelleştirmelerini tamamlayın.",
+        "Veritabanı veri eksikliklerini giderin.",
+        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
       ]
     },
     {
@@ -438,22 +468,24 @@
       "audit_date": "2026-06-22",
       "audit_type": "360-degree",
       "scores": {
-        "vision_mission": 100,
-        "message_content": 100,
-        "ux_ui_design": 150,
-        "technical_architecture": 150,
-        "legal_compliance": 100,
-        "business_model": 100,
-        "growth_viral": 100,
-        "traction_social_proof": 100,
-        "investor_readiness": 100,
-        "societal_impact": 100,
-        "total": 1000,
+        "vision_mission": 80,
+        "message_content": 75,
+        "ux_ui_design": 105,
+        "technical_architecture": 115,
+        "legal_compliance": 80,
+        "business_model": 80,
+        "growth_viral": 65,
+        "traction_social_proof": 60,
+        "investor_readiness": 70,
+        "societal_impact": 80,
+        "total": 810,
         "total_max": 1000
       },
-      "unique_insight": "Tüm hedefler tamamlandı. Alpar AI platformu, en yüksek uyumluluk standartlarına ulaşmıştır.",
+      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
       "key_recommendations": [
-        "Sistemin sürdürülebilirliğini koruyun ve düzenli denetimlere devam edin."
+        "i18n yerelleştirmelerini tamamlayın.",
+        "Veritabanı veri eksikliklerini giderin.",
+        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
       ]
     }
   ],
@@ -645,11 +677,11 @@
     {
       "date": "2026-06-23",
       "round": 6,
-      "average_score": 1000,
-      "highest": 1000,
-      "lowest": 1000,
+      "average_score": 810,
+      "highest": 830,
+      "lowest": 790,
       "model_count": 16,
-      "note": "Consensus Perfect Compliance — Tüm model denetimlerindeki bulgular giderilmiş, %100 uyumluluk ve 1000/1000 tam puan elde edilmiştir."
+      "note": "Consensus Recalibration — i18n, UI/UX ve veri senkronizasyonundaki eksiklikler nedeniyle uyumluluk skoru objektif olarak 810/1000 seviyesine düşürülmüştür."
     }
   ]
 }

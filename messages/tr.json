@@ -513,6 +513,7 @@
     "blackbox_desc": "Blackbox AI kodlama asistanı modelleri"
   },
   "common": {
+    "live": "Canlı",
     "loading": "Yükleniyor…",
     "retry": "Tekrar dene",
     "cancel": "İptal",

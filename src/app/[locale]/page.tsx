@@ -232,7 +232,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const ecosystemNews = (newsResult.data ?? []) as EcosystemNewsItem[];
   const tickerItems = ecosystemNews.map((n) => ({
     id: n.id,
-    title: n.title_tr ?? n.title_en,
+    title: locale === "tr" ? (n.title_tr ?? n.title_en) : (n.title_en ?? n.title_tr),
     severity: n.severity,
     source: n.source,
   }));
