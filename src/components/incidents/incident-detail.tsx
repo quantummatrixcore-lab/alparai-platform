@@ -12,6 +12,7 @@ import type { IncidentDetail, ProviderResponse } from "@/types";
 import { Link } from "@/i18n/routing";
 import { TakedownButton } from "./takedown-button";
 import Image from "next/image";
+import { ViewTracker } from "./view-tracker";
 
 export function IncidentDetailView({
   incident,
@@ -41,6 +42,7 @@ export function IncidentDetailView({
       : incident.description_masked;
   return (
     <article className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px]">
+      <ViewTracker incidentId={incident.id} />
       <div className="space-y-6">
         <header className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">

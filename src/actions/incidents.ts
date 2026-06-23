@@ -446,3 +446,25 @@ export async function voteOnIncident({
   }
   return { ok: false, error: "vote_failed" };
 }
+
+export async function incrementIncidentViews(incidentId: string) {
+  try {
+    const admin = createAdminClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (admin as any).rpc("increment_incident_views", {
+      p_incident_id: incidentId,
+    });
+    if (error) {
+      logger.error("Failed to increment incident views", { incidentId, error });
+      return { ok: false, error: error.message };
+    }
+    return { ok: true };
+  } catch (error) {
+    logger.error(
+      "Error in incrementIncidentViews action",
+      { incidentId },
+      error instanceof Error ? error : undefined,
+    );
+    return { ok: false, error: "Unexpected error" };
+  }
+}
