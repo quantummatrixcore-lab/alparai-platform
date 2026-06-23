@@ -95,6 +95,20 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             </Card>
           </div>
 
+          <div className="border-border-subtle mt-20 border-t pt-16">
+            <div className="mb-12 text-center">
+              <h2 className="text-fg-primary text-3xl font-extrabold tracking-tight">
+                {t("teamTitle", { defaultValue: "Our Team" })}
+              </h2>
+              <p className="text-fg-muted mx-auto mt-2 max-w-2xl text-sm">
+                {t("teamSubtitle", {
+                  defaultValue:
+                    "We are a small, independent team of researchers and engineers dedicated to AI accountability. We operate independently from major AI labs to ensure impartial tracking.",
+                })}
+              </p>
+            </div>
+          </div>
+
           <div className="mt-16 text-center">
             <Link href="/submit">
               <Button

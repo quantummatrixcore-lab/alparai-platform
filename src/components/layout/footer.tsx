@@ -11,7 +11,8 @@ import { usePathname } from "next/navigation";
 const productLinks = [
   { href: "/incidents", key: "incidents" },
   { href: "/leaderboard", key: "leaderboard" },
-  { href: "/dilemmas", key: "suggestions" },
+  { href: "/dilemmas", key: "dilemmas" },
+  { href: "/dilemmas?tab=suggestions", key: "suggestions" },
   { href: "/blog", key: "blog" },
   { href: "/submit", key: "submit" },
 ] as const;
