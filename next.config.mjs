@@ -97,6 +97,10 @@ export default withSentryConfig(nextConfig, {
   silent: true,
   widenClientSandbox: true,
   hideSourceMaps: true,
-  disableLogger: true,
-  automaticVercelMonitors: true,
+  webpack: {
+    treeshake: {
+      removeDebugLogging: true,
+    },
+    automaticVercelMonitors: true,
+  },
 });

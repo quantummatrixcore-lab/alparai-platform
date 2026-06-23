@@ -1116,7 +1116,15 @@
     "no_results_title": "Sonuç bulunamadı",
     "no_results_subtitle": "Farklı bir arama terimi deneyin veya filtreyi temizleyin.",
     "unknown_provider": "Bilinmeyen Sağlayıcı",
-    "sign_in_button": "Giriş Yap"
+    "sign_in_button": "Giriş Yap",
+    "reviews": "{count} değerlendirme",
+    "suggestions_label": "öneri",
+    "table_model_name": "Model Adı",
+    "table_provider": "Sağlayıcı",
+    "table_status": "Durum",
+    "table_rating": "Puan",
+    "table_reviews": "Değerlendirme",
+    "table_suggestions": "Öneriler"
   },
   "respond": {
     "title": "Sağlayıcı Yanıtı Gönder",
