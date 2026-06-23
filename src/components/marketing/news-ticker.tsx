@@ -107,40 +107,103 @@ const XAIIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-function getSourceIcon(source?: string | null, severity?: string | null) {
-  const src = source?.toLowerCase() || "";
-  if (src.includes("openai") || src.includes("chatgpt")) {
+function getItemIcon(item: NewsTickerItem) {
+  const title = item.title.toLowerCase();
+  const source = item.source?.toLowerCase() || "";
+
+  // 1. Check for brand names in title or source
+  if (
+    title.includes("openai") ||
+    title.includes("chatgpt") ||
+    title.includes("gpt-") ||
+    source.includes("openai") ||
+    source.includes("chatgpt")
+  ) {
     return <OpenAIIcon className="h-4 w-4 shrink-0" />;
   }
-  if (src.includes("google") || src.includes("gemini") || src.includes("deepmind")) {
+  if (
+    title.includes("google") ||
+    title.includes("gemini") ||
+    title.includes("deepmind") ||
+    source.includes("google") ||
+    source.includes("gemini") ||
+    source.includes("deepmind")
+  ) {
     return <GeminiIcon className="h-4 w-4 shrink-0" />;
   }
-  if (src.includes("anthropic") || src.includes("claude")) {
+  if (
+    title.includes("anthropic") ||
+    title.includes("claude") ||
+    source.includes("anthropic") ||
+    source.includes("claude")
+  ) {
     return <AnthropicIcon className="h-4 w-4 shrink-0" />;
   }
-  if (src.includes("microsoft") || src.includes("bing") || src.includes("copilot")) {
+  if (
+    title.includes("microsoft") ||
+    title.includes("bing") ||
+    title.includes("copilot") ||
+    source.includes("microsoft") ||
+    source.includes("bing") ||
+    source.includes("copilot")
+  ) {
     return <MicrosoftIcon className="h-3.5 w-3.5 shrink-0" />;
   }
-  if (src.includes("meta") || src.includes("llama")) {
+  if (
+    title.includes("meta") ||
+    title.includes("llama") ||
+    source.includes("meta") ||
+    source.includes("llama")
+  ) {
     return <MetaIcon className="h-4 w-4 shrink-0" />;
   }
-  if (src.includes("apple")) {
+  if (title.includes("apple") || source.includes("apple")) {
     return <AppleIcon className="h-4 w-4 shrink-0" />;
   }
   if (
-    src.includes("xai") ||
-    src.includes("grok") ||
-    src.includes("twitter") ||
-    src.includes("elon")
+    title.includes("xai") ||
+    title.includes("grok") ||
+    source.includes("xai") ||
+    source.includes("grok")
   ) {
     return <XAIIcon className="h-3.5 w-3.5 shrink-0" />;
   }
 
-  if (severity === "critical")
+  // 2. Check for security/vulnerability topics
+  if (
+    title.includes("leak") ||
+    title.includes("vulnerability") ||
+    title.includes("hack") ||
+    title.includes("breach") ||
+    title.includes("security")
+  ) {
+    return (
+      <ShieldAlert className="text-danger-400 h-3.5 w-3.5 shrink-0 drop-shadow-[0_0_3px_rgba(244,63,94,0.6)] filter" />
+    );
+  }
+
+  // 3. Check for regulation/legal/law/act topics
+  if (
+    title.includes("act") ||
+    title.includes("regulation") ||
+    title.includes("law") ||
+    title.includes("ban") ||
+    title.includes("hapis") ||
+    title.includes("ceza") ||
+    title.includes("yasa")
+  ) {
+    return (
+      <AlertTriangle className="text-warning-400 h-3.5 w-3.5 shrink-0 drop-shadow-[0_0_3px_rgba(251,191,36,0.6)] filter" />
+    );
+  }
+
+  // 4. Default fallbacks based on severity
+  if (item.severity === "critical")
     return <ShieldAlert className="text-danger-400 h-3.5 w-3.5 shrink-0" />;
-  if (severity === "high")
+  if (item.severity === "high")
     return <AlertTriangle className="text-warning-400 h-3.5 w-3.5 shrink-0" />;
-  if (severity === "medium") return <AlertCircle className="text-brand-400 h-3.5 w-3.5 shrink-0" />;
+  if (item.severity === "medium")
+    return <AlertCircle className="text-brand-400 h-3.5 w-3.5 shrink-0" />;
 
   return <Building2 className="text-fg-muted h-3.5 w-3.5 shrink-0" />;
 }
@@ -174,7 +237,7 @@ export function NewsTicker({ items }: { items: NewsTickerItem[] }) {
               repeat: Infinity,
               ease: "linear",
             }}
-            className="flex items-center gap-8 whitespace-nowrap"
+            className="flex items-center gap-8 pl-6 whitespace-nowrap"
           >
             {displayItems.map((item, i) => (
               <div key={`${item.id}-${i}`} className="flex items-center gap-3">
@@ -182,7 +245,7 @@ export function NewsTicker({ items }: { items: NewsTickerItem[] }) {
                   className={`h-1.5 w-1.5 shrink-0 rounded-full ${SEVERITY_DOTS[item.severity]} inline-block`}
                 />
                 <div className="flex items-center gap-2">
-                  {getSourceIcon(item.source, item.severity)}
+                  {getItemIcon(item)}
                   <span className={`text-sm font-semibold ${SEVERITY_COLORS[item.severity]}`}>
                     {item.title}
                   </span>
