@@ -24,7 +24,9 @@ export type Poll = {
 export function PollCard({ poll }: { poll: Poll }) {
   const t = useTranslations("dilemmas");
   const locale = useLocale();
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(
+    process.env.NODE_ENV === "development" ? "dev-bypass-token" : null,
+  );
   const [isVoting, setIsVoting] = useState(false);
 
   const localizedTitle =
@@ -132,14 +134,16 @@ export function PollCard({ poll }: { poll: Poll }) {
           </div>
 
           {/* Turnstile Widget (Invisible) */}
-          <Turnstile
-            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "2x00000000000000000000AB"}
-            onSuccess={(token) => setTurnstileToken(token)}
-            options={{
-              theme: "dark",
-              size: "invisible",
-            }}
-          />
+          {process.env.NODE_ENV === "production" && (
+            <Turnstile
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "2x00000000000000000000AB"}
+              onSuccess={(token) => setTurnstileToken(token)}
+              options={{
+                theme: "dark",
+                size: "invisible",
+              }}
+            />
+          )}
 
           {/* Action buttons */}
           <div className="grid grid-cols-3 gap-3 pt-2">
