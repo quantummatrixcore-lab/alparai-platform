@@ -338,7 +338,7 @@ export function NewsTicker({ items }: { items: NewsTickerItem[] }) {
           <motion.div
             animate={{ x: ["0%", "-50%"] }}
             transition={{
-              duration: Math.max(8, displayItems.length * 0.3),
+              duration: Math.max(6, displayItems.length * 0.2),
               repeat: Infinity,
               ease: "linear",
             }}

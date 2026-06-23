@@ -155,7 +155,9 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
                 <div
                   className={`relative h-44 w-full bg-gradient-to-br ${gradient} flex flex-col justify-between overflow-hidden border-b p-4`}
                 >
-                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.06),transparent_70%)]" />
+                  {/* Premium cyber grid pattern overlay */}
+                  <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_80%,transparent_100%)] bg-[size:14px_14px] opacity-40" />
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.08),transparent_70%)]" />
 
                   {/* Glowing Icon in the middle */}
                   <div className="relative z-10 flex flex-1 items-center justify-center">

@@ -31,75 +31,49 @@ export function Logo({ className, size = "md", ...props }: LogoProps) {
         className="block h-full w-full overflow-visible"
       >
         <defs>
-          {/* Left Shield elements gradient (Fuchsia -> Purple) */}
+          {/* Main Shield Gradient (Violet/Fuchsia to Indigo/Blue) */}
           <linearGradient
-            id="logo-left-grad"
-            x1="50"
-            y1="20"
-            x2="26"
-            y2="84"
+            id="logo-shield-grad-1"
+            x1="20"
+            y1="15"
+            x2="80"
+            y2="85"
             gradientUnits="userSpaceOnUse"
           >
             <stop offset="0%" stopColor="#d946ef" />
-            <stop offset="100%" stopColor="#a855f7" />
+            <stop offset="50%" stopColor="#8b5cf6" />
+            <stop offset="100%" stopColor="#3b82f6" />
           </linearGradient>
 
-          {/* Right Tech elements gradient (Cyan -> Teal/Blue) */}
+          {/* Overlay Shield Gradient (Cyan to Slate/Dark) */}
           <linearGradient
-            id="logo-right-grad"
-            x1="50"
-            y1="30"
-            x2="85"
-            y2="68"
+            id="logo-shield-grad-2"
+            x1="80"
+            y1="15"
+            x2="20"
+            y2="85"
             gradientUnits="userSpaceOnUse"
           >
             <stop offset="0%" stopColor="#22d3ee" />
-            <stop offset="100%" stopColor="#06b6d4" />
+            <stop offset="100%" stopColor="#0f172a" />
           </linearGradient>
 
-          {/* Symmetrical border gradient (Fuchsia -> Purple -> Cyan) */}
+          {/* Central AI Core Glow Gradient */}
           <linearGradient
-            id="logo-border-grad"
-            x1="15"
-            y1="50"
-            x2="85"
-            y2="50"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop offset="0%" stopColor="#d946ef" />
-            <stop offset="50%" stopColor="#a855f7" />
-            <stop offset="100%" stopColor="#22d3ee" />
-          </linearGradient>
-
-          {/* Shield glassmorphism body fill gradient */}
-          <linearGradient
-            id="logo-shield-fill-grad"
+            id="logo-glow-grad"
             x1="50"
-            y1="20"
-            x2="26"
-            y2="84"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop offset="0%" stopColor="#c084fc" stopOpacity="0.08" />
-            <stop offset="100%" stopColor="#0a0f1e" stopOpacity="0.55" />
-          </linearGradient>
-
-          {/* Center divider/sword column gradient */}
-          <linearGradient
-            id="logo-center-grad"
-            x1="50"
-            y1="20"
+            y1="35"
             x2="50"
-            y2="84"
+            y2="65"
             gradientUnits="userSpaceOnUse"
           >
             <stop offset="0%" stopColor="#ffffff" />
-            <stop offset="100%" stopColor="#c084fc" />
+            <stop offset="100%" stopColor="#a855f7" />
           </linearGradient>
 
-          {/* Premium neon glow effect */}
-          <filter id="logo-glow" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="2" result="blur" />
+          {/* Core Glow Filter */}
+          <filter id="logo-core-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="3.5" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
@@ -107,183 +81,46 @@ export function Logo({ className, size = "md", ...props }: LogoProps) {
           </filter>
         </defs>
 
-        {/* Full Shield Body for Glassmorphism Fill (Symmetric) */}
+        {/* Outer Shield Facets (Symmetric & Futuristic) */}
+        {/* Left Shield Facet */}
         <path
-          d="M 50,15 C 28,17 15,22 15,25 V 50 C 15,70 32,82 50,88 C 68,82 85,70 85,50 V 25 C 85,22 72,17 50,15 Z"
-          fill="url(#logo-shield-fill-grad)"
-          className="group-hover/logo:fill-opacity-30 transition-all duration-500"
+          d="M 50,12 L 20,25 V 50 C 20,70 38,83 50,88 Z"
+          fill="url(#logo-shield-grad-1)"
+          fillOpacity="0.85"
+          className="group-hover/logo:fill-opacity-95 transition-all duration-500"
         />
 
-        {/* Symmetrical Shield Neon Border */}
+        {/* Right Shield Facet (Refractive Overlay) */}
         <path
-          d="M 50,15 C 28,17 15,22 15,25 V 50 C 15,70 32,82 50,88 C 68,82 85,70 85,50 V 25 C 85,22 72,17 50,15 Z"
-          stroke="url(#logo-border-grad)"
-          strokeWidth="3.2"
-          strokeLinejoin="round"
-          className="transition-all duration-500 group-hover/logo:stroke-[3.8px]"
+          d="M 50,12 L 80,25 V 50 C 80,70 62,83 50,88 Z"
+          fill="url(#logo-shield-grad-2)"
+          fillOpacity="0.7"
+          className="group-hover/logo:fill-opacity-80 transition-all duration-500"
         />
 
-        {/* Center Sword / Divider Column (Symmetric) */}
+        {/* Cyber Inner Accent Line */}
         <path
-          d="M 50,22 V 78"
-          stroke="url(#logo-center-grad)"
-          strokeWidth="3.2"
+          d="M 50,18 L 26,29 V 49 C 26,65 40,76 50,81 V 18"
+          stroke="#ffffff"
+          strokeWidth="1.5"
+          strokeOpacity="0.15"
           strokeLinecap="round"
-          className="transition-all duration-500 group-hover/logo:stroke-[3.8px]"
+          className="group-hover/logo:stroke-opacity-30 transition-all duration-500"
         />
-        {/* Hilt / Base pedestal */}
+
+        {/* Glowing AI Core Diamond */}
         <path
-          d="M 42,78 H 58"
-          stroke="url(#logo-center-grad)"
-          strokeWidth="3.2"
-          strokeLinecap="round"
-          className="transition-all duration-500 group-hover/logo:stroke-[3.8px]"
+          d="M 50,36 L 62,50 L 50,64 L 38,50 Z"
+          fill="url(#logo-glow-grad)"
+          filter="url(#logo-core-glow)"
+          className="origin-center transition-all duration-500 group-hover/logo:scale-110"
         />
-        {/* Top Finial Node */}
-        <circle
-          cx="50"
-          cy="22"
-          r="2.5"
+
+        {/* Core Starburst (Inner Clarity Spark) */}
+        <path
+          d="M 50,42 L 52.5,47.5 L 58,50 L 52.5,52.5 L 50,58 L 47.5,52.5 L 42,50 L 47.5,47.5 Z"
           fill="#ffffff"
-          stroke="#a855f7"
-          strokeWidth="1.2"
-          filter="url(#logo-glow)"
-          className="transition-all duration-300 group-hover/logo:scale-110"
-        />
-
-        {/* Symmetrical Scales of Justice */}
-        {/* Scale Beam */}
-        <path
-          d="M 30,36 H 70"
-          stroke="url(#logo-center-grad)"
-          strokeWidth="2.8"
-          strokeLinecap="round"
-          className="transition-all duration-500 group-hover/logo:stroke-[3.2px]"
-        />
-
-        {/* Left Scale Pan */}
-        <path
-          d="M 30,36 L 22,54 L 38,54 Z"
-          stroke="url(#logo-left-grad)"
-          strokeWidth="1.6"
-          strokeLinejoin="round"
-          fill="url(#logo-left-grad)"
-          fillOpacity="0.05"
-          className="group-hover/logo:fill-opacity-15 transition-all duration-500"
-        />
-        <path
-          d="M 18,54 H 42"
-          stroke="url(#logo-left-grad)"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-        />
-        <path
-          d="M 21,54 C 21,61 39,61 39,54 Z"
-          fill="url(#logo-left-grad)"
-          fillOpacity="0.75"
-          className="group-hover/logo:fill-opacity-90 transition-all duration-500"
-        />
-
-        {/* Right Scale Pan */}
-        <path
-          d="M 70,36 L 62,54 L 78,54 Z"
-          stroke="url(#logo-right-grad)"
-          strokeWidth="1.6"
-          strokeLinejoin="round"
-          fill="url(#logo-right-grad)"
-          fillOpacity="0.05"
-          className="group-hover/logo:fill-opacity-15 transition-all duration-500"
-        />
-        <path
-          d="M 58,54 H 82"
-          stroke="url(#logo-right-grad)"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-        />
-        <path
-          d="M 61,54 C 61,61 79,61 79,54 Z"
-          fill="url(#logo-right-grad)"
-          fillOpacity="0.75"
-          className="group-hover/logo:fill-opacity-90 transition-all duration-500"
-        />
-
-        {/* Symmetrical AI Tech Circuits (Branching Symmetrically) */}
-        {/* Top Circuit Traces */}
-        <path
-          d="M 50,48 H 36 L 31,43 H 26"
-          stroke="url(#logo-left-grad)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="transition-all duration-500"
-        />
-        <circle
-          cx="23"
-          cy="43"
-          r="2.5"
-          fill="#ffffff"
-          stroke="#d946ef"
-          strokeWidth="1.2"
-          filter="url(#logo-glow)"
-          className="transition-all duration-300 group-hover/logo:scale-110"
-        />
-
-        <path
-          d="M 50,48 H 64 L 69,43 H 74"
-          stroke="url(#logo-right-grad)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="transition-all duration-500"
-        />
-        <circle
-          cx="77"
-          cy="43"
-          r="2.5"
-          fill="#ffffff"
-          stroke="#22d3ee"
-          strokeWidth="1.2"
-          filter="url(#logo-glow)"
-          className="transition-all duration-300 group-hover/logo:scale-110"
-        />
-
-        {/* Bottom Circuit Traces */}
-        <path
-          d="M 50,65 H 38 L 34,70 H 28"
-          stroke="url(#logo-left-grad)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="transition-all duration-500"
-        />
-        <circle
-          cx="25"
-          cy="70"
-          r="2.5"
-          fill="#ffffff"
-          stroke="#d946ef"
-          strokeWidth="1.2"
-          filter="url(#logo-glow)"
-          className="transition-all duration-300 group-hover/logo:scale-110"
-        />
-
-        <path
-          d="M 50,65 H 62 L 66,70 H 72"
-          stroke="url(#logo-right-grad)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="transition-all duration-500"
-        />
-        <circle
-          cx="75"
-          cy="70"
-          r="2.5"
-          fill="#ffffff"
-          stroke="#22d3ee"
-          strokeWidth="1.2"
-          filter="url(#logo-glow)"
-          className="transition-all duration-300 group-hover/logo:scale-110"
+          className="origin-center transition-all duration-700 group-hover/logo:rotate-95"
         />
       </svg>
     </span>
