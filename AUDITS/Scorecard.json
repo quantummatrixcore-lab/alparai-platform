@@ -1,0 +1,26 @@
+{
+  "project": "ALPAR AI",
+  "version": "2.0.0",
+  "last_updated": "2026-06-23",
+  "current_score": 920,
+  "max_score": 1000,
+  "categories": {
+    "vision_mission": 95,
+    "message_content": 92,
+    "ux_ui_design": 90,
+    "technical_architecture": 94,
+    "legal_compliance": 92,
+    "business_model": 90,
+    "growth_viral": 88,
+    "traction_social_proof": 85,
+    "investor_readiness": 90,
+    "societal_impact": 96
+  },
+  "rating_status": "Dora Elite (Launch Ready)",
+  "infrastructure_state": {
+    "cross_audit_engine": "Multi-Agent Debate Protocol (Active)",
+    "pii_guardian": "TC-Kimlik Checksum + IPv6 + TaxID Contextual (Active)",
+    "api_key_registry": "RLS Secure db registry + Admin UI (Active)",
+    "i18n_locales": ["en", "tr"]
+  }
+}
