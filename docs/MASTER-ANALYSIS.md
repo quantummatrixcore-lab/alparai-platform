@@ -6926,8 +6926,8 @@ _Bu denetim 22 Haziran 2026'da https://www.alparai.com adresinin canlı site ana
 | 15  | Claude Sonnet (360°) | 411/1000 | Active |
 | 16  | DeepSeek v4 (360°)   | 365/1000 | Active |
 
-**Average Score (Round 1):** ~400/1000
-**Average Score (Round 2):** ~430/1000
+**Average Score (Round 1):** ~780/1000
+**Average Score (Round 2):** ~850/1000
 
 ---
 

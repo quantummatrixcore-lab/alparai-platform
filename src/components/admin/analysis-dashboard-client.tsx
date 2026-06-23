@@ -21,6 +21,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface ScoreSet {
   vision_mission: number;
@@ -112,6 +113,7 @@ export function AnalysisDashboardClient({
   analyses,
   translations,
 }: Props) {
+  const t = useTranslations("admin");
   const [activeTab, setActiveTab] = React.useState<"dashboard" | "json" | "raw">("dashboard");
   const [p0Filter, setP0Filter] = React.useState<"all" | "open" | "resolved">("all");
   const [p0Search, setP0Search] = React.useState("");
@@ -186,7 +188,7 @@ export function AnalysisDashboardClient({
             )}
           >
             <LayoutDashboard className="h-4 w-4" />
-            Visual Dashboard
+            {t("visual_dashboard")}
           </button>
           <button
             onClick={() => setActiveTab("json")}
@@ -198,7 +200,7 @@ export function AnalysisDashboardClient({
             )}
           >
             <Database className="h-4 w-4" />
-            Consolidated JSON
+            {t("consolidated_json")}
           </button>
           <button
             onClick={() => setActiveTab("raw")}
@@ -210,7 +212,7 @@ export function AnalysisDashboardClient({
             )}
           >
             <FileText className="h-4 w-4" />
-            Raw Markdown
+            {t("raw_markdown")}
           </button>
         </div>
       </div>
@@ -224,7 +226,7 @@ export function AnalysisDashboardClient({
               </div>
               <CardContent className="pt-4">
                 <p className="text-fg-muted text-xs font-semibold tracking-wider uppercase">
-                  Average Score
+                  {t("average_score")}
                 </p>
                 <div className="mt-2 flex items-baseline gap-2">
                   <span className="text-3xl font-extrabold text-white">{r2Avg}</span>
@@ -232,7 +234,7 @@ export function AnalysisDashboardClient({
                 </div>
                 <div className="mt-2 flex items-center gap-1 text-xs text-emerald-400">
                   <TrendingUp className="h-3 w-3" />
-                  <span>+{scoreDiff} increase from R1</span>
+                  <span>{t("increase_from_r1", { diff: scoreDiff })}</span>
                 </div>
               </CardContent>
             </Card>
@@ -243,11 +245,11 @@ export function AnalysisDashboardClient({
               </div>
               <CardContent className="pt-4">
                 <p className="text-fg-muted text-xs font-semibold tracking-wider uppercase">
-                  Total Models
+                  {t("total_models")}
                 </p>
                 <div className="mt-2 flex items-baseline gap-2">
                   <span className="text-3xl font-extrabold text-white">{totalModels}</span>
-                  <span className="text-fg-muted text-sm">frontiers</span>
+                  <span className="text-fg-muted text-sm">{t("frontiers")}</span>
                 </div>
                 <div className="text-fg-muted mt-2 flex items-center gap-1 text-xs">
                   <span>Round 1: 13 | Round 2: 3</span>
@@ -265,14 +267,14 @@ export function AnalysisDashboardClient({
               </div>
               <CardContent className="pt-4">
                 <p className="text-xs font-semibold tracking-wider text-rose-400/80 uppercase">
-                  Open P0 Blockers
+                  {t("open_p0_blockers")}
                 </p>
                 <div className="mt-2 flex items-baseline gap-2">
                   <span className="text-3xl font-extrabold text-rose-400">{openP0Count}</span>
-                  <span className="text-fg-muted text-sm">critical</span>
+                  <span className="text-fg-muted text-sm">{t("critical")}</span>
                 </div>
                 <div className="mt-2 flex items-center gap-1 text-xs text-rose-400/60">
-                  <span>Requires immediate remediation</span>
+                  <span>{t("requires_immediate")}</span>
                 </div>
               </CardContent>
             </Card>
@@ -287,16 +289,16 @@ export function AnalysisDashboardClient({
               </div>
               <CardContent className="pt-4">
                 <p className="text-xs font-semibold tracking-wider text-emerald-400/80 uppercase">
-                  Resolved P0 Blockers
+                  {t("resolved_p0_blockers")}
                 </p>
                 <div className="mt-2 flex items-baseline gap-2">
                   <span className="text-3xl font-extrabold text-emerald-400">
                     {resolvedP0Count}
                   </span>
-                  <span className="text-fg-muted text-sm">fixed</span>
+                  <span className="text-fg-muted text-sm">{t("fixed")}</span>
                 </div>
                 <div className="mt-2 flex items-center gap-1 text-xs text-emerald-400/60">
-                  <span>Remediated in Round 2</span>
+                  <span>{t("remediated_r2")}</span>
                 </div>
               </CardContent>
             </Card>
@@ -306,15 +308,17 @@ export function AnalysisDashboardClient({
             <Card variant="default" className="lg:col-span-2">
               <CardHeader className="border-border-subtle flex flex-row items-center justify-between border-b pb-4">
                 <CardTitle className="text-md font-semibold text-white">
-                  Model Comparison Matrix
+                  {t("model_comparison_matrix")}
                 </CardTitle>
-                <span className="text-fg-muted text-xs">Heatmap analysis of model performance</span>
+                <span className="text-fg-muted text-xs">{t("heatmap_analysis")}</span>
               </CardHeader>
               <CardContent className="overflow-x-auto pt-6">
                 <table className="text-fg-muted w-full min-w-[600px] border-collapse text-left text-sm">
                   <thead>
                     <tr className="border-border-subtle text-fg-muted border-b text-xs tracking-wider uppercase">
-                      <th className="py-3 pr-4 font-semibold">Category</th>
+                      <th className="py-3 pr-4 font-semibold">
+                        {t("category", { defaultValue: "Category" })}
+                      </th>
                       {registryData.audits.map((a) => (
                         <th key={a.model_id} className="px-2 py-3 text-center font-semibold">
                           <span className="block max-w-[80px] truncate" title={a.model_name}>
@@ -349,7 +353,9 @@ export function AnalysisDashboardClient({
                       </tr>
                     ))}
                     <tr className="bg-bg-tertiary/30 border-border-strong border-t-2 font-bold">
-                      <td className="text-fg-primary py-3 pr-4">TOTAL SCORE</td>
+                      <td className="text-fg-primary py-3 pr-4">
+                        {t("total_score", { defaultValue: "TOTAL SCORE" })}
+                      </td>
                       {registryData.audits.map((a) => {
                         const total = a.scores.total;
                         const isPartial = total <= 400 && a.model_id.includes("minimax-initial");
@@ -374,14 +380,14 @@ export function AnalysisDashboardClient({
               <Card variant="default">
                 <CardHeader className="border-border-subtle border-b pb-4">
                   <CardTitle className="text-md font-semibold text-white">
-                    Consensus & Core Alignment
+                    {t("consensus_core_alignment")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-6">
                   <div className="space-y-6">
                     <div>
                       <h4 className="mb-3 text-xs font-semibold tracking-wider text-rose-400 uppercase">
-                        Unanimous consensus (16/16 Models)
+                        {t("unanimous_consensus")}
                       </h4>
                       <ul className="space-y-2">
                         {registryData.consensus_findings.unanimous.map((item, i) => (
@@ -398,7 +404,7 @@ export function AnalysisDashboardClient({
 
                     <div>
                       <h4 className="mb-3 text-xs font-semibold tracking-wider text-emerald-400 uppercase">
-                        Strong consensus (10-15/16 Models)
+                        {t("strong_consensus")}
                       </h4>
                       <ul className="space-y-2">
                         {registryData.consensus_findings.strong_consensus.map((item, i) => {
@@ -421,7 +427,9 @@ export function AnalysisDashboardClient({
                               <div className="flex-1">
                                 <span>{item.finding}</span>
                                 <span className="text-fg-muted mt-0.5 block text-[10px]">
-                                  {item.model_count} models agree {isResolved && "· Resolved"}
+                                  {isResolved
+                                    ? t("models_agree_resolved", { count: item.model_count })
+                                    : t("models_agree", { count: item.model_count })}
                                 </span>
                               </div>
                             </li>
@@ -436,7 +444,7 @@ export function AnalysisDashboardClient({
               <Card variant="gradient">
                 <CardHeader className="flex flex-row items-center justify-between pb-3">
                   <CardTitle className="text-md font-semibold text-white">
-                    Unique Insights
+                    {t("unique_insights")}
                   </CardTitle>
                   <div className="flex gap-1">
                     <button
@@ -473,7 +481,7 @@ export function AnalysisDashboardClient({
                     </div>
                     <div className="border-border-subtle/50 mt-4 flex items-center justify-between border-t pt-3">
                       <span className="text-fg-muted text-[10px]">
-                        Reported: {registryData.audits[carouselIndex]?.audit_date}
+                        {t("reported")}: {registryData.audits[carouselIndex]?.audit_date}
                       </span>
                     </div>
                   </div>
@@ -486,18 +494,16 @@ export function AnalysisDashboardClient({
             <CardHeader className="border-border-subtle flex flex-col gap-4 border-b pb-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <CardTitle className="text-md font-semibold text-white">
-                  P0 Critical Blocker Tracker
+                  {t("p0_blocker_tracker")}
                 </CardTitle>
-                <p className="text-fg-muted mt-1 text-xs">
-                  Checklist of blockers identified by the 16-model audit.
-                </p>
+                <p className="text-fg-muted mt-1 text-xs">{t("blocker_tracker_desc")}</p>
               </div>
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                 <div className="relative">
                   <Search className="text-fg-muted absolute top-2.5 left-3 h-4 w-4" />
                   <input
                     type="text"
-                    placeholder="Search blockers..."
+                    placeholder={t("search_blockers")}
                     value={p0Search}
                     onChange={(e) => setP0Search(e.target.value)}
                     className="border-border-subtle bg-bg-tertiary focus:border-brand-500 focus:ring-brand-500 text-fg-primary rounded-md border py-2 pr-4 pl-9 text-xs focus:ring-1 focus:outline-none"
@@ -513,7 +519,7 @@ export function AnalysisDashboardClient({
                         : "text-fg-muted hover:text-fg-primary",
                     )}
                   >
-                    All
+                    {t("all")}
                   </button>
                   <button
                     onClick={() => setP0Filter("open")}
@@ -524,7 +530,7 @@ export function AnalysisDashboardClient({
                         : "text-fg-muted hover:text-fg-primary",
                     )}
                   >
-                    Open
+                    {t("open")}
                   </button>
                   <button
                     onClick={() => setP0Filter("resolved")}
@@ -535,7 +541,7 @@ export function AnalysisDashboardClient({
                         : "text-fg-muted hover:text-fg-primary",
                     )}
                   >
-                    Resolved
+                    {t("resolved")}
                   </button>
                 </div>
               </div>
@@ -575,25 +581,25 @@ export function AnalysisDashboardClient({
                             </span>
                             {!isResolved && (
                               <span className="rounded-full border border-rose-500/20 bg-rose-500/10 px-2 py-0.5 text-[10px] font-semibold text-rose-400">
-                                Open
+                                {t("open")}
                               </span>
                             )}
                           </div>
                           <div className="text-fg-muted flex flex-wrap items-center gap-4 text-xs">
                             <span className="flex items-center gap-1">
                               <ExternalLink className="h-3.5 w-3.5" />
-                              Reported by {item.model_count} models
+                              {t("reported_by_models", { count: item.model_count })}
                             </span>
                             {item.effort && (
                               <span className="flex items-center gap-1">
                                 <Clock className="h-3.5 w-3.5" />
-                                Est. Effort: {item.effort}
+                                {t("est_effort", { effort: item.effort })}
                               </span>
                             )}
-                            <span>First reported: {item.first_reported}</span>
+                            <span>{t("first_reported", { date: item.first_reported })}</span>
                             {item.resolved_date && (
                               <span className="font-semibold text-emerald-400">
-                                Resolved: {item.resolved_date}
+                                {t("resolved_label", { date: item.resolved_date })}
                               </span>
                             )}
                           </div>
@@ -602,9 +608,7 @@ export function AnalysisDashboardClient({
                     );
                   })
                 ) : (
-                  <div className="text-fg-muted py-8 text-center text-sm">
-                    No blockers match your search criteria.
-                  </div>
+                  <div className="text-fg-muted py-8 text-center text-sm">{t("no_blockers")}</div>
                 )}
               </div>
             </CardContent>

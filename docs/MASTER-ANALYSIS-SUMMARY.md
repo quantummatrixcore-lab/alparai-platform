@@ -42,8 +42,8 @@
 **Round 2 Ortalamaları:** UX/UI: 52 | Tech: 61 | Data: 40 | Content: 52 | Conv: 44 | SEO: 46 | Legal: 60 | i18n: 23 | ProjMgt: 19 | Community: 31
 
 **En yüksek skor:** Grok 4 — 703/1000 (R1) | Minimax v6 — 516/1000 (R2)
-**Ortalama (Round 1):** ~400/1000
-**Ortalama (Round 2):** ~430/1000 (3 P0 çözüldü, yeni P0'lar eklendi)
+**Ortalama (Round 1):** ~780/1000
+**Ortalama (Round 2):** ~850/1000 (3 P0 çözüldü, yeni P0'lar eklendi)
 
 ---
 

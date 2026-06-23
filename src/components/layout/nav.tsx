@@ -4,7 +4,7 @@ import * as React from "react";
 import { Link, usePathname } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-import { FileText, BarChart3, BookOpen, Cpu, Coins, Lightbulb } from "lucide-react";
+import { FileText, BarChart3, BookOpen, Cpu, Coins, Lightbulb, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
 import type { ComponentType } from "react";
 
@@ -23,12 +23,25 @@ const navItems: NavItem[] = [
   { href: "/blog", labelKey: "blog", icon: BookOpen },
 ];
 
-export function Nav({ className }: { className?: string }) {
+export function Nav({
+  className,
+  user,
+}: {
+  className?: string;
+  user?: {
+    role: "user" | "moderator" | "admin" | "ceo";
+  } | null;
+}) {
   const pathname = usePathname();
   const t = useTranslations("nav");
+  const isMod = user && (user.role === "moderator" || user.role === "admin" || user.role === "ceo");
+  const activeItems = isMod
+    ? [...navItems, { href: "/admin", labelKey: "admin", icon: ShieldCheck }]
+    : navItems;
+
   return (
-    <nav className={cn("hidden items-center gap-1.5 md:flex", className)}>
-      {navItems.map((item) => {
+    <nav className={cn("hidden items-center gap-1 lg:flex", className)}>
+      {activeItems.map((item) => {
         const Icon = item.icon;
         const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
         return (
@@ -36,7 +49,7 @@ export function Nav({ className }: { className?: string }) {
             key={item.href}
             href={item.href}
             className={cn(
-              "focus-visible:ring-brand-500 relative inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-semibold transition-colors duration-300 outline-none focus-visible:ring-2",
+              "focus-visible:ring-brand-500 relative inline-flex items-center gap-1.5 rounded-full px-2 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors duration-300 outline-none focus-visible:ring-2 lg:gap-2 lg:px-3 lg:text-sm",
               isActive ? "text-brand-400" : "text-fg-secondary hover:text-fg-primary",
             )}
             aria-current={isActive ? "page" : undefined}
@@ -48,7 +61,7 @@ export function Nav({ className }: { className?: string }) {
                 transition={{ type: "spring", stiffness: 380, damping: 30 }}
               />
             )}
-            <span className="relative z-10 flex items-center gap-2">
+            <span className="relative z-10 flex items-center gap-1.5 lg:gap-2">
               <Icon className="h-4 w-4" aria-hidden="true" />
               {t(item.labelKey)}
             </span>
