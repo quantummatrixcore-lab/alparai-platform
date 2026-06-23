@@ -448,8 +448,9 @@
       "id": "P0-001",
       "title": "Hero sayaç 0 gösteriyor",
       "category": "data",
-      "status": "open",
+      "status": "resolved",
       "first_reported": "2026-06-08",
+      "resolved_date": "2026-06-23",
       "model_count": 5,
       "effort": "30 dk"
     },
@@ -484,8 +485,9 @@
       "id": "P0-005",
       "title": "Brand sayfaları 0 incident gösteriyor",
       "category": "data",
-      "status": "open",
+      "status": "resolved",
       "first_reported": "2026-06-22",
+      "resolved_date": "2026-06-23",
       "model_count": 3,
       "effort": "2 saat"
     },
@@ -493,8 +495,9 @@
       "id": "P0-006",
       "title": "Dual design system (iki repo, iki layout)",
       "category": "ui",
-      "status": "open",
+      "status": "resolved",
       "first_reported": "2026-06-08",
+      "resolved_date": "2026-06-23",
       "model_count": 16,
       "effort": "2-3 hafta"
     },
@@ -502,8 +505,9 @@
       "id": "P0-007",
       "title": "About sayfasında founder hikâyesi yok",
       "category": "ui",
-      "status": "open",
+      "status": "resolved",
       "first_reported": "2026-06-08",
+      "resolved_date": "2026-06-23",
       "model_count": 16,
       "effort": "3 saat"
     },
@@ -511,8 +515,9 @@
       "id": "P0-008",
       "title": "Dual email domain (@alparai.com vs @alparai.online)",
       "category": "legal",
-      "status": "open",
+      "status": "resolved",
       "first_reported": "2026-06-22",
+      "resolved_date": "2026-06-23",
       "model_count": 3,
       "effort": "1 saat"
     },
@@ -520,8 +525,9 @@
       "id": "P0-009",
       "title": "Imprint (Künye) sayfası yok",
       "category": "legal",
-      "status": "open",
+      "status": "resolved",
       "first_reported": "2026-06-22",
+      "resolved_date": "2026-06-23",
       "model_count": 3,
       "effort": "2 saat"
     },
@@ -529,8 +535,9 @@
       "id": "P0-010",
       "title": "Dilemmas cold start (8/9 soru 0 oy)",
       "category": "ui",
-      "status": "open",
+      "status": "resolved",
       "first_reported": "2026-06-22",
+      "resolved_date": "2026-06-23",
       "model_count": 3,
       "effort": "1 hafta"
     }
