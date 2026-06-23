@@ -3,6 +3,7 @@ export const revalidate = 10;
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { HeroSection } from "@/components/marketing/hero-section";
+import { WebSiteJsonLd } from "@/components/seo/json-ld";
 import { FounderStory } from "@/components/marketing/founder-story";
 import { WhyItMatters } from "@/components/marketing/why-it-matters";
 import { HowItWorks } from "@/components/marketing/how-it-works";
@@ -240,6 +241,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   return (
     <>
+      <WebSiteJsonLd />
       <HeroSection
         totalIncidents={incidentsCountResult.count ?? 0}
         totalProviders={providersResult.data?.length ?? 0}

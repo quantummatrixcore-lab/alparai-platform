@@ -21,23 +21,58 @@ test.describe("SEO", () => {
     const twitterCard = page.locator('meta[name="twitter:card"]');
     const count = await twitterCard.count();
     if (count > 0) {
-      await expect(twitterCard).toHaveAttribute(
-        "content",
-        "summary_large_image"
-      );
+      await expect(twitterCard).toHaveAttribute("content", "summary_large_image");
     }
   });
 
-  test("JSON-LD structured data exists", async ({ page }) => {
+  test("JSON-LD Organization and WebSite structured data exist on homepage", async ({ page }) => {
     await page.goto("/en");
-    const jsonLd = page.locator('script[type="application/ld+json"]');
-    const count = await jsonLd.count();
-    expect(count).toBeGreaterThanOrEqual(1);
-    const content = await jsonLd.first().textContent();
-    expect(content).toBeTruthy();
-    const parsed = JSON.parse(content!);
-    expect(parsed).toHaveProperty("@context");
-    expect(parsed).toHaveProperty("@type");
+    const jsonLds = page.locator('script[type="application/ld+json"]');
+    const count = await jsonLds.count();
+    expect(count).toBeGreaterThanOrEqual(2);
+
+    let hasOrg = false;
+    let hasWebSite = false;
+
+    for (let i = 0; i < count; i++) {
+      const content = await jsonLds.nth(i).textContent();
+      if (!content) continue;
+      const parsed = JSON.parse(content);
+      if (parsed["@type"] === "Organization") {
+        hasOrg = true;
+        expect(parsed.name).toContain("ALPAR");
+      } else if (parsed["@type"] === "WebSite") {
+        hasWebSite = true;
+        expect(parsed.potentialAction).toBeDefined();
+        expect(parsed.potentialAction["@type"]).toBe("SearchAction");
+      }
+    }
+
+    expect(hasOrg).toBe(true);
+    expect(hasWebSite).toBe(true);
+  });
+
+  test("JSON-LD BlogPosting structured data exists on blog post page", async ({ page }) => {
+    await page.goto("/en/blog/why-ai-accountability-matters-2025");
+    const jsonLds = page.locator('script[type="application/ld+json"]');
+    const count = await jsonLds.count();
+    expect(count).toBeGreaterThanOrEqual(2); // Organization (root layout) + BlogPosting
+
+    let hasBlogPosting = false;
+
+    for (let i = 0; i < count; i++) {
+      const content = await jsonLds.nth(i).textContent();
+      if (!content) continue;
+      const parsed = JSON.parse(content);
+      if (parsed["@type"] === "BlogPosting") {
+        hasBlogPosting = true;
+        expect(parsed.headline).toContain("Why AI Accountability Matters");
+        expect(parsed.author["@type"]).toBe("Person");
+        expect(parsed.publisher["@type"]).toBe("Organization");
+      }
+    }
+
+    expect(hasBlogPosting).toBe(true);
   });
 
   test("robots meta allows indexing on public pages", async ({ page }) => {
