@@ -322,6 +322,8 @@
     "all_operational": "All systems operational",
     "recent_activity": "Recent activity",
     "no_notes": "No notes",
+    "queueEmpty": "Queue is empty. All caught up.",
+    "view": "View",
     "analysisTitle": "Master Analysis — Admin",
     "auditTitle": "Audit Log",
     "autopilotTitle": "Autopilot",

@@ -322,6 +322,8 @@
     "all_operational": "Tüm sistemler çalışıyor",
     "recent_activity": "Son aktivite",
     "no_notes": "Not yok",
+    "queueEmpty": "Kuyruk boş. Her şey güncel.",
+    "view": "Görüntüle",
     "analysisTitle": "Ana Analiz — Yönetici",
     "auditTitle": "Denetim Günlüğü",
     "autopilotTitle": "Otopilot",
