@@ -4,6 +4,7 @@ import { createServerClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import { Container } from "@/components/ui/layout";
 import { IncidentDetailView } from "@/components/incidents/incident-detail";
+import type { IncidentComment } from "@/components/incidents/comment-section";
 import { IncidentJsonLd } from "@/components/seo/json-ld";
 import { APP_URL } from "@/lib/constants";
 import type { IncidentDetail, ProviderResponse, EvidenceItem } from "@/types";
@@ -43,7 +44,7 @@ export default async function IncidentDetailPage({
     .maybeSingle();
   if (!incidentRow) notFound();
 
-  const [providerRes, modelRes, evidenceRes, responseRes, user] = await Promise.all([
+  const [providerRes, modelRes, evidenceRes, responseRes, user, commentsRes] = await Promise.all([
     supabase
       .from("ai_providers")
       .select("name, slug")
@@ -62,6 +63,14 @@ export default async function IncidentDetailPage({
       .eq("is_published", true)
       .maybeSingle(),
     getCurrentUser(),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase as any)
+      .from("incident_comments")
+      .select(
+        "id, comment_text, created_at, user_id, users(id, full_name, username, avatar_url, role)",
+      )
+      .eq("incident_id", id)
+      .order("created_at", { ascending: true }),
   ]);
 
   const providerData = providerRes.data as { name: string; slug: string } | null;
@@ -117,6 +126,7 @@ export default async function IncidentDetailPage({
     view_count: (r["views_count"] as number) ?? 0,
     upvotes: (r["upvotes_count"] as number) ?? 0,
     downvotes: 0,
+    affected_count: (r["affected_users_count"] as number) ?? 0,
     author_name: null,
     provider_name: providerData?.name ?? tCommon("unknown"),
     provider_slug: providerData?.slug ?? "",
@@ -139,6 +149,20 @@ export default async function IncidentDetailPage({
     if (vote) userVote = (vote as { value: -1 | 0 | 1 }).value;
   }
 
+  let userAffected = false;
+  if (user) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: affected } = await (supabase as any)
+      .from("incident_affected_users")
+      .select("incident_id")
+      .eq("incident_id", id)
+      .eq("user_id", user.id)
+      .maybeSingle();
+    if (affected) userAffected = true;
+  }
+
+  const comments = (commentsRes.data ?? []) as unknown as IncidentComment[];
+
   return (
     <Container className="py-10">
       <IncidentJsonLd
@@ -155,6 +179,9 @@ export default async function IncidentDetailPage({
         providerResponse={providerResponse}
         userVote={userVote}
         isAuthenticated={!!user}
+        comments={comments}
+        userAffected={userAffected}
+        currentUserId={user?.id ?? null}
       />
     </Container>
   );

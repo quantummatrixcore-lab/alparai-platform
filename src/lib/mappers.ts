@@ -30,6 +30,7 @@ type RawIncidentRow = Record<string, unknown> & {
   ai_provider_id?: string | null;
   cross_audit_truth_score?: number | null;
   cross_audit_confidence?: number | null;
+  affected_users_count?: number | null;
 };
 
 export function toIncidentListItem(row: RawIncidentRow): IncidentListItem {
@@ -53,6 +54,7 @@ export function toIncidentListItem(row: RawIncidentRow): IncidentListItem {
     provider_slug: row.provider_slug ?? "",
     cross_audit_truth_score: row.cross_audit_truth_score ?? null,
     cross_audit_confidence: row.cross_audit_confidence ?? null,
+    affected_count: row.affected_users_count ?? 0,
   };
 }
 
