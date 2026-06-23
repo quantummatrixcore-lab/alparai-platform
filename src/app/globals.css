@@ -38,6 +38,7 @@
   --danger-600: #c0392b;
 
   /* Warning — Amber -> Gold */
+  --warning-300: #fde047;
   --warning-400: #f1c40f;
   --warning-500: #f39c12;
   --warning-600: #e67e22;
@@ -131,6 +132,7 @@
   --color-danger-500: var(--danger-500);
   --color-danger-600: var(--danger-600);
 
+  --color-warning-300: var(--warning-300);
   --color-warning-400: var(--warning-400);
   --color-warning-500: var(--warning-500);
   --color-warning-600: var(--warning-600);
