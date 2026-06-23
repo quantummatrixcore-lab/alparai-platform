@@ -14,7 +14,7 @@ import type { ModelReview, ModelFeatureRequest } from "@/types";
 import { ModelJsonLd } from "@/components/seo/json-ld";
 import { APP_URL } from "@/lib/constants";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 20;
 
 export async function generateMetadata({ params }: ModelDetailPageProps) {
   const { locale, modelId, providerId } = await params;

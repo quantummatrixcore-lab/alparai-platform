@@ -4,7 +4,7 @@ import { Star, MessageSquare, Lightbulb, ChevronRight } from "lucide-react";
 import { createServerClient } from "@/lib/supabase/server";
 import { Badge } from "@/components/ui/badge";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 export async function generateMetadata({ params }: ModelPageProps) {
   const { locale } = await params;
