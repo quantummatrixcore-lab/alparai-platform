@@ -44,13 +44,28 @@
 
   <!-- Icon: New Shield & Tech motif scaled to 56px inside 64px box -->
   <g transform="translate(4, 4) scale(0.56)">
-    <!-- Left Shield Half -->
+    <!-- Full Shield Body for Glassmorphism Fill -->
     <path
-      d="M 50,18 C 30,19.5 17,22 15,24 V 48 C 15,68 30,78 50,84 Z"
+      d="M 50,18 C 30,19.5 17,22 15,24 V 48 C 15,68 30,78 50,84 C 70,78 85,68 85,48 V 24 C 83,22 70,19.5 50,18 Z"
       fill="url(#logo-shield-fill-grad)"
+    />
+
+    <!-- Left Shield Neon Border (Fuchsia -> Purple) -->
+    <path
+      d="M 50,18 C 30,19.5 17,22 15,24 V 48 C 15,68 30,78 50,84"
       stroke="url(#logo-left-grad)"
       stroke-width="3.2"
       stroke-linejoin="round"
+      fill="none"
+    />
+
+    <!-- Right Shield Neon Border (Cyan -> Teal/Blue) -->
+    <path
+      d="M 50,18 C 70,19.5 83,22 85,24 V 48 C 85,68 70,78 50,84"
+      stroke="url(#logo-right-grad)"
+      stroke-width="3.2"
+      stroke-linejoin="round"
+      fill="none"
     />
 
     <!-- Scales of Justice inside Left Shield -->
