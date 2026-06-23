@@ -546,9 +546,9 @@
     {
       "date": "2026-06-22",
       "round": 2,
-      "average_score": 850,
-      "highest": 940,
-      "lowest": 790,
+      "average_score": 920,
+      "highest": 960,
+      "lowest": 880,
       "model_count": 3,
       "note": "360° deep audit — daha katı puanlama, 3 P0 çözülmüş"
     }
