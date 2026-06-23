@@ -1,4 +1,4 @@
-export const revalidate = 0;
+export const revalidate = 30;
 
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";

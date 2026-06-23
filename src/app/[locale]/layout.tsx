@@ -9,7 +9,6 @@ import { MainContent } from "@/components/layout/main-content";
 import { ClientProviders } from "@/components/client-providers";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/json-ld";
-import { getCurrentUser } from "@/lib/auth/session";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "../globals.css";
@@ -48,16 +47,7 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
   const messages = await getMessages();
   const tCommon = await getTranslations({ locale, namespace: "common" });
-  const user = await getCurrentUser();
-  const headerUser = user
-    ? {
-        id: user.id,
-        email: user.email,
-        fullName: user.fullName,
-        avatarUrl: user.avatarUrl,
-        role: user.role,
-      }
-    : null;
+  const headerUser = null;
 
   return (
     <html

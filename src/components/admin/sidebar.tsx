@@ -103,13 +103,16 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
         <Link href="/" className="flex items-center">
           <Wordmark size="sm" />
         </Link>
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="bg-bg-tertiary border-border-strong text-fg-primary flex h-10 w-10 items-center justify-center rounded-lg border focus:outline-none"
-          aria-label="Toggle Menu"
-        >
-          {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <LanguageSwitcher className="h-8" />
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="bg-bg-tertiary border-border-strong text-fg-primary flex h-10 w-10 items-center justify-center rounded-lg border focus:outline-none"
+            aria-label="Toggle Menu"
+          >
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
 
       {/* Sidebar Container */}
@@ -198,8 +201,14 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
             </div>
           </div>
 
-          <div className="space-y-1">
-            <div className="mb-1 flex items-center justify-between gap-2">
+          <div className="space-y-1.5">
+            <div className="mb-2 flex items-center justify-between gap-2 border-b border-white/5 pb-2">
+              <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
+                {tCommon("language_switcher") ?? "Dil / Language"}
+              </span>
+              <LanguageSwitcher className="h-8" />
+            </div>
+            <div className="flex items-center justify-between gap-2">
               <Link
                 href="/"
                 className="text-fg-muted hover:bg-bg-tertiary/60 hover:text-fg-primary flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition"
@@ -207,7 +216,6 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
                 <Globe className="h-3.5 w-3.5" />
                 {tCommon("home") ?? "Ana Sayfa"}
               </Link>
-              <LanguageSwitcher className="h-8" />
             </div>
             <form action="/api/auth/signout" method="post">
               <button

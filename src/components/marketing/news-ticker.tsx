@@ -192,28 +192,28 @@ function getItemIcon(item: NewsTickerItem) {
     source.includes("commission") ||
     source.includes("european union")
   ) {
-    return <EUIcon className="h-4.5 w-4.5 shrink-0" />;
+    return <EUIcon className="h-5 w-5 shrink-0" />;
   }
   if (
     source.includes("korea") ||
     title.includes("south korea") ||
     source.includes("republic of korea")
   ) {
-    return <KoreaIcon className="h-4.5 w-4.5 shrink-0" />;
+    return <KoreaIcon className="h-5 w-5 shrink-0" />;
   }
   if (
     source.includes("security research") ||
     title.includes("echoleak") ||
     title.includes("vulnerability")
   ) {
-    return <SecurityShieldIcon className="h-4.5 w-4.5 shrink-0" />;
+    return <SecurityShieldIcon className="h-5 w-5 shrink-0" />;
   }
   if (
     source.includes("industry research") ||
     title.includes("spending") ||
     title.includes("governance platform")
   ) {
-    return <ResearchAnalyticsIcon className="h-4.5 w-4.5 shrink-0" />;
+    return <ResearchAnalyticsIcon className="h-5 w-5 shrink-0" />;
   }
 
   // 2. Check for brand names in title or source

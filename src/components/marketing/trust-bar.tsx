@@ -87,7 +87,7 @@ export function TrustBar() {
                     <div
                       className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border ${item.iconBgClass}`}
                     >
-                      <Icon className={`h-4.5 w-4.5 ${item.accentClass}`} />
+                      <Icon className={`h-5 w-5 ${item.accentClass}`} />
                     </div>
                     <span
                       className={`rounded-sm border px-2 py-0.5 text-[9px] font-black tracking-widest uppercase ${item.tagClass}`}

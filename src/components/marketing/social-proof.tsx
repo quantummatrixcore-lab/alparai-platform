@@ -31,7 +31,7 @@ export function SocialProof() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto mb-12 max-w-3xl space-y-3 text-center">
           <div className="bg-brand-500/10 border-brand-500/20 text-brand-400 inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1 text-xs font-bold tracking-widest uppercase">
-            <Award className="h-4.5 w-4.5" />
+            <Award className="h-4 w-4" />
             {t("badge")}
           </div>
           <h2 className="text-fg-primary text-3xl font-extrabold tracking-tight sm:text-4xl">
