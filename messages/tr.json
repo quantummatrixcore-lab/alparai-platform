@@ -263,6 +263,15 @@
     "send": "Gönder"
   },
   "admin": {
+    "war_room_title": "Soft Launch İzleme (Savaş Odası)",
+    "war_room_desc": "Gerçek zamanlı canlı altyapı bağlantıları ve uç hız sınırlandırma parametreleri.",
+    "vercel_monitoring": "Vercel Analitikler ve Dağıtımlar",
+    "supabase_monitoring": "Supabase Veritabanı Havuzu",
+    "sentry_monitoring": "Sentry Hata ve Çökme Günlükleri",
+    "active_rate_limits": "Aktif Hız Sınırlandırmaları",
+    "incident_rate_limit": "Olay Bildirim Sınırı: Saatte 5",
+    "comment_rate_limit": "Yorum Gönderim Sınırı: 15 dakikada 5",
+    "affected_rate_limit": "Ben de Yaşadım Sınırı: 15 dakikada 10",
     "dashboard": "Kontrol Paneli",
     "moderation_queue": "Moderasyon Kuyruğu",
     "users": "Kullanıcılar",

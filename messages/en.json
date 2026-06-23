@@ -263,6 +263,15 @@
     "send": "Send"
   },
   "admin": {
+    "war_room_title": "Soft Launch Monitoring (War Room)",
+    "war_room_desc": "Real-time production infrastructure links and edge rate-limiting parameters.",
+    "vercel_monitoring": "Vercel Analytics & Deployments",
+    "supabase_monitoring": "Supabase DB Pool & Health",
+    "sentry_monitoring": "Sentry Error & Crash Logs",
+    "active_rate_limits": "Active Rate Limiting",
+    "incident_rate_limit": "Incident Post Limit: 5 / hour",
+    "comment_rate_limit": "Comment Post Limit: 5 / 15m",
+    "affected_rate_limit": "Me-Too Toggle Limit: 10 / 15m",
     "dashboard": "Dashboard",
     "moderation_queue": "Moderation Queue",
     "users": "Users",

@@ -790,6 +790,85 @@ export function AnalysisDashboardClient({
               )}
             </div>
           </div>
+
+          {/* War Room: Soft Launch Monitoring Card */}
+          <div className="rounded-lg border border-white/10 bg-neutral-900/60 p-6 shadow-md backdrop-blur-xl">
+            <div className="flex flex-col gap-4 border-b border-white/10 pb-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h3 className="text-md flex items-center gap-2 font-semibold text-white">
+                  <Database className="h-5 w-5 animate-pulse text-cyan-400" />
+                  {t("war_room_title")}
+                </h3>
+                <p className="text-fg-muted mt-1 text-xs">{t("war_room_desc")}</p>
+              </div>
+            </div>
+            <div className="mt-6 grid gap-6 md:grid-cols-2">
+              {/* Production Links */}
+              <div className="space-y-4">
+                <h4 className="text-xs font-semibold tracking-wider text-white uppercase">
+                  {t("analytics")}
+                </h4>
+                <div className="grid gap-3">
+                  <a
+                    href="https://vercel.com/quantummatrixcore-lab/alparai-com/analytics"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:border-brand-500/30 flex items-center justify-between rounded-lg border border-white/5 bg-neutral-950/40 p-3 transition-all duration-200 hover:bg-neutral-950/60"
+                  >
+                    <span className="text-xs font-medium text-white">{t("vercel_monitoring")}</span>
+                    <ExternalLink className="text-fg-muted h-4 w-4" />
+                  </a>
+                  <a
+                    href="https://supabase.com/dashboard/project/azszpzyvxjduhemkjsdh/api"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:border-brand-500/30 flex items-center justify-between rounded-lg border border-white/5 bg-neutral-950/40 p-3 transition-all duration-200 hover:bg-neutral-950/60"
+                  >
+                    <span className="text-xs font-medium text-white">
+                      {t("supabase_monitoring")}
+                    </span>
+                    <ExternalLink className="text-fg-muted h-4 w-4" />
+                  </a>
+                  <a
+                    href="https://sentry.io/organizations/quantummatrixcore/projects/alpar-ai/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:border-brand-500/30 flex items-center justify-between rounded-lg border border-white/5 bg-neutral-950/40 p-3 transition-all duration-200 hover:bg-neutral-950/60"
+                  >
+                    <span className="text-xs font-medium text-white">{t("sentry_monitoring")}</span>
+                    <ExternalLink className="text-fg-muted h-4 w-4" />
+                  </a>
+                </div>
+              </div>
+
+              {/* Edge Rate Limiting Parameters */}
+              <div className="space-y-4">
+                <h4 className="text-xs font-semibold tracking-wider text-white uppercase">
+                  {t("active_rate_limits")}
+                </h4>
+                <div className="grid gap-3">
+                  <div className="flex items-center justify-between rounded-lg border border-white/5 bg-neutral-950/40 p-3">
+                    <span className="text-fg-secondary text-xs">{t("incident_rate_limit")}</span>
+                    <span className="rounded border border-cyan-500/20 bg-cyan-500/10 px-2 py-0.5 text-[10px] font-bold text-cyan-400">
+                      Edge
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between rounded-lg border border-white/5 bg-neutral-950/40 p-3">
+                    <span className="text-fg-secondary text-xs">{t("comment_rate_limit")}</span>
+                    <span className="rounded border border-cyan-500/20 bg-cyan-500/10 px-2 py-0.5 text-[10px] font-bold text-cyan-400">
+                      Edge
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between rounded-lg border border-white/5 bg-neutral-950/40 p-3">
+                    <span className="text-fg-secondary text-xs">{t("affected_rate_limit")}</span>
+                    <span className="rounded border border-cyan-500/20 bg-cyan-500/10 px-2 py-0.5 text-[10px] font-bold text-cyan-400">
+                      Edge
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 

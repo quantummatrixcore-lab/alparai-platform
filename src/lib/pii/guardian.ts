@@ -23,7 +23,7 @@ const PATTERNS: ReadonlyArray<{
   luhn?: boolean;
   tcKimlik?: boolean;
 }> = [
-  { name: "tc_kimlik", re: /\b[1-9]\d{10}\b/g, mask: "[REDACTED-TC]", tcKimlik: true },
+  { name: "tc_kimlik", re: /\b[1-9](?:[\s.-]?\d){10}\b/g, mask: "[REDACTED-TC]", tcKimlik: true },
   {
     name: "vergi_kimlik",
     re: /(?:(?:vergi|VKN|tax)\s*(?:kimlik|id|number|no|numaras\u0131)?\s*(?:no|numaras\u0131)?\s*[:.]?\s*)\d{10}\b/gi,
