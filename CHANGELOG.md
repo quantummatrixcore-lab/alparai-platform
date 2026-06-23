@@ -5,6 +5,22 @@ All notable changes to ALPAR AI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-06-23
+
+### Added
+
+- Multi-Model Ingestion & Integration Guide (`docs/AI_ANALYSIS_INTEGRATION_GUIDE.md`).
+- Google Antigravity Setup & Auto-Fix Guide (`docs/ANTIGRAVITY_SETUP.md`).
+- AI Analysis Master Checklist (`.ai-analysis/AI_ANALYSIS_MASTER_CHECKLIST.md`).
+- Antigravity Auto-Fix JSON Configuration (`.ai-analysis/antigravity-config.json`).
+- Language switcher inside the Admin Sidebar (`src/components/admin/sidebar.tsx`).
+- Seeding of historic AI failures: Knight Capital Group (2012), Microsoft Tay (2016), Amazon Bias (2018), and Tesla Autopilot crash (2016).
+
+### Fixed
+
+- Resolved the persistent 404 routing error on `/admin` and `/admin/moderation` pages by removing empty duplicate directories in `src/app/`.
+- Completed localization support (TR/EN) inside the API key management panel (`src/components/admin/api-keys-client.tsx`).
+
 ## [1.1.0] - 2026-06-22
 
 ### Added

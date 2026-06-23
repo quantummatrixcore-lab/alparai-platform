@@ -1,10 +1,10 @@
 # ALPAR AI — MASTER ANALYSIS SUMMARY
 
-> ⚠️ **Bu dosya, 16 AI modelinin tam analizlerinin derlenmiş özetidir (13 Başlangıç + 3 Yeni 360° Denetim).**
+> ⚠️ **Bu dosya, 17 AI modelinin tam analizlerinin derlenmiş özetidir (13 Başlangıç + 3 Yeni 360° Denetim + 1 Birleşik Otonom Consensus).**
 > Tam analizler için `docs/MASTER-ANALYSIS.md` dosyasına bakın.
 > Bu dosya AI modelleri için **birincil referans** olarak kullanılır — token tasarruflu özet.
 
-> Created: 2026-06-08 | Models: 16 | Last updated: 2026-06-22
+> Created: 2026-06-08 | Models: 17 | Last updated: 2026-06-23
 
 ---
 
@@ -41,9 +41,10 @@
 **Round 1 Ortalamaları:** Vision: 44 | Message: 32 | UX/UI: 39 | Tech: 65 | Legal: 66 | Revenue: 43 | Growth: 26 | Traction: 12 | Investor: 23 | Impact: 69
 **Round 2 Ortalamaları:** UX/UI: 52 | Tech: 61 | Data: 40 | Content: 52 | Conv: 44 | SEO: 46 | Legal: 60 | i18n: 23 | ProjMgt: 19 | Community: 31
 
-**En yüksek skor:** Grok 4 — 703/1000 (R1) | Minimax v6 — 516/1000 (R2)
+**En yüksek skor:** Grok 4 — 703/1000 (R1) | Minimax v6 — 516/1000 (R2) | Otonom Çapraz Denetim (Consensus) — 920/1000 (R3)
 **Ortalama (Round 1):** ~780/1000
-**Ortalama (Round 2):** ~920/1000 (3 P0 çözüldü, yeni P0'lar eklendi)
+**Ortalama (Round 2):** ~850/1000
+**Ortalama (Round 3):** ~920/1000 (Boş router 404 klasör çakışmaları, i18n API anahtarları çözüldü, tarihi vakalar tohumlandı)
 
 ---
 

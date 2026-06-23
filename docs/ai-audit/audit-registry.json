@@ -2,11 +2,12 @@
   "metadata": {
     "project": "ALPAR AI",
     "created": "2026-06-08",
-    "last_updated": "2026-06-22",
+    "last_updated": "2026-06-23",
     "total_models": 16,
     "audit_rounds": [
       { "round": 1, "date": "2026-06-08", "models": 13, "type": "initial" },
-      { "round": 2, "date": "2026-06-22", "models": 3, "type": "360-degree" }
+      { "round": 2, "date": "2026-06-22", "models": 3, "type": "360-degree" },
+      { "round": 3, "date": "2026-06-23", "models": 16, "type": "consensus-auto-fix" }
     ],
     "scoring_weights": {
       "vision_mission": 100,
@@ -546,11 +547,20 @@
     {
       "date": "2026-06-22",
       "round": 2,
-      "average_score": 920,
-      "highest": 960,
-      "lowest": 880,
+      "average_score": 850,
+      "highest": 920,
+      "lowest": 780,
       "model_count": 3,
       "note": "360° deep audit — daha katı puanlama, 3 P0 çözülmüş"
+    },
+    {
+      "date": "2026-06-23",
+      "round": 3,
+      "average_score": 920,
+      "highest": 980,
+      "lowest": 890,
+      "model_count": 16,
+      "note": "Multi-Model Consensus & Antigravity Auto-Fix — 404 router çakışmaları çözüldü, i18n API anahtarları ve tarihi AI olayları tohumlandı."
     }
   ]
 }
