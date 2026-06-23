@@ -93,14 +93,29 @@ export function Logo({ className, size = "md", ...props }: LogoProps) {
           </filter>
         </defs>
 
-        {/* Left Shield Half (Accountability & Truth) */}
+        {/* Full Shield Body for Glassmorphism Fill */}
         <path
-          d="M 50,18 C 30,19.5 17,22 15,24 V 48 C 15,68 30,78 50,84 Z"
+          d="M 50,18 C 30,19.5 17,22 15,24 V 48 C 15,68 30,78 50,84 C 70,78 85,68 85,48 V 24 C 83,22 70,19.5 50,18 Z"
           fill="url(#logo-shield-fill-grad)"
+          className="group-hover/logo:fill-opacity-30 transition-all duration-500"
+        />
+
+        {/* Left Shield Neon Border (Fuchsia -> Purple) */}
+        <path
+          d="M 50,18 C 30,19.5 17,22 15,24 V 48 C 15,68 30,78 50,84"
           stroke="url(#logo-left-grad)"
           strokeWidth="3.2"
           strokeLinejoin="round"
-          className="group-hover/logo:fill-opacity-30 transition-all duration-500 group-hover/logo:stroke-[3.8px]"
+          className="transition-all duration-500 group-hover/logo:stroke-[3.8px]"
+        />
+
+        {/* Right Shield Neon Border (Cyan -> Teal/Blue) */}
+        <path
+          d="M 50,18 C 70,19.5 83,22 85,24 V 48 C 85,68 70,78 50,84"
+          stroke="url(#logo-right-grad)"
+          strokeWidth="3.2"
+          strokeLinejoin="round"
+          className="transition-all duration-500 group-hover/logo:stroke-[3.8px]"
         />
 
         {/* Scales of Justice inside Left Shield */}
