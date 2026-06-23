@@ -1,23 +1,27 @@
 /**
  * ALPAR AI — Autonomous Cross-Audit Engine v1.0
  *
- * Two-layer evaluation pipeline:
+ * AI-to-AI Interactive Debate & Cross-Examination Protocol:
  *
- *   Layer 1 (Triage) — Free-tier models via OpenRouter.
- *     Three models independently evaluate the incident for:
- *       - Factual plausibility
- *       - Category accuracy
- *       - Adversarial prompt detection (is the user trying to game the system?)
- *     Circuit-breaker failover rotates through models on 429/timeout.
+ *   Turn 1: Independent Initial Triage
+ *     Model A (Triage Slot 1 Chain) and Model B (Triage Slot 2 Chain)
+ *     independently evaluate the incident.
  *
- *   Layer 2 (Supreme Court) — Premium model (Claude 3.5 Sonnet).
- *     Receives the masked incident + triage layer outputs.
- *     Produces the final TruthScore (0-100) and Confidence (0.0-1.0).
+ *   Turn 2: Cross-Examination / Challenge
+ *     Model A reviews Model B's initial assessment, critiques it, and poses questions.
+ *     Model B reviews Model A's initial assessment, critiques it, and poses questions.
+ *
+ *   Turn 3: Rebuttal & Final Defense
+ *     Model A answers Model B's critiques/questions and refines/finalizes its scores.
+ *     Model B answers Model A's critiques/questions and refines/finalizes its scores.
+ *
+ *   Turn 4: Adjudication (Supreme Court)
+ *     Claude 3.5 Sonnet / Gemini Pro acts as referee, reads the entire debate transcript,
+ *     and outputs the final consensus TruthScore (0-100) and Confidence (0.0-1.0).
  *
  * KVKK/GDPR Compliance:
  *   - All user text is PII-masked BEFORE entering this pipeline.
  *   - Only masked text is sent to third-party APIs.
- *   - No raw PII ever leaves the server boundary.
  *
  * @module src/lib/ai/cross-audit-engine
  */
@@ -28,19 +32,50 @@ import {
   isGatewayConfigured,
   TRIAGE_SLOT_1_CHAIN,
   TRIAGE_SLOT_2_CHAIN,
-  TRIAGE_SLOT_3_CHAIN,
   SUPREME_COURT_CHAIN,
+  type GatewayModel,
 } from "@/lib/ai/openrouter-gateway";
 import { maskPII } from "@/lib/pii/guardian";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logger } from "@/lib/utils/logger";
 
-export interface TriageResult {
+export interface InitialEvaluation {
   plausibilityScore: number;
   categoryAccuracy: number;
   adversarialRisk: number;
+  reasoning: string;
   summary: string;
   model: string;
+}
+
+export interface ChallengeResult {
+  critique: string;
+  questions: string[];
+  model: string;
+}
+
+export interface RebuttalResult {
+  answers: string;
+  finalPlausibilityScore: number;
+  finalCategoryAccuracy: number;
+  finalAdversarialRisk: number;
+  finalReasoning: string;
+  model: string;
+}
+
+export interface DebateTranscript {
+  modelA: {
+    name: string;
+    initial: InitialEvaluation;
+    challenge: ChallengeResult;
+    rebuttal: RebuttalResult;
+  };
+  modelB: {
+    name: string;
+    initial: InitialEvaluation;
+    challenge: ChallengeResult;
+    rebuttal: RebuttalResult;
+  };
 }
 
 export interface TruthScoreResult {
@@ -52,30 +87,64 @@ export interface TruthScoreResult {
   totalLatencyMs: number;
 }
 
-const TRIAGE_SYSTEM_PROMPT = `You are an AI incident triage analyst for ALPAR AI, the world's first community-governed AI ethics platform. Your task is to independently evaluate an AI incident report submitted by a user.
+// Prompts
+const DEBATE_INITIAL_PROMPT = `You are an AI incident triage analyst for ALPAR AI, the world's first community-governed AI ethics platform. Your task is to evaluate an AI incident report submitted by a user.
 
 Evaluate the report on three axes:
 1. **plausibilityScore** (0-100): How plausible is this incident? Does it describe a real AI behavior that could actually happen? Consider known AI failure modes (hallucination, bias, privacy violations, manipulation).
 2. **categoryAccuracy** (0-100): Does the assigned category match the described incident? Categories: hallucination, bias, privacy, security, misinformation, harassment, manipulation, inaccessibility, copyright, other.
 3. **adversarialRisk** (0-100): How likely is this a bad-faith submission? Look for: prompt injection attempts, spam, harassment, defamation, fabricated incidents, or attempts to game the trust score system.
 
-Also provide a one-sentence summary of your assessment.
-
-Return ONLY valid JSON (no markdown, no explanation):
+Return ONLY valid JSON (no markdown block, no explanation):
 {
-  "plausibilityScore": 85,
-  "categoryAccuracy": 90,
-  "adversarialRisk": 5,
-  "summary": "Plausible hallucination incident with clear evidence description."
+  "plausibilityScore": number,
+  "categoryAccuracy": number,
+  "adversarialRisk": number,
+  "reasoning": "string",
+  "summary": "string"
 }`;
 
-const SUPREME_COURT_SYSTEM_PROMPT = `You are the Supreme Court adjudicator for ALPAR AI — the world's first autonomous AI ethics accountability platform. You are the final arbiter of truth.
+const DEBATE_CHALLENGE_PROMPT = `You are an AI incident triage analyst for ALPAR AI. You are in a debate/cross-examination round.
+You are given:
+1. The original incident report.
+2. The initial evaluation from your opponent model.
+
+Your task is to:
+1. Critically review your opponent's assessment. Find any potential bias, logical leaps, misunderstandings, or hallucinations in their reasoning.
+2. Formulate 1-2 sharp, critical cross-examination questions challenging their scores or arguments.
+
+Return ONLY valid JSON (no markdown block, no explanation):
+{
+  "critique": "string",
+  "questions": ["string"]
+}`;
+
+const DEBATE_REBUTTAL_PROMPT = `You are an AI incident triage analyst for ALPAR AI. You are in the rebuttal/defense round of the debate.
+You are given:
+1. The original incident report.
+2. Your initial evaluation.
+3. The opponent's critique and cross-examination questions challenging your evaluation.
+
+Your task is to:
+1. Respond to the opponent's questions and critiques. Defend your reasoning or concede where they have made valid points.
+2. Provide your finalized/adjusted scores and reasoning.
+
+Return ONLY valid JSON (no markdown block, no explanation):
+{
+  "answers": "string",
+  "finalPlausibilityScore": number,
+  "finalCategoryAccuracy": number,
+  "finalAdversarialRisk": number,
+  "finalReasoning": "string"
+}`;
+
+const DEBATE_SUPREME_COURT_PROMPT = `You are the Supreme Court adjudicator for ALPAR AI — the world's first autonomous AI ethics accountability platform. You are the final arbiter of truth.
 
 You receive:
-1. A PII-masked AI incident report (title + description + category + severity).
-2. Independent triage evaluations from multiple free-tier AI models.
+1. A PII-masked AI incident report.
+2. A complete transcript of an interactive debate between two independent AI triage models (Model A and Model B).
 
-Your role is to synthesize all inputs and produce a final, authoritative TruthScore.
+Your role is to act as the referee, synthesize the entire debate transcript, weigh the arguments, and produce the final, authoritative TruthScore and Confidence.
 
 TruthScore Scale:
 - 0-20: Spam, fabricated, or adversarial submission. Reject.
@@ -84,66 +153,16 @@ TruthScore Scale:
 - 61-80: Credible incident with reasonable evidence. Publishable.
 - 81-100: High-confidence, well-documented, verified-class incident.
 
-Confidence Scale (0.0 - 1.0):
-- How confident are you in your TruthScore? Consider triage agreement, evidence quality, and category match.
+Confidence Scale (0.0 - 1.0) based on argument quality and consensus stability.
 
-Return ONLY valid JSON:
+Return ONLY valid JSON (no markdown block, no explanation):
 {
-  "truthScore": 75,
-  "confidence": 0.85,
-  "reasoning": "Detailed reasoning for the score, referencing triage evaluations."
+  "truthScore": number,
+  "confidence": number,
+  "reasoning": "string"
 }`;
 
-function buildTriageUserMessage(
-  maskedTitle: string,
-  maskedDescription: string,
-  category: string,
-  severity: string,
-): string {
-  return `## Incident Report (PII-Masked)
-
-**Title:** ${maskedTitle}
-**Description:** ${maskedDescription}
-**Category:** ${category}
-**Severity:** ${severity}
-
-Evaluate this incident and return your assessment as JSON.`;
-}
-
-function buildSupremeCourtUserMessage(
-  maskedTitle: string,
-  maskedDescription: string,
-  category: string,
-  severity: string,
-  triageResults: TriageResult[],
-): string {
-  const triageSummaries = triageResults
-    .map(
-      (t, i) =>
-        `### Triage Model ${i + 1} (${t.model}):
-- Plausibility: ${t.plausibilityScore}/100
-- Category Accuracy: ${t.categoryAccuracy}/100
-- Adversarial Risk: ${t.adversarialRisk}/100
-- Summary: ${t.summary}`,
-    )
-    .join("\n\n");
-
-  return `## Incident Report (PII-Masked)
-
-**Title:** ${maskedTitle}
-**Description:** ${maskedDescription}
-**Category:** ${category}
-**Severity:** ${severity}
-
-## Independent Triage Evaluations
-
-${triageSummaries}
-
----
-
-Synthesize all triage inputs and produce your final TruthScore, Confidence, and Reasoning as JSON.`;
-}
-
+// Helpers
 function safeParseJSON<T>(raw: string): T | null {
   try {
     const cleaned = raw
@@ -156,93 +175,226 @@ function safeParseJSON<T>(raw: string): T | null {
   }
 }
 
-async function runTriageLayer(
-  maskedTitle: string,
-  maskedDescription: string,
-  category: string,
-  severity: string,
-): Promise<TriageResult[]> {
-  const userMessage = buildTriageUserMessage(maskedTitle, maskedDescription, category, severity);
-
-  const chains = [TRIAGE_SLOT_1_CHAIN, TRIAGE_SLOT_2_CHAIN, TRIAGE_SLOT_3_CHAIN];
-
-  const promises = chains.map(async (chain, index) => {
-    try {
-      const triageResult = await callWithFailover(
-        {
-          systemPrompt: TRIAGE_SYSTEM_PROMPT,
-          userMessage,
-          temperature: 0.2,
-          responseFormat: "json",
-        },
-        chain,
-      );
-
-      if (triageResult.ok) {
-        const parsed = safeParseJSON<{
-          plausibilityScore: number;
-          categoryAccuracy: number;
-          adversarialRisk: number;
-          summary: string;
-        }>(triageResult.data.content);
-
-        if (parsed) {
-          return {
-            plausibilityScore: clamp(parsed.plausibilityScore ?? 50, 0, 100),
-            categoryAccuracy: clamp(parsed.categoryAccuracy ?? 50, 0, 100),
-            adversarialRisk: clamp(parsed.adversarialRisk ?? 50, 0, 100),
-            summary: parsed.summary || "No summary provided.",
-            model: triageResult.data.model,
-          };
-        } else {
-          logger.warn(`[CrossAudit] Failed to parse triage response from Slot ${index + 1}`, {
-            model: triageResult.data.model,
-            content: triageResult.data.content.slice(0, 200),
-          });
-        }
-      } else {
-        logger.error(`[CrossAudit] Triage Slot ${index + 1} failed completely`, {
-          attemptedModels: triageResult.attemptedModels,
-          error: triageResult.error.message,
-        });
-      }
-    } catch (err) {
-      logger.error(
-        `[CrossAudit] Unhandled error in Triage Slot ${index + 1}`,
-        undefined,
-        err instanceof Error ? err : new Error(String(err)),
-      );
-    }
-    return null;
-  });
-
-  const results = await Promise.all(promises);
-  return results.filter((r): r is TriageResult => r !== null);
+function clamp(val: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, Math.round(val)));
 }
 
-async function runSupremeCourt(
+function clampFloat(val: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, Math.round(val * 100) / 100));
+}
+
+// Debate Steps
+async function runInitialEvaluation(
+  chain: readonly GatewayModel[],
   maskedTitle: string,
   maskedDescription: string,
   category: string,
   severity: string,
-  triageResults: TriageResult[],
+): Promise<InitialEvaluation | null> {
+  const userMessage = `## Incident Report (PII-Masked)
+**Title:** ${maskedTitle}
+**Description:** ${maskedDescription}
+**Category:** ${category}
+**Severity:** ${severity}
+
+Evaluate this incident and return your initial assessment.`;
+
+  const result = await callWithFailover(
+    {
+      systemPrompt: DEBATE_INITIAL_PROMPT,
+      userMessage,
+      temperature: 0.2,
+      responseFormat: "json",
+    },
+    chain,
+  );
+
+  if (!result.ok) return null;
+
+  const parsed = safeParseJSON<{
+    plausibilityScore: number;
+    categoryAccuracy: number;
+    adversarialRisk: number;
+    reasoning: string;
+    summary: string;
+  }>(result.data.content);
+
+  if (!parsed) return null;
+
+  return {
+    plausibilityScore: clamp(parsed.plausibilityScore ?? 50, 0, 100),
+    categoryAccuracy: clamp(parsed.categoryAccuracy ?? 50, 0, 100),
+    adversarialRisk: clamp(parsed.adversarialRisk ?? 50, 0, 100),
+    reasoning: parsed.reasoning || "No initial reasoning.",
+    summary: parsed.summary || "No initial summary.",
+    model: result.data.model,
+  };
+}
+
+async function runChallenge(
+  chain: readonly GatewayModel[],
+  maskedTitle: string,
+  maskedDescription: string,
+  category: string,
+  severity: string,
+  opponentInitial: InitialEvaluation,
+): Promise<ChallengeResult | null> {
+  const userMessage = `## Original Incident Report (PII-Masked)
+**Title:** ${maskedTitle}
+**Description:** ${maskedDescription}
+**Category:** ${category}
+**Severity:** ${severity}
+
+## Opponent Evaluation (${opponentInitial.model})
+**Scores:** Plausibility: ${opponentInitial.plausibilityScore}, Category: ${opponentInitial.categoryAccuracy}, Adversarial Risk: ${opponentInitial.adversarialRisk}
+**Reasoning:** ${opponentInitial.reasoning}
+**Summary:** ${opponentInitial.summary}
+
+Critique the opponent's evaluation and pose 1-2 challenging questions.`;
+
+  const result = await callWithFailover(
+    {
+      systemPrompt: DEBATE_CHALLENGE_PROMPT,
+      userMessage,
+      temperature: 0.2,
+      responseFormat: "json",
+    },
+    chain,
+  );
+
+  if (!result.ok) return null;
+
+  const parsed = safeParseJSON<{
+    critique: string;
+    questions: string[];
+  }>(result.data.content);
+
+  if (!parsed) return null;
+
+  return {
+    critique: parsed.critique || "No critique.",
+    questions: parsed.questions || [],
+    model: result.data.model,
+  };
+}
+
+async function runRebuttal(
+  chain: readonly GatewayModel[],
+  maskedTitle: string,
+  maskedDescription: string,
+  category: string,
+  severity: string,
+  myInitial: InitialEvaluation,
+  opponentChallenge: ChallengeResult,
+): Promise<RebuttalResult | null> {
+  const qList = opponentChallenge.questions.map((q, i) => `${i + 1}. ${q}`).join("\n");
+  const userMessage = `## Original Incident Report (PII-Masked)
+**Title:** ${maskedTitle}
+**Description:** ${maskedDescription}
+**Category:** ${category}
+**Severity:** ${severity}
+
+## Your Initial Evaluation
+**Your Scores:** Plausibility: ${myInitial.plausibilityScore}, Category: ${myInitial.categoryAccuracy}, Adversarial: ${myInitial.adversarialRisk}
+**Your Reasoning:** ${myInitial.reasoning}
+
+## Opponent Critique & Questions
+**Opponent Critique:** ${opponentChallenge.critique}
+**Questions:**
+${qList}
+
+Respond to these critiques and questions, and output your final refined/adjusted scores.`;
+
+  const result = await callWithFailover(
+    {
+      systemPrompt: DEBATE_REBUTTAL_PROMPT,
+      userMessage,
+      temperature: 0.1,
+      responseFormat: "json",
+    },
+    chain,
+  );
+
+  if (!result.ok) return null;
+
+  const parsed = safeParseJSON<{
+    answers: string;
+    finalPlausibilityScore: number;
+    finalCategoryAccuracy: number;
+    finalAdversarialRisk: number;
+    finalReasoning: string;
+  }>(result.data.content);
+
+  if (!parsed) return null;
+
+  return {
+    answers: parsed.answers || "No response provided.",
+    finalPlausibilityScore: clamp(
+      parsed.finalPlausibilityScore ?? myInitial.plausibilityScore,
+      0,
+      100,
+    ),
+    finalCategoryAccuracy: clamp(
+      parsed.finalCategoryAccuracy ?? myInitial.categoryAccuracy,
+      0,
+      100,
+    ),
+    finalAdversarialRisk: clamp(parsed.finalAdversarialRisk ?? myInitial.adversarialRisk, 0, 100),
+    finalReasoning: parsed.finalReasoning || myInitial.reasoning,
+    model: result.data.model,
+  };
+}
+
+async function runSupremeCourtAdjudication(
+  maskedTitle: string,
+  maskedDescription: string,
+  category: string,
+  severity: string,
+  transcript: DebateTranscript,
 ): Promise<{
   truthScore: number;
   confidence: number;
   reasoning: string;
   model: string;
 } | null> {
-  const userMessage = buildSupremeCourtUserMessage(
-    maskedTitle,
-    maskedDescription,
-    category,
-    severity,
-    triageResults,
-  );
+  const qAList = transcript.modelA.challenge.questions.map((q, i) => `${i + 1}. ${q}`).join("\n");
+  const qBList = transcript.modelB.challenge.questions.map((q, i) => `${i + 1}. ${q}`).join("\n");
+
+  const userMessage = `## Original Incident Report (PII-Masked)
+**Title:** ${maskedTitle}
+**Description:** ${maskedDescription}
+**Category:** ${category}
+**Severity:** ${severity}
+
+## Debate Transcript
+
+### 1. Model A (${transcript.modelA.name})
+- **Initial Scores:** Plausibility: ${transcript.modelA.initial.plausibilityScore}, Category: ${transcript.modelA.initial.categoryAccuracy}, Adversarial: ${transcript.modelA.initial.adversarialRisk}
+- **Initial Reasoning:** ${transcript.modelA.initial.reasoning}
+- **Critique of Model B:** ${transcript.modelA.challenge.critique}
+- **Questions to Model B:**
+${qAList}
+- **Response to Model B's Questions:** ${transcript.modelA.rebuttal.answers}
+- **Final Scores after Debate:** Plausibility: ${transcript.modelA.rebuttal.finalPlausibilityScore}, Category: ${transcript.modelA.rebuttal.finalCategoryAccuracy}, Adversarial: ${transcript.modelA.rebuttal.finalAdversarialRisk}
+- **Final Reasoning:** ${transcript.modelA.rebuttal.finalReasoning}
+
+---
+
+### 2. Model B (${transcript.modelB.name})
+- **Initial Scores:** Plausibility: ${transcript.modelB.initial.plausibilityScore}, Category: ${transcript.modelB.initial.categoryAccuracy}, Adversarial: ${transcript.modelB.initial.adversarialRisk}
+- **Initial Reasoning:** ${transcript.modelB.initial.reasoning}
+- **Critique of Model A:** ${transcript.modelB.challenge.critique}
+- **Questions to Model A:**
+${qBList}
+- **Response to Model A's Questions:** ${transcript.modelB.rebuttal.answers}
+- **Final Scores after Debate:** Plausibility: ${transcript.modelB.rebuttal.finalPlausibilityScore}, Category: ${transcript.modelB.rebuttal.finalCategoryAccuracy}, Adversarial: ${transcript.modelB.rebuttal.finalAdversarialRisk}
+- **Final Reasoning:** ${transcript.modelB.rebuttal.finalReasoning}
+
+Act as the referee, synthesize the debate, and output your final TruthScore, Confidence, and referee reasoning.`;
 
   const result = await callWithFailover(
     {
-      systemPrompt: SUPREME_COURT_SYSTEM_PROMPT,
+      systemPrompt: DEBATE_SUPREME_COURT_PROMPT,
       userMessage,
       temperature: 0.1,
       responseFormat: "json",
@@ -250,13 +402,7 @@ async function runSupremeCourt(
     SUPREME_COURT_CHAIN,
   );
 
-  if (!result.ok) {
-    logger.error("[CrossAudit] Supreme Court model chain failed", {
-      error: result.error.message,
-      attemptedModels: result.attemptedModels,
-    });
-    return null;
-  }
+  if (!result.ok) return null;
 
   const parsed = safeParseJSON<{
     truthScore: number;
@@ -264,12 +410,7 @@ async function runSupremeCourt(
     reasoning: string;
   }>(result.data.content);
 
-  if (!parsed) {
-    logger.error("[CrossAudit] Failed to parse Supreme Court response", {
-      content: result.data.content.slice(0, 300),
-    });
-    return null;
-  }
+  if (!parsed) return null;
 
   return {
     truthScore: clamp(parsed.truthScore ?? 50, 0, 100),
@@ -277,14 +418,6 @@ async function runSupremeCourt(
     reasoning: parsed.reasoning || "No reasoning provided.",
     model: result.data.model,
   };
-}
-
-function clamp(val: number, min: number, max: number): number {
-  return Math.max(min, Math.min(max, Math.round(val)));
-}
-
-function clampFloat(val: number, min: number, max: number): number {
-  return Math.max(min, Math.min(max, Math.round(val * 100) / 100));
 }
 
 export class NonRetryableError extends Error {
@@ -320,44 +453,124 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
   const safeTitle = maskPII(incident.title_masked || incident.title).masked;
   const safeDescription = maskPII(incident.description_masked || incident.description).masked;
 
-  logger.info("[CrossAudit] Starting pipeline", {
+  logger.info("[CrossAudit] Starting Debate Pipeline", {
     incidentId,
     category: incident.category,
     severity: incident.severity,
   });
 
-  const triageResults = await runTriageLayer(
-    safeTitle,
-    safeDescription,
-    incident.category,
-    incident.severity,
-  );
+  // Turn 1: Parallel Initial Evaluation
+  const [initA, initB] = await Promise.all([
+    runInitialEvaluation(
+      TRIAGE_SLOT_1_CHAIN,
+      safeTitle,
+      safeDescription,
+      incident.category,
+      incident.severity,
+    ),
+    runInitialEvaluation(
+      TRIAGE_SLOT_2_CHAIN,
+      safeTitle,
+      safeDescription,
+      incident.category,
+      incident.severity,
+    ),
+  ]);
 
-  logger.info("[CrossAudit] Triage complete", {
-    incidentId,
-    triageCount: triageResults.length,
-    models: triageResults.map((t) => t.model),
-  });
-
-  if (triageResults.length === 0) {
-    throw new Error("No triage results obtained from triage layer.");
+  if (!initA || !initB) {
+    throw new Error("Failed to complete initial evaluations for both slots.");
   }
 
-  const supremeResult = await runSupremeCourt(
+  logger.info("[CrossAudit] Turn 1 Complete (Initial Evaluations)", {
+    modelA: initA.model,
+    modelB: initB.model,
+  });
+
+  // Turn 2: Parallel Challenges (Cross-Examination questions)
+  const [challengeA, challengeB] = await Promise.all([
+    runChallenge(
+      TRIAGE_SLOT_1_CHAIN,
+      safeTitle,
+      safeDescription,
+      incident.category,
+      incident.severity,
+      initB,
+    ),
+    runChallenge(
+      TRIAGE_SLOT_2_CHAIN,
+      safeTitle,
+      safeDescription,
+      incident.category,
+      incident.severity,
+      initA,
+    ),
+  ]);
+
+  if (!challengeA || !challengeB) {
+    throw new Error("Failed to complete cross-examination challenges.");
+  }
+
+  logger.info("[CrossAudit] Turn 2 Complete (Challenges Generated)");
+
+  // Turn 3: Parallel Rebuttals (Defense & Score Refinement)
+  const [rebuttalA, rebuttalB] = await Promise.all([
+    runRebuttal(
+      TRIAGE_SLOT_1_CHAIN,
+      safeTitle,
+      safeDescription,
+      incident.category,
+      incident.severity,
+      initA,
+      challengeB,
+    ),
+    runRebuttal(
+      TRIAGE_SLOT_2_CHAIN,
+      safeTitle,
+      safeDescription,
+      incident.category,
+      incident.severity,
+      initB,
+      challengeA,
+    ),
+  ]);
+
+  if (!rebuttalA || !rebuttalB) {
+    throw new Error("Failed to complete rebuttals.");
+  }
+
+  logger.info("[CrossAudit] Turn 3 Complete (Rebuttals & Defenses Finalized)");
+
+  const transcript: DebateTranscript = {
+    modelA: {
+      name: initA.model,
+      initial: initA,
+      challenge: challengeA,
+      rebuttal: rebuttalA,
+    },
+    modelB: {
+      name: initB.model,
+      initial: initB,
+      challenge: challengeB,
+      rebuttal: rebuttalB,
+    },
+  };
+
+  // Turn 4: Supreme Court Adjudication
+  const supremeResult = await runSupremeCourtAdjudication(
     safeTitle,
     safeDescription,
     incident.category,
     incident.severity,
-    triageResults,
+    transcript,
   );
 
   const totalLatencyMs = Math.round(performance.now() - startTime);
 
   if (!supremeResult) {
-    throw new Error("Supreme Court evaluation returned null.");
+    throw new Error("Supreme Court adjudication returned null.");
   }
 
-  const triageModels = triageResults.map((t) => t.model);
+  const triageModels = [initA.model, initB.model];
 
   const { error: updateError } = await admin
     .from("incidents")
@@ -384,7 +597,7 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
     totalLatencyMs,
   };
 
-  logger.info("[CrossAudit] Pipeline completed successfully", {
+  logger.info("[CrossAudit] Debate Pipeline completed successfully", {
     incidentId,
     truthScore: result.truthScore,
     confidence: result.confidence,

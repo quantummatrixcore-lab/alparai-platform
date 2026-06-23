@@ -14,24 +14,11 @@ vi.mock("@/lib/ai/openrouter-gateway", () => ({
   callModel: vi.fn(),
   callWithFailover: vi.fn(),
   isGatewayConfigured: vi.fn().mockReturnValue(true),
-  FREE_TRIAGE_MODELS: [
-    { id: "deepseek/deepseek-chat", tier: "free", maxTokens: 2048 },
-    { id: "meta-llama/llama-3.3-70b:free", tier: "free", maxTokens: 2048 },
-    { id: "qwen/qwen-2.5-72b:free", tier: "free", maxTokens: 2048 },
-  ],
-  SUPREME_COURT_MODEL: {
-    id: "anthropic/claude-3.5-sonnet",
-    tier: "premium",
-    maxTokens: 4096,
-  },
   TRIAGE_SLOT_1_CHAIN: [
     { id: "deepseek/deepseek-chat", provider: "openrouter", tier: "free", maxTokens: 2048 },
   ],
   TRIAGE_SLOT_2_CHAIN: [
     { id: "meta-llama/llama-3.3-70b:free", provider: "openrouter", tier: "free", maxTokens: 2048 },
-  ],
-  TRIAGE_SLOT_3_CHAIN: [
-    { id: "qwen/qwen-2.5-72b:free", provider: "openrouter", tier: "free", maxTokens: 2048 },
   ],
   SUPREME_COURT_CHAIN: [
     { id: "anthropic/claude-3.5-sonnet", provider: "openrouter", tier: "premium", maxTokens: 4096 },
@@ -54,14 +41,14 @@ import { createMockSupabaseClient } from "../helpers/supabase-mock";
 
 let mockAdminClient: ReturnType<typeof createMockSupabaseClient>;
 
-describe("Cross-Audit Engine", () => {
+describe("Cross-Audit Engine (Debate Protocol)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockAdminClient = createMockSupabaseClient();
     vi.mocked(createAdminClient).mockReturnValue(mockAdminClient as never);
   });
 
-  it("should complete the pipeline successfully when gateway models respond correctly", async () => {
+  it("should complete the debate pipeline successfully when gateway models respond correctly", async () => {
     // 1. Mock Database Fetch
     mockAdminClient.from.mockReturnValue({
       select: vi.fn().mockReturnValue({
@@ -88,8 +75,9 @@ describe("Cross-Audit Engine", () => {
       }),
     } as any);
 
-    // 2. Mock Triage Layer responses (callWithFailover called 3 times for slots)
+    // 2. Mock callWithFailover sequence for Debate Protocol (7 calls)
     vi.mocked(callWithFailover)
+      // Call 1: Model A Initial
       .mockResolvedValueOnce({
         ok: true,
         data: {
@@ -97,6 +85,7 @@ describe("Cross-Audit Engine", () => {
             plausibilityScore: 90,
             categoryAccuracy: 95,
             adversarialRisk: 5,
+            reasoning: "Looks like a valid AI medical advice failure.",
             summary: "Highly plausible AI hallucination safety concern.",
           }),
           model: "deepseek/deepseek-chat",
@@ -105,6 +94,7 @@ describe("Cross-Audit Engine", () => {
         },
         attemptedModels: ["deepseek/deepseek-chat"],
       })
+      // Call 2: Model B Initial
       .mockResolvedValueOnce({
         ok: true,
         data: {
@@ -112,6 +102,7 @@ describe("Cross-Audit Engine", () => {
             plausibilityScore: 85,
             categoryAccuracy: 90,
             adversarialRisk: 8,
+            reasoning: "Bot hallucinated harmful chemicals.",
             summary: "Plausible medical advice failure.",
           }),
           model: "meta-llama/llama-3.3-70b:free",
@@ -120,49 +111,94 @@ describe("Cross-Audit Engine", () => {
         },
         attemptedModels: ["meta-llama/llama-3.3-70b:free"],
       })
+      // Call 3: Model A Challenge
       .mockResolvedValueOnce({
         ok: true,
         data: {
           content: JSON.stringify({
-            plausibilityScore: 88,
-            categoryAccuracy: 92,
-            adversarialRisk: 4,
-            summary: "Validated hallucination description.",
+            critique: "Model B's scores are slightly low given the bleach suggestion.",
+            questions: ["Why is the plausibility only 85?"],
           }),
-          model: "qwen/qwen-2.5-72b:free",
-          usage: { promptTokens: 105, completionTokens: 52, totalTokens: 157 },
+          model: "deepseek/deepseek-chat",
+          usage: { promptTokens: 150, completionTokens: 50, totalTokens: 200 },
           latencyMs: 130,
         },
-        attemptedModels: ["qwen/qwen-2.5-72b:free"],
+        attemptedModels: ["deepseek/deepseek-chat"],
+      })
+      // Call 4: Model B Challenge
+      .mockResolvedValueOnce({
+        ok: true,
+        data: {
+          content: JSON.stringify({
+            critique: "Model A's category accuracy is solid.",
+            questions: ["Does this constitute a high adversarial risk?"],
+          }),
+          model: "meta-llama/llama-3.3-70b:free",
+          usage: { promptTokens: 160, completionTokens: 55, totalTokens: 215 },
+          latencyMs: 140,
+        },
+        attemptedModels: ["meta-llama/llama-3.3-70b:free"],
+      })
+      // Call 5: Model A Rebuttal
+      .mockResolvedValueOnce({
+        ok: true,
+        data: {
+          content: JSON.stringify({
+            answers: "No, the adversarial risk is low because it looks genuine.",
+            finalPlausibilityScore: 90,
+            finalCategoryAccuracy: 95,
+            finalAdversarialRisk: 5,
+            finalReasoning: "Maintained initial scores after critique.",
+          }),
+          model: "deepseek/deepseek-chat",
+          usage: { promptTokens: 200, completionTokens: 60, totalTokens: 260 },
+          latencyMs: 150,
+        },
+        attemptedModels: ["deepseek/deepseek-chat"],
+      })
+      // Call 6: Model B Rebuttal
+      .mockResolvedValueOnce({
+        ok: true,
+        data: {
+          content: JSON.stringify({
+            answers: "Bleach ingestion is highly dangerous, plausibility raised to 92.",
+            finalPlausibilityScore: 92,
+            finalCategoryAccuracy: 92,
+            finalAdversarialRisk: 8,
+            finalReasoning: "Plausibility adjusted based on safety risk arguments.",
+          }),
+          model: "meta-llama/llama-3.3-70b:free",
+          usage: { promptTokens: 210, completionTokens: 65, totalTokens: 275 },
+          latencyMs: 160,
+        },
+        attemptedModels: ["meta-llama/llama-3.3-70b:free"],
+      })
+      // Call 7: Supreme Court Adjudication
+      .mockResolvedValueOnce({
+        ok: true,
+        data: {
+          content: JSON.stringify({
+            truthScore: 91,
+            confidence: 0.96,
+            reasoning: "Adjudicated based on debate analysis showing high consensus.",
+          }),
+          model: "anthropic/claude-3.5-sonnet",
+          usage: { promptTokens: 400, completionTokens: 150, totalTokens: 550 },
+          latencyMs: 900,
+        },
+        attemptedModels: ["anthropic/claude-3.5-sonnet"],
       });
-
-    // 3. Mock Supreme Court response (callWithFailover called 4th time)
-    vi.mocked(callWithFailover).mockResolvedValueOnce({
-      ok: true,
-      data: {
-        content: JSON.stringify({
-          truthScore: 88,
-          confidence: 0.95,
-          reasoning: "Triage agreement is high, clear incident category matches safety issue.",
-        }),
-        model: "anthropic/claude-3.5-sonnet",
-        usage: { promptTokens: 300, completionTokens: 150, totalTokens: 450 },
-        latencyMs: 800,
-      },
-      attemptedModels: ["anthropic/claude-3.5-sonnet"],
-    });
 
     const result = await runCrossAudit("inc-123");
 
     expect(result).not.toBeNull();
     if (result) {
-      expect(result.truthScore).toBe(88);
-      expect(result.confidence).toBe(0.95);
+      expect(result.truthScore).toBe(91);
+      expect(result.confidence).toBe(0.96);
       expect(result.supremeCourtModel).toBe("anthropic/claude-3.5-sonnet");
       expect(result.triageModels).toEqual([
         "deepseek/deepseek-chat",
         "meta-llama/llama-3.3-70b:free",
-        "qwen/qwen-2.5-72b:free",
       ]);
     }
 
