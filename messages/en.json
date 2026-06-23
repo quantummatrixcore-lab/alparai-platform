@@ -1013,7 +1013,9 @@
     "responsesGiven": "Responses given",
     "totalViews": "Total views",
     "incidentsResponded": "Incidents responded",
-    "incidentsReported": "Incidents reported ({count})"
+    "incidentsReported": "Incidents reported ({count})",
+    "brand_profile": "Brand Profile",
+    "brand_profile_desc": "{providerName} trust score, verified AI incidents, and response tracking."
   },
   "transparency": {
     "totalReports": "Total reports",
@@ -1169,6 +1171,11 @@
     "privacy": "Zero spam. Unsubscribe at any time."
   },
   "submit": {
-    "description": "Submit a new AI incident with proof and context."
+    "description": "Submit a new AI incident with proof and context.",
+    "title": "Report AI Failure"
+  },
+  "invest": {
+    "title": "Investor Pitch Deck — ALPAR AI",
+    "description": "ALPAR AI Investor Portal & Pitch Deck presentation."
   }
 }

@@ -1,7 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Star, MessageSquare, Lightbulb, ArrowLeft } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
+import Image from "next/image";
 import { createServerClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import { Badge } from "@/components/ui/badge";
@@ -196,9 +197,12 @@ export default async function ModelDetailPage({ params }: ModelDetailPageProps) 
       <div className="border-border-subtle bg-bg-secondary/20 flex flex-col items-start justify-between gap-6 rounded-2xl border p-6 md:flex-row md:items-center">
         <div className="flex items-center gap-4">
           {provider?.logo_url ? (
-            <img
+            <Image
               src={provider.logo_url}
               alt={provider.name}
+              width={64}
+              height={64}
+              unoptimized
               className="border-border-subtle bg-bg-tertiary h-16 w-16 rounded-2xl border object-contain p-2"
             />
           ) : (

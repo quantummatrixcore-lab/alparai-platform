@@ -11,6 +11,7 @@ import { Badge as UIBadge } from "@/components/ui/badge";
 import type { IncidentDetail, ProviderResponse } from "@/types";
 import { Link } from "@/i18n/routing";
 import { TakedownButton } from "./takedown-button";
+import Image from "next/image";
 
 export function IncidentDetailView({
   incident,
@@ -189,13 +190,14 @@ export function IncidentDetailView({
                     href={e.file_url}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="border-border-subtle block overflow-hidden rounded-md border"
+                    className="border-border-subtle relative block h-48 w-full overflow-hidden rounded-md border"
                   >
-                    <img
+                    <Image
                       src={e.file_url}
                       alt={e.file_name}
-                      className="h-48 w-full object-cover transition-transform hover:scale-105"
-                      loading="lazy"
+                      fill
+                      unoptimized
+                      className="object-cover transition-transform hover:scale-105"
                     />
                   </a>
                 ) : (

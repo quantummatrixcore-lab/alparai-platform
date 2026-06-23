@@ -1,12 +1,13 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
 import { InvestPresentation } from "@/components/invest/invest-presentation";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "invest" });
   return {
-    title: locale === "tr" ? "Yatırımcı Sunumu — ALPAR AI" : "Investor Pitch Deck — ALPAR AI",
-    description: "ALPAR AI Investor Portal & Pitch Deck presentation.",
+    title: t("title"),
+    description: t("description"),
   };
 }
 
