@@ -364,7 +364,10 @@
     "fixed": "çözüldü",
     "requires_immediate": "Acil müdahale gerektirir",
     "remediated_r2": "Round 2'de giderildi",
-    "increase_from_r1": "R1'den bu yana +{diff} artış"
+    "increase_from_r1": "R1'den bu yana +{diff} artış",
+    "no_pending_takedowns": "Bekleyen içerik kaldırma talebi yok.",
+    "updated": "Başarıyla güncellendi",
+    "failed": "İşlem başarısız oldu"
   },
   "footer": {
     "tagline": "Dünyanın AI'ı hesap verilebilir kıldığı yer.",

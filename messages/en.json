@@ -364,7 +364,10 @@
     "fixed": "fixed",
     "requires_immediate": "Requires immediate remediation",
     "remediated_r2": "Remediated in Round 2",
-    "increase_from_r1": "+{diff} increase from R1"
+    "increase_from_r1": "+{diff} increase from R1",
+    "no_pending_takedowns": "No pending takedown requests.",
+    "updated": "Updated successfully",
+    "failed": "Operation failed"
   },
   "footer": {
     "tagline": "Where the world holds AI accountable.",
