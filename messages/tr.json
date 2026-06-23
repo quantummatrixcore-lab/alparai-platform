@@ -451,7 +451,17 @@
     "sign_in_to_upvote": "Oylama yapmak için giriş yapın",
     "sign_in_to_review": "İnceleme göndermek için giriş yapın",
     "sign_in_to_feature": "Özellik isteği göndermek için giriş yapın",
-    "consent_required": "Tüm zorunlu onayları kabul etmelisiniz."
+    "consent_required": "Tüm zorunlu onayları kabul etmelisiniz.",
+    "api_keys_active": "Aktif",
+    "api_keys_not_configured": "Yapılandırılmadı",
+    "delete_confirm": "{provider} için API anahtarını silmek istediğinize emin misiniz?",
+    "save_failed": "Anahtar kaydedilemedi",
+    "delete_failed": "Anahtar silinemedi",
+    "openrouter_desc": "Modellere birleşik erişim (DeepSeek, Llama, Qwen)",
+    "cohere_desc": "Cohere Command R ve Command R+ modelleri",
+    "huggingface_desc": "HuggingFace Çıkarım API uç noktası modelleri",
+    "google_desc": "Google Gemini 1.5 Flash / Pro modelleri",
+    "blackbox_desc": "Blackbox AI kodlama asistanı modelleri"
   },
   "common": {
     "loading": "Yükleniyor…",

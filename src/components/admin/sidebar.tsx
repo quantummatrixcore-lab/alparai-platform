@@ -23,6 +23,7 @@ import {
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
 import { Wordmark } from "../layout/wordmark";
+import { LanguageSwitcher } from "../layout/language-switcher";
 
 interface SidebarUserShape {
   email: string;
@@ -198,13 +199,16 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
           </div>
 
           <div className="space-y-1">
-            <Link
-              href="/"
-              className="text-fg-muted hover:bg-bg-tertiary/60 hover:text-fg-primary flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition"
-            >
-              <Globe className="h-3.5 w-3.5" />
-              {tCommon("home") ?? "Ana Sayfa"}
-            </Link>
+            <div className="mb-1 flex items-center justify-between gap-2">
+              <Link
+                href="/"
+                className="text-fg-muted hover:bg-bg-tertiary/60 hover:text-fg-primary flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition"
+              >
+                <Globe className="h-3.5 w-3.5" />
+                {tCommon("home") ?? "Ana Sayfa"}
+              </Link>
+              <LanguageSwitcher className="border-border-subtle h-8 px-2.5 py-1.5 text-xs" />
+            </div>
             <form action="/api/auth/signout" method="post">
               <button
                 type="submit"

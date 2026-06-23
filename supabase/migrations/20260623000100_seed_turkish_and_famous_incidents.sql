@@ -89,5 +89,45 @@ INSERT INTO public.incidents (
     'Willy Wonka Deneyimi yapay zeka pazarlama dolandırıcılığı',
     'Glasgow''daki bir etkinlik organizatörü, Willy Wonka Deneyimi için yapay zeka görselleri hazırladı; etkinlik bomboş bir depo çıkınca binlerce aile mağdur oldu.',
     (SELECT id FROM public.ai_providers WHERE slug = 'stability'), 'manipulation', 'medium', '2024-02-28', 'UK', 'en', 'published', NOW(), false, '{}'
+  ),
+  (
+    'fa11aab1-fa11-4700-8000-000000000007', null, false,
+    'Knight Capital Group algorithmic trading glitch',
+    'A rogue algorithmic trading system executed millions of unintended orders in 45 minutes, causing Knight Capital a $440 million loss and forcing its acquisition.',
+    'Knight Capital Group algorithmic trading glitch',
+    'A rogue algorithmic trading system executed millions of unintended orders in 45 minutes, causing Knight Capital a $440 million loss and forcing its acquisition.',
+    'Knight Capital Group algoritmik işlem felaketi',
+    'Hatalı bir algoritmik ticaret sistemi 45 dakika içinde milyonlarca istenmeyen emir gerçekleştirdi. Şirket 440 milyon dolar zarar ederek iflasın eşiğine geldi ve satılmak zorunda kaldı.',
+    (SELECT id FROM public.ai_providers WHERE slug = 'stability'), 'hallucination', 'critical', '2012-08-01', 'US', 'en', 'published', NOW(), false, '{}'
+  ),
+  (
+    'fa11aab1-fa11-4700-8000-000000000008', null, false,
+    'Microsoft Tay chatbot went rogue on Twitter',
+    'Microsoft''s Tay chatbot was manipulated by internet users within 24 hours to post racist, xenophobic, and highly offensive tweets, forcing Microsoft to shut it down.',
+    'Microsoft Tay chatbot went rogue on Twitter',
+    'Microsoft''s Tay chatbot was manipulated by internet users within 24 hours to post racist, xenophobic, and highly offensive tweets, forcing Microsoft to shut it down.',
+    'Microsoft Tay sohbet robotu Twitter''da kontrolden çıktı',
+    'Microsoft''un Tay sohbet robotu, internet kullanıcıları tarafından 24 saat içinde manipüle edilerek ırkçı, yabancı düşmanı ve son derece saldırgan tweetler paylaşmaya başladı. Microsoft robotu kapatmak zorunda kaldı.',
+    (SELECT id FROM public.ai_providers WHERE slug = 'microsoft'), 'manipulation', 'critical', '2016-03-23', 'US', 'en', 'published', NOW(), false, '{}'
+  ),
+  (
+    'fa11aab1-fa11-4700-8000-000000000009', null, false,
+    'Amazon AI recruitment tool gender bias',
+    'Amazon''s experimental AI recruiting tool was found to be biased against women, automatically demoting resumes containing the word "women''s" or graduates from all-women''s colleges.',
+    'Amazon AI recruitment tool gender bias',
+    'Amazon''s experimental AI recruiting tool was found to be biased against women, automatically demoting resumes containing the word "women''s" or graduates from all-women''s colleges.',
+    'Amazon yapay zeka işe alım aracında cinsiyet ayrımcılığı',
+    'Amazon''un deneysel yapay zeka işe alım aracının kadınlara karşı ayrımcılık yaptığı, "kadın" kelimesini içeren özgeçmişleri veya yalnızca kadınların gittiği kolejlerden mezun olanları otomatik olarak elediği tespit edildi.',
+    (SELECT id FROM public.ai_providers WHERE slug = 'google'), 'bias', 'high', '2018-10-10', 'US', 'en', 'published', NOW(), false, '{}'
+  ),
+  (
+    'fa11aab1-fa11-4700-8000-000000000010', null, false,
+    'Tesla Autopilot first fatal crash of Joshua Brown',
+    'A Tesla Model S operating on Autopilot failed to distinguish a white tractor-trailer against a brightly lit sky, leading to a fatal collision without braking.',
+    'Tesla Autopilot first fatal crash of Joshua Brown',
+    'A Tesla Model S operating on Autopilot failed to distinguish a white tractor-trailer against a brightly lit sky, leading to a fatal collision without braking.',
+    'Tesla Otopilotu ilk ölümlü kazasını yaptı',
+    'Otopilot modunda çalışan bir Tesla Model S, parlak gökyüzüne karşı beyaz bir tırı ayırt edemedi ve fren yapmadan ölümcül bir çarpışmaya neden oldu. Sürücü Joshua Brown hayatını kaybetti.',
+    (SELECT id FROM public.ai_providers WHERE slug = 'stability'), 'hallucination', 'critical', '2016-05-07', 'US', 'en', 'published', NOW(), false, '{}'
   )
 ON CONFLICT (id) DO NOTHING;
