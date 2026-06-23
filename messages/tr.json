@@ -1013,7 +1013,9 @@
     "responsesGiven": "Verilen yanıtlar",
     "totalViews": "Toplam görüntülenme",
     "incidentsResponded": "Yanıt verilen olaylar",
-    "incidentsReported": "Bildirilen olaylar ({count})"
+    "incidentsReported": "Bildirilen olaylar ({count})",
+    "brand_profile": "Marka Profili",
+    "brand_profile_desc": "{providerName} güven skoru, doğrulanmış yapay zeka hataları ve yanıt takibi."
   },
   "transparency": {
     "totalReports": "Toplam rapor",
@@ -1169,6 +1171,11 @@
     "privacy": "Sıfır spam. İstediğiniz zaman ayrılabilirsiniz."
   },
   "submit": {
-    "description": "Kanıt ve bağlamla birlikte yeni bir yapay zeka olayı bildirin."
+    "description": "Kanıt ve bağlamla birlikte yeni bir yapay zeka olayı bildirin.",
+    "title": "Yapay Zeka Hatası Bildir"
+  },
+  "invest": {
+    "title": "Yatırımcı Sunumu — ALPAR AI",
+    "description": "ALPAR AI Yatırımcı Portalı ve Girişim Sunumu (Pitch Deck)."
   }
 }

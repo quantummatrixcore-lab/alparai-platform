@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, TrendingUp, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import type { IncidentListItem } from "@/types";
 import { formatDistanceToNow } from "date-fns";
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 interface ProviderLogoProps {
   src: string | null;
@@ -12,6 +13,12 @@ const SIZE_CLASS = {
   sm: "h-8 w-8 text-xs",
   md: "h-12 w-12 text-base",
   lg: "h-16 w-16 text-xl",
+} as const;
+
+const SIZE_NUMBERS = {
+  sm: 32,
+  md: 48,
+  lg: 64,
 } as const;
 
 function hashStringToColor(name: string): { bg: string; fg: string } {
@@ -51,6 +58,7 @@ export function ProviderLogo({ src, name, size = "md" }: ProviderLogoProps) {
   const initials = getInitials(name);
   const palette = hashStringToColor(name);
   const sizeClass = SIZE_CLASS[size];
+  const sizePx = SIZE_NUMBERS[size];
 
   if (!src || imgError) {
     return (
@@ -64,9 +72,12 @@ export function ProviderLogo({ src, name, size = "md" }: ProviderLogoProps) {
   }
 
   return (
-    <img
+    <Image
       src={src}
       alt={`${name} logo`}
+      width={sizePx}
+      height={sizePx}
+      unoptimized
       className={`h-full w-full rounded-md object-contain p-1.5`}
       onError={() => setImgError(true)}
     />

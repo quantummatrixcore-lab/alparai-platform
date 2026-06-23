@@ -8,6 +8,7 @@ import { createServerClient } from "@/lib/supabase/server";
 import { Trophy, Award, Sparkles, Clock, DollarSign, Plus } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { formatDate } from "@/lib/utils";
+import Image from "next/image";
 
 interface BountyListItem {
   id: string;
@@ -212,9 +213,12 @@ function BountyRow({
       <div className="grid grid-cols-1 items-center gap-4 p-5 sm:grid-cols-[60px_1fr_120px_120px_100px]">
         <div className="flex items-center justify-center">
           {bounty.ai_providers?.logo_url ? (
-            <img
+            <Image
               src={bounty.ai_providers.logo_url}
               alt={bounty.ai_providers.name}
+              width={36}
+              height={36}
+              unoptimized
               className="h-9 w-auto object-contain"
             />
           ) : (

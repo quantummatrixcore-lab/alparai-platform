@@ -1,6 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
+import Image from "next/image";
 import { createServerClient } from "@/lib/supabase/server";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,8 +40,22 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { slug } = await params;
-  return { title: `Brand: ${slug}` };
+  const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: "brand" });
+  const supabase = await createServerClient();
+  const { data: provider } = await supabase
+    .from("ai_providers")
+    .select("name")
+    .eq("slug", slug.toLowerCase())
+    .maybeSingle();
+  const providerName = provider?.name ?? slug;
+  return {
+    title: `${providerName} — ${t("brand_profile", { defaultValue: "Brand Profile" })}`,
+    description: t("brand_profile_desc", {
+      providerName,
+      defaultValue: `${providerName} trust score, verified AI incidents, and response tracking.`,
+    }),
+  };
 }
 
 export default async function BrandPage({
@@ -130,10 +145,13 @@ export default async function BrandPage({
         <CardHeader>
           <div className="flex items-start gap-4">
             {providerLogo ? (
-              <img
+              <Image
                 src={providerLogo}
                 alt={`${providerName} logo`}
-                className="border-border-subtle bg-bg-tertiary h-16 w-16 rounded-md border object-contain"
+                width={64}
+                height={64}
+                unoptimized
+                className="border-border-subtle bg-bg-tertiary rounded-md border object-contain"
               />
             ) : (
               <div className="border-border-subtle bg-bg-tertiary flex h-16 w-16 items-center justify-center rounded-md border">
