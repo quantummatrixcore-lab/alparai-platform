@@ -32,16 +32,17 @@
 
 | #   | Model                | UX  | Tech | Data | Content | Conv | SEO | Legal | i18n | ProjMgt | Community | **TOTAL** |
 | --- | -------------------- | --- | ---- | ---- | ------- | ---- | --- | ----- | ---- | ------- | --------- | --------- |
-| 14  | Minimax v6 (360°)    | 68  | 72   | 58   | 50      | 70   | 45  | 82    | 28   | 18      | 25        | **516**   |
-| 15  | Claude Sonnet (360°) | 48  | 52   | 28   | 62      | 35   | 55  | 50    | 18   | 25      | 38        | **411**   |
-| 16  | DeepSeek v4 (360°)   | 42  | 60   | 35   | 45      | 28   | 40  | 48    | 25   | 15      | 32        | **365**   |
+| 14  | Kimi.ai (360°)       | 93  | 72   | 78   | 88      | 32   | 88  | 72    | 65   | 45      | 22        | **634**   |
+| 15  | Minimax v6 (360°)    | 68  | 72   | 58   | 50      | 70   | 45  | 82    | 28   | 18      | 25        | **516**   |
+| 16  | Claude Sonnet (360°) | 48  | 52   | 28   | 62      | 35   | 55  | 50    | 18   | 25      | 38        | **411**   |
+| 17  | DeepSeek v4 (360°)   | 42  | 60   | 35   | 45      | 28   | 40  | 48    | 25   | 15      | 32        | **365**   |
 
 > **Not:** Round 2 farklı kategori ağırlıkları ve daha katı bir puanlama yapısı kullanmıştır.
 
 **Round 1 Ortalamaları:** Vision: 44 | Message: 32 | UX/UI: 39 | Tech: 65 | Legal: 66 | Revenue: 43 | Growth: 26 | Traction: 12 | Investor: 23 | Impact: 69
 **Round 2 Ortalamaları:** UX/UI: 52 | Tech: 61 | Data: 40 | Content: 52 | Conv: 44 | SEO: 46 | Legal: 60 | i18n: 23 | ProjMgt: 19 | Community: 31
 
-**En yüksek skor:** Grok 4 — 703/1000 (R1) | Minimax v6 — 516/1000 (R2) | Otonom Çapraz Denetim (Consensus) — 920/1000 (R3)
+**En yüksek skor:** Grok 4 — 703/1000 (R1) | Kimi.ai — 634/1000 (R2) | Otonom Çapraz Denetim (Consensus) — 920/1000 (R3)
 **Ortalama (Round 1):** ~780/1000
 **Ortalama (Round 2):** ~850/1000
 **Ortalama (Round 3):** ~920/1000 (Boş router 404 klasör çakışmaları, i18n API anahtarları çözüldü, tarihi vakalar tohumlandı)
