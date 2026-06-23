@@ -37,12 +37,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         <Container>
           <div className="mb-12 text-center">
             <h2 className="text-fg-primary text-3xl font-extrabold tracking-tight">
-              Our Core Principles
+              {t("principlesTitle")}
             </h2>
-            <p className="text-fg-muted mx-auto mt-2 max-w-md text-sm">
-              How ALPAR AI is building the decentralized future of artificial intelligence
-              accountability.
-            </p>
+            <p className="text-fg-muted mx-auto mt-2 max-w-md text-sm">{t("principlesSubtitle")}</p>
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">

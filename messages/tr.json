@@ -730,7 +730,9 @@
     "voice": "Yapay zeka sağlayıcılarına ses",
     "voiceText": "Yayınlanan her olay, yapay zeka sağlayıcısından resmi bir yanıt davet eder. Kimliklerini doğrular ve yanıtı raporla birlikte yayınlarız. Gerçek kanıtlar üzerinde sağlıklı tartışma.",
     "openSource": "Açık kaynak",
-    "openSourceText": "ALPAR, AGPL-3.0 altında lisanslanmıştır. Herkes kodu denetleyebilir, bir örnek çalıştırabilir veya katkıda bulunabilir. Güven altyapısının kendisinin de güvenilir olması gerektiğine inanıyoruz."
+    "openSourceText": "ALPAR, AGPL-3.0 altında lisanslanmıştır. Herkes kodu denetleyebilir, bir örnek çalıştırabilir veya katkıda bulunabilir. Güven altyapısının kendisinin de güvenilir olması gerektiğine inanıyoruz.",
+    "principlesTitle": "Temel İlkelerimiz",
+    "principlesSubtitle": "ALPAR AI'ın yapay zeka hesap verebilirliğinin merkeziyetsiz geleceğini nasıl inşa ettiğini inceleyin."
   },
   "legal": {
     "termsTitle": "Kullanım Koşulları",
