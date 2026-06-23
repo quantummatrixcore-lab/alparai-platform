@@ -13,37 +13,37 @@ interface PromoteUserFormProps {
 
 const ROLE_OPTIONS: Array<{
   value: "user" | "moderator" | "admin" | "ceo";
-  label: string;
+  labelKey: string;
   icon: typeof UserCheck;
-  description: string;
+  descriptionKey: string;
   minRole: "user" | "moderator" | "admin" | "ceo";
 }> = [
   {
     value: "user",
-    label: "User",
+    labelKey: "role_user_label",
     icon: UserCheck,
-    description: "Standard account",
+    descriptionKey: "role_user_desc",
     minRole: "user",
   },
   {
     value: "moderator",
-    label: "Moderator",
+    labelKey: "role_moderator_label",
     icon: UserCog,
-    description: "Can review & publish incidents",
+    descriptionKey: "role_moderator_desc",
     minRole: "admin",
   },
   {
     value: "admin",
-    label: "Admin",
+    labelKey: "role_admin_label",
     icon: Shield,
-    description: "Can manage users & audit logs",
+    descriptionKey: "role_admin_desc",
     minRole: "admin",
   },
   {
     value: "ceo",
-    label: "CEO",
+    labelKey: "role_ceo_label",
     icon: Shield,
-    description: "Full access including autopilot",
+    descriptionKey: "role_ceo_desc",
     minRole: "ceo",
   },
 ];
@@ -144,8 +144,8 @@ export function PromoteUserForm({ currentUserRole }: PromoteUserFormProps) {
                   className={`mt-0.5 h-4 w-4 shrink-0 ${selected ? "text-brand-400" : "text-fg-muted"}`}
                 />
                 <div className="min-w-0 flex-1">
-                  <p className="text-fg-primary text-xs font-semibold">{opt.label}</p>
-                  <p className="text-fg-muted text-xs">{opt.description}</p>
+                  <p className="text-fg-primary text-xs font-semibold">{t(opt.labelKey)}</p>
+                  <p className="text-fg-muted text-xs">{t(opt.descriptionKey)}</p>
                 </div>
               </button>
             );

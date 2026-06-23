@@ -5,19 +5,16 @@ import type { ProviderAdapter, GatewayRequest, GatewayResult } from "../types";
 const COHERE_API_URL = "https://api.cohere.com/v2/chat";
 const REQUEST_TIMEOUT_MS = 30_000;
 
+import { resolveApiKey } from "../api-keys";
+
 export class CohereAdapter implements ProviderAdapter {
-  private apiKey: string | null = null;
-
-  constructor() {
-    this.apiKey = process.env.COHERE_API_KEY || null;
-  }
-
   isConfigured(): boolean {
-    return this.apiKey !== null;
+    return true; // Configurable via DB at runtime
   }
 
   async call(request: GatewayRequest): Promise<GatewayResult> {
-    if (!this.apiKey) {
+    const apiKey = await resolveApiKey("cohere", "COHERE_API_KEY");
+    if (!apiKey) {
       return {
         ok: false,
         error: {
@@ -37,7 +34,7 @@ export class CohereAdapter implements ProviderAdapter {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${this.apiKey}`,
+          Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
           model: request.model.id,
