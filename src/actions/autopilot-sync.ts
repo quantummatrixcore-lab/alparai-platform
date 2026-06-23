@@ -75,18 +75,19 @@ async function classifyAndTranslateNewsWithGemini(
   }
 
   const prompt = `You are a professional AI technology news editor for ALPAR AI.
-Analyze the following RSS news item:
+Analyze the following RSS news item (it could be in English or Turkish):
 Title: "${title}"
 Description: "${description}"
 
 Perform these tasks:
 1. Classify the category: Must be one of: "regulation", "incident", "research", "security", "news".
 2. Classify the severity: Must be one of: "critical", "high", "medium", "low".
-3. Write a concise English summary of the news (maximum 180 characters, do not exceed).
-4. Translate the title into Turkish.
-5. Translate the English summary into Turkish (maximum 180 characters).
+3. Write a clean, professional version of the title in English (maximum 80 characters) and put it in "title_en". If the original title is in Turkish, translate it accurately to English.
+4. Write a clean, professional version of the title in Turkish (maximum 80 characters) and put it in "title_tr". If the original title is in English, translate it accurately to Turkish.
+5. Write a concise English summary of the news (maximum 180 characters) and put it in "summary_en".
+6. Write a concise Turkish summary of the news (maximum 180 characters) and put it in "summary_tr".
 
-Return ONLY a valid JSON object matching this schema (do not output markdown ticks or extra explanations):
+Return ONLY a valid JSON object matching this schema (do not output markdown ticks, triple backticks or extra explanations):
 {
   "category": "category_string",
   "severity": "severity_string",

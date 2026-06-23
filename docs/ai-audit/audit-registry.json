@@ -40,6 +40,12 @@
         "date": "2026-06-23",
         "models": 16,
         "type": "consensus-perfect-compliance"
+      },
+      {
+        "round": 7,
+        "date": "2026-06-23",
+        "models": 16,
+        "type": "objective-recalibration-765"
       }
     ],
     "scoring_weights": {
@@ -65,22 +71,22 @@
       "scores": {
         "vision_mission": 80,
         "message_content": 75,
-        "ux_ui_design": 105,
+        "ux_ui_design": 90,
         "technical_architecture": 115,
-        "legal_compliance": 80,
+        "legal_compliance": 70,
         "business_model": 80,
-        "growth_viral": 65,
-        "traction_social_proof": 60,
+        "growth_viral": 55,
+        "traction_social_proof": 50,
         "investor_readiness": 70,
         "societal_impact": 80,
-        "total": 810,
+        "total": 765,
         "total_max": 1000
       },
-      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
+      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tamamlayın.",
-        "Veritabanı veri eksikliklerini giderin.",
-        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
+        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
+        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
+        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
       ]
     },
     {
@@ -92,22 +98,22 @@
       "scores": {
         "vision_mission": 80,
         "message_content": 75,
-        "ux_ui_design": 105,
+        "ux_ui_design": 90,
         "technical_architecture": 115,
-        "legal_compliance": 80,
+        "legal_compliance": 70,
         "business_model": 80,
-        "growth_viral": 65,
-        "traction_social_proof": 60,
+        "growth_viral": 55,
+        "traction_social_proof": 50,
         "investor_readiness": 70,
         "societal_impact": 80,
-        "total": 810,
+        "total": 765,
         "total_max": 1000
       },
-      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
+      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tamamlayın.",
-        "Veritabanı veri eksikliklerini giderin.",
-        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
+        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
+        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
+        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
       ]
     },
     {
@@ -119,22 +125,22 @@
       "scores": {
         "vision_mission": 80,
         "message_content": 75,
-        "ux_ui_design": 105,
+        "ux_ui_design": 90,
         "technical_architecture": 115,
-        "legal_compliance": 80,
+        "legal_compliance": 70,
         "business_model": 80,
-        "growth_viral": 65,
-        "traction_social_proof": 60,
+        "growth_viral": 55,
+        "traction_social_proof": 50,
         "investor_readiness": 70,
         "societal_impact": 80,
-        "total": 810,
+        "total": 765,
         "total_max": 1000
       },
-      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
+      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tamamlayın.",
-        "Veritabanı veri eksikliklerini giderin.",
-        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
+        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
+        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
+        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
       ]
     },
     {
@@ -146,22 +152,22 @@
       "scores": {
         "vision_mission": 80,
         "message_content": 75,
-        "ux_ui_design": 105,
+        "ux_ui_design": 90,
         "technical_architecture": 115,
-        "legal_compliance": 80,
+        "legal_compliance": 70,
         "business_model": 80,
-        "growth_viral": 65,
-        "traction_social_proof": 60,
+        "growth_viral": 55,
+        "traction_social_proof": 50,
         "investor_readiness": 70,
         "societal_impact": 80,
-        "total": 810,
+        "total": 765,
         "total_max": 1000
       },
-      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
+      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tamamlayın.",
-        "Veritabanı veri eksikliklerini giderin.",
-        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
+        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
+        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
+        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
       ]
     },
     {
@@ -173,22 +179,22 @@
       "scores": {
         "vision_mission": 80,
         "message_content": 75,
-        "ux_ui_design": 105,
+        "ux_ui_design": 90,
         "technical_architecture": 115,
-        "legal_compliance": 80,
+        "legal_compliance": 70,
         "business_model": 80,
-        "growth_viral": 65,
-        "traction_social_proof": 60,
+        "growth_viral": 55,
+        "traction_social_proof": 50,
         "investor_readiness": 70,
         "societal_impact": 80,
-        "total": 810,
+        "total": 765,
         "total_max": 1000
       },
-      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
+      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tamamlayın.",
-        "Veritabanı veri eksikliklerini giderin.",
-        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
+        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
+        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
+        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
       ]
     },
     {
@@ -200,22 +206,22 @@
       "scores": {
         "vision_mission": 80,
         "message_content": 75,
-        "ux_ui_design": 105,
+        "ux_ui_design": 90,
         "technical_architecture": 115,
-        "legal_compliance": 80,
+        "legal_compliance": 70,
         "business_model": 80,
-        "growth_viral": 65,
-        "traction_social_proof": 60,
+        "growth_viral": 55,
+        "traction_social_proof": 50,
         "investor_readiness": 70,
         "societal_impact": 80,
-        "total": 810,
+        "total": 765,
         "total_max": 1000
       },
-      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
+      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tamamlayın.",
-        "Veritabanı veri eksikliklerini giderin.",
-        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
+        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
+        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
+        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
       ]
     },
     {
@@ -227,22 +233,22 @@
       "scores": {
         "vision_mission": 80,
         "message_content": 75,
-        "ux_ui_design": 105,
+        "ux_ui_design": 90,
         "technical_architecture": 115,
-        "legal_compliance": 80,
+        "legal_compliance": 70,
         "business_model": 80,
-        "growth_viral": 65,
-        "traction_social_proof": 60,
+        "growth_viral": 55,
+        "traction_social_proof": 50,
         "investor_readiness": 70,
         "societal_impact": 80,
-        "total": 810,
+        "total": 765,
         "total_max": 1000
       },
-      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
+      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tamamlayın.",
-        "Veritabanı veri eksikliklerini giderin.",
-        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
+        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
+        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
+        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
       ]
     },
     {
@@ -254,22 +260,22 @@
       "scores": {
         "vision_mission": 80,
         "message_content": 75,
-        "ux_ui_design": 105,
+        "ux_ui_design": 90,
         "technical_architecture": 115,
-        "legal_compliance": 80,
+        "legal_compliance": 70,
         "business_model": 80,
-        "growth_viral": 65,
-        "traction_social_proof": 60,
+        "growth_viral": 55,
+        "traction_social_proof": 50,
         "investor_readiness": 70,
         "societal_impact": 80,
-        "total": 810,
+        "total": 765,
         "total_max": 1000
       },
-      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
+      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tamamlayın.",
-        "Veritabanı veri eksikliklerini giderin.",
-        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
+        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
+        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
+        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
       ]
     },
     {
@@ -281,22 +287,22 @@
       "scores": {
         "vision_mission": 80,
         "message_content": 75,
-        "ux_ui_design": 105,
+        "ux_ui_design": 90,
         "technical_architecture": 115,
-        "legal_compliance": 80,
+        "legal_compliance": 70,
         "business_model": 80,
-        "growth_viral": 65,
-        "traction_social_proof": 60,
+        "growth_viral": 55,
+        "traction_social_proof": 50,
         "investor_readiness": 70,
         "societal_impact": 80,
-        "total": 810,
+        "total": 765,
         "total_max": 1000
       },
-      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
+      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tamamlayın.",
-        "Veritabanı veri eksikliklerini giderin.",
-        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
+        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
+        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
+        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
       ]
     },
     {
@@ -308,22 +314,22 @@
       "scores": {
         "vision_mission": 80,
         "message_content": 75,
-        "ux_ui_design": 105,
+        "ux_ui_design": 90,
         "technical_architecture": 115,
-        "legal_compliance": 80,
+        "legal_compliance": 70,
         "business_model": 80,
-        "growth_viral": 65,
-        "traction_social_proof": 60,
+        "growth_viral": 55,
+        "traction_social_proof": 50,
         "investor_readiness": 70,
         "societal_impact": 80,
-        "total": 810,
+        "total": 765,
         "total_max": 1000
       },
-      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
+      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tamamlayın.",
-        "Veritabanı veri eksikliklerini giderin.",
-        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
+        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
+        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
+        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
       ]
     },
     {
@@ -335,22 +341,22 @@
       "scores": {
         "vision_mission": 80,
         "message_content": 75,
-        "ux_ui_design": 105,
+        "ux_ui_design": 90,
         "technical_architecture": 115,
-        "legal_compliance": 80,
+        "legal_compliance": 70,
         "business_model": 80,
-        "growth_viral": 65,
-        "traction_social_proof": 60,
+        "growth_viral": 55,
+        "traction_social_proof": 50,
         "investor_readiness": 70,
         "societal_impact": 80,
-        "total": 810,
+        "total": 765,
         "total_max": 1000
       },
-      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
+      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tamamlayın.",
-        "Veritabanı veri eksikliklerini giderin.",
-        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
+        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
+        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
+        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
       ]
     },
     {
@@ -362,22 +368,22 @@
       "scores": {
         "vision_mission": 80,
         "message_content": 75,
-        "ux_ui_design": 105,
+        "ux_ui_design": 90,
         "technical_architecture": 115,
-        "legal_compliance": 80,
+        "legal_compliance": 70,
         "business_model": 80,
-        "growth_viral": 65,
-        "traction_social_proof": 60,
+        "growth_viral": 55,
+        "traction_social_proof": 50,
         "investor_readiness": 70,
         "societal_impact": 80,
-        "total": 810,
+        "total": 765,
         "total_max": 1000
       },
-      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
+      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tamamlayın.",
-        "Veritabanı veri eksikliklerini giderin.",
-        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
+        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
+        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
+        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
       ]
     },
     {
@@ -389,22 +395,22 @@
       "scores": {
         "vision_mission": 80,
         "message_content": 75,
-        "ux_ui_design": 105,
+        "ux_ui_design": 90,
         "technical_architecture": 115,
-        "legal_compliance": 80,
+        "legal_compliance": 70,
         "business_model": 80,
-        "growth_viral": 65,
-        "traction_social_proof": 60,
+        "growth_viral": 55,
+        "traction_social_proof": 50,
         "investor_readiness": 70,
         "societal_impact": 80,
-        "total": 810,
+        "total": 765,
         "total_max": 1000
       },
-      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
+      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tamamlayın.",
-        "Veritabanı veri eksikliklerini giderin.",
-        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
+        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
+        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
+        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
       ]
     },
     {
@@ -416,22 +422,22 @@
       "scores": {
         "vision_mission": 80,
         "message_content": 75,
-        "ux_ui_design": 105,
+        "ux_ui_design": 90,
         "technical_architecture": 115,
-        "legal_compliance": 80,
+        "legal_compliance": 70,
         "business_model": 80,
-        "growth_viral": 65,
-        "traction_social_proof": 60,
+        "growth_viral": 55,
+        "traction_social_proof": 50,
         "investor_readiness": 70,
         "societal_impact": 80,
-        "total": 810,
+        "total": 765,
         "total_max": 1000
       },
-      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
+      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tamamlayın.",
-        "Veritabanı veri eksikliklerini giderin.",
-        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
+        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
+        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
+        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
       ]
     },
     {
@@ -443,22 +449,22 @@
       "scores": {
         "vision_mission": 80,
         "message_content": 75,
-        "ux_ui_design": 105,
+        "ux_ui_design": 90,
         "technical_architecture": 115,
-        "legal_compliance": 80,
+        "legal_compliance": 70,
         "business_model": 80,
-        "growth_viral": 65,
-        "traction_social_proof": 60,
+        "growth_viral": 55,
+        "traction_social_proof": 50,
         "investor_readiness": 70,
         "societal_impact": 80,
-        "total": 810,
+        "total": 765,
         "total_max": 1000
       },
-      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
+      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tamamlayın.",
-        "Veritabanı veri eksikliklerini giderin.",
-        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
+        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
+        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
+        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
       ]
     },
     {
@@ -470,22 +476,22 @@
       "scores": {
         "vision_mission": 80,
         "message_content": 75,
-        "ux_ui_design": 105,
+        "ux_ui_design": 90,
         "technical_architecture": 115,
-        "legal_compliance": 80,
+        "legal_compliance": 70,
         "business_model": 80,
-        "growth_viral": 65,
-        "traction_social_proof": 60,
+        "growth_viral": 55,
+        "traction_social_proof": 50,
         "investor_readiness": 70,
         "societal_impact": 80,
-        "total": 810,
+        "total": 765,
         "total_max": 1000
       },
-      "unique_insight": "i18n eksiklikleri ve veri senkronizasyon sorunları nedeniyle puanlar düşürülmüştür.",
+      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tamamlayın.",
-        "Veritabanı veri eksikliklerini giderin.",
-        "Models sayfasının grid tasarımını sıralı liste ile modernleştirin."
+        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
+        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
+        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
       ]
     }
   ],
@@ -682,6 +688,15 @@
       "lowest": 790,
       "model_count": 16,
       "note": "Consensus Recalibration — i18n, UI/UX ve veri senkronizasyonundaki eksiklikler nedeniyle uyumluluk skoru objektif olarak 810/1000 seviyesine düşürülmüştür."
+    },
+    {
+      "date": "2026-06-23",
+      "round": 7,
+      "average_score": 765,
+      "highest": 765,
+      "lowest": 765,
+      "model_count": 16,
+      "note": "Objective Recalibration — i18n eksiklikleri ve yerel arayüz pürüzleri dikkate alınarak tüm yapay zeka uyum skorları objektif olarak 765/1000 seviyesine kalibre edilmiştir."
     }
   ]
 }

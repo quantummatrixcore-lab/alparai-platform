@@ -6,6 +6,28 @@ import { getAllPosts, getPostBySlug } from "@/content/blog-posts";
 import { ArrowLeft, Calendar, Clock, User } from "lucide-react";
 import { createServerClient } from "@/lib/supabase/server";
 
+const TAG_TRANSLATIONS: Record<string, string> = {
+  opinion: "Görüş",
+  "ai-ethics": "AI Etiği",
+  governance: "Yönetişim",
+  guide: "Rehber",
+  incidents: "Olaylar",
+  tutorial: "Kılavuz",
+  security: "Güvenlik",
+  privacy: "Gizlilik",
+  "pii-guardian": "KVT Koruyucu",
+  regulation: "Düzenleme",
+  claude: "Claude",
+  ban: "Yasak",
+  "ai-governance": "AI Yönetişimi",
+  accountability: "Hesap Verebilirlik",
+  transparency: "Şeffaflık",
+  research: "Araştırma",
+  "annual-report": "Yıllık Rapor",
+  report: "Rapor",
+  autopilot: "Otopilot",
+};
+
 export async function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
 }
@@ -201,14 +223,17 @@ export default async function BlogPostPage({
             </span>
           </div>
           <div className="flex flex-wrap gap-1.5">
-            {tags.map((tag) => (
-              <span
-                key={tag}
-                className="bg-bg-tertiary text-fg-muted rounded px-2 py-0.5 text-xs font-semibold tracking-wider uppercase"
-              >
-                {tag}
-              </span>
-            ))}
+            {tags.map((tag) => {
+              const displayTag = locale === "tr" ? TAG_TRANSLATIONS[tag.toLowerCase()] || tag : tag;
+              return (
+                <span
+                  key={tag}
+                  className="bg-bg-tertiary text-fg-muted rounded px-2 py-0.5 text-xs font-semibold tracking-wider uppercase"
+                >
+                  {displayTag}
+                </span>
+              );
+            })}
           </div>
         </header>
 
