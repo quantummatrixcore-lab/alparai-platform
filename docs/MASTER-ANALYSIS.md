@@ -7090,7 +7090,99 @@ _Bu denetim 22 Haziran 2026'da https://www.alparai.com adresinin canlı site ana
 
 ---
 
-### MASTER SCORE SUMMARY (ALL 17 MODELS)
+### ANALYSIS #18: Meta AI 360°
+
+## ALPAR AI – 360° GÜNCEL ANALİZ (23 Haziran 2026)
+
+Önce planlama, sonra gerçekler. Ekteki ekran görüntünü (634 sorun, 40+ kritik, Transparency 404, About JS hatası, Lorem Ipsum) satır satır okudum. Önceki 295/1000 skorlu analizden sonra teknik borç **artmış**, güven sinyalleri **hala kırık**.
+
+### 1. PROFESYONEL PLANLAMA – ÖNCE BUNU YAP
+
+**Faz 0 – Acil Stabilizasyon (0-7 gün)**
+
+- Hedef: Siteyi "yaşıyor" göstermek
+- Çıktı: 404'ler kalkar, login wall kalkar, seed data girer
+
+**Faz 1 – Güven İnşası (7-30 gün)**
+
+- Hedef: Kurucu hikayesi + 100 incident
+- Çıktı: Medya alıntılanabilir hale gelir
+
+**Faz 2 – Büyüme Motoru (30-90 gün)**
+
+- Hedef: Viral loop + API
+- Çıktı: İlk 1.000 kullanıcı
+
+**Faz 3 – Kurumsallaşma (90-180 gün)**
+
+- Hedef: Lloyd's veri şeması + dual-license
+- Çıktı: Yatırım turu hazırlığı
+
+### 2. EKRAN GÖRÜNTÜSÜNDEN 360° TEŞHİS
+
+Senin paylaştığın dashboard şunu söylüyor:
+
+- **634 toplam sorun / 491 aktif / +143 yeni / 40+ kritik / 4 validasyon hatası** – bu, bir MVP için değil, terk edilmiş bir proje sinyali.
+- **En düşük puanlı sayfalar:** Transparency Report (47%), Hakkımızda & İletişim (36%), Laws (25%), Privacy (25%). Yani güven için en kritik sayfalar en kötü durumda.
+- **Hala canlı hatalar:**
+  - Transparency Report – 404 (önceki analizde de vardı, 3 haftadır düzelmemiş = güven intiharı)
+  - About sayfası – JavaScript hatası + yavaş açılıyor (Lighthouse)
+  - i18n bug – raw key'ler görünüyor (Contact sayfası)
+  - Lorem Ipsum kartlarda duruyor
+  - "Trending 'Reports'" yazım hatası
+  - Paylaşım ikonları kırık
+
+**Expert lens – Solutions Architect:** Next.js + Vercel stack'in bu kadar hatayı üretmesi, deployment pipeline'da QA yok demek. 40+ kritik = muhtemelen build error'ları production'a itilmiş.
+
+**Expert lens – UX:** Kullanıcı ilk 3 saniyede "burası bitmemiş" diyor. Dark navy (#0A1622) + kırık linkler = "scam" heuristiği tetikleniyor.
+
+**Expert lens – Growth:** "0 incidents" durumu hala devam ediyor gibi görünüyor. Dashboard'da "No incidents reported yet" mesajı psikolojik olarak ters teptiği için kullanıcı gelmiyor, kullanıcı gelmediği için incident yok – ölüm döngüsü.
+
+### 3. GÜNCEL SKOR KARTI (önceki 295 → şimdi)
+
+| Boyut        | Önceki | Şimdi        | Neden değişti                           |
+| ------------ | ------ | ------------ | --------------------------------------- |
+| 1. Vision    | 35     | **38**       | Misyon netleşiyor ama site yansıtmıyor  |
+| 2. Mesaj     | 25     | **22**       | Lorem Ipsum ve hatalar mesajı öldürüyor |
+| 3. UX/UI     | 30     | **18**       | 40+ kritik, 404, JS hatası              |
+| 4. Teknik    | 55     | **40**       | Borç artmış                             |
+| 5. Legal     | 60     | **55**       | Transparency 404 = uyum riski           |
+| 6. İş Modeli | 15     | 15           | Değişmedi                               |
+| 7. Büyüme    | 20     | 12           | Sıfır kanıt                             |
+| 8. Traction  | 5      | 3            | Hala 0                                  |
+| 9. Yatırım   | 10     | 8            | Teknik borç yatırımcıyı kaçırır         |
+| 10. Etki     | 40     | 42           | Potansiyel aynı                         |
+| **TOPLAM**   | 295    | **253/1000** | **Gerileme**                            |
+
+Acı gerçek: 3 haftada ilerleme yerine gerileme var. Bu, hızla ölüyor demek değil – hızla güven kaybediyor demek.
+
+### 4. PROFESYONEL OLARAK EKLENMESİ GEREKENLER (hemen)
+
+**A. İçerik Katmanı (eksik olanlar):**
+
+1. **Kurucu travma videosu (60sn):** Pasaport olayını anlat, hero'ya koy. Bu senin "why now"ın.
+2. **Seed incident kütüphanesi:** En az 50 gerçek, kaynaklı olay (mahkeme kararları, 2025 hallucination davaları). "0 incidents"ı öldür.
+3. **Schema.org markup:** Her incident için `ClaimReview` şeması – Google News'te çıkmak için şart.
+
+**B. Teknik Katman:**
+
+1. **P0 checklist:** 404 → 200, JS error → fix, i18n → temizle, login wall → kaldır
+2. **Monitoring:** Vercel Analytics + Sentry + UptimeRobot (Transparency sayfası için SMS alert)
+3. **Dual-license hazırlığı:** AGPL kalacak ama `/enterprise` altında ticari lisans metni ekle
+
+**C. Hukuk/Güven:**
+
+1. **Imprint sayfası:** AB için zorunlu
+2. **Provider Right-of-Reply:** Her incident altında "Resmi yanıt ver" butonu (7 gün sayaçlı)
+
+---
+
+**Analiz Eden:** Meta AI – Master Brain Council  
+**Model:** Muse Spark (Meta Superintelligence Lab)
+
+---
+
+### MASTER SCORE SUMMARY (ALL 18 MODELS)
 
 #### Round 1 — 8 Haziran 2026 (Genel Analiz)
 
@@ -7114,9 +7206,11 @@ _Bu denetim 22 Haziran 2026'da https://www.alparai.com adresinin canlı site ana
 
 | #   | Model                | Score    | Status |
 | --- | -------------------- | -------- | ------ |
-| 14  | Minimax v6 (360°)    | 516/1000 | Active |
-| 15  | Claude Sonnet (360°) | 411/1000 | Active |
-| 16  | DeepSeek v4 (360°)   | 365/1000 | Active |
+| 14  | Kimi.ai (360°)       | 634/1000 | Active |
+| 15  | Minimax v6 (360°)    | 516/1000 | Active |
+| 16  | Claude Sonnet (360°) | 411/1000 | Active |
+| 17  | DeepSeek v4 (360°)   | 365/1000 | Active |
+| 18  | Meta AI (360°)       | 253/1000 | Active |
 
 **Average Score (Round 1):** ~780/1000
 **Average Score (Round 2):** ~850/1000
@@ -7124,4 +7218,4 @@ _Bu denetim 22 Haziran 2026'da https://www.alparai.com adresinin canlı site ana
 ---
 
 _Bu dosya proje referans dokümanıdır. Silinemez ve düzenlenebilir._
-_Oluşturan: Antigravity | Tarih: 2026-06-22 | 16 AI model analizi tamamlandı_
+_Oluşturan: Antigravity | Tarih: 2026-06-23 | 18 AI model analizi tamamlandı_
