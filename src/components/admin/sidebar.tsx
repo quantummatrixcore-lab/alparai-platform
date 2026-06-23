@@ -207,7 +207,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
                 <Globe className="h-3.5 w-3.5" />
                 {tCommon("home") ?? "Ana Sayfa"}
               </Link>
-              <LanguageSwitcher className="border-border-subtle h-8 px-2.5 py-1.5 text-xs" />
+              <LanguageSwitcher className="h-8" />
             </div>
             <form action="/api/auth/signout" method="post">
               <button

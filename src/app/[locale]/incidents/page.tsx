@@ -1,4 +1,4 @@
-export const dynamic = "force-dynamic";
+export const revalidate = 10;
 
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";

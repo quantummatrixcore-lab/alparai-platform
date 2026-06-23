@@ -107,11 +107,116 @@ const XAIIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const EUIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="24" height="24" rx="4" fill="#003399" />
+    <g fill="#FFCC00">
+      <path d="M12 3.5l.2.7h.7l-.6.4.2.7-.5-.4-.5.4.2-.7-.6-.4h.7z" />
+      <path d="M16.25 4.6l.2.7h.7l-.6.4.2.7-.5-.4-.5.4.2-.7-.6-.4h.7z" />
+      <path d="M19.4 7.75l.2.7h.7l-.6.4.2.7-.5-.4-.5.4.2-.7-.6-.4h.7z" />
+      <path d="M20.5 12l.2.7h.7l-.6.4.2.7-.5-.4-.5.4.2-.7-.6-.4h.7z" />
+      <path d="M19.4 16.25l.2.7h.7l-.6.4.2.7-.5-.4-.5.4.2-.7-.6-.4h.7z" />
+      <path d="M16.25 19.4l.2.7h.7l-.6.4.2.7-.5-.4-.5.4.2-.7-.6-.4h.7z" />
+      <path d="M12 20.5l.2.7h.7l-.6.4.2.7-.5-.4-.5.4.2-.7-.6-.4h.7z" />
+      <path d="M7.75 19.4l.2.7h.7l-.6.4.2.7-.5-.4-.5.4.2-.7-.6-.4h.7z" />
+      <path d="M4.6 16.25l.2.7h.7l-.6.4.2.7-.5-.4-.5.4.2-.7-.6-.4h.7z" />
+      <path d="M3.5 12l.2.7h.7l-.6.4.2.7-.5-.4-.5.4.2-.7-.6-.4h.7z" />
+      <path d="M4.6 7.75l.2.7h.7l-.6.4.2.7-.5-.4-.5.4.2-.7-.6-.4h.7z" />
+      <path d="M7.75 4.6l.2.7h.7l-.6.4.2.7-.5-.4-.5.4.2-.7-.6-.4h.7z" />
+    </g>
+  </svg>
+);
+
+const KoreaIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="24" height="24" rx="4" fill="#F8F9FA" />
+    <circle cx="12" cy="12" r="5" fill="#CD2E3A" />
+    <path
+      d="M12 7C9.24 7 7 9.24 7 12C7 14.76 9.24 17 12 17C12 14.24 14.24 12 17 12C14.24 12 12 9.24 12 7Z"
+      fill="#0047A0"
+    />
+    <rect x="5" y="5" width="2" height="0.6" transform="rotate(45 5 5)" fill="#000000" />
+    <rect x="17" y="17" width="2" height="0.6" transform="rotate(45 17 17)" fill="#000000" />
+    <rect x="5" y="17" width="2" height="0.6" transform="rotate(-45 5 17)" fill="#000000" />
+    <rect x="17" y="5" width="2" height="0.6" transform="rotate(-45 17 5)" fill="#000000" />
+  </svg>
+);
+
+const SecurityShieldIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M12 2L4 5v6c0 5.25 3.42 10.16 8 11 4.58-.84 8-5.75 8-11V5l-8-3z"
+      fill="url(#shield-grad)"
+      stroke="#06B6D4"
+      strokeWidth="1.5"
+    />
+    <path
+      d="M12 6v10M9 9l3-3 3 3"
+      stroke="#FFFFFF"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <defs>
+      <linearGradient id="shield-grad" x1="4" y1="2" x2="20" y2="22" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#0891B2" stopOpacity="0.4" />
+        <stop offset="1" stopColor="#0E7490" stopOpacity="0.1" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
+
+const ResearchAnalyticsIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="24" height="24" rx="4" fill="#1E1B4B" />
+    <path d="M6 18V12M12 18V8M18 18V14" stroke="#A855F7" strokeWidth="2.5" strokeLinecap="round" />
+    <path
+      d="M5 8l6-4 8 5"
+      stroke="#F43F5E"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <circle cx="19" cy="9" r="1.5" fill="#F43F5E" />
+  </svg>
+);
+
 function getItemIcon(item: NewsTickerItem) {
   const title = item.title.toLowerCase();
   const source = item.source?.toLowerCase() || "";
 
-  // 1. Check for brand names in title or source
+  // 1. Check for institutional/research sources first to avoid generic severity symbols
+  if (
+    source.includes("european commission") ||
+    title.includes("eu ai act") ||
+    source.includes("commission") ||
+    source.includes("european union")
+  ) {
+    return <EUIcon className="h-4.5 w-4.5 shrink-0" />;
+  }
+  if (
+    source.includes("korea") ||
+    title.includes("south korea") ||
+    source.includes("republic of korea")
+  ) {
+    return <KoreaIcon className="h-4.5 w-4.5 shrink-0" />;
+  }
+  if (
+    source.includes("security research") ||
+    title.includes("echoleak") ||
+    title.includes("vulnerability")
+  ) {
+    return <SecurityShieldIcon className="h-4.5 w-4.5 shrink-0" />;
+  }
+  if (
+    source.includes("industry research") ||
+    title.includes("spending") ||
+    title.includes("governance platform")
+  ) {
+    return <ResearchAnalyticsIcon className="h-4.5 w-4.5 shrink-0" />;
+  }
+
+  // 2. Check for brand names in title or source
   if (
     title.includes("openai") ||
     title.includes("chatgpt") ||

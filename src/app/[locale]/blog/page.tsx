@@ -1,4 +1,4 @@
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
