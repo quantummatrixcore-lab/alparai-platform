@@ -6,7 +6,7 @@ import { getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import { maskPII } from "@/lib/pii/guardian";
-import { checkRateLimit } from "@/lib/utils/rate-limit";
+import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { logger } from "@/lib/utils/logger";
 
 /**
@@ -32,7 +32,7 @@ export async function submitComment(incidentId: string, commentText: string) {
     const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
 
     // Rate Limit comments
-    const rlKey = `comment_submission:${user.id}:${ip}`;
+    const rlKey = `${RATE_LIMIT_KEYS.incident_comment}:${user.id}:${ip}`;
     const rl = await checkRateLimit(rlKey);
     if (!rl.ok) {
       return { ok: false, error: `Too many comments. Try again in ${rl.retryAfter}s.` };
@@ -122,7 +122,7 @@ export async function toggleAffectedStatus(incidentId: string) {
     const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
 
     // Rate Limit toggle action
-    const rlKey = `affected_toggle:${user.id}:${ip}`;
+    const rlKey = `${RATE_LIMIT_KEYS.incident_affected}:${user.id}:${ip}`;
     const rl = await checkRateLimit(rlKey);
     if (!rl.ok) {
       return { ok: false, error: `Too many actions. Try again in ${rl.retryAfter}s.` };
