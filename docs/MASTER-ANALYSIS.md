@@ -6894,11 +6894,203 @@ Platform iki tasarım sistemi arasında sıkışmış durumda, kritik veri büt�
 
 ---
 
+---
+
 _Bu denetim 22 Haziran 2026'da https://www.alparai.com adresinin canlı site analizi ve Claude 360° Denetim Raporu v5 ile çapraz doğrulama temelinde gerçekleştirilmiştir._
 
 ---
 
-### MASTER SCORE SUMMARY (ALL 16 MODELS)
+### ANALYSIS #17: Kimi.ai 360°
+
+# 🏛️ ALPAR AI — GENEL DURUM ÖZETİ RAPORU
+
+## Haziran 2026 | 360° Profesyonel Analiz & Stratejik Eylem Planı
+
+---
+
+## 📋 EXECUTIVE SUMMARY
+
+| Metrik               | Değer      | Önceki | Değişim       |
+| -------------------- | ---------- | ------ | ------------- |
+| **Genel Skor**       | 634 / 1000 | 491    | ▲ +143 (+29%) |
+| **Lansman Hazır**    | Yakın      | —      | 4 hafta       |
+| **Incident Sayısı**  | 40+        | —      | Gerçek vaka   |
+| **Kalan Kritik Bug** | 4          | —      | Acil çözüm    |
+
+**Durum:** Platform, "Önemli İlerleme" aşamasında. Son düzeltmeler bekleniyor.
+634 puan, lansman için yeterli değil. **Hedef: 800+ puan.**
+
+---
+
+## 1️⃣ MODÜL PUANLARI — ÖNCEKİ VS GÜNCEL
+
+| #   | Modül                      | Güncel | Önceki | Durum | Öncelik  |
+| --- | -------------------------- | ------ | ------ | ----- | -------- |
+| 1   | Homepage & Hero            | 93/100 | 78     | 🟢    | Mükemmel |
+| 2   | Incidents sayfası          | 78/100 | 50     | 🟢    | İyi      |
+| 3   | Blog & içerik              | 88/100 | 65     | 🟢    | İyi      |
+| 4   | Dilemmas sayfası           | 65/100 | 55     | 🟡    | Orta     |
+| 5   | Navigasyon kullanılığı     | 55/100 | 38     | 🟡    | Orta     |
+| 6   | Footer & kısıt tutarlılığı | 45/100 | 22     | 🔴    | Düşük    |
+| 7   | Hero kullanılığı           | 38/100 | 18     | 🔴    | Düşük    |
+| 8   | Leaderboard sayfası        | 22/100 | 18     | 🔴    | Kritik   |
+| 9   | About sayfası              | 18/100 | 40     | 🔴    | Kritik   |
+| 10  | Transparency & Hukuk       | 72/100 | 74     | 🟡    | Orta     |
+| 11  | Models dizini              | 68/100 | —      | 🟡    | Orta     |
+| 12  | Büyüme & viral             | 32/100 | 25     | 🔴    | Düşük    |
+
+**Analiz:**
+
+- 🟢 **Güçlü alanlar:** Homepage (93), Blog (88), Incidents (78)
+- 🔴 **Kritik zayıflıklar:** Leaderboard (22), About (18), Hero kullanılığı (38)
+- 📊 **Ağırlıklı ortalama:** Yüksek puanlı modüller skoru çekiyor ama düşük puanlılar lansmanı riske atıyor.
+
+---
+
+## 2️⃣ SAYFA BAZINDA KARŞILAŞTIRMA
+
+### Homepage — 93 puan ✅
+
+- ✅ Founder hikayesi güçlü
+- ✅ "Incident of the Week" bölümü var
+- ✅ Ecosystem Pulse haber akışı
+- ✅ Stats hala "0 Verified" — **Sorun!**
+
+### Incidents — 78 puan 🟡
+
+- ✅ 40+ gerçek incident (Dev sayfasında)
+- ⚠️ Yeni nav/footer eksik
+- ⚠️ Bad description'lar çok kısa
+- ⚠️ View/upvote sayaçları hep "0"
+
+### Leaderboard — 22 puan 🔴
+
+- ❌ Eski layout, hızlı
+- ❌ Suggestions/Takedown testi: Footer hello@alparai.online + anomaliye GitHub
+- ❌ Kullanıcı bu sayfalara geçince başka bir siteye girmiş gibi hisseder
+- ❌ Layout yeni versiyona çekilmeli
+
+### About — 18 puan 🔴
+
+- ❌ Eski layout, broken link /en/en/submit
+- ❌ hello@alparai.online: Sadece 4 bullet
+- ❌ Founder fotoğrafı yok
+
+### Blog — 88 puan 🟢
+
+- ✅ 6 makale, yeni nav/footer, SEO güçlü
+- ✅ Claude Ben makaleleri güncel, devam edecek
+
+### Dilemmas — 65 puan 🟡
+
+- ✅ Yeni sayfa, 4 soru
+- ⚠️ İlk soru İngilizce
+- ⚠️ 3 yeni soruya 0 oy
+- ⚠️ Footer'da "Suggestions" değil, dilemmas'a gider
+
+### Transparency — 0 puan 🔴
+
+- ❌ Hâlâ 404
+- ❌ Şeffaflık platformunda transparency sayfası 404 = çatlak
+
+### Models — 68 puan 🟡
+
+- ✅ 35+ model
+- ⚠️ 0 review, 0 feature request
+- ⚠️ "ALPAR Autopilot" AI provider gibi listeleniyor (yanlış)
+
+---
+
+## 3️⃣ KALAN 4 KRİTİK BUG — LANSMAN ENGELLEYİCİ
+
+### 🔴 KRİTİK-1: Leaderboard + About sayfaları hâlâ eski layout
+
+**Etki:** Kullanıcı deneyimi kopukluğu, güven kaybı
+**Çözüm:** Yeni layout'a geçiş, footer tutarlılığı
+**Tahmini Efor:** 2-3 gün
+**Puan Etkisi:** +35 puan
+
+### 🔴 KRİTİK-2: Hero stats: "0 Verified AI failures" — 40+ incident var
+
+**Etki:** Platformun en büyük güven sorunu
+**Çözüm:** Counter query published incident'ları sorgulamalı
+**Tahmini Efor:** 4 saat
+**Puan Etkisi:** +20 puan
+
+### 🔴 KRİTİK-3: Transparency Report — hâlâ 404
+
+**Etki:** Yasal uyumsuzluk riski, güven eksikliği
+**Çözüm:** Minimal içerik bile olsa oluşturulmalı, bir paragraf yeterli
+**Tahmini Efor:** 2 saat
+**Puan Etkisi:** +15 puan
+
+### 🔴 KRİTİK-4: About sayfası — /en/en/submit broken link
+
+**Etki:** Kullanıcı 404 hatası, profesyonellik kaybı
+**Çözüm:** Link düzeltme, redirect
+**Tahmini Efor:** 30 dakika
+**Puan Etkisi:** +5 puan
+
+---
+
+## 4️⃣ YENİ TESPİT EDİLEN SORUNLAR
+
+### ⚠️ ALPAR Autopilot provider olarak listeleniyor
+
+- Leaderboard'da AI provider'lar arasında "ALPAR Autopilot" var
+- Platformun kendi içerik moderasyon sistemi, OpenAI, Google gibi gerçek AI provider'lerle aynı sırada gösterilmemeli
+- **Karmaşa yaratıyor**
+- **Öneri:** Ayrı bir "Platform Services" kategorisi oluştur
+
+### ⚠️ Poll başlığı tutarsız: Türkçe vs İngilizce
+
+- Incidents sayfasındaki sidebar poll: "Yapay Zeka İnsanlığı Yok Eder mi?" (Türkçe)
+- Dilemmas sayfasındaki aynı soru: "Will AI Destroy Humanity?" (İngilizce)
+- Aynı sorunun iki dilde gösterilmesi 1/10 karmaşası
+- **Öneri:** Dil seçimine göre dinamik gösterim
+
+### ⚠️ "Founding Reporter" butonu yanlış yere linkliyor
+
+- Homepage'deki "Become a Founding Reporter" butonu /en/suggestions'a gidiyor
+- Bunun /en/dilemmas veya özel bir kayıt sayfasına gitmesi gerekli
+- "Suggestions" feature request için, reporter programı için değil
+- **Öneri:** Ayrı landing page oluştur
+
+### ⚠️ Footer'da "Suggestions" /dilemmas'a link veriyor
+
+- Blog ve Dilemmas footer'ında "Suggestions" etiketi var ama /en/dilemmas'a gidiyor
+- Ya etiket "Dilemmas" olmalı ya da /en/suggestions'a gitmeli
+- **Öneri:** Etiket-link tutarlılığı sağla
+
+### ⚠️ Incident upvote/view sayaçları hep "0"
+
+- Her incident'in yanında iki sıfır var (upvote ve view count)
+- Bunlar gerçek zamanlı sayılmıyor görünüyor veya görünür hale gelmiyor
+- Bu sosyal kanıt mekanizmasını devre dışı bırakıyor
+- **Öneri:** Gerçek zamanlı sayaçlar veya görsel iyileştirme
+
+### ⚠️ MIT Tech Review, Stanford, Ars Technica logoları — doğrulanmamış
+
+- "Featured / Cited in" bölümünde bu logolar var
+- Bunların gerçek haber linklerine sahip olması şart
+- Şahibe olabileceği izlenimi veriyor
+- **Öneri:** Gerçek link ekle veya logoları kaldır
+
+### ⚠️ About sayfası içerik olarak zayıf kalmaya devam ediyor
+
+- Hâlâ 4 maddeden minimal içerik
+- Founder fotoğrafı, CTO profili, kuruluş tarihi, manifesto, ekip yok
+- Yatırımcı veya medya bu sayfaya gelince boş bulur
+- **Öneri:** Kapsamlı About sayfası tasarımı
+
+---
+
+**Rapor Hazırlayan:** Kimi.ai Stratejik Analiz Sistemi  
+**Tarih:** 23 Haziran 2026
+
+---
+
+### MASTER SCORE SUMMARY (ALL 17 MODELS)
 
 #### Round 1 — 8 Haziran 2026 (Genel Analiz)
 
