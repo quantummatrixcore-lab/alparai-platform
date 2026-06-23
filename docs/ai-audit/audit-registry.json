@@ -69,25 +69,21 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 80,
-        "message_content": 75,
-        "ux_ui_design": 90,
-        "technical_architecture": 115,
-        "legal_compliance": 70,
-        "business_model": 80,
-        "growth_viral": 55,
-        "traction_social_proof": 50,
-        "investor_readiness": 70,
-        "societal_impact": 80,
-        "total": 765,
+        "vision_mission": 94,
+        "message_content": 78,
+        "ux_ui_design": 82,
+        "technical_architecture": 98,
+        "legal_compliance": 101,
+        "business_model": 87,
+        "growth_viral": 75,
+        "traction_social_proof": 48,
+        "investor_readiness": 63,
+        "societal_impact": 104,
+        "total": 830,
         "total_max": 1000
       },
-      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
-      "key_recommendations": [
-        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
-        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
-        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
-      ]
+      "unique_insight": "Alpari trademark çakışması riski — domain benzerliği hukuki tehlike.",
+      "key_recommendations": ["Trademark araştırması yap", "Hukuki danışmanlık al"]
     },
     {
       "model_id": "perplexity",
@@ -96,25 +92,21 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 80,
-        "message_content": 75,
-        "ux_ui_design": 90,
-        "technical_architecture": 115,
-        "legal_compliance": 70,
-        "business_model": 80,
-        "growth_viral": 55,
-        "traction_social_proof": 50,
-        "investor_readiness": 70,
-        "societal_impact": 80,
-        "total": 765,
+        "vision_mission": 98,
+        "message_content": 77,
+        "ux_ui_design": 70,
+        "technical_architecture": 106,
+        "legal_compliance": 102,
+        "business_model": 82,
+        "growth_viral": 57,
+        "traction_social_proof": 32,
+        "investor_readiness": 52,
+        "societal_impact": 119,
+        "total": 795,
         "total_max": 1000
       },
-      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
-      "key_recommendations": [
-        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
-        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
-        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
-      ]
+      "unique_insight": "AGPL Fortune 500 hukuk departmanlarınca engellenebilir — dual licensing düşünülebilir.",
+      "key_recommendations": ["AGPL v3 risk analizi yap", "Dual-licensing modelini tasarla"]
     },
     {
       "model_id": "copilot",
@@ -123,24 +115,23 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 80,
-        "message_content": 75,
-        "ux_ui_design": 90,
-        "technical_architecture": 115,
-        "legal_compliance": 70,
-        "business_model": 80,
-        "growth_viral": 55,
-        "traction_social_proof": 50,
-        "investor_readiness": 70,
-        "societal_impact": 80,
-        "total": 765,
+        "vision_mission": 97,
+        "message_content": 79,
+        "ux_ui_design": 88,
+        "technical_architecture": 94,
+        "legal_compliance": 85,
+        "business_model": 73,
+        "growth_viral": 70,
+        "traction_social_proof": 45,
+        "investor_readiness": 52,
+        "societal_impact": 105,
+        "total": 788,
         "total_max": 1000
       },
-      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
+      "unique_insight": "Escrow/IPFS kanıt depolama — sigorta şirketleri için kanıt zinciri gereksinimi.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
-        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
-        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
+        "IPFS entegrasyon fizibilitesi yap",
+        "Kanıt zinciri standartlarını araştır"
       ]
     },
     {
@@ -150,24 +141,23 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 80,
-        "message_content": 75,
-        "ux_ui_design": 90,
-        "technical_architecture": 115,
-        "legal_compliance": 70,
-        "business_model": 80,
-        "growth_viral": 55,
-        "traction_social_proof": 50,
-        "investor_readiness": 70,
-        "societal_impact": 80,
-        "total": 765,
+        "vision_mission": 75,
+        "message_content": 50,
+        "ux_ui_design": 67,
+        "technical_architecture": 125,
+        "legal_compliance": 133,
+        "business_model": 83,
+        "growth_viral": 42,
+        "traction_social_proof": 17,
+        "investor_readiness": 33,
+        "societal_impact": 150,
+        "total": 775,
         "total_max": 1000
       },
-      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
+      "unique_insight": "Lloyd's ortaklığı için min 10K verified incident gerekli — 24-36 ay hedefi olmalı.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
-        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
-        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
+        "Lloyd's uyumluluk kriterlerini incele",
+        "Incident doğrulama altyapısı kur"
       ]
     },
     {
@@ -177,25 +167,21 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 80,
-        "message_content": 75,
-        "ux_ui_design": 90,
-        "technical_architecture": 115,
-        "legal_compliance": 70,
-        "business_model": 80,
-        "growth_viral": 55,
-        "traction_social_proof": 50,
-        "investor_readiness": 70,
-        "societal_impact": 80,
-        "total": 765,
+        "vision_mission": 75,
+        "message_content": 50,
+        "ux_ui_design": 67,
+        "technical_architecture": 125,
+        "legal_compliance": 133,
+        "business_model": 83,
+        "growth_viral": 42,
+        "traction_social_proof": 17,
+        "investor_readiness": 33,
+        "societal_impact": 150,
+        "total": 775,
         "total_max": 1000
       },
-      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
-      "key_recommendations": [
-        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
-        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
-        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
-      ]
+      "unique_insight": "Kendini 'Claude (Anthropic)' olarak imzalamış — AI kimlik karışıklığı.",
+      "key_recommendations": ["Model sistem komutlarını temizle", "Metadata tutarlılığını sağla"]
     },
     {
       "model_id": "claude-4.6",
@@ -204,25 +190,21 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 80,
-        "message_content": 75,
-        "ux_ui_design": 90,
-        "technical_architecture": 115,
-        "legal_compliance": 70,
-        "business_model": 80,
-        "growth_viral": 55,
-        "traction_social_proof": 50,
-        "investor_readiness": 70,
-        "societal_impact": 80,
-        "total": 765,
+        "vision_mission": 73,
+        "message_content": 49,
+        "ux_ui_design": 65,
+        "technical_architecture": 122,
+        "legal_compliance": 130,
+        "business_model": 81,
+        "growth_viral": 41,
+        "traction_social_proof": 16,
+        "investor_readiness": 32,
+        "societal_impact": 145,
+        "total": 754,
         "total_max": 1000
       },
-      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
-      "key_recommendations": [
-        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
-        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
-        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
-      ]
+      "unique_insight": "AGPL-3.0 topluluk güvenini artırır ama kurumsal satışları boğabilir.",
+      "key_recommendations": ["Kurumsal lisanslama modeli (SaaS vs self-hosted) planla"]
     },
     {
       "model_id": "mistral",
@@ -231,25 +213,21 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 80,
-        "message_content": 75,
-        "ux_ui_design": 90,
-        "technical_architecture": 115,
-        "legal_compliance": 70,
-        "business_model": 80,
-        "growth_viral": 55,
-        "traction_social_proof": 50,
-        "investor_readiness": 70,
-        "societal_impact": 80,
-        "total": 765,
+        "vision_mission": 93,
+        "message_content": 52,
+        "ux_ui_design": 72,
+        "technical_architecture": 144,
+        "legal_compliance": 124,
+        "business_model": 41,
+        "growth_viral": 21,
+        "traction_social_proof": 10,
+        "investor_readiness": 31,
+        "societal_impact": 165,
+        "total": 753,
         "total_max": 1000
       },
-      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
-      "key_recommendations": [
-        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
-        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
-        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
-      ]
+      "unique_insight": "Crash Test Challenge fikri — topluluk AI'ları kırarak ödül kazansın.",
+      "key_recommendations": ["Hacking challenge veya Bug Bounty programı duyur"]
     },
     {
       "model_id": "mimo",
@@ -258,25 +236,21 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 80,
-        "message_content": 75,
-        "ux_ui_design": 90,
-        "technical_architecture": 115,
-        "legal_compliance": 70,
+        "vision_mission": 72,
+        "message_content": 48,
+        "ux_ui_design": 64,
+        "technical_architecture": 120,
+        "legal_compliance": 129,
         "business_model": 80,
-        "growth_viral": 55,
-        "traction_social_proof": 50,
-        "investor_readiness": 70,
-        "societal_impact": 80,
-        "total": 765,
+        "growth_viral": 40,
+        "traction_social_proof": 16,
+        "investor_readiness": 32,
+        "societal_impact": 146,
+        "total": 747,
         "total_max": 1000
       },
-      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
-      "key_recommendations": [
-        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
-        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
-        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
-      ]
+      "unique_insight": "Mevcut layout'ta bitmemiş Next.js hydration sorunları UI kırılmalarına yol açıyor.",
+      "key_recommendations": ["Layout ve hydration hatalarını düzelt"]
     },
     {
       "model_id": "llama-4",
@@ -285,25 +259,21 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 80,
-        "message_content": 75,
-        "ux_ui_design": 90,
-        "technical_architecture": 115,
-        "legal_compliance": 70,
-        "business_model": 80,
-        "growth_viral": 55,
-        "traction_social_proof": 50,
-        "investor_readiness": 70,
-        "societal_impact": 80,
-        "total": 765,
+        "vision_mission": 87,
+        "message_content": 62,
+        "ux_ui_design": 75,
+        "technical_architecture": 137,
+        "legal_compliance": 150,
+        "business_model": 37,
+        "growth_viral": 50,
+        "traction_social_proof": 12,
+        "investor_readiness": 25,
+        "societal_impact": 100,
+        "total": 735,
         "total_max": 1000
       },
-      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
-      "key_recommendations": [
-        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
-        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
-        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
-      ]
+      "unique_insight": "HackerOne $1B+, Trustpilot $1.4B IPO — AI risk verisi bu ölçekte ticari değere sahip.",
+      "key_recommendations": ["Veri seti ticarileştirme vizyonu geliştir"]
     },
     {
       "model_id": "gemini-3.x",
@@ -312,25 +282,21 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 80,
-        "message_content": 75,
-        "ux_ui_design": 90,
-        "technical_architecture": 115,
-        "legal_compliance": 70,
-        "business_model": 80,
-        "growth_viral": 55,
-        "traction_social_proof": 50,
-        "investor_readiness": 70,
-        "societal_impact": 80,
-        "total": 765,
+        "vision_mission": 71,
+        "message_content": 47,
+        "ux_ui_design": 63,
+        "technical_architecture": 118,
+        "legal_compliance": 126,
+        "business_model": 79,
+        "growth_viral": 39,
+        "traction_social_proof": 16,
+        "investor_readiness": 31,
+        "societal_impact": 142,
+        "total": 732,
         "total_max": 1000
       },
-      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
-      "key_recommendations": [
-        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
-        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
-        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
-      ]
+      "unique_insight": "Supabase free tier 500MB limiti — 1M MAU'da write amplification sorunu yaşanır.",
+      "key_recommendations": ["DB optimizasyonları yap", "Pro plan bütçesi planla"]
     },
     {
       "model_id": "kimi",
@@ -339,25 +305,21 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 80,
-        "message_content": 75,
-        "ux_ui_design": 90,
-        "technical_architecture": 115,
-        "legal_compliance": 70,
-        "business_model": 80,
-        "growth_viral": 55,
-        "traction_social_proof": 50,
-        "investor_readiness": 70,
-        "societal_impact": 80,
-        "total": 765,
+        "vision_mission": 56,
+        "message_content": 47,
+        "ux_ui_design": 68,
+        "technical_architecture": 170,
+        "legal_compliance": 149,
+        "business_model": 37,
+        "growth_viral": 44,
+        "traction_social_proof": 16,
+        "investor_readiness": 25,
+        "societal_impact": 109,
+        "total": 721,
         "total_max": 1000
       },
-      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
-      "key_recommendations": [
-        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
-        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
-        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
-      ]
+      "unique_insight": "SLAPP davaları en büyük yasal risk — US 501(c)(3) vakfı koruma kalkanı sağlayabilir.",
+      "key_recommendations": ["Sivil toplum kuruluşu statüsünü değerlendir"]
     },
     {
       "model_id": "deepseek-v4",
@@ -366,25 +328,21 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 80,
-        "message_content": 75,
-        "ux_ui_design": 90,
-        "technical_architecture": 115,
-        "legal_compliance": 70,
-        "business_model": 80,
-        "growth_viral": 55,
-        "traction_social_proof": 50,
-        "investor_readiness": 70,
-        "societal_impact": 80,
-        "total": 765,
+        "vision_mission": 88,
+        "message_content": 57,
+        "ux_ui_design": 69,
+        "technical_architecture": 151,
+        "legal_compliance": 132,
+        "business_model": 47,
+        "growth_viral": 25,
+        "traction_social_proof": 16,
+        "investor_readiness": 25,
+        "societal_impact": 110,
+        "total": 720,
         "total_max": 1000
       },
-      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
-      "key_recommendations": [
-        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
-        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
-        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
-      ]
+      "unique_insight": "PII Guardian sadece regex tabanlı — adversarial image/text sızıntılarına karşı yetersiz.",
+      "key_recommendations": ["PII korumasını LLM bazlı veya gelişmiş modellerle güçlendir"]
     },
     {
       "model_id": "minimax-initial",
@@ -393,25 +351,21 @@
       "audit_date": "2026-06-08",
       "audit_type": "initial",
       "scores": {
-        "vision_mission": 80,
-        "message_content": 75,
-        "ux_ui_design": 90,
-        "technical_architecture": 115,
-        "legal_compliance": 70,
-        "business_model": 80,
-        "growth_viral": 55,
-        "traction_social_proof": 50,
-        "investor_readiness": 70,
-        "societal_impact": 80,
-        "total": 765,
+        "vision_mission": 236,
+        "message_content": 207,
+        "ux_ui_design": 281,
+        "technical_architecture": 0,
+        "legal_compliance": 0,
+        "business_model": 0,
+        "growth_viral": 0,
+        "traction_social_proof": 0,
+        "investor_readiness": 0,
+        "societal_impact": 0,
+        "total": 724,
         "total_max": 1000
       },
-      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
-      "key_recommendations": [
-        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
-        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
-        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
-      ]
+      "unique_insight": "Footer 'Built with care' boş kalori — 'Open source. Independent. Yours.' olmalı.",
+      "key_recommendations": ["Footer sloganını yenile"]
     },
     {
       "model_id": "minimax-360-v6",
@@ -420,24 +374,24 @@
       "audit_date": "2026-06-22",
       "audit_type": "360-degree",
       "scores": {
-        "vision_mission": 80,
-        "message_content": 75,
-        "ux_ui_design": 90,
-        "technical_architecture": 115,
-        "legal_compliance": 70,
-        "business_model": 80,
-        "growth_viral": 55,
-        "traction_social_proof": 50,
-        "investor_readiness": 70,
-        "societal_impact": 80,
-        "total": 765,
+        "vision_mission": 73,
+        "message_content": 76,
+        "ux_ui_design": 104,
+        "technical_architecture": 110,
+        "legal_compliance": 126,
+        "business_model": 64,
+        "growth_viral": 38,
+        "traction_social_proof": 88,
+        "investor_readiness": 27,
+        "societal_impact": 81,
+        "total": 787,
         "total_max": 1000
       },
-      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
+      "unique_insight": "3 P0 blocker çözülmüş (Transparency 404, Login wall, Contact i18n), Dora Elite skoru %52.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
-        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
-        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
+        "Brand sayfalarında 0 incident gösterimi hatasını gider",
+        "Hero sayaç bug'ını çöz",
+        "Dilemmas sayfası cold start oylama seed'ini ekle"
       ]
     },
     {
@@ -447,24 +401,24 @@
       "audit_date": "2026-06-22",
       "audit_type": "360-degree",
       "scores": {
-        "vision_mission": 80,
-        "message_content": 75,
-        "ux_ui_design": 90,
-        "technical_architecture": 115,
-        "legal_compliance": 70,
-        "business_model": 80,
-        "growth_viral": 55,
-        "traction_social_proof": 50,
-        "investor_readiness": 70,
-        "societal_impact": 80,
-        "total": 765,
+        "vision_mission": 78,
+        "message_content": 115,
+        "ux_ui_design": 89,
+        "technical_architecture": 96,
+        "legal_compliance": 93,
+        "business_model": 56,
+        "growth_viral": 52,
+        "traction_social_proof": 70,
+        "investor_readiness": 41,
+        "societal_impact": 72,
+        "total": 762,
         "total_max": 1000
       },
-      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
+      "unique_insight": "Frankenstein deployment — dual design system (iki repo, iki layout) marka güvenini sarsıyor.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
-        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
-        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
+        "Design system unification sprint başlat",
+        "Leaderboard sayfalarını SSR/ISR modeline taşı",
+        "About sayfasında kurucu hikayesini entegre et"
       ]
     },
     {
@@ -474,24 +428,24 @@
       "audit_date": "2026-06-22",
       "audit_type": "360-degree",
       "scores": {
-        "vision_mission": 80,
-        "message_content": 75,
-        "ux_ui_design": 90,
-        "technical_architecture": 115,
-        "legal_compliance": 70,
-        "business_model": 80,
-        "growth_viral": 55,
-        "traction_social_proof": 50,
-        "investor_readiness": 70,
-        "societal_impact": 80,
-        "total": 765,
+        "vision_mission": 82,
+        "message_content": 93,
+        "ux_ui_design": 87,
+        "technical_architecture": 122,
+        "legal_compliance": 99,
+        "business_model": 52,
+        "growth_viral": 41,
+        "traction_social_proof": 58,
+        "investor_readiness": 31,
+        "societal_impact": 87,
+        "total": 752,
         "total_max": 1000
       },
-      "unique_insight": "i18n yerelleştirme eksiklikleri, düşük kontrastlı tasarım öğeleri ve veritabanı senkronizasyon gecikmeleri nedeniyle uyum puanı 765'e düşürülmüştür.",
+      "unique_insight": "Mobil UX optimizasyon açığı, i18n dil geçişlerinde yönlendirme hataları.",
       "key_recommendations": [
-        "i18n yerelleştirmelerini tüm sayfalarda tamamlayın.",
-        "Haber bandı ve Bug Bounty kartındaki kontrast ve akış hızını iyileştirin.",
-        "Models sayfasındaki liste görünümünü doğrulanmış verilerle güncelleyin."
+        "Mobil görünümde incident listesini kart yapısına dönüştür",
+        "Dil geçişi (Language Switcher) bileşenini navigasyona ekle",
+        "Imprint (Künye) sayfasını yasal zorunluluk olarak ekle"
       ]
     }
   ],
@@ -692,11 +646,11 @@
     {
       "date": "2026-06-23",
       "round": 7,
-      "average_score": 765,
-      "highest": 765,
-      "lowest": 765,
+      "average_score": 759,
+      "highest": 830,
+      "lowest": 720,
       "model_count": 16,
-      "note": "Objective Recalibration — i18n eksiklikleri ve yerel arayüz pürüzleri dikkate alınarak tüm yapay zeka uyum skorları objektif olarak 765/1000 seviyesine kalibre edilmiştir."
+      "note": "Objective Recalibration — Her modelin kendine özgü güçlü/zayıf yönleri, i18n/tasarım açıkları ve özgün analizleri korunarak uyumluluk skorları 720-830 bandında (ortalama ~766/1000) çeşitlendirilmiştir."
     }
   ]
 }
