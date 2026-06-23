@@ -26,11 +26,12 @@ export interface TakedownItem {
 }
 
 export function TakedownQueue({ items }: { items: TakedownItem[] }) {
+  const t = useTranslations("admin");
   if (items.length === 0) {
     return (
       <Card>
         <CardContent className="text-fg-muted py-12 text-center text-sm">
-          No pending takedown requests.
+          {t("no_pending_takedowns")}
         </CardContent>
       </Card>
     );
@@ -51,8 +52,8 @@ function TakedownRow({ item }: { item: TakedownItem }) {
   const decide = (decision: "approve" | "reject") => {
     start(async () => {
       const res = await reviewTakedown({ id: item.id, decision });
-      if (res.ok) toast.success("Updated");
-      else toast.error(res.error ?? "Failed");
+      if (res.ok) toast.success(t("updated"));
+      else toast.error(res.error ?? t("failed"));
     });
   };
   return (
