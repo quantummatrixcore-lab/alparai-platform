@@ -5,19 +5,16 @@ import type { ProviderAdapter, GatewayRequest, GatewayResult } from "../types";
 const GOOGLE_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 const REQUEST_TIMEOUT_MS = 30_000;
 
+import { resolveApiKey } from "../api-keys";
+
 export class GoogleAdapter implements ProviderAdapter {
-  private apiKey: string | null = null;
-
-  constructor() {
-    this.apiKey = process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY || null;
-  }
-
   isConfigured(): boolean {
-    return this.apiKey !== null;
+    return true; // Configurable via DB at runtime
   }
 
   async call(request: GatewayRequest): Promise<GatewayResult> {
-    if (!this.apiKey) {
+    const apiKey = await resolveApiKey("google", "GOOGLE_API_KEY");
+    if (!apiKey) {
       return {
         ok: false,
         error: {
@@ -35,7 +32,7 @@ export class GoogleAdapter implements ProviderAdapter {
     // Google Gemini REST endpoint format
     // POST https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={apiKey}
     const model = request.model.id.replace(/^models\//, ""); // Strip models/ prefix if present
-    const url = `${GOOGLE_BASE_URL}/${model}:generateContent?key=${this.apiKey}`;
+    const url = `${GOOGLE_BASE_URL}/${model}:generateContent?key=${apiKey}`;
 
     const systemInstruction = request.systemPrompt
       ? { parts: [{ text: request.systemPrompt }] }

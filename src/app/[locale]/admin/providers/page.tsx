@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,12 +7,10 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Building2 } from "lucide-react";
 
-export async function generateMetadata({
-  params: _params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  return { title: "AI Providers" };
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "admin" });
+  return { title: t("providers") };
 }
 
 export default async function AdminProvidersPage({
@@ -22,6 +20,8 @@ export default async function AdminProvidersPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "admin" });
+
   const user = await getCurrentUser();
   if (!user) redirect(`/${locale}/auth/signin?next=/${locale}/admin/providers`);
   if (user.role !== "moderator" && user.role !== "admin" && user.role !== "ceo") {
@@ -37,9 +37,9 @@ export default async function AdminProvidersPage({
     <Container className="py-10">
       <header className="mb-6">
         <h1 className="text-fg-primary inline-flex items-center gap-2 text-2xl font-bold">
-          <Building2 className="text-brand-400 h-6 w-6" /> AI Providers
+          <Building2 className="text-brand-400 h-6 w-6" /> {t("providers")}
         </h1>
-        <p className="text-fg-muted mt-1 text-sm">All registered providers.</p>
+        <p className="text-fg-muted mt-1 text-sm">{t("all_registered_providers")}</p>
       </header>
       <Card>
         <CardContent className="p-0">
@@ -47,10 +47,10 @@ export default async function AdminProvidersPage({
             <caption className="sr-only">AI Providers Table</caption>
             <thead>
               <tr className="border-border-subtle text-fg-muted border-b text-left text-xs font-semibold tracking-wider uppercase">
-                <th className="p-4">Name</th>
-                <th className="p-4">Slug</th>
-                <th className="p-4">Website</th>
-                <th className="p-4">Status</th>
+                <th className="p-4">{t("provider")}</th>
+                <th className="p-4">{t("slug")}</th>
+                <th className="p-4">{t("website")}</th>
+                <th className="p-4">{t("status")}</th>
               </tr>
             </thead>
             <tbody className="divide-border-subtle divide-y">
@@ -75,11 +75,11 @@ export default async function AdminProvidersPage({
                   <td className="p-4">
                     {p["is_verified"] ? (
                       <Badge variant="success" dot>
-                        Verified
+                        {t("verified")}
                       </Badge>
                     ) : (
                       <Badge variant="warning" dot>
-                        Unverified
+                        {t("unverified")}
                       </Badge>
                     )}
                   </td>

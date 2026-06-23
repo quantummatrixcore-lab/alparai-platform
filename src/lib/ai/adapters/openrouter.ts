@@ -7,31 +7,16 @@ const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
 const REQUEST_TIMEOUT_MS = 30_000;
 const MAX_RETRIES = 1;
 
+import { resolveApiKey } from "../api-keys";
+
 export class OpenRouterAdapter implements ProviderAdapter {
-  private client: OpenAI | null = null;
-
-  constructor() {
-    const apiKey = process.env.OPENROUTER_API_KEY;
-    if (apiKey) {
-      this.client = new OpenAI({
-        baseURL: OPENROUTER_BASE_URL,
-        apiKey,
-        timeout: REQUEST_TIMEOUT_MS,
-        maxRetries: MAX_RETRIES,
-        defaultHeaders: {
-          "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "https://alparai.com",
-          "X-Title": "ALPAR AI Cross-Audit Engine",
-        },
-      });
-    }
-  }
-
   isConfigured(): boolean {
-    return this.client !== null;
+    return true; // Configurable via DB at runtime
   }
 
   async call(request: GatewayRequest): Promise<GatewayResult> {
-    if (!this.client) {
+    const apiKey = await resolveApiKey("openrouter", "OPENROUTER_API_KEY");
+    if (!apiKey) {
       return {
         ok: false,
         error: {
@@ -42,10 +27,21 @@ export class OpenRouterAdapter implements ProviderAdapter {
       };
     }
 
+    const client = new OpenAI({
+      baseURL: OPENROUTER_BASE_URL,
+      apiKey,
+      timeout: REQUEST_TIMEOUT_MS,
+      maxRetries: MAX_RETRIES,
+      defaultHeaders: {
+        "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "https://alparai.com",
+        "X-Title": "ALPAR AI Cross-Audit Engine",
+      },
+    });
+
     const startTime = performance.now();
 
     try {
-      const completion = await this.client.chat.completions.create({
+      const completion = await client.chat.completions.create({
         model: request.model.id,
         messages: [
           { role: "system", content: request.systemPrompt },

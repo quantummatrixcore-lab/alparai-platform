@@ -18,6 +18,7 @@ import {
   Menu,
   X,
   ShieldCheck,
+  Key,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
@@ -81,6 +82,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       active: pathname.startsWith("/admin/analysis"),
     },
     {
+      href: "/admin/api-keys",
+      label: t("api_keys"),
+      icon: Key,
+      active: pathname.startsWith("/admin/api-keys"),
+    },
+    {
       href: "/admin/audit",
       label: t("audit_log"),
       icon: Clock,
@@ -109,7 +116,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
         className={cn(
           "bg-bg-secondary/95 border-border-subtle md:bg-bg-secondary/40 fixed top-0 bottom-0 left-0 z-40 flex w-64 flex-col border-r shadow-2xl transition-transform duration-300 md:sticky md:translate-x-0 md:backdrop-blur-md",
           isOpen ? "translate-x-0" : "-translate-x-full",
-          "pt-16 md:pt-0" // Add padding top only on mobile since top bar is present
+          "pt-16 md:pt-0", // Add padding top only on mobile since top bar is present
         )}
       >
         {/* Brand / Logo */}
@@ -135,13 +142,13 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
                   "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-300",
                   item.active
                     ? "bg-brand-500/15 text-brand-300 border-brand-500 border-l-2 shadow-[inset_0_0_12px_rgba(168,85,247,0.15)]"
-                    : "text-fg-secondary hover:bg-bg-tertiary/40 hover:text-fg-primary"
+                    : "text-fg-secondary hover:bg-bg-tertiary/40 hover:text-fg-primary",
                 )}
               >
                 <Icon
                   className={cn(
                     "h-4 w-4 transition-colors duration-300",
-                    item.active ? "text-brand-400" : "text-fg-muted group-hover:text-fg-primary"
+                    item.active ? "text-brand-400" : "text-fg-muted group-hover:text-fg-primary",
                   )}
                 />
                 <span className="truncate">{item.label}</span>
@@ -180,7 +187,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
                       ? "bg-danger-500/10 text-danger-300 border-danger-500/20"
                       : user.role === "admin"
                         ? "bg-warning-500/10 text-warning-300 border-warning-500/20"
-                        : "bg-brand-500/10 text-brand-300 border-brand-500/20"
+                        : "bg-brand-500/10 text-brand-300 border-brand-500/20",
                   )}
                 >
                   <ShieldCheck className="h-2.5 w-2.5" />
