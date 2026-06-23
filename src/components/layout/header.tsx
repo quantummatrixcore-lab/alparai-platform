@@ -45,7 +45,7 @@ export function Header({
             <div className="from-brand-500/0 via-brand-500/10 to-brand-500/0 absolute -inset-2 rounded-full bg-gradient-to-r opacity-0 blur transition-opacity duration-500 group-hover:opacity-100"></div>
             <Wordmark size="md" />
           </Link>
-          <div className="hidden lg:block">
+          <div className="hidden xl:block">
             <Nav user={user} />
           </div>
         </div>
@@ -53,7 +53,7 @@ export function Header({
           <LanguageSwitcher className="hidden sm:inline-flex" />
           <Link
             href="/submit"
-            className="from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 focus-visible:ring-brand-500 hidden h-9 items-center gap-1.5 rounded-full bg-gradient-to-r px-4.5 text-xs font-bold text-white shadow-[0_0_15px_rgba(168,85,247,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_25px_rgba(168,85,247,0.6)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:inline-flex"
+            className="from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 focus-visible:ring-brand-500 hidden h-9 flex-shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-r px-4.5 text-xs font-bold whitespace-nowrap text-white shadow-[0_0_15px_rgba(168,85,247,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_25px_rgba(168,85,247,0.6)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:inline-flex"
           >
             <Plus className="h-3.5 w-3.5" aria-hidden="true" />
             {t("report")}
@@ -61,7 +61,7 @@ export function Header({
           <div className="pl-1">
             <UserMenu initialUser={user} />
           </div>
-          <div className="lg:hidden">
+          <div className="xl:hidden">
             <MobileNav user={user} />
           </div>
         </div>
