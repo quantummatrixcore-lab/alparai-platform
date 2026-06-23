@@ -35,7 +35,7 @@ export function Header({
   }
   return (
     <div className="pointer-events-none fixed top-0 z-50 flex w-full justify-center p-4 sm:p-6">
-      <header className="bg-glass hover:border-brand-500/20 pointer-events-auto flex h-14 w-full max-w-6xl items-center justify-between gap-4 rounded-full px-4 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] transition-all duration-500 hover:shadow-[0_8px_32px_rgba(168,85,247,0.15)]">
+      <header className="bg-glass hover:border-brand-500/20 pointer-events-auto flex h-14 w-full max-w-7xl items-center justify-between gap-4 rounded-full px-4 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] transition-all duration-500 hover:shadow-[0_8px_32px_rgba(168,85,247,0.15)]">
         <div className="flex items-center gap-6 lg:gap-8">
           <Link
             href="/"
@@ -53,7 +53,8 @@ export function Header({
           <LanguageSwitcher className="hidden sm:inline-flex" />
           <Link
             href="/submit"
-            className="from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 focus-visible:ring-brand-500 hidden h-9 flex-shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-r px-4.5 text-xs font-bold whitespace-nowrap text-white shadow-[0_0_15px_rgba(168,85,247,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_25px_rgba(168,85,247,0.6)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:inline-flex"
+            style={{ whiteSpace: "nowrap" }}
+            className="from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 focus-visible:ring-brand-500 hidden h-9 flex-shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-r px-4.5 text-xs font-bold text-white shadow-[0_0_15px_rgba(168,85,247,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_25px_rgba(168,85,247,0.6)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:inline-flex"
           >
             <Plus className="h-3.5 w-3.5" aria-hidden="true" />
             {t("report")}
