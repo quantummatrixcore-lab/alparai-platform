@@ -116,6 +116,8 @@
     "zero_tolerance": "Sıfır Tolerans. %100 Şeffaflık."
   },
   "incident": {
+    "me_too": "Ben de Yaşadım",
+    "comment_action": "Yorum Yap",
     "page_title": "Tüm Olaylar",
     "page_subtitle": "Topluluktan {count} yayınlanmış raporu inceleyin.",
     "submit_page_title": "Bir olay bildir",

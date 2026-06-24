@@ -116,6 +116,8 @@
     "zero_tolerance": "Zero Tolerance. 100% Transparency."
   },
   "incident": {
+    "me_too": "Me Too",
+    "comment_action": "Comment",
     "page_title": "All Incidents",
     "page_subtitle": "Browse {count} published reports from the community.",
     "submit_page_title": "Report an incident",
