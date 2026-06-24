@@ -11,12 +11,12 @@ import { LanguageSwitcher } from "./language-switcher";
 
 const links = [
   { href: "/", key: "home" },
+  { href: "/feed", key: "feed" },
   { href: "/incidents", key: "incidents" },
-  { href: "/models", key: "models" },
   { href: "/leaderboard", key: "leaderboard" },
-  { href: "/bounties", key: "bounties" },
-  { href: "/blog", key: "blog" },
+  { href: "/models", key: "models" },
   { href: "/dilemmas", key: "suggestions" },
+  { href: "/blog", key: "blog" },
   { href: "/about", key: "about" },
   { href: "/contact", key: "contact" },
 ] as const;

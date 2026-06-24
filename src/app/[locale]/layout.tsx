@@ -11,6 +11,7 @@ import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { OrganizationJsonLd } from "@/components/seo/json-ld";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import "../globals.css";
 
 const sans = Inter({
@@ -63,11 +64,12 @@ export default async function LocaleLayout({
           {tCommon("skipToContent", { defaultValue: "Skip to main content" })}
         </a>
         <NextIntlClientProvider messages={messages}>
-          <div className="flex min-h-screen flex-col">
+          <div className="flex min-h-screen flex-col pb-16 lg:pb-0">
             <Header user={headerUser} />
             <MainContent>{children}</MainContent>
             <Footer />
           </div>
+          <MobileBottomNav />
           <ClientProviders />
           <ScrollToTop />
           <OrganizationJsonLd />

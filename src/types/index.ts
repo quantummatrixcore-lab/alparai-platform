@@ -39,6 +39,7 @@ export interface IncidentListItem {
   vote_count: number;
   evidence_count: number;
   affected_count?: number;
+  shares_count: number;
   author_name: string | null;
   provider_name: string;
   provider_slug: string;

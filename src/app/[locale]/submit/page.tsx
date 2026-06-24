@@ -27,22 +27,28 @@ export default async function SubmitPage({ params }: { params: Promise<{ locale:
 
   const t = await getTranslations({ locale, namespace: "incident" });
   const supabase = await createServerClient();
-  const [{ data: providersData }, { data: modelsData }] = await Promise.all([
-    supabase
-      .from("ai_providers")
-      .select("id, slug, name, description, logo_url, website_url, is_verified")
-      .neq("slug", "alpar-autopilot")
-      .order("is_verified", { ascending: false })
-      .order("name"),
-    supabase
-      .from("ai_models")
-      .select("id, provider_id, name, version, status, released_at, created_at")
-      .eq("status", "active")
-      .order("name"),
-  ]);
+  const [{ data: providersData }, { data: modelsData }, { count: incidentsCount }] =
+    await Promise.all([
+      supabase
+        .from("ai_providers")
+        .select("id, slug, name, description, logo_url, website_url, is_verified")
+        .neq("slug", "alpar-autopilot")
+        .order("is_verified", { ascending: false })
+        .order("name"),
+      supabase
+        .from("ai_models")
+        .select("id, provider_id, name, version, status, released_at, created_at")
+        .eq("status", "active")
+        .order("name"),
+      supabase
+        .from("incidents")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "published"),
+    ]);
 
   const providers = (providersData ?? []) as unknown as AIProvider[];
   const models = (modelsData ?? []) as unknown as AIModel[];
+  const totalIncidents = incidentsCount ?? 0;
 
   return (
     <Container size="narrow" className="py-12">
@@ -67,7 +73,12 @@ export default async function SubmitPage({ params }: { params: Promise<{ locale:
 
       <Card variant="elevated">
         <CardContent>
-          <IncidentForm providers={providers} models={models} isLoggedIn={isLoggedIn} />
+          <IncidentForm
+            providers={providers}
+            models={models}
+            isLoggedIn={isLoggedIn}
+            totalIncidents={totalIncidents}
+          />
         </CardContent>
       </Card>
     </Container>

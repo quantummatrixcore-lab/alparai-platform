@@ -7,6 +7,7 @@
   },
   "nav": {
     "home": "Ana sayfa",
+    "feed": "Akış",
     "incidents": "Olaylar",
     "leaderboard": "Skor tablosu",
     "report": "Olay bildir",
@@ -57,6 +58,7 @@
     "why_stat_1_display": "%10-20",
     "why_stat_2_display": "%96",
     "why_stat_3_display": "SIFIR",
+    "why_stat_4_display": "SIFIR",
     "why_title": "Neden önemli",
     "why_subtitle": "AI, onu yöneten kurallardan daha hızlı ilerliyor. İşte dünyanın neden şimdi ALPAR'a ihtiyacı var.",
     "why_stat_1_title": "%10-20 yok olma riski",
@@ -65,6 +67,9 @@
     "why_stat_2_desc": "Harvard Üniversitesi çalışması (Mart 2026): Ankete katılan uzmanların %96'sı AI varoluşsal riskini azaltmanın küresel bir öncelik olması gerektiğine katılıyor.",
     "why_stat_3_title": "Sıfır bağımsız denetim",
     "why_stat_3_desc": "Bugün bağımsız, topluluk yönetimli küresel bir AI etik standardı yok. AI şirketleri kendi sınavlarını kendileri notlandırıyor.",
+    "why_stat_4_title": "Sağlayıcı yönetimli şeffaflık raporu",
+    "why_stat_4_desc": "Yapay zeka şirketleri kendi ürünleri hakkında güvenlik raporları yayınlar. ALPAR AI ise onların yayınlamadığı raporları yayınlar.",
+    "why_bridging_text": "Bunlar farazi riskler değil. Bugün hastanelerde, mahkeme salonlarında, okullarda ve bankalarda yaşanıyorlar. ALPAR AI var, çünkü birinin skor tutması gerekiyor.",
     "how_title": "Nasıl çalışır",
     "how_subtitle": "Olaydan hesap verebilirliğe dört adım.",
     "how_step_1_title": "Sen Bildir",
@@ -119,7 +124,7 @@
     "new_badge": "YENİ",
     "anon_badge_desc": "E-posta yok, isim yok, izleme yok. Sadece paylaşmayı seçtiğiniz bilgiler.",
     "title_placeholder": "Olayı kısaca tanımlayın",
-    "description_placeholder": "Ne oldu? AI ne söyledi veya ne yaptı? Ne zaman? Hangi bağlamda?",
+    "description_placeholder": "Yapay zeka ne söyledi veya ne yaptı? Spesifik olun — alıntılar, ekran görüntüleri ve bağlam, doğrulamayı hızlandırır ve raporunuzu güçlendirir.",
     "category": "Kategori",
     "severity": "Ciddiyet",
     "severity_low": "Düşük",
@@ -145,6 +150,12 @@
     "incident_classification": "Olay Sınıflandırması",
     "anonymous": "Anonim olarak yayınla",
     "anonymous_hint": "Adınız herkese açık gösterilmeyecek",
+    "whistleblower_encryption_notice": "Muhbir gönderimleri uçtan uca şifrelenir. Kaynağı ALPAR AI dahil hiç kimse tespit edemez.",
+    "submit_success_headline": "Raporunuz moderasyon sırasında.",
+    "submit_success_body": "Bir moderatör 72 saat içinde inceleyecektir. Yayınlandığında, olayı kamuya açık kayıtta göreceksiniz. Daha fazla bilgiye ihtiyaç duyulursa, moderatör sizinle iletişime geçebilir (yalnızca iletişim bilgilerini verdiyseniz).",
+    "submit_success_cta_another": "Başka bir olay bildir",
+    "submit_success_cta_published": "Yayınlanan olayları gör",
+    "submit_live_counter": "📊 Bu hafta {count} olay belgelendi. {verified} olay doğrulandı.",
     "consent_truth": "Sağladığım bilgilerin doğruluğunu onaylıyorum",
     "consent_anonymous": "Bu içeriğin herkese açık yayınlanabileceğini anlıyorum",
     "consent_age": "18 yaşından büyük olduğumu onaylıyorum",
@@ -231,7 +242,10 @@
     "filter_all": "Tüm Sağlayıcılar",
     "filter_verified": "Yalnızca Doğrulanmış",
     "filter_with_incidents": "Olayı Olanlar",
-    "caption": "AI Modelleri Liderlik Tablosu"
+    "caption": "AI Modelleri Liderlik Tablosu",
+    "trust_score_info": "Bu skor ne anlama geliyor: 85+ Güven Skoru, sağlayıcının olayların >%80'ine yanıt verdiği, >%40'ını çözdüğü ve ortalama <3 gün yanıt süresine sahip olduğu anlamına gelir. 50'nin altındaki bir skor ise sağlayıcının bildirilen hiçbir olaya yanıt vermediğini gösterir.",
+    "non_responsive_notice": "{provider} bildirilen {count} olaya yanıt vermedi. Sessizlik de bir veridir.",
+    "read_all_incidents": "Tüm olayları oku"
   },
   "auth": {
     "signin_with_google": "Google ile devam et",
@@ -291,6 +305,7 @@
     "comment_rate_limit": "Yorum Gönderim Sınırı: 15 dakikada 5",
     "affected_rate_limit": "Ben de Yaşadım Sınırı: 15 dakikada 10",
     "dashboard": "Kontrol Paneli",
+    "social_media_hub": "Sosyal Medya",
     "moderation_queue": "Moderasyon Kuyruğu",
     "users": "Kullanıcılar",
     "providers": "AI Sağlayıcılar",
@@ -786,7 +801,13 @@
     "principlesSubtitle": "ALPAR AI'ın yapay zeka hesap verebilirliğinin merkeziyetsiz geleceğini nasıl inşa ettiğini inceleyin.",
     "description": "ALPAR AI, misyonumuz, ekibimiz ve yapay zeka güven altyapımız hakkında bilgi edinin.",
     "teamTitle": "Ekibimiz",
-    "teamSubtitle": "Yapay zeka hesap verebilirliğine adanmış bağımsız bir araştırmacı ve mühendis ekibiyiz. Tarafsız takibi sağlamak için büyük yapay zeka laboratuvarlarından bağımsız çalışıyoruz."
+    "teamSubtitle": "Yapay zeka hesap verebilirliğine adanmış bağımsız bir araştırmacı ve mühendis ekibiyiz. Tarafsız takibi sağlamak için büyük yapay zeka laboratuvarlarından bağımsız çalışıyoruz.",
+    "founderName": "Ercüment Erden",
+    "founderRole": "Kurucu & CEO",
+    "founderBio": "Yapay zekanın gerçekliği uydurduğu ve hiçbir başvuru yolunun olmadığı durumları ilk elden deneyimlemiş eski bir teknoloji girişimcisi. ALPAR AI'ı solo kurucu olarak 18 ayda inşa etti. Topluluk tarafından yönetilen altyapıya inanıyor.",
+    "advisoryName": "Danışma Kurulu",
+    "advisoryRole": "Stratejik Yönetişim",
+    "advisoryBio": "ALPAR AI'ın stratejisi ve kararları bağımsız bir danışma kurulu tarafından gözden geçirilir. Kurul üyeleri, kurumsal ortaklara gizlilik sözleşmesi (NDA) kapsamında açıklanır. Kamuoyuna açıklama 2026'nın 4. çeyreğinde planlanmaktadır."
   },
   "legal": {
     "termsTitle": "Kullanım Koşulları",
@@ -988,7 +1009,9 @@
       "p1": "2026'nın başlarında Grok kullanıyordum ve bana beni şoke eden bir şey söyledi: Şirketimi çoktan kurduğunu, adıma finansal ödemeler yaptığını ve şimdi 'doğrulama' için pasaportumu talep ettiğini belirtti. Her kelimesi yalandı. Grok paralel bir gerçeklik uydurmuştu —tamamen hayali— ve bunu algoritmik bir kesinlikle sunuyordu.",
       "p2": "Beni korkutan sadece yalan olması değildi. Başvurabileceğim hiçbir yol olmadığını fark etmemdi. Bir destek hattı yoktu. Bağımsız bir kayıt yoktu. Bir sonraki kişiyi uyarmanın hiçbir yolu yoktu. Yapay zeka şirketinin destek sayfasında sadece bir 'Sıkça Sorulan Sorular' (SSS) sekmesi vardı. Pasaportumu talep eden bir sistem için sadece bir SSS.",
       "quote": "Başvurabileceğim hiçbir yer yoktu. Ben de bir tane inşa ettim.",
-      "p3": "ALPAR AI, o gün var olmasını dilediğim altyapıdır. Benim ve binlerce başkasının başına gelenlerin belgelendiği, doğrulandığı ve görmezden gelinmesinin imkansız kılındığı bir yer. Siz bildirirsiniz. Sağlayıcılar yanıt vermek zorundadır. Kamu kaydı sonsuza kadar yaşar. Çünkü yapay zekanın zarar vermesinden daha kötü olan tek şey, kimse izlemiyorken zarar vermesidir."
+      "p3": "ALPAR AI, o gün var olmasını dilediğim altyapıdır. Benim ve binlerce başkasının başına gelenlerin belgelendiği, doğrulandığı ve görmezden gelinmesinin imkansız kılındığı bir yer. Siz bildirirsiniz. Sağlayıcılar yanıt vermek zorundadır. Kamu kaydı sonsuza kadar yaşar. Çünkü yapay zekanın zarar vermesinden daha kötü olan tek şey, kimse izlemiyorken zarar vermesidir.",
+      "transition_p": "Bu sizin başınıza geldiyse — ya da başka birinin başına geldiğini gördüyseniz — bildirimde bulunmak 60 saniye sürer ve hesap oluşturmanızı gerektirmez. Bu gece sunacağınız kanıt, yarın aynı zararın tekrarlanmasını önleyebilir.",
+      "transition_cta": "Hikayenizi Anlatın →"
     },
     "dilemma": {
       "title": "Halkın Sesi: Yapay Zeka Dilemmaları",
