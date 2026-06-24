@@ -205,9 +205,61 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
         </Card>
       </section>
 
-      <section>
+      <section className="mb-10">
         <h2 className="text-fg-primary mb-3 text-2xl font-bold">{t("rate_title")}</h2>
         <p className="text-fg-muted">{t("rate_desc")}</p>
+      </section>
+
+      <section className="border-border-subtle mt-12 border-t pt-12">
+        <h2 className="text-fg-primary mb-3 text-2xl font-bold">{t("pricing_title")}</h2>
+        <p className="text-fg-muted mb-8">{t("pricing_desc")}</p>
+
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <Card variant="glass">
+            <CardContent className="space-y-4 p-6">
+              <div>
+                <h3 className="text-fg-primary text-lg font-bold">{t("tier_academic")}</h3>
+                <p className="text-fg-muted mt-1 text-xs">{t("tier_academic_desc")}</p>
+              </div>
+              <div className="text-brand-400 text-3xl font-black">{t("tier_academic_price")}</div>
+              <ul className="text-fg-secondary border-border-subtle space-y-2 border-t pt-4 text-xs">
+                <li>✓ {t("tier_features_limit")}</li>
+                <li>✓ {t("tier_features_support")}</li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          <Card variant="glass" className="border-brand-500/50 relative">
+            <div className="bg-brand-500 text-bg-primary absolute -top-3 right-4 rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase">
+              Popular
+            </div>
+            <CardContent className="space-y-4 p-6">
+              <div>
+                <h3 className="text-fg-primary text-lg font-bold">{t("tier_pro")}</h3>
+                <p className="text-fg-muted mt-1 text-xs">{t("tier_pro_desc")}</p>
+              </div>
+              <div className="text-brand-400 text-3xl font-black">{t("tier_pro_price")}</div>
+              <ul className="text-fg-secondary border-border-subtle space-y-2 border-t pt-4 text-xs">
+                <li>✓ {t("tier_features_limit_pro")}</li>
+                <li>✓ {t("tier_features_support_pro")}</li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          <Card variant="glass">
+            <CardContent className="space-y-4 p-6">
+              <div>
+                <h3 className="text-fg-primary text-lg font-bold">{t("tier_enterprise")}</h3>
+                <p className="text-fg-muted mt-1 text-xs">{t("tier_enterprise_desc")}</p>
+              </div>
+              <div className="text-brand-400 text-3xl font-black">{t("tier_enterprise_price")}</div>
+              <ul className="text-fg-secondary border-border-subtle space-y-2 border-t pt-4 text-xs">
+                <li>✓ {t("tier_features_limit_ent")}</li>
+                <li>✓ {t("tier_features_support_ent")}</li>
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
       </section>
     </Container>
   );

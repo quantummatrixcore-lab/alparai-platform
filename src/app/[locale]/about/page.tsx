@@ -3,7 +3,7 @@ import { Container, Section } from "@/components/ui/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { Wordmark } from "@/components/layout/wordmark";
-import { Sparkles, Users, Shield, Globe, ArrowRight } from "lucide-react";
+import { Sparkles, Users, Shield, Globe, ArrowRight, Linkedin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FounderStory } from "@/components/marketing/founder-story";
 
@@ -109,10 +109,21 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                   <div className="bg-brand-500/10 text-brand-400 border-brand-500/20 flex h-12 w-12 items-center justify-center rounded-full border">
                     <Users className="h-6 w-6" />
                   </div>
-                  <div>
-                    <CardTitle className="text-lg font-bold text-white">
-                      {t("founderName")}
-                    </CardTitle>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <CardTitle className="text-lg font-bold text-white">
+                        {t("founderName")}
+                      </CardTitle>
+                      <a
+                        href="https://www.linkedin.com/in/ercument-erden"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-fg-muted hover:text-brand-400 transition-colors"
+                        aria-label="Ercüment Erden LinkedIn"
+                      >
+                        <Linkedin className="h-4 w-4" />
+                      </a>
+                    </div>
                     <p className="text-brand-400 mt-0.5 text-xs font-semibold tracking-wider uppercase">
                       {t("founderRole")}
                     </p>
