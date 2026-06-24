@@ -3,30 +3,20 @@
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lightbulb, ShieldQuestion, Plus, Zap } from "lucide-react";
+import { Lightbulb, ShieldQuestion, Plus } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { PollCard, type Poll } from "./poll-card";
 import { SuggestionCard, type SuggestionListItem } from "@/components/marketing/suggestion-card";
 
 interface CommunityHubProps {
   polls: Poll[];
   suggestions: SuggestionListItem[];
-  seedSuggestions: Array<
-    SuggestionListItem & { title_tr: string; description_tr: string; author_name_tr: string }
-  >;
+
   isLoggedIn: boolean;
-  locale: string;
 }
 
-export function CommunityHub({
-  polls,
-  suggestions,
-  seedSuggestions,
-  isLoggedIn: _isLoggedIn,
-  locale,
-}: CommunityHubProps) {
+export function CommunityHub({ polls, suggestions, isLoggedIn: _isLoggedIn }: CommunityHubProps) {
   const tDilemmas = useTranslations("dilemmas");
   const tSuggestions = useTranslations("suggestions");
   const [activeTab, setActiveTab] = useState<"dilemmas" | "suggestions">("dilemmas");
@@ -37,9 +27,6 @@ export function CommunityHub({
       setActiveTab("suggestions");
     }
   }, []);
-
-  const displaySuggestions = suggestions.length > 0 ? suggestions : seedSuggestions;
-  const isSeed = suggestions.length === 0;
 
   return (
     <div className="space-y-8">
@@ -129,39 +116,10 @@ export function CommunityHub({
               </Link>
             </div>
 
-            {isSeed && (
-              <Card variant="default" className="border-brand-500/30 bg-brand-500/5">
-                <CardContent className="flex items-start gap-3 py-4">
-                  <Zap className="text-brand-400 mt-0.5 h-4 w-4 shrink-0" />
-                  <div>
-                    <p className="text-fg-primary text-sm font-medium">
-                      {tSuggestions("subtitle")}
-                    </p>
-                    <p className="text-fg-muted text-xs">{tSuggestions("create_description")}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
             <div className="space-y-3">
-              {displaySuggestions.map((it) => {
-                const seedItem = seedSuggestions.find((s) => s.id === it.id);
-                const isSeedItem = Boolean(seedItem);
-                const displayTitle =
-                  isSeedItem && locale === "tr" && seedItem && seedItem.title_tr
-                    ? seedItem.title_tr
-                    : it.title;
-                const displayDesc =
-                  isSeedItem && locale === "tr" && seedItem && seedItem.description_tr
-                    ? seedItem.description_tr
-                    : it.description;
-                return (
-                  <SuggestionCard
-                    key={it.id}
-                    item={{ ...it, title: displayTitle, description: displayDesc }}
-                  />
-                );
-              })}
+              {suggestions.map((it) => (
+                <SuggestionCard key={it.id} item={it} />
+              ))}
             </div>
           </motion.div>
         )}

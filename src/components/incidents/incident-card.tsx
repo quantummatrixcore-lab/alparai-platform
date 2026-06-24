@@ -179,23 +179,34 @@ export function IncidentCard({
           {/* Timeline indicator */}
           <TimelineIndicator status={incident.status as IncidentStatus} t={t} />
           <div className="text-fg-muted mt-4 flex items-center justify-between text-xs">
-            <div className="flex items-center gap-4">
-              <span className="inline-flex items-center gap-1">
-                <Clock className="h-3.5 w-3.5" aria-hidden="true" />
-                {formatDate(new Date(incident.incident_date), locale)}
-              </span>
-              <motion.span
-                whileHover={{ scale: 1.15 }}
-                className="inline-flex cursor-pointer items-center gap-1"
-              >
-                <ThumbsUp className="h-3.5 w-3.5" aria-hidden="true" />
-                {incident.vote_count}
-              </motion.span>
-              <span className="inline-flex items-center gap-1">
-                <MessageSquare className="h-3.5 w-3.5" aria-hidden="true" />
-                {incident.evidence_count}
-              </span>
-              <div className="ml-1 flex items-center gap-2 border-l border-white/10 pl-3">
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex items-center gap-3">
+                <span className="inline-flex items-center gap-1">
+                  <Clock className="h-3.5 w-3.5" aria-hidden="true" />
+                  {formatDate(new Date(incident.incident_date), locale)}
+                </span>
+                <Link
+                  href={`/incidents/${incident.id}#affected`}
+                  className="text-fg-secondary hover:border-brand-500/30 hover:bg-brand-500/10 hover:text-brand-400 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-white/5 bg-white/5 px-2.5 py-1 text-xs font-semibold transition-all"
+                >
+                  <ThumbsUp className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>{t("me_too", { defaultValue: "Ben de Yaşadım" })}</span>
+                  <span className="ml-1 rounded bg-white/10 px-1.5 py-0.5 text-[10px]">
+                    {incident.vote_count}
+                  </span>
+                </Link>
+                <Link
+                  href={`/incidents/${incident.id}#comments`}
+                  className="text-fg-secondary inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-white/5 bg-white/5 px-2.5 py-1 text-xs font-semibold transition-all hover:border-cyan-500/30 hover:bg-cyan-500/10 hover:text-cyan-400"
+                >
+                  <MessageSquare className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>{t("comment_action", { defaultValue: "Yorum Yap" })}</span>
+                  <span className="ml-1 rounded bg-white/10 px-1.5 py-0.5 text-[10px]">
+                    {incident.evidence_count}
+                  </span>
+                </Link>
+              </div>
+              <div className="flex items-center gap-2 border-l border-white/10 pl-3">
                 {/* X */}
                 <motion.a
                   whileHover={{ scale: 1.2, y: -1 }}
@@ -203,7 +214,7 @@ export function IncidentCard({
                   href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(displayTitle)}&url=${encodeURIComponent(shareUrl)}`}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="text-fg-muted p-0.5 transition-colors hover:text-white"
+                  className="p-0.5 text-zinc-100 transition-colors hover:text-white"
                   aria-label="Share on X"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -217,7 +228,7 @@ export function IncidentCard({
                   href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="text-fg-muted p-0.5 transition-colors hover:text-[#0077b5]"
+                  className="p-0.5 text-[#0077b5] transition-colors hover:text-[#0077b5]/80"
                   aria-label="Share on LinkedIn"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -228,7 +239,7 @@ export function IncidentCard({
                 <motion.button
                   whileHover={{ scale: 1.2, y: -1 }}
                   whileTap={{ scale: 0.9 }}
-                  className="text-fg-muted cursor-pointer p-0.5 transition-colors hover:text-[#e1306c]"
+                  className="cursor-pointer p-0.5 text-[#e1306c] transition-colors hover:text-[#e1306c]/80"
                   aria-label="Copy for Instagram"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -246,7 +257,7 @@ export function IncidentCard({
                   href={`https://api.whatsapp.com/send?text=${encodeURIComponent(displayTitle + " " + shareUrl)}`}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="text-fg-muted p-0.5 transition-colors hover:text-[#25d366]"
+                  className="p-0.5 text-[#25d366] transition-colors hover:text-[#25d366]/80"
                   aria-label="Share on WhatsApp"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -254,7 +265,7 @@ export function IncidentCard({
                 </motion.a>
               </div>
             </div>
-            <span>
+            <span className="ml-4 whitespace-nowrap">
               {t("by")} {incident.author_name ?? t("anonymous")}
             </span>
           </div>
