@@ -28,9 +28,9 @@ let _limiters: Record<string, Ratelimit> | null = null;
 function getLimiters(): Record<string, Ratelimit> {
   if (_limiters) return _limiters;
   if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
-    if (process.env.NODE_ENV === "production") {
-      throw new Error("CRITICAL: Upstash Redis environment variables are missing in production.");
-    }
+    logger.warn(
+      "CRITICAL: Upstash Redis environment variables are missing. Rate limiting is disabled.",
+    );
     return {};
   }
   if (!_redis) {
@@ -143,14 +143,14 @@ function getLimiters(): Record<string, Ratelimit> {
 export async function checkRateLimit(
   key: string,
 ): Promise<{ ok: boolean; retryAfter?: number; remaining?: number }> {
-  const limiters = getLimiters();
-  const parts = key.split(":");
-  const baseKey = parts.length >= 2 ? `${parts[0]}:${parts[1]}` : key;
-  const limiter = limiters[baseKey];
-  if (!limiter) {
-    return { ok: true };
-  }
   try {
+    const limiters = getLimiters();
+    const parts = key.split(":");
+    const baseKey = parts.length >= 2 ? `${parts[0]}:${parts[1]}` : key;
+    const limiter = limiters[baseKey];
+    if (!limiter) {
+      return { ok: true };
+    }
     const { success, remaining, reset } = await limiter.limit(key);
     return {
       ok: success,

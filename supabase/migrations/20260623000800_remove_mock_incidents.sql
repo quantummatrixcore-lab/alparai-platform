@@ -15,5 +15,6 @@ WHERE id NOT IN (
   'fa11aab1-fa11-4700-8000-000000000009', -- Amazon AI recruitment tool gender bias
   'fa11aab1-fa11-4700-8000-000000000010', -- Tesla Autopilot first fatal crash of Joshua Brown
   '0a2c6a31-e4d7-45d5-9b94-7ab0e6eeb041', -- Teen Suicide Linked to AI Chatbot (Character.AI)
-  '4e03fbf0-ec19-42a5-af71-e0d186553067'  -- Fatal Autonomous Vehicle Crash (Uber/Volvo)
+  '4e03fbf0-ec19-42a5-af71-e0d186553067', -- Fatal Autonomous Vehicle Crash (Uber/Volvo)
+  'fa11aab1-fa11-4700-8000-000000000031'  -- Grok Passport Incident (xAI)
 );
