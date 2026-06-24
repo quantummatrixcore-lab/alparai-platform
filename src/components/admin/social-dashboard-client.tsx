@@ -324,10 +324,22 @@ export function SocialDashboardClient({
   };
 
   const tabs = [
-    { id: "drafts", label: "Drafts", icon: FileText },
-    { id: "calendar", label: "Content Calendar", icon: Calendar },
-    { id: "templates", label: "Templates", icon: Sparkles },
-    { id: "analytics", label: "Analytics", icon: BarChart3 },
+    { id: "drafts", label: tAdmin("tabDrafts", { defaultValue: "Drafts" }), icon: FileText },
+    {
+      id: "calendar",
+      label: tAdmin("tabCalendar", { defaultValue: "Content Calendar" }),
+      icon: Calendar,
+    },
+    {
+      id: "templates",
+      label: tAdmin("tabTemplates", { defaultValue: "Templates" }),
+      icon: Sparkles,
+    },
+    {
+      id: "analytics",
+      label: tAdmin("tabAnalytics", { defaultValue: "Analytics" }),
+      icon: BarChart3,
+    },
   ] as const;
 
   return (
@@ -335,7 +347,9 @@ export function SocialDashboardClient({
       {/* Title Header */}
       <div className="border-border-subtle flex flex-col justify-between gap-4 border-b pb-6 md:flex-row md:items-center">
         <div>
-          <h1 className="text-fg-primary text-3xl font-bold tracking-tight">Growth Hub</h1>
+          <h1 className="text-fg-primary text-3xl font-bold tracking-tight">
+            {tAdmin("growthHub", { defaultValue: "Growth Hub" })}
+          </h1>
           <p className="text-fg-muted mt-2 max-w-2xl text-sm">
             {tAdmin("growthHubDesc", {
               defaultValue:
@@ -715,12 +729,14 @@ export function SocialDashboardClient({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
           <div className="bg-bg-secondary border-border-subtle w-full max-w-lg space-y-4 rounded-2xl border p-6 shadow-2xl">
             <h3 className="text-fg-primary text-lg font-bold">
-              {editingPost ? "Edit Campaign Post" : "Create New Campaign Post"}
+              {editingPost
+                ? tAdmin("editCampaignPost", { defaultValue: "Edit Campaign Post" })
+                : tAdmin("createCampaignPost", { defaultValue: "Create Campaign Post" })}
             </h3>
             <form onSubmit={handleSubmit} className="space-y-4 text-sm">
               <div className="space-y-1">
                 <label className="text-fg-secondary text-xs font-bold">
-                  Internal Title / Reference
+                  {tAdmin("internalTitle", { defaultValue: "Internal Title / Reference" })}
                 </label>
                 <input
                   type="text"
@@ -734,7 +750,9 @@ export function SocialDashboardClient({
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-fg-secondary text-xs font-bold">Platform</label>
+                  <label className="text-fg-secondary text-xs font-bold">
+                    {tAdmin("platformLabel", { defaultValue: "Platform" })}
+                  </label>
                   <select
                     value={formPlatform}
                     onChange={(e) => setFormPlatform(e.target.value as any)}
@@ -747,18 +765,30 @@ export function SocialDashboardClient({
                   </select>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-fg-secondary text-xs font-bold">Campaign Type</label>
+                  <label className="text-fg-secondary text-xs font-bold">
+                    {tAdmin("campaignType", { defaultValue: "Campaign Type" })}
+                  </label>
                   <select
                     value={formContentType}
                     onChange={(e) => setFormContentType(e.target.value as any)}
                     className="bg-bg-primary border-border-subtle text-fg-primary w-full rounded-xl border px-3 py-2 focus:outline-none"
                   >
-                    <option value="manifesto">Manifesto</option>
-                    <option value="case_study">Case Study</option>
-                    <option value="weekly_report">Weekly Report</option>
-                    <option value="incident_spotlight">Incident Spotlight</option>
-                    <option value="thread">Thread</option>
-                    <option value="poll">Poll</option>
+                    <option value="manifesto">
+                      {tAdmin("typeManifesto", { defaultValue: "Manifesto" })}
+                    </option>
+                    <option value="case_study">
+                      {tAdmin("typeCaseStudy", { defaultValue: "Case Study" })}
+                    </option>
+                    <option value="weekly_report">
+                      {tAdmin("typeWeeklyReport", { defaultValue: "Weekly Report" })}
+                    </option>
+                    <option value="incident_spotlight">
+                      {tAdmin("typeIncidentSpotlight", { defaultValue: "Incident Spotlight" })}
+                    </option>
+                    <option value="thread">
+                      {tAdmin("typeThread", { defaultValue: "Thread" })}
+                    </option>
+                    <option value="poll">{tAdmin("typePoll", { defaultValue: "Poll" })}</option>
                   </select>
                 </div>
               </div>
@@ -791,22 +821,32 @@ export function SocialDashboardClient({
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-fg-secondary text-xs font-bold">Status</label>
+                  <label className="text-fg-secondary text-xs font-bold">
+                    {tAdmin("statusLabel", { defaultValue: "Status" })}
+                  </label>
                   <select
                     value={formStatus}
                     onChange={(e) => setFormStatus(e.target.value as any)}
                     className="bg-bg-primary border-border-subtle text-fg-primary w-full rounded-xl border px-3 py-2 focus:outline-none"
                   >
-                    <option value="draft">Draft</option>
-                    <option value="scheduled">Scheduled</option>
-                    <option value="published">Published</option>
-                    <option value="archived">Archived</option>
+                    <option value="draft">
+                      {tAdmin("statusDraft", { defaultValue: "Draft" })}
+                    </option>
+                    <option value="scheduled">
+                      {tAdmin("statusScheduled", { defaultValue: "Scheduled" })}
+                    </option>
+                    <option value="published">
+                      {tAdmin("statusPublished", { defaultValue: "Published" })}
+                    </option>
+                    <option value="archived">
+                      {tAdmin("statusArchived", { defaultValue: "Archived" })}
+                    </option>
                   </select>
                 </div>
                 {formStatus === "scheduled" && (
                   <div className="space-y-1">
                     <label className="text-fg-secondary text-xs font-bold">
-                      Schedule Date & Time
+                      {tAdmin("scheduleDateTime", { defaultValue: "Schedule Date & Time" })}
                     </label>
                     <input
                       type="datetime-local"
@@ -820,7 +860,7 @@ export function SocialDashboardClient({
                 {formStatus === "published" && (
                   <div className="space-y-1">
                     <label className="text-fg-secondary text-xs font-bold">
-                      External Post URL (Optional)
+                      {tAdmin("externalPostUrl", { defaultValue: "External Post URL (Optional)" })}
                     </label>
                     <input
                       type="url"
