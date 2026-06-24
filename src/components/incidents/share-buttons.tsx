@@ -132,7 +132,7 @@ export function ShareButtons({
           href={xUrl}
           target="_blank"
           rel="noreferrer noopener"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-neutral-900/60 text-white backdrop-blur-md transition-colors duration-200 hover:border-white/20 hover:bg-white/10"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/20 bg-black text-white shadow-sm transition-all duration-200 hover:border-white/40 hover:bg-neutral-900 hover:shadow-white/10"
           aria-label={t("share_x")}
         >
           <XIcon className="h-4 w-4" />
@@ -146,7 +146,7 @@ export function ShareButtons({
           href={liUrl}
           target="_blank"
           rel="noreferrer noopener"
-          className="text-fg-secondary inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-neutral-900/60 backdrop-blur-md transition-colors duration-200 hover:border-[#0077b5]/20 hover:bg-[#0077b5]/10 hover:text-[#0077b5]"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#0077b5]/30 bg-[#0077b5]/10 text-[#0077b5] shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[#0077b5]/50 hover:bg-[#0077b5]/20 hover:shadow-[#0077b5]/20"
           aria-label={t("share_linkedin")}
         >
           <LinkedInIcon className="h-4 w-4" />
@@ -159,10 +159,8 @@ export function ShareButtons({
           whileTap={{ scale: 0.95 }}
           onClick={onCopyInstagram}
           className={cn(
-            "text-fg-secondary inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-neutral-900/60 backdrop-blur-md transition-colors duration-200",
-            instaCopied
-              ? "border-[#e1306c]/40 bg-[#e1306c]/20 text-[#e1306c]"
-              : "hover:border-[#e1306c]/20 hover:bg-gradient-to-tr hover:from-[#f9ce34]/10 hover:via-[#ee2a7b]/10 hover:to-[#6228d7]/10 hover:text-[#e1306c]",
+            "inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#e1306c]/30 bg-gradient-to-tr from-[#f9ce34]/15 via-[#ee2a7b]/15 to-[#6228d7]/15 text-[#e1306c] shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[#e1306c]/50 hover:from-[#f9ce34]/25 hover:via-[#ee2a7b]/25 hover:to-[#6228d7]/25 hover:shadow-[#e1306c]/20",
+            instaCopied && "border-[#e1306c]/60 bg-[#e1306c]/30",
           )}
           aria-label={t("share_instagram")}
         >
@@ -177,7 +175,7 @@ export function ShareButtons({
           href={fbUrl}
           target="_blank"
           rel="noreferrer noopener"
-          className="text-fg-secondary inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-neutral-900/60 backdrop-blur-md transition-colors duration-200 hover:border-[#1877f2]/20 hover:bg-[#1877f2]/10 hover:text-[#1877f2]"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#1877f2]/30 bg-[#1877f2]/10 text-[#1877f2] shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[#1877f2]/50 hover:bg-[#1877f2]/20 hover:shadow-[#1877f2]/20"
           aria-label={t("share_facebook")}
         >
           <FacebookIcon className="h-4 w-4" />
@@ -191,7 +189,7 @@ export function ShareButtons({
           href={waUrl}
           target="_blank"
           rel="noreferrer noopener"
-          className="text-fg-secondary inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-neutral-900/60 backdrop-blur-md transition-colors duration-200 hover:border-[#25d366]/20 hover:bg-[#25d366]/10 hover:text-[#25d366]"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#25d366]/30 bg-[#25d366]/10 text-[#25d366] shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[#25d366]/50 hover:bg-[#25d366]/20 hover:shadow-[#25d366]/20"
           aria-label={t("share_whatsapp")}
         >
           <WhatsAppIcon className="h-4 w-4" />
