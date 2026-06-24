@@ -18,12 +18,12 @@ export function ModelFeatureRequestForm({ modelId, onSuccess }: ModelFeatureRequ
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
 
   const categories = [
-    { value: "feature", label: "New Feature / Capability" },
-    { value: "safety", label: "Safety & Guardrails" },
-    { value: "accuracy", label: "Accuracy & Hallucination Fixes" },
-    { value: "ux", label: "UX & Developer Experience" },
-    { value: "integration", label: "Integrations & APIs" },
-    { value: "other", label: "Other" },
+    { value: "feature", label: t("feature_cat_feature") },
+    { value: "safety", label: t("feature_cat_safety") },
+    { value: "accuracy", label: t("feature_cat_accuracy") },
+    { value: "ux", label: t("feature_cat_ux") },
+    { value: "integration", label: t("feature_cat_integration") },
+    { value: "other", label: t("feature_cat_other") },
   ];
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -41,7 +41,7 @@ export function ModelFeatureRequestForm({ modelId, onSuccess }: ModelFeatureRequ
         if (res.fieldErrors) {
           setErrors(res.fieldErrors);
         }
-        toast.error(res.error || "Failed to submit feature request");
+        toast.error(res.error || t("error_feature_submit"));
       }
     });
   };
@@ -63,7 +63,7 @@ export function ModelFeatureRequestForm({ modelId, onSuccess }: ModelFeatureRequ
           type="text"
           name="title"
           required
-          placeholder="e.g. Add native PDF analysis or larger context window"
+          placeholder={t("placeholder_feature")}
           className="bg-bg-tertiary border-border-strong text-fg-primary focus:ring-brand-500/20 w-full rounded-xl border px-4 py-2 focus:ring-2 focus:outline-none"
         />
         {errors.title && <p className="text-danger-500 text-xs">{errors.title[0]}</p>}
@@ -119,7 +119,7 @@ export function ModelFeatureRequestForm({ modelId, onSuccess }: ModelFeatureRequ
         {isPending ? (
           <>
             <Loader2 className="h-5 w-5 animate-spin" />
-            <span>Submitting...</span>
+            <span>{t("submitting")}</span>
           </>
         ) : (
           <span>{t("submit_feature")}</span>

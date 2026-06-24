@@ -1,0 +1,1082 @@
+[
+  {
+    "file": "D:/Alparai/src/app/global-error.tsx",
+    "line": 41,
+    "type": "JsxText",
+    "text": "Something went wrong"
+  },
+  {
+    "file": "D:/Alparai/src/app/global-error.tsx",
+    "line": 44,
+    "type": "JsxText",
+    "text": "Error ID:"
+  },
+  {
+    "file": "D:/Alparai/src/app/global-error.tsx",
+    "line": 60,
+    "type": "JsxText",
+    "text": "Try again"
+  },
+  {
+    "file": "D:/Alparai/src/app/opengraph-image.tsx",
+    "line": 67,
+    "type": "JsxText",
+    "text": "Trust infrastructure for AI accountability"
+  },
+  {
+    "file": "D:/Alparai/src/app/opengraph-image.tsx",
+    "line": 78,
+    "type": "JsxText",
+    "text": "Community-driven incident reporting. Like Trustpilot, but for AI."
+  },
+  {
+    "file": "components/admin/analysis-dashboard-client.tsx",
+    "line": 583,
+    "type": "JsxText",
+    "text": "sk-prod-••••••••••••8f9a"
+  },
+  {
+    "file": "components/admin/analysis-dashboard-client.tsx",
+    "line": 609,
+    "type": "JsxText",
+    "text": "sk-stag-••••••••••••2b1c"
+  },
+  {
+    "file": "components/admin/analysis-dashboard-client.tsx",
+    "line": 657,
+    "type": "JsxText",
+    "text": "&ldquo;"
+  },
+  {
+    "file": "components/admin/analysis-dashboard-client.tsx",
+    "line": 657,
+    "type": "JsxText",
+    "text": "&rdquo;"
+  },
+  {
+    "file": "components/admin/analysis-dashboard-client.tsx",
+    "line": 853,
+    "type": "JsxText",
+    "text": "Edge"
+  },
+  {
+    "file": "components/admin/analysis-dashboard-client.tsx",
+    "line": 859,
+    "type": "JsxText",
+    "text": "Edge"
+  },
+  {
+    "file": "components/admin/analysis-dashboard-client.tsx",
+    "line": 865,
+    "type": "JsxText",
+    "text": "Edge"
+  },
+  {
+    "file": "components/admin/analysis-dashboard-client.tsx",
+    "line": 883,
+    "type": "JsxText",
+    "text": "docs/ai-audit/audit-registry.json"
+  },
+  {
+    "file": "components/admin/api-keys-client.tsx",
+    "line": 129,
+    "type": "JsxAttribute (placeholder)",
+    "text": "sk-..."
+  },
+  {
+    "file": "components/admin/promote-user-form.tsx",
+    "line": 103,
+    "type": "JsxAttribute (aria-label)",
+    "text": "Close"
+  },
+  {
+    "file": "components/admin/promote-user-form.tsx",
+    "line": 117,
+    "type": "JsxAttribute (placeholder)",
+    "text": "user@example.com"
+  },
+  {
+    "file": "components/admin/sidebar.tsx",
+    "line": 118,
+    "type": "JsxAttribute (aria-label)",
+    "text": "Toggle Menu"
+  },
+  {
+    "file": "components/admin/sidebar.tsx",
+    "line": 138,
+    "type": "JsxText",
+    "text": "Admin"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 295,
+    "type": "JsxText",
+    "text": "Growth Hub"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 297,
+    "type": "JsxText",
+    "text": "Manage your AI safety calendar, pre-written manifesto campaigns, templates, and track\n            published analytics."
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 307,
+    "type": "JsxText",
+    "text": "Create Campaign Post"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 342,
+    "type": "JsxText",
+    "text": "Platform:"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 349,
+    "type": "JsxText",
+    "text": "All Platforms"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 350,
+    "type": "JsxText",
+    "text": "LinkedIn"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 351,
+    "type": "JsxText",
+    "text": "X / Twitter"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 352,
+    "type": "JsxText",
+    "text": "Instagram"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 390,
+    "type": "JsxText",
+    "text": "Characters:"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 400,
+    "type": "JsxText",
+    "text": "Created"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 407,
+    "type": "JsxAttribute (title)",
+    "text": "Copy to Clipboard"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 421,
+    "type": "JsxAttribute (title)",
+    "text": "Open Platform"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 429,
+    "type": "JsxText",
+    "text": "Edit"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 441,
+    "type": "JsxText",
+    "text": "No campaign drafts currently in queue."
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 453,
+    "type": "JsxText",
+    "text": "Timeline Overview"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 514,
+    "type": "JsxText",
+    "text": "Edit"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 526,
+    "type": "JsxText",
+    "text": "No scheduled or published timeline items found."
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 545,
+    "type": "JsxText",
+    "text": "Hook:"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 559,
+    "type": "JsxText",
+    "text": "Example Output:"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 569,
+    "type": "JsxText",
+    "text": "Use Template"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 581,
+    "type": "JsxText",
+    "text": "Post Reach & Metrics Tracker"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 587,
+    "type": "JsxText",
+    "text": "Post Title"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 588,
+    "type": "JsxText",
+    "text": "Platform"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 589,
+    "type": "JsxText",
+    "text": "Reach"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 590,
+    "type": "JsxText",
+    "text": "Likes"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 591,
+    "type": "JsxText",
+    "text": "Comments"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 592,
+    "type": "JsxText",
+    "text": "Shares"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 593,
+    "type": "JsxText",
+    "text": "Actions"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 640,
+    "type": "JsxText",
+    "text": "Update"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 649,
+    "type": "JsxText",
+    "text": "No published posts listed for analytics tracking."
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 670,
+    "type": "JsxText",
+    "text": "Internal Title / Reference"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 678,
+    "type": "JsxAttribute (placeholder)",
+    "text": "Hook Post - Passport lie"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 684,
+    "type": "JsxText",
+    "text": "Platform"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 690,
+    "type": "JsxText",
+    "text": "LinkedIn"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 691,
+    "type": "JsxText",
+    "text": "X / Twitter"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 692,
+    "type": "JsxText",
+    "text": "Instagram"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 693,
+    "type": "JsxText",
+    "text": "Facebook"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 697,
+    "type": "JsxText",
+    "text": "Campaign Type"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 703,
+    "type": "JsxText",
+    "text": "Manifesto"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 704,
+    "type": "JsxText",
+    "text": "Case Study"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 705,
+    "type": "JsxText",
+    "text": "Weekly Report"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 706,
+    "type": "JsxText",
+    "text": "Incident Spotlight"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 707,
+    "type": "JsxText",
+    "text": "Thread"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 708,
+    "type": "JsxText",
+    "text": "Poll"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 715,
+    "type": "JsxText",
+    "text": "Post Content"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 733,
+    "type": "JsxAttribute (placeholder)",
+    "text": "I asked an AI for help with a passport application..."
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 739,
+    "type": "JsxText",
+    "text": "Status"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 745,
+    "type": "JsxText",
+    "text": "Draft"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 746,
+    "type": "JsxText",
+    "text": "Scheduled"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 747,
+    "type": "JsxText",
+    "text": "Published"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 748,
+    "type": "JsxText",
+    "text": "Archived"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 754,
+    "type": "JsxText",
+    "text": "Schedule Date & Time"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 768,
+    "type": "JsxText",
+    "text": "External Post URL (Optional)"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 775,
+    "type": "JsxAttribute (placeholder)",
+    "text": "https://linkedin.com/posts/..."
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 787,
+    "type": "JsxText",
+    "text": "Cancel"
+  },
+  {
+    "file": "components/admin/social-dashboard-client.tsx",
+    "line": 795,
+    "type": "JsxText",
+    "text": "Save Post"
+  },
+  {
+    "file": "D:/Alparai/src/components/auth/auth-buttons.tsx",
+    "line": 209,
+    "type": "JsxAttribute (placeholder)",
+    "text": "you@example.com"
+  },
+  {
+    "file": "components/auth/onboarding-wizard.tsx",
+    "line": 128,
+    "type": "JsxText",
+    "text": "STEP"
+  },
+  {
+    "file": "components/auth/onboarding-wizard.tsx",
+    "line": 128,
+    "type": "JsxText",
+    "text": "OF 2"
+  },
+  {
+    "file": "components/auth/onboarding-wizard.tsx",
+    "line": 279,
+    "type": "JsxText",
+    "text": "UNLOCKED BADGE"
+  },
+  {
+    "file": "components/auth/onboarding-wizard.tsx",
+    "line": 282,
+    "type": "JsxText",
+    "text": "Founding Reporter"
+  },
+  {
+    "file": "components/auth/onboarding-wizard.tsx",
+    "line": 286,
+    "type": "JsxText",
+    "text": "Exclusive early-adopter verification badge awarded to our first 100 beta\r\n                    participants."
+  },
+  {
+    "file": "components/feed/feed-card.tsx",
+    "line": 217,
+    "type": "JsxText",
+    "text": "Truth Score"
+  },
+  {
+    "file": "components/feed/feed-card.tsx",
+    "line": 315,
+    "type": "JsxAttribute (aria-label)",
+    "text": "Share on X"
+  },
+  {
+    "file": "components/feed/feed-card.tsx",
+    "line": 327,
+    "type": "JsxAttribute (aria-label)",
+    "text": "Share on LinkedIn"
+  },
+  {
+    "file": "components/feed/feed-card.tsx",
+    "line": 336,
+    "type": "JsxAttribute (aria-label)",
+    "text": "Copy for Instagram"
+  },
+  {
+    "file": "components/feed/feed-card.tsx",
+    "line": 353,
+    "type": "JsxAttribute (aria-label)",
+    "text": "Share on WhatsApp"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/evidence-uploader.tsx",
+    "line": 123,
+    "type": "JsxText",
+    "text": "KB"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/evidence-uploader.tsx",
+    "line": 130,
+    "type": "JsxAttribute (aria-label)",
+    "text": "Remove file"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/incident-card.tsx",
+    "line": 160,
+    "type": "JsxText",
+    "text": "TruthScore:"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/incident-card.tsx",
+    "line": 218,
+    "type": "JsxAttribute (aria-label)",
+    "text": "Share on X"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/incident-card.tsx",
+    "line": 232,
+    "type": "JsxAttribute (aria-label)",
+    "text": "Share on LinkedIn"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/incident-card.tsx",
+    "line": 243,
+    "type": "JsxAttribute (aria-label)",
+    "text": "Copy for Instagram"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/incident-card.tsx",
+    "line": 261,
+    "type": "JsxAttribute (aria-label)",
+    "text": "Share on WhatsApp"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/incident-card.tsx",
+    "line": 291,
+    "type": "JsxAttribute (aria-label)",
+    "text": "Incident timeline"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/incident-detail.tsx",
+    "line": 81,
+    "type": "JsxText",
+    "text": "TruthScore:"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/incident-detail.tsx",
+    "line": 133,
+    "type": "JsxText",
+    "text": "Confidence:"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/incident-detail.tsx",
+    "line": 147,
+    "type": "JsxText",
+    "text": "Calculated using multi-model consensus and semantic audit engines."
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/incident-detail.tsx",
+    "line": 179,
+    "type": "JsxText",
+    "text": "Auditor Engine:"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/provider-response-card.tsx",
+    "line": 37,
+    "type": "JsxText",
+    "text": "Verified"
+  },
+  {
+    "file": "components/incidents/related-incidents.tsx",
+    "line": 92,
+    "type": "JsxText",
+    "text": "Truth Score"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/takedown-button.tsx",
+    "line": 60,
+    "type": "JsxAttribute (label)",
+    "text": "Reason"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/takedown-button.tsx",
+    "line": 62,
+    "type": "JsxAttribute (placeholder)",
+    "text": "Select a reason"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/takedown-button.tsx",
+    "line": 67,
+    "type": "JsxAttribute (label)",
+    "text": "Details"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/takedown-button.tsx",
+    "line": 72,
+    "type": "JsxAttribute (placeholder)",
+    "text": "Explain the issue and provide supporting facts."
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/takedown-button.tsx",
+    "line": 76,
+    "type": "JsxAttribute (label)",
+    "text": "Contact email"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/takedown-button.tsx",
+    "line": 78,
+    "type": "JsxAttribute (placeholder)",
+    "text": "you@example.com"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/takedown-button.tsx",
+    "line": 82,
+    "type": "JsxText",
+    "text": "Cancel"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/takedown-button.tsx",
+    "line": 85,
+    "type": "JsxText",
+    "text": "Submit"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/vote-buttons.tsx",
+    "line": 66,
+    "type": "JsxAttribute (aria-label)",
+    "text": "Upvote"
+  },
+  {
+    "file": "D:/Alparai/src/components/incidents/vote-buttons.tsx",
+    "line": 82,
+    "type": "JsxAttribute (aria-label)",
+    "text": "Downvote"
+  },
+  {
+    "file": "components/layout/footer.tsx",
+    "line": 60,
+    "type": "JsxAttribute (aria-label)",
+    "text": "GitHub"
+  },
+  {
+    "file": "components/layout/footer.tsx",
+    "line": 69,
+    "type": "JsxAttribute (aria-label)",
+    "text": "Twitter"
+  },
+  {
+    "file": "components/layout/footer.tsx",
+    "line": 76,
+    "type": "JsxAttribute (aria-label)",
+    "text": "Email"
+  },
+  {
+    "file": "components/layout/footer.tsx",
+    "line": 121,
+    "type": "JsxText",
+    "text": "ALPAR AI."
+  },
+  {
+    "file": "components/layout/header.tsx",
+    "line": 43,
+    "type": "JsxAttribute (aria-label)",
+    "text": "ALPAR AI home"
+  },
+  {
+    "file": "components/layout/language-switcher.tsx",
+    "line": 35,
+    "type": "JsxText",
+    "text": "TR"
+  },
+  {
+    "file": "components/layout/language-switcher.tsx",
+    "line": 48,
+    "type": "JsxText",
+    "text": "EN"
+  },
+  {
+    "file": "components/layout/logo.tsx",
+    "line": 22,
+    "type": "JsxAttribute (aria-label)",
+    "text": "ALPAR AI"
+  },
+  {
+    "file": "components/legal/cookie-banner.tsx",
+    "line": 43,
+    "type": "JsxAttribute (aria-label)",
+    "text": "Cookie preferences"
+  },
+  {
+    "file": "components/legal/cookie-banner.tsx",
+    "line": 67,
+    "type": "JsxAttribute (aria-label)",
+    "text": "Dismiss"
+  },
+  {
+    "file": "components/legal/takedown-form.tsx",
+    "line": 68,
+    "type": "JsxAttribute (placeholder)",
+    "text": "https://alparai.com/incidents/…"
+  },
+  {
+    "file": "components/legal/takedown-form.tsx",
+    "line": 96,
+    "type": "JsxAttribute (placeholder)",
+    "text": "Select"
+  },
+  {
+    "file": "components/legal/takedown-form.tsx",
+    "line": 106,
+    "type": "JsxAttribute (placeholder)",
+    "text": "Provide a clear explanation with supporting evidence."
+  },
+  {
+    "file": "components/legal/takedown-form.tsx",
+    "line": 113,
+    "type": "JsxAttribute (placeholder)",
+    "text": "https://…"
+  },
+  {
+    "file": "components/marketing/founder-story.tsx",
+    "line": 49,
+    "type": "JsxText",
+    "text": "&ldquo;"
+  },
+  {
+    "file": "components/marketing/founder-story.tsx",
+    "line": 49,
+    "type": "JsxText",
+    "text": "&rdquo;"
+  },
+  {
+    "file": "D:/Alparai/src/components/marketing/incident-of-the-week.tsx",
+    "line": 66,
+    "type": "JsxText",
+    "text": "TruthScore:"
+  },
+  {
+    "file": "components/marketing/new-suggestion-form.tsx",
+    "line": 51,
+    "type": "JsxText",
+    "text": "Thanks for your suggestion!"
+  },
+  {
+    "file": "components/marketing/new-suggestion-form.tsx",
+    "line": 52,
+    "type": "JsxText",
+    "text": "Redirecting to suggestions list…"
+  },
+  {
+    "file": "components/marketing/new-suggestion-form.tsx",
+    "line": 67,
+    "type": "JsxAttribute (label)",
+    "text": "Title"
+  },
+  {
+    "file": "components/models/model-feature-request-form.tsx",
+    "line": 66,
+    "type": "JsxAttribute (placeholder)",
+    "text": "e.g. Add native PDF analysis or larger context window"
+  },
+  {
+    "file": "components/models/model-feature-request-form.tsx",
+    "line": 122,
+    "type": "JsxText",
+    "text": "Submitting..."
+  },
+  {
+    "file": "components/models/model-rating-form.tsx",
+    "line": 173,
+    "type": "JsxText",
+    "text": "Submitting..."
+  },
+  {
+    "file": "components/whistleblower/whistleblower-form.tsx",
+    "line": 106,
+    "type": "JsxText",
+    "text": "Submission Transmitted"
+  },
+  {
+    "file": "components/whistleblower/whistleblower-form.tsx",
+    "line": 109,
+    "type": "JsxText",
+    "text": "Submit Another Report"
+  },
+  {
+    "file": "components/whistleblower/whistleblower-form.tsx",
+    "line": 122,
+    "type": "JsxText",
+    "text": "Zero-Knowledge Transmission"
+  },
+  {
+    "file": "components/whistleblower/whistleblower-form.tsx",
+    "line": 159,
+    "type": "JsxAttribute (placeholder)",
+    "text": "e.g. OpenAI, Anthropic, Google..."
+  },
+  {
+    "file": "components/whistleblower/whistleblower-form.tsx",
+    "line": 185,
+    "type": "JsxText",
+    "text": "Encrypting Payload..."
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/api-docs/page.tsx",
+    "line": 62,
+    "type": "JsxText",
+    "text": "GET"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/api-docs/page.tsx",
+    "line": 63,
+    "type": "JsxText",
+    "text": "/api/v1/incidents"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/api-docs/page.tsx",
+    "line": 99,
+    "type": "JsxText",
+    "text": "GET"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/api-docs/page.tsx",
+    "line": 101,
+    "type": "JsxText",
+    "text": "/api/v1/incidents/"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/api-docs/page.tsx",
+    "line": 127,
+    "type": "JsxText",
+    "text": "GET"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/api-docs/page.tsx",
+    "line": 128,
+    "type": "JsxText",
+    "text": "/api/v1/providers"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/api-docs/page.tsx",
+    "line": 160,
+    "type": "JsxText",
+    "text": "GET"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/api-docs/page.tsx",
+    "line": 161,
+    "type": "JsxText",
+    "text": "/api/v1/stats"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/api-docs/page.tsx",
+    "line": 202,
+    "type": "JsxText",
+    "text": "/openapi.yaml"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/contact/page.tsx",
+    "line": 45,
+    "type": "JsxText",
+    "text": "hello@alparai.com"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/contact/page.tsx",
+    "line": 58,
+    "type": "JsxText",
+    "text": "press@alparai.com"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/leaderboard/opengraph-image.tsx",
+    "line": 200,
+    "type": "JsxText",
+    "text": "alparai.com/leaderboard"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/leaderboard/page.tsx",
+    "line": 198,
+    "type": "JsxText",
+    "text": "&rarr;"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/newsletter/page.tsx",
+    "line": 39,
+    "type": "JsxText",
+    "text": "GDPR Compliant"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/newsletter/page.tsx",
+    "line": 41,
+    "type": "JsxText",
+    "text": "Your email is encrypted and secure."
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/newsletter/page.tsx",
+    "line": 48,
+    "type": "JsxText",
+    "text": "Weekly Pulse"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/newsletter/page.tsx",
+    "line": 50,
+    "type": "JsxText",
+    "text": "One digest email per week. No daily spam."
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/settings/page.tsx",
+    "line": 51,
+    "type": "JsxText",
+    "text": "privacy@alparai.com"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/admin/audit/page.tsx",
+    "line": 42,
+    "type": "JsxText",
+    "text": "System Audit Logs Table"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/admin/autopilot/page.tsx",
+    "line": 120,
+    "type": "JsxText",
+    "text": "Autopilot Policies Table"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/admin/autopilot/page.tsx",
+    "line": 136,
+    "type": "JsxText",
+    "text": "ms ·"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/admin/autopilot/page.tsx",
+    "line": 136,
+    "type": "JsxText",
+    "text": "tok"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/admin/autopilot/page.tsx",
+    "line": 171,
+    "type": "JsxText",
+    "text": "Autopilot Active Runs Table"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/admin/providers/page.tsx",
+    "line": 47,
+    "type": "JsxText",
+    "text": "AI Providers Table"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/admin/users/page.tsx",
+    "line": 47,
+    "type": "JsxText",
+    "text": "Registered Users Table"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/brand/[slug]/opengraph-image.tsx",
+    "line": 64,
+    "type": "JsxText",
+    "text": "BRAND PROFILE"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/brand/[slug]/opengraph-image.tsx",
+    "line": 110,
+    "type": "JsxText",
+    "text": "Trust Infrastructure for AI Accountability"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/brand/[slug]/opengraph-image.tsx",
+    "line": 112,
+    "type": "JsxText",
+    "text": "alparai.com"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/incidents/[id]/opengraph-image.tsx",
+    "line": 116,
+    "type": "JsxText",
+    "text": "Read the full report & provider response"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/incidents/[id]/opengraph-image.tsx",
+    "line": 118,
+    "type": "JsxText",
+    "text": "alparai.com"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/legal/cookies/page.tsx",
+    "line": 36,
+    "type": "JsxText",
+    "text": "sb-*-auth-token"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/legal/cookies/page.tsx",
+    "line": 44,
+    "type": "JsxText",
+    "text": "alpar_cookie_consent"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/legal/privacy/page.tsx",
+    "line": 51,
+    "type": "JsxText",
+    "text": "privacy@alparai.com"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/legal/privacy/page.tsx",
+    "line": 85,
+    "type": "JsxText",
+    "text": "dpo@alparai.com"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/legal/takedown/page.tsx",
+    "line": 39,
+    "type": "JsxText",
+    "text": "takedown@alparai.com"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/legal/terms/page.tsx",
+    "line": 54,
+    "type": "JsxText",
+    "text": "/legal/takedown"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/legal/terms/page.tsx",
+    "line": 76,
+    "type": "JsxText",
+    "text": "legal@alparai.com"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/submit/whistleblower/page.tsx",
+    "line": 28,
+    "type": "JsxText",
+    "text": "SECURE & ANONYMOUS"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/suggestions/new/page.tsx",
+    "line": 30,
+    "type": "JsxText",
+    "text": "Sign in to suggest"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/suggestions/new/page.tsx",
+    "line": 44,
+    "type": "JsxText",
+    "text": "New suggestion"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/suggestions/new/page.tsx",
+    "line": 46,
+    "type": "JsxText",
+    "text": "Share a feature idea, a bug, or anything that would make ALPAR better."
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/incidents/[id]/embed/page.tsx",
+    "line": 84,
+    "type": "JsxText",
+    "text": "ALPAR AI • MONITOR"
+  },
+  {
+    "file": "D:/Alparai/src/app/[locale]/incidents/[id]/embed/page.tsx",
+    "line": 119,
+    "type": "JsxText",
+    "text": "Truth Score"
+  }
+]

@@ -20,6 +20,7 @@ export default async function NewSuggestionPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const user = await getCurrentUser();
+  const t = await getTranslations({ locale, namespace: "suggestions" });
   if (!user) {
     return (
       <Container size="narrow" className="py-12">
@@ -27,7 +28,7 @@ export default async function NewSuggestionPage({
           <CardHeader>
             <CardTitle className="inline-flex items-center gap-2">
               <Shield className="text-brand-400 h-5 w-5" />
-              Sign in to suggest
+              {t("signInToSuggest")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -41,9 +42,9 @@ export default async function NewSuggestionPage({
   return (
     <Container size="narrow" className="py-12">
       <header className="mb-6">
-        <h1 className="text-fg-primary text-3xl font-bold tracking-tight">New suggestion</h1>
+        <h1 className="text-fg-primary text-3xl font-bold tracking-tight">{t("newSuggestion")}</h1>
         <p className="text-fg-muted mt-1 text-sm">
-          Share a feature idea, a bug, or anything that would make ALPAR better.
+          {t("shareIdea")}
         </p>
       </header>
       <NewSuggestionForm />

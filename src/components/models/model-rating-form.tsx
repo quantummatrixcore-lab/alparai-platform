@@ -56,7 +56,7 @@ export function ModelRatingForm({ modelId, onSuccess }: ModelRatingFormProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (ratings.scoreOverall === 0) {
-      toast.error("Please provide an overall rating");
+      toast.error(t("error_overall"));
       return;
     }
 
@@ -80,7 +80,7 @@ export function ModelRatingForm({ modelId, onSuccess }: ModelRatingFormProps) {
         if (res.fieldErrors) {
           setErrors(res.fieldErrors);
         }
-        toast.error(res.error || "Failed to submit review");
+        toast.error(res.error || t("error_submit"));
       }
     });
   };
@@ -170,7 +170,7 @@ export function ModelRatingForm({ modelId, onSuccess }: ModelRatingFormProps) {
         {isPending ? (
           <>
             <Loader2 className="h-5 w-5 animate-spin" />
-            <span>Submitting...</span>
+            <span>{t("submitting")}</span>
           </>
         ) : (
           <span>{t("submit_review")}</span>

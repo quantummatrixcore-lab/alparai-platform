@@ -32,6 +32,7 @@ export default async function IncidentEmbedPage({ params }: EmbedPageProps) {
 
   const tCommon = await getTranslations({ locale, namespace: "common" });
   const tCat = await getTranslations({ locale, namespace: "categories" });
+  const tFeed = await getTranslations({ locale, namespace: "feed" });
   const supabase = await createServerClient();
 
   // Fetch incident row
@@ -81,7 +82,7 @@ export default async function IncidentEmbedPage({ params }: EmbedPageProps) {
           <div className="flex items-center gap-2">
             <span className="bg-brand-500 h-2 w-2 animate-pulse rounded-full" />
             <span className="text-fg-secondary text-[10px] font-black tracking-widest uppercase">
-              ALPAR AI • MONITOR
+              {tCommon("monitor", { defaultValue: "ALPAR AI • MONITOR" })}
             </span>
           </div>
           <span className="text-fg-muted rounded border border-white/5 bg-white/5 px-2 py-0.5 text-[9px] font-bold uppercase">
@@ -116,7 +117,7 @@ export default async function IncidentEmbedPage({ params }: EmbedPageProps) {
         {truthScore !== null && (
           <div className="mt-4 rounded-xl border border-white/5 bg-white/5 p-3">
             <div className="text-fg-secondary flex items-center justify-between text-[10px] font-extrabold tracking-wider uppercase">
-              <span>Truth Score</span>
+              <span>{tFeed("truthScore")}</span>
               <span
                 className={
                   truthScore >= 80
@@ -163,7 +164,7 @@ export default async function IncidentEmbedPage({ params }: EmbedPageProps) {
               rel="noopener noreferrer"
               className="bg-brand-500 hover:bg-brand-600 inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-bold tracking-tight text-white transition-colors duration-200"
             >
-              <span>{locale === "tr" ? "Raporu İncele" : "View Report"}</span>
+              <span>{tCommon("viewReport", { defaultValue: "View Report" })}</span>
               <ExternalLink className="h-3 w-3" />
             </a>
           </div>

@@ -33,7 +33,7 @@ export function NewSuggestionForm() {
 
   useEffect(() => {
     if (state.ok) {
-      toast.success("Suggestion submitted");
+      toast.success(t("submitted_toast"));
       setDone(true);
       const timer = setTimeout(() => router.push("/dilemmas?tab=suggestions"), 1200);
       return () => clearTimeout(timer);
@@ -48,8 +48,8 @@ export function NewSuggestionForm() {
     return (
       <Card>
         <CardContent className="py-12 text-center">
-          <p className="text-success-500 text-lg font-semibold">Thanks for your suggestion!</p>
-          <p className="text-fg-muted mt-1 text-sm">Redirecting to suggestions list…</p>
+          <p className="text-success-500 text-lg font-semibold">{t("thanks")}</p>
+          <p className="text-fg-muted mt-1 text-sm">{t("redirecting")}</p>
         </CardContent>
       </Card>
     );
@@ -64,7 +64,7 @@ export function NewSuggestionForm() {
         <form action={formAction} className="space-y-4">
           <Input
             name="title"
-            label="Title"
+            label={t("title", { defaultValue: "Title" })}
             required
             minLength={8}
             maxLength={200}
@@ -84,7 +84,10 @@ export function NewSuggestionForm() {
             label={t("category")}
             required
             defaultValue="feature"
-            options={SUGGESTION_CATEGORIES.map((c) => ({ value: c.value, label: c.label }))}
+            options={SUGGESTION_CATEGORIES.map((c) => ({
+              value: c.value,
+              label: t(`cat_${c.value}` as any, { defaultValue: c.label }),
+            }))}
             error={state.fieldErrors?.category?.[0]}
           />
           <SubmitBtn>{t("create_title")}</SubmitBtn>

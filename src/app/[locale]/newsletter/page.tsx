@@ -36,18 +36,18 @@ export default async function NewsletterPage({ params }: { params: Promise<{ loc
             <div className="flex items-start gap-2.5">
               <Shield className="text-success-500 mt-0.5 h-4 w-4 shrink-0" />
               <div>
-                <h4 className="text-fg-primary text-xs font-bold">GDPR Compliant</h4>
+                <h4 className="text-fg-primary text-xs font-bold">{t("gdprCompliant")}</h4>
                 <p className="text-fg-muted mt-0.5 text-[10px]">
-                  Your email is encrypted and secure.
+                  {t("gdprDesc")}
                 </p>
               </div>
             </div>
             <div className="flex items-start gap-2.5">
               <Bell className="text-brand-400 mt-0.5 h-4 w-4 shrink-0" />
               <div>
-                <h4 className="text-fg-primary text-xs font-bold">Weekly Pulse</h4>
+                <h4 className="text-fg-primary text-xs font-bold">{t("weeklyPulse")}</h4>
                 <p className="text-fg-muted mt-0.5 text-[10px]">
-                  One digest email per week. No daily spam.
+                  {t("weeklyPulseDesc")}
                 </p>
               </div>
             </div>

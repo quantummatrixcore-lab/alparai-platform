@@ -23,6 +23,7 @@ export function Header({
   } | null;
 }) {
   const t = useTranslations("nav");
+  const tCommon = useTranslations("common");
   const pathname = usePathname();
   const isAdmin =
     pathname &&
@@ -40,7 +41,7 @@ export function Header({
           <Link
             href="/"
             className="focus-visible:ring-brand-500 group relative flex items-center rounded-full pl-1 focus-visible:ring-2 focus-visible:outline-none"
-            aria-label="ALPAR AI home"
+            aria-label={tCommon("alparAi", { defaultValue: "ALPAR AI" }) + " home"}
           >
             <div className="from-brand-500/0 via-brand-500/10 to-brand-500/0 absolute -inset-2 rounded-full bg-gradient-to-r opacity-0 blur transition-opacity duration-500 group-hover:opacity-100"></div>
             <Wordmark size="md" />

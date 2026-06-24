@@ -57,7 +57,7 @@ export function TakedownForm() {
             identity_proof_url: String(fd.get("identity_proof_url") ?? ""),
           });
           if (res.ok) setDone(true);
-          else toast.error(res.error ?? "Failed");
+          else toast.error(res.error ?? t("failed", { defaultValue: "Failed" }));
         });
       }}
       className="space-y-4"
@@ -103,7 +103,7 @@ export function TakedownForm() {
         minLength={50}
         maxLength={4000}
         rows={6}
-        placeholder="Provide a clear explanation with supporting evidence."
+        placeholder={t("takedownDetailsPlaceholder", { defaultValue: "Provide a clear explanation with supporting evidence." })}
       />
       <Input
         name="identity_proof_url"

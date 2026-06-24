@@ -68,6 +68,7 @@ export function FeedCard({
   const t = useTranslations("incident");
   const tCat = useTranslations("categories");
   const tCommon = useTranslations("common");
+  const tFeed = useTranslations("feed");
   const locale = useLocale();
 
   const [expanded, setExpanded] = React.useState(false);
@@ -214,7 +215,7 @@ export function FeedCard({
           {incident.cross_audit_truth_score !== null && (
             <div className="mt-6 border-y border-white/5 py-4">
               <div className="text-fg-secondary mb-2 flex items-center justify-between text-xs">
-                <span className="font-bold tracking-wide uppercase">Truth Score</span>
+                <span className="font-bold tracking-wide uppercase">{tFeed("truthScore")}</span>
                 <span
                   className={cn(
                     "text-sm font-black",
@@ -312,7 +313,7 @@ export function FeedCard({
                       target="_blank"
                       rel="noreferrer noopener"
                       className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 text-zinc-100 transition-colors hover:text-white"
-                      aria-label="Share on X"
+                      aria-label={tFeed("shareOnX")}
                     >
                       <XIcon className="h-4 w-4" />
                     </motion.a>
@@ -324,7 +325,7 @@ export function FeedCard({
                       target="_blank"
                       rel="noreferrer noopener"
                       className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0077b5]/10 text-[#0077b5] transition-colors hover:bg-[#0077b5]/20"
-                      aria-label="Share on LinkedIn"
+                      aria-label={tFeed("shareOnLinkedIn")}
                     >
                       <LinkedInIcon className="h-4 w-4" />
                     </motion.a>
@@ -333,10 +334,10 @@ export function FeedCard({
                     <motion.button
                       whileHover={{ scale: 1.15, y: -1 }}
                       className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e1306c]/10 text-[#e1306c] transition-colors hover:bg-[#e1306c]/20"
-                      aria-label="Copy for Instagram"
+                      aria-label={tFeed("copyForInstagram")}
                       onClick={() => {
                         navigator.clipboard.writeText(shareUrl);
-                        toast.success(t("share_instagram") + " ✓");
+                        toast.success(tFeed("copyForInstagram") + " ✓");
                         setShowShare(false);
                       }}
                     >
@@ -350,7 +351,7 @@ export function FeedCard({
                       target="_blank"
                       rel="noreferrer noopener"
                       className="flex h-8 w-8 items-center justify-center rounded-full bg-[#25d366]/10 text-[#25d366] transition-colors hover:bg-[#25d366]/20"
-                      aria-label="Share on WhatsApp"
+                      aria-label={tFeed("shareOnWhatsApp")}
                     >
                       <WhatsAppIcon className="h-4 w-4" />
                     </motion.a>

@@ -22,6 +22,7 @@ export function TakedownButton({ incidentId }: { incidentId: string }) {
   const [pending, start] = useTransition();
   const t = useTranslations("incident");
   const tr = useTranslations("takedown.reasons");
+  const tForms = useTranslations("forms");
   return (
     <>
       <Button
@@ -57,32 +58,32 @@ export function TakedownButton({ incidentId }: { incidentId: string }) {
         >
           <Select
             name="reason"
-            label="Reason"
+            label={tForms("selectReason")}
             required
-            placeholder="Select a reason"
+            placeholder={tForms("selectReason")}
             options={REASONS.map((r) => ({ value: r.value, label: tr(r.value as never) }))}
           />
           <Textarea
             name="details"
-            label="Details"
+            label={tForms("details")}
             required
             minLength={20}
             maxLength={2000}
             rows={4}
-            placeholder="Explain the issue and provide supporting facts."
+            placeholder={tForms("explainIssue")}
           />
           <Textarea
             name="contact_email"
-            label="Contact email"
+            label={tForms("contactEmail")}
             required
-            placeholder="you@example.com"
+            placeholder={tForms("emailPlaceholder", { defaultValue: "you@example.com" })}
           />
           <div className="flex justify-end gap-2">
             <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
-              Cancel
+              {tForms("cancel")}
             </Button>
             <Button type="submit" variant="danger" isLoading={pending}>
-              Submit
+              {tForms("submit")}
             </Button>
           </div>
         </form>
