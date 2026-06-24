@@ -12,6 +12,8 @@ import { formatDistanceToNow } from "date-fns";
 
 export function IncidentOfTheWeek({ incident }: { incident: IncidentListItem | null }) {
   const t = useTranslations("marketing.incident_of_week");
+  const tCat = useTranslations("categories");
+  const tFeed = useTranslations("feed");
   const locale = useLocale();
 
   if (!incident) return null;
@@ -50,7 +52,7 @@ export function IncidentOfTheWeek({ incident }: { incident: IncidentListItem | n
               {t("title")}
             </span>
             <Badge variant="outline" className="border-border-strong text-fg-muted">
-              {incident.category}
+              {tCat(incident.category)}
             </Badge>
             {incident.cross_audit_truth_score !== null && (
               <Badge
@@ -63,7 +65,7 @@ export function IncidentOfTheWeek({ incident }: { incident: IncidentListItem | n
                 }
                 className="font-bold"
               >
-                TruthScore: {incident.cross_audit_truth_score}%
+                {tFeed("truthScore")} {incident.cross_audit_truth_score}%
               </Badge>
             )}
           </div>

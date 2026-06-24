@@ -55,6 +55,7 @@ export function IncidentCard({
 }) {
   const t = useTranslations("incident");
   const tCat = useTranslations("categories");
+  const tFeed = useTranslations("feed");
   const locale = useLocale();
 
   const displayTitle =
@@ -157,7 +158,7 @@ export function IncidentCard({
                   }
                   className="font-bold"
                 >
-                  TruthScore: {incident.cross_audit_truth_score}%
+                  {t("truthScore")} {incident.cross_audit_truth_score}%
                 </Badge>
               )}
             </div>
@@ -215,7 +216,7 @@ export function IncidentCard({
                   target="_blank"
                   rel="noreferrer noopener"
                   className="p-0.5 text-zinc-100 transition-colors hover:text-white"
-                  aria-label="Share on X"
+                  aria-label={tFeed("shareOnX")}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <XIcon className="h-3.5 w-3.5" />
@@ -229,7 +230,7 @@ export function IncidentCard({
                   target="_blank"
                   rel="noreferrer noopener"
                   className="p-0.5 text-[#0077b5] transition-colors hover:text-[#0077b5]/80"
-                  aria-label="Share on LinkedIn"
+                  aria-label={tFeed("shareOnLinkedIn")}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <LinkedInIcon className="h-3.5 w-3.5" />
@@ -240,11 +241,11 @@ export function IncidentCard({
                   whileHover={{ scale: 1.2, y: -1 }}
                   whileTap={{ scale: 0.9 }}
                   className="cursor-pointer p-0.5 text-[#e1306c] transition-colors hover:text-[#e1306c]/80"
-                  aria-label="Copy for Instagram"
+                  aria-label={tFeed("copyForInstagram")}
                   onClick={(e) => {
                     e.stopPropagation();
                     navigator.clipboard.writeText(shareUrl);
-                    toast.success(t("share_instagram") + " ✓");
+                    toast.success(tFeed("copyForInstagram") + " ✓");
                   }}
                 >
                   <InstagramIcon className="h-3.5 w-3.5" />
@@ -258,7 +259,7 @@ export function IncidentCard({
                   target="_blank"
                   rel="noreferrer noopener"
                   className="p-0.5 text-[#25d366] transition-colors hover:text-[#25d366]/80"
-                  aria-label="Share on WhatsApp"
+                  aria-label={tFeed("shareOnWhatsApp")}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <WhatsAppIcon className="h-3.5 w-3.5" />
@@ -288,7 +289,7 @@ function TimelineIndicator({ status, t }: { status: IncidentStatus; t: (key: str
   const isRejected = status === "rejected" || status === "takedown";
 
   return (
-    <div className="mt-4 flex items-center gap-1" aria-label="Incident timeline">
+    <div className="mt-4 flex items-center gap-1" aria-label={t("timeline")}>
       {steps.map((step, i) => {
         const active = step.statuses.includes(status);
         const isLast = i === steps.length - 1;

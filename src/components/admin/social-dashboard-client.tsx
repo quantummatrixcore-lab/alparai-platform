@@ -3,6 +3,7 @@
 
 import * as React from "react";
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import {
   Calendar,
   FileText,
@@ -100,6 +101,8 @@ export function SocialDashboardClient({
   initialTemplates,
   initialAssets: _initialAssets,
 }: Props) {
+  const tCommon = useTranslations("common");
+  const tAdmin = useTranslations("admin");
   const [posts, setPosts] = useState<SocialPost[]>(initialPosts);
   const [activeTab, setActiveTab] = useState<"calendar" | "drafts" | "templates" | "analytics">(
     "drafts",
@@ -293,9 +296,8 @@ export function SocialDashboardClient({
       <div className="border-border-subtle flex flex-col justify-between gap-4 border-b pb-6 md:flex-row md:items-center">
         <div>
           <h1 className="text-fg-primary text-3xl font-bold tracking-tight">Growth Hub</h1>
-          <p className="text-fg-secondary mt-1 text-sm">
-            Manage your AI safety calendar, pre-written manifesto campaigns, templates, and track
-            published analytics.
+          <p className="text-fg-muted mt-2 max-w-2xl text-sm">
+            {tAdmin("growthHubDesc", { defaultValue: "Manage your AI safety calendar, pre-written manifesto campaigns, templates, and track published analytics." })}
           </p>
         </div>
         <div>
@@ -304,7 +306,7 @@ export function SocialDashboardClient({
             className="from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 flex items-center gap-2 rounded-xl bg-gradient-to-r px-4 py-2.5 text-sm font-bold text-white shadow-lg transition-all"
           >
             <Plus className="h-4 w-4" />
-            Create Campaign Post
+            {tAdmin("createCampaignPost", { defaultValue: "Create Campaign Post" })}
           </button>
         </div>
       </div>
@@ -339,14 +341,14 @@ export function SocialDashboardClient({
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <span className="text-fg-secondary text-xs font-bold tracking-wider uppercase">
-                Platform:
+                {tAdmin("platform", { defaultValue: "Platform:" })}
               </span>
               <select
                 value={platformFilter}
                 onChange={(e) => setPlatformFilter(e.target.value)}
                 className="bg-bg-secondary border-border-subtle text-fg-primary rounded-lg border px-2 py-1 text-xs focus:outline-none"
               >
-                <option value="all">All Platforms</option>
+                <option value="all">{tAdmin("allPlatforms", { defaultValue: "All Platforms" })}</option>
                 <option value="linkedin">LinkedIn</option>
                 <option value="x">X / Twitter</option>
                 <option value="instagram">Instagram</option>
@@ -437,9 +439,7 @@ export function SocialDashboardClient({
               {posts.filter((p) => p.status === "draft").length === 0 && (
                 <div className="border-border-subtle col-span-full rounded-2xl border border-dashed p-12 text-center">
                   <AlertCircle className="text-fg-muted mx-auto mb-3 h-8 w-8" />
-                  <p className="text-fg-secondary text-sm">
-                    No campaign drafts currently in queue.
-                  </p>
+                  <div className="text-fg-muted py-8 text-center text-sm">{tAdmin("noCampaignDrafts", { defaultValue: "No campaign drafts currently in queue." })}</div>
                 </div>
               )}
             </div>
@@ -449,8 +449,9 @@ export function SocialDashboardClient({
         {/* Tab 2: Calendar */}
         {activeTab === "calendar" && (
           <div className="bg-bg-secondary/40 border-border-subtle space-y-4 rounded-2xl border p-6">
-            <h2 className="text-fg-primary mb-4 flex items-center gap-2 text-lg font-bold">
-              <Clock className="text-brand-400 h-5 w-5" /> Timeline Overview
+            <h2 className="text-fg-primary mb-6 flex items-center gap-2 text-xl font-bold">
+              <Calendar className="text-brand-500 h-5 w-5" />
+              {tAdmin("timelineOverview", { defaultValue: "Timeline Overview" })}
             </h2>
             <div className="border-border-subtle relative ml-3 space-y-6 border-l pl-6">
               {posts
@@ -577,8 +578,9 @@ export function SocialDashboardClient({
         {/* Tab 4: Analytics */}
         {activeTab === "analytics" && (
           <div className="bg-bg-secondary/40 border-border-subtle overflow-hidden rounded-2xl border p-6">
-            <h2 className="text-fg-primary mb-4 flex items-center gap-2 text-lg font-bold">
-              <BarChart3 className="text-brand-400 h-5 w-5" /> Post Reach & Metrics Tracker
+            <h2 className="text-fg-primary mb-6 flex items-center gap-2 text-xl font-bold">
+              <BarChart3 className="text-brand-500 h-5 w-5" />
+              {tAdmin("postReachMetrics", { defaultValue: "Post Reach & Metrics Tracker" })}
             </h2>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-left text-xs">
@@ -646,7 +648,7 @@ export function SocialDashboardClient({
                   {posts.filter((p) => p.status === "published").length === 0 && (
                     <tr>
                       <td colSpan={7} className="text-fg-muted py-8 text-center">
-                        No published posts listed for analytics tracking.
+                        {tAdmin("noPublishedPosts", { defaultValue: "No published posts listed for analytics tracking." })}
                       </td>
                     </tr>
                   )}
@@ -712,7 +714,7 @@ export function SocialDashboardClient({
 
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <label className="text-fg-secondary text-xs font-bold">Post Content</label>
+                  <label className="text-fg-primary block text-sm font-semibold mb-2">{tAdmin("postContent", { defaultValue: "Post Content" })}</label>
                   <span
                     className={cn(
                       "text-[10px] font-semibold",
@@ -792,7 +794,7 @@ export function SocialDashboardClient({
                   className="bg-brand-500 hover:bg-brand-400 flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-bold text-white shadow-lg transition-all"
                 >
                   {isPending && <RefreshCw className="h-4.5 w-4.5 animate-spin" />}
-                  Save Post
+                  {tAdmin("savePost", { defaultValue: "Save Post" })}
                 </button>
               </div>
             </form>

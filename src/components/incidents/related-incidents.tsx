@@ -20,6 +20,7 @@ export async function RelatedIncidents({
 }: RelatedIncidentsProps) {
   const supabase = await createServerClient();
   const tCat = await getTranslations({ locale, namespace: "categories" });
+  const tFeed = await getTranslations({ locale, namespace: "feed" });
 
   const { data: relatedRows } = await supabase
     .from("incidents")
@@ -89,7 +90,7 @@ export async function RelatedIncidents({
                   {incident.cross_audit_truth_score !== null && (
                     <div className="mt-4">
                       <div className="text-fg-secondary flex items-center justify-between text-[10px] font-bold uppercase">
-                        <span>Truth Score</span>
+                        <span>{tFeed("truthScore")}</span>
                         <span
                           className={
                             incident.cross_audit_truth_score >= 80

@@ -33,6 +33,7 @@ const aboutLinks = [
 
 export function Footer() {
   const t = useTranslations("footer");
+  const tCommon = useTranslations("common");
   const year = new Date().getFullYear();
   const pathname = usePathname();
   const isAdmin =
@@ -57,7 +58,7 @@ export function Footer() {
                 target="_blank"
                 rel="noreferrer noopener"
                 className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary inline-flex h-9 w-9 items-center justify-center rounded-md"
-                aria-label="GitHub"
+                aria-label={tCommon("github", { defaultValue: "GitHub" })}
               >
                 <Github className="h-4 w-4" />
               </a>
@@ -66,14 +67,14 @@ export function Footer() {
                 target="_blank"
                 rel="noreferrer noopener"
                 className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary inline-flex h-9 w-9 items-center justify-center rounded-md"
-                aria-label="Twitter"
+                aria-label={tCommon("twitter", { defaultValue: "Twitter" })}
               >
                 <Twitter className="h-4 w-4" />
               </a>
               <a
                 href="mailto:hello@alparai.com"
                 className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary inline-flex h-9 w-9 items-center justify-center rounded-md"
-                aria-label="Email"
+                aria-label={tCommon("email", { defaultValue: "Email" })}
               >
                 <Mail className="h-4 w-4" />
               </a>
@@ -118,7 +119,7 @@ export function Footer() {
         </div>
         <div className="border-border-subtle mt-12 flex flex-col gap-4 border-t pt-8 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-fg-muted text-xs">
-            © {year} ALPAR AI. {t("rights")}
+            © {year} {tCommon("alparAi", { defaultValue: "ALPAR AI" })}. {t("rights")}
           </p>
           <p className="text-fg-muted inline-flex items-center gap-1.5 text-xs">
             <Shield className="h-3 w-3" aria-hidden="true" />

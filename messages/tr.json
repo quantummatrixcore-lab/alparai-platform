@@ -192,7 +192,13 @@
     "timeline_published": "Yayınlandı",
     "piiProtectedTitle": "Kişisel veriler korunuyor",
     "piiProtectedDesc": "E-posta, telefon numarası, kimlik ve erişim belirteci gibi kişisel bilgiler yayınlanmadan önce otomatik olarak maskelenir.",
-    "draft_restored": "Taslak son oturumunuzdan geri yüklendi."
+    "draft_restored": "Taslak son oturumunuzdan geri yüklendi.",
+    "truthScore": "Doğruluk Skoru:",
+    "confidence": "Güven:",
+    "calculatedUsing": "Çoklu model fikir birliği ve anlamsal denetim motorları kullanılarak hesaplanmıştır.",
+    "auditorEngine": "Denetim Motoru:",
+    "verified": "Doğrulandı",
+    "timeline": "Olay zaman çizelgesi"
   },
   "categories": {
     "hallucination": "Halüsinasyon",
@@ -225,7 +231,10 @@
     "status_completed": "Tamamlandı",
     "status_declined": "Reddedildi",
     "by": "tarafından",
-    "anon": "Anonim"
+    "anon": "Anonim",
+    "signInToSuggest": "Öneri yapmak için giriş yapın",
+    "newSuggestion": "Yeni öneri",
+    "shareFeatureIdea": "Bir özellik fikri, hata veya ALPAR'ı daha iyi yapacak herhangi bir şey paylaşın."
   },
   "leaderboard": {
     "title": "Yapay Zeka Sağlayıcı Sıralaması",
@@ -294,7 +303,11 @@
     "signin_footer_prefix": "Giriş yaparak şunları kabul etmiş olursunuz:",
     "signin_footer_and": "ve",
     "benefit_secure": "Google OAuth ile güvenli kimlik doğrulama",
-    "send": "Gönder"
+    "send": "Gönder",
+    "step": "ADIM",
+    "of_2": "/ 2",
+    "unlockedBadge": "KAZANILAN ROZET",
+    "badgeDesc": "İlk 100 beta katılımcımıza verilen özel erken benimseyen doğrulama rozeti."
   },
   "admin": {
     "war_room_title": "Soft Launch İzleme (Savaş Odası)",
@@ -485,7 +498,44 @@
     "cat_societal_impact": "Toplumsal Etki",
     "awaiting_input": "GİRDİ_BEKLENİYOR",
     "structured_consolidated_registry": "Yapılandırılmış Konsolide Kayıt Defteri",
-    "terminal_version": "TERMİNAL_V1.0"
+    "terminal_version": "TERMİNAL_V1.0",
+    "socialDashboard": "Sosyal Medya Paneli",
+    "systemAuditLogsTable": "Sistem Denetim Günlükleri Tablosu",
+    "autopilotPoliciesTable": "Otopilot Politikaları Tablosu",
+    "aiProvidersTable": "Yapay Zeka Sağlayıcıları Tablosu",
+    "registeredUsersTable": "Kayıtlı Kullanıcılar Tablosu",
+    "growthHub": "Büyüme Merkezi",
+    "growthHubDesc": "Yapay zeka güvenlik takviminizi, hazır manifesto kampanyalarınızı, şablonlarınızı yönetin ve yayınlanan analizleri takip edin.",
+    "createCampaignPost": "Kampanya Gönderisi Oluştur",
+    "platform": "Platform:",
+    "allPlatforms": "Tüm Platformlar",
+    "characters": "Karakter:",
+    "created": "Oluşturuldu",
+    "copyToClipboard": "Panoya Kopyala",
+    "openPlatform": "Platformu Aç",
+    "edit": "Düzenle",
+    "noCampaignDrafts": "Şu anda sırada kampanya taslağı yok.",
+    "timelineOverview": "Zaman Çizelgesi Özeti",
+    "noScheduled": "Planlanmış veya yayınlanmış zaman çizelgesi öğesi bulunamadı.",
+    "hook": "Kanca (Hook):",
+    "exampleOutput": "Örnek Çıktı:",
+    "useTemplate": "Şablonu Kullan",
+    "postReachMetrics": "Gönderi Erişimi ve Metrik Takipçisi",
+    "postTitle": "Gönderi Başlığı",
+    "reach": "Erişim",
+    "likes": "Beğeniler",
+    "comments": "Yorumlar",
+    "shares": "Paylaşımlar",
+    "actions": "İşlemler",
+    "update": "Güncelle",
+    "noPublished": "Analitik takibi için listelenmiş yayınlanmış gönderi yok.",
+    "internalTitle": "İç Başlık / Referans",
+    "campaignType": "Kampanya Türü",
+    "postContent": "Gönderi İçeriği",
+    "scheduleDateTime": "Tarih ve Saat Planla",
+    "externalPostUrl": "Harici Gönderi URL'si (İsteğe bağlı)",
+    "cancel": "İptal",
+    "savePost": "Gönderiyi Kaydet"
   },
   "footer": {
     "tagline": "Dünyanın AI'ı hesap verilebilir kıldığı yer.",
@@ -596,7 +646,13 @@
     "skipToContent": "İçeriğe atla",
     "unknown": "Bilinmiyor",
     "unknown_provider": "Bilinmeyen Sağlayıcı",
-    "unknown_error": "Bilinmeyen hata"
+    "unknown_error": "Bilinmeyen hata",
+    "secureAndAnonymous": "GÜVENLİ & ANONİM",
+    "monitor": "ALPAR AI • İZLEME",
+    "alparAi": "ALPAR AI",
+    "dismiss": "Kapat",
+    "cookiePreferences": "Çerez tercihleri",
+    "select": "Seçiniz"
   },
   "autopilot": {
     "title": "Kendini iyileştiren gönderim",
@@ -1249,7 +1305,11 @@
     "submit": "Abone Ol",
     "success": "Başarıyla abone olundu!",
     "success_toast": "Teşekkürler! Aboneliğiniz tamamlandı.",
-    "privacy": "Sıfır spam. İstediğiniz zaman ayrılabilirsiniz."
+    "privacy": "Sıfır spam. İstediğiniz zaman ayrılabilirsiniz.",
+    "gdprCompliant": "GDPR Uyumlu",
+    "emailEncrypted": "E-postanız şifrelenmiştir ve güvendedir.",
+    "weeklyPulse": "Haftalık Nabız",
+    "oneDigest": "Haftada bir özet e-posta. Günlük spam yok."
   },
   "submit": {
     "description": "Kanıt ve bağlamla birlikte yeni bir yapay zeka olayı bildirin.",
@@ -1285,5 +1345,38 @@
     "successTitle": "Aramıza Hoş Geldiniz!",
     "successDesc": "Profiliniz güncellendi. Erken betamıza katıldığınız için Kurucu Raporcu rozetini kazandınız!",
     "successCta": "Profile Git"
+  },
+  "error": {
+    "somethingWentWrong": "Bir şeyler ters gitti",
+    "errorId": "Hata Kimliği:",
+    "tryAgain": "Tekrar dene"
+  },
+  "feed": {
+    "shareOnX": "X'te Paylaş",
+    "shareOnLinkedIn": "LinkedIn'de Paylaş",
+    "copyForInstagram": "Instagram için Kopyala",
+    "shareOnWhatsApp": "WhatsApp'ta Paylaş",
+    "truthScore": "Doğruluk Skoru",
+    "upvote": "Olumlu oy",
+    "downvote": "Olumsuz oy"
+  },
+  "forms": {
+    "submitting": "Gönderiliyor...",
+    "submissionTransmitted": "İhbar İletildi",
+    "submitAnotherReport": "Başka Bir Rapor Gönder",
+    "zeroKnowledgeTransmission": "Sıfır Bilgi İletimi",
+    "encryptingPayload": "Yük Şifreleniyor...",
+    "selectReason": "Bir neden seçin",
+    "details": "Detaylar",
+    "explainIssue": "Sorunu açıklayın ve destekleyici gerçekleri sağlayın.",
+    "contactEmail": "İletişim e-postası",
+    "cancel": "İptal",
+    "submit": "Gönder",
+    "title": "Başlık",
+    "thanksForSuggestion": "Öneriniz için teşekkürler!",
+    "redirecting": "Öneri listesine yönlendiriliyor…",
+    "kb": "KB",
+    "removeFile": "Dosyayı kaldır",
+    "emailPlaceholder": "siz@ornek.com"
   }
 }

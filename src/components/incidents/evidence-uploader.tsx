@@ -26,6 +26,7 @@ export function EvidenceUploader({
   disabled = false,
 }: EvidenceUploaderProps) {
   const t = useTranslations("incident");
+  const tForms = useTranslations("forms");
   const [files, setFiles] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -120,14 +121,14 @@ export function EvidenceUploader({
                 <FileText className="text-fg-muted h-4 w-4 shrink-0" />
                 <span className="text-fg-primary truncate text-sm">{f.name}</span>
                 <span className="text-fg-muted shrink-0 text-xs">
-                  {formatNumber(Math.round(f.size / 1024))} KB
+                  {formatNumber(Math.round(f.size / 1024))} {tForms("kb", { defaultValue: "KB" })}
                 </span>
               </div>
               <button
                 type="button"
                 onClick={() => remove(i)}
                 className="text-fg-muted hover:text-danger-500"
-                aria-label="Remove file"
+                aria-label={tForms("removeFile", { defaultValue: "Remove file" })}
               >
                 <X className="h-4 w-4" />
               </button>

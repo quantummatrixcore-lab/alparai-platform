@@ -78,7 +78,7 @@ export function IncidentDetailView({
                 }
                 className="font-bold"
               >
-                TruthScore: {incident.cross_audit_truth_score}%
+                {t("truthScore")} {incident.cross_audit_truth_score}%
               </UIBadge>
             )}
             <UIBadge variant="muted">
@@ -130,7 +130,7 @@ export function IncidentDetailView({
                   })}
                 </CardTitle>
                 <div className="flex items-center gap-2">
-                  <span className="text-fg-muted text-xs">Confidence:</span>
+                  <span className="text-fg-muted text-xs">{t("confidence")}</span>
                   <UIBadge variant="brand" className="font-mono">
                     {Math.round((incident.cross_audit_confidence ?? 0) * 100)}%
                   </UIBadge>
@@ -144,7 +144,7 @@ export function IncidentDetailView({
                     {t("truth_score", { defaultValue: "TruthScore" })}
                   </h4>
                   <p className="text-fg-muted mt-1 text-xs">
-                    Calculated using multi-model consensus and semantic audit engines.
+                    {t("calculatedUsing")}
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
@@ -176,7 +176,7 @@ export function IncidentDetailView({
               )}
               {incident.cross_audit_model && (
                 <div className="text-fg-muted flex items-center justify-between border-t border-white/5 pt-2 text-[11px]">
-                  <span>Auditor Engine:</span>
+                  <span>{t("auditorEngine")}</span>
                   <span className="font-mono font-bold">{incident.cross_audit_model}</span>
                 </div>
               )}

@@ -22,6 +22,7 @@ export function VoteButtons({
   disabled?: boolean;
 }) {
   const tCommon = useTranslations("common");
+  const tFeed = useTranslations("feed");
   const [up, setUp] = useState(initialUpvotes);
   const [down, setDown] = useState(initialDownvotes);
   const [userVote, setUserVote] = useState(initialUserVote);
@@ -63,7 +64,7 @@ export function VoteButtons({
             : "text-fg-muted hover:bg-bg-tertiary hover:text-success-400",
           (disabled || pending) && "cursor-not-allowed opacity-50"
         )}
-        aria-label="Upvote"
+        aria-label={tFeed("upvote", { defaultValue: "Upvote" })}
         aria-pressed={userVote === 1}
       >
         <ThumbsUp className="h-4 w-4" />
@@ -79,7 +80,7 @@ export function VoteButtons({
             : "text-fg-muted hover:bg-bg-tertiary hover:text-danger-400",
           (disabled || pending) && "cursor-not-allowed opacity-50"
         )}
-        aria-label="Downvote"
+        aria-label={tFeed("downvote", { defaultValue: "Downvote" })}
         aria-pressed={userVote === -1}
       >
         <ThumbsDown className="h-4 w-4" />

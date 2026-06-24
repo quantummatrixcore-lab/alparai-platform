@@ -34,7 +34,7 @@ export function ProviderResponseCard({
         {verified ? (
           <Badge variant="success" size="sm" dot>
             <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
-            Verified
+            {t("verified")}
           </Badge>
         ) : (
           <Badge variant="muted" size="sm">

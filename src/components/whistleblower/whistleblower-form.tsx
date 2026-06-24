@@ -9,6 +9,7 @@ import { submitWhistleblowerAction } from "@/actions/whistleblower";
 
 export function WhistleblowerForm() {
   const t = useTranslations("whistleblower");
+  const tCat = useTranslations("categories");
 
   const [category, setCategory] = React.useState("safety");
   const [providerHint, setProviderHint] = React.useState("");
@@ -18,13 +19,12 @@ export function WhistleblowerForm() {
   >("idle");
   const [displayContent, setDisplayContent] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
-
-  const categories = [
-    { id: "safety", label: "Safety Violation" },
-    { id: "privacy", label: "Privacy Breach" },
-    { id: "bias", label: "Algorithmic Bias" },
-    { id: "security", label: "Security Vulnerability" },
-    { id: "other", label: "Other" },
+  const CATEGORIES = [
+    { id: "safety", label: tCat("safety") },
+    { id: "privacy", label: tCat("privacy") },
+    { id: "bias", label: tCat("bias") },
+    { id: "security", label: tCat("security") },
+    { id: "other", label: tCat("other") },
   ];
 
   React.useEffect(() => {
@@ -103,10 +103,10 @@ export function WhistleblowerForm() {
         <div className="bg-success-500/10 text-success-500 rounded-full p-4">
           <CheckCircle2 className="h-12 w-12" />
         </div>
-        <h3 className="text-fg-primary text-xl font-bold">Submission Transmitted</h3>
+        <h3 className="text-fg-primary text-xl font-bold">{t("successTitle")}</h3>
         <p className="text-fg-muted max-w-md text-sm">{t("success")}</p>
         <Button onClick={() => setStatus("idle")} variant="outline" className="mt-4">
-          Submit Another Report
+          {t("submitAnother")}
         </Button>
       </div>
     );
@@ -119,7 +119,7 @@ export function WhistleblowerForm() {
         <Lock className="text-brand-400 mt-0.5 h-5 w-5 shrink-0" />
         <div className="space-y-1">
           <p className="text-fg-primary text-xs font-bold tracking-wider uppercase">
-            Zero-Knowledge Transmission
+            {t("zeroKnowledge")}
           </p>
           <p className="text-fg-muted text-xs leading-relaxed">{t("notice")}</p>
         </div>
@@ -129,7 +129,7 @@ export function WhistleblowerForm() {
       <div className="space-y-2">
         <label className="text-fg-primary block text-sm font-semibold">{t("category")}</label>
         <div className="flex flex-wrap gap-2">
-          {categories.map((cat) => (
+          {CATEGORIES.map((cat) => (
             <button
               key={cat.id}
               type="button"
@@ -156,7 +156,7 @@ export function WhistleblowerForm() {
           id="providerHint"
           value={providerHint}
           onChange={(e) => setProviderHint(e.target.value)}
-          placeholder="e.g. OpenAI, Anthropic, Google..."
+          placeholder={t("providerHint")}
           disabled={status !== "idle" && status !== "error"}
           className="max-w-md"
         />
@@ -182,7 +182,7 @@ export function WhistleblowerForm() {
               <div className="bg-bg-tertiary border-border-strong flex items-center gap-2 rounded-md border px-4 py-2 shadow-lg">
                 <div className="border-brand-500 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></div>
                 <span className="text-brand-400 font-mono text-xs font-bold tracking-wider uppercase">
-                  Encrypting Payload...
+                  {t("encryptingPayload")}
                 </span>
               </div>
             </div>
@@ -204,9 +204,9 @@ export function WhistleblowerForm() {
         className="w-full min-w-[150px] sm:w-auto"
       >
         {status === "encrypting" ? (
-          "Encrypting..."
+          t("encrypting")
         ) : status === "submitting" ? (
-          "Transmitting..."
+          t("transmitting")
         ) : (
           <>
             <Shield className="mr-2 h-4 w-4" />

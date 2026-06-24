@@ -38,10 +38,10 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
       >
         <div>
           <h1 style={{ fontSize: "1.5rem", fontWeight: "bold", marginBottom: "0.5rem" }}>
-            Something went wrong
+            Something went wrong / Bir şeyler ters gitti
           </h1>
           {error.digest && (
-            <p style={{ fontSize: "0.75rem", color: "#94a3b8" }}>Error ID: {error.digest}</p>
+            <p style={{ fontSize: "0.75rem", color: "#94a3b8" }}>Error ID / Hata Kodu: {error.digest}</p>
           )}
         </div>
         <button
@@ -57,7 +57,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
             fontWeight: "500",
           }}
         >
-          Try again
+          Try again / Tekrar dene
         </button>
       </body>
     </html>

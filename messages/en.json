@@ -192,7 +192,13 @@
     "timeline_published": "Published",
     "piiProtectedTitle": "PII protected",
     "piiProtectedDesc": "Personal information such as emails, phone numbers, IDs and access tokens are automatically masked before publication.",
-    "draft_restored": "Draft restored from your last session."
+    "draft_restored": "Draft restored from your last session.",
+    "truthScore": "TruthScore:",
+    "confidence": "Confidence:",
+    "calculatedUsing": "Calculated using multi-model consensus and semantic audit engines.",
+    "auditorEngine": "Auditor Engine:",
+    "verified": "Verified",
+    "timeline": "Incident timeline"
   },
   "categories": {
     "hallucination": "Hallucination",
@@ -225,7 +231,10 @@
     "status_completed": "Completed",
     "status_declined": "Declined",
     "by": "by",
-    "anon": "Anonymous"
+    "anon": "Anonymous",
+    "signInToSuggest": "Sign in to suggest",
+    "newSuggestion": "New suggestion",
+    "shareFeatureIdea": "Share a feature idea, a bug, or anything that would make ALPAR better."
   },
   "leaderboard": {
     "title": "AI Provider Leaderboard",
@@ -294,7 +303,11 @@
     "signin_footer_prefix": "By signing in, you agree to our",
     "signin_footer_and": "and",
     "benefit_secure": "Secure authentication via Google OAuth",
-    "send": "Send"
+    "send": "Send",
+    "step": "STEP",
+    "of_2": "OF 2",
+    "unlockedBadge": "UNLOCKED BADGE",
+    "badgeDesc": "Exclusive early-adopter verification badge awarded to our first 100 beta participants."
   },
   "admin": {
     "war_room_title": "Soft Launch Monitoring (War Room)",
@@ -485,7 +498,44 @@
     "cat_societal_impact": "Societal Impact",
     "awaiting_input": "AWAITING_INPUT",
     "structured_consolidated_registry": "Structured Consolidated Registry",
-    "terminal_version": "TERMINAL_V1.0"
+    "terminal_version": "TERMINAL_V1.0",
+    "socialDashboard": "Social Dashboard",
+    "systemAuditLogsTable": "System Audit Logs Table",
+    "autopilotPoliciesTable": "Autopilot Policies Table",
+    "aiProvidersTable": "AI Providers Table",
+    "registeredUsersTable": "Registered Users Table",
+    "growthHub": "Growth Hub",
+    "growthHubDesc": "Manage your AI safety calendar, pre-written manifesto campaigns, templates, and track published analytics.",
+    "createCampaignPost": "Create Campaign Post",
+    "platform": "Platform:",
+    "allPlatforms": "All Platforms",
+    "characters": "Characters:",
+    "created": "Created",
+    "copyToClipboard": "Copy to Clipboard",
+    "openPlatform": "Open Platform",
+    "edit": "Edit",
+    "noCampaignDrafts": "No campaign drafts currently in queue.",
+    "timelineOverview": "Timeline Overview",
+    "noScheduled": "No scheduled or published timeline items found.",
+    "hook": "Hook:",
+    "exampleOutput": "Example Output:",
+    "useTemplate": "Use Template",
+    "postReachMetrics": "Post Reach & Metrics Tracker",
+    "postTitle": "Post Title",
+    "reach": "Reach",
+    "likes": "Likes",
+    "comments": "Comments",
+    "shares": "Shares",
+    "actions": "Actions",
+    "update": "Update",
+    "noPublished": "No published posts listed for analytics tracking.",
+    "internalTitle": "Internal Title / Reference",
+    "campaignType": "Campaign Type",
+    "postContent": "Post Content",
+    "scheduleDateTime": "Schedule Date & Time",
+    "externalPostUrl": "External Post URL (Optional)",
+    "cancel": "Cancel",
+    "savePost": "Save Post"
   },
   "footer": {
     "tagline": "Where the world holds AI accountable.",
@@ -596,7 +646,13 @@
     "skipToContent": "Skip to main content",
     "unknown": "Unknown",
     "unknown_provider": "Unknown Provider",
-    "unknown_error": "Unknown error"
+    "unknown_error": "Unknown error",
+    "secureAndAnonymous": "SECURE & ANONYMOUS",
+    "monitor": "ALPAR AI • MONITOR",
+    "alparAi": "ALPAR AI",
+    "dismiss": "Dismiss",
+    "cookiePreferences": "Cookie preferences",
+    "select": "Select"
   },
   "autopilot": {
     "title": "Self-healing submission",
@@ -1249,7 +1305,11 @@
     "submit": "Subscribe",
     "success": "Subscribed successfully!",
     "success_toast": "Thank you! You are now subscribed.",
-    "privacy": "Zero spam. Unsubscribe at any time."
+    "privacy": "Zero spam. Unsubscribe at any time.",
+    "gdprCompliant": "GDPR Compliant",
+    "emailEncrypted": "Your email is encrypted and secure.",
+    "weeklyPulse": "Weekly Pulse",
+    "oneDigest": "One digest email per week. No daily spam."
   },
   "submit": {
     "description": "Submit a new AI incident with proof and context.",
@@ -1285,5 +1345,38 @@
     "successTitle": "Welcome Aboard!",
     "successDesc": "Your profile has been updated. You've earned the Founding Reporter badge for joining our early beta!",
     "successCta": "Go to Profile"
+  },
+  "error": {
+    "somethingWentWrong": "Something went wrong",
+    "errorId": "Error ID:",
+    "tryAgain": "Try again"
+  },
+  "feed": {
+    "shareOnX": "Share on X",
+    "shareOnLinkedIn": "Share on LinkedIn",
+    "copyForInstagram": "Copy for Instagram",
+    "shareOnWhatsApp": "Share on WhatsApp",
+    "truthScore": "Truth Score",
+    "upvote": "Upvote",
+    "downvote": "Downvote"
+  },
+  "forms": {
+    "submitting": "Submitting...",
+    "submissionTransmitted": "Submission Transmitted",
+    "submitAnotherReport": "Submit Another Report",
+    "zeroKnowledgeTransmission": "Zero-Knowledge Transmission",
+    "encryptingPayload": "Encrypting Payload...",
+    "selectReason": "Select a reason",
+    "details": "Details",
+    "explainIssue": "Explain the issue and provide supporting facts.",
+    "contactEmail": "Contact email",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "title": "Title",
+    "thanksForSuggestion": "Thanks for your suggestion!",
+    "redirecting": "Redirecting to suggestions list…",
+    "kb": "KB",
+    "removeFile": "Remove file",
+    "emailPlaceholder": "you@example.com"
   }
 }
