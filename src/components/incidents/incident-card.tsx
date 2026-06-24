@@ -179,23 +179,34 @@ export function IncidentCard({
           {/* Timeline indicator */}
           <TimelineIndicator status={incident.status as IncidentStatus} t={t} />
           <div className="text-fg-muted mt-4 flex items-center justify-between text-xs">
-            <div className="flex items-center gap-4">
-              <span className="inline-flex items-center gap-1">
-                <Clock className="h-3.5 w-3.5" aria-hidden="true" />
-                {formatDate(new Date(incident.incident_date), locale)}
-              </span>
-              <motion.span
-                whileHover={{ scale: 1.15 }}
-                className="inline-flex cursor-pointer items-center gap-1"
-              >
-                <ThumbsUp className="h-3.5 w-3.5" aria-hidden="true" />
-                {incident.vote_count}
-              </motion.span>
-              <span className="inline-flex items-center gap-1">
-                <MessageSquare className="h-3.5 w-3.5" aria-hidden="true" />
-                {incident.evidence_count}
-              </span>
-              <div className="ml-1 flex items-center gap-2 border-l border-white/10 pl-3">
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex items-center gap-3">
+                <span className="inline-flex items-center gap-1">
+                  <Clock className="h-3.5 w-3.5" aria-hidden="true" />
+                  {formatDate(new Date(incident.incident_date), locale)}
+                </span>
+                <Link
+                  href={`/incidents/${incident.id}#affected`}
+                  className="text-fg-secondary hover:border-brand-500/30 hover:bg-brand-500/10 hover:text-brand-400 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-white/5 bg-white/5 px-2.5 py-1 text-xs font-semibold transition-all"
+                >
+                  <ThumbsUp className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>{t("me_too", { defaultValue: "Ben de Yaşadım" })}</span>
+                  <span className="ml-1 rounded bg-white/10 px-1.5 py-0.5 text-[10px]">
+                    {incident.vote_count}
+                  </span>
+                </Link>
+                <Link
+                  href={`/incidents/${incident.id}#comments`}
+                  className="text-fg-secondary inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-white/5 bg-white/5 px-2.5 py-1 text-xs font-semibold transition-all hover:border-cyan-500/30 hover:bg-cyan-500/10 hover:text-cyan-400"
+                >
+                  <MessageSquare className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>{t("comment_action", { defaultValue: "Yorum Yap" })}</span>
+                  <span className="ml-1 rounded bg-white/10 px-1.5 py-0.5 text-[10px]">
+                    {incident.evidence_count}
+                  </span>
+                </Link>
+              </div>
+              <div className="flex items-center gap-2 border-l border-white/10 pl-3">
                 {/* X */}
                 <motion.a
                   whileHover={{ scale: 1.2, y: -1 }}
@@ -254,7 +265,7 @@ export function IncidentCard({
                 </motion.a>
               </div>
             </div>
-            <span>
+            <span className="ml-4 whitespace-nowrap">
               {t("by")} {incident.author_name ?? t("anonymous")}
             </span>
           </div>
