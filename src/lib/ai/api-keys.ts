@@ -8,6 +8,7 @@ export async function resolveApiKey(provider: string, envVar: string): Promise<s
   // 1. Try to read from the public.api_keys table using admin client (bypasses RLS)
   try {
     const admin = createAdminClient();
+    const dbProvider = provider === "vertex" ? "google_vertex" : provider;
     const { data } = await (
       admin as unknown as {
         from: (name: string) => {
@@ -24,7 +25,7 @@ export async function resolveApiKey(provider: string, envVar: string): Promise<s
     )
       .from("api_keys")
       .select("api_key")
-      .eq("provider", provider)
+      .eq("provider", dbProvider)
       .single();
 
     if (data && data.api_key) {
@@ -45,6 +46,9 @@ export async function resolveApiKey(provider: string, envVar: string): Promise<s
   }
   if (provider === "huggingface" && process.env.HF_API_KEY) {
     return process.env.HF_API_KEY;
+  }
+  if ((provider === "vertex" || provider === "google_vertex") && process.env.VERTEX_API_KEY) {
+    return process.env.VERTEX_API_KEY;
   }
 
   return null;
