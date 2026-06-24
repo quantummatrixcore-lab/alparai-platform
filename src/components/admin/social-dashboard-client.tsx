@@ -13,7 +13,6 @@ import {
   Edit3,
   Copy,
   ExternalLink,
-  Clock,
   Check,
   AlertCircle,
   Linkedin,
@@ -101,7 +100,6 @@ export function SocialDashboardClient({
   initialTemplates,
   initialAssets: _initialAssets,
 }: Props) {
-  const tCommon = useTranslations("common");
   const tAdmin = useTranslations("admin");
   const [posts, setPosts] = useState<SocialPost[]>(initialPosts);
   const [activeTab, setActiveTab] = useState<"calendar" | "drafts" | "templates" | "analytics">(
@@ -297,7 +295,10 @@ export function SocialDashboardClient({
         <div>
           <h1 className="text-fg-primary text-3xl font-bold tracking-tight">Growth Hub</h1>
           <p className="text-fg-muted mt-2 max-w-2xl text-sm">
-            {tAdmin("growthHubDesc", { defaultValue: "Manage your AI safety calendar, pre-written manifesto campaigns, templates, and track published analytics." })}
+            {tAdmin("growthHubDesc", {
+              defaultValue:
+                "Manage your AI safety calendar, pre-written manifesto campaigns, templates, and track published analytics.",
+            })}
           </p>
         </div>
         <div>
@@ -348,7 +349,9 @@ export function SocialDashboardClient({
                 onChange={(e) => setPlatformFilter(e.target.value)}
                 className="bg-bg-secondary border-border-subtle text-fg-primary rounded-lg border px-2 py-1 text-xs focus:outline-none"
               >
-                <option value="all">{tAdmin("allPlatforms", { defaultValue: "All Platforms" })}</option>
+                <option value="all">
+                  {tAdmin("allPlatforms", { defaultValue: "All Platforms" })}
+                </option>
                 <option value="linkedin">LinkedIn</option>
                 <option value="x">X / Twitter</option>
                 <option value="instagram">Instagram</option>
@@ -439,7 +442,11 @@ export function SocialDashboardClient({
               {posts.filter((p) => p.status === "draft").length === 0 && (
                 <div className="border-border-subtle col-span-full rounded-2xl border border-dashed p-12 text-center">
                   <AlertCircle className="text-fg-muted mx-auto mb-3 h-8 w-8" />
-                  <div className="text-fg-muted py-8 text-center text-sm">{tAdmin("noCampaignDrafts", { defaultValue: "No campaign drafts currently in queue." })}</div>
+                  <div className="text-fg-muted py-8 text-center text-sm">
+                    {tAdmin("noCampaignDrafts", {
+                      defaultValue: "No campaign drafts currently in queue.",
+                    })}
+                  </div>
                 </div>
               )}
             </div>
@@ -648,7 +655,9 @@ export function SocialDashboardClient({
                   {posts.filter((p) => p.status === "published").length === 0 && (
                     <tr>
                       <td colSpan={7} className="text-fg-muted py-8 text-center">
-                        {tAdmin("noPublishedPosts", { defaultValue: "No published posts listed for analytics tracking." })}
+                        {tAdmin("noPublishedPosts", {
+                          defaultValue: "No published posts listed for analytics tracking.",
+                        })}
                       </td>
                     </tr>
                   )}
@@ -714,7 +723,9 @@ export function SocialDashboardClient({
 
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <label className="text-fg-primary block text-sm font-semibold mb-2">{tAdmin("postContent", { defaultValue: "Post Content" })}</label>
+                  <label className="text-fg-primary mb-2 block text-sm font-semibold">
+                    {tAdmin("postContent", { defaultValue: "Post Content" })}
+                  </label>
                   <span
                     className={cn(
                       "text-[10px] font-semibold",

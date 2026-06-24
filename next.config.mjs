@@ -1,7 +1,3 @@
-
-
-
-
 /**
  * Security headers applied to all routes.
  */
