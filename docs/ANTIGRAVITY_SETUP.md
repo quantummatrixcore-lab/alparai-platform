@@ -1,41 +1,41 @@
 # ALPAR AI - Google Antigravity Setup & Auto-Fix Guide
 
-## 1. GENEL BAKIŞ
+## 1. OVERVIEW
 
-Google Antigravity, AlparAI platformunun otonom yazılım ve düzeltme (auto-fix) motorudur. Çoklu yapay zeka analiz raporlarından gelen bulguları okuyarak, kod zafiyetlerini, i18n eksikliklerini ve performans darboğazlarını otomatik olarak düzeltmek üzere yapılandırılmıştır.
+Google Antigravity is the autonomous software development and auto-fix engine of the AlparAI platform. It is configured to read findings from multi-model AI analysis reports and automatically correct code vulnerabilities, i18n deficiencies, and performance bottlenecks.
 
 ---
 
-## 2. KULLANIM VE TETİKLEME
+## 2. USAGE AND TRIGGERS
 
-Antigravity, projede iki ana yöntemle tetiklenebilir:
+Antigravity can be triggered in the project in two main ways:
 
-### A. Yerel Tetikleme (Local Execution)
+### A. Local Execution
 
-Geliştirme ortamında otonom düzeltme döngüsünü başlatmak için:
+To start the autonomous correction loop in the development environment:
 
 ```bash
-# 1. Bağımlılıkları ve çevre değişkenlerini doğrula
+# 1. Verify dependencies and environment variables
 npm run typecheck
 
-# 2. Antigravity otonom analiz ve düzeltme scriptini çalıştır
+# 2. Run the Antigravity autonomous analysis and correction script
 npm run dev
 ```
 
-### B. CI/CD Otomasyonu (GitHub Actions)
+### B. CI/CD Automation (GitHub Actions)
 
-Her pazartesi saat 09:00'da veya manuel tetiklendiğinde çalışan otomatik düzeltme iş akışı `.github/workflows/antigravity-auto-fix.yml` dosyasında tanımlıdır. Bu akış:
+The auto-fix workflow that runs every Monday at 09:00 or when triggered manually is defined in the `.github/workflows/antigravity-auto-fix.yml` file. This workflow:
 
-1. Son değişiklikleri kontrol eder ve testleri çalıştırır.
-2. Çoklu model analiz raporlarını konsolide eder.
-3. Kritik (P0) ve Yüksek (P1) sorunlar için kodu otomatik olarak yamalar, testleri çalıştırır ve başarılıysa PR (Pull Request) oluşturur.
+1. Checks the latest changes and runs tests.
+2. Consolidates multi-model analysis reports.
+3. Automatically patches the code for Critical (P0) and High (P1) issues, runs tests, and creates a Pull Request (PR) if successful.
 
 ---
 
-## 3. GÜVENLİK VE SINIRLANDIRMALAR (GUARDRAILS)
+## 3. SECURITY AND GUARDRAILS
 
-Antigravity otonom olarak kod yazarken aşağıdaki kurallarla sınırlandırılmıştır:
+Antigravity is limited by the following rules when writing code autonomously:
 
-- **PII Guardian:** Hiçbir yama veya loglama işlemi, veritabanına ya da üçüncü taraf servislere maskelenmemiş kullanıcı PII'si (TC Kimlik, E-posta, Telefon vb.) sızdıramaz.
-- **RLS Güvenliği:** Supabase veri katmanındaki satır seviyesi güvenlik (RLS) politikalarını ve veritabanı şemasını bypass eden hiçbir SQL işlemi gerçekleştirilemez.
-- **Rollback Garantisi:** Eğer yazılan kod sonrasında `npm run typecheck`, `npm run lint` veya `npx vitest run` testlerinden herhangi biri başarısız olursa, Antigravity tüm değişiklikleri anında geri alır (Rollback).
+- **PII Guardian:** No patch or logging operation may leak unmasked user PII (National ID, Email, Phone, etc.) to the database or third-party services.
+- **RLS Security:** No SQL operations that bypass Row Level Security (RLS) policies or the database schema in the Supabase data layer can be executed.
+- **Rollback Guarantee:** If any of the tests in `npm run typecheck`, `npm run lint`, or `npx vitest run` fail after code is written, Antigravity instantly rolls back all changes.

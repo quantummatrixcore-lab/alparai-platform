@@ -10,27 +10,27 @@ Authentication uses Supabase Auth (Google OAuth + Magic Link). Session cookies a
 
 All endpoints are rate-limited via Upstash Redis (sliding window).
 
-| Endpoint | Limit | Window |
-|----------|-------|--------|
-| Incident submission | 5 | 1 hour |
-| Suggestion submission | 10 | 1 day |
-| Auth sign-in | 10 | 15 min |
-| API general | 100 | 1 min |
+| Endpoint              | Limit | Window |
+| --------------------- | ----- | ------ |
+| Incident submission   | 5     | 1 hour |
+| Suggestion submission | 10    | 1 day  |
+| Auth sign-in          | 10    | 15 min |
+| API general           | 100   | 1 min  |
 
 ## Error Codes
 
-| Code | Description |
-|------|-------------|
-| `UNAUTHORIZED` | Authentication required |
-| `FORBIDDEN` | Insufficient permissions |
-| `VALIDATION_ERROR` | Input validation failed |
-| `RATE_LIMITED` | Rate limit exceeded |
-| `NOT_FOUND` | Resource not found |
-| `INTERNAL_ERROR` | Unexpected server error |
-| `PII_DETECTED` | Personal data detected and redacted |
-| `FILE_TOO_LARGE` | Upload exceeds 10MB limit |
-| `INVALID_FILE_TYPE` | Unsupported file format |
-| `DUPLICATE_VOTE` | User already voted |
+| Code                | Description                         |
+| ------------------- | ----------------------------------- |
+| `UNAUTHORIZED`      | Authentication required             |
+| `FORBIDDEN`         | Insufficient permissions            |
+| `VALIDATION_ERROR`  | Input validation failed             |
+| `RATE_LIMITED`      | Rate limit exceeded                 |
+| `NOT_FOUND`         | Resource not found                  |
+| `INTERNAL_ERROR`    | Unexpected server error             |
+| `PII_DETECTED`      | Personal data detected and redacted |
+| `FILE_TOO_LARGE`    | Upload exceeds 10MB limit           |
+| `INVALID_FILE_TYPE` | Unsupported file format             |
+| `DUPLICATE_VOTE`    | User already voted                  |
 
 ---
 
@@ -44,20 +44,20 @@ All endpoints are rate-limited via Upstash Redis (sliding window).
 
 **FormData fields:**
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `title` | string | Yes | 8-200 chars |
-| `description` | string | Yes | 20-10000 chars |
-| `category` | enum | Yes | hallucination, bias, privacy, security, misinformation, harassment, manipulation, inaccessibility, copyright, other |
-| `severity` | enum | Yes | low, medium, high, critical |
-| `provider_id` | uuid | No | AI provider ID |
-| `model_id` | uuid | No | AI model ID |
-| `incident_date` | date | No | YYYY-MM-DD |
-| `is_anonymous` | checkbox | No | Default: off |
-| `consent_truth` | checkbox | Yes | Truthfulness confirmation |
-| `consent_anonymous` | checkbox | Yes | Anonymous publication consent |
-| `consent_age` | checkbox | Yes | Age 18+ confirmation |
-| `consent_terms` | checkbox | Yes | ToS acceptance |
+| Field               | Type     | Required | Description                                                                                                         |
+| ------------------- | -------- | -------- | ------------------------------------------------------------------------------------------------------------------- |
+| `title`             | string   | Yes      | 8-200 chars                                                                                                         |
+| `description`       | string   | Yes      | 20-10000 chars                                                                                                      |
+| `category`          | enum     | Yes      | hallucination, bias, privacy, security, misinformation, harassment, manipulation, inaccessibility, copyright, other |
+| `severity`          | enum     | Yes      | low, medium, high, critical                                                                                         |
+| `provider_id`       | uuid     | No       | AI provider ID                                                                                                      |
+| `model_id`          | uuid     | No       | AI model ID                                                                                                         |
+| `incident_date`     | date     | No       | YYYY-MM-DD                                                                                                          |
+| `is_anonymous`      | checkbox | No       | Default: off                                                                                                        |
+| `consent_truth`     | checkbox | Yes      | Truthfulness confirmation                                                                                           |
+| `consent_anonymous` | checkbox | Yes      | Anonymous publication consent                                                                                       |
+| `consent_age`       | checkbox | Yes      | Age 18+ confirmation                                                                                                |
+| `consent_terms`     | checkbox | Yes      | ToS acceptance                                                                                                      |
 
 **Returns:** `{ ok: boolean; error?: string; formError?: string; fieldErrors?: Record<string, string[]>; incidentId?: string }`
 
@@ -103,6 +103,7 @@ All endpoints are rate-limited via Upstash Redis (sliding window).
 
 **Auth:** Moderator/Admin
 **Parameters:**
+
 - `incidentId: string`
 - `decision: "approve" | "reject"`
 - `moderationNote?: string` (max 2000 chars)
@@ -156,6 +157,7 @@ All endpoints are rate-limited via Upstash Redis (sliding window).
 
 **Auth:** None
 **Parameters:**
+
 - `target_url: string` (URL)
 - `reason: string` (2-100 chars)
 - `details: string` (20-4000 chars)

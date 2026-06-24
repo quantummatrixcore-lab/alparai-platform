@@ -102,19 +102,19 @@ ai_providers  ── ai_models
 
 ### Row Level Security (RLS)
 
-| Table              | Anon  | Authenticated user                | Moderator / Admin        |
-| ------------------ | ----- | --------------------------------- | ------------------------ |
-| `incidents`        | read published | read own + published, insert own | read all, update status  |
-| `evidence`         | —     | read public, insert own           | read all                 |
-| `incident_votes`   | —     | insert/update/delete own          | read all                 |
-| `ai_providers`     | read  | read                              | write                    |
-| `ai_models`        | read  | read                              | write                    |
-| `ai_provider_responses` | read published | — | read all, write all |
-| `suggestions`      | read  | read, insert, update own          | read all, update any     |
-| `suggestion_votes` | —     | insert/delete own                 | read all                 |
-| `takedown_requests`| —     | insert                            | read all, update status  |
-| `consent_log`      | —     | insert own                        | read all                 |
-| `audit_log`        | —     | —                                 | read all (admin)         |
+| Table                   | Anon           | Authenticated user               | Moderator / Admin       |
+| ----------------------- | -------------- | -------------------------------- | ----------------------- |
+| `incidents`             | read published | read own + published, insert own | read all, update status |
+| `evidence`              | —              | read public, insert own          | read all                |
+| `incident_votes`        | —              | insert/update/delete own         | read all                |
+| `ai_providers`          | read           | read                             | write                   |
+| `ai_models`             | read           | read                             | write                   |
+| `ai_provider_responses` | read published | —                                | read all, write all     |
+| `suggestions`           | read           | read, insert, update own         | read all, update any    |
+| `suggestion_votes`      | —              | insert/delete own                | read all                |
+| `takedown_requests`     | —              | insert                           | read all, update status |
+| `consent_log`           | —              | insert own                       | read all                |
+| `audit_log`             | —              | —                                | read all (admin)        |
 
 ## Security model
 
@@ -234,13 +234,13 @@ erDiagram
 
 ## RLS Policy Matrix
 
-| Table | anon | user (own) | user (other) | moderator | admin |
-|-------|------|------------|--------------|-----------|-------|
-| users | — | R/U own | R public | R all | R/U/D all |
-| incidents | R published | R/U/D own | R published | R/U all | R/U/D all |
-| incident_votes | — | C/R/D own | — | R all | R all |
-| suggestions | R all | C/R own | R all | R/U all | R/U/D all |
-| consent_log | — | C/R own | — | — | R all |
-| takedown_requests | — | C own | — | R/U all | R/U/D all |
-| audit_log | — | — | — | R all | R all |
-| evidence | R public | C own | R public | R all | R/U/D all |
+| Table             | anon        | user (own) | user (other) | moderator | admin     |
+| ----------------- | ----------- | ---------- | ------------ | --------- | --------- |
+| users             | —           | R/U own    | R public     | R all     | R/U/D all |
+| incidents         | R published | R/U/D own  | R published  | R/U all   | R/U/D all |
+| incident_votes    | —           | C/R/D own  | —            | R all     | R all     |
+| suggestions       | R all       | C/R own    | R all        | R/U all   | R/U/D all |
+| consent_log       | —           | C/R own    | —            | —         | R all     |
+| takedown_requests | —           | C own      | —            | R/U all   | R/U/D all |
+| audit_log         | —           | —          | —            | R all     | R all     |
+| evidence          | R public    | C own      | R public     | R all     | R/U/D all |

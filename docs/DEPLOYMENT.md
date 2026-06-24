@@ -14,23 +14,23 @@
 
 ### Required (build & runtime)
 
-| Variable | Description | Where |
-|----------|-------------|-------|
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL | Vercel env |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon/public key | Vercel env |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-only) | Vercel env (secret) |
-| `UPSTASH_REDIS_REST_URL` | Upstash Redis REST URL | Vercel env |
-| `UPSTASH_REDIS_REST_TOKEN` | Upstash Redis REST token | Vercel env (secret) |
-| `NEXT_PUBLIC_APP_URL` | Production URL (https://alparai.online) | Vercel env |
+| Variable                        | Description                             | Where               |
+| ------------------------------- | --------------------------------------- | ------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Supabase project URL                    | Vercel env          |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon/public key                | Vercel env          |
+| `SUPABASE_SERVICE_ROLE_KEY`     | Supabase service role key (server-only) | Vercel env (secret) |
+| `UPSTASH_REDIS_REST_URL`        | Upstash Redis REST URL                  | Vercel env          |
+| `UPSTASH_REDIS_REST_TOKEN`      | Upstash Redis REST token                | Vercel env (secret) |
+| `NEXT_PUBLIC_APP_URL`           | Production URL (https://alparai.online) | Vercel env          |
 
 ### Optional
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `RESEND_API_KEY` | Resend email API key | Console logging |
-| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Plausible analytics domain | Disabled |
-| `SENTRY_DSN` | Sentry error tracking DSN | Disabled |
-| `SENTRY_AUTH_TOKEN` | Sentry auth token for source maps | Disabled |
+| Variable                       | Description                       | Default         |
+| ------------------------------ | --------------------------------- | --------------- |
+| `RESEND_API_KEY`               | Resend email API key              | Console logging |
+| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Plausible analytics domain        | Disabled        |
+| `SENTRY_DSN`                   | Sentry error tracking DSN         | Disabled        |
+| `SENTRY_AUTH_TOKEN`            | Sentry auth token for source maps | Disabled        |
 
 ## Deployment Checklist
 
@@ -77,11 +77,13 @@ vercel --prod
 ## Rollback Procedure
 
 1. **Vercel rollback:**
+
    ```bash
    vercel rollback
    ```
 
 2. **Database rollback:**
+
    ```bash
    # Revert last migration
    supabase migration repair --status reverted <migration_id>
@@ -95,13 +97,13 @@ vercel --prod
 
 ## Monitoring
 
-| System | URL | Purpose |
-|--------|-----|---------|
-| Vercel Dashboard | vercel.com | Deployment status, logs |
-| Supabase Dashboard | supabase.com | Database, auth, storage |
-| Upstash Console | console.upstash.com | Redis metrics, rate limiting |
-| Sentry | sentry.io | Error tracking |
-| Plausible | plausible.io | Privacy-friendly analytics |
+| System             | URL                 | Purpose                      |
+| ------------------ | ------------------- | ---------------------------- |
+| Vercel Dashboard   | vercel.com          | Deployment status, logs      |
+| Supabase Dashboard | supabase.com        | Database, auth, storage      |
+| Upstash Console    | console.upstash.com | Redis metrics, rate limiting |
+| Sentry             | sentry.io           | Error tracking               |
+| Plausible          | plausible.io        | Privacy-friendly analytics   |
 
 ## Incident Response
 
@@ -117,14 +119,15 @@ vercel --prod
 
 Rotate all secrets every 90 days:
 
-| Secret | Rotation Method |
-|--------|----------------|
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase Dashboard → Settings → API |
-| `UPSTASH_REDIS_REST_TOKEN` | Upstash Console → Database → Reset Token |
-| `RESEND_API_KEY` | Resend Dashboard → API Keys → Regenerate |
-| `SENTRY_AUTH_TOKEN` | Sentry → Settings → Auth Tokens |
+| Secret                      | Rotation Method                          |
+| --------------------------- | ---------------------------------------- |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase Dashboard → Settings → API      |
+| `UPSTASH_REDIS_REST_TOKEN`  | Upstash Console → Database → Reset Token |
+| `RESEND_API_KEY`            | Resend Dashboard → API Keys → Regenerate |
+| `SENTRY_AUTH_TOKEN`         | Sentry → Settings → Auth Tokens          |
 
 After rotation:
+
 1. Update Vercel environment variables
 2. Trigger redeployment
 3. Verify health endpoint

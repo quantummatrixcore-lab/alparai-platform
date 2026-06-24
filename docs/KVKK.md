@@ -1,52 +1,53 @@
 # KVKK Compliance
 
-> 6698 sayılı Kişisel Verilerin Korunması Kanunu — Uyumluluk Notları
+> Law No. 6698 on the Protection of Personal Data (KVKK) — Compliance Notes
 
-## Veri sorumlusu
+## Data Controller
 
-ALPAR AI ("Veri Sorumlusu" sıfatıyla) aşağıdaki kişisel verileri işler.
+ALPAR AI (acting as "Data Controller") processes the following personal data.
 
-## İşlenen veri kategorileri
+## Processed Data Categories
 
-| Kategori | Veri türü                                | İşleme amacı                               | Hukuki sebep (KVKK m.5/6)         |
-| -------- | ---------------------------------------- | ------------------------------------------ | --------------------------------- |
-| Kimlik   | Ad, e-posta, OAuth sağlayıcı meta verisi | Hesap oluşturma, oturum yönetimi           | Açık rıza (m.5/1)                 |
-| İçerik   | Olay başlık/açıklaması, kanıt dosyaları  | Platform işletme, moderasyon               | Açık rıza (m.5/1) + Meşru menfaat |
-| İletişim | IP, kullanıcı aracısı (hash'lenmiş)      | Güvenlik, hız sınırlaması, kötüye kullanım | Meşru menfaat (m.5/2-f)           |
-| Çerez    | Oturum çerezi, tercih çerezi             | Oturum yönetimi, kullanıcı tercihleri      | Açık rıza (m.5/1)                 |
+| Category | Data Type                                  | Purpose of Processing                     | Legal Basis (KVKK Art. 5/6)                       |
+| -------- | ------------------------------------------ | ----------------------------------------- | ------------------------------------------------- |
+| Identity | Name, email, OAuth provider metadata       | Account creation, session management      | Explicit consent (Art. 5/1)                       |
+| Content  | Incident title/description, evidence files | Platform operation, moderation            | Explicit consent (Art. 5/1) + Legitimate interest |
+| Contact  | IP, user agent (hashed)                    | Security, rate limiting, abuse prevention | Legitimate interest (Art. 5/2-f)                  |
+| Cookie   | Session cookie, preference cookie          | Session management, user preferences      | Explicit consent (Art. 5/1)                       |
 
-## Maskeleme (PII Guardian)
+## Masking (PII Guardian)
 
-Başvurular, depolanmadan önce **PII Guardian** tarafından taranır. Tespit edilen kişisel veriler (e-posta, telefon, TC, IBAN, kredi kartı, API anahtarı vb.) otomatik olarak maskelenir. Ham metin hiçbir zaman herkese açık kolonlara yazılmaz.
+Submissions are scanned by **PII Guardian** before storage. Detected personal data (email, phone, national ID, IBAN, credit card, API keys, etc.) are automatically masked. Raw text is never written to public columns.
 
-## Veri saklama
+## Data Retention
 
-- Hesap verisi: hesap silinene kadar.
-- Yayınlanan olaylar: PII maskelenmiş olarak süresiz (şeffaflık amacıyla).
-- Reddedilen olaylar: 90 gün sonra silinir.
-- Denetim günlüğü: 2 yıl.
-- Yedekler: 30 gün.
+- Account data: until account deletion.
+- Published incidents: indefinitely with PII masked (for transparency purposes).
+- Rejected incidents: deleted after 90 days.
+- Audit log: 2 years.
+- Backups: 30 days.
 
-## Veri sahibinin hakları (KVKK m.11)
+## Rights of the Data Subject (KVKK Art. 11)
 
-- Kişisel verilerinizin işlenip işlenmediğini öğrenme
-- İşlenmişse buna ilişkin bilgi talep etme
-- İşlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenme
-- Yurt içinde/dışında aktarıldığı 3. kişileri öğrenme
-- Eksik/yanlış işlenen verilerin düzeltilmesini isteme
-- Şartlar oluştuğunda silinmesini/yok edilmesini isteme
-- Otomatik sistemlerle aşağılayıcı sonuç doğan analizlere itiraz etme
+- To learn whether your personal data is being processed
+- To request information if processed
+- To learn the purpose of processing and whether it is used in accordance with the purpose
+- To know the third parties to whom it is transferred domestically or abroad
+- To request correction of incomplete/incorrectly processed data
+- To request deletion/destruction when the conditions are met
+- To object to analysis with automated systems that produces a negative result
+- To claim compensation in case of damage due to unlawful processing
 
-## Başvuru
+## Application
 
-Haklarınızı kullanmak için **privacy@alparai.com** adresine kimliğinizi tevsik eden belge ile yazılı başvuru yapın. 30 gün içinde yanıtlanır.
+To exercise your rights, please submit a written application to **privacy@alparai.com** with a document verifying your identity. It will be responded to within 30 days.
 
-KVKK Kurulu'na şikâyet hakkınız saklıdır (https://www.kvkk.gov.tr).
+Your right to complain to the Personal Data Protection Board (KVKK Board) is reserved (https://www.kvkk.gov.tr).
 
-## Uluslararası aktarım
+## International Transfer
 
-Veriler AB (Frankfurt) bölgesinde barındırılır. AEA dışı aktarımlar için standart sözleşme maddeleri (SCC) kullanılır.
+Data is hosted in the EU (Frankfurt) region. Standard Contractual Clauses (SCC) are used for transfers outside the EEA.
 
-## Çocuklar
+## Children
 
-Platform 18+ kullanıma yöneliktir. Kayıt olarak 18+ olduğunuzu onaylarsınız.
+The platform is intended for 18+ use. By registering, you confirm that you are 18+.

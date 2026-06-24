@@ -1,8 +1,8 @@
 # ALPAR AI - AI Multi-Model Analysis Integration Guide
 
-## 1. MİMARİ BAKIŞ
+## 1. ARCHITECTURAL OVERVIEW
 
-AlparAI, yapay zeka sağlayıcılarının ve modellerinin davranışlarını denetleyen bağımsız bir derecelendirme altyapısıdır (AI Moody's). Bu entegrasyon kılavuzu, platformun çoklu yapay zeka model analizlerinin nasıl toplandığını, konsolide edildiğini ve çapraz denetim (debate) motoruna nasıl entegre edildiğini açıklar.
+AlparAI is an independent rating infrastructure that audits the behavior of AI providers and models (an "AI Moody's"). This integration guide explains how the platform's multi-model AI analyses are collected, consolidated, and integrated into the cross-audit (debate) engine.
 
 ```
 ┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
@@ -33,26 +33,26 @@ AlparAI, yapay zeka sağlayıcılarının ve modellerinin davranışlarını den
 
 ---
 
-## 2. ÇAPRAZ DENETİM (DEBATE) AKIŞI
+## 2. CROSS-AUDIT (DEBATE) FLOW
 
-Yapay zeka modellerinin bağımsız analizleri, tek yönlü bir puanlamadan ibaret kalmaz. Sistem, modelleri karşılıklı olarak argümanlarını savunmaya zorlayan 4 aşamalı bir debate protokolü çalıştırır:
+The independent analyses of AI models are not limited to one-way scoring. The system runs a 4-phase debate protocol that forces models to mutually defend their arguments:
 
-1. **Bağımsız Değerlendirme (Turn 1 - Independent Triage):** Her model olayı kendi kriterlerine göre analiz eder ve ilk güven/doğruluk skorunu atar.
-2. **Sorgulama (Turn 2 - Critique/Challenge):** Modeller birbirlerinin analizlerini inceleyerek halüsinasyon, önyargı veya mantık hatalarını ortaya çıkaran kritik sorular sorarlar.
-3. **Savunma (Turn 3 - Rebuttal/Defense):** Modeller kendilerine yöneltilen eleştirilere cevap verir. Gerekirse kendi puanlarını savunurlar ya da hatayı kabul edip puanlarını güncellerler.
-4. **Nihai Karar (Turn 4 - Supreme Court Adjudication):** Baş Hakem model (Claude 3.5 Sonnet / Gemini Pro), tüm transkripti sentezleyerek nihai `TruthScore` değerini hesaplar.
-
----
-
-## 3. ŞEFFAFLIK ÜLTİMATOMU (TRANSPARENCY ULTIMATUM)
-
-AlparAI derecelendirme ilkeleri gereğince:
-
-- Eğer bir model sağlayıcısı (OpenAI, Google, Meta, Microsoft, Anthropic, xAI), AlparAI denetim motorundan gelen istekleri kısıtlar (rate-limit), engeller veya yavaşlatırsa, o sağlayıcının tüm modelleri otomatik olarak **Transparency & Reliability** kategorisinde en düşük puana (F rating) çekilir.
-- Arayüzde bu modele ait profil sayfasında genel bir **"TRANSPARENCY WARNING: Provider restricts independent audits"** uyarı etiketi gösterilir.
+1. **Independent Evaluation (Turn 1 - Independent Triage):** Each model analyzes the incident according to its own criteria and assigns an initial trust/accuracy score.
+2. **Challenge (Turn 2 - Critique/Challenge):** Models examine each other's analyses and ask critical questions to expose hallucinations, biases, or logical errors.
+3. **Defense (Turn 3 - Rebuttal/Defense):** Models respond to the critiques directed at them. They either defend their scores or accept errors and update their scores accordingly.
+4. **Final Decision (Turn 4 - Supreme Court Adjudication):** The Head Judge model (Claude 3.5 Sonnet / Gemini Pro) synthesizes the entire transcript and calculates the final `TruthScore`.
 
 ---
 
-## 4. DİNAMİK KAYNAKLAR (DYNAMIC SOURCING)
+## 3. TRANSPARENCY ULTIMATUM
 
-Denetim motorunda kullanılan değerlendirme promptları statik benchmark veri setlerinden beslenmez. Tam aksine, gerçek dünyada kullanıcılar tarafından bildirilmiş, doğrulanmış ve maskelenmiş **canlı yapay zeka hata vakaları (live mutations of real-world failures)** üzerinden dinamik olarak türetilir. Bu sayede yapay zeka şirketlerinin önceden eğitilmiş verilerle denetimleri manipüle etmesinin önüne geçilir.
+In accordance with AlparAI rating principles:
+
+- If an AI provider (OpenAI, Google, Meta, Microsoft, Anthropic, xAI) rate-limits, blocks, or slows down requests from the AlparAI audit engine, all models of that provider are automatically downgraded to the lowest rating (F rating) in the **Transparency & Reliability** category.
+- A prominent warning label **"TRANSPARENCY WARNING: Provider restricts independent audits"** is displayed on the provider's profile page in the UI.
+
+---
+
+## 4. DYNAMIC SOURCING
+
+Evaluation prompts used in the audit engine are not populated from static benchmark datasets. Instead, they are dynamically derived from **live mutations of real-world failures** reported, verified, and masked by users. This prevents AI companies from manipulating audits with pre-trained data.

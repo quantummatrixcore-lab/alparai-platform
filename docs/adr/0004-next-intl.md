@@ -15,10 +15,11 @@ Use **next-intl** with `localePrefix: "always"`. All public routes are prefixed 
 
 ## Consequences
 
-+ Each URL is locale-explicit.
-+ SEO is per-locale.
-- Slightly longer URLs (`/en/incidents` vs `/incidents`).
-- We must handle the root URL `/` (default locale redirect).
+- Each URL is locale-explicit.
+- SEO is per-locale.
+
+* Slightly longer URLs (`/en/incidents` vs `/incidents`).
+* We must handle the root URL `/` (default locale redirect).
 
 ## Setup
 

@@ -1,64 +1,54 @@
 ---
 audit_id: "ALPAR-AUDIT-2026-06-23-claude-sonnet-4.6-v6"
 date: "2026-06-23"
-model: "claude-sonnet-4-6" # denetimi üreten model
-model_note: "" # opsiyonel: model ayarı, persona vb.
-site_commit_or_deploy_tag: "" # ÖNEMLİ: hangi git commit / deploy denetlendi? boşsa yazın "bilinmiyor"
-previous_audit_id: "ALPAR-AUDIT-2026-0X-XX-..." # bir önceki denetimin ID'si (zincir kurmak için)
-overall_score: 0 # /1000, MASTER_CHECKLIST.md'deki güncel rubriğe göre
+model: "claude-sonnet-4-6" # model generating the audit
+model_note: "" # optional: model settings, persona, etc.
+site_commit_or_deploy_tag: "" # IMPORTANT: which git commit / deploy was audited? if unknown, specify "unknown"
+previous_audit_id: "ALPAR-AUDIT-2026-0X-XX-..." # ID of the previous audit (to build a chain)
+overall_score: 0 # /1000, according to the current rubric in MASTER_CHECKLIST.md
 verification_method: "live-browse | html-fetch | screenshot-review | manual-paste | unverified"
 locales_checked: ["en", "tr"]
 viewports_checked: ["desktop", "mobile(<768px)"]
 ---
 
-# ALPAR AI Denetim Raporu — {tarih} — {model adı}
+# ALPAR AI Audit Report — {date} — {model name}
 
-> Bu dosyayı doldurduktan sonra `reports/{tarih}_{model}_v{n}.md` olarak kaydedin
-> ve bulgularınızı `MASTER_CHECKLIST.md`'ye işleyin (yeni ID ekleyin veya mevcut
-> ID'lerin durumunu güncelleyin). Bu dosyanın kendisi Antigravity'ye DOĞRUDAN
-> görev kaynağı olarak verilmemelidir — sadece arşiv/kanıttır.
+> Save this file as `reports/{date}_{model}_v{n}.md` after filling it out.
+> Register your findings in `MASTER_CHECKLIST.md` (add a new ID or update
+> the status of existing IDs). This file itself should NOT be given DIRECTLY
+> to Antigravity as a task source — it is strictly for archiving/evidence.
 
-## 0. Doğrulama Yöntemi (zorunlu, dürüst olun)
+## 0. Verification Method (mandatory, be honest)
 
-Bu denetimde siteye nasıl eriştiniz? (canlı tarayıcı / HTML fetch / kullanıcının
-yapıştırdığı ekran görüntüsü / yalnızca önceki raporlardan çıkarım / vb.)
-Hangi sayfalar, hangi dil(ler), hangi viewport(lar) GERÇEKTEN görüldü, hangileri
-görülemedi? Görülemeyenleri "CANLI DOĞRULAMA GEREKİYOR" olarak işaretleyin —
-tahmin etmeyin.
+How did you access the site in this audit? (live browser / HTML fetch / screenshot pasted by user / inferred only from previous reports / etc.)
+Which pages, which language(s), and which viewport(s) were ACTUALLY visited, and which were not? Mark the unvisited ones as "LIVE VERIFICATION REQUIRED" — do not guess.
 
-## 1. Bu Turda Doğrulanan Bulgular
+## 1. Verified Findings in This Round
 
-Her madde için: sayfa/alan, ne gözlemlendi, hangi kanıtla (ekran görüntüsü,
-HTML alıntısı, URL).
+For each item: page/field, what was observed, with what evidence (screenshot, HTML snippet, URL).
 
-## 2. MASTER_CHECKLIST.md'deki Önceki Maddelerin Durumu
+## 2. Status of Previous Items in MASTER_CHECKLIST.md
 
-| ID      | Önceki Durum | Bu Turda Gözlem                                       | Yeni Durum |
-| ------- | ------------ | ----------------------------------------------------- | ---------- |
-| ALP-001 | 🔴 Açık      | (hâlâ açık / artık 🟢 / artık ✅ / kontrol edilemedi) | ...        |
+| ID      | Previous Status | Observation in This Round                         | New Status |
+| ------- | --------------- | ------------------------------------------------- | ---------- |
+| ALP-001 | 🔴 Open         | (still open / now 🟢 / now ✅ / could not verify) | ...        |
 
-## 3. Yeni Tespit Edilen Sorunlar
+## 3. Newly Identified Issues
 
-| Geçici ID (taslak) | Sayfa/Alan | Açıklama | Önerilen Önem (P0/P1/P2) | Kanıt |
-| ------------------ | ---------- | -------- | ------------------------ | ----- |
-|                    |            |          |                          |       |
+| Temporary ID (draft) | Page/Field | Description | Recommended Severity (P0/P1/P2) | Evidence |
+| -------------------- | ---------- | ----------- | ------------------------------- | -------- |
+|                      |            |             |                                 |          |
 
-_Not: kesin ID, `MASTER_CHECKLIST.md`'ye eklenirken artan sırada verilir._
+_Note: The actual ID is assigned in ascending order when adding to `MASTER_CHECKLIST.md`._
 
-## 4. Bu Turda Doğrulanamayanlar
+## 4. Unverified Items in This Round
 
-Açıkça listeleyin — örn. "mobil viewport test edilemedi", "/tr/contact canlı
-açılamadı". Bu bölümü boş bırakmak, her şeyin doğrulandığı anlamına gelir —
-bu nedenle dürüst ve eksiksiz olun.
+List them clearly — e.g. "could not test mobile viewport", "could not load /tr/contact live". Leaving this section blank means everything was verified — so be honest and thorough.
 
-## 5. Skor Değişikliği ve Gerekçesi
+## 5. Score Changes and Rationale
 
-Önceki denetimin skoruna göre değişim varsa, HER puan değişikliğini somut bir
-gözleme bağlayın. "Genel olarak iyileşti" gibi gerekçesiz puan değişikliği kabul
-edilmez.
+If there is a change compared to the previous audit's score, tie EVERY point change to a concrete observation. Score changes without a concrete rationale, such as "improved overall", are not accepted.
 
-## 6. Antigravity İçin Önerilen Aksiyonlar
+## 6. Recommended Actions for Antigravity
 
-Her biri tek bir kod ajanı görevine dönüştürülebilecek kadar somut ve test
-edilebilir olmalı (bkz. örnek: "Hero sayaç sorgusuna `WHERE status='published'`
-filtresi ekle ve `/incidents` sayısıyla eşleştiğini doğrula").
+Each must be concrete and testable enough to be converted into a single code agent task (e.g., "Add a `WHERE status='published'` filter to the Hero stats query and verify that it matches the incident count on the `/incidents` page").

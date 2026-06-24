@@ -15,11 +15,12 @@ Use **Supabase** (managed Postgres + Auth + Storage) as the data tier. Use **Row
 
 ## Consequences
 
-+ Single source of truth for auth, data, and storage.
-+ RLS makes it impossible to write a query that bypasses authz (even a typo).
-+ Migrations are plain SQL, version-controlled.
-- We're locked to Supabase's pricing & availability. The schema is portable; the auth layer is partially.
-- We must learn to write RLS policies (versus app-level checks).
+- Single source of truth for auth, data, and storage.
+- RLS makes it impossible to write a query that bypasses authz (even a typo).
+- Migrations are plain SQL, version-controlled.
+
+* We're locked to Supabase's pricing & availability. The schema is portable; the auth layer is partially.
+* We must learn to write RLS policies (versus app-level checks).
 
 ## Patterns
 
