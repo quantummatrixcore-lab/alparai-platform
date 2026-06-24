@@ -1307,9 +1307,9 @@
     "success_toast": "Teşekkürler! Aboneliğiniz tamamlandı.",
     "privacy": "Sıfır spam. İstediğiniz zaman ayrılabilirsiniz.",
     "gdprCompliant": "GDPR Uyumlu",
-    "emailEncrypted": "E-postanız şifrelenmiştir ve güvendedir.",
+    "gdprDesc": "E-postanız şifrelenmiştir ve güvendedir.",
     "weeklyPulse": "Haftalık Nabız",
-    "oneDigest": "Haftada bir özet e-posta. Günlük spam yok."
+    "weeklyPulseDesc": "Haftada bir özet e-posta. Günlük spam yok."
   },
   "submit": {
     "description": "Kanıt ve bağlamla birlikte yeni bir yapay zeka olayı bildirin.",

@@ -1307,9 +1307,9 @@
     "success_toast": "Thank you! You are now subscribed.",
     "privacy": "Zero spam. Unsubscribe at any time.",
     "gdprCompliant": "GDPR Compliant",
-    "emailEncrypted": "Your email is encrypted and secure.",
+    "gdprDesc": "Your email is encrypted and secure.",
     "weeklyPulse": "Weekly Pulse",
-    "oneDigest": "One digest email per week. No daily spam."
+    "weeklyPulseDesc": "One digest email per week. No daily spam."
   },
   "submit": {
     "description": "Submit a new AI incident with proof and context.",
