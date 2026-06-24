@@ -98,7 +98,7 @@ export function HeroSection({
                 {t("cta_primary")}
               </Link>
               <Link
-                href="/incidents"
+                href="/leaderboard"
                 className="bg-glass text-fg-primary hover:border-brand-500/40 inline-flex h-13 items-center justify-center gap-3 rounded-md px-8 text-base font-bold shadow-xl transition-all duration-300 hover:-translate-y-1 hover:scale-105"
               >
                 {t("cta_secondary")}
