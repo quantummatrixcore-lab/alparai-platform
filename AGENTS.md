@@ -45,12 +45,12 @@ pnpm db:migrate       # supabase migration up
 | Add a PII regex       | `src/lib/pii/guardian.ts`                                  |
 | Add a rate limit      | `src/lib/utils/rate-limit.ts` + `RATE_LIMITS` in constants |
 
-> ⚠️ **MASTER ANALYSIS KURALI:**
-> AI analiz dosyaları `docs/` klasöründedir. Okuma sırası:
+> ⚠️ **MASTER ANALYSIS RULE:**
+> AI analysis files are in the `docs/` folder. Reading order:
 >
-> 1. **Önce** `docs/MASTER-ANALYSIS-SUMMARY.md` oku (özet, ~500 satır, token tasarruflu)
-> 2. **Sadece** gerektiğinde `docs/MASTER-ANALYSIS.md` oku (tam analiz, ~4700 satır, 13 model)
->    Orijinal dosya çok uzundur ve her okumada ~50-80K token harcar. Özeti tercih edin.
+> 1. **First** read `docs/MASTER-ANALYSIS-SUMMARY.md` (summary, ~500 lines, token-saving)
+> 2. **Only** when necessary read `docs/MASTER-ANALYSIS.md` (full analysis, ~4700 lines, 13 models)
+>    The original file is very long and consumes ~50-80K tokens per read. Prefer the summary.
 
 ## Safety
 
@@ -89,12 +89,12 @@ pnpm db:migrate       # supabase migration up
 
 ### OAuth Consent Screen Fix (MANUAL)
 
-Google OAuth ekranında "ALPAR AI" yerine Supabase proje ID'si görünmesinin nedeni Google Cloud Console'daki OAuth consent screen ayarları. Bu ayar Supabase API ile değiştirilemez.
+The reason the Supabase project ID appears on the Google OAuth screen instead of "ALPAR AI" is the OAuth consent screen settings in the Google Cloud Console. This setting cannot be changed via the Supabase API.
 
-**Çözüm:**
+**Solution:**
 
-1. https://console.cloud.google.com/apis/credentials/consent adresine git
-2. **App name** alanını "ALPAR AI" olarak değiştir
+1. Go to https://console.cloud.google.com/apis/credentials/consent
+2. Change the **App name** field to "ALPAR AI"
 3. **User support email**: `quantum.matrix.core@gmail.com`
 4. **Developer contact information**: `quantum.matrix.core@gmail.com`
 5. **Save**

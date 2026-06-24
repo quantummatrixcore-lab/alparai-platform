@@ -20,7 +20,7 @@ Every user-submitted free-text field (`incident.title`, `incident.description`, 
 - `detectPII(text) → { hasPII, types: PIIType[] }`
 - `maskPII(text) → { masked, types }`
 
-Detected types: `email`, `phone`, `tc_kimlik`, `iban`, `credit_card` (Luhn-valid only), `ipv4`, `url_with_token`, `api_key` (sk-, ghp_, AKIA, xai-), `passport_tr`, `dob`.
+Detected types: `email`, `phone`, `tc_kimlik`, `iban`, `credit_card` (Luhn-valid only), `ipv4`, `url_with_token`, `api_key` (sk-, ghp\_, AKIA, xai-), `passport_tr`, `dob`.
 
 ## False positives
 

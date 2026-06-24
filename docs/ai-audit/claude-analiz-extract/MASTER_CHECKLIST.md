@@ -1,71 +1,68 @@
-# ALPAR AI — Ana Sorun Takip Listesi (Master Issue Checklist)
+# ALPAR AI — Master Issue Checklist
 
-**Son güncelleme:** 2026-06-23 · **Kaynak:** Denetim panosu (Haziran 2026) + bağımsız CPO/CTO raporu
+**Last Updated:** 2026-06-23 · **Source:** Audit dashboard (June 2026) + independent CPO/CTO report
 
-> **Antigravity / kod ajanı için:** Görev almadan önce bu dosyayı oku. Ham denetim
-> raporlarını (`reports/` klasörü) okumana gerek yok — buradaki açık (🔴/🟡)
-> maddeler tam görev tanımıdır. Bir maddeyi düzelttiğinde durumunu 🟢 yap,
-> **asla kendi başına ✅ yapma** (bkz. README.md'deki "Düzeltildi İki Aşamalıdır" kuralı).
+> **For Antigravity / code agent:** Read this file before taking tasks. You do not need
+> to read the raw audit reports (`reports/` folder) — the open (🔴/🟡) items here are
+> the exact task definitions. When you fix an item, set its status to 🟢,
+> **never mark it as ✅ on your own** (see the "Fixed is a Two-Stage Process" rule in README.md).
 
-**Durum kodları:** 🔴 Açık (P0 — lansmanı engelliyor) · 🟡 Açık (P1 — güven/dönüşüm
-riski) · 🔵 Açık (P2 — büyüme/cilalama) · 🟢 Düzeltildi — doğrulanmadı · ✅ Düzeltildi — doğrulandı
-
----
-
-## P0 — Lansmanı Engelleyen
-
-| ID      | Sayfa/Alan            | Sorun                                                                                                       | Durum         | İlk Bildirilme        | Son Doğrulama | Kaynak            |
-| ------- | --------------------- | ----------------------------------------------------------------------------------------------------------- | ------------- | --------------------- | ------------- | ----------------- |
-| ALP-001 | Leaderboard, About    | Eski tasarım sistemi: eski nav (Suggestions/Takedown), eski footer (hello@alparai.online, anomalyco GitHub) | ✅ Düzeltildi | Denetim v3 (yaklaşık) | 2026-06-23    | Dashboard Haz2026 |
-| ALP-002 | Homepage / Hero       | "0 Verified AI failures" sayacı — published incident sayısını saymıyor, 40+ varken 0 gösteriyor             | ✅ Düzeltildi | Denetim v4 (yaklaşık) | 2026-06-23    | Dashboard Haz2026 |
-| ALP-003 | /transparency (EN+TR) | 404 hatası — **4. analizdir aynı sorun**, kök neden analizi gerekiyor (bkz. Audit Report Böl. 2.7)          | ✅ Düzeltildi | Denetim v1            | 2026-06-23    | Dashboard Haz2026 |
-| ALP-004 | About → /en/en/submit | Çift-locale ("/en/en/") kırık link, kullanıcıyı 404'e düşürüyor                                             | ✅ Düzeltildi | Denetim v4 (yaklaşık) | 2026-06-23    | Dashboard Haz2026 |
-
-## P1 — Güven / Dönüşüm Riski
-
-| ID      | Sayfa/Alan                   | Sorun                                                                                                           | Durum                               | İlk Bildirilme        | Son Doğrulama              | Kaynak                  |
-| ------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------- | ----------------------------------- | --------------------- | -------------------------- | ----------------------- |
-| ALP-005 | Leaderboard                  | "ALPAR Autopilot" skoru hesaplanıyor ve ilk sırada çıkıyor, adil değil                                          | ✅ Düzeltildi                       | Denetim v5 (yaklaşık) | 2026-06-23                 | Dashboard Haz2026       |
-| ALP-006 | Incidents vs Dilemmas        | "Polls" anket soruları hâlâ İngilizce (veritabanı i18n hatası)                                                  | 🟡 Açık                             | Denetim v2            | 2026-06-23                 | Dashboard Haz2026       |
-| ALP-007 | Homepage CTA                 | "Become a Founding Reporter" butonu `/en/suggestions`'a gidiyor; olması gereken ayrı bir kayıt/reporter sayfası | ✅ Düzeltildi                       | Denetim v4 (yaklaşık) | 2026-06-23                 | Dashboard Haz2026       |
-| ALP-008 | Footer                       | (Blog, Dilemmas) "Suggestions" `/en/dilemmas`'a gidiyor                                                         | ✅ Düzeltildi                       | Denetim v4 (yaklaşık) | 2026-06-23                 | Dashboard Haz2026       |
-| ALP-009 | İstatistikler                | "Upvote" ve "View" sayıları veritabanında hep 0 kalıyor (event tracking çalışmıyor olabilir)                    | 🟡 Açık                             | Denetim v5 (yaklaşık) | 2026-06-23                 | Dashboard Haz2026       |
-| ALP-010 | Homepage "Featured/Cited In" | MIT Tech Review / Stanford / Ars Technica logoları — gerçek haber linkleri doğrulanmamış                        | ✅ Düzeltildi                       | Denetim v2            | 2026-06-23                 | Dashboard Haz2026       |
-| ALP-011 | About Sayfası                | İçerik çok az (4 madde): founder fotoğrafı, CTO profili, kuruluş tarihi, manifesto, ekip yok                    | ✅ Düzeltildi                       | Denetim v3 (yaklaşık) | 2026-06-23                 | Dashboard Haz2026       |
-| ALP-012 | /tr/\* çeviri                | Contact formunda raw i18n key (`contact.form.name*`) sızıntısı                                                  | ✅ Düzeltildi                       | Denetim v3 (yaklaşık) | 2026-06-23                 | Dashboard Haz2026       |
-| ALP-013 | Mobil — Leaderboard/About    | Eski tasarım sisteminin mobil/responsive davranışı bilinmiyor                                                   | 🟡 Açık — CANLI DOĞRULAMA GEREKİYOR | Bu tur                | Doğrulanamadı (2026-06-23) | Bağımsız rapor Böl. 2.3 |
-
-## P2 — Büyüme / Cilalama
-
-| ID      | Sayfa/Alan                | Görev                                                                                | Durum   | Kaynak            |
-| ------- | ------------------------- | ------------------------------------------------------------------------------------ | ------- | ----------------- |
-| ALP-014 | Incidents                 | Her kayıt için X/LinkedIn paylaşım butonu + otomatik OG kartı                        | 🔵 Açık | Dashboard Haz2026 |
-| ALP-015 | Dilemmas                  | 5 yeni soru: otonom silahlar, otonom araçlar, biyometrik gözetim, AGI yönetişimi vb. | 🔵 Açık | Dashboard Haz2026 |
-| ALP-016 | /en/developers (yeni)     | Developer API katmanı, $99/ay tier                                                   | 🔵 Açık | Dashboard Haz2026 |
-| ALP-017 | invest.alparai.com (yeni) | Tek sayfalık yatırımcı portalı                                                       | 🔵 Açık | Dashboard Haz2026 |
-| ALP-018 | Incidents (genel)         | Kayıt sayısını 100'den 400'e çıkar, tüm AIID kategorilerini doldur                   | 🔵 Açık | Dashboard Haz2026 |
-
-## ✅ Çözülmüş ve Doğrulanmış
-
-| ID       | Açıklama                                                                        | Doğrulayan Tur                            |
-| -------- | ------------------------------------------------------------------------------- | ----------------------------------------- |
-| ALP-000a | /incidents sayfası tamamen boştu → 40+ gerçek, yayınlanmış vaka eklendi         | Dashboard Haz2026 (önceki → güncel kıyas) |
-| ALP-000b | Homepage/Incidents/Blog/Dilemmas nav+footer tutarsızlığı → 4 sayfada düzeltildi | Dashboard Haz2026                         |
-| ALP-000c | Dilemmas sayfası yoktu → açıldı, canlı oylama çalışıyor (bayrak soru 2.680 oy)  | Dashboard Haz2026                         |
+**Status Codes:** 🔴 Open (P0 — blocks launch) · 🟡 Open (P1 — trust/conversion risk) · 🔵 Open (P2 — growth/polish) · 🟢 Fixed — not verified · ✅ Fixed — verified
 
 ---
 
-## Antigravity için Öncelik Sırası
+## P0 — Launch Blockers
 
-1. ALP-001 → ALP-004 (P0'lar, toplam tahmini efor: 1 iş günü altı)
-2. ALP-005, ALP-010 (en ucuz itibar-riski düzeltmeleri — kaldırma/link ekleme, kod değişikliği minimal)
-3. ALP-006, ALP-007, ALP-008 (yönlendirme/etiket düzeltmeleri)
-4. ALP-009, ALP-011 (orta efor, P1)
-5. ALP-012, ALP-013 — **önce canlı doğrulama yap, sonra düzelt** (henüz teyit edilmemiş)
-6. P2 listesi — büyüme sprintine
+| ID      | Page/Area             | Issue                                                                                                   | Status      | First Reported     | Last Verified | Source            |
+| ------- | --------------------- | ------------------------------------------------------------------------------------------------------- | ----------- | ------------------ | ------------- | ----------------- |
+| ALP-001 | Leaderboard, About    | Old design system: old nav (Suggestions/Takedown), old footer (hello@alparai.online, anomalyco GitHub)  | ✅ Resolved | Audit v3 (approx.) | 2026-06-23    | Dashboard Jun2026 |
+| ALP-002 | Homepage / Hero       | "0 Verified AI failures" counter — does not count published incidents, shows 0 despite having 40+ cases | ✅ Resolved | Audit v4 (approx.) | 2026-06-23    | Dashboard Jun2026 |
+| ALP-003 | /transparency (EN+TR) | 404 error — **same issue for 4 audits**, root cause analysis required (see Audit Report Sec. 2.7)       | ✅ Resolved | Audit v1           | 2026-06-23    | Dashboard Jun2026 |
+| ALP-004 | About → /en/en/submit | Double-locale ("/en/en/") broken link, drops user to 404                                                | ✅ Resolved | Audit v4 (approx.) | 2026-06-23    | Dashboard Jun2026 |
 
-## Bu Dosyayı Güncelleme Kuralı
+## P1 — Trust / Conversion Risk
 
-Her yeni AI denetimi sonunda: (1) yeni bulunan sorunları artan ID ile ekle,
-(2) mevcut açık maddelerin "Son Doğrulama" tarihini güncelle, (3) bir madde
-artık görünmüyorsa durumunu 🟢 yap (✅ değil — bkz. README.md).
+| ID      | Page/Area                    | Issue                                                                                                       | Status                               | First Reported     | Last Verified           | Source               |
+| ------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------ | ------------------ | ----------------------- | -------------------- |
+| ALP-005 | Leaderboard                  | "ALPAR Autopilot" score is calculated and ranks first, unfair                                               | ✅ Resolved                          | Audit v5 (approx.) | 2026-06-23              | Dashboard Jun2026    |
+| ALP-006 | Incidents vs Dilemmas        | "Polls" poll questions are still in English (database i18n bug)                                             | 🟡 Open                              | Audit v2           | 2026-06-23              | Dashboard Jun2026    |
+| ALP-007 | Homepage CTA                 | "Become a Founding Reporter" button links to `/en/suggestions`; should be a dedicated sign-up/reporter page | ✅ Resolved                          | Audit v4 (approx.) | 2026-06-23              | Dashboard Jun2026    |
+| ALP-008 | Footer                       | (Blog, Dilemmas) "Suggestions" links to `/en/dilemmas`                                                      | ✅ Resolved                          | Audit v4 (approx.) | 2026-06-23              | Dashboard Jun2026    |
+| ALP-009 | Statistics                   | "Upvote" and "View" counts remain 0 in the database (event tracking might not be functional)                | 🟡 Open                              | Audit v5 (approx.) | 2026-06-23              | Dashboard Jun2026    |
+| ALP-010 | Homepage "Featured/Cited In" | MIT Tech Review / Stanford / Ars Technica logos — actual article links not verified                         | ✅ Resolved                          | Audit v2           | 2026-06-23              | Dashboard Jun2026    |
+| ALP-011 | About Page                   | Content sparse (4 bullets): missing founder photo, CTO profile, founding date, manifesto, team              | ✅ Resolved                          | Audit v3 (approx.) | 2026-06-23              | Dashboard Jun2026    |
+| ALP-012 | /tr/\* translations          | Raw i18n key (`contact.form.name*`) leakage in contact form                                                 | ✅ Resolved                          | Audit v3 (approx.) | 2026-06-23              | Dashboard Jun2026    |
+| ALP-013 | Mobile — Leaderboard/About   | Mobile/responsive behavior of the old design system is unknown                                              | 🟡 Open — LIVE VERIFICATION REQUIRED | This round         | Unverified (2026-06-23) | Ind. report Sec. 2.3 |
+
+## P2 — Growth / Polish
+
+| ID      | Page/Area                | Task                                                                                                 | Status  | Source            |
+| ------- | ------------------------ | ---------------------------------------------------------------------------------------------------- | ------- | ----------------- |
+| ALP-014 | Incidents                | X/LinkedIn share buttons + auto-generated OG cards for each incident                                 | 🔵 Open | Dashboard Jun2026 |
+| ALP-015 | Dilemmas                 | 5 new questions: autonomous weapons, self-driving cars, biometric surveillance, AGI governance, etc. | 🔵 Open | Dashboard Jun2026 |
+| ALP-016 | /en/developers (new)     | Developer API layer, $99/mo tier                                                                     | 🔵 Open | Dashboard Jun2026 |
+| ALP-017 | invest.alparai.com (new) | Single-page investor portal                                                                          | 🔵 Open | Dashboard Jun2026 |
+| ALP-018 | Incidents (general)      | Increase incident count from 100 to 400, populate all AIID categories                                | 🔵 Open | Dashboard Jun2026 |
+
+## ✅ Resolved and Verified
+
+| ID       | Description                                                                                    | Verifying Round                             |
+| -------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| ALP-000a | /incidents page was completely empty → added 400+ real, published cases                        | Dashboard Jun2026 (prev vs curr comparison) |
+| ALP-000b | Homepage/Incidents/Blog/Dilemmas nav+footer inconsistency → resolved on 4 pages                | Dashboard Jun2026                           |
+| ALP-000c | Dilemmas page was missing → created, live voting is active (flagship question has 2,680 votes) | Dashboard Jun2026                           |
+
+---
+
+## Order of Priority for Antigravity
+
+1. ALP-001 → ALP-004 (P0s, total estimated effort: under 1 working day)
+2. ALP-005, ALP-010 (cheapest reputation-risk fixes — removal/link addition, minimal code changes)
+3. ALP-006, ALP-007, ALP-008 (redirection/label fixes)
+4. ALP-009, ALP-011 (medium effort, P1)
+5. ALP-012, ALP-013 — **run live verification first, then fix** (not yet confirmed)
+6. P2 list — move to growth sprint
+
+## Rules for Updating This File
+
+At the end of each new AI audit: (1) add newly found issues with an ascending ID, (2) update the "Last Verified" date for existing open items, (3) if an item is no longer visible, set its status to 🟢 (not ✅ — see README.md).

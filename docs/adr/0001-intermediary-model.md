@@ -19,12 +19,13 @@ We do not pre-moderate submissions (except for automated PII masking and obvious
 
 ## Consequences
 
-+ We are protected from most third-party liability claims under Article 14 / hosting safe harbor.
-+ We do not become a publisher and do not need to fact-check submissions.
-- We must respond to takedown notices within 7 days.
-- We must have a clear Imprint page with the legal entity's identity.
-- AI providers (the subjects of reports) have a right to respond; we publish verified responses.
-- A takedown queue is a hard requirement.
+- We are protected from most third-party liability claims under Article 14 / hosting safe harbor.
+- We do not become a publisher and do not need to fact-check submissions.
+
+* We must respond to takedown notices within 7 days.
+* We must have a clear Imprint page with the legal entity's identity.
+* AI providers (the subjects of reports) have a right to respond; we publish verified responses.
+* A takedown queue is a hard requirement.
 
 ## Alternatives considered
 

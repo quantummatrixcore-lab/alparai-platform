@@ -1,63 +1,46 @@
-# ALPAR AI — Çoklu Yapay Zeka Denetim Sistemi
+# ALPAR AI — Multi-Agent AI Audit System
 
-Bu klasör, farklı AI modellerinin (Claude, GPT, Gemini, vb.) ALPAR AI üzerinde yaptığı
-360° denetimleri **standart, kıyaslanabilir ve takip edilebilir** hâle getirmek için
-tasarlandı. Hedef: aynı bug'ın 4 ayrı denetim turunda 4 kez yeniden "keşfedilip"
-hiçbir zaman kapanmaması döngüsünü kırmak.
+This directory is designed to make 360° audits performed on ALPAR AI by different AI models (Claude, GPT, Gemini, etc.) **standardized, comparable, and trackable**. The goal: to break the loop of the same bug being "rediscovered" 4 times across 4 separate audit rounds but never getting closed.
 
-## Neden Bu Sisteme İhtiyaç Var?
+## Why Do We Need This System?
 
-Serbest metin denetim raporları (PDF, sohbet çıktısı, dashboard görseli vb.) her AI
-modelinde farklı kelimelerle yazılır. Bir kod ajanı (Antigravity) bu raporları okuduğunda,
-"bu, geçen ayki ile aynı sorun mu?" sorusunu güvenilir şekilde cevaplayamaz. Sonuç:
-aynı kök neden farklı şekillerde yamalanır, hiçbiri kalıcı olarak doğrulanmaz, ve
-sorun tekrar tekrar açılır.
+Free-text audit reports (PDF, chat outputs, dashboard screenshots, etc.) are written in different words by each AI model. When a code agent (Antigravity) reads these reports, it cannot reliably answer the question: "is this the same issue as last month?". The result: the same root cause is patched in different ways, none of them are permanently verified, and the issue keeps getting reopened.
 
-**Çözüm:** her sorun bir kez sabit bir ID alır (`ALP-001`, `ALP-002`, …) ve bu ID'nin
-durumu tek bir dosyada (`MASTER_CHECKLIST.md`) yaşar. Ham denetim raporları arşiv
-amaçlıdır; **Antigravity'nin okuması gereken dosya `MASTER_CHECKLIST.md`'dir.**
+**Solution:** Each issue gets a fixed ID once (`ALP-001`, `ALP-002`, etc.) and the state of this ID lives in a single file (`MASTER_CHECKLIST.md`). Raw audit reports are for archive purposes; **the file Antigravity must read is `MASTER_CHECKLIST.md`.**
 
-## Klasör Yapısı
+## Folder Structure
 
 ```
 ai-audits/
-├── README.md                  ← bu dosya
-├── AUDIT_TEMPLATE.md          ← her yeni AI denetiminin doldurması gereken şablon
-├── MASTER_CHECKLIST.md        ← TEK doğruluk kaynağı: canlı, sabit-ID'li sorun listesi
+├── README.md                  ← this file
+├── AUDIT_TEMPLATE.md          ← template that every new AI audit must fill out
+├── MASTER_CHECKLIST.md        ← SINGLE source of truth: live, fixed-ID issue list
 ├── reports/
-│   └── 2026-06-23_claude-sonnet-4.6_v6.md   ← her denetimin tam çıktısı (arşiv)
+│   └── 2026-06-23_claude-sonnet-4.6_v6.md   ← full output of each audit (archive)
 └── scripts/
-    └── smoke-test-p0.sh       ← P0 maddelerini otomatik kontrol eden örnek script
+    └── smoke-test-p0.sh       ← sample script that automatically verifies P0 items
 ```
 
-## İş Akışı
+## Workflow
 
-1. **Yeni bir AI modeline denetim yaptırdığınızda:** çıktısını `AUDIT_TEMPLATE.md`
-   formatına uydurun (veya AI'a doğrudan bu şablonu kullanmasını söyleyin) ve
-   `reports/{tarih}_{model}_v{n}.md` olarak kaydedin.
-2. **Aynı oturumda `MASTER_CHECKLIST.md`'yi güncelleyin:**
-   - Yeni bir sorun bulunduysa → yeni satır, yeni ID (artan sırada).
-   - Bilinen bir sorun hâlâ açıksa → "Son Doğrulama" tarihini güncelleyin, durumu değiştirmeyin.
-   - Bilinen bir sorun artık görünmüyorsa → durumu 🟢 _Düzeltildi-doğrulanmadı_ yapın (aşağıdaki kurala bakın).
-3. **Antigravity'ye görev verirken** ham raporları değil, `MASTER_CHECKLIST.md`'deki
-   açık (🔴/🟡) satırları referans gösterin.
-4. **Antigravity bir düzeltme yaptığını bildirdiğinde**, durumu hemen ✅ yapmayın.
+1. **When you have a new audit done by an AI model:** format its output according to `AUDIT_TEMPLATE.md` (or tell the AI to use this template directly) and save it as `reports/{date}_{model}_v{n}.md`.
+2. **Update `MASTER_CHECKLIST.md` in the same session:**
+   - If a new issue is found → new line, new ID (in ascending order).
+   - If a known issue is still open → update the "Last Verified" date, do not change the status.
+   - If a known issue is no longer visible → set status to 🟢 _Fixed — not verified_ (see rule below).
+3. **When assigning tasks to Antigravity,** refer to the open (🔴/🟡) lines in `MASTER_CHECKLIST.md` instead of raw reports.
+4. **When Antigravity reports that it made a fix**, do not immediately change the status to ✅.
 
-## Kritik Kural: "Düzeltildi" İki Aşamalıdır
+## Critical Rule: "Fixed" is a Two-Stage Process
 
-| Durum                        | Kim verir?                                                      | Anlamı                                                |
-| ---------------------------- | --------------------------------------------------------------- | ----------------------------------------------------- |
-| 🔴 / 🟡 Açık                 | Herhangi bir denetim                                            | Sorun hâlâ var veya henüz kontrol edilmedi            |
-| 🟢 Düzeltildi — doğrulanmadı | Kod ajanı (Antigravity) bir fix yaptığını bildirdiğinde         | "Yapıldı dendi" — ama henüz BAĞIMSIZ olarak görülmedi |
-| ✅ Düzeltildi — doğrulandı   | Yalnızca bir SONRAKİ bağımsız AI denetimi, canlı sitede görerek | Gerçekten kapandı                                     |
+| Status                  | Who sets it?                                                     | Meaning                                                   |
+| ----------------------- | ---------------------------------------------------------------- | --------------------------------------------------------- |
+| 🔴 / 🟡 Open            | Any audit                                                        | Issue still exists or has not been verified yet           |
+| 🟢 Fixed — not verified | When the code agent (Antigravity) reports a fix                  | "Claimed to be done" — but not yet INDEPENDENTLY verified |
+| ✅ Fixed — verified     | ONLY when the NEXT independent AI audit verifies it on live site | Confirmed resolved                                        |
 
-Bu ayrım olmadan, bir kod ajanının "tamamlandı" demesi ile sorunun gerçekten
-production'da çözülmüş olması karıştırılır — ki bu raporun 2.7. Bölümünde tespit
-edilen tekrarlayan-bug döngüsünün tam olarak nedeni budur.
+Without this distinction, the code agent's "completed" claim is easily confused with the issue actually being resolved in production — which is exactly the cause of the recurring-bug loop identified in section 2.7 of this report.
 
-## Antigravity'ye Verilecek Örnek Talimat
+## Sample Instruction to Antigravity
 
-> "MASTER_CHECKLIST.md dosyasındaki 🔴 durumundaki tüm maddeleri öncelik sırasıyla
-> (P0 → P1 → P2) çöz. Her madde için: (1) kök nedeni düzelt, (2) durumu 🟢 yap,
-> (3) `scripts/smoke-test-p0.sh` içindeki ilgili kontrolü ekle/güncelle. Hiçbir
-> maddeyi kendi başına ✅ olarak işaretleme."
+> "Resolve all items with 🔴 status in the MASTER_CHECKLIST.md file in order of priority (P0 → P1 → P2). For each item: (1) fix the root cause, (2) change the status to 🟢, (3) add/update the relevant check in `scripts/smoke-test-p0.sh`. Do not mark any item as ✅ on your own."

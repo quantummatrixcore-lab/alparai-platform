@@ -1,254 +1,254 @@
-# ALPAR AI — Canlı Site UI/UX Değerlendirmesi
+# ALPAR AI — Live Site UI/UX Audit
 
-> **AI Model:** deepseek v4 flash
-> **Tarih:** 2026-06-20 08:50 UTC+3
-> **Yöntem:** Playwright canlı tarama (headless) + DOM snapshot + screenshot analizi
-> **Hedef:** www.alparai.com
-
----
-
-## Sayfa Haritası (Taranan Sayfalar)
-
-| Sayfa        | URL             | Durum |
-| ------------ | --------------- | ----- |
-| Ana Sayfa    | /en             | ✅    |
-| Olaylar      | /en/incidents   | ✅    |
-| Leaderboard  | /en/leaderboard | ✅    |
-| Modeller     | /en/models      | ✅    |
-| Blog         | /en/blog        | ✅    |
-| Rapor Gönder | /en/submit      | ✅    |
-| Giriş        | /en/auth/signin | ✅    |
-| Footer       | Tüm sayfalarda  | ✅    |
+> **AI Model:** deepseek v4 flash  
+> **Date:** 2026-06-20 08:50 UTC+3  
+> **Method:** Playwright live scan (headless) + DOM snapshot + screenshot analysis  
+> **Target:** www.alparai.com
 
 ---
 
-## 1. GENEL DURUM: 72/100 🟡
+## Page Sitemap (Scanned Pages)
 
-| Boyut                        | Puan   |
-| ---------------------------- | ------ |
-| Görsel Hiyerarşi & Tipografi | 75/100 |
-| Renk & Tutarlılık            | 80/100 |
-| Bileşen Tasarımı             | 70/100 |
-| Etkileşim & Animasyon        | 85/100 |
-| Responsive                   | 60/100 |
-| Erişilebilirlik              | 65/100 |
-| İçerik Kalitesi              | 80/100 |
+| Page            | URL             | Status |
+| --------------- | --------------- | ------ |
+| Homepage        | /en             | ✅     |
+| Incidents       | /en/incidents   | ✅     |
+| Leaderboard     | /en/leaderboard | ✅     |
+| Models          | /en/models      | ✅     |
+| Blog            | /en/blog        | ✅     |
+| Submit Incident | /en/submit      | ✅     |
+| Sign In         | /en/auth/signin | ✅     |
+| Footer          | All pages       | ✅     |
 
 ---
 
-## 2. SAYFA BAZLI ANALİZ
+## 1. OVERALL STATUS: 72/100 🟡
 
-### 2.1 Ana Sayfa (Homepage) — 78/100
+| Dimension                     | Score  |
+| ----------------------------- | ------ |
+| Visual Hierarchy & Typography | 75/100 |
+| Color & Consistency           | 80/100 |
+| Component Design              | 70/100 |
+| Interaction & Animation       | 85/100 |
+| Responsiveness                | 60/100 |
+| Accessibility                 | 65/100 |
+| Content Quality               | 80/100 |
 
-**Güçlü Yönler:**
+---
 
-- Hero bölümü etkileyici: "AI Lied to You. Nobody Was Tracking It. We Were." güçlü mesaj
-- 2-column split layout (manifesto + live data) iyi çalışıyor
-- Live stat card'lar (64 failures, 23 providers, 47 countries) dikkat çekici
-- Leaderboard mini panel bar chart ile görsel
-- Founder story bölümü duygusal bağ kuruyor
-- News ticker canlı bilgi akışı sağlıyor
-- Ecosystem Pulse bölümü içerik zenginliği sunuyor
-- "How it works" 4 adımlık süreç net
-- Trust bar (AGPL, EU/GDPR, PII Guardian, Art. 14) güven veriyor
-- Footer kapsamlı (Product, Legal, About)
+## 2. PAGE-BY-PAGE ANALYSIS
 
-**Sorunlar:**
+### 2.1 Homepage — 78/100
 
-- 🔴 Nav bar overlap: Subpage'lerde nav bar, hero section ile çakışıyor (düzeltme yapılmış ama tam oturmamış)
-- 🟡 "See Rankings" butonunda "rankings" diyor ama link `/incidents`'a gidiyor — yanıltıcı
-- 🟡 Bug Bounty badge ile "See Rankings" butonu arasında copy çakışması
-- 🟡 "Last report: Just now" — gerçek zamanlı mı, statik mi belli değil
-- 🟡 Leaderboard panelinde sadece 5 provider gösteriliyor, kalanları görünmüyor
-- 🟡 "See Full Leaderboard →" link'i var ama zaten "View All" link'i de var — gereksiz tekrar
+**Strengths:**
 
-### 2.2 Olaylar Sayfası (Incidents) — 75/100
+- The hero section is engaging: "AI Lied to You. Nobody Was Tracking It. We Were." is a strong message.
+- 2-column split layout (manifesto + live data) works well.
+- Live stat cards (64 failures, 23 providers, 47 countries) are eye-catching.
+- Leaderboard mini-panel is highly visual with a bar chart.
+- Founder story section builds an emotional connection.
+- News ticker provides a live information stream.
+- Ecosystem Pulse section offers rich content.
+- "How it works" 4-step process is clear.
+- Trust bar (AGPL, EU/GDPR, PII Guardian, Art. 14) builds credibility.
+- Footer is comprehensive (Product, Legal, About).
 
-**Güçlü Yönler:**
+**Issues:**
 
-- "All Incidents" başlığı net
-- 50 published reports bilgisi açık
-- Filtre sistemi kapsamlı: category (10 tane) + severity (5 seviye) + search
-- Incident kartları bilgilendirici: severity badge, status badge, provider, category
-- Timeline (Reported → Reviewed → Published) süreci görsel
-- Vote count (0) ve comment count (0) görünüyor
-- "Publish anonymously" bilgisi mevcut
-- Sidebar'da Live Poll ve Latest News bölümleri var
+- 🔴 Navigation bar overlap: The nav bar overlaps with the hero section on subpages.
+- 🟡 "See Rankings" button says "rankings" but links to `/incidents` — misleading.
+- 🟡 Copy collision between the Bug Bounty badge and the "See Rankings" button.
+- 🟡 "Last report: Just now" — unclear whether it is real-time or static.
+- 🟡 Only 5 providers are displayed in the Leaderboard panel, hiding the rest.
+- 🟡 "See Full Leaderboard →" link exists alongside a duplicate "View All" link — redundant.
 
-**Sorunlar:**
+### 2.2 Incidents Page — 75/100
 
-- 🔴 Sidebar ile ana içerik alanının genişlik oranı dengesiz — sidebar çok geniş, kartlar sıkışık
-- 🟡 Filtre butonları çok küçük ve sıkışık — mobilde zor kullanılır
-- 🟡 Tüm olaylarda vote=0, comment=0 — sosyal kanıt yok
-- 🟡 "Publish anonymously" her kartta tekrar ediyor — gereksiz tekrar
-- 🟡 Severity renk kodları tutarsız: Critical kırmızı, High turuncu, Medium sarı ama badge'ler aynı boyutta
-- 🟡 Tarih formatı tutarsız: "Mar 18, 2018" vs "Aug 1, 2012" — sıralama belirsiz
+**Strengths:**
+
+- "All Incidents" header is clear.
+- "50 published reports" counter is explicit.
+- Filtering system is comprehensive: category (10 options) + severity (5 levels) + search.
+- Incident cards are informative: severity badge, status badge, provider, category.
+- Timeline (Reported → Reviewed → Published) process is visual.
+- Vote count (0) and comment count (0) are displayed.
+- "Publish anonymously" notice is present.
+- Sidebar features a Live Poll and Latest News section.
+
+**Issues:**
+
+- 🔴 Unbalanced width ratio between the sidebar and the main content area — sidebar is too wide, squeezing the cards.
+- 🟡 Filter buttons are too small and cramped — hard to use on mobile devices.
+- 🟡 All incidents display vote=0 and comment=0 — lack of social proof.
+- 🟡 "Publish anonymously" repeats on every card — redundant.
+- 🟡 Inconsistent severity color-coding: Critical is red, High is orange, Medium is yellow, but all badges have the same weight/size.
+- 🟡 Date format is inconsistent: "Mar 18, 2018" vs "Aug 1, 2012" — makes chronological sorting unclear.
 
 ### 2.3 Leaderboard — 70/100
 
-**Güçlü Yönler:**
+**Strengths:**
 
-- Tablo yapısı temiz: Rank, Provider, Incidents, Responses, Response Rate
-- Provider logoları premium ve tanınabilir
-- `<table>` + `<caption>` erişilebilirlik için iyi
-- 23 provider takip ediliyor
-- Share butonları (X, LinkedIn, Copy Link)
-- Top 3 için gold/silver/bronze renklendirme
-- Response rate badge'leri renk kodlu (danger/warning/success)
+- Table structure is clean: Rank, Provider, Incidents, Responses, Response Rate.
+- Provider logos are premium and recognizable.
+- `<table>` + `<caption>` elements are implemented well for accessibility.
+- 23 providers are being tracked.
+- Social sharing buttons are active (X, LinkedIn, Copy Link).
+- Gold/silver/bronze highlight colors for the top 3 spots.
+- Response rate badges are color-coded (danger/warning/success).
 
-**Sorunlar:**
+**Issues:**
 
-- 🔴 Sıralama mantığı hatalı: Anthropic (#1, 10 incident) > Google (#2, 14 incident) — Google daha çok olaya sahipken neden #2?
-- 🔴 Toplam response=0, avg response rate=0% — platform ölü görünüyor
-- 🟡 16 provider'da 0 incident, 0 response — tablonun %70'i boş
-- 🟡 Sort by response rate çalışıyor mu? 0% = 0% için sıralama belirsiz
-- 🟡 Mobilde tablo yatay kaydırma gerektirecek
+- 🔴 Ranking logic is incorrect: Anthropic (#1, 10 incidents) > Google (#2, 14 incidents) — why is Google #2 when it has more incidents?
+- 🔴 Total response=0, average response rate=0% — makes the platform look dead.
+- 🟡 16 providers show 0 incidents and 0 responses — 70% of the table is empty.
+- 🟡 Sort by response rate behavior: sorting is undefined for equal 0% values.
+- 🟡 Table will require horizontal scrolling on mobile.
 
-### 2.4 Modeller (Models) — 55/100
+### 2.4 Models — 55/100
 
-**Güçlü Yönler:**
+**Strengths:**
 
-- "AI Models Directory" başlığı net
-- Search + sort (Name, Highest Rating, Most Reviews, Most Feature Requests) + Filter
-- Model kartı: provider logo, model adı, version, release date, rating, reviews, feature requests
+- "AI Models Directory" header is clear.
+- Features search + sorting (Name, Highest Rating, Most Reviews, Most Feature Requests) + Filter.
+- Model cards display: provider logo, model name, version, release date, rating, reviews, and feature requests.
 
-**Sorunlar:**
+**Issues:**
 
-- 🔴 SADECE 1 MODEL! (Grok 3) — Sayfa neredeyse boş, devasa boşluk
-- 🔴 Sayfa yüksekliğinin %80'i boş alan — çok zayıf görünüm
-- 🟡 "Filter" butonu ne filtreliyor belli değil
-- 🟡 Rating "-(0)" şeklinde — negatif mi, boş mu belli değil
+- 🔴 ONLY 1 MODEL LISTED! (Grok 3) — The page is almost empty, leaving a massive blank space.
+- 🔴 80% of the page height is empty space — looks very sparse.
+- 🟡 Unclear what the "Filter" button filters.
+- 🟡 Rating shows as "-(0)" — unclear whether it represents a negative value or an empty state.
 
 ### 2.5 Blog — 80/100
 
-**Güçlü Yönler:**
+**Strengths:**
 
-- "INSIGHTS & RESEARCH" eyebrow badge tematik
-- 3 blog kartı yan yana (grid): tarih, okuma süresi, başlık, özet, tag'ler
-- Tag'ler kategori bazlı: REGULATION, CLAUDE, BAN, AI-GOVERNANCE, ACCOUNTABILITY vb.
-- İçerik kaliteli: Claude ban, AI accountability, Top 10 incidents
+- "INSIGHTS & RESEARCH" eyebrow badge is thematic.
+- 3 blog cards arranged in a grid: date, reading time, title, summary, tags.
+- Tags are category-based: REGULATION, CLAUDE, BAN, AI-GOVERNANCE, ACCOUNTABILITY, etc.
+- Content quality is high: Claude ban, AI accountability, Top 10 incidents.
 
-**Sorunlar:**
+**Issues:**
 
-- 🟡 Blog kartlarında görsel/thumbnail yok — sadece metin
-- 🟡 Tag'ler çok küçük ve soluk — okunabilirlik düşük
-- 🟡 Blog yazısı sayısına limite ulaşılmış (3 tane) — daha fazla içerik gerek
+- 🟡 Blog cards lack visual thumbnails — text-only.
+- 🟡 Tags are too small and faded — poor readability.
+- 🟡 Limited to 3 blog posts — more content is needed.
 
-### 2.6 Rapor Gönder (Submit) — 82/100
+### 2.6 Submit Incident — 82/100
 
-**Güçlü Yönler:**
+**Strengths:**
 
-- "No login required" mesajı açık
-- "100% Anonymous — No email, no name, no tracking" güven veriyor
-- Form alanları net: "Briefly describe the incident" (0/200), description (0/5000)
-- Required field indicator (\*)
-- Character counter mevcut
+- "No login required" message is explicit.
+- "100% Anonymous — No email, no name, no tracking" builds trust.
+- Form fields are clean: "Briefly describe the incident" (0/200), description (0/5000).
+- Required field indicator (\*).
+- Character counters are active.
 
-**Sorunlar:**
+**Issues:**
 
-- 🟡 Form sayfası çok uzun — scroll gerekiyor, sticky submit butonu yok
-- 🟡 "PII is masked automatically" mesajı var ama nasıl çalıştığı açıklanmamış
-- 🟡 Consent checkbox görünmüyor (scroll gerekiyor olabilir)
+- 🟡 Form page is very long — requires scrolling, lacks a sticky submit button.
+- 🟡 "PII is masked automatically" notice is shown, but how it works isn't explained.
+- 🟡 Consent checkbox is not immediately visible (requires scrolling).
 
-### 2.7 Giriş (Sign In) — 85/100
+### 2.7 Sign In — 85/100
 
-**Güçlü Yönler:**
+**Strengths:**
 
-- Temiz, minimal tasarım
-- "Welcome back" mesajı sıcak
-- "Continue with Google" — OAuth, büyük buton
-- "OR CONTINUE WITH EMAIL" — Magic Link seçeneği
-- "We use Google for secure authentication. We never see your password." güven mesajı
-- Terms of Service + Privacy Policy checkbox
-- Email input + Send butonu
+- Clean, minimalist design.
+- Warm "Welcome back" message.
+- Large, prominent "Continue with Google" OAuth button.
+- "OR CONTINUE WITH EMAIL" magic link option.
+- Reassuring copy: "We use Google for secure authentication. We never see your password."
+- Checkbox for Terms of Service + Privacy Policy.
+- Email input + Send button.
 
-**Sorunlar:**
+**Issues:**
 
-- 🟡 Logo (envelope ikonu) çok basit — ALPAR AI logosu yerine generic mail ikonu
-- 🟡 "Send" butonu purple — Google butonu da aynı renk mi? Farklılık az
+- 🟡 Logo is too simple — uses a generic envelope icon instead of the ALPAR AI logo.
+- 🟡 The "Send" button is purple, very close to the Google button color — lacks contrast.
 
 ---
 
-## 3. GLOBAL SORUNLAR
+## 3. GLOBAL ISSUES
 
-### 3.1 Navigasyon
+### 3.1 Navigation
 
-- ✅ Aktif sayfa göstergesi var (purple highlight)
-- ✅ Ana sayfa, Olaylar, Modeller, Leaderboard, Blog — 5 ana link
-- ✅ Dil değiştirme (TR)
-- ✅ Suggestions + Report Incident + Sign in — sağ taraf
-- 🔴 Nav bar subpage'lerde hero ile çakışıyor (overlap fix yapılmış ama hala sorunlu)
-- 🟡 Mobil hamburger menü看不到 — responsive test yapılamadı
+- ✅ Active page indicator is styled (purple highlight).
+- ✅ 5 main links: Homepage, Incidents, Models, Leaderboard, Blog.
+- ✅ Language switcher is active (TR).
+- ✅ Right side features: Suggestions + Report Incident + Sign in.
+- 🔴 Navigation bar overlaps with the hero section on subpages.
+- 🟡 Mobile hamburger menu is not visible — responsiveness could not be tested.
 
-### 3.2 Tipografi
+### 3.2 Typography
 
-- ✅ Başlıklar bold ve büyük
-- ✅ "AI Models Directory" gradient text etkisi
-- 🟡 Bazı başlıklar çok büyük (hero h1), bazıları çok küçük (footer)
-- 🟡 Metin okunabilirliği yeterli ama kontrast artırılabilir
+- ✅ Headings are bold and large.
+- ✅ Gradient text effects on "AI Models Directory".
+- 🟡 Inconsistent font scaling: headings are very large (hero h1) while footer text is very small.
+- 🟡 Text readability is acceptable but contrast can be improved.
 
-### 3.3 Renk Paleti
+### 3.3 Color Palette
 
-- ✅ Dark theme (koyu arka plan)
-- ✅ Purple accent (primary action)
-- ✅ Renk kodlu severity badges (Critical=red, High=orange, Medium=yellow, Low=green)
-- ✅ Gradient text efektleri
-- 🟡 Purple çok baskın — daha fazla renk çeşidi gerek
-- 🟡 Bazı kartlar arka plan ile yeterince ayrışmıyor
+- ✅ Dark theme (dark background).
+- ✅ Purple accent color for primary actions.
+- ✅ Color-coded severity badges (Critical=red, High=orange, Medium=yellow, Low=green).
+- ✅ Gradient text effects.
+- 🟡 Purple is too dominant — more color variety is needed.
+- 🟡 Some cards do not contrast enough with the background.
 
-### 3.4 Bileşen Kalitesi
+### 3.4 Component Quality
 
-- ✅ Card bileşenleri tutarlı
-- ✅ Badge bileşenleri renk kodlu
-- ✅ Button bileşenleri net
-- 🟡 Kart border radius tutarlı ama shadow eksik
-- 🟡 Hover efektleri sınırlı
+- ✅ Card components are consistent.
+- ✅ Badge components are color-coded.
+- ✅ Button components are clear.
+- 🟡 Card border radius is consistent but lacks shadows.
+- 🟡 Hover effects are limited.
 
 ### 3.5 Footer
 
-- ✅ Kapsamlı: Product, Legal, About bölümleri
-- ✅ Social links: GitHub, Twitter, Email
-- ✅ Copyright + intermediary disclaimer
-- ✅ Whistleblower program link'i mevcut
+- ✅ Comprehensive: Product, Legal, About sections.
+- ✅ Social links: GitHub, Twitter, Email.
+- ✅ Copyright + hosting safe harbor disclaimer.
+- ✅ Whistleblower program link is active.
 
 ---
 
-## 4. ACİL DÜZELTMELER
+## 4. IMMEDIATE FIXES
 
-| #   | Sorun                                    | Sayfa        | Etki                        |
-| --- | ---------------------------------------- | ------------ | --------------------------- |
-| 1   | Models sayfası sadece 1 model gösteriyor | /models      | 🔴 Çok kötü görünüm         |
-| 2   | Leaderboard sıralama mantığı hatalı      | /leaderboard | 🔴 Yanıltıcı veri           |
-| 3   | Nav bar overlap (subpage'lerde)          | Tümü         | 🔴 Kullanıcı deneyimi bozuk |
-| 4   | Vote=0, Response=0 her yerde             | Tümü         | 🔴 Sosyal kanıt yok         |
-| 5   | Blog kartlarında görsel yok              | /blog        | 🟡 Görsel ilgi düşük        |
+| #   | Issue                                  | Page         | Impact                    |
+| --- | -------------------------------------- | ------------ | ------------------------- |
+| 1   | Models page lists only 1 model         | /models      | 🔴 Poor presentation      |
+| 2   | Leaderboard ranking logic is incorrect | /leaderboard | 🔴 Misleading data        |
+| 3   | Nav bar overlaps on subpages           | All pages    | 🔴 Broken user experience |
+| 4   | Vote=0, Response=0 everywhere          | All pages    | 🔴 Lacks social proof     |
+| 5   | Blog cards lack thumbnails             | /blog        | 🟡 Low visual engagement  |
 
-## 5. ÖNERİLER
+## 5. RECOMMENDATIONS
 
-### Kısa Vade (1 Hafta)
+### Short Term (1 Week)
 
-1. **Models sayfasına veri ekle** — en az 10-15 model (GPT-4, Gemini, Claude, Llama vb.)
-2. **Leaderboard sıralamasını düzelt** — incident_count'a göre azalan
-3. **Blog kartlarına thumbnail ekle** — her yazıya görsel
-4. **Nav overlap'ı kesin çöz** — sticky header height hesaplaması
+1. **Populate Models page** — add at least 10-15 models (GPT-4, Gemini, Claude, Llama, etc.).
+2. **Correct Leaderboard ranking** — descending sort based on incident_count.
+3. **Add thumbnails to blog cards** — visual representation for each post.
+4. **Resolve nav overlap** — fix sticky header height calculations.
 
-### Orta Vade (2-4 Hafta)
+### Medium Term (2-4 Weeks)
 
-5. **Incident kartlarına hover efekti ekle** — border glow, shadow
-6. **Sidebar'ı daralt** — %25'ten %20'ye
-7. **Mobile responsive test** — hamburger menü, kart düzeni
-8. **Vote system'ini teşvik et** — oylama sonrası feedback
-9. **Empty state design** — 0 incident olan provider'lar için "No incidents yet" mesajı
+5. **Add hover effects to incident cards** — border glow, shadow.
+6. **Narrow down the sidebar** — adjust from 25% to 20% width.
+7. **Mobile responsive testing** — audit hamburger menu and card layout on mobile.
+8. **Encourage voting** — add post-vote feedback mechanism.
+9. **Empty state design** — design "No incidents yet" message for empty providers.
 
-### Uzun Vade (1-2 Ay)
+### Long Term (1-2 Months)
 
-10. **Data visualization** — leaderboard bar chart race, trend lines
-11. **Incident timeline animation** — reported → reviewed → published geçişi
-12. **Dark/light mode toggle** — kullanıcı tercihi
-13. **Skeleton loading** — sayfa yüklenirken shimmer efekti
+10. **Data visualization** — implement leaderboard bar chart race and trend lines.
+11. **Incident timeline animation** — visual transition for reported → reviewed → published states.
+12. **Dark/light mode toggle** — save user preferences.
+13. **Skeleton loading** — shimmer effects during page load.
 
 ---
 
-_Rapor OMEGA PRIME tarafından Playwright canlı tarama ile hazırlanmıştır._
-_AI Model: deepseek v4 flash_
-_Screenshot'lar: D:\Alparai\docs\ui-audit\ dizininde_
+_Report prepared by OMEGA PRIME using Playwright live scanning._  
+_AI Model: deepseek v4 flash_  
+\_Screenshots saved in: D:\Alparai\docs\ui-audit\_

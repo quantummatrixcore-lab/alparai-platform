@@ -1,343 +1,343 @@
 # ALPAR AI — 360° Consolidated Audit Report
 
-> **Tarih:** 23 Haziran 2026
-> **Sürüm:** 3.0 (Profesyonel Formatta Güncellenmiş)
-> **Hazırlayan:** opencode/mimo-v2.5-free
-> **Kapsam:** Tüm sayfalar (EN + TR + Mobil) + 16 model historical data
-> **Skor:** 570/1000 (Bağımsız Canlı Site Denetimi)
-> **Durum:** Lansmana HAZIR DEĞİL — 7 P0 Blocker mevcut
+> **Date:** June 23, 2026
+> **Version:** 3.0 (Updated to Professional Format)
+> **Prepared by:** opencode/mimo-v2.5-free
+> **Scope:** All pages (EN + TR + Mobile) + 16 models historical data
+> **Score:** 570/1000 (Independent Live Site Audit)
+> **Status:** NOT READY for Launch — 7 P0 Blockers present
 
 ---
 
-## 1. YÖNETİCİ ÖZETİ
+## 1. EXECUTIVE SUMMARY
 
-### Güncel Durum Özeti
+### Current Status Summary
 
-| Metrik         | Değer    | Not                                                |
+| Metric         | Value    | Note                                               |
 | -------------- | -------- | -------------------------------------------------- |
-| Toplam Skor    | 570/1000 | Bağımsız canlı site denetimi                       |
-| Önceki Skor    | 634/1000 | MASTER-360-AUDIT-REPORT.md                         |
-| P0 Blocker     | 7 adet   | Kritik, lansman öncesi çözülmeli                   |
-| P1 Issue       | 12 adet  | Yüksek öncelik, 1 hafta içinde                     |
-| Çözülen P0     | 4 adet   | Transparency, Login wall, Contact i18n, Brand data |
-| Lansman Durumu | HAYIR    | 7 P0 blocker devam ediyor                          |
+| Overall Score  | 570/1000 | Independent live site audit                        |
+| Previous Score | 634/1000 | MASTER-360-AUDIT-REPORT.md                         |
+| P0 Blockers    | 7 items  | Critical, must be resolved before launch           |
+| P1 Issues      | 12 items | High priority, within 1 week                       |
+| Resolved P0s   | 4 items  | Transparency, Login wall, Contact i18n, Brand data |
+| Launch Status  | NO       | 7 P0 blockers remain                               |
 
-### En Kritik Bulgular (Canlı Site Doğrulaması)
+### Most Critical Findings (Live Site Verification)
 
-1. **Transparency'de raw i18n key** — `legal.trustScoreMethodology` ve `legal.trustScoreMethodologyDesc` her iki dilde de raw basılıyor
-2. **Brand sayfası boş incidents** — OpenAI'da "24 incidents" yazılı ama hiçbiri render edilmiyor
-3. **"See Rankings" yanıltıcı** — Hero'daki buton `/incidents`'a gidiyor, `/leaderboard`'a değil
-4. **TR Live Feed İngilizce** — "Fatal Autonomous Vehicle Crash", "AI recommended Ponzi scheme" başlıkları İngilizce
-5. **Trust Score Metodolojisi hardcoded İngilizce** — "Verified Incidents", "Response Rate & Speed" hiç çevrilmemiş
-6. **Models sayfası sadece 1 model** — Grok 3 var, gerisi yok
-7. **Sıfır sosyal kanıt** — 0 oy, 0 yorum, platform ölü görünüyor
+1. **Raw i18n key in Transparency:** `legal.trustScoreMethodology` and `legal.trustScoreMethodologyDesc` are printed raw in both languages.
+2. **Empty incidents on Brand page:** OpenAI page claims "24 incidents" but none are rendered.
+3. **"See Rankings" misleading:** The button in the Hero section links to `/incidents` instead of `/leaderboard`.
+4. **TR Live Feed in English:** "Fatal Autonomous Vehicle Crash", "AI recommended Ponzi scheme" titles are in English.
+5. **Trust Score Methodology hardcoded in English:** "Verified Incidents", "Response Rate & Speed" sections are completely untranslated.
+6. **Models page lists only 1 model:** Grok 3 is present, the rest are missing.
+7. **Zero social proof:** 0 votes, 0 comments, platform looks dead.
 
 ---
 
-## 2. SAYFA BAZLI ANALİZ (CANLI SİTE DOĞRULAMASI)
+## 2. PAGE-BY-PAGE ANALYSIS (LIVE SITE VERIFICATION)
 
-### 2.1 Homepage (Ana Sayfa) — 65/100
+### 2.1 Homepage — 65/100
 
-**Güçlü Yönler:**
+**Strengths:**
 
-- Hero bölümü etkileyici: "AI Lied to You. Nobody Was Tracking It. We Were." güçlü mesaj
-- 2-column split layout (manifesto + live data) iyi çalışıyor
-- Live stat card'lar (64 failures, 23 providers, 47 countries) dikkat çekici
-- Founder story bölümü duygusal bağ kuruyor
-- News ticker canlı bilgi akışı sağlıyor
-- Ecosystem Pulse bölümü içerik zenginliği sunuyor
-- "How it works" 4 adımlık süreç net
-- Trust bar (AGPL, EU/GDPR, PII Guardian, Art. 14) güven veriyor
-- Footer kapsamlı (Product, Legal, About)
+- The hero section is engaging: "AI Lied to You. Nobody Was Tracking It. We Were." is a strong message.
+- 2-column split layout (manifesto + live data) works well.
+- Live stat cards (64 failures, 23 providers, 47 countries) are eye-catching.
+- Founder story section builds an emotional connection.
+- News ticker provides a live information stream.
+- Ecosystem Pulse section offers rich content.
+- "How it works" 4-step process is clear.
+- Trust bar (AGPL, EU/GDPR, PII Guardian, Art. 14) builds credibility.
+- Footer is comprehensive (Product, Legal, About).
 
-**Kritik Sorunlar:**
+**Critical Issues:**
 
-- 🔴 "See Rankings" butonu yanıltıcı — `/incidents`'a gidiyor (`hero-section.tsx:98`)
-- 🔴 Duplicate CTAs — Alt kısımda hem "See Rankings" butonu hem "See Rankings" link'i
-- 🔴 TR Live Feed İngilizce — `page.tsx:213`'te `title_tr ?? title_en` fallback'i, DB'de `title_tr` NULL
-- 🟡 Nav bar kalabalık — 10+ element tek satırda
-- 🟡 "Last report: Just now" — gerçek zamanlı mı statik mi belli değil
+- 🔴 "See Rankings" button is misleading — links to `/incidents` (`hero-section.tsx:98`).
+- 🔴 Duplicate CTAs — features both a "See Rankings" button and a duplicate link at the bottom.
+- 🔴 TR Live Feed in English — `title_tr ?? title_en` fallback in `page.tsx:213` because `title_tr` is NULL in the DB.
+- 🟡 Navigation bar is cramped — 10+ elements on a single row.
+- 🟡 "Last report: Just now" — unclear whether it is real-time or static.
 
-### 2.2 Incidents (Olaylar) — 60/100
+### 2.2 Incidents — 60/100
 
-**Güçlü Yönler:**
+**Strengths:**
 
-- "All Incidents" başlığı net
-- 50+ published reports
-- Filtre sistemi kapsamlı: category + severity + search
-- Incident kartları bilgilendirici
-- Timeline süreci görsel
-- Sidebar'da Live Poll ve Latest News
+- "All Incidents" header is clear.
+- 50+ published reports.
+- Filtering system is comprehensive: category + severity + search.
+- Incident cards are informative.
+- Timeline process is visual.
+- Live Poll and Latest News in the sidebar.
 
-**Kritik Sorunlar:**
+**Critical Issues:**
 
-- 🔴 Sidebar ile ana içerik genişlik oranı dengesiz
-- 🔴 Tüm olaylarda vote=0, comment=0 — sosyal kanıt yok
-- 🟡 Filtre butonları çok küçük — mobilde zor
-- 🟡 Severity renk kodları tutarsız
+- 🔴 Unbalanced width ratio between the sidebar and the main content area.
+- 🔴 All incidents display vote=0 and comment=0 — lacks social proof.
+- 🟡 Filter buttons are too small — hard to use on mobile.
+- 🟡 Inconsistent severity color-coding.
 
 ### 2.3 Leaderboard — 55/100
 
-**Güçlü Yönler:**
+**Strengths:**
 
-- Tablo yapısı temiz
-- Provider logoları premium
-- `<table>` + `<caption>` erişilebilirlik için iyi
-- Share butonları mevcut
+- Table structure is clean.
+- Provider logos are premium.
+- `<table>` + `<caption>` elements are implemented well for accessibility.
+- Sharing buttons are active.
 
-**Kritik Sorunlar:**
+**Critical Issues:**
 
-- 🔴 Sıralama mantığı hatalı — trust_score'a göre sıralı, incident_count'a değil
-- 🔴 Toplam response=0, avg response rate=0% — platform ölü görünüyor
-- 🔴 ALPAR Autopilot (#1, 0 incident) — sıralamada haksız avantaj
-- 🟡 16 provider'da 0 incident — tablonun %70'i boş
+- 🔴 Ranking logic is incorrect — sorted by `trust_score` instead of `incident_count`.
+- 🔴 Total response=0, average response rate=0% — makes the platform look dead.
+- 🔴 ALPAR Autopilot (#1, 0 incidents) — unfair ranking advantage.
+- 🟡 16 providers show 0 incidents — 70% of the table is empty.
 
 ### 2.4 Models — 30/100
 
-**Güçlü Yönler:**
+**Strengths:**
 
-- "AI Models Directory" başlığı net
-- Search + sort + filter mevcut
+- "AI Models Directory" header is clear.
+- Search + sort + filter are present.
 
-**Kritik Sorunlar:**
+**Critical Issues:**
 
-- 🔴 SADECE 1 MODEL (Grok 3) — Sayfa neredeyse boş
-- 🔴 Sayfa yüksekliğinin %80'i boş alan
-- 🟡 Rating "-(0)" şeklinde — negatif mi boş mu belli değil
+- 🔴 ONLY 1 MODEL LISTED (Grok 3) — The page is almost empty.
+- 🔴 80% of the page height is empty space.
+- 🟡 Rating shows as "-(0)" — unclear whether it represents a negative value or an empty state.
 
 ### 2.5 Blog — 70/100
 
-**Güçlü Yönler:**
+**Strengths:**
 
-- "INSIGHTS & RESEARCH" eyebrow badge tematik
-- 3 blog kartı yan yana
-- Tag'ler kategori bazlı
-- İçerik kaliteli
+- "INSIGHTS & RESEARCH" eyebrow badge is thematic.
+- 3 blog cards arranged in a grid.
+- Tags are category-based.
+- Content quality is high.
 
-**Sorunlar:**
+**Issues:**
 
-- 🟡 Blog kartlarında görsel yok
-- 🟡 Tag'ler çok küçük ve soluk
-- 🟡 Blog yazısı sayısı az (3 tane)
+- 🟡 Blog cards lack visual thumbnails.
+- 🟡 Tags are too small and faded.
+- 🟡 Limited to 3 blog posts.
 
-### 2.6 Submit (Rapor Gönder) — 82/100
+### 2.6 Submit — 82/100
 
-**Güçlü Yönler:**
+**Strengths:**
 
-- "No login required" mesajı açık
-- "100% Anonymous" güven veriyor
-- Form alanları net (200/5000 char)
-- 3 zorunlu consent checkbox
-- Evidence upload mevcut
+- "No login required" message is explicit.
+- "100% Anonymous" builds trust.
+- Form fields are clean (200/5000 chars).
+- 3 required consent checkboxes.
+- Evidence upload is active.
 
-**Sorunlar:**
+**Issues:**
 
-- 🟡 Form sayfası çok uzun — sticky submit butonu yok
-- 🟡 "PII is masked automatically" nasıl çalıştığı açıklanmamış
+- 🟡 Form page is very long — lacks a sticky submit button.
+- 🟡 "PII is masked automatically" notice is shown, but how it works isn't explained.
 
-### 2.7 Contact (İletişim) — 75/100
+### 2.7 Contact — 75/100
 
-**Güçlü Yönler:**
+**Strengths:**
 
-- Temiz form tasarımı
-- Category dropdown'ı çalışıyor
-- EN ve TR versiyonları tutarlı
-- Sidebar'da email ve registered office bilgisi
+- Clean form design.
+- Category dropdown is functional.
+- EN and TR versions are consistent.
+- Sidebar features email and registered office info.
 
-**Sorunlar:**
+**Issues:**
 
-- 🟡 "Registered office" bilgisi eksik — "Will be disclosed in the Imprint page"
-- 🟡 Imprint (Künye) sayfası yok — yasal zorunluluk
+- 🟡 Missing "registered office" details — "Will be disclosed in the Imprint page".
+- 🟡 Missing Imprint page — legal requirement.
 
 ### 2.8 Transparency — 50/100
 
-**Güçlü Yönler:**
+**Strengths:**
 
-- 64 total reports, %100 publish rate
-- Moderasyon süreci 4 adımlık olarak açıklanmış
-- Platform sayıları doğru (4 users, 23 providers, 64 incidents)
+- 64 total reports, 100% publish rate.
+- 4-step moderation process explained.
+- Platform stats are correct (4 users, 23 providers, 64 incidents).
 
-**Kritik Sorunlar:**
+**Critical Issues:**
 
-- 🔴 Raw i18n key — `legal.trustScoreMethodology` ve `legal.trustScoreMethodologyDesc` ham basılıyor
-- 🔴 Trust Score Metodolojisi hardcoded İngilizce — hiçbir `t()` kullanılmamış
-- 🟡 Trust Score formülü: "Verified Incidents × -5" — negatif çarpan yanıltıcı olabilir
+- 🔴 Raw i18n key — `legal.trustScoreMethodology` and `legal.trustScoreMethodologyDesc` are printed raw.
+- 🔴 Trust Score Methodology is hardcoded in English — no `t()` translations used.
+- 🟡 Trust Score formula: "Verified Incidents × -5" — negative multiplier could be misleading.
 
 ### 2.9 Legal Pages — 80/100
 
-**Güçlü Yönler:**
+**Strengths:**
 
-- Terms of Service: tamamen Türkçe çevrilmiş
-- Privacy Policy: mevcut
-- Takedown Policy: mevcut
-- Cookie Policy: mevcut
+- Terms of Service: fully translated into Turkish.
+- Privacy Policy: present.
+- Takedown Policy: present.
+- Cookie Policy: present.
 
-**Sorunlar:**
+**Issues:**
 
-- 🟡 Imprint (Künye) sayfası yok — AB yasal zorunluluğu
-- 🟡 "/legal/takedown" link'i raw URL olarak görünüyor (anchor link hatalı olabilir)
-
----
-
-## 3. TEKNİK ANALİZ (KOD KAYNAKLARI)
-
-### 3.1 i18n Durumu
-
-**Sorunlu Alanlar:**
-
-1. `transparency/page.tsx:201,206` — `trustScoreMethodology` ve `trustScoreMethodologyDesc` key'leri messages dosyalarında yok
-2. `transparency/page.tsx:224-249` — Trust Score bölümü tamamen hardcoded İngilizce
-3. `page.tsx:213` — `title_tr ?? title_en` fallback'i, DB'de `title_tr` muhtemelen NULL
-4. `hero-section.tsx:98` — "See Rankings" link'i `/incidents`'a gidiyor
-
-**Çözülen Alanlar:**
-
-- Contact form i18n — tamamen çevrilmiş
-- Legal pages — tamamen çevrilmiş
-- Navigation — tamamen çevrilmiş
-
-### 3.2 Veri Bütünlüğü
-
-**Sorunlu Alanlar:**
-
-1. Brand sayfası incidents — `brand/[slug]/page.tsx:121-137` incidents çekiyor ama render etmiyor
-2. Leaderboard sıralama — `leaderboard/page.tsx:70-77` trust_score'a göre sıralıyor
-3. Homepage vs Brand count — Homepage "64", OpenAI "24" — bu doğru olabilir
-
-### 3.3 Mobil Durum
-
-**Mevcut Durum:**
-
-- `mobile-nav.tsx` mevcut ve çalışır durumda
-- 8 link, Escape desteği, body scroll lock
-- LanguageSwitcher hamburger menüde görünüyor
-
-**Test Edilemeyen Alanlar:**
-
-- Viewport 1280px sabit — mobil görünüm doğrulanamadı
-- Touch target boyutları doğrulanamadı
-- Form kullanılabilirliği mobilde doğrulanamadı
+- 🟡 Missing Imprint page — EU legal requirement.
+- 🟡 `/legal/takedown` link appears as raw URL (anchor link might be broken).
 
 ---
 
-## 4. SKORLAMA (10 Kategori × 100 = 1000)
+## 3. TECHNICAL ANALYSIS (CODE REFERENCES)
 
-| #   | Kategori                | Ağırlık  | Skor    | Kanıt                                                            |
-| --- | ----------------------- | -------- | ------- | ---------------------------------------------------------------- |
-| 1   | UX/UI & Design          | 100      | 65      | Hero güçlü ama nav kalabalık, brand boş, duplicate CTAs          |
-| 2   | Technical Architecture  | 100      | 75      | Next.js 16 + Supabase iyi ama FREE plan risk, eksik CI           |
-| 3   | Data Integrity          | 100      | 40      | Brand boş incidents, leaderboard yanlış sıralama, 0 sosyal kanıt |
-| 4   | Content & Copywriting   | 100      | 70      | Güçlü EN/TR hero copy ama trust score methodology hardcoded      |
-| 5   | Conversion & User Flows | 100      | 55      | Submit formu iyi ama "See Rankings" yanıltıcı, 0 vote/comment    |
-| 6   | SEO & Growth            | 100      | 60      | Meta tags mevcut ama blog 3 yazı ile sınırlı                     |
-| 7   | Legal Compliance        | 100      | 80      | AGPL, GDPR, KVKK, PII Guardian güçlü. Imprint eksik              |
-| 8   | i18n & Localization     | 100      | 50      | Çoğu çeviri iyi ama transparency raw key, trust score hardcoded  |
-| 9   | Project Management      | 100      | 45      | İki tasarım sistemi, eksik CI/CD, models sayfası boş             |
-| 10  | Community & Virality    | 100      | 30      | 0 sosyal kanıt, Founding Reporter henüz başlamamış               |
-|     | **TOPLAM**              | **1000** | **570** |                                                                  |
+### 3.1 i18n Status
 
----
+**Problematic Areas:**
 
-## 5. P0 BLOCKER'LAR (LANSMAN ÖNCESİ ZORUNLU)
+1. `transparency/page.tsx:201,206` — `trustScoreMethodology` and `trustScoreMethodologyDesc` keys are missing in translation files.
+2. `transparency/page.tsx:224-249` — Trust Score section is completely hardcoded in English.
+3. `page.tsx:213` — `title_tr ?? title_en` fallback; `title_tr` is likely NULL in the DB.
+4. `hero-section.tsx:98` — "See Rankings" link points to `/incidents`.
 
-| #   | ID     | Başlık                             | Kategori | Durum | Kanıt                                 | Çaba    |
-| --- | ------ | ---------------------------------- | -------- | ----- | ------------------------------------- | ------- |
-| 1   | P0-011 | Transparency raw i18n key          | i18n     | AÇIK  | `transparency/page.tsx:201,206`       | 30 dk   |
-| 2   | P0-012 | Brand sayfası boş incidents        | data     | AÇIK  | `brand/[slug]/page.tsx:121-137`       | 2 saat  |
-| 3   | P0-013 | "See Rankings" yanıltıcı link      | ui       | AÇIK  | `hero-section.tsx:98`                 | 5 dk    |
-| 4   | P0-014 | TR Live Feed İngilizce             | i18n     | AÇIK  | `page.tsx:213`, DB'de `title_tr` NULL | 1 saat  |
-| 5   | P0-015 | Trust Score hardcoded İngilizce    | i18n     | AÇIK  | `transparency/page.tsx:224-249`       | 2 saat  |
-| 6   | P0-016 | Models sayfası sadece 1 model      | data     | AÇIK  | Canlı site doğrulandı                 | 3 saat  |
-| 7   | P0-017 | Sıfır sosyal kanıt (0 oy, 0 yorum) | data     | AÇIK  | Tüm platform                          | 1 hafta |
+**Resolved Areas:**
 
----
+- Contact form i18n — fully translated.
+- Legal pages — fully translated.
+- Navigation — fully translated.
 
-## 6. P1 YÜKSEK ÖNCELİK (1 HAFTA İÇİNDE)
+### 3.2 Data Integrity
 
-| #   | ID     | Başlık                                              | Kategori | Durum | Çaba      |
-| --- | ------ | --------------------------------------------------- | -------- | ----- | --------- |
-| 1   | P1-001 | Leaderboard sıralama mantığı                        | data     | AÇIK  | 2 saat    |
-| 2   | P1-002 | Homepage duplicate CTAs                             | ui       | AÇIK  | 1 saat    |
-| 3   | P1-003 | Nav bar kalabalık                                   | ui       | AÇIK  | 3 saat    |
-| 4   | P1-004 | Blog kartlarında görsel yok                         | ui       | AÇIK  | 2 saat    |
-| 5   | P1-005 | Mobil test edilemedi                                | ui       | AÇIK  | 1 gün     |
-| 6   | P1-006 | Imprint (Künye) sayfası yok                         | legal    | AÇIK  | 3 saat    |
-| 7   | P1-007 | Dual email domain (@alparai.com vs @alparai.online) | legal    | AÇIK  | 1 saat    |
-| 8   | P1-008 | Dilemmas cold start (8/9 soru 0 oy)                 | data     | AÇIK  | 1 hafta   |
-| 9   | P1-009 | Dual design system                                  | ui       | AÇIK  | 2-3 hafta |
-| 10  | P1-010 | Health endpoint bilgi sızıntısı                     | security | AÇIK  | 30 dk     |
-| 11  | P1-011 | Cookie banner Escape desteği yok                    | ui       | AÇIK  | 15 dk     |
-| 12  | P1-012 | Husky hook'ları boş                                 | project  | AÇIK  | 15 dk     |
+**Problematic Areas:**
+
+1. Brand page incidents — `brand/[slug]/page.tsx:121-137` fetches incidents but does not render them.
+2. Leaderboard sorting — `leaderboard/page.tsx:70-77` sorts by `trust_score`.
+3. Homepage vs Brand count — Homepage "64", OpenAI "24" — this might be correct.
+
+### 3.3 Mobile Responsiveness
+
+**Current Status:**
+
+- `mobile-nav.tsx` is present and functional.
+- 8 links, Escape key support, body scroll lock.
+- LanguageSwitcher appears in the hamburger menu.
+
+**Unverified Areas:**
+
+- Viewport fixed to 1280px — mobile presentation could not be verified.
+- Touch target sizes not verified.
+- Form usability on mobile not verified.
 
 ---
 
-## 7. ÇÖZÜLEN SORUNLAR (Önceki Raporlardan)
+## 4. SCORING (10 Categories × 100 = 1000)
 
-| #   | Başlık                          | Kaynak             | Durum      | Çözüm Tarihi |
-| --- | ------------------------------- | ------------------ | ---------- | ------------ |
-| 1   | Transparency Report 404         | Claude P0, Minimax | ✅ ÇÖZÜLDÜ | 2026-06-22   |
-| 2   | Contact form i18n key sızıntısı | Claude P1          | ✅ ÇÖZÜLDÜ | 2026-06-22   |
-| 3   | Submit login wall               | Claude P0          | ✅ ÇÖZÜLDÜ | 2026-06-22   |
-| 4   | Brand veri hatası (kısmen)      | Claude P0          | ✅ ÇÖZÜLDÜ | 2026-06-22   |
-| 5   | About 404 linki                 | Claude P0          | ✅ ÇÖZÜLDÜ | 2026-06-22   |
-| 6   | Autopilot leaderboard'da        | Claude P1          | ✅ ÇÖZÜLDÜ | 2026-06-22   |
-| 7   | Sahte "Featured In" logoları    | Claude P1          | ✅ ÇÖZÜLDÜ | 2026-06-22   |
-| 8   | Paylaşım linkleri               | Claude P1          | ✅ ÇÖZÜLDÜ | 2026-06-22   |
-
----
-
-## 8. BENZERSİZ TESPİTLER (Bu Denetimden)
-
-### mimo-v2.5 Tespiti
-
-> "Transparency sayfasında `trustScoreMethodology` key'i messages dosyalarında yok ama `defaultValue` fallback kullanılmış. Sorun şu: fallback metni bile raw key olarak render edilmiş — bu, next-intl'in `defaultValue` mekanizmasının çalışmaması değil, component'in `t()` çağrısının yanlış yapılması. `transparency/page.tsx:201`'de `{t("trustScoreMethodology", { defaultValue: "Trust Score™ Methodology" })}` yerine `{t("trustScoreMethodologyDesc", { defaultValue: "..." })}` gibi bir kullanım olmalı. Ama asıl sorun: bu key'ler messages dosyalarında hiç yok — fallback çalışsa bile çeviri yapılamaz."
+| #   | Category                | Weight   | Score   | Evidence                                                               |
+| --- | ----------------------- | -------- | ------- | ---------------------------------------------------------------------- |
+| 1   | UX/UI & Design          | 100      | 65      | Hero strong but nav cramped, brand empty, duplicate CTAs               |
+| 2   | Technical Architecture  | 100      | 75      | Next.js 16 + Supabase good but FREE plan risk, missing CI              |
+| 3   | Data Integrity          | 100      | 40      | Brand empty incidents, leaderboard wrong sorting, 0 social proof       |
+| 4   | Content & Copywriting   | 100      | 70      | Strong EN/TR hero copy but trust score methodology hardcoded           |
+| 5   | Conversion & User Flows | 100      | 55      | Submit form good but "See Rankings" misleading, 0 votes/comments       |
+| 6   | SEO & Growth            | 100      | 60      | Meta tags present but blog limited to 3 posts                          |
+| 7   | Legal Compliance        | 100      | 80      | AGPL, GDPR, KVKK, PII Guardian strong. Imprint missing                 |
+| 8   | i18n & Localization     | 100      | 50      | Most translations good but transparency raw key, trust score hardcoded |
+| 9   | Project Management      | 100      | 45      | Two design systems, missing CI/CD, models page empty                   |
+| 10  | Community & Virality    | 100      | 30      | 0 social proof, Founding Reporter has not started                      |
+|     | **TOTAL**               | **1000** | **570** |                                                                        |
 
 ---
 
-## 9. ÖNERİLER
+## 5. P0 BLOCKERS (MANDATORY PRE-LAUNCH)
 
-### Hemen Yapılacak (Bugün)
-
-1. "See Rankings" link'ini `/leaderboard`'a çevir — 5 dk
-2. `trustScoreMethodology` ve `trustScoreMethodologyDesc` key'lerini messages dosyalarına ekle — 30 dk
-3. Trust Score Metodolojisi'ni i18n'e geçir — 2 saat
-
-### Bu Hafta
-
-4. Brand sayfası incidents render sorununu çöz — 2 saat
-5. TR Live Feed'i düzelt (`title_tr` alanını doldur) — 1 saat
-6. Imprint (Künye) sayfası oluştur — 3 saat
-7. Leaderboard sıralamasını düzelt — 2 saat
-
-### Bu Ay
-
-8. Models sayfasına 10+ model ekle — 3 saat
-9. Mobil test ve optimizasyon — 1 gün
-10. Dual design system unification — 2-3 hafta
-11. CI/CD pipeline (visual regression, i18n-lint) — 1 hafta
+| #   | ID     | Title                                | Category | Status | Evidence                              | Effort  |
+| --- | ------ | ------------------------------------ | -------- | ------ | ------------------------------------- | ------- |
+| 1   | P0-011 | Transparency raw i18n key            | i18n     | OPEN   | `transparency/page.tsx:201,206`       | 30 mins |
+| 2   | P0-012 | Empty incidents on Brand page        | data     | OPEN   | `brand/[slug]/page.tsx:121-137`       | 2 hours |
+| 3   | P0-013 | "See Rankings" misleading link       | ui       | OPEN   | `hero-section.tsx:98`                 | 5 mins  |
+| 4   | P0-014 | TR Live Feed in English              | i18n     | OPEN   | `page.tsx:213`, `title_tr` NULL in DB | 1 hour  |
+| 5   | P0-015 | Trust Score hardcoded in English     | i18n     | OPEN   | `transparency/page.tsx:224-249`       | 2 hours |
+| 6   | P0-016 | Models page lists only 1 model       | data     | OPEN   | Live site verified                    | 3 hours |
+| 7   | P0-017 | Zero social proof (0 votes/comments) | data     | OPEN   | Whole platform                        | 1 week  |
 
 ---
 
-## 10. SONUÇ
+## 6. P1 HIGH PRIORITY (WITHIN 1 WEEK)
 
-### Genel Değerlendirme
-
-ALPAR AI **potansiyeli yüksek ama lansmana hazır olmayan** bir ürün. 16 modelin ortak tespitleri güçlü bir foundational analysis oluşturmuş. Canlı site denetimim, bu tespitleri doğruluyor ve yeni P0'lar tespit ediyor.
-
-### Lansman Yolu
-
-**7 P0 blocker düzeltildiğinde:** Skor 570 → 750+ civarına yükselebilir.
-**12 P1 düzeltildiğinde:** Skor 800+ civarına yükselebilir.
-**Dora Elite (900+):** 3-6 ay sürekli geliştirme ile ulaşılabilir.
-
-### Yatırımcı Görünümü
-
-- **Güçlü yönler:** Benzersiz value proposition, sağlam yasal altyapı, güçlü founding story
-- **Zayıf yönler:** Sıfır sosyal kanıt, veri bütünlüğü sorunları, mobil test eksikliği
-- **Öneri:** P0'ları düzeltmeden yatırım turuna başlamayın
+| #   | ID     | Title                                               | Category | Status | Effort    |
+| --- | ------ | --------------------------------------------------- | -------- | ------ | --------- |
+| 1   | P1-001 | Leaderboard ranking logic                           | data     | OPEN   | 2 hours   |
+| 2   | P1-002 | Homepage duplicate CTAs                             | ui       | OPEN   | 1 hour    |
+| 3   | P1-003 | Nav bar cramped                                     | ui       | OPEN   | 3 hours   |
+| 4   | P1-004 | Blog cards lack thumbnails                          | ui       | OPEN   | 2 hours   |
+| 5   | P1-005 | Mobile not verified                                 | ui       | OPEN   | 1 day     |
+| 6   | P1-006 | Missing Imprint page                                | legal    | OPEN   | 3 hours   |
+| 7   | P1-007 | Dual email domain (@alparai.com vs @alparai.online) | legal    | OPEN   | 1 hour    |
+| 8   | P1-008 | Dilemmas cold start (8/9 questions 0 votes)         | data     | OPEN   | 1 week    |
+| 9   | P1-009 | Dual design system                                  | ui       | OPEN   | 2-3 weeks |
+| 10  | P1-010 | Health endpoint information leakage                 | security | OPEN   | 30 mins   |
+| 11  | P1-011 | Cookie banner lacks Escape support                  | ui       | OPEN   | 15 mins   |
+| 12  | P1-012 | Husky hooks empty                                   | project  | OPEN   | 15 mins   |
 
 ---
 
-_Rapor opencode/mimo-v2.5-free tarafından hazırlanmıştır._
-_Tarih: 23 Haziran 2026_
-_Versiyon: 3.0_
+## 7. RESOLVED ISSUES (From Previous Reports)
+
+| #   | Title                         | Source             | Status      | Resolution Date |
+| --- | ----------------------------- | ------------------ | ----------- | --------------- |
+| 1   | Transparency Report 404       | Claude P0, Minimax | ✅ RESOLVED | 2026-06-22      |
+| 2   | Contact form i18n key leakage | Claude P1          | ✅ RESOLVED | 2026-06-22      |
+| 3   | Submit login wall             | Claude P0          | ✅ RESOLVED | 2026-06-22      |
+| 4   | Brand data error (partial)    | Claude P0          | ✅ RESOLVED | 2026-06-22      |
+| 5   | About 404 link                | Claude P0          | ✅ RESOLVED | 2026-06-22      |
+| 6   | Autopilot in leaderboard      | Claude P1          | ✅ RESOLVED | 2026-06-22      |
+| 7   | Fake "Featured In" logos      | Claude P1          | ✅ RESOLVED | 2026-06-22      |
+| 8   | Share links                   | Claude P1          | ✅ RESOLVED | 2026-06-22      |
+
+---
+
+## 8. UNIQUE FINDINGS (From This Audit)
+
+### mimo-v2.5 Finding
+
+> "On the Transparency page, the `trustScoreMethodology` key is missing in messages files, but a `defaultValue` fallback is used. The issue: even the fallback text is rendered as raw key — this is not a failure of next-intl's `defaultValue` mechanism, but rather a misuse of the component's `t()` call. In `transparency/page.tsx:201`, it should use `{t("trustScoreMethodology", { defaultValue: "Trust Score™ Methodology" })}` instead of `{t("trustScoreMethodologyDesc", { defaultValue: "..." })}`. But the root issue: these keys are not present in messages files at all — meaning even if the fallback worked, translation would be impossible."
+
+---
+
+## 9. RECOMMENDATIONS
+
+### Immediate (Today)
+
+1. Point the "See Rankings" link to `/leaderboard` — 5 mins
+2. Add `trustScoreMethodology` and `trustScoreMethodologyDesc` keys to messages files — 30 mins
+3. Move Trust Score Methodology to i18n — 2 hours
+
+### This Week
+
+4. Resolve Brand page incidents rendering issue — 2 hours
+5. Fix TR Live Feed (populate `title_tr` field) — 1 hour
+6. Create Imprint page — 3 hours
+7. Correct Leaderboard ranking logic — 2 hours
+
+### This Month
+
+8. Add 10+ models to Models page — 3 hours
+9. Mobile testing and optimization — 1 day
+10. Dual design system unification — 2-3 weeks
+11. CI/CD pipeline (visual regression, i18n-lint) — 1 week
+
+---
+
+## 10. CONCLUSION
+
+### Overall Evaluation
+
+ALPAR AI is a **high-potential but launch-unready** product. Consolidated findings from 16 models form a robust foundational analysis. My live site audit verifies these findings and identifies new P0 issues.
+
+### Path to Launch
+
+- **When 7 P0 blockers are resolved:** Score can rise to around 570 → 750+.
+- **When 12 P1 issues are resolved:** Score can rise to around 800+.
+- **Dora Elite (900+):** Can be achieved with 3-6 months of continuous development.
+
+### Investor View
+
+- **Strengths:** Unique value proposition, solid legal infrastructure, strong founding story
+- **Weaknesses:** Zero social proof, data integrity issues, lack of mobile testing
+- **Recommendation:** Do not begin your investment round before resolving P0 issues.
+
+---
+
+_Report prepared by opencode/mimo-v2.5-free._  
+_Date: June 23, 2026_  
+_Version: 3.0_

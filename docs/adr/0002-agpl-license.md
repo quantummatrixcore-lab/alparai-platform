@@ -15,10 +15,11 @@ ALPAR AI is licensed under **GNU Affero General Public License, version 3** (AGP
 
 ## Consequences
 
-+ Anyone can audit, fork, and self-host.
-+ We benefit from external contributions.
-- Commercial entities who want to integrate ALPAR as a library in a closed-source product will not. That's a deliberate trade-off.
-- The full license text is at [LICENSE](../LICENSE) and at https://www.gnu.org/licenses/agpl-3.0.txt.
+- Anyone can audit, fork, and self-host.
+- We benefit from external contributions.
+
+* Commercial entities who want to integrate ALPAR as a library in a closed-source product will not. That's a deliberate trade-off.
+* The full license text is at [LICENSE](../LICENSE) and at https://www.gnu.org/licenses/agpl-3.0.txt.
 
 ## Alternatives
 

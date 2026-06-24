@@ -1,30 +1,30 @@
-# Olgunluk Skoru Değişim Geçmişi (Changelog)
+# Maturity Score Change History (Changelog)
 
-Tüm denetim turlarında gerçekleşen puanlama ve altyapı değişikliklerinin log kaydı:
+Log record of scoring and infrastructure changes across all audit rounds:
 
 ---
 
 ## [2026-06-23] Round 2: Sovereign Rating & Multi-Agent Debate
 
-- **Mevcut Skor:** 920 / 1000 (Dora Elite)
-- **Önceki Skor:** 850 / 1000
-- **Değişim:** +70 puan (İyileşme)
-- **Yapılan Değişiklikler:**
-  - AI-to-AI karşılıklı debate ve çapraz sorgu (cross-examination) altyapısı uygulandı.
-  - Şeffaflık Ültimatomu (The Transparency Ultimatum) Claude Supreme Court yönergesine eklendi.
-  - AI Moody's derecelendirme kuruluşu tonu prompt seviyesinde entegre edildi.
-  - Proje yönetim standartları (`/AUDITS`, `ANTIGRAVITY_CHECKLIST.md`, `ARCHITECT_DECISION_RECORD.md`) oluşturuldu.
+- **Current Score:** 920 / 1000 (Dora Elite)
+- **Previous Score:** 850 / 1000
+- **Change:** +70 points (Improvement)
+- **Changes Implemented:**
+  - AI-to-AI mutual debate and cross-examination infrastructure implemented.
+  - Transparency Ultimatum added to Claude Supreme Court directives.
+  - AI Moody's rating agency tone integrated at the prompt level.
+  - Project management standards (`/AUDITS`, `ANTIGRAVITY_CHECKLIST.md`, `ARCHITECT_DECISION_RECORD.md`) created.
 
 ---
 
 ## [2026-06-22] Round 2: Admin Dashboard & Core P0 Fixes
 
-- **Mevcut Skor:** 850 / 1000
-- **Önceki Skor:** 430 / 1000 (eski db_reset sonrası)
-- **Değişim:** +420 puan
-- **Yapılan Değişiklikler:**
-  - Admin paneli `/admin/analysis` görsel analitik ekranı geliştirildi.
-  - API Anahtarları yönetimi ve `/admin/api-keys` sayfası eklendi.
-  - Leaderboard sayfası N+1 veritabanı sorgu sorunu çözüldü (performans optimizasyonu).
-  - Admin sidebar, kullanıcı terfi formu ve sağlayıcı listesi TR/EN dil desteği ile yerelleştirildi.
-  - Çift dil önekinden kaynaklı 404 yönlendirme hataları çözüldü.
+- **Current Score:** 850 / 1000
+- **Previous Score:** 430 / 1000 (post old db_reset)
+- **Change:** +420 points
+- **Changes Implemented:**
+  - Admin panel `/admin/analysis` visual analytics dashboard developed.
+  - API Keys management and `/admin/api-keys` page added.
+  - Leaderboard page N+1 database query issue resolved (performance optimization).
+  - Admin sidebar, user promotion form, and provider list localized with TR/EN support.
+  - 404 redirection errors due to duplicate language prefix resolved.

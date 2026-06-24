@@ -1,79 +1,79 @@
-# 🏛️ ALPAR AI — Çoklu Model Analiz Protokolü
+# 🏛️ ALPAR AI — Multi-Model Analysis Protocol
 
-## Sürüm: 1.0 | Haziran 2026
+## Version: 1.0 | June 2026
 
-### 1. ANALİZ AKIŞI
+### 1. ANALYSIS FLOW
 
-[1] Her AI modelden aynı prompt ile analiz al
-[2] Yanıtları standart formatta kaydet
-[3] Çakışan veya tutarsız bulguları işaretle
-[4] Konsolide rapor oluştur
-[5] Google Antigravity'e gönder
+[1] Fetch analysis from each AI model using the same prompt
+[2] Store responses in a standardized format
+[3] Flag conflicting or inconsistent findings
+[4] Create a consolidated report
+[5] Send to Google Antigravity
 
-### 2. PROMPT STANDARTI
+### 2. PROMPT STANDARD
 
 ```
-ROL: Sen bir platform kalite müfettişisin.
-GÖREV: Aşağıdaki platform durum raporunu analiz et.
+ROLE: You are a platform quality inspector.
+TASK: Analyze the following platform status report.
 FORMAT:
-  - Güçlü Yönler (en az 3)
-  - Zayıf Yönler (en az 3)
-  - Kritik Sorunlar (en az 2)
-  - Öneriler (öncelik sıralı)
-  - Puanlama (100 üzerinden, gerekçeli)
-KISIT: Teknik jargon kullanma, eyleme dönük öneriler ver.
+  - Strengths (at least 3)
+  - Weaknesses (at least 3)
+  - Critical Issues (at least 2)
+  - Recommendations (in order of priority)
+  - Scoring (out of 100, with rationale)
+CONSTRAINT: Do not use technical jargon; provide actionable recommendations.
 ```
 
-### 3. MODEL SPESİFİKASYONLARI
+### 3. MODEL SPECIFICATIONS
 
-| Model             | Güçlü Alan       | Zayıf Alan  | Kullanım Amacı             |
-| ----------------- | ---------------- | ----------- | -------------------------- |
-| Gemini 2.5 Pro    | Kod, analiz      | Yaratıcılık | Teknik analiz, kod üretimi |
-| Claude 3.5 Sonnet | Yazı, mantık     | Hız         | İçerik analizi, strateji   |
-| GPT-4o            | Genel, çok yönlü | Maliyet     | Genel değerlendirme        |
-| DeepSeek          | Maliyet, kod     | İngilizce   | Hızlı tarama, kod          |
-| Perplexity        | Araştırma        | Derinlik    | Kaynak tarama              |
+| Model             | Strong Area        | Weak Area  | Intended Use Case                   |
+| ----------------- | ------------------ | ---------- | ----------------------------------- |
+| Gemini 2.5 Pro    | Code, analysis     | Creativity | Technical analysis, code generation |
+| Claude 3.5 Sonnet | Writing, logic     | Speed      | Content analysis, strategy          |
+| GPT-4o            | General, versatile | Cost       | General evaluation                  |
+| DeepSeek          | Cost, code         | English    | Fast scanning, code                 |
+| Perplexity        | Research           | Depth      | Source scanning                     |
 
-### 4. KONSOLİDASYON KURALLARI
+### 4. CONSOLIDATION RULES
 
-- 3+ model aynı bulguyu işaretliyorsa → KRİTİK
-- 2 model işaretliyorsa → ÖNEMLİ
-- 1 model işaretliyorsa → DEĞERLENDİR
-- Hiçbir model işaretlemiyorsa → GÖZ ARDI ET (yok say)
+- If 3+ models flag the same finding → CRITICAL
+- If 2 models flag it → IMPORTANT
+- If 1 model flags it → EVALUATE
+- If no model flags it → IGNORE
 
-### 5. ANTIGRAVITY ENTEGRASYONU
+### 5. ANTIGRAVITY INTEGRATION
 
-- Konsolide raporu Antigravity prompt'una dönüştür
-- Her aksiyon için: Dosya, Satır, Değişiklik açıkla
-- Test senaryolarını ekle
-- Geri bildirim döngüsü oluştur
+- Convert the consolidated report into an Antigravity prompt
+- For each action: Specify File, Line, and Change
+- Include test cases
+- Create a feedback loop
 
 ---
 
-# Çoklu Model Analiz Kontrol Listesi
+# Multi-Model Analysis Checklist
 
-## Her Analiz Öncesi
+## Before Each Analysis
 
-- [ ] Tüm modellerin API key'leri aktif mi?
-- [ ] Rate limit kontrolü yapıldı mı?
-- [ ] Prompt versiyonu güncel mi?
-- [ ] Çıktı formatı standart mı?
+- [ ] Are API keys active for all models?
+- [ ] Has rate limit checking been performed?
+- [ ] Is the prompt version up to date?
+- [ ] Is the output format standardized?
 
-## Analiz Sırasında
+## During Analysis
 
-- [ ] Her modelden yanıt alındı mı?
-- [ ] Yanıtlar zaman damgalı mı?
-- [ ] Tutarsızlıklar not edildi mi?
+- [ ] Was a response received from every model?
+- [ ] Are responses timestamped?
+- [ ] Were inconsistencies noted?
 
-## Analiz Sonrası
+## After Analysis
 
-- [ ] Konsolide rapor oluşturuldu mu?
-- [ ] Çakışan bulgular çözüldü mu?
-- [ ] Antigravity prompt'u hazırlandı mı?
-- [ ] Test planı eklendi mi?
+- [ ] Has a consolidated report been created?
+- [ ] Have conflicting findings been resolved?
+- [ ] Has the Antigravity prompt been prepared?
+- [ ] Has a test plan been appended?
 
-## Antigravity Sonrası
+## After Antigravity Run
 
-- [ ] Değişiklikler test edildi mi?
-- [ ] Regresyon testi yapıldı mı?
-- [ ] Canlıya alma onayı alındı mı?
+- [ ] Have changes been tested?
+- [ ] Was regression testing performed?
+- [ ] Was deployment approval obtained?

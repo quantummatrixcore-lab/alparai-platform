@@ -1,132 +1,132 @@
-# TASARIM & UI/UX PROFESYONEL ÖNERİLERİ
+# PROFESSIONAL UI/UX & DESIGN RECOMMENDATIONS
 
-> **AI Model:** deepseek v4 flash
-> **Tarih:** 2026-06-16
-> **Bağlam:** ALPAR AI — AI accountability platform, www.alparai.com
-
----
-
-## Mevcut Durum: UI ~60/100
-
-Altyapı sağlam (88/100, DORA Elite) ama görsel katman zayıf:
-
-- Minimalist ama _austere_ — karakter yok, sıcaklık yok
-- Hero section metin ağırlıklı, görsel hiyerarşi zayıf
-- Premium ikon/illustration seti yok
-- Renk paleti düz, gradient/glow/depth efekti yok
-- Provider logoları SVG wordmark — vector logo değil
-- Incident kartları düz metin kutusu
+> **AI Model:** deepseek v4 flash  
+> **Date:** 2026-06-16  
+> **Context:** ALPAR AI — AI accountability platform, www.alparai.com
 
 ---
 
-## HEMEN (Bu Hafta)
+## Current State: UI ~60/100
 
-### 1. Güvenlik: `.env.local` Takeaway + Token Rotasyonu
+The infrastructure is robust (88/100, DORA Elite), but the visual layer is weak:
 
-- `.env.local` git'te track ediliyor, tokenlar açıkta
-- Vercel token (`vcp_502...`) ve Supabase token (`sbp_1b9...`) rotasyonu gerek
-- `git rm --cached .env.local` + `.gitignore` güncelle
-
-### 2. Hero Section Görselleştirme
-
-- AI failure live counter (63 → güncel)
-- 22 provider grafiği (bar chart race)
-- Timeline animasyonu (önemli AI olayları)
-- Ekip fotoğrafı veya brand illustrasyonu
-
-### 3. Provider Logolarını Yükselt
-
-- Şu an: SVG wordmark (metin bazlı)
-- Hedef: Vector logo (renkli, tanınabilir, tutarlı boyut)
-- Fallback: Placeholder + provider adı
-
-### 4. Login Gereksinimini Gevşet
-
-- Dilemmas oylama anonim yapılabilir
-- Incident görüntüleme herkese açık (zaten öyle)
-- Submit için sonra kayıt (anonim rapor → email verification)
+- Minimalist but _austere_ — lacks character and warmth
+- The hero section is text-heavy with poor visual hierarchy
+- Lacks a premium icon/illustration set
+- The color palette is flat, missing gradient/glow/depth effects
+- Provider logos are SVG wordmarks instead of vector brand marks
+- Incident cards are plain text boxes
 
 ---
 
-## KISA VADE (1-2 Hafta)
+## IMMEDIATE ACTIONS (This Week)
 
-### 5. Premium İkon Seti
+### 1. Security: `.env.local` Removal + Token Rotation
 
-- Lucide veya Phosphor ikon seti ekle
-- Heroicons outline + solid (shadcn/ui uyumu)
-- Gradient ikonlar (premium his)
+- `.env.local` is tracked in git; tokens are exposed
+- Rotate the Vercel token (`vcp_502...`) and Supabase token (`sbp_1b9...`)
+- Run `git rm --cached .env.local` and update `.gitignore`
 
-### 6. Renk Sistemine Depth Kat
+### 2. Hero Section Visualization
 
-- Kartlara subtle shadow (hover'da yükselme)
-- Hero'ya ambient glow (gradient background)
-- Gradient border'lar (incident severity'ye göre)
-- Dark mode geçiş animasyonu
+- AI failure live counter (63 → current)
+- 22 provider graph (bar chart race)
+- Timeline animation of milestone AI incidents
+- Add a team photo or brand illustration
 
-### 7. Incident Kartlarını Görselleştir
+### 3. Upgrade Provider Logos
 
-- Severity badge (renk kodlu, ikonlu)
-- Timeline indicator (oluş → tespit → çözüm)
-- Provider avatar + isim
-- Vote count (up/down animasyonu)
-- Category tag (pill-shaped, renk kodlu)
+- Current: SVG wordmark (text-based)
+- Target: Vector logo (colored, recognizable, consistent dimensions)
+- Fallback: Placeholder + provider name
 
-### 8. Animasyon Katmanı
+### 4. Relax Login Requirements
 
-- Framer Motion zaten var → kullanılmayan potansiyel
-- Page transitions (soft fade + slide)
-- Scroll-triggered reveal (Intersection Observer)
-- Counter animation (vote sayıları, provider count)
-- Loading skeleton (shimmer efekti)
+- Dilemma voting can be made anonymous
+- Incident viewing is public (already configured)
+- Enable delayed registration for submission (anonymous report → email verification)
 
 ---
 
-## 1 AY
+## SHORT TERM (1-2 Weeks)
 
-### 9. Brand Illustration Seti
+### 5. Premium Icon Set
 
-- AI accountability temalı özel illustrasyonlar
-- 404 sayfası için eğlenceli illustrasyon
-- Empty state illustrasyonları ("Henüz rapor yok")
-- Hero background pattern (subtle, marka renginde)
+- Add Lucide or Phosphor icon sets
+- Use Heroicons outline + solid (aligning with shadcn/ui)
+- Implement gradient icons for a premium feel
+
+### 6. Introduce Depth to the Color System
+
+- Subtle shadows on cards (lift on hover)
+- Ambient glow in the hero (gradient background)
+- Gradient borders based on incident severity
+- Dark mode transition animations
+
+### 7. Visualize Incident Cards
+
+- Color-coded severity badge with icons
+- Timeline indicator (occurrence → detection → resolution)
+- Provider avatar + name
+- Vote count (up/down vote animations)
+- Pill-shaped, color-coded category tags
+
+### 8. Animation Layer
+
+- Framer Motion is present but underutilized
+- Add page transitions (soft fade + slide)
+- Implement scroll-triggered reveals (Intersection Observer)
+- Add counter animations for votes and provider counts
+- Add loading skeletons with shimmer effects
+
+---
+
+## 1 MONTH OUT
+
+### 9. Brand Illustration Set
+
+- Custom illustrations themed around AI accountability
+- Playful illustration for the 404 page
+- Empty state illustrations ("No incidents reported yet")
+- Subtle background patterns in the brand color for the hero
 
 ### 10. Live Feed (Homepage)
 
-- Son incident'ların canlı akışı
-- Sosyal kanıt anında görünür
+- Live stream of recent incidents
+- Make social proof immediately visible
 - Auto-scroll carousel
-- "Just reported" badge yeni olaylarda
+- "Just reported" badge on new incidents
 
 ### 11. Leaderboard → Data Visualization
 
-- Bar chart race (zaman içinde provider sıralaması)
-- Trend lines (son 30 gün)
-- Heatmap (hangi kategoride kim önde)
-- Export grafik (PNG/SVG)
+- Bar chart race showing provider ranking over time
+- Trend lines (last 30 days)
+- Heatmap highlighting who leads in which category
+- Exportable charts (PNG/SVG)
 
 ### 12. Public API v1 + API Docs UI
 
 - Swagger/OpenAPI UI
-- Interactive playground (try endpoint)
-- Rate limit göstergesi
-- Code snippet (curl, Python, JS)
+- Interactive playground to test endpoints
+- Rate limit indicator
+- Code snippets (curl, Python, JS)
 
 ---
 
-## TEKNİK NOTLAR
+## TECHNICAL NOTES
 
-### Mevcut Stack (UI için geçerli olanlar)
+### Current Stack (Applicable to UI)
 
-| Teknoloji     | Durum                  |
-| ------------- | ---------------------- |
-| Tailwind v4   | Mevcut                 |
-| Framer Motion | Mevcut, az kullanılmış |
-| shadcn/ui     | Mevcut                 |
-| Lucide React  | Tavsiye                |
-| next/font     | Mevcut (Inter)         |
-| next/image    | Mevcut                 |
+| Technology    | Status                |
+| ------------- | --------------------- |
+| Tailwind v4   | Active                |
+| Framer Motion | Active, underutilized |
+| shadcn/ui     | Active                |
+| Lucide React  | Recommended           |
+| next/font     | Active (Inter)        |
+| next/image    | Active                |
 
-### Atomic Tasarım Sistemi Yaklaşımı
+### Atomic Design System Approach
 
 ```
 Atoms:    Badge, Button, Icon, Input, Tag
@@ -138,17 +138,17 @@ Pages:    Home, Incidents, Leaderboard, Models, About
 
 ---
 
-## HARİCİ ANALİZLE KARŞILAŞTIRMA
+## COMPARISON WITH EXTERNAL AUDIT
 
-| İddia                       | Doğruluk  | Yorum                                       |
-| --------------------------- | --------- | ------------------------------------------- |
-| "Sıfır rapor"               | ❌ Yanlış | 50 incident canlı, 22 provider, 2.680 oy    |
-| "Login wall %60-80 düşürür" | ⚠️ Kısmen | View açık, submit login ister — intentional |
-| "i18n raw key görünüyor"    | ❌ Yanlış | 763=763 satır, tam çeviri                   |
-| "Founder story yok"         | ❌ Yanlış | Var ama görsel vurgu yetersiz               |
-| "Tech 65/100"               | ❌ Eksik  | 88/100 — live verify yapılmamış             |
+| Claim                     | Accuracy      | Comment                                             |
+| ------------------------- | ------------- | --------------------------------------------------- |
+| "Zero incidents"          | ❌ False      | 50 incidents live, 22 providers, 2,680 votes        |
+| "Login wall drops 60-80%" | ⚠️ Partial    | View is public, submit requires login — intentional |
+| "i18n raw keys visible"   | ❌ False      | Full translations present                           |
+| "Founder story missing"   | ❌ False      | Present but lacks visual emphasis                   |
+| "Tech score 65/100"       | ❌ Incomplete | 88/100 — live verification was not run              |
 
 ---
 
-**AI Model:** deepseek v4 flash
-**Son Güncelleme:** 2026-06-16
+**AI Model:** deepseek v4 flash  
+**Last Updated:** 2026-06-16

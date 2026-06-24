@@ -2,73 +2,58 @@
 audit_id: "ALPAR-AUDIT-2026-06-23-claude-sonnet-4.6-v6"
 date: "2026-06-23"
 model: "claude-sonnet-4-6"
-model_note: "Bağımsız CPO/CTO denetim rolü, claude.ai sohbet arayüzü"
-site_commit_or_deploy_tag: "bilinmiyor — bu tur kullanıcı tarafından sağlanan denetim panosu (dashboard) verisine dayanır"
-previous_audit_id: "bilinmiyor — panodaki '4. analiz turu' referansına göre bu en az 5. veya 6. tur olmalı"
+model_note: "Independent CPO/CTO audit role, claude.ai chat interface"
+site_commit_or_deploy_tag: "unknown — this round relies on audit dashboard data provided by the user"
+previous_audit_id: "unknown — based on the '4th audit round' reference on the dashboard, this must be at least the 5th or 6th round"
 overall_score: 505
-verification_method: "manual-paste (kullanıcının paylaştığı denetim panosu görseli) — canlı site fetch denendi, başarısız oldu (bkz. Böl. 4)"
+verification_method: "manual-paste (audit dashboard screenshot shared by the user) — live site fetch was attempted and failed (see Sec. 4)"
 locales_checked: ["en", "tr"]
 viewports_checked: []
 ---
 
-# ALPAR AI Denetim Raporu — 2026-06-23 — claude-sonnet-4.6
+# ALPAR AI Audit Report — 2026-06-23 — claude-sonnet-4.6
 
-## 0. Doğrulama Yöntemi
+## 0. Verification Method
 
-Bu turda canlı siteye (www.alparai.com) doğrudan erişim denendi (web_search +
-web_fetch), ancak site arama motoru indeksinde bulunamadığı için hiçbir sayfa
-canlı olarak açılamadı. Bu nedenle bu denetim, kullanıcının paylaştığı denetim
-panosu (Haziran 2026, önceki AI denetiminin çıktısı) verisine ve bu verinin
-üzerine uygulanan CPO/CTO seviyesi analiz/sentezine dayanır. Hiçbir sayfa,
-hiçbir viewport, hiçbir locale bu turda bizzat görülmedi.
+In this round, direct access to the live site (www.alparai.com) was attempted (web_search + web_fetch), but since the site was not found in the search engine index, no pages could be loaded live. Therefore, this audit is based on the data of the audit dashboard (June 2026, output of the previous AI audit) shared by the user, and the CPO/CTO-level analysis/synthesis applied on top of this data. No pages, viewports, or locales were personally observed in this round.
 
-## 1. Bu Turda Doğrulanan Bulgular
+## 1. Verified Findings in This Round
 
-Doğrudan gözlem yok — tüm bulgular "doğrulanmış" etiketiyle işaretlendiyse,
-bu panodaki veriye atfen doğrulanmıştır, bu denetimin kendi canlı gözlemine
-değil. Tam liste için ana rapor: `ALPAR_AI_360_Denetim_Raporu_2026-06.docx`.
+No direct observation — all findings marked as "verified" are verified in reference to the data on the dashboard, not the live observation of this audit. For the full list, see the main report: `ALPAR_AI_360_Denetim_Raporu_2026-06.docx`.
 
-## 2. MASTER_CHECKLIST.md'deki Önceki Maddelerin Durumu
+## 2. Status of Previous Items in MASTER_CHECKLIST.md
 
-| ID      | Önceki Durum            | Bu Turda Gözlem                                    | Yeni Durum |
+| ID      | Previous Status         | Observation in This Round                          | New Status |
 | ------- | ----------------------- | -------------------------------------------------- | ---------- |
-| ALP-001 | 🔴 Açık (panoya göre)   | Pano "hâlâ eski layout" diyor; canlı doğrulanamadı | 🔴 Açık    |
-| ALP-002 | 🔴 Açık (panoya göre)   | Pano "0 Verified" diyor; canlı doğrulanamadı       | 🔴 Açık    |
-| ALP-003 | 🔴 Açık, 4. turdur aynı | Pano "hâlâ 404" diyor; canlı doğrulanamadı         | 🔴 Açık    |
-| ALP-004 | 🔴 Açık (panoya göre)   | Pano kırık linki doğruluyor; canlı doğrulanamadı   | 🔴 Açık    |
+| ALP-001 | 🔴 Open (per dashboard) | Dashboard says "still old layout"; unverified live | 🔴 Open    |
+| ALP-002 | 🔴 Open (per dashboard) | Dashboard says "0 Verified"; unverified live       | 🔴 Open    |
+| ALP-003 | 🔴 Open, 4th round same | Dashboard says "still 404"; unverified live        | 🔴 Open    |
+| ALP-004 | 🔴 Open (per dashboard) | Dashboard confirms broken link; unverified live    | 🔴 Open    |
 
-## 3. Yeni Tespit Edilen Sorunlar (bu turda, analiz yoluyla)
+## 3. Newly Identified Issues (in this round, via analysis)
 
-| Geçici ID            | Sayfa/Alan               | Açıklama                                                                                 | Önerilen Önem | Kanıt                           |
-| -------------------- | ------------------------ | ---------------------------------------------------------------------------------------- | ------------- | ------------------------------- |
-| (ALP-012'ye işlendi) | /tr/\*                   | Geçmiş "ham i18n key" bulgusu bu turda da yeniden doğrulanamadı — birikmiş bir kör nokta | P1            | Panonun önceki turlara atıfı    |
-| (ALP-013'e işlendi)  | Mobil, Leaderboard/About | Eski tasarım sisteminin mobil davranışı hiç test edilmemiş görünüyor                     | P1            | Çıkarımsal — doğrudan kanıt yok |
+| Temporary ID        | Page/Area                 | Description                                                                                   | Recommended Severity | Evidence                               |
+| ------------------- | ------------------------- | --------------------------------------------------------------------------------------------- | -------------------- | -------------------------------------- |
+| (Logged as ALP-012) | /tr/\*                    | Past "raw i18n key" finding could not be re-verified in this round — a accumulated blind spot | P1                   | Dashboard reference to previous rounds |
+| (Logged as ALP-013) | Mobile, Leaderboard/About | Mobile behavior of the old design system seems to have never been tested                      | P1                   | Inferential — no direct evidence       |
 
-_Not: bu ikisi yeni "bug" değil, mevcut kör noktaların resmî olarak işaretlenmesi._
+_Note: These two are not new "bugs" but rather the formal flagging of existing blind spots._
 
-## 4. Bu Turda Doğrulanamayanlar
+## 4. Unverified Items in This Round
 
-- Tüm canlı sayfa içerikleri (EN ve TR) — site fetch edilemedi.
-- Mobil görünüm (<768px) — hiçbir viewport testi yapılamadı.
-- Performans/Lighthouse metrikleri — araç mevcut değildi.
-- /tr tarafının i18n bütünlüğü — geçmiş bulgu yeniden test edilemedi.
-- "ALPAR Autopilot", poll dil tutarsızlığı, upvote/view sayaçları, medya logoları — bunların hepsi panodan alındı, bu turda bizzat görülmedi.
+- All live page contents (EN and TR) — could not fetch the site.
+- Mobile viewport (<768px) — no viewport testing could be performed.
+- Performance/Lighthouse metrics — tool was unavailable.
+- i18n integrity of the /tr side — past finding could not be retested.
+- "ALPAR Autopilot", poll language inconsistency, upvote/view counters, media logos — all of these were taken from the dashboard, not personally seen in this round.
 
-## 5. Skor Değişikliği ve Gerekçesi
+## 5. Score Changes and Rationale
 
-Bu denetim panodaki 634/1000 ile AYNI rubriği kullanmıyor — talimatın istediği
-10-kategorili yatırımcı rubriğine göre yeniden hesaplandı ve 505/1000 çıktı.
-Bu bir "düzeltme" değil, farklı bir ağırlıklandırma sorusuna verilen cevap
-(ayrıntı: ana rapor Böl. 5.1). Gelecek denetimler bu iki skoru karıştırmamalı;
-ikisini de ayrı sütunlarda takip etmesi önerilir.
+This audit does not use the same rubric as the 634/1000 on the dashboard — it was recalculated based on the 10-category investor rubric requested in the instructions and resulted in 505/1000. This is not a "correction", but rather an answer given to a different weighting question (detail: main report Sec. 5.1). Future audits should not mix these two scores; it is recommended to track both in separate columns.
 
-## 6. Antigravity İçin Önerilen Aksiyonlar
+## 6. Recommended Actions for Antigravity
 
-`MASTER_CHECKLIST.md` içindeki P0 listesi (ALP-001..004) bu denetimin birincil
-çıktısıdır. Ayrıca:
+The P0 list in `MASTER_CHECKLIST.md` (ALP-001..004) is the primary output of this audit. In addition:
 
-- ALP-012 ve ALP-013'ü kapatmadan önce mutlaka canlı/manuel doğrulama yapılmalı
-  (bu ikisi "düzeltme" değil "doğrulama" görevi).
-- `scripts/smoke-test-p0.sh` şablonu, gerçek domain/API'ye göre uyarlanıp CI'ya
-  eklenmeli — bu, bu raporun kök-neden bölümünde (Böl. 2.7) tespit edilen
-  "aynı bug 4. kez açık" döngüsünü kırmak için tek kalıcı çözüm.
+- Live/manual verification must be performed before closing ALP-012 and ALP-013 (these two are "verification" tasks, not "fix" tasks).
+- The `scripts/smoke-test-p0.sh` template should be adapted to the actual domain/API and added to CI — this is the only permanent solution to break the "same bug open for the 4th time" loop identified in the root-cause section of this report (Sec. 2.7).

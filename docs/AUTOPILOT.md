@@ -20,8 +20,8 @@ The autopilot module is a thin, typed wrapper that gives any Server Action:
 - **Layer 2 worker** that drains the queue and re-runs policies with full
   retry/breaker semantics.
 
-The official term: *Self-Healing Task Automation Engine with Backward Error
-Propagation and Cost-Aware Stop Conditions.*
+The official term: _Self-Healing Task Automation Engine with Backward Error
+Propagation and Cost-Aware Stop Conditions._
 
 ## Where
 
@@ -43,16 +43,16 @@ src/lib/autopilot/
 
 ## Active policies
 
-| Action             | Retry | Breaker thr | Budget ms | On exhaust         | Use case |
-|--------------------|-------|-------------|-----------|--------------------|----------|
-| `submitIncident`   | 4     | 8           | 10 000    | `silent_log`       | User-facing incident submission |
-| `submitContact`    | 3     | 12          | 6 000     | `toast_warn`       | Marketing contact form |
-| `submitTakedown`   | 5     | 6           | 15 000    | `email_fallback`   | Legal takedown (must reach inbox) |
-| `voteIncident`     | 3     | 20          | 3 000     | `silent_log`       | High-volume, low-stakes |
-| `moderateIncident` | 3     | 10          | 8 000     | `escalate_admin`   | Admin moderation, must be loud |
-| `submitSuggestion` | 3     | 15          | 5 000     | `toast_warn`       | User feature suggestion |
-| `reviewTakedown`   | 4     | 10          | 8 000     | `escalate_admin`   | Admin review of takedown |
-| `exportUserData`   | 2     | 5           | 20 000    | `silent_log`       | Admin CSV export |
+| Action             | Retry | Breaker thr | Budget ms | On exhaust       | Use case                          |
+| ------------------ | ----- | ----------- | --------- | ---------------- | --------------------------------- |
+| `submitIncident`   | 4     | 8           | 10 000    | `silent_log`     | User-facing incident submission   |
+| `submitContact`    | 3     | 12          | 6 000     | `toast_warn`     | Marketing contact form            |
+| `submitTakedown`   | 5     | 6           | 15 000    | `email_fallback` | Legal takedown (must reach inbox) |
+| `voteIncident`     | 3     | 20          | 3 000     | `silent_log`     | High-volume, low-stakes           |
+| `moderateIncident` | 3     | 10          | 8 000     | `escalate_admin` | Admin moderation, must be loud    |
+| `submitSuggestion` | 3     | 15          | 5 000     | `toast_warn`     | User feature suggestion           |
+| `reviewTakedown`   | 4     | 10          | 8 000     | `escalate_admin` | Admin review of takedown          |
+| `exportUserData`   | 2     | 5           | 20 000    | `silent_log`     | Admin CSV export                  |
 
 ## How (one-minute tour)
 
@@ -84,8 +84,20 @@ The result is a discriminated union:
 ```ts
 type AutopilotResult<T> =
   | { kind: "ok"; value: T; attempts: number; durationMs: number; idempotencyKey: IdempotencyKey }
-  | { kind: "replayed"; value: unknown; originalId: string; attempts: number; idempotencyKey: IdempotencyKey }
-  | { kind: "exhausted"; error: string; attempts: number; durationMs: number; idempotencyKey: IdempotencyKey }
+  | {
+      kind: "replayed";
+      value: unknown;
+      originalId: string;
+      attempts: number;
+      idempotencyKey: IdempotencyKey;
+    }
+  | {
+      kind: "exhausted";
+      error: string;
+      attempts: number;
+      durationMs: number;
+      idempotencyKey: IdempotencyKey;
+    }
   | { kind: "circuit_open"; cooldownMs: number; idempotencyKey: IdempotencyKey }
   | { kind: "budget_exceeded"; costMs: number; attempts: number; idempotencyKey: IdempotencyKey };
 ```
@@ -130,6 +142,7 @@ admin "tick" button to drain a backlog.
 - `POST /api/admin/autopilot` — single worker tick.
 
 The snapshot returns:
+
 - `stats` — totals, succeeded, failed, replayed, p50/p95 duration.
 - `breakers` — live state of every circuit breaker.
 - `policies` — current configuration.
@@ -146,13 +159,13 @@ The snapshot returns:
 
 ## Failure modes
 
-| Kind | What it means | Recommended UX |
-|---|---|---|
-| `ok` | Succeeded within budget. | Toast: success. |
-| `replayed` | Same idempotency key seen before. | Toast: success (same result). |
-| `exhausted` | All attempts failed retryably OR fatal. | Per `onExhaust` policy. |
-| `circuit_open` | Breaker tripped; downstream is unhealthy. | Toast: "Service recovering…". |
-| `budget_exceeded` | Total cost > maxMs / maxTokens. | Toast: "Logged, please retry." |
+| Kind              | What it means                             | Recommended UX                 |
+| ----------------- | ----------------------------------------- | ------------------------------ |
+| `ok`              | Succeeded within budget.                  | Toast: success.                |
+| `replayed`        | Same idempotency key seen before.         | Toast: success (same result).  |
+| `exhausted`       | All attempts failed retryably OR fatal.   | Per `onExhaust` policy.        |
+| `circuit_open`    | Breaker tripped; downstream is unhealthy. | Toast: "Service recovering…".  |
+| `budget_exceeded` | Total cost > maxMs / maxTokens.           | Toast: "Logged, please retry." |
 
 ## Adding a new policy
 
@@ -191,7 +204,7 @@ configureTelemetry({
 4. **Budget drift** — telemetry flags `budget_exceeded` rate; tune
    `retry.attempts` or `budget.maxMs`.
 5. **PII in logs** — `redactForLog()` is called on every payload, but
-   custom fields in `AttemptOutcome.value` are *not* auto-redacted. Keep
+   custom fields in `AttemptOutcome.value` are _not_ auto-redacted. Keep
    PII out of return values; the Guardian masks user input upstream.
 
 ## Migration
@@ -212,5 +225,5 @@ Recommend partitioning by `created_at` once row count exceeds 10M.
 - F2.5 ✅ Layer 2 worker that drains the queue — done
 - F3 ✅ Admin UI for in-flight runs — done
 - F4 ✅ Propagate to all write actions (contact, takedown, suggestion,
-       vote, moderate, review, export) — done
+  vote, moderate, review, export) — done
 - F5 Adaptive planner (postpone; ROI unclear)

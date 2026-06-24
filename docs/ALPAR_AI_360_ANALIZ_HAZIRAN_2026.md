@@ -1,370 +1,369 @@
-# 🏛️ ALPAR AI — GENEL DURUM ÖZETİ RAPORU
+# 🏛️ ALPAR AI — STATUS SUMMARY REPORT
 
-## Haziran 2026 | 360° Profesyonel Analiz & Stratejik Eylem Planı
+## June 2026 | 360° Professional Analysis & Strategic Action Plan
 
 ---
 
 ## 📋 EXECUTIVE SUMMARY
 
-| Metrik               | Değer      | Önceki | Değişim       |
-| -------------------- | ---------- | ------ | ------------- |
-| **Genel Skor**       | 634 / 1000 | 491    | ▲ +143 (+29%) |
-| **Lansman Hazır**    | Yakın      | —      | 4 hafta       |
-| **Incident Sayısı**  | 40+        | —      | Gerçek vaka   |
-| **Kalan Kritik Bug** | 4          | —      | Acil çözüm    |
+| Metric                      | Value      | Previous | Change        |
+| --------------------------- | ---------- | -------- | ------------- |
+| **Overall Score**           | 634 / 1000 | 491      | ▲ +143 (+29%) |
+| **Launch Ready**            | Close      | —        | 4 weeks       |
+| **Incident Count**          | 40+        | —        | Real cases    |
+| **Remaining Critical Bugs** | 4          | —        | Urgent fix    |
 
-**Durum:** Platform, "Önemli İlerleme" aşamasında. Son düzeltmeler bekleniyor.
-634 puan, lansman için yeterli değil. **Hedef: 800+ puan.**
-
----
-
-## 1️⃣ MODÜL PUANLARI — ÖNCEKİ VS GÜNCEL
-
-| #   | Modül                      | Güncel | Önceki | Durum | Öncelik  |
-| --- | -------------------------- | ------ | ------ | ----- | -------- |
-| 1   | Homepage & Hero            | 93/100 | 78     | 🟢    | Mükemmel |
-| 2   | Incidents sayfası          | 78/100 | 50     | 🟢    | İyi      |
-| 3   | Blog & içerik              | 88/100 | 65     | 🟢    | İyi      |
-| 4   | Dilemmas sayfası           | 65/100 | 55     | 🟡    | Orta     |
-| 5   | Navigasyon kullanılığı     | 55/100 | 38     | 🟡    | Orta     |
-| 6   | Footer & kısıt tutarlılığı | 45/100 | 22     | 🔴    | Düşük    |
-| 7   | Hero kullanılığı           | 38/100 | 18     | 🔴    | Düşük    |
-| 8   | Leaderboard sayfası        | 22/100 | 18     | 🔴    | Kritik   |
-| 9   | About sayfası              | 18/100 | 40     | 🔴    | Kritik   |
-| 10  | Transparency & Hukuk       | 72/100 | 74     | 🟡    | Orta     |
-| 11  | Models dizini              | 68/100 | —      | 🟡    | Orta     |
-| 12  | Büyüme & viral             | 32/100 | 25     | 🔴    | Düşük    |
-
-**Analiz:**
-
-- 🟢 **Güçlü alanlar:** Homepage (93), Blog (88), Incidents (78)
-- 🔴 **Kritik zayıflıklar:** Leaderboard (22), About (18), Hero kullanılığı (38)
-- 📊 **Ağırlıklı ortalama:** Yüksek puanlı modüller skoru çekiyor ama düşük puanlılar lansmanı riske atıyor.
+**Status:** The platform is in the "Significant Progress" phase. Final fixes are awaited.
+An overall score of 634 is not sufficient for launch. **Target: 800+ points.**
 
 ---
 
-## 2️⃣ SAYFA BAZINDA KARŞILAŞTIRMA
+## 1️⃣ MODULE SCORES — PREVIOUS VS CURRENT
 
-### Homepage — 93 puan ✅
+| #   | Module                          | Current | Previous | Status | Priority  |
+| --- | ------------------------------- | ------- | -------- | ------ | --------- |
+| 1   | Homepage & Hero                 | 93/100  | 78       | 🟢     | Excellent |
+| 2   | Incidents page                  | 78/100  | 50       | 🟢     | Good      |
+| 3   | Blog & content                  | 88/100  | 65       | 🟢     | Good      |
+| 4   | Dilemmas page                   | 65/100  | 55       | 🟡     | Medium    |
+| 5   | Navigation usability            | 55/100  | 38       | 🟡     | Medium    |
+| 6   | Footer & constraint consistency | 45/100  | 22       | 🔴     | Low       |
+| 7   | Hero usability                  | 38/100  | 18       | 🔴     | Low       |
+| 8   | Leaderboard page                | 22/100  | 18       | 🔴     | Critical  |
+| 9   | About page                      | 18/100  | 40       | 🔴     | Critical  |
+| 10  | Transparency & Legal            | 72/100  | 74       | 🟡     | Medium    |
+| 11  | Models directory                | 68/100  | —        | 🟡     | Medium    |
+| 12  | Growth & virality               | 32/100  | 25       | 🔴     | Low       |
 
-- ✅ Founder hikayesi güçlü
-- ✅ "Incident of the Week" bölümü var
-- ✅ Ecosystem Pulse haber akışı
-- ✅ Stats hala "0 Verified" — **Sorun!**
+**Analysis:**
 
-### Incidents — 78 puan 🟡
-
-- ✅ 40+ gerçek incident (Dev sayfasında)
-- ⚠️ Yeni nav/footer eksik
-- ⚠️ Bad description'lar çok kısa
-- ⚠️ View/upvote sayaçları hep "0"
-
-### Leaderboard — 22 puan 🔴
-
-- ❌ Eski layout, hızlı
-- ❌ Suggestions/Takedown testi: Footer hello@alparai.online + anomaliye GitHub
-- ❌ Kullanıcı bu sayfalara geçince başka bir siteye girmiş gibi hisseder
-- ❌ Layout yeni versiyona çekilmeli
-
-### About — 18 puan 🔴
-
-- ❌ Eski layout, broken link /en/en/submit
-- ❌ hello@alparai.online: Sadece 4 bullet
-- ❌ Founder fotoğrafı yok
-
-### Blog — 88 puan 🟢
-
-- ✅ 6 makale, yeni nav/footer, SEO güçlü
-- ✅ Claude Ben makaleleri güncel, devam edecek
-
-### Dilemmas — 65 puan 🟡
-
-- ✅ Yeni sayfa, 4 soru
-- ⚠️ İlk soru İngilizce
-- ⚠️ 3 yeni soruya 0 oy
-- ⚠️ Footer'da "Suggestions" değil, dilemmas'a gider
-
-### Transparency — 0 puan 🔴
-
-- ❌ Hâlâ 404
-- ❌ Şeffaflık platformunda transparency sayfası 404 = çatlak
-
-### Models — 68 puan 🟡
-
-- ✅ 35+ model
-- ⚠️ 0 review, 0 feature request
-- ⚠️ "ALPAR Autopilot" AI provider gibi listeleniyor (yanlış)
+- 🟢 **Strong areas:** Homepage (93), Blog (88), Incidents (78)
+- 🔴 **Critical weaknesses:** Leaderboard (22), About (18), Hero usability (38)
+- 📊 **Weighted average:** High-scoring modules pull the score up, but low-scoring ones risk the launch.
 
 ---
 
-## 3️⃣ KALAN 4 KRİTİK BUG — LANSMAN ENGELLEYİCİ
+## 2️⃣ COMPARISON BY PAGE
 
-### 🔴 KRİTİK-1: Leaderboard + About sayfaları hâlâ eski layout
+### Homepage — 93 points ✅
 
-**Etki:** Kullanıcı deneyimi kopukluğu, güven kaybı
-**Çözüm:** Yeni layout'a geçiş, footer tutarlılığı
-**Tahmini Efor:** 2-3 gün
-**Puan Etkisi:** +35 puan
+- ✅ Founder story is strong
+- ✅ "Incident of the Week" section is active
+- ✅ Ecosystem Pulse news feed
+- ❌ Stats still show "0 Verified" — **Issue!**
 
-### 🔴 KRİTİK-2: Hero stats: "0 Verified AI failures" — 40+ incident var
+### Incidents — 78 points 🟡
 
-**Etki:** Platformun en büyük güven sorunu
-**Çözüm:** Counter query published incident'ları sorgulamalı
-**Tahmini Efor:** 4 saat
-**Puan Etkisi:** +20 puan
+- ✅ 40+ real incidents (seeded on Dev page)
+- ⚠️ New navigation/footer missing
+- ⚠️ Bad descriptions are too short
+- ⚠️ View/upvote counters always show "0"
 
-### 🔴 KRİTİK-3: Transparency Report — hâlâ 404
+### Leaderboard — 22 points 🔴
 
-**Etki:** Yasal uyumsuzluk riski, güven eksikliği
-**Çözüm:** Minimal içerik bile olsa oluşturulmalı, bir paragraf yeterli
-**Tahmini Efor:** 2 saat
-**Puan Etkisi:** +15 puan
+- ❌ Old layout, fast
+- ❌ Suggestions/Takedown test: Footer shows hello@alparai.online + anomaly points to GitHub
+- ❌ Users transitioning to these pages feel like they entered a different site
+- ❌ Layout must be updated to the new design
 
-### 🔴 KRİTİK-4: About sayfası — /en/en/submit broken link
+### About — 18 points 🔴
 
-**Etki:** Kullanıcı 404 hatası, profesyonellik kaybı
-**Çözüm:** Link düzeltme, redirect
-**Tahmini Efor:** 30 dakika
-**Puan Etkisi:** +5 puan
+- ❌ Old layout, broken link: `/en/en/submit`
+- ❌ hello@alparai.online: Only 4 bullet points
+- ❌ No founder photo
 
----
+### Blog — 88 points 🟢
 
-## 4️⃣ YENİ TESPİT EDİLEN SORUNLAR
+- ✅ 6 articles, new navigation/footer, strong SEO
+- ✅ Claude Ben articles are up-to-date and ongoing
 
-### ⚠️ ALPAR Autopilot provider olarak listeleniyor
+### Dilemmas — 65 points 🟡
 
-- Leaderboard'da AI provider'lar arasında "ALPAR Autopilot" var
-- Platformun kendi içerik moderasyon sistemi, OpenAI, Google gibi gerçek AI provider'lerle aynı sırada gösterilmemeli
-- **Karmaşa yaratıyor**
-- **Öneri:** Ayrı bir "Platform Services" kategorisi oluştur
+- ✅ New page, 4 questions
+- ⚠️ The first question is in English
+- ⚠️ 0 votes on 3 new questions
+- ⚠️ Footer links to dilemmas instead of "Suggestions"
 
-### ⚠️ Poll başlığı tutarsız: Türkçe vs İngilizce
+### Transparency — 0 points 🔴
 
-- Incidents sayfasındaki sidebar poll: "Yapay Zeka İnsanlığı Yok Eder mi?" (Türkçe)
-- Dilemmas sayfasındaki aynı soru: "Will AI Destroy Humanity?" (İngilizce)
-- Aynı sorunun iki dilde gösterilmesi 1/10 karmaşası
-- **Öneri:** Dil seçimine göre dinamik gösterim
+- ❌ Still 404
+- ❌ A transparency platform with a 404 transparency page = trust breach
 
-### ⚠️ "Founding Reporter" butonu yanlış yere linkliyor
+### Models — 68 points 🟡
 
-- Homepage'deki "Become a Founding Reporter" butonu /en/suggestions'a gidiyor
-- Bunun /en/dilemmas veya özel bir kayıt sayfasına gitmesi gerekli
-- "Suggestions" feature request için, reporter programı için değil
-- **Öneri:** Ayrı landing page oluştur
-
-### ⚠️ Footer'da "Suggestions" /dilemmas'a link veriyor
-
-- Blog ve Dilemmas footer'ında "Suggestions" etiketi var ama /en/dilemmas'a gidiyor
-- Ya etiket "Dilemmas" olmalı ya da /en/suggestions'a gitmeli
-- **Öneri:** Etiket-link tutarlılığı sağla
-
-### ⚠️ Incident upvote/view sayaçları hep "0"
-
-- Her incident'in yanında iki sıfır var (upvote ve view count)
-- Bunlar gerçek zamanlı sayılmıyor görünüyor veya görünür hale gelmiyor
-- Bu sosyal kanıt mekanizmasını devre dışı bırakıyor
-- **Öneri:** Gerçek zamanlı sayaçlar veya görsel iyileştirme
-
-### ⚠️ MIT Tech Review, Stanford, Ars Technica logoları — doğrulanmamış
-
-- "Featured / Cited in" bölümünde bu logolar var
-- Bunların gerçek haber linklerine sahip olması şart
-- Şahibe olabileceği izlenimi veriyor
-- **Öneri:** Gerçek link ekle veya logoları kaldır
-
-### ⚠️ About sayfası içerik olarak zayıf kalmaya devam ediyor
-
-- Hâlâ 4 maddeden minimal içerik
-- Founder fotoğrafı, CTO profili, kuruluş tarihi, manifesto, ekip yok
-- Yatırımcı veya medya bu sayfaya gelince boş bulur
-- **Öneri:** Kapsamlı About sayfası tasarımı
+- ✅ 35+ models
+- ⚠️ 0 reviews, 0 feature requests
+- ⚠️ "ALPAR Autopilot" listed as an AI provider (incorrect)
 
 ---
 
-## 5️⃣ BÜYÜECEK ALANLAR & BAŞARILAR ✅
+## 3️⃣ 4 REMAINING CRITICAL BUGS — LAUNCH BLOCKERS
 
-### ✅ 40+ gerçek incident — en kritik sorun çözüldü
+### 🔴 CRITICAL-1: Leaderboard + About pages still on the old layout
 
-- Önceki analizde incidents tamamen boştu
-- Şimdi 40+ publish edilmiş gerçek vaka var
-- Uber/Yahoo, Knight Capital, Character.AI, Grok pornografik, tıbbi hallucination'lar, hukuki fabrikasyon, finansal pazarl bilgi, ayrımcılık vakaları
-- **Platform artık canlı hissettiriyor**
+- **Impact:** UX disconnect, loss of trust
+- **Solution:** Migrate to new layout, ensure footer consistency
+- **Estimated Effort:** 2-3 days
+- **Score Impact:** +35 points
 
-### ✅ Dilemmas sayfası açıldı ve çalışıyor
+### 🔴 CRITICAL-2: Hero stats show "0 Verified AI failures" despite having 40+ incidents
 
-- 4 etk soru, canlı oy sistemi
-- İlk soru 2.600 oy: "Will AI Destroy Humanity?" sorusu global ilgi çekebilecek potansiyelle sahip
-- SEO açısından büyük kazanım
+- **Impact:** The platform's biggest trust issue
+- **Solution:** Counter query should fetch published incidents count
+- **Estimated Effort:** 4 hours
+- **Score Impact:** +20 points
 
-### ✅ Founder hikayesi "Why I Built This" — çok güçlü
+### 🔴 CRITICAL-3: Transparency Report still returns 404
 
-- Tam meraklı, duygusal ve özgün: "I had no recourse. So I built one."
-- Medya, VC, kullanıcı — hepsi bu hikayeye bağlanıyor
-- **Bu bölüm platformun en güçlü varlığı**
+- **Impact:** Legal non-compliance risk, lack of trust
+- **Solution:** Create even a minimal page; one paragraph is enough
+- **Estimated Effort:** 2 hours
+- **Score Impact:** +15 points
 
-### ✅ Homepage & Blog nav/footer tutarlı hale getirildi
+### 🔴 CRITICAL-4: About page contains broken link `/en/en/submit`
 
-- Ana sayfa, Blog, Incidents, Dilemmas, hepsi yeni layout kullanıyor
-- hello@alparai.com ve doğru GitHub
-- 4 sayfadan düşüklere taşındık
-
-### ✅ Ecosystem Pulse haber akışı mükemmel
-
-- EU AI Act, Article 40, Claude pazarı, Güney Kore ceza yasası, EchoLink açığı
-- Güncel haberler canlı akışta
-- Platform sadece şikayet yeri değil, AI dünyasının nabzını tutan otorite
-
-### ✅ "How it works" 4 adım + "Why this matters" istatistikler
-
-- Hâlâ %10-20, Harvard %96 — bu rakamlar platformun neden gerekli olduğunu kanıtlıyor
-- Doğru bağlantı kuruldu
+- **Impact:** User encounters 404, loss of professionalism
+- **Solution:** Fix the link and set redirect
+- **Estimated Effort:** 30 minutes
+- **Score Impact:** +5 points
 
 ---
 
-## 6️⃣ 1000'E ULAŞMAK İÇİN GEREKEN AKSİYONLAR
+## 4️⃣ NEWLY IDENTIFIED ISSUES
 
-### 🔴 ACİL (Lansman Öncesi — 0-2 Hafta)
+### ⚠️ ALPAR Autopilot listed as a provider
 
-| #   | Aksiyon                             | Etki                                                           | Puan |
-| --- | ----------------------------------- | -------------------------------------------------------------- | ---- |
-| 1   | Leaderboard + About layout güncelle | Yeni versiyona geçiş                                           | +35  |
-| 2   | Hero stats counter fix              | Published incident sayısını göster                             | +20  |
-| 3   | Transparency sayfası oluştur        | Minimal içerik, modernizasyon süreci, aylık özet, 404 kalkacak | +15  |
-| 4   | About /en/en/submit → /en/submit    | Tek tıkla fix, broken link düzeltilecek                        | +5   |
+- "ALPAR Autopilot" appears among AI providers on the Leaderboard.
+- The platform's own content moderation system should not be listed alongside actual AI providers like OpenAI, Google, etc.
+- **Creates confusion.**
+- **Recommendation:** Create a separate "Platform Services" category.
 
-**Acil Toplam: +75 puan → 634 → 709 puan**
+### ⚠️ Poll Title Inconsistency: Turkish vs English
 
-### 🟡 KISA VADELİ (2-4 Hafta)
+- Sidebar poll on Incidents page: "Yapay Zeka İnsanlığı Yok Eder mi?" (Turkish)
+- The same question on Dilemmas page: "Will AI Destroy Humanity?" (English)
+- Displaying the same question in two different languages causes confusion.
+- **Recommendation:** Render dynamically based on selected language.
 
-| #   | Aksiyon                                    | Etki                                                        | Puan |
-| --- | ------------------------------------------ | ----------------------------------------------------------- | ---- |
-| 5   | About sayfasını zenginleştir               | Founder fotoğrafı, CTO profili, timeline, manifesto, ekip   | +20  |
-| 6   | Media logoları doğrula veya kaldır         | MIT, Stanford, Ars Technica linkleri ekle veya güvenilirlik | +15  |
-| 7   | ALPAR Autopilot provider listesinden çıkar | Kendi moderasyon sistemimiz AI provider değil               | +8   |
+### ⚠️ "Founding Reporter" button links to the wrong place
 
-**Kısa Vadeli Toplam: +43 puan → 709 → 752 puan**
+- The "Become a Founding Reporter" button on the Homepage links to `/en/suggestions`.
+- This should go to `/en/dilemmas` or a dedicated registration page.
+- "Suggestions" is for feature requests, not for the reporter program.
+- **Recommendation:** Create a dedicated landing page.
 
-### 🟢 ORTA VADELİ (1-2 Ay)
+### ⚠️ "Suggestions" in footer links to `/dilemmas`
 
-| #   | Aksiyon                                   | Etki                                                                                 | Puan |
-| --- | ----------------------------------------- | ------------------------------------------------------------------------------------ | ---- |
-| 8   | Incident upvote/view sayaçlarını aktif et | Gerçek zamanlı sayaçlar, sosyal kanıt                                                | +12  |
-| 9   | Paylaşım butonları ekle                   | Her incident'ta X/LinkedIn share, auto-generated OG card                             | +25  |
-| 10  | Dilemmas'a 5 yeni soru ekle               | Autonomous weapons, algorithmic bias, biometric surveillance, AGI governance         | +15  |
-| 11  | Developer API sayfası                     | APIKey test, /en/developers, ilk gelir                                               | +25  |
-| 12  | HackerNews lansmanı                       | "Show HN: Blueprint for AI incidents" — 40+ incident + founder story = HN için hazır | +30  |
+- Footer on Blog and Dilemmas pages has a "Suggestions" label but links to `/en/dilemmas`.
+- Either rename the label to "Dilemmas" or change the link to `/en/suggestions`.
+- **Recommendation:** Align labels with links.
 
-**Orta Vadeli Toplam: +107 puan → 752 → 859 puan**
+### ⚠️ Incident upvote/view counters always show "0"
 
-### 🔵 UZUN VADELİ (2-3 Ay)
+- Two zeros appear next to each incident (upvote and view count).
+- These are either not counted in real-time or not displayed.
+- This disables the social proof mechanism.
+- **Recommendation:** Implement real-time counters or visual improvements.
 
-| #   | Aksiyon                    | Etki                                                                                            | Puan |
-| --- | -------------------------- | ----------------------------------------------------------------------------------------------- | ---- |
-| 13  | invest.alparai.com portalı | Yatırımcı tek sayfa sitesi, Problem/Çözüm/Veri/Takım, VC toplantılarından önce link gönder      | +20  |
-| 14  | 100 → 500 incident hedefi  | AI'den daha fazla gerçek vaka, her kategoride doku gösterilmeli, Leaderboard anlamlı hale gelir | +25  |
+### ⚠️ Unverified MIT Tech Review, Stanford, Ars Technica logos
 
-**Uzun Vadeli Toplam: +45 puan → 859 → 904 puan**
+- "Featured / Cited in" section features these logos.
+- It is crucial that these link to actual articles.
+- Otherwise, it gives the impression of being suspicious/fake.
+- **Recommendation:** Add actual links or remove the logos.
 
----
+### ⚠️ About page content remains sparse
 
-## 7️⃣ RİSK ANALİZİ & ÖNLEMLER
-
-| Risk                                | Olasılık | Etki   | Önlem                          |
-| ----------------------------------- | -------- | ------ | ------------------------------ |
-| Yasal uyumsuzluk (Transparency 404) | Yüksek   | Kritik | Sayfa oluştur, hukuki danışman |
-| Güven kaybı (0 Verified stats)      | Yüksek   | Yüksek | Counter fix, veri doğrulama    |
-| Kullanıcı deneyimi kopukluğu        | Orta     | Yüksek | Layout birleştirme             |
-| SEO cezası (broken link)            | Düşük    | Orta   | 301 redirect, link kontrolü    |
-| Rekabet (AIID, AIAAIC)              | Orta     | Orta   | Farklılaşma, hız, UX           |
+- Still has minimal content with only 4 bullet points.
+- Missing founder photo, CTO profile, founding date, manifesto, and team details.
+- Investors or media visiting this page will find it empty.
+- **Recommendation:** Design a comprehensive About page.
 
 ---
 
-## 8️⃣ STRATEJİK ÖNERİLER
+## 5️⃣ GROWTH AREAS & SUCCESSES ✅
 
-### A. Hızlı Kazanımlar (Low-Hanging Fruit)
+### ✅ 40+ real incidents — critical issue resolved
 
-1. **Hero stats fix** — 4 saat, +20 puan
-2. **Transparency sayfası** — 2 saat, +15 puan
-3. **Broken link fix** — 30 dk, +5 puan
-4. **Footer etiket tutarlılığı** — 1 saat, +5 puan
+- In the previous analysis, incidents were completely empty.
+- Now there are 40+ published real cases.
+- Covers Uber/Yahoo, Knight Capital, Character.AI, Grok pornography, medical hallucinations, legal fabrications, financial insider information, and discrimination cases.
+- **The platform now feels alive.**
 
-**Toplam: 7.5 saat, +45 puan → 634 → 679 puan**
+### ✅ Dilemmas page is live and functional
 
-### B. Yapısal İyileştirmeler
+- 4 engaging questions, live voting system.
+- The first question has 2,600 votes: "Will AI Destroy Humanity?" has great global interest potential.
+- Big win for SEO.
 
-1. **Layout birleştirme** — Leaderboard + About
-2. **İçerik stratejisi** — About sayfası zenginleştirme
-3. **Sosyal kanıt** — Sayaçlar, paylaşım butonları
-4. **API geliştirme** — Developer portalı
+### ✅ Founder story "Why I Built This" is very strong
 
-### C. Büyüme Motorları
+- Intimate, emotional, and authentic: "I had no recourse. So I built one."
+- Media, VCs, and users all connect with this story.
+- **This section is the platform's strongest asset.**
 
-1. **HackerNews lansmanı** — "Show HN" formatı
-2. **SEO optimizasyonu** — Dilemmas, Blog içerikleri
-3. **Viral mekanizmalar** — Paylaşım, upvote, yorum
-4. **Yatırımcı sayfası** — invest.alparai.com
+### ✅ Homepage & Blog navigation/footers are aligned
 
----
+- Homepage, Blog, Incidents, and Dilemmas all use the new layout.
+- Points to `hello@alparai.com` and correct GitHub.
 
-## 🔟 SONUÇ & ÖNERİLEN YOL HARİTASI
+### ✅ Ecosystem Pulse news feed is excellent
 
-### Faz 1: Acil Düzeltmeler (1-2 Hafta)
+- Covers EU AI Act, Article 40, Claude market, South Korean criminal law, and EchoLink vulnerability.
+- Live stream of current news.
+- The platform is not just a place for complaints, but an authority keeping its finger on the pulse of the AI world.
 
-- 4 kritik bug çözümü
-- Hedef: 709 puan
-- Lansman için minimum eşik
+### ✅ "How it works" 4 steps + "Why this matters" statistics
 
-### Faz 2: Kısa Vadeli İyileştirmeler (2-4 Hafta)
-
-- About, Media logoları, Autopilot fix
-- Hedef: 752 puan
-- Güvenilirlik artışı
-
-### Faz 3: Orta Vadeli Büyüme (1-2 Ay)
-
-- Sayaçlar, paylaşım, API, HN lansmanı
-- Hedef: 859 puan
-- Büyüme motorları aktif
-
-### Faz 4: Uzun Vadeli Ölçekleme (2-3 Ay)
-
-- 500 incident, yatırımcı sayfası
-- Hedef: 904 puan
-- Seri A hazırlığı
+- Still 10-20%, Harvard 96% — these figures prove why the platform is necessary.
+- Correct connections established.
 
 ---
 
-## 📎 EKLER
+## 6️⃣ ACTIONS REQUIRED TO REACH 1000
 
-### Ek A: Puan Hesaplama Metodolojisi
+### 🔴 URGENT (Pre-Launch — 0-2 Weeks)
 
-- Her modül 100 üzerinden değerlendirilir
-- Ağırlıklı ortalama: Kullanıcı etkisi x Teknik karmaşıklık
-- Lansman eşiği: 800 puan
-- Mükemmellik: 950+ puan
+| #   | Action                                   | Impact                                                               | Score |
+| --- | ---------------------------------------- | -------------------------------------------------------------------- | ----- |
+| 1   | Update Leaderboard + About layouts       | Transition to new version                                            | +35   |
+| 2   | Fix Hero stats counter                   | Show published incidents count                                       | +20   |
+| 3   | Create Transparency page                 | Minimal content, modernization progress, monthly summary, remove 404 | +15   |
+| 4   | Fix About `/en/en/submit` → `/en/submit` | One-click fix, broken link resolved                                  | +5    |
 
-### Ek B: Rakip Analizi
+**Urgent Total: +75 points → 634 → 709 points**
 
-| Platform   | Güçlü Yön        | Zayıf Yön    | Fırsat         |
-| ---------- | ---------------- | ------------ | -------------- |
-| AIID       | Veri zenginliği  | UX eski      | Hız, modernlik |
-| AIAAIC     | Akademik         | Yavaş        | Pratiklik      |
-| Badness.ai | Topluluk         | Derinlik     | Profesyonellik |
-| ALPAR AI   | UX, hız, founder | Veri miktarı | Farklılaşma    |
+### 🟡 SHORT TERM (2-4 Weeks)
 
-### Ek C: Metrik Takip Tablosu
+| #   | Action                                    | Impact                                                      | Score |
+| --- | ----------------------------------------- | ----------------------------------------------------------- | ----- |
+| 5   | Enrich About page                         | Founder photo, CTO profile, timeline, manifesto, team       | +20   |
+| 6   | Verify or remove media logos              | Add MIT, Stanford, Ars Technica links or ensure credibility | +15   |
+| 7   | Remove ALPAR Autopilot from provider list | Our own moderation system is not an AI provider             | +8    |
 
-| Metrik              | Hedef    | Mevcut | Durum |
-| ------------------- | -------- | ------ | ----- |
-| Incident sayısı     | 500      | 40+    | 🟡    |
-| Günlük ziyaretçi    | 1000     | ?      | ⚪    |
-| HN upvote           | 100      | 0      | ⚪    |
-| API kullanımı       | 1000/gün | 0      | ⚪    |
-| Yatırımcı görüşmesi | 10       | 0      | ⚪    |
+**Short Term Total: +43 points → 709 → 752 points**
+
+### 🟢 MEDIUM TERM (1-2 Months)
+
+| #   | Action                                 | Impact                                                                               | Score |
+| --- | -------------------------------------- | ------------------------------------------------------------------------------------ | ----- |
+| 8   | Activate incident upvote/view counters | Real-time counters, social proof                                                     | +12   |
+| 9   | Add sharing buttons                    | X/LinkedIn share on each incident, auto-generated OG cards                           | +25   |
+| 10  | Add 5 new questions to Dilemmas        | Autonomous weapons, algorithmic bias, biometric surveillance, AGI governance         | +15   |
+| 11  | Developer API page                     | APIKey testing, `/en/developers`, initial revenue                                    | +25   |
+| 12  | HackerNews launch                      | "Show HN: Blueprint for AI incidents" — 40+ incidents + founder story = ready for HN | +30   |
+
+**Medium Term Total: +107 points → 752 → 859 points**
+
+### 🔵 LONG TERM (2-3 Months)
+
+| #   | Action                             | Impact                                                                              | Score |
+| --- | ---------------------------------- | ----------------------------------------------------------------------------------- | ----- |
+| 13  | `invest.alparai.com` portal        | Investor single-page site: Problem/Solution/Data/Team, send link before VC meetings | +20   |
+| 14  | Target 500 incidents (up from 100) | More real cases from AI, populate each category, make Leaderboard meaningful        | +25   |
+
+**Long Term Total: +45 points → 859 → 904 points**
 
 ---
 
-**Rapor Hazırlayan:** Kimi.ai Stratejik Analiz Sistemi
-**Tarih:** 23 Haziran 2026
-**Sürüm:** 1.0
-**Sonraki Revizyon:** 7 Temmuz 2026
+## 7️⃣ RISK ANALYSIS & MITIGATION
+
+| Risk                                    | Probability | Impact   | Mitigation                 |
+| --------------------------------------- | ----------- | -------- | -------------------------- |
+| Legal non-compliance (Transparency 404) | High        | Critical | Create page, consult legal |
+| Loss of trust (0 Verified stats)        | High        | High     | Fix counter, verify data   |
+| UX disconnect                           | Medium      | High     | Unify layouts              |
+| SEO penalty (broken link)               | Low         | Medium   | 301 redirect, check links  |
+| Competition (AIID, AIAAIC)              | Medium      | Medium   | Differentiation, speed, UX |
+
+---
+
+## 8️⃣ STRATEGY RECOMMENDATIONS
+
+### A. Quick Wins (Low-Hanging Fruit)
+
+1. **Hero stats fix** — 4 hours, +20 points
+2. **Transparency page** — 2 hours, +15 points
+3. **Broken link fix** — 30 mins, +5 points
+4. **Footer label consistency** — 1 hour, +5 points
+
+**Total: 7.5 hours, +45 points → 634 → 679 points**
+
+### B. Structural Improvements
+
+1. **Layout unification** — Leaderboard + About
+2. **Content strategy** — Enrich About page
+3. **Social proof** — Counters, share buttons
+4. **API development** — Developer portal
+
+### C. Growth Engines
+
+1. **HackerNews launch** — "Show HN" format
+2. **SEO optimization** — Dilemmas, Blog content
+3. **Viral mechanisms** — Share, upvote, comment
+4. **Investor page** — `invest.alparai.com`
+
+---
+
+## 🔟 CONCLUSION & RECOMMENDED ROADMAP
+
+### Phase 1: Urgent Fixes (1-2 Weeks)
+
+- Fix 4 critical bugs
+- Target: 709 points
+- Minimum threshold for launch
+
+### Phase 2: Short-Term Improvements (2-4 Weeks)
+
+- About, Media logos, Autopilot fix
+- Target: 752 points
+- Credibility boost
+
+### Phase 3: Medium-Term Growth (1-2 Months)
+
+- Counters, sharing, API, HN launch
+- Target: 859 points
+- Active growth engines
+
+### Phase 4: Long-Term Scaling (2-3 Months)
+
+- 500 incidents, investor page
+- Target: 904 points
+- Series A preparation
+
+---
+
+## 📎 APPENDICES
+
+### Appendix A: Score Calculation Methodology
+
+- Each module is evaluated out of 100
+- Weighted average: User impact x Technical complexity
+- Launch threshold: 800 points
+- Excellence: 950+ points
+
+### Appendix B: Competitor Analysis
+
+| Platform   | Strength           | Weakness      | Opportunity      |
+| ---------- | ------------------ | ------------- | ---------------- |
+| AIID       | Data richness      | Legacy UX     | Speed, modernity |
+| AIAAIC     | Academic           | Slow          | Practicality     |
+| Badness.ai | Community          | Lack of depth | Professionalism  |
+| ALPAR AI   | UX, speed, founder | Data volume   | Differentiation  |
+
+### Appendix C: Metric Tracking Table
+
+| Metric            | Target   | Current | Status |
+| ----------------- | -------- | ------- | ------ |
+| Incident count    | 500      | 40+     | 🟡     |
+| Daily visitors    | 1000     | ?       | ⚪     |
+| HN upvotes        | 100      | 0       | ⚪     |
+| API usage         | 1000/day | 0       | ⚪     |
+| Investor meetings | 10       | 0       | ⚪     |
+
+---
+
+**Report Prepared By:** Kimi.ai Strategic Analysis System  
+**Date:** June 23, 2026  
+**Version:** 1.0  
+**Next Revision:** July 7, 2026
