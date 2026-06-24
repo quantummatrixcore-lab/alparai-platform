@@ -20,6 +20,7 @@ export const RATE_LIMIT_KEYS = {
   whistleblower_submission: "ratelimit:whistleblower_submission",
   incident_comment: "ratelimit:incident_comment",
   incident_affected: "ratelimit:incident_affected",
+  onboarding: "ratelimit:onboarding",
 } as const;
 
 let _redis: Redis | null = null;
@@ -133,6 +134,12 @@ function getLimiters(): Record<string, Ratelimit> {
     [RATE_LIMIT_KEYS.incident_affected]: new Ratelimit({
       redis: _redis,
       limiter: Ratelimit.slidingWindow(10, "15 m"),
+      analytics: true,
+      prefix: "alpar",
+    }),
+    [RATE_LIMIT_KEYS.onboarding]: new Ratelimit({
+      redis: _redis,
+      limiter: Ratelimit.slidingWindow(5, "1 d"),
       analytics: true,
       prefix: "alpar",
     }),

@@ -26,13 +26,13 @@
   },
   "hero": {
     "eyebrow": "GÜVEN VE HESAP VEREBİLİRLİK ALTYAPISI",
-    "title_primary": "Yapay Zeka Sizi Yanılttı. Kimse Kayıt Tutmadı. Biz Tuttuk.",
+    "title_primary": "Bir yapay zeka sizi yanılttığında — sorumlusu kim?",
     "bug_bounty_badge": "AI Bug Bounty",
     "title_accent": "AI Hackle. Ödülü Kap.",
     "title_accent_desc": "Gerçek bir AI hatası mı buldun? Belgele. Doğrulat. Etik Savunucu rozeti kazan — ve bildirdiğin sağlayıcıdan ödül kredisi al.",
-    "subtitle": "ALPAR AI, yapay zekanın gerçek dünyadaki hatalarını, manipülasyonlarını ve ihlallerini belgeleyen bağımsız ve şeffaf bir güven altyapısıdır. Topluluk doğrular, sağlayıcılar yanıtlar.",
-    "cta_primary": "Olayı Raporla",
-    "cta_secondary": "Sıralamayı Gör",
+    "subtitle": "ALPAR AI, yapay zeka sistemlerinin gerçek dünyadaki davranışlarını belgeleyen, topluluk tarafından küratörlüğü yapılan halka açık bir arşivdir.",
+    "cta_primary": "İlk Olayı Raporla",
+    "cta_secondary": "Skor Tablosunu Gör",
     "cta_bounty": "Bug Bounty Hakkında",
     "live_data": "Canlı Veri",
     "leaderboard_title": "Skor Tablosu",
@@ -1008,7 +1008,25 @@
     "incidentsReported": "Bildirilen olaylar",
     "suggestionsMade": "Yapılan öneriler",
     "reputationScore": "İtibar Puanı",
-    "earnedBadges": "Kazanılan Rozetler"
+    "earnedBadges": "Kazanılan Rozetler",
+    "communityRole": "Topluluk Rolü",
+    "interests": "İlgi Alanları",
+    "roles": {
+      "advocate": "Etik Savunucusu",
+      "provider": "Yapay Zeka Sağlayıcısı",
+      "advisor": "Stratejik Danışman",
+      "researcher": "YXT Araştırmacısı"
+    },
+    "interestsList": {
+      "safety": "Yapay Zeka Güvenliği",
+      "transparency": "Şeffaflık",
+      "privacy": "Gizlilik (KVKK/GDPR)",
+      "bias": "Yapay Zeka Yanlılığı",
+      "hallucinations": "YDilM Halüsinasyonları"
+    },
+    "badgesList": {
+      "founding_reporter": "Kurucu Raporcu"
+    }
   },
   "brand": {
     "verified": "Doğrulanmış",
@@ -1200,5 +1218,32 @@
   "invest": {
     "title": "Yatırımcı Sunumu — ALPAR AI",
     "description": "ALPAR AI Yatırımcı Portalı ve Girişim Sunumu (Pitch Deck)."
+  },
+  "onboarding": {
+    "title": "Profilinizi Tamamlayın",
+    "subtitle": "ALPAR AI deneyiminizi size göre uyarlamamıza yardımcı olun. Sadece 30 saniye sürer.",
+    "roleTitle": "Topluluk rolünüzü seçin",
+    "roleDesc": "Yapay zeka sistemleriyle olan etkileşiminizi en iyi tanımlayan seçeneği belirleyin.",
+    "advocateTitle": "Etik Savunucusu",
+    "advocateDesc": "Yapay zeka sistemlerini sorumlu tutmak için yapay zeka risklerini, sapmalarını ve mevzuat ihlallerini bildirirsiniz.",
+    "providerTitle": "Yapay Zeka Sağlayıcısı",
+    "providerDesc": "Yapay zeka modelleri tasarlıyor, geliştiriyor veya dağıtıyorsunuz ve kamuoyuna açık olaylara yanıt vermek istiyorsunuz.",
+    "advisorTitle": "Stratejik Danışman",
+    "advisorDesc": "Yapay zeka yönetişimi, politika geliştirme veya risk yönetimi çerçeveleri hakkında danışmanlık yapıyorsunuz.",
+    "researcherTitle": "YXT Araştırmacısı",
+    "researcherDesc": "Yapay zeka modellerinin güvenliği, hizalaması, güvenlik açıkları veya model davranışları üzerinde çalışıyorsunuz.",
+    "interestsTitle": "Yapay zeka davranışlarının hangi alanları ilginizi çekiyor?",
+    "interestsDesc": "Geçerli olan tüm seçenekleri belirleyin. Bu, akışınızı ve olay uyarılarınızı özelleştirmemize yardımcı olur.",
+    "safety": "Yapay Zeka Güvenliği & Hizalaması",
+    "transparency": "Model Şeffaflığı",
+    "privacy": "Gizlilik & KVKK/GDPR Uyumluluğu",
+    "bias": "Önyargı, Eşitlik & Ayrımcılık",
+    "hallucinations": "Halüsinasyonlar & Bilgi Dezenformasyonu",
+    "next": "Sonraki Adım",
+    "back": "Geri",
+    "submit": "Kaydı Tamamla",
+    "successTitle": "Aramıza Hoş Geldiniz!",
+    "successDesc": "Profiliniz güncellendi. Erken betamıza katıldığınız için Kurucu Raporcu rozetini kazandınız!",
+    "successCta": "Profile Git"
   }
 }

@@ -26,13 +26,13 @@
   },
   "hero": {
     "eyebrow": "TRUST AND ACCOUNTABILITY INFRASTRUCTURE",
-    "title_primary": "AI Lied to You. Nobody Was Tracking It. We Were.",
+    "title_primary": "When an AI lies to you — who is accountable?",
     "bug_bounty_badge": "AI Bug Bounty",
     "title_accent": "Hack AI. Win the bounty.",
     "title_accent_desc": "Found a real AI failure? Document it. Get verified. Earn the Ethics Advocate badge — and reward credits from the providers you reported.",
-    "subtitle": "ALPAR AI is an independent, transparent trust infrastructure documenting real-world AI failures, biases, and manipulations. Verified by the community, responded by the providers.",
-    "cta_primary": "Report an Incident",
-    "cta_secondary": "See Rankings",
+    "subtitle": "ALPAR AI is the public, community-curated archive of how AI systems actually behave in the real world.",
+    "cta_primary": "Report the First Incident",
+    "cta_secondary": "See the Leaderboard",
     "cta_bounty": "Learn about Bug Bounties",
     "live_data": "Live Data",
     "leaderboard_title": "Leaderboard",
@@ -1008,7 +1008,25 @@
     "incidentsReported": "Incidents reported",
     "suggestionsMade": "Suggestions made",
     "reputationScore": "Reputation Score",
-    "earnedBadges": "Earned Badges"
+    "earnedBadges": "Earned Badges",
+    "communityRole": "Community Role",
+    "interests": "Areas of Interest",
+    "roles": {
+      "advocate": "Ethics Advocate",
+      "provider": "AI Provider",
+      "advisor": "Strategic Advisor",
+      "researcher": "AI Researcher"
+    },
+    "interestsList": {
+      "safety": "AI Safety",
+      "transparency": "Transparency",
+      "privacy": "Privacy (GDPR/KVKK)",
+      "bias": "AI Bias",
+      "hallucinations": "LLM Hallucinations"
+    },
+    "badgesList": {
+      "founding_reporter": "Founding Reporter"
+    }
   },
   "brand": {
     "verified": "Verified",
@@ -1200,5 +1218,32 @@
   "invest": {
     "title": "Investor Pitch Deck — ALPAR AI",
     "description": "ALPAR AI Investor Portal & Pitch Deck presentation."
+  },
+  "onboarding": {
+    "title": "Complete Your Profile",
+    "subtitle": "Help us tailor your ALPAR AI experience. It only takes 30 seconds.",
+    "roleTitle": "Choose your community role",
+    "roleDesc": "Select the option that best describes your interaction with AI systems.",
+    "advocateTitle": "Ethics Advocate",
+    "advocateDesc": "You report AI risks, bias, and compliance violations to hold AI systems accountable.",
+    "providerTitle": "AI Provider",
+    "providerDesc": "You design, build, or deploy AI models and want to respond to public incidents.",
+    "advisorTitle": "Strategic Advisor",
+    "advisorDesc": "You advise on AI governance, policy development, or risk management frameworks.",
+    "researcherTitle": "AI Researcher",
+    "researcherDesc": "You study LLM safety, alignment, security vulnerabilities, or model behavior.",
+    "interestsTitle": "What areas of AI behavior interest you?",
+    "interestsDesc": "Select all that apply. This helps customize your feed and incident alerts.",
+    "safety": "AI Safety & Alignment",
+    "transparency": "Model Transparency",
+    "privacy": "Privacy & GDPR/KVKK Compliance",
+    "bias": "Bias, Fairness & Discrimination",
+    "hallucinations": "Hallucinations & Misinformation",
+    "next": "Next Step",
+    "back": "Back",
+    "submit": "Complete Onboarding",
+    "successTitle": "Welcome Aboard!",
+    "successDesc": "Your profile has been updated. You've earned the Founding Reporter badge for joining our early beta!",
+    "successCta": "Go to Profile"
   }
 }
