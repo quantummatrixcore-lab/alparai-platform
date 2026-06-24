@@ -17,15 +17,18 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; id: string }>;
 }) {
-  const { id } = await params;
+  const { id, locale } = await params;
   const supabase = await createServerClient();
   const { data } = await supabase
     .from("incidents")
-    .select("title_masked")
+    .select("title_masked, title_tr")
     .eq("id", id)
     .maybeSingle();
+  const row = data as Record<string, unknown> | null;
+  const title =
+    locale === "tr" && row?.title_tr ? (row.title_tr as string) : (row?.title_masked as string);
   return {
-    title: ((data as Record<string, unknown> | null)?.title_masked as string) ?? "Incident",
+    title: title ?? "Incident",
   };
 }
 

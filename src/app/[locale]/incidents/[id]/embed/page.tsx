@@ -12,17 +12,19 @@ interface EmbedPageProps {
 }
 
 export async function generateMetadata({ params }: EmbedPageProps) {
-  const { id } = await params;
+  const { id, locale } = await params;
   const supabase = await createServerClient();
   const { data } = await supabase
     .from("incidents")
-    .select("title_masked")
+    .select("title_masked, title_tr")
     .eq("id", id)
     .maybeSingle();
 
-  const incidentData = data as { title_masked: string | null } | null;
+  const incidentData = data as { title_masked: string | null; title_tr: string | null } | null;
+  const title =
+    locale === "tr" && incidentData?.title_tr ? incidentData.title_tr : incidentData?.title_masked;
   return {
-    title: `Embed: ${incidentData?.title_masked ?? "Incident Report"} | ALPAR AI`,
+    title: `Embed: ${title ?? "Incident Report"} | ALPAR AI`,
   };
 }
 
