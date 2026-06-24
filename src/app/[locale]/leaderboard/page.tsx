@@ -5,7 +5,7 @@ import { createServerClient } from "@/lib/supabase/server";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, MessageSquare, TrendingUp, TrendingDown } from "lucide-react";
+import { Trophy, MessageSquare, TrendingUp, TrendingDown, AlertCircle } from "lucide-react";
 import { cn, formatNumber } from "@/lib/utils";
 import { Link } from "@/i18n/routing";
 import { ProviderLogo } from "@/components/leaderboard/provider-logo";
@@ -164,6 +164,45 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
         </Card>
       </div>
 
+      {/* Trust Score Explanation & Non-Responsive Warnings */}
+      <Card className="border-border-subtle bg-bg-secondary/40 mb-6">
+        <CardContent className="text-fg-secondary flex items-start gap-3 p-4 text-xs font-semibold">
+          <AlertCircle className="text-brand-400 mt-0.5 h-5 w-5 shrink-0" />
+          <span>{t("trust_score_info")}</span>
+        </CardContent>
+      </Card>
+
+      {(() => {
+        const nonResponsive = sorted.filter((p) => p.incident_count > 0 && p.response_count === 0);
+        if (nonResponsive.length === 0) return null;
+        return (
+          <div className="mb-6 space-y-3">
+            {nonResponsive.map((p) => (
+              <div
+                key={p.id}
+                className="bg-danger-500/5 border-danger-500/20 text-danger-300 flex flex-col justify-between gap-3 rounded-2xl border p-4 text-xs font-bold sm:flex-row sm:items-center"
+              >
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="text-danger-400 h-4.5 w-4.5 shrink-0" />
+                  <span>
+                    {t("non_responsive_notice", {
+                      provider: p.name,
+                      count: p.incident_count,
+                    })}
+                  </span>
+                </div>
+                <Link
+                  href={`/brand/${p.slug}`}
+                  className="text-brand-400 hover:text-brand-300 flex items-center gap-1 self-start underline sm:self-auto"
+                >
+                  {t("read_all_incidents")} &rarr;
+                </Link>
+              </div>
+            ))}
+          </div>
+        );
+      })()}
+
       <Card>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
@@ -260,12 +299,14 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
                     <td className="p-4 text-right font-mono">
                       <span
                         className={cn(
-                          "inline-flex rounded px-2 py-0.5 text-xs font-bold",
+                          "inline-flex rounded border px-2 py-0.5 text-xs font-bold",
                           p.trust_score >= 90
-                            ? "bg-success-500/10 text-success-400 border-success-500/20 border"
-                            : p.trust_score >= 75
-                              ? "bg-warning-500/10 text-warning-400 border-warning-500/20 border"
-                              : "bg-danger-500/10 text-danger-400 border-danger-500/20 border",
+                            ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
+                            : p.trust_score >= 70
+                              ? "border-blue-500/20 bg-blue-500/10 text-blue-400"
+                              : p.trust_score >= 50
+                                ? "border-amber-500/20 bg-amber-500/10 text-amber-400"
+                                : "border-red-500/20 bg-red-500/10 text-red-400",
                         )}
                       >
                         {p.trust_score}/100

@@ -19,6 +19,7 @@ import {
   X,
   ShieldCheck,
   Key,
+  Share2,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
@@ -81,6 +82,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       label: t("analytics"),
       icon: BarChart3,
       active: pathname.startsWith("/admin/analysis"),
+    },
+    {
+      href: "/admin/social",
+      label: t("social_media_hub") || "Social Media Hub",
+      icon: Share2,
+      active: pathname.startsWith("/admin/social"),
     },
     {
       href: "/admin/api-keys",

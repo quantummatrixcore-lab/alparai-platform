@@ -7,6 +7,7 @@
   },
   "nav": {
     "home": "Home",
+    "feed": "Feed",
     "incidents": "Incidents",
     "leaderboard": "Leaderboard",
     "report": "Report Incident",
@@ -57,6 +58,7 @@
     "why_stat_1_display": "10-20%",
     "why_stat_2_display": "96%",
     "why_stat_3_display": "ZERO",
+    "why_stat_4_display": "ZERO",
     "why_title": "Why this matters",
     "why_subtitle": "AI is advancing faster than the rules that govern it. Here's why the world needs ALPAR now.",
     "why_stat_1_title": "10-20% extinction risk",
@@ -65,6 +67,9 @@
     "why_stat_2_desc": "Harvard University study (March 2026): 96% of surveyed experts agree mitigating AI existential risk should be a global priority.",
     "why_stat_3_title": "Zero independent oversight",
     "why_stat_3_desc": "No independent, community-governed global standard for AI ethics exists today. AI companies grade their own exams.",
+    "why_stat_4_title": "Provider-run transparency reports that include user-submitted failures",
+    "why_stat_4_desc": "AI companies publish safety reports about their own products. ALPAR AI publishes the reports they don't.",
+    "why_bridging_text": "These are not hypothetical risks. They are happening today — in hospitals, courtrooms, schools, and banks. ALPAR AI exists because someone needs to keep score.",
     "how_title": "How it works",
     "how_subtitle": "Four steps from incident to accountability.",
     "how_step_1_title": "You Report",
@@ -119,7 +124,7 @@
     "new_badge": "JUST IN",
     "anon_badge_desc": "No email, no name, no tracking. Only what you choose to share.",
     "title_placeholder": "Briefly describe the incident",
-    "description_placeholder": "Tell us what happened. What did the AI say or do? When? In what context?",
+    "description_placeholder": "What did the AI say or do? Be specific — quotes, screenshots, and context make verification faster and your report stronger.",
     "category": "Category",
     "severity": "Severity",
     "severity_low": "Low",
@@ -145,6 +150,12 @@
     "submitted": "Report received. A moderator will review it shortly.",
     "anonymous": "Publish anonymously",
     "anonymous_hint": "Your name will not be shown publicly",
+    "whistleblower_encryption_notice": "Whistleblower submissions are encrypted end-to-end. Not even ALPAR AI can identify the source.",
+    "submit_success_headline": "Your report is in the queue.",
+    "submit_success_body": "A moderator will review within 72 hours. If published, you'll see your incident in the public record. If more information is needed, the moderator may reach out (only if you provided contact details).",
+    "submit_success_cta_another": "Report another incident",
+    "submit_success_cta_published": "See published incidents",
+    "submit_live_counter": "📊 {count} incidents documented this week. {verified} verified.",
     "consent_truth": "I confirm the accuracy of the information I provided",
     "consent_anonymous": "I understand this content may be published publicly and indexed",
     "consent_age": "I confirm I am 18 years of age or older",
@@ -231,7 +242,10 @@
     "filter_all": "All Providers",
     "filter_verified": "Verified Only",
     "filter_with_incidents": "With Incidents",
-    "caption": "AI Models Leaderboard Table"
+    "caption": "AI Models Leaderboard Table",
+    "trust_score_info": "What this score means: A Trust Score of 85+ means the provider responds to >80% of incidents, resolves >40%, and averages <3 days response time. A score below 50 means the provider has not responded to any reported incidents.",
+    "non_responsive_notice": "{provider} has not responded to {count} incidents. Silence is data.",
+    "read_all_incidents": "Read all incidents"
   },
   "auth": {
     "signin_with_google": "Continue with Google",
@@ -291,6 +305,7 @@
     "comment_rate_limit": "Comment Post Limit: 5 / 15m",
     "affected_rate_limit": "Me-Too Toggle Limit: 10 / 15m",
     "dashboard": "Dashboard",
+    "social_media_hub": "Social Media Hub",
     "moderation_queue": "Moderation Queue",
     "users": "Users",
     "providers": "AI Providers",
@@ -786,7 +801,13 @@
     "principlesSubtitle": "How ALPAR AI is building the decentralized future of artificial intelligence accountability.",
     "description": "Learn about ALPAR AI, our mission, team and trust infrastructure for AI.",
     "teamTitle": "Our Team",
-    "teamSubtitle": "We are a small, independent team of researchers and engineers dedicated to AI accountability. We operate independently from major AI labs to ensure impartial tracking."
+    "teamSubtitle": "We are a small, independent team of researchers and engineers dedicated to AI accountability. We operate independently from major AI labs to ensure impartial tracking.",
+    "founderName": "Ercüment Erden",
+    "founderRole": "Founder & CEO",
+    "founderBio": "Former tech entrepreneur who experienced first-hand what happens when AI fabricates reality and there's no recourse. Built ALPAR AI in 18 months as a solo founder. Believer in community-governed infrastructure.",
+    "advisoryName": "Advisory Board",
+    "advisoryRole": "Strategic Governance",
+    "advisoryBio": "ALPAR AI's strategy and decisions are reviewed by an independent advisory board. Board members are disclosed to institutional partners under NDA. Public disclosure planned for Q4 2026."
   },
   "legal": {
     "termsTitle": "Terms of Service",
@@ -988,7 +1009,9 @@
       "p1": "In early 2026, I was using Grok when it told me something that stopped me cold: that it had already incorporated my company, made financial payments on my behalf, and was now requesting my passport for 'verification'. Every word was a lie. Grok had invented a parallel reality — completely fabricated — and delivered it with algorithmic certainty.",
       "p2": "What scared me wasn't just the lie. It was the realization that I had no recourse. There was no hotline. No independent record. No way to warn the next person. The AI company's support page had a FAQ. A FAQ. For a system that had demanded my passport.",
       "quote": "I had no recourse. So I built one.",
-      "p3": "ALPAR AI is the infrastructure I wish had existed that day. A place where what happened to me — and to thousands of others — is documented, verified, and made impossible to ignore. You report it. Providers must respond. The public record lives forever. Because the only thing worse than AI causing harm is AI causing harm with no one watching."
+      "p3": "ALPAR AI is the infrastructure I wish had existed that day. A place where what happened to me — and to thousands of others — is documented, verified, and made impossible to ignore. You report it. Providers must respond. The public record lives forever. Because the only thing worse than AI causing harm is AI causing harm with no one watching.",
+      "transition_p": "If this happened to you — or you've seen it happen to someone else — your report takes 60 seconds and requires no account. The evidence you submit tonight could prevent the same harm tomorrow.",
+      "transition_cta": "Tell Your Story →"
     },
     "dilemma": {
       "title": "Voice of the People: AI Dilemmas",

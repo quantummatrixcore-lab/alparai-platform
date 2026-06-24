@@ -23,6 +23,8 @@ type RawIncidentRow = Record<string, unknown> & {
   created_at?: string | null;
   views_count?: number | null;
   upvotes_count?: number | null;
+  comments_count?: number | null;
+  shares_count?: number | null;
   provider_name?: string | null;
   provider_slug?: string | null;
   user_id?: string | null;
@@ -48,7 +50,8 @@ export function toIncidentListItem(row: RawIncidentRow): IncidentListItem {
     created_at: row.created_at ?? "",
     view_count: row.views_count ?? 0,
     vote_count: row.upvotes_count ?? 0,
-    evidence_count: row.views_count ?? 0,
+    evidence_count: row.comments_count ?? 0,
+    shares_count: row.shares_count ?? 0,
     author_name: row.author_name ?? null,
     provider_name: row.provider_name ?? "",
     provider_slug: row.provider_slug ?? "",

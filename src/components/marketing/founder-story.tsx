@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Container, Section } from "@/components/ui/layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { AlertTriangle, Fingerprint } from "lucide-react";
+import { Link } from "@/i18n/routing";
 
 export function FounderStory() {
   const t = useTranslations("marketing.founder_story");
@@ -48,6 +49,16 @@ export function FounderStory() {
                   &ldquo;{t("quote")}&rdquo;
                 </div>
                 <p>{t("p3")}</p>
+
+                <div className="border-t border-white/5 pt-8">
+                  <p className="text-fg-muted mb-4 text-sm">{t("transition_p")}</p>
+                  <Link
+                    href="/submit"
+                    className="bg-danger-500 hover:bg-danger-600 focus:ring-danger-500/50 inline-flex h-10 items-center justify-center rounded-lg px-6 text-sm font-bold text-white shadow-lg transition-colors focus:ring-2 focus:outline-none"
+                  >
+                    {t("transition_cta")}
+                  </Link>
+                </div>
               </div>
             </CardContent>
           </Card>

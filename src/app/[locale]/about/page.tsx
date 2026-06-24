@@ -98,14 +98,49 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           <div className="border-border-subtle mt-20 border-t pt-16">
             <div className="mb-12 text-center">
               <h2 className="text-fg-primary text-3xl font-extrabold tracking-tight">
-                {t("teamTitle", { defaultValue: "Our Team" })}
+                {t("teamTitle")}
               </h2>
-              <p className="text-fg-muted mx-auto mt-2 max-w-2xl text-sm">
-                {t("teamSubtitle", {
-                  defaultValue:
-                    "We are a small, independent team of researchers and engineers dedicated to AI accountability. We operate independently from major AI labs to ensure impartial tracking.",
-                })}
-              </p>
+              <p className="text-fg-muted mx-auto mt-2 max-w-2xl text-sm">{t("teamSubtitle")}</p>
+            </div>
+
+            <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2">
+              <Card variant="glass" padding="md">
+                <CardHeader className="flex flex-row items-center gap-4 pb-2">
+                  <div className="bg-brand-500/10 text-brand-400 border-brand-500/20 flex h-12 w-12 items-center justify-center rounded-full border">
+                    <Users className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg font-bold text-white">
+                      {t("founderName")}
+                    </CardTitle>
+                    <p className="text-brand-400 mt-0.5 text-xs font-semibold tracking-wider uppercase">
+                      {t("founderRole")}
+                    </p>
+                  </div>
+                </CardHeader>
+                <CardContent className="text-fg-secondary mt-2 text-sm leading-relaxed">
+                  {t("founderBio")}
+                </CardContent>
+              </Card>
+
+              <Card variant="glass" padding="md">
+                <CardHeader className="flex flex-row items-center gap-4 pb-2">
+                  <div className="bg-success-500/10 text-success-400 border-success-500/20 flex h-12 w-12 items-center justify-center rounded-full border">
+                    <Shield className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg font-bold text-white">
+                      {t("advisoryName")}
+                    </CardTitle>
+                    <p className="text-success-400 mt-0.5 text-xs font-semibold tracking-wider uppercase">
+                      {t("advisoryRole")}
+                    </p>
+                  </div>
+                </CardHeader>
+                <CardContent className="text-fg-secondary mt-2 text-sm leading-relaxed">
+                  {t("advisoryBio")}
+                </CardContent>
+              </Card>
             </div>
           </div>
 

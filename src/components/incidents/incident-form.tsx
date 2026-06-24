@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { submitIncident, type SubmitIncidentState } from "@/actions/incidents";
 import { useFormAutosave, clearDraft } from "@/hooks/use-form-autosave";
 import { GoogleSignInButton } from "@/components/auth/auth-buttons";
+import { Link } from "@/i18n/routing";
 import type { AIProvider, AIModel, IncidentCategory, IncidentSeverity } from "@/types";
 
 const initialState: SubmitIncidentState = { ok: false };
@@ -26,10 +27,12 @@ export function IncidentForm({
   providers,
   models,
   isLoggedIn = false,
+  totalIncidents,
 }: {
   providers: AIProvider[];
   models: AIModel[];
   isLoggedIn?: boolean;
+  totalIncidents?: number;
 }) {
   const t = useTranslations("incident");
   const tCat = useTranslations("categories");
@@ -137,14 +140,22 @@ export function IncidentForm({
         </div>
         <div className="space-y-2">
           <h2 className="text-fg-primary text-3xl font-extrabold tracking-tight">
-            {t("submitted")}
+            {t("submit_success_headline")}
           </h2>
           <p className="text-fg-muted mx-auto max-w-md text-sm leading-relaxed">
-            {t("submit_success_subtitle", {
-              defaultValue:
-                "Your report has been successfully recorded and sent to moderation. It will be published after review.",
-            })}
+            {t("submit_success_body")}
           </p>
+        </div>
+
+        <div className="flex flex-col justify-center gap-4 pt-6 sm:flex-row">
+          <Button onClick={() => window.location.reload()} variant="primary">
+            {t("submit_success_cta_another")}
+          </Button>
+          <Link href="/incidents">
+            <Button variant="outline" className="w-full sm:w-auto">
+              {t("submit_success_cta_published")}
+            </Button>
+          </Link>
         </div>
 
         {!isLoggedIn && (
@@ -238,7 +249,13 @@ export function IncidentForm({
   const canSubmit = allConsents && selectedProvider && title.trim() && description.trim();
 
   return (
-    <form action={formAction} className="space-y-5">
+    <form action={formAction} className="space-y-6">
+      {totalIncidents !== undefined && (
+        <div className="bg-bg-secondary/40 border-border-subtle text-fg-secondary rounded-lg border p-3 text-center text-sm font-semibold">
+          {t("submit_live_counter", { count: totalIncidents, verified: totalIncidents })}
+        </div>
+      )}
+      {piiDetected && <PIIBanner />}
       {state.formError && (
         <div
           className="border-danger-500/30 bg-danger-500/5 text-danger-400 rounded-md border p-3 text-sm"
@@ -410,6 +427,11 @@ export function IncidentForm({
             checked={isAnonymous}
             onChange={(e) => setIsAnonymous(e.target.checked)}
           />
+          {isAnonymous && (
+            <p className="text-warning-400 mt-1.5 ml-7 text-xs leading-relaxed font-medium">
+              {t("whistleblower_encryption_notice")}
+            </p>
+          )}
         </div>
       </fieldset>
 

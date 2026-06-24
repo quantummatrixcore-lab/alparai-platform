@@ -4,7 +4,7 @@ import * as React from "react";
 import { motion, useInView } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Container, Section } from "@/components/ui/layout";
-import { Flame, CheckCircle, ShieldOff } from "lucide-react";
+import { Flame, CheckCircle, ShieldOff, ShieldAlert } from "lucide-react";
 
 const stats = [
   {
@@ -43,6 +43,18 @@ const stats = [
     badgeClass: "bg-brand-500/15 text-brand-400 border-brand-500/30",
     displayKey: "why_stat_3_display",
   },
+  {
+    icon: ShieldAlert,
+    titleKey: "why_stat_4_title",
+    descKey: "why_stat_4_desc",
+    accentClass: "text-danger-400",
+    glowColor: "rgba(230,57,70,0.10)",
+    borderClass: "border-danger-500/20 hover:border-danger-500/40",
+    bgClass: "from-danger-500/8 to-transparent",
+    iconBgClass: "bg-danger-500/10 border-danger-500/20",
+    badgeClass: "bg-danger-500/15 text-danger-400 border-danger-500/30",
+    displayKey: "why_stat_4_display",
+  },
 ] as const;
 
 export function WhyItMatters() {
@@ -70,7 +82,7 @@ export function WhyItMatters() {
           <p className="text-fg-secondary mt-4 text-lg">{t("why_subtitle")}</p>
         </motion.div>
 
-        <div ref={ref} className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div ref={ref} className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat, i) => {
             const Icon = stat.icon;
             return (
@@ -119,6 +131,18 @@ export function WhyItMatters() {
             );
           })}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mx-auto mt-12 max-w-3xl text-center"
+        >
+          <p className="text-fg-secondary mx-auto max-w-2xl border-t border-white/5 pt-6 text-sm leading-relaxed font-semibold md:text-base">
+            {t("why_bridging_text")}
+          </p>
+        </motion.div>
       </Container>
     </Section>
   );
