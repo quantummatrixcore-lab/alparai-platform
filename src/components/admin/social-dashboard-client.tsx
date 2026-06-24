@@ -20,9 +20,11 @@ import {
   Instagram,
   Send,
   RefreshCw,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createSocialPost, updateSocialPost } from "@/actions/social";
+import { toast } from "sonner";
 
 interface SocialPost {
   id: string;
@@ -123,6 +125,9 @@ export function SocialDashboardClient({
   );
   const [formScheduledAt, setFormScheduledAt] = useState("");
   const [formExternalUrl, setFormExternalUrl] = useState("");
+  const [formImagePrompt, setFormImagePrompt] = useState("");
+  const [formImageUrl, setFormImageUrl] = useState("");
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
 
   // Copy indicator states
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -134,6 +139,35 @@ export function SocialDashboardClient({
     navigator.clipboard.writeText(text);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const handleGenerateImage = () => {
+    if (!editingPost || !formImagePrompt) return;
+    setIsGeneratingImage(true);
+    startTransition(async () => {
+      try {
+        const { generateSocialImageAction } = await import("@/actions/social-image");
+        const res = await generateSocialImageAction(editingPost.id, formImagePrompt);
+        if (res.ok) {
+          setFormImageUrl(res.imageUrl);
+          toast.success("Image generated successfully!");
+          setPosts((prev) =>
+            prev.map((p) =>
+              p.id === editingPost.id
+                ? { ...p, image_url: res.imageUrl, image_prompt: formImagePrompt }
+                : p,
+            ),
+          );
+        } else {
+          toast.error(res.error || "Failed to generate image.");
+        }
+      } catch (err) {
+        console.error("Failed to generate image:", err);
+        toast.error("An error occurred during image generation.");
+      } finally {
+        setIsGeneratingImage(false);
+      }
+    });
   };
 
   const handleOpenForm = (post?: SocialPost) => {
@@ -148,6 +182,8 @@ export function SocialDashboardClient({
         post.scheduled_at ? new Date(post.scheduled_at).toISOString().slice(0, 16) : "",
       );
       setFormExternalUrl(post.external_url || "");
+      setFormImagePrompt(post.image_prompt || "");
+      setFormImageUrl(post.image_url || "");
     } else {
       setEditingPost(null);
       setFormTitle("");
@@ -157,6 +193,8 @@ export function SocialDashboardClient({
       setFormStatus("draft");
       setFormScheduledAt("");
       setFormExternalUrl("");
+      setFormImagePrompt("");
+      setFormImageUrl("");
     }
     setShowFormModal(true);
   };
@@ -170,6 +208,8 @@ export function SocialDashboardClient({
     setFormStatus("draft");
     setFormScheduledAt("");
     setFormExternalUrl("");
+    setFormImagePrompt("");
+    setFormImageUrl("");
     setActiveTab("drafts");
     setShowFormModal(true);
   };
@@ -186,6 +226,8 @@ export function SocialDashboardClient({
           status: formStatus,
           scheduled_at: formScheduledAt ? new Date(formScheduledAt).toISOString() : null,
           external_url: formExternalUrl || null,
+          image_prompt: formImagePrompt || null,
+          image_url: formImageUrl || null,
         };
 
         if (editingPost) {
@@ -787,6 +829,71 @@ export function SocialDashboardClient({
                       className="bg-bg-primary border-border-subtle text-fg-primary w-full rounded-xl border px-3 py-2 focus:outline-none"
                       placeholder="https://linkedin.com/posts/..."
                     />
+                  </div>
+                )}
+              </div>
+
+              <div className="border-border-subtle/30 space-y-2 border-t pt-3">
+                <label className="text-fg-primary block text-sm font-semibold">
+                  AI Image Generation (Vertex Imagen 3)
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={formImagePrompt}
+                    onChange={(e) => setFormImagePrompt(e.target.value)}
+                    className="bg-bg-primary border-border-subtle text-fg-primary focus:ring-brand-500 flex-1 rounded-xl border px-3 py-2 text-xs focus:ring-2 focus:outline-none"
+                    placeholder="Enter prompt to generate image..."
+                  />
+                  {editingPost ? (
+                    <button
+                      type="button"
+                      disabled={isGeneratingImage || !formImagePrompt}
+                      onClick={handleGenerateImage}
+                      className="bg-brand-500 hover:bg-brand-600 flex items-center gap-1 rounded-xl px-3 py-2 text-xs font-semibold text-white transition-all disabled:opacity-50"
+                    >
+                      {isGeneratingImage ? (
+                        <>
+                          <RefreshCw className="h-3 w-3 animate-spin" />
+                          Generating...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="h-3 w-3" />
+                          Generate
+                        </>
+                      )}
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled
+                      className="bg-brand-500/50 flex cursor-not-allowed items-center gap-1 rounded-xl px-3 py-2 text-xs font-semibold text-white/50 transition-all"
+                    >
+                      <Sparkles className="h-3 w-3" />
+                      Generate
+                    </button>
+                  )}
+                </div>
+                {!editingPost && (
+                  <p className="text-fg-muted text-[10px]">
+                    * Save the post as a draft first to enable image generation.
+                  </p>
+                )}
+                {formImageUrl && (
+                  <div className="border-border-subtle relative mt-2 aspect-square max-w-[120px] overflow-hidden rounded-xl border">
+                    <img
+                      src={formImageUrl}
+                      alt="Generated Asset"
+                      className="h-full w-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setFormImageUrl("")}
+                      className="absolute top-1 right-1 rounded-full bg-black/75 p-1 text-white transition-all hover:bg-black/90"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
                   </div>
                 )}
               </div>
