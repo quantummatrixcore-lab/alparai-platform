@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { trackEvent } from "@/lib/analytics";
 
 // High-fidelity brand SVG icons
 const XIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -71,6 +72,7 @@ export function ShareButtons({
     try {
       await navigator.clipboard.writeText(fullUrl);
       setCopied(true);
+      trackEvent("Incident Shared", { platform: "copy" });
       toast.success(t("share_copy") + " ✓");
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -83,6 +85,7 @@ export function ShareButtons({
     try {
       await navigator.clipboard.writeText(fullUrl);
       setInstaCopied(true);
+      trackEvent("Incident Shared", { platform: "instagram" });
       toast.success(t("share_instagram") + " ✓");
       setTimeout(() => setInstaCopied(false), 2000);
     } catch (err) {
@@ -132,6 +135,7 @@ export function ShareButtons({
           href={xUrl}
           target="_blank"
           rel="noreferrer noopener"
+          onClick={() => trackEvent("Incident Shared", { platform: "x" })}
           className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/20 bg-black text-white shadow-sm transition-all duration-200 hover:border-white/40 hover:bg-neutral-900 hover:shadow-white/10"
           aria-label={t("share_x")}
         >
@@ -146,6 +150,7 @@ export function ShareButtons({
           href={liUrl}
           target="_blank"
           rel="noreferrer noopener"
+          onClick={() => trackEvent("Incident Shared", { platform: "linkedin" })}
           className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#0077b5]/30 bg-[#0077b5]/10 text-[#0077b5] shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[#0077b5]/50 hover:bg-[#0077b5]/20 hover:shadow-[#0077b5]/20"
           aria-label={t("share_linkedin")}
         >
@@ -175,6 +180,7 @@ export function ShareButtons({
           href={fbUrl}
           target="_blank"
           rel="noreferrer noopener"
+          onClick={() => trackEvent("Incident Shared", { platform: "facebook" })}
           className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#1877f2]/30 bg-[#1877f2]/10 text-[#1877f2] shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[#1877f2]/50 hover:bg-[#1877f2]/20 hover:shadow-[#1877f2]/20"
           aria-label={t("share_facebook")}
         >
@@ -189,6 +195,7 @@ export function ShareButtons({
           href={waUrl}
           target="_blank"
           rel="noreferrer noopener"
+          onClick={() => trackEvent("Incident Shared", { platform: "whatsapp" })}
           className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#25d366]/30 bg-[#25d366]/10 text-[#25d366] shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[#25d366]/50 hover:bg-[#25d366]/20 hover:shadow-[#25d366]/20"
           aria-label={t("share_whatsapp")}
         >

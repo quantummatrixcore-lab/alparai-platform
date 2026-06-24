@@ -149,7 +149,13 @@ function getLimiters(): Record<string, Ratelimit> {
 
 export async function checkRateLimit(
   key: string,
-): Promise<{ ok: boolean; retryAfter?: number; remaining?: number }> {
+): Promise<{
+  ok: boolean;
+  limit?: number;
+  remaining?: number;
+  reset?: number;
+  retryAfter?: number;
+}> {
   try {
     const limiters = getLimiters();
     const parts = key.split(":");
@@ -158,10 +164,12 @@ export async function checkRateLimit(
     if (!limiter) {
       return { ok: true };
     }
-    const { success, remaining, reset } = await limiter.limit(key);
+    const { success, limit, remaining, reset } = await limiter.limit(key);
     return {
       ok: success,
+      limit,
       remaining,
+      reset,
       retryAfter: Math.max(0, Math.ceil((reset - Date.now()) / 1000)),
     };
   } catch (e) {

@@ -1,4 +1,6 @@
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
+
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { Inter, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
@@ -9,6 +11,8 @@ import { MainContent } from "@/components/layout/main-content";
 import { ClientProviders } from "@/components/client-providers";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { OrganizationJsonLd } from "@/components/seo/json-ld";
+import Script from "next/script";
+
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
@@ -50,6 +54,10 @@ export default async function LocaleLayout({
   const tCommon = await getTranslations({ locale, namespace: "common" });
   const headerUser = null;
 
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") || "";
+  const isEmbed = pathname.endsWith("/embed");
+
   return (
     <html
       lang={locale}
@@ -64,16 +72,27 @@ export default async function LocaleLayout({
           {tCommon("skipToContent", { defaultValue: "Skip to main content" })}
         </a>
         <NextIntlClientProvider messages={messages}>
-          <div className="flex min-h-screen flex-col pb-16 lg:pb-0">
-            <Header user={headerUser} />
-            <MainContent>{children}</MainContent>
-            <Footer />
-          </div>
-          <MobileBottomNav />
+          {isEmbed ? (
+            <main className="m-0 min-h-screen bg-transparent p-0">{children}</main>
+          ) : (
+            <div className="flex min-h-screen flex-col pb-16 lg:pb-0">
+              <Header user={headerUser} />
+              <MainContent>{children}</MainContent>
+              <Footer />
+            </div>
+          )}
+          {!isEmbed && <MobileBottomNav />}
           <ClientProviders />
-          <ScrollToTop />
+          {!isEmbed && <ScrollToTop />}
           <OrganizationJsonLd />
+          <Script
+            defer
+            data-domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || "alparai.com"}
+            src="https://plausible.io/js/script.js"
+            strategy="afterInteractive"
+          />
           <Analytics />
+
           <SpeedInsights />
         </NextIntlClientProvider>
       </body>

@@ -38,7 +38,16 @@ export async function GET(request: Request) {
   if (!rl.ok) {
     return NextResponse.json(
       { error: "rate_limited", retryAfter: rl.retryAfter },
-      { status: 429, headers: corsHeaders(origin) },
+      {
+        status: 429,
+        headers: {
+          ...corsHeaders(origin),
+          "Retry-After": rl.retryAfter?.toString() ?? "60",
+          "X-RateLimit-Limit": rl.limit?.toString() ?? "100",
+          "X-RateLimit-Remaining": rl.remaining?.toString() ?? "0",
+          "X-RateLimit-Reset": rl.retryAfter?.toString() ?? "60",
+        },
+      },
     );
   }
 
@@ -66,6 +75,9 @@ export async function GET(request: Request) {
       headers: {
         ...corsHeaders(origin),
         "Cache-Control": "public, max-age=60, s-maxage=300, stale-while-revalidate=600",
+        "X-RateLimit-Limit": rl.limit?.toString() ?? "100",
+        "X-RateLimit-Remaining": rl.remaining?.toString() ?? "100",
+        "X-RateLimit-Reset": rl.retryAfter?.toString() ?? "0",
       },
     },
   );

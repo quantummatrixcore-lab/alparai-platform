@@ -3,6 +3,7 @@ import { createServerClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import { FeedContainer } from "@/components/feed/feed-container";
 import { toIncidentListItems } from "@/lib/mappers";
+import { getWatchedProviders } from "@/actions/watches";
 import type { IncidentListItem, LeaderboardEntry } from "@/types";
 import type { SidebarNewsItem, SidebarPollData } from "@/components/feed/feed-sidebar";
 
@@ -18,6 +19,7 @@ export default async function FeedPage({ params }: { params: Promise<{ locale: s
 
   const user = await getCurrentUser();
   const isLoggedIn = !!user;
+  const watchedProviders = isLoggedIn ? await getWatchedProviders() : [];
 
   const supabase = await createServerClient();
   const tCommon = await getTranslations({ locale, namespace: "common" });
@@ -116,6 +118,7 @@ export default async function FeedPage({ params }: { params: Promise<{ locale: s
       news={latestNews}
       poll={activePoll}
       isLoggedIn={isLoggedIn}
+      initialWatchedProviders={watchedProviders}
     />
   );
 }

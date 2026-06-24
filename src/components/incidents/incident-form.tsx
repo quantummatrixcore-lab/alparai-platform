@@ -20,6 +20,7 @@ import { useFormAutosave, clearDraft } from "@/hooks/use-form-autosave";
 import { GoogleSignInButton } from "@/components/auth/auth-buttons";
 import { Link } from "@/i18n/routing";
 import type { AIProvider, AIModel, IncidentCategory, IncidentSeverity } from "@/types";
+import { trackEvent } from "@/lib/analytics";
 
 const initialState: SubmitIncidentState = { ok: false };
 
@@ -109,6 +110,7 @@ export function IncidentForm({
   useEffect(() => {
     if (state.ok) {
       clearDraft(DRAFT_KEY);
+      trackEvent("Incident Submitted");
       toast.success(t("submitted"));
     } else if (state.error) {
       toast.error(state.error);

@@ -8,6 +8,9 @@ import { FeedSidebar, type SidebarNewsItem, type SidebarPollData } from "./feed-
 import type { IncidentListItem, LeaderboardEntry } from "@/types";
 import { AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { supabase } from "@/lib/supabase/client";
+import { watchProvider, unwatchProvider } from "@/actions/watches";
+import { toast } from "sonner";
 
 interface FeedContainerProps {
   initialIncidents: IncidentListItem[];
@@ -15,6 +18,7 @@ interface FeedContainerProps {
   news: SidebarNewsItem[];
   poll: SidebarPollData | null;
   isLoggedIn: boolean;
+  initialWatchedProviders?: string[];
 }
 
 const SEVERITY_WEIGHTS: Record<string, number> = {
@@ -30,16 +34,129 @@ export function FeedContainer({
   news,
   poll,
   isLoggedIn,
+  initialWatchedProviders = [],
 }: FeedContainerProps) {
   const [activeTab, setActiveTab] = React.useState<FeedTabType>("for-you");
+  const [incidents, setIncidents] = React.useState<IncidentListItem[]>(initialIncidents);
+  const [watchedProviders, setWatchedProviders] = React.useState<string[]>(initialWatchedProviders);
+  const [newIncidents, setNewIncidents] = React.useState<IncidentListItem[]>([]);
+
+  const providerMap = React.useMemo(() => {
+    return new Map(leaderboard.map((p) => [p.provider_id, p]));
+  }, [leaderboard]);
+
+  // Supabase Realtime updates
+  React.useEffect(() => {
+    const channel = supabase
+      .channel("feed-updates")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "incidents",
+          filter: "status=eq.published",
+        },
+        (payload) => {
+          const providerId = payload.new.ai_provider_id;
+          const provider = providerId ? providerMap.get(providerId) : null;
+          const newIncident: IncidentListItem = {
+            id: payload.new.id,
+            title_masked: payload.new.title_masked ?? "",
+            description_masked: payload.new.description_masked ?? "",
+            title_tr: payload.new.title_tr ?? null,
+            description_tr: payload.new.description_tr ?? null,
+            severity: payload.new.severity ?? "medium",
+            status: payload.new.status ?? "published",
+            category: payload.new.category ?? "other",
+            is_anonymous: payload.new.is_anonymous ?? false,
+            incident_date: payload.new.incident_date ?? new Date().toISOString(),
+            view_count: payload.new.views_count ?? 0,
+            vote_count: payload.new.upvotes_count ?? 0,
+            created_at: payload.new.created_at ?? new Date().toISOString(),
+            provider_name: provider?.provider_name ?? "Unknown",
+            provider_slug: provider?.provider_slug ?? "",
+            evidence_count: payload.new.comments_count ?? 0,
+            affected_count: payload.new.affected_users_count ?? 0,
+            cross_audit_truth_score: payload.new.cross_audit_truth_score ?? null,
+            cross_audit_confidence: payload.new.cross_audit_confidence ?? null,
+            shares_count: payload.new.shares_count ?? 0,
+            author_name: null,
+          };
+          setNewIncidents((prev) => [newIncident, ...prev]);
+        },
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "incidents",
+        },
+        (payload) => {
+          setIncidents((prev) =>
+            prev.map((item) => {
+              if (item.id === payload.new.id) {
+                return {
+                  ...item,
+                  view_count: payload.new.views_count ?? item.view_count,
+                  vote_count: payload.new.upvotes_count ?? item.vote_count,
+                  evidence_count: payload.new.comments_count ?? item.evidence_count,
+                  affected_count: payload.new.affected_users_count ?? item.affected_count,
+                  cross_audit_truth_score:
+                    payload.new.cross_audit_truth_score ?? item.cross_audit_truth_score,
+                  cross_audit_confidence:
+                    payload.new.cross_audit_confidence ?? item.cross_audit_confidence,
+                };
+              }
+              return item;
+            }),
+          );
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [providerMap]);
+
+  const handleRefresh = () => {
+    setIncidents((prev) => [...newIncidents, ...prev]);
+    setNewIncidents([]);
+  };
+
+  const handleToggleWatch = async (providerId: string) => {
+    if (!isLoggedIn) {
+      toast.error(
+        locale === "tr" ? "Takip etmek için giriş yapmalısınız" : "Sign in to follow providers",
+      );
+      return;
+    }
+    const isWatched = watchedProviders.includes(providerId);
+    try {
+      if (isWatched) {
+        await unwatchProvider(providerId);
+        setWatchedProviders((prev) => prev.filter((id) => id !== providerId));
+        toast.success(locale === "tr" ? "Takip bırakıldı" : "Unfollowed successfully");
+      } else {
+        await watchProvider(providerId);
+        setWatchedProviders((prev) => [...prev, providerId]);
+        toast.success(locale === "tr" ? "Takip ediliyor" : "Following successfully");
+      }
+    } catch (err) {
+      console.error("Failed to toggle watch status:", err);
+      toast.error(locale === "tr" ? "İşlem başarısız oldu" : "Action failed");
+    }
+  };
 
   // Calculate engagement & recency score client-side for "For You"
   const scoredIncidents = React.useMemo(() => {
     const now = new Date().getTime();
 
-    return initialIncidents.map((incident) => {
+    return incidents.map((incident) => {
       const upvotes = incident.vote_count ?? 0;
-      const comments = incident.evidence_count ?? 0; // mapped to comments_count
+      const comments = incident.evidence_count ?? 0;
       const affected = incident.affected_count ?? 0;
       const views = incident.view_count ?? 0;
 
@@ -60,7 +177,7 @@ export function FeedContainer({
         hoursSince,
       };
     });
-  }, [initialIncidents]);
+  }, [incidents]);
 
   const filteredIncidents = React.useMemo(() => {
     const sorted = [...scoredIncidents];
@@ -78,7 +195,6 @@ export function FeedContainer({
     }
 
     if (activeTab === "trending") {
-      // Trending in last 7 days, fallback to overall trending if none found
       const sevenDaysAgo = 7 * 24;
       let trending = sorted.filter((i) => i.hoursSince <= sevenDaysAgo);
       if (trending.length === 0) {
@@ -88,12 +204,17 @@ export function FeedContainer({
     }
 
     if (activeTab === "following") {
-      // Followed providers tab (Sprint 4, returns empty/mock for now)
-      return [];
+      // Find incidents matching watched provider IDs
+      return sorted.filter((i) => {
+        const providerId = (initialIncidents as { id: string; ai_provider_id?: string }[]).find(
+          (orig) => orig.id === i.id,
+        )?.ai_provider_id;
+        return providerId && watchedProviders.includes(providerId);
+      });
     }
 
     return sorted;
-  }, [scoredIncidents, activeTab]);
+  }, [scoredIncidents, activeTab, watchedProviders, initialIncidents]);
 
   return (
     <Container className="py-8">
@@ -117,11 +238,41 @@ export function FeedContainer({
           <FeedTabs activeTab={activeTab} onChange={setActiveTab} isLoggedIn={isLoggedIn} />
 
           <div className="min-h-[400px]">
+            <AnimatePresence>
+              {newIncidents.length > 0 && (
+                <motion.button
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  onClick={handleRefresh}
+                  className="bg-brand-500 hover:bg-brand-600 text-bg-primary mb-6 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl py-3 text-sm font-extrabold shadow-lg transition-colors"
+                >
+                  <AlertCircle className="h-4 w-4" />
+                  <span>
+                    {locale === "tr"
+                      ? `${newIncidents.length} yeni olay raporu yayınlandı — yenilemek için tıklayın`
+                      : `${newIncidents.length} new AI incident reports published — tap to refresh`}
+                  </span>
+                </motion.button>
+              )}
+            </AnimatePresence>
+
             <AnimatePresence mode="popLayout">
               {filteredIncidents.length > 0 ? (
-                filteredIncidents.map((incident) => (
-                  <FeedCard key={incident.id} incident={incident} />
-                ))
+                filteredIncidents.map((incident) => {
+                  const providerId = (
+                    initialIncidents as { id: string; ai_provider_id?: string }[]
+                  ).find((i) => i.id === incident.id)?.ai_provider_id;
+                  return (
+                    <FeedCard
+                      key={incident.id}
+                      incident={incident}
+                      isLoggedIn={isLoggedIn}
+                      isWatched={providerId ? watchedProviders.includes(providerId) : false}
+                      onToggleWatch={providerId ? () => handleToggleWatch(providerId) : undefined}
+                    />
+                  );
+                })
               ) : (
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -151,5 +302,4 @@ export function FeedContainer({
   );
 }
 
-// Quick helper to detect locale since useLocale is hook
 const locale = typeof window !== "undefined" ? document.documentElement.lang || "en" : "en";

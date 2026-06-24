@@ -10,6 +10,7 @@ import type { IncidentComment } from "@/components/incidents/comment-section";
 import { IncidentJsonLd } from "@/components/seo/json-ld";
 import { APP_URL } from "@/lib/constants";
 import type { IncidentDetail, ProviderResponse, EvidenceItem } from "@/types";
+import { RelatedIncidents } from "@/components/incidents/related-incidents";
 
 export async function generateMetadata({
   params,
@@ -184,6 +185,11 @@ export default async function IncidentDetailPage({
         comments={comments}
         userAffected={userAffected}
         currentUserId={user?.id ?? null}
+      />
+      <RelatedIncidents
+        providerId={(incidentRow as Record<string, unknown>)["ai_provider_id"] as string}
+        currentIncidentId={id}
+        locale={locale}
       />
     </Container>
   );
