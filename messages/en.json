@@ -811,7 +811,24 @@
     "spec_title": "OpenAPI 3.0 specification",
     "spec_desc": "Download the full OpenAPI spec to generate typed clients in your language of choice.",
     "rate_title": "Rate limits",
-    "rate_desc": "100 requests per minute per IP. Burst allowed. Returns 429 with retryAfter when exceeded."
+    "rate_desc": "100 requests per minute per IP. Burst allowed. Returns 429 with retryAfter when exceeded.",
+    "pricing_title": "API Pricing",
+    "pricing_desc": "Our services are free for researchers and public interest. Commercial usage and high-scale integrations fund the platform's sustainability.",
+    "tier_academic": "Academic / Non-Profit",
+    "tier_academic_desc": "For researchers, academics, and non-profit organizations.",
+    "tier_academic_price": "Free",
+    "tier_pro": "Professional",
+    "tier_pro_desc": "For startups and teams building growing AI products.",
+    "tier_pro_price": "$99 / Month",
+    "tier_enterprise": "Enterprise",
+    "tier_enterprise_desc": "For organizations requiring custom SLA, higher rate limits, and unlimited volume.",
+    "tier_enterprise_price": "Contact Us",
+    "tier_features_limit": "Rate limit: 60 requests/min",
+    "tier_features_limit_pro": "Rate limit: 1000 requests/min",
+    "tier_features_limit_ent": "Rate limit: Unlimited / Custom SLA",
+    "tier_features_support": "Community support",
+    "tier_features_support_pro": "Priority email support",
+    "tier_features_support_ent": "24/7 Dedicated Slack & Support line"
   },
   "bounties": {
     "eyebrow": "AI Accountability Bounty",
@@ -1183,7 +1200,11 @@
     "methodologyRatingsDesc": "Community evaluations of model features and performance.",
     "methodologyAuditingTitle": "Independent Auditing",
     "methodologyAuditingDesc": "Credits given for publishing public bias, privacy, and safety audits.",
-    "description": "ALPAR AI Transparency Report. Real-time metrics on moderation, audit logs, and provider responses."
+    "description": "ALPAR AI Transparency Report. Real-time metrics on moderation, audit logs, and provider responses.",
+    "roadmapTitle": "Security Certifications Roadmap",
+    "roadmapIntro": "To guarantee trust and institutional readiness, ALPAR AI is pursuing industry-standard compliance certifications.",
+    "soc2Desc": "Target: Q3 2026. Setting up continuous security logging, audit trails, and strict data access policies.",
+    "isoDesc": "Target: Q1 2027. Implementation of an Information Security Management System (ISMS) across all pipelines."
   },
   "models": {
     "page_title": "AI Models Directory",

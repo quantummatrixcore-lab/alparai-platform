@@ -295,6 +295,47 @@ export default async function TransparencyPage({
           <p>{tTransparency("commitmentText3")}</p>
         </CardContent>
       </Card>
+
+      <Card className="border-success-500/20 mt-8">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-sm">
+            <Shield className="text-success-500 h-4 w-4" />
+            {tTransparency("roadmapTitle", { defaultValue: "Security Certifications Roadmap" })}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="text-fg-secondary text-sm">
+          <p className="mb-4">
+            {tTransparency("roadmapIntro", {
+              defaultValue:
+                "To guarantee trust and institutional readiness, ALPAR AI is pursuing industry-standard compliance certifications.",
+            })}
+          </p>
+          <div className="mt-2 grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="border-border-subtle bg-bg-secondary/40 rounded-lg border p-4">
+              <h4 className="mb-2 text-xs font-bold tracking-wider text-white uppercase">
+                SOC 2 Type II
+              </h4>
+              <p className="text-fg-muted text-xs">
+                {tTransparency("soc2Desc", {
+                  defaultValue:
+                    "Target: Q3 2026. Setting up continuous security logging, audit trails, and data access controls.",
+                })}
+              </p>
+            </div>
+            <div className="border-border-subtle bg-bg-secondary/40 rounded-lg border p-4">
+              <h4 className="mb-2 text-xs font-bold tracking-wider text-white uppercase">
+                ISO 27001
+              </h4>
+              <p className="text-fg-muted text-xs">
+                {tTransparency("isoDesc", {
+                  defaultValue:
+                    "Target: Q1 2027. Implementing a comprehensive ISMS across all infrastructure pipelines.",
+                })}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </Container>
   );
 }
