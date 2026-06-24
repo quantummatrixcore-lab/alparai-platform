@@ -54,7 +54,17 @@ const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-export function FeedCard({ incident }: { incident: IncidentListItem }) {
+export function FeedCard({
+  incident,
+  isLoggedIn = false,
+  isWatched = false,
+  onToggleWatch,
+}: {
+  incident: IncidentListItem;
+  isLoggedIn?: boolean;
+  isWatched?: boolean;
+  onToggleWatch?: () => void;
+}) {
   const t = useTranslations("incident");
   const tCat = useTranslations("categories");
   const tCommon = useTranslations("common");
@@ -117,12 +127,37 @@ export function FeedCard({ incident }: { incident: IncidentListItem }) {
                 {incident.provider_name ? incident.provider_name.charAt(0) : "A"}
               </div>
               <div>
-                <Link
-                  href={`/incidents/${incident.id}`}
-                  className="text-fg-primary hover:text-brand-400 text-sm font-bold transition-colors"
-                >
-                  {incident.provider_name}
-                </Link>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/brand/${incident.provider_slug}`}
+                    className="text-fg-primary hover:text-brand-400 text-sm font-bold transition-colors"
+                  >
+                    {incident.provider_name}
+                  </Link>
+                  {isLoggedIn && onToggleWatch && (
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onToggleWatch();
+                      }}
+                      className={cn(
+                        "ml-1 cursor-pointer rounded-md px-1.5 py-0.5 text-[10px] font-bold tracking-wider uppercase transition-all",
+                        isWatched
+                          ? "text-fg-secondary bg-white/10 hover:bg-white/15"
+                          : "bg-brand-500/10 text-brand-400 border-brand-500/20 hover:bg-brand-500/20 border",
+                      )}
+                    >
+                      {isWatched
+                        ? locale === "tr"
+                          ? "Takipte"
+                          : "Following"
+                        : locale === "tr"
+                          ? "Takip Et"
+                          : "Follow"}
+                    </button>
+                  )}
+                </div>
                 <div className="text-fg-muted mt-0.5 flex items-center gap-1.5 text-xs">
                   <Clock className="h-3 w-3" />
                   <span>

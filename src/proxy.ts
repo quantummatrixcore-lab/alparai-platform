@@ -9,6 +9,7 @@ export async function proxy(request: NextRequest) {
   const requestId = request.headers.get("x-request-id") ?? crypto.randomUUID();
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-request-id", requestId);
+  requestHeaders.set("x-pathname", request.nextUrl.pathname);
 
   const requestWithId = new NextRequest(request, {
     headers: requestHeaders,

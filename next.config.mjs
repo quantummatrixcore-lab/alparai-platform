@@ -40,6 +40,23 @@ const securityHeaders = [
   { key: "Cross-Origin-Embedder-Policy", value: "require-corp" },
 ];
 
+const embedCsp = csp.replace("frame-ancestors 'none'", "frame-ancestors *");
+const embedHeaders = [
+  { key: "Content-Security-Policy", value: embedCsp },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+  },
+  {
+    key: "Strict-Transport-Security",
+    value: "max-age=31536000; includeSubDomains; preload",
+  },
+  { key: "X-DNS-Prefetch-Control", value: "on" },
+];
+
+
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -75,7 +92,15 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: "/(.*)",
+        source: "/:locale/incidents/:id/embed",
+        headers: embedHeaders,
+      },
+      {
+        source: "/incidents/:id/embed",
+        headers: embedHeaders,
+      },
+      {
+        source: "/((?!.*embed).*)",
         headers: securityHeaders,
       },
     ];

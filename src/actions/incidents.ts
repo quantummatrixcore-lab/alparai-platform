@@ -19,6 +19,8 @@ import {
   durationOf,
 } from "@/lib/autopilot";
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
+import { Resend } from "resend";
+import { getWhistleblowerConfirmationEmail, getAdminNotificationEmail } from "@/emails/templates";
 import type { Database } from "@/types/database";
 
 export interface SubmitIncidentState {
@@ -212,6 +214,61 @@ const runSubmitWork = async (
   const consentRes = await supabase.from("consent_log").insert(consentLogEntries);
   if (consentRes.error) {
     return { kind: "retryable", error: `consent_log_insert_failed: ${consentRes.error.message}` };
+  }
+
+  // Send email notifications via Resend
+  if (process.env.RESEND_API_KEY) {
+    try {
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      const emailPromises: Promise<unknown>[] = [];
+
+      // 1. Send confirmation to whistleblower if logged in
+      if (user && user.email) {
+        const html = getWhistleblowerConfirmationEmail({
+          title: raw.title,
+          category: raw.category,
+          severity: raw.severity,
+          date: raw.incident_date || new Date().toLocaleDateString(),
+          locale,
+        });
+
+        emailPromises.push(
+          resend.emails.send({
+            from: "ALPAR AI <noreply@alparai.com>",
+            to: user.email,
+            subject:
+              locale === "tr"
+                ? "Olay Raporunuz Alındı — ALPAR AI"
+                : "Incident Report Received — ALPAR AI",
+            html,
+          }),
+        );
+      }
+
+      // 2. Send alert notification to administrators
+      const adminHtml = getAdminNotificationEmail({
+        id: incidentId,
+        title: raw.title,
+        category: raw.category,
+        severity: raw.severity,
+      });
+
+      emailPromises.push(
+        resend.emails.send({
+          from: "ALPAR AI Alerts <alerts@alparai.com>",
+          to: "quantum.matrix.core@gmail.com",
+          subject: `[ALERT] New Incident: ${raw.title.substring(0, 40)}...`,
+          html: adminHtml,
+        }),
+      );
+
+      await Promise.all(emailPromises);
+      logger.info("Resend emails dispatched successfully", { incidentId });
+    } catch (emailErr) {
+      logger.error("Failed to send Resend emails", { error: emailErr, incidentId });
+    }
+  } else {
+    logger.info("Resend email simulation (no RESEND_API_KEY configuration)", { incidentId });
   }
 
   return { kind: "success", value: { id: incidentId } };
