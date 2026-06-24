@@ -23,6 +23,25 @@ export function HeroSection({
   const y1 = useTransform(scrollY, [0, 500], [0, 150]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
+  // A/B test split for Variant B
+  const [headlineVariant, setHeadlineVariant] = React.useState<"a" | "b">("a");
+
+  React.useEffect(() => {
+    try {
+      const saved = localStorage.getItem("alpar_hero_variant");
+      if (saved === "a" || saved === "b") {
+        setHeadlineVariant(saved);
+      } else {
+        const choice = Math.random() > 0.5 ? "b" : "a";
+        localStorage.setItem("alpar_hero_variant", choice);
+        setHeadlineVariant(choice);
+      }
+    } catch {
+      // SSR or localStorage disabled fallback
+      setHeadlineVariant("a");
+    }
+  }, []);
+
   return (
     <section className="bg-bg-primary relative overflow-hidden pt-24 pb-16">
       {/* Background Effects */}
@@ -70,7 +89,7 @@ export function HeroSection({
               transition={{ duration: 0.7, delay: 0.1 }}
               className="text-fg-primary pb-4 text-5xl leading-[0.95] font-black tracking-tighter drop-shadow-lg sm:text-6xl lg:text-[72px]"
             >
-              {t("title_primary")}
+              {headlineVariant === "b" ? t("title_variant_b") : t("title_primary")}
             </motion.h1>
 
             {/* Subtitle */}
@@ -80,7 +99,7 @@ export function HeroSection({
               transition={{ duration: 0.7, delay: 0.2 }}
               className="text-fg-secondary mt-6 max-w-xl text-lg leading-relaxed font-medium tracking-tight"
             >
-              {t("subtitle")}
+              {headlineVariant === "b" ? t("subtitle_variant_b") : t("subtitle")}
             </motion.p>
 
             {/* CTAs */}
@@ -106,7 +125,20 @@ export function HeroSection({
               </Link>
             </motion.div>
 
-            {/* Founder Quote will be rendered in the bottom row */}
+            {/* Tertiary Founding Reporter CTA */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="mt-4 px-1"
+            >
+              <Link
+                href="/submit"
+                className="text-brand-400 hover:text-brand-300 decoration-brand-500/30 text-sm font-bold underline decoration-2 underline-offset-4 transition-colors"
+              >
+                {t("cta_tertiary")}
+              </Link>
+            </motion.div>
           </div>
 
           {/* RIGHT: Live Data Panel */}
