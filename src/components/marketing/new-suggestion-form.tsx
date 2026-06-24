@@ -42,7 +42,7 @@ export function NewSuggestionForm() {
       toast.error(state.error);
     }
     return;
-  }, [state, router]);
+  }, [state, router, t]);
 
   if (done) {
     return (
@@ -86,7 +86,9 @@ export function NewSuggestionForm() {
             defaultValue="feature"
             options={SUGGESTION_CATEGORIES.map((c) => ({
               value: c.value,
-              label: t(`cat_${c.value}` as any, { defaultValue: c.label }),
+              label: t(`categories_${c.value}` as Parameters<typeof t>[0], {
+                defaultValue: c.label,
+              }),
             }))}
             error={state.fieldErrors?.category?.[0]}
           />
