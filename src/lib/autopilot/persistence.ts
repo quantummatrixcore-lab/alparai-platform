@@ -24,6 +24,7 @@ export const persistAutopilotRun = async <T>(
   userId: string | null,
   ipHash: string | null,
   durationMs: number,
+  costTokens?: number,
 ): Promise<PersistedAutopilotRun | null> => {
   try {
     const admin = createAdminClient();
@@ -51,7 +52,7 @@ export const persistAutopilotRun = async <T>(
           result_id: resultId,
           user_id: userId,
           ip_hash: ipHash,
-          metadata: {},
+          metadata: { cost_tokens: costTokens ?? 0 },
           updated_at: new Date().toISOString(),
         } as never,
         { onConflict: "idempotency_key" },
@@ -110,6 +111,7 @@ export interface PersistedAutopilotRunWithMeta extends PersistedAutopilotRun {
   last_error: string | null;
   created_at: string;
   updated_at: string;
+  metadata?: Record<string, unknown> | null;
 }
 
 export const listRecentRuns = async (limit: number): Promise<PersistedAutopilotRunWithMeta[]> => {
@@ -118,7 +120,7 @@ export const listRecentRuns = async (limit: number): Promise<PersistedAutopilotR
     const { data, error } = (await admin
       .from("autopilot_runs")
       .select(
-        "id, status, attempts, result_id, idempotency_key, action, duration_ms, last_error, created_at, updated_at",
+        "id, status, attempts, result_id, idempotency_key, action, duration_ms, last_error, created_at, updated_at, metadata",
       )
       .order("updated_at", { ascending: false })
       .limit(limit)) as unknown as {
@@ -137,6 +139,7 @@ export const listRecentRuns = async (limit: number): Promise<PersistedAutopilotR
       last_error: row["last_error"] === null ? null : String(row["last_error"]),
       created_at: String(row["created_at"] ?? ""),
       updated_at: String(row["updated_at"] ?? ""),
+      metadata: row["metadata"] as Record<string, unknown> | null,
     }));
   } catch {
     return [];
@@ -153,6 +156,8 @@ export interface AutopilotRunStats {
   byStatus: Record<string, number>;
   p50DurationMs: number;
   p95DurationMs: number;
+  totalTokens: number;
+  estimatedCostUSD: number;
 }
 
 const percentile = (values: number[], p: number): number => {
@@ -170,15 +175,19 @@ export const summarizeRuns = (runs: PersistedAutopilotRunWithMeta[]): AutopilotR
   let failed = 0;
   let retried = 0;
   let replayed = 0;
+  let totalTokens = 0;
   for (const run of runs) {
     byAction[run.action] = (byAction[run.action] ?? 0) + 1;
     byStatus[run.status] = (byStatus[run.status] ?? 0) + 1;
     durations.push(run.duration_ms);
+    const runTokens = Number(run.metadata?.cost_tokens ?? 0);
+    totalTokens += runTokens;
     if (run.status === "ok" || run.status === "succeeded") succeeded += 1;
     else if (run.status === "exhausted" || run.status === "circuit_open") failed += 1;
     else if (run.status === "budget_exceeded") retried += 1;
     else if (run.status === "replayed") replayed += 1;
   }
+  const estimatedCostUSD = (totalTokens / 1_000_000) * 2.0;
   return {
     total: runs.length,
     succeeded,
@@ -189,5 +198,7 @@ export const summarizeRuns = (runs: PersistedAutopilotRunWithMeta[]): AutopilotR
     byStatus,
     p50DurationMs: percentile(durations, 50),
     p95DurationMs: percentile(durations, 95),
+    totalTokens,
+    estimatedCostUSD,
   };
 };

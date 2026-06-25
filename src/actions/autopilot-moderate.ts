@@ -14,7 +14,7 @@ import { revalidatePath } from "next/cache";
 async function evaluateIncidentWithGemini(
   title: string,
   description: string,
-): Promise<{ score: number; reason: string } | null> {
+): Promise<{ score: number; reason: string; costTokens?: number } | null> {
   const apiKey = process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY;
   if (!apiKey) {
     logger.error("No Google API Key found for incident moderation Gemini call");
@@ -67,6 +67,7 @@ Return ONLY a valid JSON object matching this schema (do not output markdown tic
 
     const data = await response.json();
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const costTokens = data.usageMetadata?.totalTokenCount || 0;
     if (!text) {
       logger.error("Gemini API returned empty response for moderation");
       return null;
@@ -76,6 +77,7 @@ Return ONLY a valid JSON object matching this schema (do not output markdown tic
     return {
       score: typeof parsed.score === "number" ? parsed.score : 50,
       reason: parsed.reason || "Evaluated by AI.",
+      costTokens,
     };
   } catch (error) {
     logger.error(
@@ -208,7 +210,11 @@ https://alparai.com`,
     }
   }
 
-  return { kind: "success", value: { score: evaluation.score, status: finalStatus } };
+  return {
+    kind: "success",
+    value: { score: evaluation.score, status: finalStatus },
+    costTokens: evaluation.costTokens,
+  };
 }
 
 export async function autoModerateIncidentAction(
