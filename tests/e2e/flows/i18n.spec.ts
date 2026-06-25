@@ -29,10 +29,10 @@ test.describe("i18n Language & Routing Checks", () => {
     }
 
     // 2. Click Language Switcher to switch to Turkish
-    const trLink = page.getByRole("link", { name: /switch language|dil|language/i });
-    const isVisible = await trLink.isVisible();
+    const trButton = page.getByRole("button", { name: /^TR$/i });
+    const isVisible = await trButton.isVisible();
     if (isVisible) {
-      await trLink.click();
+      await trButton.click();
       await page.waitForURL(/\/tr/);
 
       // Verify html lang is now 'tr'

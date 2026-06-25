@@ -20,7 +20,7 @@ describe("Autopilot Queue", () => {
   });
 
   afterEach(() => {
-    process.env = { ...envBackup };
+    process.env = envBackup as NodeJS.ProcessEnv;
   });
 
   it("creates in-process handle when no Redis config", async () => {
