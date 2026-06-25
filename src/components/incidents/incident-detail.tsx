@@ -119,6 +119,26 @@ export function IncidentDetailView({
           </CardContent>
         </Card>
 
+        {incident.import_attribution && (
+          <Card className="border-brand-500/10 bg-bg-secondary/40">
+            <CardContent className="flex gap-4 p-5 text-sm">
+              <Globe className="text-brand-400 mt-0.5 h-5 w-5 shrink-0" />
+              <div className="space-y-1">
+                <h4 className="text-fg-primary font-bold">
+                  {t("imported_incident_attribution_title")}
+                </h4>
+                <p className="text-fg-secondary text-xs">
+                  {t("imported_incident_attribution_desc")}
+                </p>
+                <div className="bg-bg-tertiary/60 border-border-subtle text-brand-300 mt-3 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 font-mono text-xs">
+                  <Shield className="h-3.5 w-3.5" />
+                  {incident.import_attribution}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {incident.cross_audit_truth_score !== null && (
           <Card className="border-brand-500/20 bg-brand-500/5 border shadow-[0_0_30px_rgba(168,85,247,0.05)]">
             <CardHeader className="border-border-subtle border-b pb-4">
@@ -143,9 +163,7 @@ export function IncidentDetailView({
                   <h4 className="text-fg-primary text-base font-bold">
                     {t("truth_score", { defaultValue: "TruthScore" })}
                   </h4>
-                  <p className="text-fg-muted mt-1 text-xs">
-                    {t("calculatedUsing")}
-                  </p>
+                  <p className="text-fg-muted mt-1 text-xs">{t("calculatedUsing")}</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="text-right">

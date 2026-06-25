@@ -142,6 +142,9 @@ export default async function IncidentDetailPage({
     cross_audit_confidence: (r["cross_audit_confidence"] as number | null) ?? null,
     cross_audit_reasoning: (r["cross_audit_reasoning"] as string | null) ?? null,
     cross_audit_model: (r["cross_audit_model"] as string | null) ?? null,
+    incident_source: (r["incident_source"] as string | null) ?? undefined,
+    import_external_id: (r["import_external_id"] as string | null) ?? null,
+    import_attribution: (r["import_attribution"] as string | null) ?? null,
   };
 
   let userVote: -1 | 0 | 1 = 0;

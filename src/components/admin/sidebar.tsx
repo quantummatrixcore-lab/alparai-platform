@@ -23,6 +23,7 @@ import {
   Grid,
   TrendingUp,
   Compass,
+  Download,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
@@ -56,6 +57,16 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       icon: ShieldAlert,
       active: pathname.startsWith("/admin/moderation"),
     },
+    ...(user.role === "admin" || user.role === "ceo"
+      ? [
+          {
+            href: "/admin/import",
+            label: t("import_queue") || "Import Queue",
+            icon: Download,
+            active: pathname.startsWith("/admin/import"),
+          },
+        ]
+      : []),
     {
       href: "/admin/takedown",
       label: t("stats_takedown_requests"),
