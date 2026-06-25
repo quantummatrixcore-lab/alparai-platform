@@ -35,8 +35,8 @@ interface SidebarUserShape {
 
 export function AdminSidebar({ user }: { user: SidebarUserShape }) {
   const t = useTranslations("admin");
-  const tCommon = useTranslations("common");
   const tAuth = useTranslations("auth");
+  const tNav = useTranslations("nav");
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -211,7 +211,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
           <div className="space-y-1.5">
             <div className="mb-2 flex items-center justify-between gap-2 border-b border-white/5 pb-2">
               <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
-                {tCommon("language_switcher") ?? "Dil / Language"}
+                {tNav("language_switcher")}
               </span>
               <LanguageSwitcher className="h-8" />
             </div>
@@ -221,7 +221,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
                 className="text-fg-muted hover:bg-bg-tertiary/60 hover:text-fg-primary flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition"
               >
                 <Globe className="h-3.5 w-3.5" />
-                {tCommon("home") ?? "Ana Sayfa"}
+                {tNav("home")}
               </Link>
             </div>
             <form action="/api/auth/signout" method="post">
