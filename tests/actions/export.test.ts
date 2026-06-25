@@ -128,7 +128,7 @@ describe("exportIncidentsCSV", () => {
     const workResult = await autopilotCallback!({} as never, { adminId: "admin" });
     expect(workResult.kind).toBe("success");
     if (workResult.kind === "success") {
-      expect(workResult.value.rowCount).toBe(1);
+      expect(workResult.value!.rowCount).toBe(1);
     }
   });
 
@@ -195,7 +195,7 @@ describe("exportAuditLogCSV", () => {
     const workResult = await autopilotCallback!({} as never, { adminId: "admin" });
     expect(workResult.kind).toBe("success");
     if (workResult.kind === "success") {
-      expect(workResult.value.rowCount).toBe(1);
+      expect(workResult.value!.rowCount).toBe(1);
     }
   });
 
