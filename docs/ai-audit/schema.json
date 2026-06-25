@@ -23,6 +23,9 @@
         "traction_social_proof": { "type": "number", "minimum": 0, "maximum": 100 },
         "investor_readiness": { "type": "number", "minimum": 0, "maximum": 100 },
         "societal_impact": { "type": "number", "minimum": 0, "maximum": 100 },
+        "eu_act_transparency": { "type": "number", "minimum": 0, "maximum": 100 },
+        "eu_act_non_discrimination": { "type": "number", "minimum": 0, "maximum": 100 },
+        "eu_act_data_privacy": { "type": "number", "minimum": 0, "maximum": 100 },
         "total": { "type": "number" },
         "total_max": { "type": "number", "default": 1000 }
       }

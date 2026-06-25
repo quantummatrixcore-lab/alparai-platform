@@ -232,6 +232,7 @@ export const withAutopilot = async <T>(
         ctx.userId,
         ctx.ipHash,
         Date.now() - start,
+        totalTokens,
       );
       return budget;
     }
@@ -255,6 +256,7 @@ export const withAutopilot = async <T>(
         ctx.userId,
         ctx.ipHash,
         Date.now() - start,
+        totalTokens,
       );
       return budget;
     }
@@ -296,6 +298,7 @@ export const withAutopilot = async <T>(
           ctx.userId,
           ctx.ipHash,
           ok.durationMs,
+          totalTokens,
         );
         return ok;
       }
@@ -329,6 +332,7 @@ export const withAutopilot = async <T>(
           ctx.userId,
           ctx.ipHash,
           exhausted.durationMs,
+          totalTokens,
         );
         return exhausted;
       }
@@ -359,6 +363,7 @@ export const withAutopilot = async <T>(
           ctx.userId,
           ctx.ipHash,
           exhausted.durationMs,
+          totalTokens,
         );
         return exhausted;
       }
@@ -405,6 +410,7 @@ export const withAutopilot = async <T>(
     ctx.userId,
     ctx.ipHash,
     exhausted.durationMs,
+    totalTokens,
   );
 
   if (config.onExhaust === "escalate_admin") {

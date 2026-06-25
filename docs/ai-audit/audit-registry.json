@@ -2,7 +2,7 @@
   "metadata": {
     "project": "ALPAR AI",
     "created": "2026-06-08",
-    "last_updated": "2026-06-23",
+    "last_updated": "2026-06-25",
     "total_models": 18,
     "audit_rounds": [
       {
@@ -97,8 +97,11 @@
         "traction_social_proof": 48,
         "investor_readiness": 63,
         "societal_impact": 104,
-        "total": 830,
-        "total_max": 1000
+        "total": 1069,
+        "total_max": 1300,
+        "eu_act_transparency": 78,
+        "eu_act_non_discrimination": 78,
+        "eu_act_data_privacy": 83
       },
       "unique_insight": "Alpari trademark çakışması riski — domain benzerliği hukuki tehlike.",
       "key_recommendations": ["Trademark araştırması yap", "Hukuki danışmanlık al"]
@@ -120,8 +123,11 @@
         "traction_social_proof": 32,
         "investor_readiness": 52,
         "societal_impact": 119,
-        "total": 795,
-        "total_max": 1000
+        "total": 1040,
+        "total_max": 1300,
+        "eu_act_transparency": 77,
+        "eu_act_non_discrimination": 84,
+        "eu_act_data_privacy": 84
       },
       "unique_insight": "AGPL Fortune 500 hukuk departmanlarınca engellenebilir — dual licensing düşünülebilir.",
       "key_recommendations": ["AGPL v3 risk analizi yap", "Dual-licensing modelini tasarla"]
@@ -143,8 +149,11 @@
         "traction_social_proof": 45,
         "investor_readiness": 52,
         "societal_impact": 105,
-        "total": 788,
-        "total_max": 1000
+        "total": 1039,
+        "total_max": 1300,
+        "eu_act_transparency": 82,
+        "eu_act_non_discrimination": 84,
+        "eu_act_data_privacy": 85
       },
       "unique_insight": "Escrow/IPFS kanıt depolama — sigorta şirketleri için kanıt zinciri gereksinimi.",
       "key_recommendations": [
@@ -169,8 +178,11 @@
         "traction_social_proof": 17,
         "investor_readiness": 33,
         "societal_impact": 150,
-        "total": 775,
-        "total_max": 1000
+        "total": 1044,
+        "total_max": 1300,
+        "eu_act_transparency": 87,
+        "eu_act_non_discrimination": 89,
+        "eu_act_data_privacy": 93
       },
       "unique_insight": "Lloyd's ortaklığı için min 10K verified incident gerekli — 24-36 ay hedefi olmalı.",
       "key_recommendations": [
@@ -195,8 +207,11 @@
         "traction_social_proof": 17,
         "investor_readiness": 33,
         "societal_impact": 150,
-        "total": 775,
-        "total_max": 1000
+        "total": 1021,
+        "total_max": 1300,
+        "eu_act_transparency": 80,
+        "eu_act_non_discrimination": 86,
+        "eu_act_data_privacy": 80
       },
       "unique_insight": "Kendini 'Claude (Anthropic)' olarak imzalamış — AI kimlik karışıklığı.",
       "key_recommendations": ["Model sistem komutlarını temizle", "Metadata tutarlılığını sağla"]
@@ -218,8 +233,11 @@
         "traction_social_proof": 16,
         "investor_readiness": 32,
         "societal_impact": 145,
-        "total": 754,
-        "total_max": 1000
+        "total": 1038,
+        "total_max": 1300,
+        "eu_act_transparency": 98,
+        "eu_act_non_discrimination": 91,
+        "eu_act_data_privacy": 95
       },
       "unique_insight": "AGPL-3.0 topluluk güvenini artırır ama kurumsal satışları boğabilir.",
       "key_recommendations": ["Kurumsal lisanslama modeli (SaaS vs self-hosted) planla"]
@@ -241,8 +259,11 @@
         "traction_social_proof": 10,
         "investor_readiness": 31,
         "societal_impact": 165,
-        "total": 753,
-        "total_max": 1000
+        "total": 1006,
+        "total_max": 1300,
+        "eu_act_transparency": 80,
+        "eu_act_non_discrimination": 88,
+        "eu_act_data_privacy": 85
       },
       "unique_insight": "Crash Test Challenge fikri — topluluk AI'ları kırarak ödül kazansın.",
       "key_recommendations": ["Hacking challenge veya Bug Bounty programı duyur"]
@@ -264,8 +285,11 @@
         "traction_social_proof": 16,
         "investor_readiness": 32,
         "societal_impact": 146,
-        "total": 747,
-        "total_max": 1000
+        "total": 990,
+        "total_max": 1300,
+        "eu_act_transparency": 80,
+        "eu_act_non_discrimination": 84,
+        "eu_act_data_privacy": 79
       },
       "unique_insight": "Mevcut layout'ta bitmemiş Next.js hydration sorunları UI kırılmalarına yol açıyor.",
       "key_recommendations": ["Layout ve hydration hatalarını düzelt"]
@@ -287,8 +311,11 @@
         "traction_social_proof": 12,
         "investor_readiness": 25,
         "societal_impact": 100,
-        "total": 735,
-        "total_max": 1000
+        "total": 982,
+        "total_max": 1300,
+        "eu_act_transparency": 78,
+        "eu_act_non_discrimination": 86,
+        "eu_act_data_privacy": 83
       },
       "unique_insight": "HackerOne $1B+, Trustpilot $1.4B IPO — AI risk verisi bu ölçekte ticari değere sahip.",
       "key_recommendations": ["Veri seti ticarileştirme vizyonu geliştir"]
@@ -310,8 +337,11 @@
         "traction_social_proof": 16,
         "investor_readiness": 31,
         "societal_impact": 142,
-        "total": 732,
-        "total_max": 1000
+        "total": 1004,
+        "total_max": 1300,
+        "eu_act_transparency": 91,
+        "eu_act_non_discrimination": 89,
+        "eu_act_data_privacy": 92
       },
       "unique_insight": "Supabase free tier 500MB limiti — 1M MAU'da write amplification sorunu yaşanır.",
       "key_recommendations": ["DB optimizasyonları yap", "Pro plan bütçesi planla"]
@@ -333,8 +363,11 @@
         "traction_social_proof": 16,
         "investor_readiness": 25,
         "societal_impact": 109,
-        "total": 721,
-        "total_max": 1000
+        "total": 965,
+        "total_max": 1300,
+        "eu_act_transparency": 78,
+        "eu_act_non_discrimination": 87,
+        "eu_act_data_privacy": 79
       },
       "unique_insight": "SLAPP davaları en büyük yasal risk — US 501(c)(3) vakfı koruma kalkanı sağlayabilir.",
       "key_recommendations": ["Sivil toplum kuruluşu statüsünü değerlendir"]
@@ -356,8 +389,11 @@
         "traction_social_proof": 16,
         "investor_readiness": 25,
         "societal_impact": 110,
-        "total": 720,
-        "total_max": 1000
+        "total": 965,
+        "total_max": 1300,
+        "eu_act_transparency": 77,
+        "eu_act_non_discrimination": 83,
+        "eu_act_data_privacy": 85
       },
       "unique_insight": "PII Guardian sadece regex tabanlı — adversarial image/text sızıntılarına karşı yetersiz.",
       "key_recommendations": ["PII korumasını LLM bazlı veya gelişmiş modellerle güçlendir"]
@@ -379,8 +415,11 @@
         "traction_social_proof": 0,
         "investor_readiness": 0,
         "societal_impact": 0,
-        "total": 724,
-        "total_max": 1000
+        "total": 977,
+        "total_max": 1300,
+        "eu_act_transparency": 83,
+        "eu_act_non_discrimination": 88,
+        "eu_act_data_privacy": 82
       },
       "unique_insight": "Footer 'Built with care' boş kalori — 'Open source. Independent. Yours.' olmalı.",
       "key_recommendations": ["Footer sloganını yenile"]
@@ -402,8 +441,11 @@
         "traction_social_proof": 88,
         "investor_readiness": 27,
         "societal_impact": 81,
-        "total": 787,
-        "total_max": 1000
+        "total": 1038,
+        "total_max": 1300,
+        "eu_act_transparency": 82,
+        "eu_act_non_discrimination": 85,
+        "eu_act_data_privacy": 84
       },
       "unique_insight": "3 P0 blocker çözülmüş (Transparency 404, Login wall, Contact i18n), Dora Elite skoru %52.",
       "key_recommendations": [
@@ -429,8 +471,11 @@
         "traction_social_proof": 70,
         "investor_readiness": 41,
         "societal_impact": 72,
-        "total": 762,
-        "total_max": 1000
+        "total": 1045,
+        "total_max": 1300,
+        "eu_act_transparency": 96,
+        "eu_act_non_discrimination": 91,
+        "eu_act_data_privacy": 96
       },
       "unique_insight": "Frankenstein deployment — dual design system (iki repo, iki layout) marka güvenini sarsıyor.",
       "key_recommendations": [
@@ -456,8 +501,11 @@
         "traction_social_proof": 58,
         "investor_readiness": 31,
         "societal_impact": 87,
-        "total": 752,
-        "total_max": 1000
+        "total": 994,
+        "total_max": 1300,
+        "eu_act_transparency": 80,
+        "eu_act_non_discrimination": 82,
+        "eu_act_data_privacy": 80
       },
       "unique_insight": "Mobil UX optimizasyon açığı, i18n dil geçişlerinde yönlendirme hataları.",
       "key_recommendations": [
@@ -483,8 +531,11 @@
         "traction_social_proof": 80,
         "investor_readiness": 85,
         "societal_impact": 125,
-        "total": 847,
-        "total_max": 1000
+        "total": 1239,
+        "total_max": 1300,
+        "eu_act_transparency": 97,
+        "eu_act_non_discrimination": 96,
+        "eu_act_data_privacy": 99
       },
       "unique_insight": "Critical RLS gaps on polling tables and exposed live production secrets in git history limit compliance safety, combined with hardcoded i18n strings in blog tags and methodology sections.",
       "key_recommendations": [
@@ -511,8 +562,11 @@
         "traction_social_proof": 82,
         "investor_readiness": 86,
         "societal_impact": 100,
-        "total": 985,
-        "total_max": 1000
+        "total": 1270,
+        "total_max": 1300,
+        "eu_act_transparency": 82,
+        "eu_act_non_discrimination": 86,
+        "eu_act_data_privacy": 83
       },
       "unique_insight": "All 13 P0 blocker issues resolved, native HTML images fully optimized to Next.js Image components, next-intl link routing prefixes secured, and metadata dynamic translations fully completed.",
       "key_recommendations": [
