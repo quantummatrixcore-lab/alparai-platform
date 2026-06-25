@@ -14,7 +14,7 @@ interface SessionUserShape {
   email: string;
   fullName: string | null;
   avatarUrl: string | null;
-  role: "user" | "moderator" | "admin" | "ceo";
+  role: "user" | "moderator" | "admin" | "ceo" | "advisor";
 }
 
 export function UserMenu({ initialUser }: { initialUser: SessionUserShape | null }) {

@@ -205,3 +205,69 @@ export interface ModelScoreSummary {
   score_value: number;
   reviews_count: number;
 }
+
+export interface SwotItem {
+  id: string;
+  category: "strength" | "weakness" | "opportunity" | "threat";
+  title: string;
+  description: string | null;
+  weight: "low" | "medium" | "high";
+  owner_user_id: string | null;
+  action_plan: string | null;
+  target_date: string | null;
+  status: "active" | "done" | "archived";
+  created_at: string;
+  updated_at: string;
+}
+
+export interface StrategyRisk {
+  id: string;
+  code: string;
+  title: string;
+  description: string | null;
+  probability: number; // 1-5
+  impact: number; // 1-5
+  owner_user_id: string | null;
+  mitigation_plan: string | null;
+  target_date: string | null;
+  status: "active" | "mitigated" | "triggered" | "closed";
+  created_at: string;
+  updated_at: string;
+}
+
+export interface StrategyValuation {
+  id: string;
+  method: "berkus" | "scorecard" | "vc" | "average";
+  inputs: Record<string, unknown>;
+  result_pre_money: number;
+  notes: string | null;
+  snapshot_date: string;
+  created_by: string | null;
+  created_at: string;
+}
+
+export interface StrategyMilestone {
+  id: string;
+  quarter: string;
+  title: string;
+  okr_text: string | null;
+  progress: number; // 0-100
+  status: "planned" | "in_progress" | "done" | "missed";
+  linked_metric: string | null;
+  owner_user_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface StrategyMetricsSnapshot {
+  id: string;
+  snapshot_date: string;
+  total_users: number;
+  total_incidents: number;
+  active_providers: number;
+  media_mentions_count: number;
+  mrr_cents: number;
+  runway_months: number | null;
+  health_score: number; // 0-100
+  created_at: string;
+}
