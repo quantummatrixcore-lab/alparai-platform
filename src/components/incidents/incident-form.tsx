@@ -387,12 +387,6 @@ export function IncidentForm({
         <EvidenceUploader name="evidence" />
       </div>
 
-      <div>
-        <label className="text-fg-primary mb-2 block text-sm font-medium">
-          {t("evidence_hint") ?? ""}
-        </label>
-      </div>
-
       {piiDetected && <PIIBanner />}
 
       <fieldset className="border-border-subtle bg-bg-secondary/40 space-y-3 rounded-md border p-4">
@@ -421,7 +415,7 @@ export function IncidentForm({
           checked={consents.terms}
           onChange={(e) => setConsents((c) => ({ ...c, terms: e.target.checked }))}
         />
-        <div className="pt-2">
+        <div>
           <Checkbox
             name="is_anonymous"
             label={t("anonymous")}
