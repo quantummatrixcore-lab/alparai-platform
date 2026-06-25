@@ -13,7 +13,7 @@ export interface BlogPost {
   content_tr: string;
 }
 
-export const blogPosts: BlogPost[] = [
+const blogPosts: BlogPost[] = [
   {
     slug: "why-ai-accountability-matters-2025",
     title: "Why AI Accountability Matters in 2025",
