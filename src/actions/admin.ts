@@ -371,3 +371,65 @@ export async function promoteUser(
   revalidatePath("/admin/users");
   return { ok: true, userId: target.id };
 }
+
+export async function bulkApproveIncidents(
+  ids: string[],
+): Promise<{ ok: boolean; error?: string }> {
+  const admin = await requireAdmin();
+  if (!admin) return { ok: false, error: "Forbidden" };
+
+  const db = createAdminClient();
+
+  const { error } = await db
+    .from("incidents")
+    .update({
+      status: "published",
+      moderator_id: admin.id,
+      moderated_at: new Date().toISOString(),
+      published_at: new Date().toISOString(),
+    })
+    .in("id", ids);
+
+  if (error) return { ok: false, error: error.message };
+
+  await db.from("audit_log").insert({
+    actor_id: admin.id,
+    action: "incident.bulk_approve",
+    entity_type: "incident",
+    entity_id: ids.join(","),
+    after_data: { count: ids.length },
+  });
+
+  revalidatePath("/[locale]/admin/import", "layout");
+  revalidatePath("/[locale]/incidents", "layout");
+  return { ok: true };
+}
+
+export async function bulkRejectIncidents(ids: string[]): Promise<{ ok: boolean; error?: string }> {
+  const admin = await requireAdmin();
+  if (!admin) return { ok: false, error: "Forbidden" };
+
+  const db = createAdminClient();
+
+  const { error } = await db
+    .from("incidents")
+    .update({
+      status: "rejected",
+      moderator_id: admin.id,
+      moderated_at: new Date().toISOString(),
+    })
+    .in("id", ids);
+
+  if (error) return { ok: false, error: error.message };
+
+  await db.from("audit_log").insert({
+    actor_id: admin.id,
+    action: "incident.bulk_reject",
+    entity_type: "incident",
+    entity_id: ids.join(","),
+    after_data: { count: ids.length },
+  });
+
+  revalidatePath("/[locale]/admin/import", "layout");
+  return { ok: true };
+}

@@ -45,6 +45,9 @@ export interface IncidentListItem {
   provider_slug: string;
   cross_audit_truth_score: number | null;
   cross_audit_confidence: number | null;
+  incident_source?: string;
+  import_external_id?: string | null;
+  import_attribution?: string | null;
 }
 
 export interface IncidentDetail {
@@ -72,6 +75,9 @@ export interface IncidentDetail {
   cross_audit_confidence: number | null;
   cross_audit_reasoning: string | null;
   cross_audit_model: string | null;
+  incident_source?: string;
+  import_external_id?: string | null;
+  import_attribution?: string | null;
 }
 
 export interface EvidenceItem {

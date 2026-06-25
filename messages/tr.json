@@ -198,7 +198,9 @@
     "calculatedUsing": "Çoklu model fikir birliği ve anlamsal denetim motorları kullanılarak hesaplanmıştır.",
     "auditorEngine": "Denetim Motoru:",
     "verified": "Doğrulandı",
-    "timeline": "Olay zaman çizelgesi"
+    "timeline": "Olay zaman çizelgesi",
+    "imported_incident_attribution_title": "Dış Kaynak Atıf Bilgisi",
+    "imported_incident_attribution_desc": "Bu olay, açık kaynaklı dış bir veri tabanından içe aktarılmıştır. CC BY 4.0 veya kamu malı lisansı altındadır. Orijinal kaynak detayları aşağıda yer almaktadır."
   },
   "categories": {
     "hallucination": "Halüsinasyon",
@@ -328,6 +330,7 @@
     "dashboard": "Kontrol Paneli",
     "social_media_hub": "Sosyal Medya",
     "moderation_queue": "Moderasyon Kuyruğu",
+    "import_queue": "İçe Aktarma Kuyruğu",
     "users": "Kullanıcılar",
     "providers": "AI Sağlayıcılar",
     "analytics": "Analitik",

@@ -844,6 +844,9 @@ export type Database = {
           cross_audit_model: string | null;
           cross_audit_triage_models: string[] | null;
           cross_audit_completed_at: string | null;
+          incident_source: string;
+          import_external_id: string | null;
+          import_attribution: string | null;
         };
         Insert: {
           ai_model_id?: string | null;
@@ -891,6 +894,9 @@ export type Database = {
           cross_audit_model?: string | null;
           cross_audit_triage_models?: string[] | null;
           cross_audit_completed_at?: string | null;
+          incident_source?: string;
+          import_external_id?: string | null;
+          import_attribution?: string | null;
         };
         Update: {
           ai_model_id?: string | null;
@@ -938,6 +944,9 @@ export type Database = {
           cross_audit_model?: string | null;
           cross_audit_triage_models?: string[] | null;
           cross_audit_completed_at?: string | null;
+          incident_source?: string;
+          import_external_id?: string | null;
+          import_attribution?: string | null;
         };
         Relationships: [
           {

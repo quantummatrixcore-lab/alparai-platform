@@ -198,7 +198,9 @@
     "calculatedUsing": "Calculated using multi-model consensus and semantic audit engines.",
     "auditorEngine": "Auditor Engine:",
     "verified": "Verified",
-    "timeline": "Incident timeline"
+    "timeline": "Incident timeline",
+    "imported_incident_attribution_title": "External Source Attribution",
+    "imported_incident_attribution_desc": "This incident was imported from an external open database. Licensed under CC BY 4.0 or public domain. Original source details below."
   },
   "categories": {
     "hallucination": "Hallucination",
@@ -328,6 +330,7 @@
     "dashboard": "Dashboard",
     "social_media_hub": "Social Media Hub",
     "moderation_queue": "Moderation Queue",
+    "import_queue": "Import Queue",
     "users": "Users",
     "providers": "AI Providers",
     "analytics": "Analytics",
