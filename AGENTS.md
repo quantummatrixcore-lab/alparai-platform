@@ -114,6 +114,4 @@ The reason the Supabase project ID appears on the Google OAuth screen instead of
 
 - Rotate `vcp_502...` Vercel token + `sbp_1b9...` Supabase token (both exposed in chat history).
 - Reset Supabase DB password and re-set in `.env.local` + Vercel.
-- `git rm --cached .env.local` + commit.
 - Delete duplicate Vercel project `alparai-web`.
-- Fix i18n on remaining legal pages: `terms`, `cookies` (still have hardcoded English).
