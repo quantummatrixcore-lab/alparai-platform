@@ -34,6 +34,7 @@ const mono = JetBrains_Mono({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-mono",
+  weight: ["400", "700"],
 });
 
 export function generateStaticParams() {
@@ -89,7 +90,7 @@ export default async function LocaleLayout({
             defer
             data-domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || "alparai.com"}
             src="https://plausible.io/js/script.js"
-            strategy="afterInteractive"
+            strategy="lazyOnload"
           />
           <Analytics />
 

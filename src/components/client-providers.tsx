@@ -1,8 +1,15 @@
 "use client";
 
 import * as React from "react";
-import { CookieBanner } from "./legal/cookie-banner";
 import { Toaster } from "sonner";
+import dynamic from "next/dynamic";
+
+const CookieBanner = dynamic(
+  () => import("./legal/cookie-banner").then((mod) => mod.CookieBanner),
+  {
+    ssr: false,
+  },
+);
 
 export function ClientProviders() {
   return (
