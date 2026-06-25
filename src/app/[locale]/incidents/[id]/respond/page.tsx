@@ -4,7 +4,7 @@ import { Container } from "@/components/ui/layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyProviderToken } from "@/lib/utils/hash";
-import { ProviderResponseForm } from "@/components/incidents";
+import { ProviderResponseForm } from "@/components/incidents/provider-response-form";
 import { AlertCircle, FileText } from "lucide-react";
 
 export async function generateMetadata({

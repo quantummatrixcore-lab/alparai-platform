@@ -70,16 +70,6 @@ export async function requireAdmin(): Promise<SessionUser> {
   return user;
 }
 
-export async function isCEO(): Promise<boolean> {
-  const user = await getCurrentUser();
-  return user?.role === "ceo" || user?.role === "admin";
-}
-
-export async function isAdvisor(): Promise<boolean> {
-  const user = await getCurrentUser();
-  return user?.role === "advisor" || user?.role === "ceo" || user?.role === "admin";
-}
-
 export async function requireCEO(): Promise<SessionUser> {
   const user = await requireUser();
   if (user.role !== "ceo" && user.role !== "admin") {

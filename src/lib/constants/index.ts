@@ -3,16 +3,11 @@
  */
 
 export const APP_NAME = "ALPAR AI" as const;
-export const APP_SHORT_NAME = "ALPAR" as const;
 export const APP_DESCRIPTION =
   "Trust infrastructure for AI accountability. Community-driven incident reporting platform." as const;
-export const APP_TAGLINE = "Trust infrastructure for AI accountability" as const;
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? ("https://alparai.com" as const);
 export const APP_EMAIL = "hello@alparai.com" as const;
-export const APP_LEGAL_EMAIL = process.env.LEGAL_EMAIL ?? ("legal@alparai.com" as const);
-export const APP_PRIVACY_EMAIL = process.env.PRIVACY_EMAIL ?? ("privacy@alparai.com" as const);
 export const APP_TAKEDOWN_EMAIL = process.env.TAKEDOWN_EMAIL ?? ("takedown@alparai.com" as const);
-export const APP_SUPPORT_EMAIL = process.env.SUPPORT_EMAIL ?? ("support@alparai.com" as const);
 
 export const DEFAULT_LOCALE = "en" as const;
 export const SUPPORTED_LOCALES = ["en", "tr"] as const;
@@ -23,33 +18,6 @@ export const LINKEDIN_URL =
   process.env.NEXT_PUBLIC_LINKEDIN_URL ?? ("https://www.linkedin.com/company/alpar-ai" as const);
 export const TWITTER_URL =
   process.env.NEXT_PUBLIC_TWITTER_URL ?? ("https://twitter.com/alparai" as const);
-
-export const NAV_LINKS = [
-  { href: "/", labelKey: "nav.home" },
-  { href: "/leaderboard", labelKey: "nav.leaderboard" },
-  { href: "/submit", labelKey: "nav.report" },
-  { href: "/dilemmas?tab=suggestions", labelKey: "nav.suggestions" },
-  { href: "/about", labelKey: "nav.about" },
-] as const;
-
-export const FOOTER_LINKS = {
-  product: [
-    { href: "/", labelKey: "footer.home" },
-    { href: "/submit", labelKey: "footer.report" },
-    { href: "/leaderboard", labelKey: "footer.leaderboard" },
-    { href: "/dilemmas?tab=suggestions", labelKey: "footer.suggestions" },
-  ],
-  legal: [
-    { href: "/legal/privacy", labelKey: "footer.privacy" },
-    { href: "/legal/terms", labelKey: "footer.terms" },
-    { href: "/legal/takedown", labelKey: "footer.takedown" },
-    { href: "/legal/cookies", labelKey: "footer.cookies" },
-  ],
-  company: [
-    { href: "/about", labelKey: "footer.about" },
-    { href: "/contact", labelKey: "footer.contact" },
-  ],
-} as const;
 
 export const SEVERITY_LEVELS = [
   { value: "low", label: "Low" },
@@ -91,19 +59,3 @@ export const SUGGESTION_STATUSES = [
   { value: "declined", label: "Declined" },
 ] as const;
 export type SuggestionStatus = (typeof SUGGESTION_STATUSES)[number]["value"];
-
-export const CONSENT_TYPES = [
-  "submission_truthfulness",
-  "anonymous_publication",
-  "data_processing",
-  "terms_of_service",
-  "age_18_plus",
-] as const;
-export type ConsentType = (typeof CONSENT_TYPES)[number];
-
-export const RATE_LIMITS = {
-  incident_submission: { limit: 5, window: "1 h" },
-  suggestion_submission: { limit: 10, window: "1 d" },
-  auth_signin: { limit: 10, window: "15 m" },
-  api_general: { limit: 100, window: "1 m" },
-} as const;
