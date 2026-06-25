@@ -69,8 +69,8 @@ test.describe("Accessibility", () => {
     }
     await page.goto("/en");
     await page.waitForLoadState("domcontentloaded");
-    const switcher = page.getByRole("link", {
-      name: /switch language|dil|language/i,
+    const switcher = page.getByRole("button", {
+      name: /^TR$/i,
     });
     if (!(await switcher.isVisible())) {
       test.skip();

@@ -285,6 +285,71 @@ describe("AI Adapters", () => {
         expect(result.error.code).toBe("rate_limit");
       }
     });
+
+    it("should return api_error on other error status codes", async () => {
+      mockResolveApiKey.mockResolvedValue("mock-google-key");
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: false,
+        status: 500,
+        statusText: "Internal Server Error",
+      });
+
+      const result = await adapter.call(mockRequest);
+
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.error.code).toBe("api_error");
+        expect(result.error.statusCode).toBe(500);
+      }
+    });
+
+    it("should return api_error if returned content is empty", async () => {
+      mockResolveApiKey.mockResolvedValue("mock-google-key");
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({}),
+      });
+
+      const result = await adapter.call(mockRequest);
+
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.error.code).toBe("api_error");
+        expect(result.error.message).toContain("empty response content");
+      }
+    });
+
+    it("should return timeout error when request is aborted", async () => {
+      mockResolveApiKey.mockResolvedValue("mock-google-key");
+
+      global.fetch = vi
+        .fn()
+        .mockRejectedValue(new DOMException("The user aborted a request.", "AbortError"));
+
+      const result = await adapter.call(mockRequest);
+
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.error.code).toBe("timeout");
+      }
+    });
+
+    it("should return api_error on generic fetch failure", async () => {
+      mockResolveApiKey.mockResolvedValue("mock-google-key");
+
+      global.fetch = vi.fn().mockRejectedValue(new Error("Network Error"));
+
+      const result = await adapter.call(mockRequest);
+
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.error.code).toBe("api_error");
+        expect(result.error.message).toBe("Network Error");
+      }
+    });
   });
 
   describe("HuggingFaceAdapter", () => {
@@ -355,6 +420,88 @@ describe("AI Adapters", () => {
         expect(result.error.code).toBe("rate_limit");
         expect(result.error.statusCode).toBe(503);
         expect(result.error.message).toContain("currently loading");
+      }
+    });
+
+    it("should return rate_limit error on status 429", async () => {
+      mockResolveApiKey.mockResolvedValue("mock-hf-key");
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: false,
+        status: 429,
+      });
+
+      const result = await adapter.call(mockRequest);
+
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.error.code).toBe("rate_limit");
+        expect(result.error.statusCode).toBe(429);
+      }
+    });
+
+    it("should return api_error on other error status codes", async () => {
+      mockResolveApiKey.mockResolvedValue("mock-hf-key");
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: false,
+        status: 500,
+        statusText: "Internal Server Error",
+      });
+
+      const result = await adapter.call(mockRequest);
+
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.error.code).toBe("api_error");
+        expect(result.error.statusCode).toBe(500);
+      }
+    });
+
+    it("should return api_error if returned content is empty", async () => {
+      mockResolveApiKey.mockResolvedValue("mock-hf-key");
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({}),
+      });
+
+      const result = await adapter.call(mockRequest);
+
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.error.code).toBe("api_error");
+        expect(result.error.message).toContain("empty response content");
+      }
+    });
+
+    it("should return timeout error when request is aborted", async () => {
+      mockResolveApiKey.mockResolvedValue("mock-hf-key");
+
+      global.fetch = vi
+        .fn()
+        .mockRejectedValue(new DOMException("The user aborted a request.", "AbortError"));
+
+      const result = await adapter.call(mockRequest);
+
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.error.code).toBe("timeout");
+      }
+    });
+
+    it("should return api_error on generic fetch failure", async () => {
+      mockResolveApiKey.mockResolvedValue("mock-hf-key");
+
+      global.fetch = vi.fn().mockRejectedValue(new Error("Network Error"));
+
+      const result = await adapter.call(mockRequest);
+
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.error.code).toBe("api_error");
+        expect(result.error.message).toBe("Network Error");
       }
     });
   });

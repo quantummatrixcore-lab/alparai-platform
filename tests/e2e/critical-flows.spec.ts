@@ -17,7 +17,7 @@ test.describe("Home page", () => {
   test("renders hero, live feed, and leaderboard", async ({ page }) => {
     await page.goto("/en");
     await expect(page).toHaveTitle(/ALPAR AI/);
-    await expect(page.getByRole("heading", { name: /AI Lied to You/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /When an AI lies|The AI That/i })).toBeVisible();
     await expect(page.getByText(/live feed/i)).toBeVisible();
     await expect(page.getByRole("link", { name: /leaderboard/i }).first()).toBeVisible();
   });
@@ -29,7 +29,7 @@ test.describe("Home page", () => {
     }
     await page.goto("/en");
     await page.waitForLoadState("domcontentloaded");
-    const switcher = page.getByRole("link", { name: /switch language/i });
+    const switcher = page.getByRole("button", { name: /^TR$/i });
     if (!(await switcher.isVisible())) {
       test.skip();
       return;
