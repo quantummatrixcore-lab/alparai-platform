@@ -387,8 +387,6 @@ export function IncidentForm({
         <EvidenceUploader name="evidence" />
       </div>
 
-      {piiDetected && <PIIBanner />}
-
       <fieldset className="border-border-subtle bg-bg-secondary/40 space-y-3 rounded-md border p-4">
         <legend className="text-fg-primary inline-flex items-center gap-1.5 px-2 text-sm font-semibold">
           <Shield className="text-brand-400 h-4 w-4" />
