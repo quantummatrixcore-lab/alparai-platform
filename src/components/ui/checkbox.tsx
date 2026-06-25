@@ -13,7 +13,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     const idFromProps = React.useId();
     const inputId = id ?? idFromProps;
     return (
-      <div className="flex items-start gap-3">
+      <div className={cn("flex gap-3", description ? "items-start" : "items-center")}>
         <div className="relative flex h-5 items-center">
           <input
             id={inputId}
