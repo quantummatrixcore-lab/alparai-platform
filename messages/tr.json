@@ -1373,6 +1373,10 @@
     "tryAgain": "Tekrar dene"
   },
   "feed": {
+    "feed_tab_for_you": "Sana Özel",
+    "feed_tab_latest": "En Son",
+    "feed_tab_trending": "Gündemdekiler",
+    "feed_tab_following": "Takip Ettiklerim",
     "shareOnX": "X'te Paylaş",
     "shareOnLinkedIn": "LinkedIn'de Paylaş",
     "copyForInstagram": "Instagram için Kopyala",

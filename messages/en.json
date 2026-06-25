@@ -1373,6 +1373,10 @@
     "tryAgain": "Try again"
   },
   "feed": {
+    "feed_tab_for_you": "For You",
+    "feed_tab_latest": "Latest",
+    "feed_tab_trending": "Trending",
+    "feed_tab_following": "Following",
     "shareOnX": "Share on X",
     "shareOnLinkedIn": "Share on LinkedIn",
     "copyForInstagram": "Copy for Instagram",

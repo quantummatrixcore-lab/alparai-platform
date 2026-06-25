@@ -14,27 +14,27 @@ interface FeedTabsProps {
 }
 
 export function FeedTabs({ activeTab, onChange, isLoggedIn = false }: FeedTabsProps) {
-  const t = useTranslations("common");
+  const t = useTranslations("feed");
 
   const tabs = [
     {
       id: "for-you" as const,
-      label: t("feed_tab_for_you", { defaultValue: "For You" }),
+      label: t("feed_tab_for_you"),
       icon: Sparkles,
     },
     {
       id: "latest" as const,
-      label: t("feed_tab_latest", { defaultValue: "Latest" }),
+      label: t("feed_tab_latest"),
       icon: Clock,
     },
     {
       id: "trending" as const,
-      label: t("feed_tab_trending", { defaultValue: "Trending" }),
+      label: t("feed_tab_trending"),
       icon: Flame,
     },
     {
       id: "following" as const,
-      label: t("feed_tab_following", { defaultValue: "Following" }),
+      label: t("feed_tab_following"),
       icon: UserCheck,
       disabled: !isLoggedIn,
     },
