@@ -18,7 +18,13 @@ vi.hoisted(() => {
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireModerator, requireAdmin } from "@/lib/auth/session";
-import { moderateIncident, reviewTakedown, setUserRole } from "@/actions/admin";
+import {
+  moderateIncident,
+  reviewTakedown,
+  setUserRole,
+  bulkApproveIncidents,
+  bulkRejectIncidents,
+} from "@/actions/admin";
 
 let mockAdminClient: ReturnType<typeof createMockSupabaseClient>;
 let mockModerator: ReturnType<typeof createTestModerator>;
@@ -211,5 +217,81 @@ describe("setUserRole", () => {
     });
     expect(result.ok).toBe(false);
     expect(result.error).toBe("Invalid input");
+  });
+});
+
+describe("bulkApproveIncidents", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(requireAdmin).mockResolvedValue(mockAdmin as never);
+
+    const mockUpdateIn = vi.fn().mockResolvedValue({ error: null });
+    const mockUpdate = vi.fn().mockReturnValue({ in: mockUpdateIn });
+    const mockInsert = vi.fn().mockReturnValue({
+      select: vi.fn().mockReturnValue({
+        single: vi.fn().mockResolvedValue({ data: null, error: null }),
+      }),
+    });
+
+    mockAdminClient.from.mockImplementation((table: string) => {
+      if (table === "incidents") {
+        return { update: mockUpdate } as never;
+      }
+      if (table === "audit_log") {
+        return { insert: mockInsert } as never;
+      }
+      return {} as never;
+    });
+  });
+
+  it("approves multiple incidents in bulk", async () => {
+    const result = await bulkApproveIncidents(["inc-1", "inc-2"]);
+    expect(result.ok).toBe(true);
+    expect(mockAdminClient.from).toHaveBeenCalledWith("incidents");
+  });
+
+  it("returns error when unauthorized", async () => {
+    vi.mocked(requireAdmin).mockResolvedValueOnce(null as never);
+    const result = await bulkApproveIncidents(["inc-1", "inc-2"]);
+    expect(result.ok).toBe(false);
+    expect(result.error).toBe("Forbidden");
+  });
+});
+
+describe("bulkRejectIncidents", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(requireAdmin).mockResolvedValue(mockAdmin as never);
+
+    const mockUpdateIn = vi.fn().mockResolvedValue({ error: null });
+    const mockUpdate = vi.fn().mockReturnValue({ in: mockUpdateIn });
+    const mockInsert = vi.fn().mockReturnValue({
+      select: vi.fn().mockReturnValue({
+        single: vi.fn().mockResolvedValue({ data: null, error: null }),
+      }),
+    });
+
+    mockAdminClient.from.mockImplementation((table: string) => {
+      if (table === "incidents") {
+        return { update: mockUpdate } as never;
+      }
+      if (table === "audit_log") {
+        return { insert: mockInsert } as never;
+      }
+      return {} as never;
+    });
+  });
+
+  it("rejects multiple incidents in bulk", async () => {
+    const result = await bulkRejectIncidents(["inc-1", "inc-2"]);
+    expect(result.ok).toBe(true);
+    expect(mockAdminClient.from).toHaveBeenCalledWith("incidents");
+  });
+
+  it("returns error when unauthorized", async () => {
+    vi.mocked(requireAdmin).mockResolvedValueOnce(null as never);
+    const result = await bulkRejectIncidents(["inc-1", "inc-2"]);
+    expect(result.ok).toBe(false);
+    expect(result.error).toBe("Forbidden");
   });
 });
