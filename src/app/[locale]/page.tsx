@@ -3,19 +3,37 @@ export const revalidate = 60;
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { HeroSection } from "@/components/marketing/hero-section";
-import { LiveStats } from "@/components/marketing/live-stats";
 import { WebSiteJsonLd } from "@/components/seo/json-ld";
-import { FounderStory } from "@/components/marketing/founder-story";
-import { WhyItMatters } from "@/components/marketing/why-it-matters";
-import { HowItWorks } from "@/components/marketing/how-it-works";
-import { LiveFeed } from "@/components/marketing/live-feed";
-import { LeaderboardPreview } from "@/components/marketing/leaderboard-preview";
-import { GetInvolved } from "@/components/marketing/get-involved";
-import { ClosingSection } from "@/components/marketing/closing-section";
 import { Container, Section } from "@/components/ui/layout";
 import type { IncidentListItem, LeaderboardEntry } from "@/types";
 import { toIncidentListItems } from "@/lib/mappers";
 import { checkAndTriggerNewsSyncPassive } from "@/actions/autopilot-sync";
+import dynamic from "next/dynamic";
+
+const LiveStats = dynamic(() =>
+  import("@/components/marketing/live-stats").then((mod) => mod.LiveStats),
+);
+const FounderStory = dynamic(() =>
+  import("@/components/marketing/founder-story").then((mod) => mod.FounderStory),
+);
+const WhyItMatters = dynamic(() =>
+  import("@/components/marketing/why-it-matters").then((mod) => mod.WhyItMatters),
+);
+const HowItWorks = dynamic(() =>
+  import("@/components/marketing/how-it-works").then((mod) => mod.HowItWorks),
+);
+const LiveFeed = dynamic(() =>
+  import("@/components/marketing/live-feed").then((mod) => mod.LiveFeed),
+);
+const LeaderboardPreview = dynamic(() =>
+  import("@/components/marketing/leaderboard-preview").then((mod) => mod.LeaderboardPreview),
+);
+const GetInvolved = dynamic(() =>
+  import("@/components/marketing/get-involved").then((mod) => mod.GetInvolved),
+);
+const ClosingSection = dynamic(() =>
+  import("@/components/marketing/closing-section").then((mod) => mod.ClosingSection),
+);
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -36,7 +54,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const supabase = await createServerClient();
   const tCommon = await getTranslations({ locale, namespace: "common" });
 
-  const [incidentsResult, incidentsCountResult, providersResult, countriesResult] =
+  const [incidentsResult, incidentsCountResult, providersResult, countriesResult, countDataResult] =
     await Promise.all([
       supabase
         .from("incidents")
@@ -59,6 +77,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         .select("location_country")
         .eq("status", "published")
         .not("location_country", "is", null),
+      supabase
+        .from("incidents")
+        .select("ai_provider_id")
+        .eq("status", "published")
+        .not("ai_provider_id", "is", null),
     ]);
 
   if (incidentsCountResult.error) {
@@ -69,6 +92,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   }
   if (incidentsResult.error) {
     console.error("Supabase error for incidents list:", incidentsResult.error);
+  }
+  if (countDataResult.error) {
+    console.error("Supabase error for provider counts:", countDataResult.error);
   }
 
   const providerMap = new Map(
@@ -91,19 +117,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   });
 
   const incidentCountsByProvider = new Map<string, number>();
-  if (providersResult.data) {
-    const { data: countData } = await supabase
-      .from("incidents")
-      .select("ai_provider_id")
-      .eq("status", "published")
-      .not("ai_provider_id", "is", null);
-    if (countData) {
-      for (const row of countData as Array<{ ai_provider_id: string }>) {
-        incidentCountsByProvider.set(
-          row.ai_provider_id,
-          (incidentCountsByProvider.get(row.ai_provider_id) ?? 0) + 1,
-        );
-      }
+  if (providersResult.data && countDataResult.data) {
+    const countData = countDataResult.data as Array<{ ai_provider_id: string }>;
+    for (const row of countData) {
+      incidentCountsByProvider.set(
+        row.ai_provider_id,
+        (incidentCountsByProvider.get(row.ai_provider_id) ?? 0) + 1,
+      );
     }
   }
 

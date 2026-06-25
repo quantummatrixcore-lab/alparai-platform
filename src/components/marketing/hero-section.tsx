@@ -49,18 +49,9 @@ export function HeroSection({
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
         <motion.div
           style={{ y: y1, opacity }}
-          animate={{
-            scale: [1, 1.1, 1],
-            x: ["-50%", "-48%", "-52%", "-50%"],
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-          className="bg-brand-600/8 absolute -top-[30%] left-1/4 h-[800px] w-[800px] rounded-full mix-blend-screen blur-[140px]"
+          className="bg-brand-600/8 absolute -top-[30%] left-1/4 h-[800px] w-[800px] -translate-x-1/2 rounded-full mix-blend-screen blur-[140px]"
         />
-        <motion.div
-          animate={{ scale: [1, 1.05, 0.95, 1], y: [0, 20, -20, 0] }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          className="bg-danger-500/10 absolute top-[20%] right-[5%] h-[500px] w-[500px] rounded-full mix-blend-screen blur-[160px]"
-        />
+        <div className="bg-danger-500/10 absolute top-[20%] right-[5%] h-[500px] w-[500px] rounded-full mix-blend-screen blur-[160px]" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_0%,#000_20%,transparent_100%)] bg-[size:64px_64px]" />
       </div>
 
