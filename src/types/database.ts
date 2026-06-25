@@ -1235,6 +1235,236 @@ export type Database = {
         };
         Relationships: [];
       };
+      strategy_swot_items: {
+        Row: {
+          id: string;
+          category: "strength" | "weakness" | "opportunity" | "threat";
+          title: string;
+          description: string | null;
+          weight: "low" | "medium" | "high";
+          owner_user_id: string | null;
+          action_plan: string | null;
+          target_date: string | null;
+          status: "active" | "done" | "archived";
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          category: "strength" | "weakness" | "opportunity" | "threat";
+          title: string;
+          description?: string | null;
+          weight?: "low" | "medium" | "high";
+          owner_user_id?: string | null;
+          action_plan?: string | null;
+          target_date?: string | null;
+          status?: "active" | "done" | "archived";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          category?: "strength" | "weakness" | "opportunity" | "threat";
+          title?: string;
+          description?: string | null;
+          weight?: "low" | "medium" | "high";
+          owner_user_id?: string | null;
+          action_plan?: string | null;
+          target_date?: string | null;
+          status?: "active" | "done" | "archived";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "strategy_swot_items_owner_user_id_fkey";
+            columns: ["owner_user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      strategy_risks: {
+        Row: {
+          id: string;
+          code: string;
+          title: string;
+          description: string | null;
+          probability: number;
+          impact: number;
+          owner_user_id: string | null;
+          mitigation_plan: string | null;
+          target_date: string | null;
+          status: "active" | "mitigated" | "triggered" | "closed";
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          code: string;
+          title: string;
+          description?: string | null;
+          probability: number;
+          impact: number;
+          owner_user_id?: string | null;
+          mitigation_plan?: string | null;
+          target_date?: string | null;
+          status?: "active" | "mitigated" | "triggered" | "closed";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          code?: string;
+          title?: string;
+          description?: string | null;
+          probability?: number;
+          impact?: number;
+          owner_user_id?: string | null;
+          mitigation_plan?: string | null;
+          target_date?: string | null;
+          status?: "active" | "mitigated" | "triggered" | "closed";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "strategy_risks_owner_user_id_fkey";
+            columns: ["owner_user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      strategy_valuations: {
+        Row: {
+          id: string;
+          method: "berkus" | "scorecard" | "vc" | "average";
+          inputs: Json;
+          result_pre_money: number;
+          notes: string | null;
+          snapshot_date: string;
+          created_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          method: "berkus" | "scorecard" | "vc" | "average";
+          inputs?: Json;
+          result_pre_money: number;
+          notes?: string | null;
+          snapshot_date?: string;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          method?: "berkus" | "scorecard" | "vc" | "average";
+          inputs?: Json;
+          result_pre_money?: number;
+          notes?: string | null;
+          snapshot_date?: string;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "strategy_valuations_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      strategy_milestones: {
+        Row: {
+          id: string;
+          quarter: string;
+          title: string;
+          okr_text: string | null;
+          progress: number;
+          status: "planned" | "in_progress" | "done" | "missed";
+          linked_metric: string | null;
+          owner_user_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          quarter: string;
+          title: string;
+          okr_text?: string | null;
+          progress?: number;
+          status?: "planned" | "in_progress" | "done" | "missed";
+          linked_metric?: string | null;
+          owner_user_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          quarter?: string;
+          title?: string;
+          okr_text?: string | null;
+          progress?: number;
+          status?: "planned" | "in_progress" | "done" | "missed";
+          linked_metric?: string | null;
+          owner_user_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "strategy_milestones_owner_user_id_fkey";
+            columns: ["owner_user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      strategy_metrics_snapshots: {
+        Row: {
+          id: string;
+          snapshot_date: string;
+          total_users: number;
+          total_incidents: number;
+          active_providers: number;
+          media_mentions_count: number;
+          mrr_cents: number;
+          runway_months: number | null;
+          health_score: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          snapshot_date?: string;
+          total_users?: number;
+          total_incidents?: number;
+          active_providers?: number;
+          media_mentions_count?: number;
+          mrr_cents?: number;
+          runway_months?: number | null;
+          health_score?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          snapshot_date?: string;
+          total_users?: number;
+          total_incidents?: number;
+          active_providers?: number;
+          media_mentions_count?: number;
+          mrr_cents?: number;
+          runway_months?: number | null;
+          health_score?: number;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       bug_bounties: {
         Row: {
           id: string;
@@ -1421,7 +1651,7 @@ export type Database = {
         | "completed"
         | "declined";
       takedown_status: "received" | "under_review" | "approved" | "rejected" | "escalated";
-      user_role: "user" | "moderator" | "admin" | "ceo";
+      user_role: "user" | "moderator" | "admin" | "ceo" | "advisor";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -1571,7 +1801,7 @@ export const Constants = {
         "declined",
       ],
       takedown_status: ["received", "under_review", "approved", "rejected", "escalated"],
-      user_role: ["user", "moderator", "admin", "ceo"],
+      user_role: ["user", "moderator", "admin", "ceo", "advisor"],
     },
   },
 } as const;

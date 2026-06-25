@@ -82,7 +82,7 @@ export interface MeResult {
     email: string;
     fullName: string | null;
     avatarUrl: string | null;
-    role: "user" | "moderator" | "admin" | "ceo";
+    role: "user" | "moderator" | "admin" | "ceo" | "advisor";
   } | null;
 }
 

@@ -20,6 +20,9 @@ import {
   ShieldCheck,
   Key,
   Share2,
+  Grid,
+  TrendingUp,
+  Compass,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
@@ -30,7 +33,7 @@ interface SidebarUserShape {
   email: string;
   fullName: string | null;
   avatarUrl: string | null;
-  role: "user" | "moderator" | "admin" | "ceo";
+  role: "user" | "moderator" | "admin" | "ceo" | "advisor";
 }
 
 export function AdminSidebar({ user }: { user: SidebarUserShape }) {
@@ -103,6 +106,41 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
   ];
 
+  const hasStrategyAccess = user.role === "ceo" || user.role === "admin" || user.role === "advisor";
+
+  const strategyItems = [
+    {
+      href: "/admin/strategy",
+      label: t("strategy_overview") || "Overview",
+      icon: BarChart3,
+      active: pathname === "/admin/strategy",
+    },
+    {
+      href: "/admin/strategy/swot",
+      label: t("strategy_swot") || "SWOT Board",
+      icon: Grid,
+      active: pathname.startsWith("/admin/strategy/swot"),
+    },
+    {
+      href: "/admin/strategy/risks",
+      label: t("strategy_risks") || "Risk Matrix",
+      icon: ShieldAlert,
+      active: pathname.startsWith("/admin/strategy/risks"),
+    },
+    {
+      href: "/admin/strategy/valuation",
+      label: t("strategy_valuation") || "Valuation Calculator",
+      icon: TrendingUp,
+      active: pathname.startsWith("/admin/strategy/valuation"),
+    },
+    {
+      href: "/admin/strategy/roadmap",
+      label: t("strategy_roadmap") || "OKR Roadmap",
+      icon: Compass,
+      active: pathname.startsWith("/admin/strategy/roadmap"),
+    },
+  ];
+
   return (
     <>
       {/* Mobile Top Bar */}
@@ -166,6 +204,42 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
               </Link>
             );
           })}
+
+          {hasStrategyAccess && (
+            <>
+              <div className="px-4 pt-6 pb-2">
+                <span className="text-fg-muted/60 font-mono text-[10px] font-bold tracking-wider uppercase">
+                  {t("strategy_header") || "Strategy"}
+                </span>
+              </div>
+              {strategyItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className={cn(
+                      "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-300",
+                      item.active
+                        ? "bg-brand-500/15 text-brand-300 border-brand-500 border-l-2 shadow-[inset_0_0_12px_rgba(168,85,247,0.15)]"
+                        : "text-fg-secondary hover:bg-bg-tertiary/40 hover:text-fg-primary",
+                    )}
+                  >
+                    <Icon
+                      className={cn(
+                        "h-4 w-4 transition-colors duration-300",
+                        item.active
+                          ? "text-brand-400"
+                          : "text-fg-muted group-hover:text-fg-primary",
+                      )}
+                    />
+                    <span className="truncate">{item.label}</span>
+                  </Link>
+                );
+              })}
+            </>
+          )}
         </nav>
 
         {/* User Profile Footer */}

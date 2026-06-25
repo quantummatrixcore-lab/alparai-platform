@@ -247,20 +247,21 @@ const userRoleSchema = z.object({
   role: z.enum(["user", "moderator"]),
 });
 
-const ROLE_RANK: Record<"user" | "moderator" | "admin" | "ceo", number> = {
+const ROLE_RANK: Record<"user" | "advisor" | "moderator" | "admin" | "ceo", number> = {
   user: 0,
-  moderator: 1,
-  admin: 2,
-  ceo: 3,
+  advisor: 1,
+  moderator: 2,
+  admin: 3,
+  ceo: 4,
 };
 
 function canAssignRole(
-  actorRole: "user" | "moderator" | "admin" | "ceo",
-  targetRole: "user" | "moderator" | "admin" | "ceo",
+  actorRole: "user" | "advisor" | "moderator" | "admin" | "ceo",
+  targetRole: "user" | "advisor" | "moderator" | "admin" | "ceo",
 ): boolean {
   if (actorRole === "ceo") return true;
-  if (actorRole === "admin") return targetRole !== "ceo";
-  return targetRole === "user";
+  if (actorRole === "admin") return targetRole !== "ceo" && targetRole !== "admin";
+  return false;
 }
 
 export async function setUserRole(
@@ -316,7 +317,7 @@ export async function setUserRole(
 
 export async function promoteUser(
   email: string,
-  role: "user" | "moderator" | "admin" | "ceo",
+  role: "user" | "advisor" | "moderator" | "admin" | "ceo",
 ): Promise<{ ok: boolean; error?: string; userId?: string }> {
   const admin = await requireAdmin();
   if (!admin) return { ok: false, error: "Forbidden" };
@@ -325,7 +326,7 @@ export async function promoteUser(
   const parsedEmail = emailSchema.safeParse(email);
   if (!parsedEmail.success) return { ok: false, error: "Invalid email" };
 
-  const parsedRole = z.enum(["user", "moderator", "admin", "ceo"]).safeParse(role);
+  const parsedRole = z.enum(["user", "advisor", "moderator", "admin", "ceo"]).safeParse(role);
   if (!parsedRole.success) return { ok: false, error: "Invalid role" };
 
   if (!canAssignRole(admin.role, parsedRole.data)) {
