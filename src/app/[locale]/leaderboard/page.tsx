@@ -21,8 +21,17 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
-export default async function LeaderboardPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function LeaderboardPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ filter?: string }>;
+}) {
   const { locale } = await params;
+  const { filter } = (await searchParams) ?? {};
+  const currentFilter = filter || "all";
+
   setRequestLocale(locale);
   const supabase = await createServerClient();
   const t = await getTranslations({ locale, namespace: "leaderboard" });
@@ -92,7 +101,13 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
     };
   });
 
-  const sorted = stats.sort((a, b) => {
+  const filteredStats = stats.filter((p) => {
+    if (currentFilter === "verified") return p.is_verified;
+    if (currentFilter === "with_incidents") return p.incident_count > 0;
+    return true;
+  });
+
+  const sorted = filteredStats.sort((a, b) => {
     const scoreA = a.trust_score ?? 70;
     const scoreB = b.trust_score ?? 70;
     if (scoreB !== scoreA) return scoreB - scoreA;
@@ -115,6 +130,42 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
           <ShareButtons url="/leaderboard" title={t("title")} />
         </div>
       </header>
+
+      <div className="mb-8 flex flex-wrap gap-2">
+        <Link
+          href="/leaderboard?filter=all"
+          className={cn(
+            "rounded-full border px-4 py-1.5 text-xs font-semibold transition-colors",
+            currentFilter === "all"
+              ? "bg-brand-500/20 border-brand-500 text-brand-400"
+              : "border-border-subtle hover:bg-bg-tertiary/50 text-fg-muted",
+          )}
+        >
+          {t("filter_all")}
+        </Link>
+        <Link
+          href="/leaderboard?filter=verified"
+          className={cn(
+            "rounded-full border px-4 py-1.5 text-xs font-semibold transition-colors",
+            currentFilter === "verified"
+              ? "bg-brand-500/20 border-brand-500 text-brand-400"
+              : "border-border-subtle hover:bg-bg-tertiary/50 text-fg-muted",
+          )}
+        >
+          {t("filter_verified")}
+        </Link>
+        <Link
+          href="/leaderboard?filter=with_incidents"
+          className={cn(
+            "rounded-full border px-4 py-1.5 text-xs font-semibold transition-colors",
+            currentFilter === "with_incidents"
+              ? "bg-brand-500/20 border-brand-500 text-brand-400"
+              : "border-border-subtle hover:bg-bg-tertiary/50 text-fg-muted",
+          )}
+        >
+          {t("filter_with_incidents")}
+        </Link>
+      </div>
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Card>

@@ -86,14 +86,16 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
     slug: p.slug,
     title: p.title_en,
     title_tr: p.title_tr,
-    description: p.content_en.slice(0, 160) + "...",
-    description_tr: p.content_tr.slice(0, 160) + "...",
+    description: (p.content_en ?? "").slice(0, 160) + "...",
+    description_tr: (p.content_tr ?? "").slice(0, 160) + "...",
     author: t("author"),
     author_tr: t("author"),
     date: p.published_at ?? p.created_at,
     readingTime: Math.max(
       1,
-      Math.ceil((locale === "tr" ? p.content_tr : p.content_en).split(/\s+/).length / 200),
+      Math.ceil(
+        (locale === "tr" ? (p.content_tr ?? "") : (p.content_en ?? "")).split(/\s+/).length / 200,
+      ),
     ),
     tags: ["report", "autopilot"],
   }));

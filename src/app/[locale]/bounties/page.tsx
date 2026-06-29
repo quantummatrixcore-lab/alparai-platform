@@ -33,7 +33,7 @@ interface BountyListItem {
   } | null;
   reporter: {
     full_name: string | null;
-    email: string;
+    username: string | null;
   } | null;
 }
 
@@ -53,7 +53,7 @@ export default async function BountiesPage({ params }: { params: Promise<{ local
   const { data } = await supabase
     .from("bug_bounties" as never)
     .select(
-      "id, severity_score, estimated_reward_cents, status, created_at, notes, incident_id, reporter_id, provider_id, incidents(title_masked, title_tr, category, severity), ai_providers(name, slug, logo_url), reporter:user_profiles!bug_bounties_reporter_id_fkey(full_name, email)" as never,
+      "id, severity_score, estimated_reward_cents, status, created_at, notes, incident_id, reporter_id, provider_id, incidents(title_masked, title_tr, category, severity), ai_providers(name, slug, logo_url), reporter:user_profiles!bug_bounties_reporter_id_fkey(full_name, username)" as never,
     )
     .in("status", ["validated", "paid", "open"] as never)
     .order("created_at", { ascending: false })
@@ -231,7 +231,7 @@ function BountyRow({
           <p className="text-fg-primary line-clamp-1 text-sm font-semibold">{incidentTitle}</p>
           <p className="text-fg-muted text-xs">
             {bounty.ai_providers?.name ?? unknownLabel} ·{" "}
-            {bounty.reporter?.full_name ?? bounty.reporter?.email ?? "anon"}
+            {bounty.reporter?.full_name ?? bounty.reporter?.username ?? "anon"}
           </p>
         </div>
         <div className="flex flex-col">

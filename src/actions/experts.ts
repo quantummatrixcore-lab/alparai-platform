@@ -9,6 +9,7 @@ import type { AttemptContext, AttemptOutcome, AutopilotPolicy } from "@/lib/auto
 import { DEFAULT_BREAKER, DEFAULT_IDEMPOTENCY, DEFAULT_RETRY } from "@/lib/autopilot";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { hashIp } from "@/lib/utils/hash";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export const expertApplicationSchema = z.object({
   name: z
@@ -61,16 +62,41 @@ const runExpertWork = async (
   _ctx: AttemptContext,
   data: ExpertWorkInput,
 ): Promise<AttemptOutcome<{ sent: boolean; channel: "email" | "log" }>> => {
+  try {
+    const admin = createAdminClient();
+    const { error: dbError } = await admin.from("expert_applications" as never).insert({
+      name: data.name,
+      title_institution: data.titleInstitution,
+      expertise: data.expertise,
+      linkedin_url: data.linkedinUrl,
+      status: "pending",
+    } as never);
+    if (dbError) {
+      console.error("[submitExpert] Database insert failed:", dbError);
+    }
+  } catch (dbEx) {
+    console.error("[submitExpert] Database exception:", dbEx);
+  }
+
   if (!process.env.RESEND_API_KEY) {
     return { kind: "success", value: { sent: true, channel: "log" } };
   }
   try {
     const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({
-      from: "ALPAR AI Expert Panel <contact@alparai.com>",
+      from: `ALPAR AI Expert Panel <${APP_EMAIL}>`,
       to: APP_EMAIL,
       subject: `[Expert Panel Application] ${data.name}`,
       text: `Expert Panel Application:\n\nName: ${data.name}\nTitle/Institution: ${data.titleInstitution}\nArea of Expertise: ${data.expertise}\nLinkedIn: ${data.linkedinUrl}\n\n--\nIP: ${data.ip}\nUA: ${data.userAgent}`,
+      html: `
+        <h2>Expert Panel Application</h2>
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Title/Institution:</strong> ${data.titleInstitution}</p>
+        <p><strong>Area of Expertise:</strong> ${data.expertise}</p>
+        <p><strong>LinkedIn:</strong> <a href="${data.linkedinUrl}" target="_blank" rel="noopener noreferrer">${data.linkedinUrl}</a></p>
+        <hr/>
+        <p style="font-size: 11px; color: #666;">IP: ${data.ip}<br/>User Agent: ${data.userAgent}</p>
+      `,
     });
     return { kind: "success", value: { sent: true, channel: "email" } };
   } catch (e) {

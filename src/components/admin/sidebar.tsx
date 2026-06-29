@@ -24,6 +24,7 @@ import {
   TrendingUp,
   Compass,
   Download,
+  Award,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
@@ -78,6 +79,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       label: t("users"),
       icon: Users,
       active: pathname.startsWith("/admin/users"),
+    },
+    {
+      href: "/admin/experts",
+      label: t("expertApplications", { defaultValue: "Experts" }),
+      icon: Award,
+      active: pathname.startsWith("/admin/experts"),
     },
     {
       href: "/admin/providers",

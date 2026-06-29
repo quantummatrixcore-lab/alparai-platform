@@ -12,6 +12,7 @@ vi.mock("resend", () => ({
 vi.mock("@/lib/supabase/admin", () => ({
   createAdminClient: () => ({
     from: () => ({
+      insert: () => Promise.resolve({ data: { id: "mock" }, error: null }),
       upsert: () => ({
         select: () => ({ single: () => Promise.resolve({ data: { id: "mock" }, error: null }) }),
       }),
