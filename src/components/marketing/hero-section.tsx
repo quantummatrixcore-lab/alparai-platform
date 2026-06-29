@@ -23,25 +23,6 @@ export function HeroSection({
   const y1 = useTransform(scrollY, [0, 500], [0, 150]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
-  // A/B test split for Variant B
-  const [headlineVariant, setHeadlineVariant] = React.useState<"a" | "b">("a");
-
-  React.useEffect(() => {
-    try {
-      const saved = localStorage.getItem("alpar_hero_variant");
-      if (saved === "a" || saved === "b") {
-        setHeadlineVariant(saved);
-      } else {
-        const choice = Math.random() > 0.5 ? "b" : "a";
-        localStorage.setItem("alpar_hero_variant", choice);
-        setHeadlineVariant(choice);
-      }
-    } catch {
-      // SSR or localStorage disabled fallback
-      setHeadlineVariant("a");
-    }
-  }, []);
-
   return (
     <section className="bg-bg-primary relative overflow-hidden pt-24 pb-16">
       {/* Background Effects */}
@@ -80,7 +61,7 @@ export function HeroSection({
               transition={{ duration: 0.7, delay: 0.1 }}
               className="text-fg-primary pb-4 text-5xl leading-[0.95] font-black tracking-tighter drop-shadow-lg sm:text-6xl lg:text-[72px]"
             >
-              {headlineVariant === "b" ? t("title_variant_b") : t("title_primary")}
+              {t("title_primary")}
             </motion.h1>
 
             {/* Subtitle */}
@@ -90,7 +71,7 @@ export function HeroSection({
               transition={{ duration: 0.7, delay: 0.2 }}
               className="text-fg-secondary mt-6 max-w-xl text-lg leading-relaxed font-medium tracking-tight"
             >
-              {headlineVariant === "b" ? t("subtitle_variant_b") : t("subtitle")}
+              {t("subtitle")}
             </motion.p>
 
             {/* CTAs */}

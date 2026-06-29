@@ -168,7 +168,15 @@ export default async function LeaderboardPage({ params }: { params: Promise<{ lo
       <Card className="border-border-subtle bg-bg-secondary/40 mb-6">
         <CardContent className="text-fg-secondary flex items-start gap-3 p-4 text-xs font-semibold">
           <AlertCircle className="text-brand-400 mt-0.5 h-5 w-5 shrink-0" />
-          <span>{t("trust_score_info")}</span>
+          <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2">
+            <span>{t("trust_score_info")}</span>
+            <Link
+              href="/transparency"
+              className="text-brand-400 hover:text-brand-300 inline-flex items-center font-bold whitespace-nowrap underline"
+            >
+              {t("read_methodology_link")}
+            </Link>
+          </div>
         </CardContent>
       </Card>
 

@@ -4,7 +4,7 @@ import * as React from "react";
 import { Link, usePathname } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-import { FileText, BarChart3, BookOpen, Cpu, Lightbulb, ShieldCheck, Activity } from "lucide-react";
+import { FileText, BarChart3, BookOpen, Cpu, ShieldCheck, Eye, Info } from "lucide-react";
 import { motion } from "framer-motion";
 import type { ComponentType } from "react";
 
@@ -15,12 +15,12 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { href: "/feed", labelKey: "feed", icon: Activity },
   { href: "/incidents", labelKey: "incidents", icon: FileText },
   { href: "/leaderboard", labelKey: "leaderboard", icon: BarChart3 },
   { href: "/models", labelKey: "models", icon: Cpu },
-  { href: "/dilemmas", labelKey: "suggestions", icon: Lightbulb },
   { href: "/blog", labelKey: "blog", icon: BookOpen },
+  { href: "/transparency", labelKey: "transparency", icon: Eye },
+  { href: "/about", labelKey: "about", icon: Info },
 ];
 
 export function Nav({

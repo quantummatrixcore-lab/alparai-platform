@@ -13,9 +13,7 @@ import dynamic from "next/dynamic";
 const LiveStats = dynamic(() =>
   import("@/components/marketing/live-stats").then((mod) => mod.LiveStats),
 );
-const FounderStory = dynamic(() =>
-  import("@/components/marketing/founder-story").then((mod) => mod.FounderStory),
-);
+
 const WhyItMatters = dynamic(() =>
   import("@/components/marketing/why-it-matters").then((mod) => mod.WhyItMatters),
 );
@@ -176,8 +174,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         totalProviders={providersResult.data?.length ?? 0}
         totalCountries={uniqueCountriesCount}
       />
-
-      <FounderStory />
 
       <WhyItMatters />
 
