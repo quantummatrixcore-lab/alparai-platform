@@ -50,7 +50,7 @@ export function Nav({
             key={item.href}
             href={item.href}
             className={cn(
-              "focus-visible:ring-brand-500 relative inline-flex items-center gap-1.5 rounded-full px-2 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors duration-300 outline-none focus-visible:ring-2 xl:gap-2 xl:px-3 xl:text-sm",
+              "focus-visible:ring-brand-500 relative inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold whitespace-nowrap transition-colors duration-300 outline-none focus-visible:ring-2 xl:gap-1.5 xl:px-2 xl:text-xs 2xl:gap-2 2xl:px-3 2xl:text-sm",
               isActive ? "text-brand-400" : "text-fg-secondary hover:text-fg-primary",
             )}
             aria-current={isActive ? "page" : undefined}
@@ -62,7 +62,7 @@ export function Nav({
                 transition={{ type: "spring", stiffness: 380, damping: 30 }}
               />
             )}
-            <span className="relative z-10 flex items-center gap-1.5 xl:gap-2">
+            <span className="relative z-10 flex items-center gap-1 xl:gap-1.5 2xl:gap-2">
               <Icon className="h-4 w-4" aria-hidden="true" />
               {t(item.labelKey)}
             </span>
