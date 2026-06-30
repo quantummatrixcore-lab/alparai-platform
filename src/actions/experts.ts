@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { APP_EMAIL } from "@/lib/constants";
-import { Resend } from "resend";
+import { getResendClient } from "@/lib/email/resend";
 import { headers } from "next/headers";
 import { withAutopilot, attemptsOf, durationOf } from "@/lib/autopilot";
 import type { AttemptContext, AttemptOutcome, AutopilotPolicy } from "@/lib/autopilot";
@@ -78,16 +78,16 @@ const runExpertWork = async (
     console.error("[submitExpert] Database exception:", dbEx);
   }
 
-  if (!process.env.RESEND_API_KEY) {
+  const resend = getResendClient();
+  if (!resend) {
     return { kind: "success", value: { sent: true, channel: "log" } };
   }
   try {
-    const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({
       from: `ALPAR AI Expert Panel <${APP_EMAIL}>`,
       to: APP_EMAIL,
       subject: `[Expert Panel Application] ${data.name}`,
-      text: `Expert Panel Application:\n\nName: ${data.name}\nTitle/Institution: ${data.titleInstitution}\nArea of Expertise: ${data.expertise}\nLinkedIn: ${data.linkedinUrl}\n\n--\nIP: ${data.ip}\nUA: ${data.userAgent}`,
+      text: `Expert Panel Application:\n\nName: ${data.name}\nTitle/Institution: ${data.titleInstitution}\nArea of Expertise: ${data.expertise}\nLinkedIn: ${data.linkedinUrl}\n\n--\nIP Hash: ${hashIp(data.ip)}`,
       html: `
         <h2>Expert Panel Application</h2>
         <p><strong>Name:</strong> ${data.name}</p>
@@ -95,7 +95,7 @@ const runExpertWork = async (
         <p><strong>Area of Expertise:</strong> ${data.expertise}</p>
         <p><strong>LinkedIn:</strong> <a href="${data.linkedinUrl}" target="_blank" rel="noopener noreferrer">${data.linkedinUrl}</a></p>
         <hr/>
-        <p style="font-size: 11px; color: #666;">IP: ${data.ip}<br/>User Agent: ${data.userAgent}</p>
+        <p style="font-size: 11px; color: #666;">IP Hash: ${hashIp(data.ip)}</p>
       `,
     });
     return { kind: "success", value: { sent: true, channel: "email" } };
@@ -112,7 +112,7 @@ export async function submitExpert(_prev: ExpertState, formData: FormData): Prom
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   const userAgent = hdrs.get("user-agent") ?? "unknown";
 
-  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.contact_submission}:${ip}`);
+  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.expert_application}:${ip}`);
   if (!rl.ok) {
     return { ok: false, formError: `Too many submissions. Try again in ${rl.retryAfter}s.` };
   }

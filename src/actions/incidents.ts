@@ -19,7 +19,7 @@ import {
   durationOf,
 } from "@/lib/autopilot";
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
-import { Resend } from "resend";
+import { getResendClient } from "@/lib/email/resend";
 import { getWhistleblowerConfirmationEmail, getAdminNotificationEmail } from "@/emails/templates";
 import type { Database } from "@/types/database";
 
@@ -217,9 +217,9 @@ const runSubmitWork = async (
   }
 
   // Send email notifications via Resend
-  if (process.env.RESEND_API_KEY) {
+  const resend = getResendClient();
+  if (resend) {
     try {
-      const resend = new Resend(process.env.RESEND_API_KEY);
       const emailPromises: Promise<unknown>[] = [];
 
       // 1. Send confirmation to whistleblower if logged in

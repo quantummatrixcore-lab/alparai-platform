@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { createServerClient } from "@/lib/supabase/server";
@@ -7,11 +6,11 @@ import { revalidatePath } from "next/cache";
 
 export async function watchProvider(providerId: string): Promise<{ success: boolean }> {
   const user = await requireUser();
-  const supabase = (await createServerClient()) as any;
-  const { error } = await supabase.from("user_provider_watches").insert({
+  const supabase = await createServerClient();
+  const { error } = await supabase.from("user_provider_watches" as never).insert({
     user_id: user.id,
     provider_id: providerId,
-  });
+  } as never);
   if (error) throw new Error(error.message);
   revalidatePath("/feed");
   return { success: true };
@@ -19,12 +18,12 @@ export async function watchProvider(providerId: string): Promise<{ success: bool
 
 export async function unwatchProvider(providerId: string): Promise<{ success: boolean }> {
   const user = await requireUser();
-  const supabase = (await createServerClient()) as any;
+  const supabase = await createServerClient();
   const { error } = await supabase
-    .from("user_provider_watches")
+    .from("user_provider_watches" as never)
     .delete()
-    .eq("user_id", user.id)
-    .eq("provider_id", providerId);
+    .eq("user_id" as never, user.id as never)
+    .eq("provider_id" as never, providerId as never);
   if (error) throw new Error(error.message);
   revalidatePath("/feed");
   return { success: true };
@@ -33,11 +32,12 @@ export async function unwatchProvider(providerId: string): Promise<{ success: bo
 export async function getWatchedProviders(): Promise<string[]> {
   const user = await getCurrentUser();
   if (!user) return [];
-  const supabase = (await createServerClient()) as any;
+  const supabase = await createServerClient();
   const { data, error } = await supabase
-    .from("user_provider_watches")
-    .select("provider_id")
-    .eq("user_id", user.id);
+    .from("user_provider_watches" as never)
+    .select("provider_id" as never)
+    .eq("user_id" as never, user.id as never);
   if (error) throw new Error(error.message);
-  return (data || []).map((row: any) => row.provider_id);
+  const rows = data as unknown as { provider_id: string }[] | null;
+  return (rows || []).map((row) => row.provider_id);
 }

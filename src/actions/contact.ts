@@ -2,7 +2,7 @@
 
 import { contactFormSchema } from "@/lib/validation/schemas";
 import { APP_EMAIL } from "@/lib/constants";
-import { Resend } from "resend";
+import { getResendClient } from "@/lib/email/resend";
 import { headers } from "next/headers";
 import { withAutopilot, submitContactPolicy, attemptsOf, durationOf } from "@/lib/autopilot";
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
@@ -29,19 +29,19 @@ interface ContactWorkInput {
 
 const runContactWork = async (
   _ctx: AttemptContext,
-  data: ContactWorkInput
+  data: ContactWorkInput,
 ): Promise<AttemptOutcome<{ sent: boolean; channel: "email" | "log" }>> => {
-  if (!process.env.RESEND_API_KEY) {
+  const resend = getResendClient();
+  if (!resend) {
     return { kind: "success", value: { sent: true, channel: "log" } };
   }
   try {
-    const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({
       from: "ALPAR AI Contact <contact@alparai.com>",
       to: APP_EMAIL,
       replyTo: data.email,
       subject: `[${data.category}] ${data.subject}`,
-      text: `From: ${data.name} <${data.email}>\n\n${data.message}\n\n--\nIP: ${data.ip}\nUA: ${data.userAgent}`,
+      text: `From: ${data.name} <${data.email}>\n\n${data.message}\n\n--\nIP Hash: ${hashIp(data.ip)}`,
     });
     return { kind: "success", value: { sent: true, channel: "email" } };
   } catch (e) {
@@ -54,7 +54,7 @@ const runContactWork = async (
 
 export async function submitContact(
   _prev: ContactState,
-  formData: FormData
+  formData: FormData,
 ): Promise<ContactState> {
   const hdrs = await headers();
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
@@ -100,7 +100,7 @@ export async function submitContact(
         ipHash: hashIp(ip),
         clientIdempotencyKey,
       },
-    }
+    },
   );
 
   if (result.kind === "ok" || result.kind === "replayed") {

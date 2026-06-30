@@ -13,7 +13,7 @@ import {
 } from "@/lib/autopilot";
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
 import { requireAdmin } from "@/lib/auth/session";
-import { Resend } from "resend";
+import { getResendClient } from "@/lib/email/resend";
 import { generateProviderToken } from "@/lib/utils/hash";
 import { logger } from "@/lib/utils/logger";
 
@@ -76,8 +76,8 @@ const runModerationWork = async (
           const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://alparai.com";
           const respondLink = `${appUrl}/en/incidents/${incident.id}/respond?token=${token}`;
 
-          if (process.env.RESEND_API_KEY) {
-            const resend = new Resend(process.env.RESEND_API_KEY);
+          const resend = getResendClient();
+          if (resend) {
             await resend.emails.send({
               from: "ALPAR AI <noreply@alparai.com>",
               to: provider.contact_email,

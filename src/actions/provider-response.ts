@@ -44,7 +44,7 @@ export async function submitProviderResponse(
   const { incidentId, token, responseText, responderName, responderRole } = parsed.data;
 
   // Rate limit check
-  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.contact_submission}:${ip}`); // use contact rate limiter as response rate limiter
+  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.provider_response}:${ip}`);
   if (!rl.ok) {
     return { ok: false, error: `Too many submissions. Try again in ${rl.retryAfter}s.` };
   }

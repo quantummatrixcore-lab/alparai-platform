@@ -10,6 +10,7 @@ import {
   type AttemptContext,
 } from "@/lib/autopilot";
 import { revalidatePath } from "next/cache";
+import { getResendClient } from "@/lib/email/resend";
 
 async function evaluateIncidentWithGemini(
   title: string,
@@ -170,9 +171,8 @@ async function runAutoModerationWork(
           const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://alparai.com";
           const respondLink = `${appUrl}/en/incidents/${fullIncident.id}/respond?token=${token}`;
 
-          if (process.env.RESEND_API_KEY) {
-            const { Resend } = await import("resend");
-            const resend = new Resend(process.env.RESEND_API_KEY);
+          const resend = getResendClient();
+          if (resend) {
             await resend.emails.send({
               from: "ALPAR AI <noreply@alparai.com>",
               to: provider.contact_email,
