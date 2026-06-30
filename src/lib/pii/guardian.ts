@@ -22,7 +22,15 @@ const PATTERNS: ReadonlyArray<{
   mask: string;
   luhn?: boolean;
   tcKimlik?: boolean;
+  ibanMod97?: boolean;
 }> = [
+  // IBAN (TR + general) - MUST be matched before phone/TC to prevent partial masking of digit sequences
+  {
+    name: "iban",
+    re: /\bTR\d{2}\s?(?:\d{4}\s?){5}\d{2}\b|\b[A-Z]{2}\d{2}[A-Z0-9]{11,30}\b/g,
+    mask: "[REDACTED-IBAN]",
+    ibanMod97: true,
+  },
   { name: "tc_kimlik", re: /\b[1-9](?:[\s.-]?\d){10}\b/g, mask: "[REDACTED-TC]", tcKimlik: true },
   {
     name: "vergi_kimlik",
@@ -46,12 +54,6 @@ const PATTERNS: ReadonlyArray<{
     name: "email",
     re: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,
     mask: "[REDACTED-EMAIL]",
-  },
-  // IBAN (TR + general)
-  {
-    name: "iban",
-    re: /\bTR\d{2}\s?(?:\d{4}\s?){5}\d{2}\b|\b[A-Z]{2}\d{2}[A-Z0-9]{11,30}\b/g,
-    mask: "[REDACTED-IBAN]",
   },
   // Credit card (13-19 digits, optional separators, Luhn-valid)
   {
@@ -88,10 +90,10 @@ const PATTERNS: ReadonlyArray<{
     re: /\b[A-Z]\d{8}\b/g,
     mask: "[REDACTED-PASSPORT]",
   },
-  // Date of birth (Turkish + ISO)
+  // Date of birth (Turkish + ISO formats: DD.MM.YYYY or YYYY-MM-DD)
   {
     name: "dob",
-    re: /\b(?:0?[1-9]|[12]\d|3[01])[./-](?:0?[1-9]|1[0-2])[./-](?:19|20)\d{2}\b/g,
+    re: /\b(?:(?:0?[1-9]|[12]\d|3[01])[./-](?:0?[1-9]|1[0-2])[./-](?:19|20)\d{2}|(?:19|20)\d{2}[./-](?:0?[1-9]|1[0-2])[./-](?:0?[1-9]|[12]\d|3[01]))\b/g,
     mask: "[REDACTED-DATE]",
   },
 ];
@@ -121,7 +123,7 @@ export function maskPII(input: string): PiiScanResult {
   const detectionMap = new Map<string, PiiDetection>();
   let totalRedactions = 0;
 
-  for (const { name, re, mask, luhn, tcKimlik } of PATTERNS) {
+  for (const { name, re, mask, luhn, tcKimlik, ibanMod97 } of PATTERNS) {
     re.lastIndex = 0;
     const matches = [...input.matchAll(re)];
     if (matches.length === 0) continue;
@@ -129,6 +131,7 @@ export function maskPII(input: string): PiiScanResult {
     let validMatches = matches;
     if (luhn) validMatches = validMatches.filter((m) => isLuhnValid(m[0]));
     if (tcKimlik) validMatches = validMatches.filter((m) => isTcKimlikValid(m[0]));
+    if (ibanMod97) validMatches = validMatches.filter((m) => isIbanMod97Valid(m[0]));
     if (validMatches.length === 0) continue;
 
     const samples: string[] = [];
@@ -142,7 +145,7 @@ export function maskPII(input: string): PiiScanResult {
       samples,
     });
 
-    // Replace only the Luhn-valid matches (re-create regex to avoid global state)
+    // Replace only the Luhn-valid/TC/IBAN-valid matches (re-create regex to avoid global state)
     for (const m of validMatches) {
       const escaped = m[0].replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       const single = new RegExp(escaped);
@@ -165,13 +168,13 @@ export function maskPII(input: string): PiiScanResult {
  */
 export function hasPII(input: string): boolean {
   if (!input) return false;
-  return PATTERNS.some(({ re, luhn, tcKimlik }) => {
+  return PATTERNS.some(({ re, luhn, tcKimlik, ibanMod97 }) => {
     re.lastIndex = 0;
     if (!re.test(input)) return false;
-    if (luhn || tcKimlik) {
+    if (luhn || tcKimlik || ibanMod97) {
       re.lastIndex = 0;
       const matches = [...input.matchAll(re)];
-      const validator = luhn ? isLuhnValid : isTcKimlikValid;
+      const validator = luhn ? isLuhnValid : tcKimlik ? isTcKimlikValid : isIbanMod97Valid;
       return matches.some((m) => validator(m[0]));
     }
     return true;
@@ -184,13 +187,13 @@ export function hasPII(input: string): boolean {
 export function detectPIITypes(input: string): string[] {
   if (!input) return [];
   const types: string[] = [];
-  for (const { name, re, luhn, tcKimlik } of PATTERNS) {
+  for (const { name, re, luhn, tcKimlik, ibanMod97 } of PATTERNS) {
     re.lastIndex = 0;
     if (!re.test(input)) continue;
-    if (luhn || tcKimlik) {
+    if (luhn || tcKimlik || ibanMod97) {
       re.lastIndex = 0;
       const matches = [...input.matchAll(re)];
-      const validator = luhn ? isLuhnValid : isTcKimlikValid;
+      const validator = luhn ? isLuhnValid : tcKimlik ? isTcKimlikValid : isIbanMod97Valid;
       if (matches.some((m) => validator(m[0]))) types.push(name);
     } else {
       types.push(name);
@@ -247,4 +250,37 @@ function isTcKimlikValid(raw: string): boolean {
   if (sumFirst10 % 10 !== d[10]) return false;
 
   return true;
+}
+
+function isIbanMod97Valid(iban: string): boolean {
+  // Clean up whitespace and non-alphanumeric characters
+  const clean = iban.replace(/[^A-Z0-9]/gi, "").toUpperCase();
+  if (clean.length < 15 || clean.length > 34) return false;
+
+  // Rearrange: move first 4 chars to the end
+  const rearranged = clean.slice(4) + clean.slice(0, 4);
+
+  // Convert characters to digits
+  let digitStr = "";
+  for (let i = 0; i < rearranged.length; i++) {
+    const char = rearranged[i];
+    if (!char) continue;
+    const code = char.charCodeAt(0);
+    if (code >= 65 && code <= 90) {
+      // A-Z
+      digitStr += String(code - 55); // A=10, B=11, ...
+    } else if (code >= 48 && code <= 57) {
+      // 0-9
+      digitStr += char;
+    } else {
+      return false; // Invalid character
+    }
+  }
+
+  try {
+    const num = BigInt(digitStr);
+    return num % 97n === 1n;
+  } catch {
+    return false;
+  }
 }

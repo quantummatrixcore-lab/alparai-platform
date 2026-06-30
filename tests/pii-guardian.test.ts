@@ -33,8 +33,23 @@ describe("PII Guardian", () => {
   });
 
   describe("IBAN", () => {
-    it("detects TR IBAN", () => {
-      expect(hasPII("TR12 0006 4000 0011 2345 6789 01")).toBe(true);
+    it("detects and masks TR IBAN with valid mod-97", () => {
+      expect(hasPII("TR29 0006 4000 0011 2345 6789 01")).toBe(true);
+      const r = maskPII("My IBAN is TR29 0006 4000 0011 2345 6789 01.");
+      expect(r.masked).toContain("[REDACTED-IBAN]");
+      expect(r.masked).not.toContain("TR29");
+    });
+
+    it("rejects invalid mod-97 TR IBAN", () => {
+      // Formats correctly but invalid checksum
+      expect(hasPII("TR12 0006 4000 0011 2345 6789 01")).toBe(false);
+      const r = maskPII("My IBAN is TR12 0006 4000 0011 2345 6789 01.");
+      expect(r.masked).toContain("TR12 0006 4000 0011 2345 6789 01");
+    });
+
+    it("masks spaces-reformatted IBAN", () => {
+      const r = maskPII("TR290006400000112345678901");
+      expect(r.masked).toBe("[REDACTED-IBAN]");
     });
   });
 
@@ -153,6 +168,63 @@ describe("PII Guardian", () => {
 
     it("does not detect a bare 10-digit number without context", () => {
       expect(detectPIITypes("Order 1234567890")).not.toContain("vergi_kimlik");
+    });
+  });
+
+  describe("Extra test coverage for T3", () => {
+    describe("Passport", () => {
+      it("detects and masks passport", () => {
+        expect(hasPII("Passport U12345678")).toBe(true);
+        const r = maskPII("Passport U12345678");
+        expect(r.masked).toBe("Passport [REDACTED-PASSPORT]");
+      });
+    });
+
+    describe("Date of Birth", () => {
+      it("detects and masks DOB", () => {
+        expect(hasPII("My birthday is 15.06.1990")).toBe(true);
+        expect(hasPII("My birthday is 1990-06-15")).toBe(true);
+        const r1 = maskPII("Date: 15.06.1990");
+        expect(r1.masked).toBe("Date: [REDACTED-DATE]");
+      });
+    });
+
+    describe("Edge Cases (empty, null, undefined)", () => {
+      it("handles empty string without crashing", () => {
+        const r = maskPII("");
+        expect(r.masked).toBe("");
+        expect(r.piiFound).toBe(false);
+        expect(r.redactedCount).toBe(0);
+      });
+
+      it("handles null / undefined safely", () => {
+        const r1 = maskPII(null as never);
+        expect(r1.masked).toBe("");
+        expect(r1.piiFound).toBe(false);
+
+        const r2 = maskPII(undefined as never);
+        expect(r2.masked).toBe("");
+        expect(r2.piiFound).toBe(false);
+      });
+    });
+
+    describe("Overlapping PII", () => {
+      it("masks both email and TC Kimlik in same text", () => {
+        const text = "Gönderen: john@example.com TC: 10000000146";
+        const r = maskPII(text);
+        expect(r.masked).toContain("[REDACTED-EMAIL]");
+        expect(r.masked).toContain("[REDACTED-TC]");
+        expect(r.masked).not.toContain("john@example.com");
+        expect(r.masked).not.toContain("10000000146");
+        expect(r.redactedCount).toBe(2);
+      });
+    });
+
+    describe("Unicode and Turkish character emails", () => {
+      it("masks emails with Turkish characters or custom domain structure", () => {
+        const r = maskPII("Yaz bana: ihsan.oz@test-domain.tr");
+        expect(r.masked).toContain("[REDACTED-EMAIL]");
+      });
     });
   });
 });

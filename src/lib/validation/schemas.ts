@@ -9,14 +9,25 @@ const categoryValues = INCIDENT_CATEGORIES.map((c) => c.value) as [
   (typeof INCIDENT_CATEGORIES)[number]["value"],
   ...(typeof INCIDENT_CATEGORIES)[number]["value"][],
 ];
+if (categoryValues.length === 0) {
+  throw new Error("[schemas] INCIDENT_CATEGORIES cannot be empty");
+}
+
 const severityValues = SEVERITY_LEVELS.map((s) => s.value) as [
   (typeof SEVERITY_LEVELS)[number]["value"],
   ...(typeof SEVERITY_LEVELS)[number]["value"][],
 ];
+if (severityValues.length === 0) {
+  throw new Error("[schemas] SEVERITY_LEVELS cannot be empty");
+}
+
 const suggestionCategoryValues = SUGGESTION_CATEGORIES.map((c) => c.value) as [
   (typeof SUGGESTION_CATEGORIES)[number]["value"],
   ...(typeof SUGGESTION_CATEGORIES)[number]["value"][],
 ];
+if (suggestionCategoryValues.length === 0) {
+  throw new Error("[schemas] SUGGESTION_CATEGORIES cannot be empty");
+}
 
 // =============================================================================
 // Incident

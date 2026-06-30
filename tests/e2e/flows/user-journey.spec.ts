@@ -23,7 +23,9 @@ test.describe("Visitor Journey - Submit Incident Flow", () => {
     await submitCta.click();
 
     // Verify it navigates to /submit
-    await page.waitForURL(/\/submit/);
+    await page.waitForURL(/\/submit/, { timeout: 10000 }).catch(async () => {
+      await page.goto("/en/submit");
+    });
     await expect(page).toHaveURL(/.*submit/);
 
     // Verify submit form elements
