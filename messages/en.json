@@ -1492,6 +1492,9 @@
     "form_submit": "Submit Application",
     "form_footer": "Applications reviewed within 7 days.",
     "form_success": "Thank you! Your application has been received. We will review it within 7 days.",
-    "form_error": "Something went wrong. Please try again or email us directly at hello@alparai.com."
+    "form_error": "Something went wrong. Please try again or email us directly at hello@alparai.com.",
+    "badge_title": "ALPAR AI Verified Expert",
+    "badge_description": "Contribute credibility and domain expertise to high-severity incident verification.",
+    "form_subtitle": "Please provide your details below. We review and verify all applicants."
   }
 }

@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -27,7 +28,7 @@ function SubmitBtn({ children }: { children: React.ReactNode }) {
 
 export function NewSuggestionForm() {
   const t = useTranslations("suggestions");
-  const [state, formAction] = useFormState(submitSuggestion, initialState);
+  const [state, formAction] = useActionState(submitSuggestion, initialState);
   const router = useRouter();
   const [done, setDone] = useState(false);
 

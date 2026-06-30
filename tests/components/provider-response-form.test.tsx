@@ -2,7 +2,7 @@
 import * as React from "react";
 import { render, screen } from "@testing-library/react";
 import { expect, test, describe, vi } from "vitest";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { ProviderResponseForm } from "@/components/incidents/provider-response-form";
 
 // Mock next-intl
@@ -15,9 +15,17 @@ vi.mock("next-intl", () => ({
   },
 }));
 
-// Mock react-dom useFormState and useFormStatus
+// Mock react useActionState
+vi.mock("react", async () => {
+  const actual = await vi.importActual<typeof React>("react");
+  return {
+    ...actual,
+    useActionState: vi.fn((fn, initial) => [initial, fn, false]),
+  };
+});
+
+// Mock react-dom useFormStatus
 vi.mock("react-dom", () => ({
-  useFormState: vi.fn((fn, initial) => [initial, fn, false]),
   useFormStatus: vi.fn(() => ({ pending: false })),
 }));
 
@@ -49,7 +57,7 @@ describe("ProviderResponseForm Component", () => {
   });
 
   test("renders success card when state.ok is true", () => {
-    vi.mocked(useFormState).mockImplementationOnce(() => [{ ok: true }, vi.fn(), false]);
+    vi.mocked(useActionState).mockImplementationOnce(() => [{ ok: true }, vi.fn(), false]);
 
     render(<ProviderResponseForm {...defaultProps} />);
     expect(screen.getByText("success_title")).toBeDefined();
@@ -58,7 +66,7 @@ describe("ProviderResponseForm Component", () => {
   });
 
   test("renders error block when state.error is present", () => {
-    vi.mocked(useFormState).mockImplementationOnce(() => [
+    vi.mocked(useActionState).mockImplementationOnce(() => [
       { ok: false, error: "invalid_token" },
       vi.fn(),
       false,
@@ -70,7 +78,7 @@ describe("ProviderResponseForm Component", () => {
   });
 
   test("renders field errors", () => {
-    vi.mocked(useFormState).mockImplementationOnce(() => [
+    vi.mocked(useActionState).mockImplementationOnce(() => [
       {
         ok: false,
         fieldErrors: {

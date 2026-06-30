@@ -2,7 +2,7 @@
 import * as React from "react";
 import { render, screen } from "@testing-library/react";
 import { expect, test, describe, vi } from "vitest";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { ContactForm } from "@/components/marketing/contact-form";
 
 // Mock next-intl
@@ -10,9 +10,17 @@ vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
 }));
 
-// Mock react-dom useFormState and useFormStatus
+// Mock react useActionState
+vi.mock("react", async () => {
+  const actual = await vi.importActual<typeof React>("react");
+  return {
+    ...actual,
+    useActionState: vi.fn((fn, initial) => [initial, fn, false]),
+  };
+});
+
+// Mock react-dom useFormStatus
 vi.mock("react-dom", () => ({
-  useFormState: vi.fn((fn, initial) => [initial, fn, false]),
   useFormStatus: vi.fn(() => ({ pending: false })),
 }));
 
@@ -33,7 +41,7 @@ describe("ContactForm Component", () => {
   });
 
   test("renders success state card when state.ok is true", () => {
-    vi.mocked(useFormState).mockImplementationOnce(() => [{ ok: true }, vi.fn(), false]);
+    vi.mocked(useActionState).mockImplementationOnce(() => [{ ok: true }, vi.fn(), false]);
 
     render(<ContactForm />);
     expect(screen.getByText("sent_title")).toBeDefined();
@@ -42,7 +50,7 @@ describe("ContactForm Component", () => {
   });
 
   test("renders formError alert when state.formError is present", () => {
-    vi.mocked(useFormState).mockImplementationOnce(() => [
+    vi.mocked(useActionState).mockImplementationOnce(() => [
       { ok: false, formError: "Invalid submission" },
       vi.fn(),
       false,
@@ -54,7 +62,7 @@ describe("ContactForm Component", () => {
   });
 
   test("renders fieldErrors under respective inputs", () => {
-    vi.mocked(useFormState).mockImplementationOnce(() => [
+    vi.mocked(useActionState).mockImplementationOnce(() => [
       {
         ok: false,
         fieldErrors: {

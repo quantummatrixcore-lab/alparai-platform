@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
@@ -40,7 +41,7 @@ export function ProviderResponseForm({
   token,
   providerName,
 }: ProviderResponseFormProps) {
-  const [state, formAction] = useFormState(submitProviderResponse, initialState);
+  const [state, formAction] = useActionState(submitProviderResponse, initialState);
   const t = useTranslations("respond");
 
   useEffect(() => {

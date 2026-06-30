@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -38,7 +38,7 @@ export function IncidentForm({
   const t = useTranslations("incident");
   const tCat = useTranslations("categories");
   const tCommon = useTranslations("common");
-  const [state, formAction] = useFormState(submitIncident, initialState);
+  const [state, formAction] = useActionState(submitIncident, initialState);
   const [piiDetected, setPiiDetected] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");

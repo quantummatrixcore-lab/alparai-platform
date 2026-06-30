@@ -178,10 +178,8 @@ export default async function ExpertsPage({ params }: { params: Promise<{ locale
             {/* Decorative Card Stack or graphic */}
             <div className="from-success-500/5 to-brand-500/5 border-border-subtle flex flex-col items-center justify-center rounded-2xl border bg-gradient-to-br p-8 text-center">
               <Award className="text-success-400 h-16 w-16 animate-pulse" />
-              <h3 className="mt-4 text-xl font-bold text-white">ALPAR AI Verified Expert</h3>
-              <p className="text-fg-muted mt-2 max-w-xs text-sm">
-                Contribute credibility and domain expertise to high-severity incident verification.
-              </p>
+              <h3 className="mt-4 text-xl font-bold text-white">{t("badge_title")}</h3>
+              <p className="text-fg-muted mt-2 max-w-xs text-sm">{t("badge_description")}</p>
             </div>
           </div>
         </Container>
@@ -194,9 +192,7 @@ export default async function ExpertsPage({ params }: { params: Promise<{ locale
             <h2 className="text-fg-primary text-3xl font-extrabold tracking-tight">
               {t("form_title")}
             </h2>
-            <p className="text-fg-muted mt-2 text-sm">
-              Please provide your details below. We review and verify all applicants.
-            </p>
+            <p className="text-fg-muted mt-2 text-sm">{t("form_subtitle")}</p>
           </div>
 
           <Card

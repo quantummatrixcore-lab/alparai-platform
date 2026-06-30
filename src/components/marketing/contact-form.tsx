@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
@@ -31,7 +32,7 @@ function SubmitBtn({ children }: { children: React.ReactNode }) {
 }
 
 export function ContactForm() {
-  const [state, formAction] = useFormState(submitContact, initialState);
+  const [state, formAction] = useActionState(submitContact, initialState);
   const t = useTranslations("contact.form");
   useEffect(() => {
     if (state.ok) toast.success(t("sent_toast"));

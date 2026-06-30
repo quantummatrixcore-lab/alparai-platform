@@ -1492,6 +1492,9 @@
     "form_submit": "Başvuruyu Gönder",
     "form_footer": "Başvurular 7 gün içinde incelenir.",
     "form_success": "Teşekkürler! Başvurunuz alındı. 7 gün içinde inceleyip size döneceğiz.",
-    "form_error": "Bir şeyler ters gitti. Lütfen tekrar deneyin veya doğrudan hello@alparai.com adresine e-posta gönderin."
+    "form_error": "Bir şeyler ters gitti. Lütfen tekrar deneyin veya doğrudan hello@alparai.com adresine e-posta gönderin.",
+    "badge_title": "ALPAR AI Doğrulanmış Uzman",
+    "badge_description": "Yüksek öncelikli olay doğrulamasına güvenilirlik ve alan uzmanlığı ile katkıda bulunun.",
+    "form_subtitle": "Lütfen bilgilerinizi aşağıya girin. Tüm başvurular incelenir ve doğrulanır."
   }
 }
