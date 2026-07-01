@@ -29,8 +29,10 @@ import { submitExpert } from "@/actions/experts";
 function buildExpertForm(overrides: Record<string, string> = {}): FormData {
   const fd = new FormData();
   fd.set("name", "John Expert");
-  fd.set("titleInstitution", "Senior Professor, Stanford University");
-  fd.set("expertise", "AI Safety and Alignment Research");
+  fd.set("email", "john.expert@university.edu");
+  fd.set("title", "Senior Professor");
+  fd.set("institution", "Stanford University");
+  fd.set("expertiseArea", "research");
   fd.set("linkedinUrl", "https://linkedin.com/in/johnexpert");
   for (const [key, value] of Object.entries(overrides)) {
     fd.set(key, value);
@@ -56,20 +58,36 @@ describe("submitExpert", () => {
     expect(result.fieldErrors?.name).toBeDefined();
   });
 
-  it("returns field errors for short titleInstitution", async () => {
-    const fd = buildExpertForm({ titleInstitution: "B" });
+  it("returns field errors for short title", async () => {
+    const fd = buildExpertForm({ title: "B" });
     const result = await submitExpert({ ok: false }, fd);
     expect(result.ok).toBe(false);
     expect(result.fieldErrors).toBeDefined();
-    expect(result.fieldErrors?.titleInstitution).toBeDefined();
+    expect(result.fieldErrors?.title).toBeDefined();
   });
 
-  it("returns field errors for short expertise", async () => {
-    const fd = buildExpertForm({ expertise: "C" });
+  it("returns field errors for short institution", async () => {
+    const fd = buildExpertForm({ institution: "B" });
     const result = await submitExpert({ ok: false }, fd);
     expect(result.ok).toBe(false);
     expect(result.fieldErrors).toBeDefined();
-    expect(result.fieldErrors?.expertise).toBeDefined();
+    expect(result.fieldErrors?.institution).toBeDefined();
+  });
+
+  it("returns field errors for invalid expertiseArea", async () => {
+    const fd = buildExpertForm({ expertiseArea: "invalid-category" });
+    const result = await submitExpert({ ok: false }, fd);
+    expect(result.ok).toBe(false);
+    expect(result.fieldErrors).toBeDefined();
+    expect(result.fieldErrors?.expertiseArea).toBeDefined();
+  });
+
+  it("returns field errors for invalid email", async () => {
+    const fd = buildExpertForm({ email: "invalid-email" });
+    const result = await submitExpert({ ok: false }, fd);
+    expect(result.ok).toBe(false);
+    expect(result.fieldErrors).toBeDefined();
+    expect(result.fieldErrors?.email).toBeDefined();
   });
 
   it("returns field errors for invalid linkedinUrl", async () => {
