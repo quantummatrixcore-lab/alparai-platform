@@ -6,203 +6,33 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5";
   };
+  graphql_public: {
+    Tables: {
+      [_ in never]: never;
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json;
+          operationName?: string;
+          query?: string;
+          variables?: Json;
+        };
+        Returns: Json;
+      };
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
+  };
   public: {
     Tables: {
-      model_reviews: {
-        Row: {
-          id: string;
-          model_id: string;
-          user_id: string | null;
-          is_anonymous: boolean;
-          score_overall: number;
-          score_accuracy: number | null;
-          score_safety: number | null;
-          score_creativity: number | null;
-          score_speed: number | null;
-          score_value: number | null;
-          title: string | null;
-          body: string | null;
-          status: string;
-          helpful_count: number;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          model_id: string;
-          user_id?: string | null;
-          is_anonymous?: boolean;
-          score_overall: number;
-          score_accuracy?: number | null;
-          score_safety?: number | null;
-          score_creativity?: number | null;
-          score_speed?: number | null;
-          score_value?: number | null;
-          title?: string | null;
-          body?: string | null;
-          status?: string;
-          helpful_count?: number;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          model_id?: string;
-          user_id?: string | null;
-          is_anonymous?: boolean;
-          score_overall?: number;
-          score_accuracy?: number | null;
-          score_safety?: number | null;
-          score_creativity?: number | null;
-          score_speed?: number | null;
-          score_value?: number | null;
-          title?: string | null;
-          body?: string | null;
-          status?: string;
-          helpful_count?: number;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "model_reviews_model_id_fkey";
-            columns: ["model_id"];
-            isOneToOne: false;
-            referencedRelation: "ai_models";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "model_reviews_user_id_fkey";
-            columns: ["user_id"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      model_review_votes: {
-        Row: {
-          user_id: string;
-          review_id: string;
-          created_at: string;
-        };
-        Insert: {
-          user_id: string;
-          review_id: string;
-          created_at?: string;
-        };
-        Update: {
-          user_id?: string;
-          review_id?: string;
-          created_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "model_review_votes_user_id_fkey";
-            columns: ["user_id"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "model_review_votes_review_id_fkey";
-            columns: ["review_id"];
-            isOneToOne: false;
-            referencedRelation: "model_reviews";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      model_feature_requests: {
-        Row: {
-          id: string;
-          model_id: string;
-          user_id: string | null;
-          is_anonymous: boolean;
-          title: string;
-          description: string | null;
-          category: string;
-          status: string;
-          votes_count: number;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          model_id: string;
-          user_id?: string | null;
-          is_anonymous?: boolean;
-          title: string;
-          description?: string | null;
-          category?: string;
-          status?: string;
-          votes_count?: number;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          model_id?: string;
-          user_id?: string | null;
-          is_anonymous?: boolean;
-          title?: string;
-          description?: string | null;
-          category?: string;
-          status?: string;
-          votes_count?: number;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "model_feature_requests_model_id_fkey";
-            columns: ["model_id"];
-            isOneToOne: false;
-            referencedRelation: "ai_models";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "model_feature_requests_user_id_fkey";
-            columns: ["user_id"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      model_feature_votes: {
-        Row: {
-          user_id: string;
-          request_id: string;
-          created_at: string;
-        };
-        Insert: {
-          user_id: string;
-          request_id: string;
-          created_at?: string;
-        };
-        Update: {
-          user_id?: string;
-          request_id?: string;
-          created_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "model_feature_votes_user_id_fkey";
-            columns: ["user_id"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "model_feature_votes_request_id_fkey";
-            columns: ["request_id"];
-            isOneToOne: false;
-            referencedRelation: "model_feature_requests";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
       ai_models: {
         Row: {
           created_at: string;
@@ -239,6 +69,13 @@ export type Database = {
             referencedRelation: "ai_providers";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "ai_models_provider_id_fkey";
+            columns: ["provider_id"];
+            isOneToOne: false;
+            referencedRelation: "provider_leaderboard";
+            referencedColumns: ["id"];
+          },
         ];
       };
       ai_poll_votes: {
@@ -273,185 +110,64 @@ export type Database = {
           },
         ];
       };
-      newsletter_subscribers: {
-        Row: {
-          id: string;
-          email: string;
-          locale: string | null;
-          confirmed: boolean;
-          subscribed_at: string;
-          unsubscribed_at: string | null;
-        };
-        Insert: {
-          id?: string;
-          email: string;
-          locale?: string | null;
-          confirmed?: boolean;
-          subscribed_at?: string;
-          unsubscribed_at?: string | null;
-        };
-        Update: {
-          id?: string;
-          email?: string;
-          locale?: string | null;
-          confirmed?: boolean;
-          subscribed_at?: string;
-          unsubscribed_at?: string | null;
-        };
-        Relationships: [];
-      };
-      blog_posts: {
-        Row: {
-          id: string;
-          slug: string;
-          title_en: string;
-          title_tr: string;
-          content_en: string;
-          content_tr: string;
-          status: "draft" | "published";
-          generated_by: string | null;
-          published_at: string | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          slug: string;
-          title_en: string;
-          title_tr: string;
-          content_en: string;
-          content_tr: string;
-          status?: "draft" | "published";
-          generated_by?: string | null;
-          published_at?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          slug?: string;
-          title_en?: string;
-          title_tr?: string;
-          content_en?: string;
-          content_tr?: string;
-          status?: "draft" | "published";
-          generated_by?: string | null;
-          published_at?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
-      whistleblower_submissions: {
-        Row: {
-          id: string;
-          encrypted_content: string;
-          category: string;
-          provider_hint: string | null;
-          submitted_at: string;
-          status: "pending" | "reviewing" | "verified" | "closed";
-        };
-        Insert: {
-          id?: string;
-          encrypted_content: string;
-          category: string;
-          provider_hint?: string | null;
-          submitted_at?: string;
-          status?: "pending" | "reviewing" | "verified" | "closed";
-        };
-        Update: {
-          id?: string;
-          encrypted_content?: string;
-          category?: string;
-          provider_hint?: string | null;
-          submitted_at?: string;
-          status?: "pending" | "reviewing" | "verified" | "closed";
-        };
-        Relationships: [];
-      };
       ai_polls: {
         Row: {
           category: string;
+          context_news_id: string | null;
           created_at: string;
           description: string;
+          description_en: string;
+          description_tr: string | null;
           id: string;
           is_active: boolean;
           no_count: number;
           title: string;
+          title_en: string;
+          title_tr: string | null;
           unsure_count: number;
           yes_count: number;
         };
         Insert: {
           category?: string;
+          context_news_id?: string | null;
           created_at?: string;
           description: string;
+          description_en: string;
+          description_tr?: string | null;
           id?: string;
           is_active?: boolean;
           no_count?: number;
           title: string;
+          title_en: string;
+          title_tr?: string | null;
           unsure_count?: number;
           yes_count?: number;
         };
         Update: {
           category?: string;
+          context_news_id?: string | null;
           created_at?: string;
           description?: string;
+          description_en?: string;
+          description_tr?: string | null;
           id?: string;
           is_active?: boolean;
           no_count?: number;
           title?: string;
+          title_en?: string;
+          title_tr?: string | null;
           unsure_count?: number;
           yes_count?: number;
         };
-        Relationships: [];
-      };
-      ecosystem_news: {
-        Row: {
-          id: string;
-          title_en: string;
-          title_tr: string | null;
-          summary_en: string | null;
-          summary_tr: string | null;
-          url: string | null;
-          source: string | null;
-          category: string;
-          severity: string;
-          is_featured: boolean;
-          is_active: boolean;
-          published_at: string;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          title_en: string;
-          title_tr?: string | null;
-          summary_en?: string | null;
-          summary_tr?: string | null;
-          url?: string | null;
-          source?: string | null;
-          category?: string;
-          severity?: string;
-          is_featured?: boolean;
-          is_active?: boolean;
-          published_at?: string;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          title_en?: string;
-          title_tr?: string | null;
-          summary_en?: string | null;
-          summary_tr?: string | null;
-          url?: string | null;
-          source?: string | null;
-          category?: string;
-          severity?: string;
-          is_featured?: boolean;
-          is_active?: boolean;
-          published_at?: string;
-          created_at?: string;
-        };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "ai_polls_context_news_id_fkey";
+            columns: ["context_news_id"];
+            isOneToOne: false;
+            referencedRelation: "ecosystem_news";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       ai_provider_responses: {
         Row: {
@@ -502,10 +218,31 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "ai_provider_responses_ai_provider_id_fkey";
+            columns: ["ai_provider_id"];
+            isOneToOne: false;
+            referencedRelation: "provider_leaderboard";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ai_provider_responses_incident_id_fkey";
+            columns: ["incident_id"];
+            isOneToOne: false;
+            referencedRelation: "feed_incidents";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "ai_provider_responses_incident_id_fkey";
             columns: ["incident_id"];
             isOneToOne: false;
             referencedRelation: "incidents";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ai_provider_responses_incident_id_fkey";
+            columns: ["incident_id"];
+            isOneToOne: false;
+            referencedRelation: "incidents_localized";
             referencedColumns: ["id"];
           },
         ];
@@ -520,8 +257,8 @@ export type Database = {
           logo_url: string | null;
           name: string;
           slug: string;
+          trust_score: number | null;
           website_url: string | null;
-          trust_score: number;
         };
         Insert: {
           contact_email?: string | null;
@@ -532,8 +269,8 @@ export type Database = {
           logo_url?: string | null;
           name: string;
           slug: string;
+          trust_score?: number | null;
           website_url?: string | null;
-          trust_score?: number;
         };
         Update: {
           contact_email?: string | null;
@@ -544,8 +281,29 @@ export type Database = {
           logo_url?: string | null;
           name?: string;
           slug?: string;
+          trust_score?: number | null;
           website_url?: string | null;
-          trust_score?: number;
+        };
+        Relationships: [];
+      };
+      api_keys: {
+        Row: {
+          api_key: string;
+          created_at: string;
+          provider: string;
+          updated_at: string;
+        };
+        Insert: {
+          api_key: string;
+          created_at?: string;
+          provider: string;
+          updated_at?: string;
+        };
+        Update: {
+          api_key?: string;
+          created_at?: string;
+          provider?: string;
+          updated_at?: string;
         };
         Relationships: [];
       };
@@ -649,6 +407,182 @@ export type Database = {
           },
         ];
       };
+      blog_posts: {
+        Row: {
+          content_en: string;
+          content_tr: string;
+          created_at: string;
+          generated_by: string | null;
+          id: string;
+          published_at: string | null;
+          slug: string;
+          status: string;
+          title_en: string;
+          title_tr: string;
+          updated_at: string;
+        };
+        Insert: {
+          content_en: string;
+          content_tr: string;
+          created_at?: string;
+          generated_by?: string | null;
+          id?: string;
+          published_at?: string | null;
+          slug: string;
+          status?: string;
+          title_en: string;
+          title_tr: string;
+          updated_at?: string;
+        };
+        Update: {
+          content_en?: string;
+          content_tr?: string;
+          created_at?: string;
+          generated_by?: string | null;
+          id?: string;
+          published_at?: string | null;
+          slug?: string;
+          status?: string;
+          title_en?: string;
+          title_tr?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      bounty_badges: {
+        Row: {
+          code: string;
+          description_en: string;
+          description_tr: string;
+          icon: string;
+          name_en: string;
+          name_tr: string;
+          threshold_count: number;
+        };
+        Insert: {
+          code: string;
+          description_en: string;
+          description_tr: string;
+          icon: string;
+          name_en: string;
+          name_tr: string;
+          threshold_count?: number;
+        };
+        Update: {
+          code?: string;
+          description_en?: string;
+          description_tr?: string;
+          icon?: string;
+          name_en?: string;
+          name_tr?: string;
+          threshold_count?: number;
+        };
+        Relationships: [];
+      };
+      bug_bounties: {
+        Row: {
+          actual_reward_cents: number | null;
+          badge_awarded: boolean;
+          created_at: string;
+          estimated_reward_cents: number | null;
+          id: string;
+          incident_id: string;
+          notes: string | null;
+          paid_at: string | null;
+          provider_id: string | null;
+          reporter_id: string;
+          severity_score: number;
+          status: string;
+          updated_at: string;
+          validated_at: string | null;
+          validated_by: string | null;
+        };
+        Insert: {
+          actual_reward_cents?: number | null;
+          badge_awarded?: boolean;
+          created_at?: string;
+          estimated_reward_cents?: number | null;
+          id?: string;
+          incident_id: string;
+          notes?: string | null;
+          paid_at?: string | null;
+          provider_id?: string | null;
+          reporter_id: string;
+          severity_score?: number;
+          status?: string;
+          updated_at?: string;
+          validated_at?: string | null;
+          validated_by?: string | null;
+        };
+        Update: {
+          actual_reward_cents?: number | null;
+          badge_awarded?: boolean;
+          created_at?: string;
+          estimated_reward_cents?: number | null;
+          id?: string;
+          incident_id?: string;
+          notes?: string | null;
+          paid_at?: string | null;
+          provider_id?: string | null;
+          reporter_id?: string;
+          severity_score?: number;
+          status?: string;
+          updated_at?: string;
+          validated_at?: string | null;
+          validated_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "bug_bounties_incident_id_fkey";
+            columns: ["incident_id"];
+            isOneToOne: false;
+            referencedRelation: "feed_incidents";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "bug_bounties_incident_id_fkey";
+            columns: ["incident_id"];
+            isOneToOne: false;
+            referencedRelation: "incidents";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "bug_bounties_incident_id_fkey";
+            columns: ["incident_id"];
+            isOneToOne: false;
+            referencedRelation: "incidents_localized";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "bug_bounties_provider_id_fkey";
+            columns: ["provider_id"];
+            isOneToOne: false;
+            referencedRelation: "ai_providers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "bug_bounties_provider_id_fkey";
+            columns: ["provider_id"];
+            isOneToOne: false;
+            referencedRelation: "provider_leaderboard";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "bug_bounties_reporter_id_fkey";
+            columns: ["reporter_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "bug_bounties_validated_by_fkey";
+            columns: ["validated_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       consent_log: {
         Row: {
           consent_text_snapshot: string;
@@ -695,6 +629,54 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      ecosystem_news: {
+        Row: {
+          category: string;
+          created_at: string;
+          id: string;
+          is_active: boolean;
+          is_featured: boolean;
+          published_at: string;
+          severity: string;
+          source: string | null;
+          summary_en: string | null;
+          summary_tr: string | null;
+          title_en: string;
+          title_tr: string | null;
+          url: string | null;
+        };
+        Insert: {
+          category?: string;
+          created_at?: string;
+          id?: string;
+          is_active?: boolean;
+          is_featured?: boolean;
+          published_at?: string;
+          severity?: string;
+          source?: string | null;
+          summary_en?: string | null;
+          summary_tr?: string | null;
+          title_en: string;
+          title_tr?: string | null;
+          url?: string | null;
+        };
+        Update: {
+          category?: string;
+          created_at?: string;
+          id?: string;
+          is_active?: boolean;
+          is_featured?: boolean;
+          published_at?: string;
+          severity?: string;
+          source?: string | null;
+          summary_en?: string | null;
+          summary_tr?: string | null;
+          title_en?: string;
+          title_tr?: string | null;
+          url?: string | null;
+        };
+        Relationships: [];
       };
       evidence: {
         Row: {
@@ -747,7 +729,166 @@ export type Database = {
             foreignKeyName: "evidence_incident_id_fkey";
             columns: ["incident_id"];
             isOneToOne: false;
+            referencedRelation: "feed_incidents";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "evidence_incident_id_fkey";
+            columns: ["incident_id"];
+            isOneToOne: false;
             referencedRelation: "incidents";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "evidence_incident_id_fkey";
+            columns: ["incident_id"];
+            isOneToOne: false;
+            referencedRelation: "incidents_localized";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      expert_applications: {
+        Row: {
+          created_at: string;
+          email: string | null;
+          expertise: string;
+          expertise_area: string | null;
+          id: string;
+          linkedin_url: string | null;
+          name: string;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          status: string;
+          title_institution: string;
+        };
+        Insert: {
+          created_at?: string;
+          email?: string | null;
+          expertise: string;
+          expertise_area?: string | null;
+          id?: string;
+          linkedin_url?: string | null;
+          name: string;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          title_institution: string;
+        };
+        Update: {
+          created_at?: string;
+          email?: string | null;
+          expertise?: string;
+          expertise_area?: string | null;
+          id?: string;
+          linkedin_url?: string | null;
+          name?: string;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          title_institution?: string;
+        };
+        Relationships: [];
+      };
+      incident_affected_users: {
+        Row: {
+          created_at: string;
+          incident_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          incident_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          incident_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "incident_affected_users_incident_id_fkey";
+            columns: ["incident_id"];
+            isOneToOne: false;
+            referencedRelation: "feed_incidents";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "incident_affected_users_incident_id_fkey";
+            columns: ["incident_id"];
+            isOneToOne: false;
+            referencedRelation: "incidents";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "incident_affected_users_incident_id_fkey";
+            columns: ["incident_id"];
+            isOneToOne: false;
+            referencedRelation: "incidents_localized";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "incident_affected_users_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      incident_comments: {
+        Row: {
+          comment_text: string;
+          created_at: string;
+          id: string;
+          incident_id: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          comment_text: string;
+          created_at?: string;
+          id?: string;
+          incident_id: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          comment_text?: string;
+          created_at?: string;
+          id?: string;
+          incident_id?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "incident_comments_incident_id_fkey";
+            columns: ["incident_id"];
+            isOneToOne: false;
+            referencedRelation: "feed_incidents";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "incident_comments_incident_id_fkey";
+            columns: ["incident_id"];
+            isOneToOne: false;
+            referencedRelation: "incidents";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "incident_comments_incident_id_fkey";
+            columns: ["incident_id"];
+            isOneToOne: false;
+            referencedRelation: "incidents_localized";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "incident_comments_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
             referencedColumns: ["id"];
           },
         ];
@@ -785,7 +926,21 @@ export type Database = {
             foreignKeyName: "incident_votes_incident_id_fkey";
             columns: ["incident_id"];
             isOneToOne: false;
+            referencedRelation: "feed_incidents";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "incident_votes_incident_id_fkey";
+            columns: ["incident_id"];
+            isOneToOne: false;
             referencedRelation: "incidents";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "incident_votes_incident_id_fkey";
+            columns: ["incident_id"];
+            isOneToOne: false;
+            referencedRelation: "incidents_localized";
             referencedColumns: ["id"];
           },
           {
@@ -799,25 +954,46 @@ export type Database = {
       };
       incidents: {
         Row: {
+          affected_users_count: number;
           ai_model_id: string | null;
+          ai_moderation_reason: string | null;
+          ai_moderation_score: number | null;
           ai_provider_id: string | null;
           category: Database["public"]["Enums"]["incident_category"];
           comments_count: number;
           contains_pii: boolean;
           created_at: string;
+          cross_audit_completed_at: string | null;
+          cross_audit_confidence: number | null;
+          cross_audit_model: string | null;
+          cross_audit_reasoning: string | null;
+          cross_audit_triage_models: string[] | null;
+          cross_audit_truth_score: number | null;
           description: string;
           description_masked: string | null;
+          description_tr: string | null;
+          eu_act_data_privacy_score: number | null;
+          eu_act_non_discrimination_score: number | null;
+          eu_act_risk_category: string | null;
+          eu_act_transparency_score: number | null;
+          expert_fix: string | null;
           id: string;
+          import_attribution: string | null;
+          import_external_id: string | null;
           incident_date: string | null;
+          incident_source: string | null;
           ip_hash: string | null;
           is_anonymous: boolean;
+          is_expert: boolean;
           language: string;
           location_country: string | null;
+          model_custom_name: string | null;
           moderated_at: string | null;
           moderation_note: string | null;
           moderator_id: string | null;
           moderator_notes: string | null;
           pii_categories: string[];
+          provider_custom_name: string | null;
           published_at: string | null;
           reviewed_at: string | null;
           search_vector: unknown;
@@ -827,49 +1003,54 @@ export type Database = {
           status: Database["public"]["Enums"]["incident_status"];
           title: string;
           title_masked: string | null;
-          provider_custom_name: string | null;
-          model_custom_name: string | null;
+          title_tr: string | null;
           updated_at: string;
           upvotes_count: number;
           user_agent: string | null;
           user_id: string | null;
           views_count: number;
-          ai_moderation_score: number | null;
-          ai_moderation_reason: string | null;
-          title_tr: string | null;
-          description_tr: string | null;
-          cross_audit_truth_score: number | null;
-          cross_audit_confidence: number | null;
-          cross_audit_reasoning: string | null;
-          cross_audit_model: string | null;
-          cross_audit_triage_models: string[] | null;
-          cross_audit_completed_at: string | null;
-          incident_source: string;
-          import_external_id: string | null;
-          import_attribution: string | null;
-          is_expert: boolean;
-          expert_fix: string | null;
         };
         Insert: {
+          affected_users_count?: number;
           ai_model_id?: string | null;
+          ai_moderation_reason?: string | null;
+          ai_moderation_score?: number | null;
           ai_provider_id?: string | null;
           category?: Database["public"]["Enums"]["incident_category"];
           comments_count?: number;
           contains_pii?: boolean;
           created_at?: string;
+          cross_audit_completed_at?: string | null;
+          cross_audit_confidence?: number | null;
+          cross_audit_model?: string | null;
+          cross_audit_reasoning?: string | null;
+          cross_audit_triage_models?: string[] | null;
+          cross_audit_truth_score?: number | null;
           description: string;
           description_masked?: string | null;
+          description_tr?: string | null;
+          eu_act_data_privacy_score?: number | null;
+          eu_act_non_discrimination_score?: number | null;
+          eu_act_risk_category?: string | null;
+          eu_act_transparency_score?: number | null;
+          expert_fix?: string | null;
           id?: string;
+          import_attribution?: string | null;
+          import_external_id?: string | null;
           incident_date?: string | null;
+          incident_source?: string | null;
           ip_hash?: string | null;
           is_anonymous?: boolean;
+          is_expert?: boolean;
           language?: string;
           location_country?: string | null;
+          model_custom_name?: string | null;
           moderated_at?: string | null;
           moderation_note?: string | null;
           moderator_id?: string | null;
           moderator_notes?: string | null;
           pii_categories?: string[];
+          provider_custom_name?: string | null;
           published_at?: string | null;
           reviewed_at?: string | null;
           search_vector?: unknown;
@@ -879,49 +1060,54 @@ export type Database = {
           status?: Database["public"]["Enums"]["incident_status"];
           title: string;
           title_masked?: string | null;
-          provider_custom_name?: string | null;
-          model_custom_name?: string | null;
+          title_tr?: string | null;
           updated_at?: string;
           upvotes_count?: number;
           user_agent?: string | null;
           user_id?: string | null;
           views_count?: number;
-          ai_moderation_score?: number | null;
-          ai_moderation_reason?: string | null;
-          title_tr?: string | null;
-          description_tr?: string | null;
-          cross_audit_truth_score?: number | null;
-          cross_audit_confidence?: number | null;
-          cross_audit_reasoning?: string | null;
-          cross_audit_model?: string | null;
-          cross_audit_triage_models?: string[] | null;
-          cross_audit_completed_at?: string | null;
-          incident_source?: string;
-          import_external_id?: string | null;
-          import_attribution?: string | null;
-          is_expert?: boolean;
-          expert_fix?: string | null;
         };
         Update: {
+          affected_users_count?: number;
           ai_model_id?: string | null;
+          ai_moderation_reason?: string | null;
+          ai_moderation_score?: number | null;
           ai_provider_id?: string | null;
           category?: Database["public"]["Enums"]["incident_category"];
           comments_count?: number;
           contains_pii?: boolean;
           created_at?: string;
+          cross_audit_completed_at?: string | null;
+          cross_audit_confidence?: number | null;
+          cross_audit_model?: string | null;
+          cross_audit_reasoning?: string | null;
+          cross_audit_triage_models?: string[] | null;
+          cross_audit_truth_score?: number | null;
           description?: string;
           description_masked?: string | null;
+          description_tr?: string | null;
+          eu_act_data_privacy_score?: number | null;
+          eu_act_non_discrimination_score?: number | null;
+          eu_act_risk_category?: string | null;
+          eu_act_transparency_score?: number | null;
+          expert_fix?: string | null;
           id?: string;
+          import_attribution?: string | null;
+          import_external_id?: string | null;
           incident_date?: string | null;
+          incident_source?: string | null;
           ip_hash?: string | null;
           is_anonymous?: boolean;
+          is_expert?: boolean;
           language?: string;
           location_country?: string | null;
+          model_custom_name?: string | null;
           moderated_at?: string | null;
           moderation_note?: string | null;
           moderator_id?: string | null;
           moderator_notes?: string | null;
           pii_categories?: string[];
+          provider_custom_name?: string | null;
           published_at?: string | null;
           reviewed_at?: string | null;
           search_vector?: unknown;
@@ -931,28 +1117,12 @@ export type Database = {
           status?: Database["public"]["Enums"]["incident_status"];
           title?: string;
           title_masked?: string | null;
-          provider_custom_name?: string | null;
-          model_custom_name?: string | null;
+          title_tr?: string | null;
           updated_at?: string;
           upvotes_count?: number;
           user_agent?: string | null;
           user_id?: string | null;
           views_count?: number;
-          ai_moderation_score?: number | null;
-          ai_moderation_reason?: string | null;
-          title_tr?: string | null;
-          description_tr?: string | null;
-          cross_audit_truth_score?: number | null;
-          cross_audit_confidence?: number | null;
-          cross_audit_reasoning?: string | null;
-          cross_audit_model?: string | null;
-          cross_audit_triage_models?: string[] | null;
-          cross_audit_completed_at?: string | null;
-          incident_source?: string;
-          import_external_id?: string | null;
-          import_attribution?: string | null;
-          is_expert?: boolean;
-          expert_fix?: string | null;
         };
         Relationships: [
           {
@@ -970,6 +1140,13 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "incidents_ai_provider_id_fkey";
+            columns: ["ai_provider_id"];
+            isOneToOne: false;
+            referencedRelation: "provider_leaderboard";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "incidents_moderator_id_fkey";
             columns: ["moderator_id"];
             isOneToOne: false;
@@ -979,6 +1156,678 @@ export type Database = {
           {
             foreignKeyName: "incidents_user_id_fkey";
             columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      investor_applications: {
+        Row: {
+          access_token_hash: string | null;
+          approved_at: string | null;
+          check_size: string;
+          company: string;
+          created_at: string;
+          email: string;
+          full_name: string;
+          id: string;
+          linkedin_url: string;
+          status: string;
+          title: string;
+          why_interested: string | null;
+        };
+        Insert: {
+          access_token_hash?: string | null;
+          approved_at?: string | null;
+          check_size: string;
+          company: string;
+          created_at?: string;
+          email: string;
+          full_name: string;
+          id?: string;
+          linkedin_url: string;
+          status?: string;
+          title: string;
+          why_interested?: string | null;
+        };
+        Update: {
+          access_token_hash?: string | null;
+          approved_at?: string | null;
+          check_size?: string;
+          company?: string;
+          created_at?: string;
+          email?: string;
+          full_name?: string;
+          id?: string;
+          linkedin_url?: string;
+          status?: string;
+          title?: string;
+          why_interested?: string | null;
+        };
+        Relationships: [];
+      };
+      model_feature_requests: {
+        Row: {
+          category: string;
+          created_at: string;
+          description: string | null;
+          id: string;
+          is_anonymous: boolean;
+          model_id: string;
+          status: string;
+          title: string;
+          updated_at: string;
+          user_id: string | null;
+          votes_count: number;
+        };
+        Insert: {
+          category?: string;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          is_anonymous?: boolean;
+          model_id: string;
+          status?: string;
+          title: string;
+          updated_at?: string;
+          user_id?: string | null;
+          votes_count?: number;
+        };
+        Update: {
+          category?: string;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          is_anonymous?: boolean;
+          model_id?: string;
+          status?: string;
+          title?: string;
+          updated_at?: string;
+          user_id?: string | null;
+          votes_count?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "model_feature_requests_model_id_fkey";
+            columns: ["model_id"];
+            isOneToOne: false;
+            referencedRelation: "ai_models";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "model_feature_requests_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      model_feature_votes: {
+        Row: {
+          created_at: string;
+          request_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          request_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          request_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "model_feature_votes_request_id_fkey";
+            columns: ["request_id"];
+            isOneToOne: false;
+            referencedRelation: "model_feature_requests";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "model_feature_votes_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      model_review_votes: {
+        Row: {
+          created_at: string;
+          review_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          review_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          review_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "model_review_votes_review_id_fkey";
+            columns: ["review_id"];
+            isOneToOne: false;
+            referencedRelation: "model_reviews";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "model_review_votes_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      model_reviews: {
+        Row: {
+          body: string | null;
+          created_at: string;
+          helpful_count: number;
+          id: string;
+          is_anonymous: boolean;
+          model_id: string;
+          score_accuracy: number | null;
+          score_creativity: number | null;
+          score_overall: number;
+          score_safety: number | null;
+          score_speed: number | null;
+          score_value: number | null;
+          status: string;
+          title: string | null;
+          updated_at: string;
+          user_id: string | null;
+        };
+        Insert: {
+          body?: string | null;
+          created_at?: string;
+          helpful_count?: number;
+          id?: string;
+          is_anonymous?: boolean;
+          model_id: string;
+          score_accuracy?: number | null;
+          score_creativity?: number | null;
+          score_overall: number;
+          score_safety?: number | null;
+          score_speed?: number | null;
+          score_value?: number | null;
+          status?: string;
+          title?: string | null;
+          updated_at?: string;
+          user_id?: string | null;
+        };
+        Update: {
+          body?: string | null;
+          created_at?: string;
+          helpful_count?: number;
+          id?: string;
+          is_anonymous?: boolean;
+          model_id?: string;
+          score_accuracy?: number | null;
+          score_creativity?: number | null;
+          score_overall?: number;
+          score_safety?: number | null;
+          score_speed?: number | null;
+          score_value?: number | null;
+          status?: string;
+          title?: string | null;
+          updated_at?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "model_reviews_model_id_fkey";
+            columns: ["model_id"];
+            isOneToOne: false;
+            referencedRelation: "ai_models";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "model_reviews_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      newsletter_subscribers: {
+        Row: {
+          confirmed: boolean | null;
+          email: string;
+          id: string;
+          locale: string | null;
+          subscribed_at: string | null;
+          unsubscribed_at: string | null;
+        };
+        Insert: {
+          confirmed?: boolean | null;
+          email: string;
+          id?: string;
+          locale?: string | null;
+          subscribed_at?: string | null;
+          unsubscribed_at?: string | null;
+        };
+        Update: {
+          confirmed?: boolean | null;
+          email?: string;
+          id?: string;
+          locale?: string | null;
+          subscribed_at?: string | null;
+          unsubscribed_at?: string | null;
+        };
+        Relationships: [];
+      };
+      social_assets: {
+        Row: {
+          asset_type: string;
+          created_at: string;
+          file_url: string;
+          id: string;
+          linked_post_id: string | null;
+          tags: string[];
+          thumbnail_url: string | null;
+          title: string;
+        };
+        Insert: {
+          asset_type: string;
+          created_at?: string;
+          file_url: string;
+          id?: string;
+          linked_post_id?: string | null;
+          tags?: string[];
+          thumbnail_url?: string | null;
+          title: string;
+        };
+        Update: {
+          asset_type?: string;
+          created_at?: string;
+          file_url?: string;
+          id?: string;
+          linked_post_id?: string | null;
+          tags?: string[];
+          thumbnail_url?: string | null;
+          title?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "social_assets_linked_post_id_fkey";
+            columns: ["linked_post_id"];
+            isOneToOne: false;
+            referencedRelation: "social_posts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      social_posts: {
+        Row: {
+          body_text: string;
+          comments_count: number;
+          content_type: string;
+          created_at: string;
+          created_by: string | null;
+          estimated_reach: number;
+          external_url: string | null;
+          hashtags: string[];
+          id: string;
+          image_prompt: string | null;
+          image_url: string | null;
+          likes: number;
+          linked_incident_id: string | null;
+          platform: string;
+          published_at: string | null;
+          scheduled_at: string | null;
+          shares_count: number;
+          status: string;
+          title: string;
+          updated_at: string;
+          video_url: string | null;
+        };
+        Insert: {
+          body_text: string;
+          comments_count?: number;
+          content_type: string;
+          created_at?: string;
+          created_by?: string | null;
+          estimated_reach?: number;
+          external_url?: string | null;
+          hashtags?: string[];
+          id?: string;
+          image_prompt?: string | null;
+          image_url?: string | null;
+          likes?: number;
+          linked_incident_id?: string | null;
+          platform: string;
+          published_at?: string | null;
+          scheduled_at?: string | null;
+          shares_count?: number;
+          status?: string;
+          title: string;
+          updated_at?: string;
+          video_url?: string | null;
+        };
+        Update: {
+          body_text?: string;
+          comments_count?: number;
+          content_type?: string;
+          created_at?: string;
+          created_by?: string | null;
+          estimated_reach?: number;
+          external_url?: string | null;
+          hashtags?: string[];
+          id?: string;
+          image_prompt?: string | null;
+          image_url?: string | null;
+          likes?: number;
+          linked_incident_id?: string | null;
+          platform?: string;
+          published_at?: string | null;
+          scheduled_at?: string | null;
+          shares_count?: number;
+          status?: string;
+          title?: string;
+          updated_at?: string;
+          video_url?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "social_posts_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "social_posts_linked_incident_id_fkey";
+            columns: ["linked_incident_id"];
+            isOneToOne: false;
+            referencedRelation: "feed_incidents";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "social_posts_linked_incident_id_fkey";
+            columns: ["linked_incident_id"];
+            isOneToOne: false;
+            referencedRelation: "incidents";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "social_posts_linked_incident_id_fkey";
+            columns: ["linked_incident_id"];
+            isOneToOne: false;
+            referencedRelation: "incidents_localized";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      social_templates: {
+        Row: {
+          content_type: string;
+          created_at: string;
+          example_output: string | null;
+          id: string;
+          name: string;
+          platform: string;
+          psychology_hook: string;
+          template_body: string;
+        };
+        Insert: {
+          content_type: string;
+          created_at?: string;
+          example_output?: string | null;
+          id?: string;
+          name: string;
+          platform: string;
+          psychology_hook: string;
+          template_body: string;
+        };
+        Update: {
+          content_type?: string;
+          created_at?: string;
+          example_output?: string | null;
+          id?: string;
+          name?: string;
+          platform?: string;
+          psychology_hook?: string;
+          template_body?: string;
+        };
+        Relationships: [];
+      };
+      strategy_metrics_snapshots: {
+        Row: {
+          active_providers: number;
+          created_at: string;
+          health_score: number;
+          id: string;
+          media_mentions_count: number;
+          mrr_cents: number;
+          runway_months: number | null;
+          snapshot_date: string;
+          total_incidents: number;
+          total_users: number;
+        };
+        Insert: {
+          active_providers?: number;
+          created_at?: string;
+          health_score?: number;
+          id?: string;
+          media_mentions_count?: number;
+          mrr_cents?: number;
+          runway_months?: number | null;
+          snapshot_date?: string;
+          total_incidents?: number;
+          total_users?: number;
+        };
+        Update: {
+          active_providers?: number;
+          created_at?: string;
+          health_score?: number;
+          id?: string;
+          media_mentions_count?: number;
+          mrr_cents?: number;
+          runway_months?: number | null;
+          snapshot_date?: string;
+          total_incidents?: number;
+          total_users?: number;
+        };
+        Relationships: [];
+      };
+      strategy_milestones: {
+        Row: {
+          created_at: string;
+          id: string;
+          linked_metric: string | null;
+          okr_text: string | null;
+          owner_user_id: string | null;
+          progress: number;
+          quarter: string;
+          status: string;
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          linked_metric?: string | null;
+          okr_text?: string | null;
+          owner_user_id?: string | null;
+          progress?: number;
+          quarter: string;
+          status?: string;
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          linked_metric?: string | null;
+          okr_text?: string | null;
+          owner_user_id?: string | null;
+          progress?: number;
+          quarter?: string;
+          status?: string;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "strategy_milestones_owner_user_id_fkey";
+            columns: ["owner_user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      strategy_risks: {
+        Row: {
+          code: string;
+          created_at: string;
+          description: string | null;
+          id: string;
+          impact: number;
+          mitigation_plan: string | null;
+          owner_user_id: string | null;
+          probability: number;
+          status: string;
+          target_date: string | null;
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          code: string;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          impact: number;
+          mitigation_plan?: string | null;
+          owner_user_id?: string | null;
+          probability: number;
+          status?: string;
+          target_date?: string | null;
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          code?: string;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          impact?: number;
+          mitigation_plan?: string | null;
+          owner_user_id?: string | null;
+          probability?: number;
+          status?: string;
+          target_date?: string | null;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "strategy_risks_owner_user_id_fkey";
+            columns: ["owner_user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      strategy_swot_items: {
+        Row: {
+          action_plan: string | null;
+          category: string;
+          created_at: string;
+          description: string | null;
+          id: string;
+          owner_user_id: string | null;
+          status: string;
+          target_date: string | null;
+          title: string;
+          updated_at: string;
+          weight: string;
+        };
+        Insert: {
+          action_plan?: string | null;
+          category: string;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          owner_user_id?: string | null;
+          status?: string;
+          target_date?: string | null;
+          title: string;
+          updated_at?: string;
+          weight?: string;
+        };
+        Update: {
+          action_plan?: string | null;
+          category?: string;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          owner_user_id?: string | null;
+          status?: string;
+          target_date?: string | null;
+          title?: string;
+          updated_at?: string;
+          weight?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "strategy_swot_items_owner_user_id_fkey";
+            columns: ["owner_user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      strategy_valuations: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          inputs: Json;
+          method: string;
+          notes: string | null;
+          result_pre_money: number;
+          snapshot_date: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          inputs?: Json;
+          method: string;
+          notes?: string | null;
+          result_pre_money: number;
+          snapshot_date?: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          inputs?: Json;
+          method?: string;
+          notes?: string | null;
+          result_pre_money?: number;
+          snapshot_date?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "strategy_valuations_created_by_fkey";
+            columns: ["created_by"];
             isOneToOne: false;
             referencedRelation: "users";
             referencedColumns: ["id"];
@@ -1010,6 +1859,13 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "suggestion_votes_suggestion_id_fkey";
+            columns: ["suggestion_id"];
+            isOneToOne: false;
+            referencedRelation: "suggestions_localized";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "suggestion_votes_user_id_fkey";
             columns: ["user_id"];
             isOneToOne: false;
@@ -1024,10 +1880,12 @@ export type Database = {
           comments_count: number;
           created_at: string;
           description: string;
+          description_tr: string | null;
           id: string;
           is_anonymous: boolean;
           status: Database["public"]["Enums"]["suggestion_status"];
           title: string;
+          title_tr: string | null;
           updated_at: string;
           upvotes_count: number;
           user_id: string | null;
@@ -1037,10 +1895,12 @@ export type Database = {
           comments_count?: number;
           created_at?: string;
           description: string;
+          description_tr?: string | null;
           id?: string;
           is_anonymous?: boolean;
           status?: Database["public"]["Enums"]["suggestion_status"];
           title: string;
+          title_tr?: string | null;
           updated_at?: string;
           upvotes_count?: number;
           user_id?: string | null;
@@ -1050,10 +1910,12 @@ export type Database = {
           comments_count?: number;
           created_at?: string;
           description?: string;
+          description_tr?: string | null;
           id?: string;
           is_anonymous?: boolean;
           status?: Database["public"]["Enums"]["suggestion_status"];
           title?: string;
+          title_tr?: string | null;
           updated_at?: string;
           upvotes_count?: number;
           user_id?: string | null;
@@ -1156,7 +2018,21 @@ export type Database = {
             foreignKeyName: "takedown_requests_incident_id_fkey";
             columns: ["incident_id"];
             isOneToOne: false;
+            referencedRelation: "feed_incidents";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "takedown_requests_incident_id_fkey";
+            columns: ["incident_id"];
+            isOneToOne: false;
             referencedRelation: "incidents";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "takedown_requests_incident_id_fkey";
+            columns: ["incident_id"];
+            isOneToOne: false;
+            referencedRelation: "incidents_localized";
             referencedColumns: ["id"];
           },
           {
@@ -1202,417 +2078,26 @@ export type Database = {
         };
         Relationships: [];
       };
-      users: {
-        Row: {
-          avatar_url: string | null;
-          badges: string[];
-          bio: string | null;
-          created_at: string;
-          email: string;
-          full_name: string | null;
-          id: string;
-          is_verified: boolean;
-          locale: string;
-          reputation_score: number;
-          role: Database["public"]["Enums"]["user_role"];
-          updated_at: string;
-          username: string | null;
-        };
-        Insert: {
-          avatar_url?: string | null;
-          badges?: string[];
-          bio?: string | null;
-          created_at?: string;
-          email: string;
-          full_name?: string | null;
-          id: string;
-          is_verified?: boolean;
-          locale?: string;
-          reputation_score?: number;
-          role?: Database["public"]["Enums"]["user_role"];
-          updated_at?: string;
-          username?: string | null;
-        };
-        Update: {
-          avatar_url?: string | null;
-          badges?: string[];
-          bio?: string | null;
-          created_at?: string;
-          email?: string;
-          full_name?: string | null;
-          id?: string;
-          is_verified?: boolean;
-          locale?: string;
-          reputation_score?: number;
-          role?: Database["public"]["Enums"]["user_role"];
-          updated_at?: string;
-          username?: string | null;
-        };
-        Relationships: [];
-      };
-      strategy_swot_items: {
-        Row: {
-          id: string;
-          category: "strength" | "weakness" | "opportunity" | "threat";
-          title: string;
-          description: string | null;
-          weight: "low" | "medium" | "high";
-          owner_user_id: string | null;
-          action_plan: string | null;
-          target_date: string | null;
-          status: "active" | "done" | "archived";
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          category: "strength" | "weakness" | "opportunity" | "threat";
-          title: string;
-          description?: string | null;
-          weight?: "low" | "medium" | "high";
-          owner_user_id?: string | null;
-          action_plan?: string | null;
-          target_date?: string | null;
-          status?: "active" | "done" | "archived";
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          category?: "strength" | "weakness" | "opportunity" | "threat";
-          title?: string;
-          description?: string | null;
-          weight?: "low" | "medium" | "high";
-          owner_user_id?: string | null;
-          action_plan?: string | null;
-          target_date?: string | null;
-          status?: "active" | "done" | "archived";
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "strategy_swot_items_owner_user_id_fkey";
-            columns: ["owner_user_id"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      strategy_risks: {
-        Row: {
-          id: string;
-          code: string;
-          title: string;
-          description: string | null;
-          probability: number;
-          impact: number;
-          owner_user_id: string | null;
-          mitigation_plan: string | null;
-          target_date: string | null;
-          status: "active" | "mitigated" | "triggered" | "closed";
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          code: string;
-          title: string;
-          description?: string | null;
-          probability: number;
-          impact: number;
-          owner_user_id?: string | null;
-          mitigation_plan?: string | null;
-          target_date?: string | null;
-          status?: "active" | "mitigated" | "triggered" | "closed";
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          code?: string;
-          title?: string;
-          description?: string | null;
-          probability?: number;
-          impact?: number;
-          owner_user_id?: string | null;
-          mitigation_plan?: string | null;
-          target_date?: string | null;
-          status?: "active" | "mitigated" | "triggered" | "closed";
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "strategy_risks_owner_user_id_fkey";
-            columns: ["owner_user_id"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      strategy_valuations: {
-        Row: {
-          id: string;
-          method: "berkus" | "scorecard" | "vc" | "average";
-          inputs: Json;
-          result_pre_money: number;
-          notes: string | null;
-          snapshot_date: string;
-          created_by: string | null;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          method: "berkus" | "scorecard" | "vc" | "average";
-          inputs?: Json;
-          result_pre_money: number;
-          notes?: string | null;
-          snapshot_date?: string;
-          created_by?: string | null;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          method?: "berkus" | "scorecard" | "vc" | "average";
-          inputs?: Json;
-          result_pre_money?: number;
-          notes?: string | null;
-          snapshot_date?: string;
-          created_by?: string | null;
-          created_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "strategy_valuations_created_by_fkey";
-            columns: ["created_by"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      strategy_milestones: {
-        Row: {
-          id: string;
-          quarter: string;
-          title: string;
-          okr_text: string | null;
-          progress: number;
-          status: "planned" | "in_progress" | "done" | "missed";
-          linked_metric: string | null;
-          owner_user_id: string | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          quarter: string;
-          title: string;
-          okr_text?: string | null;
-          progress?: number;
-          status?: "planned" | "in_progress" | "done" | "missed";
-          linked_metric?: string | null;
-          owner_user_id?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          quarter?: string;
-          title?: string;
-          okr_text?: string | null;
-          progress?: number;
-          status?: "planned" | "in_progress" | "done" | "missed";
-          linked_metric?: string | null;
-          owner_user_id?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "strategy_milestones_owner_user_id_fkey";
-            columns: ["owner_user_id"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      strategy_metrics_snapshots: {
-        Row: {
-          id: string;
-          snapshot_date: string;
-          total_users: number;
-          total_incidents: number;
-          active_providers: number;
-          media_mentions_count: number;
-          mrr_cents: number;
-          runway_months: number | null;
-          health_score: number;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          snapshot_date?: string;
-          total_users?: number;
-          total_incidents?: number;
-          active_providers?: number;
-          media_mentions_count?: number;
-          mrr_cents?: number;
-          runway_months?: number | null;
-          health_score?: number;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          snapshot_date?: string;
-          total_users?: number;
-          total_incidents?: number;
-          active_providers?: number;
-          media_mentions_count?: number;
-          mrr_cents?: number;
-          runway_months?: number | null;
-          health_score?: number;
-          created_at?: string;
-        };
-        Relationships: [];
-      };
-      bug_bounties: {
-        Row: {
-          id: string;
-          incident_id: string;
-          reporter_id: string;
-          provider_id: string | null;
-          status: string;
-          severity_score: number;
-          estimated_reward_cents: number | null;
-          actual_reward_cents: number | null;
-          badge_awarded: boolean;
-          notes: string | null;
-          validated_by: string | null;
-          validated_at: string | null;
-          paid_at: string | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          incident_id: string;
-          reporter_id: string;
-          provider_id?: string | null;
-          status?: string;
-          severity_score?: number;
-          estimated_reward_cents?: number | null;
-          actual_reward_cents?: number | null;
-          badge_awarded?: boolean;
-          notes?: string | null;
-          validated_by?: string | null;
-          validated_at?: string | null;
-          paid_at?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          incident_id?: string;
-          reporter_id?: string;
-          provider_id?: string | null;
-          status?: string;
-          severity_score?: number;
-          estimated_reward_cents?: number | null;
-          actual_reward_cents?: number | null;
-          badge_awarded?: boolean;
-          notes?: string | null;
-          validated_by?: string | null;
-          validated_at?: string | null;
-          paid_at?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "bug_bounties_incident_id_fkey";
-            columns: ["incident_id"];
-            isOneToOne: false;
-            referencedRelation: "incidents";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "bug_bounties_reporter_id_fkey";
-            columns: ["reporter_id"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "bug_bounties_provider_id_fkey";
-            columns: ["provider_id"];
-            isOneToOne: false;
-            referencedRelation: "ai_providers";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      bounty_badges: {
-        Row: {
-          code: string;
-          name_en: string;
-          name_tr: string;
-          description_en: string;
-          description_tr: string;
-          icon: string;
-          threshold_count: number;
-        };
-        Insert: {
-          code: string;
-          name_en: string;
-          name_tr: string;
-          description_en: string;
-          description_tr: string;
-          icon: string;
-          threshold_count?: number;
-        };
-        Update: {
-          code?: string;
-          name_en?: string;
-          name_tr?: string;
-          description_en?: string;
-          description_tr?: string;
-          icon?: string;
-          threshold_count?: number;
-        };
-        Relationships: [];
-      };
       user_bounty_badges: {
         Row: {
-          user_id: string;
-          badge_code: string;
           awarded_at: string;
+          badge_code: string;
           bounty_id: string | null;
+          user_id: string;
         };
         Insert: {
-          user_id: string;
-          badge_code: string;
           awarded_at?: string;
+          badge_code: string;
           bounty_id?: string | null;
+          user_id: string;
         };
         Update: {
-          user_id?: string;
-          badge_code?: string;
           awarded_at?: string;
+          badge_code?: string;
           bounty_id?: string | null;
+          user_id?: string;
         };
         Relationships: [
-          {
-            foreignKeyName: "user_bounty_badges_user_id_fkey";
-            columns: ["user_id"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
           {
             foreignKeyName: "user_bounty_badges_badge_code_fkey";
             columns: ["badge_code"];
@@ -1627,49 +2112,623 @@ export type Database = {
             referencedRelation: "bug_bounties";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "user_bounty_badges_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
         ];
       };
-    };
-    Views: {
-      provider_leaderboard: {
+      user_provider_watches: {
         Row: {
-          id: string | null;
-          slug: string | null;
-          name: string | null;
-          logo_url: string | null;
-          is_verified: boolean | null;
-          website_url: string | null;
-          trust_score: number | null;
-          incident_count: number | null;
-          response_count: number | null;
+          created_at: string;
+          provider_id: string;
+          user_id: string;
         };
         Insert: {
-          id?: string | null;
-          slug?: string | null;
-          name?: string | null;
-          logo_url?: string | null;
-          is_verified?: boolean | null;
-          website_url?: string | null;
-          trust_score?: number | null;
-          incident_count?: number | null;
-          response_count?: number | null;
+          created_at?: string;
+          provider_id: string;
+          user_id: string;
         };
         Update: {
-          id?: string | null;
-          slug?: string | null;
-          name?: string | null;
-          logo_url?: string | null;
-          is_verified?: boolean | null;
-          website_url?: string | null;
-          trust_score?: number | null;
-          incident_count?: number | null;
-          response_count?: number | null;
+          created_at?: string;
+          provider_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_provider_watches_provider_id_fkey";
+            columns: ["provider_id"];
+            isOneToOne: false;
+            referencedRelation: "ai_providers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_provider_watches_provider_id_fkey";
+            columns: ["provider_id"];
+            isOneToOne: false;
+            referencedRelation: "provider_leaderboard";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_provider_watches_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      users: {
+        Row: {
+          avatar_url: string | null;
+          badges: string[];
+          bio: string | null;
+          community_role: string | null;
+          created_at: string;
+          email: string;
+          full_name: string | null;
+          id: string;
+          interests: string[];
+          is_verified: boolean;
+          locale: string;
+          reputation_score: number;
+          role: Database["public"]["Enums"]["user_role"];
+          updated_at: string;
+          username: string | null;
+        };
+        Insert: {
+          avatar_url?: string | null;
+          badges?: string[];
+          bio?: string | null;
+          community_role?: string | null;
+          created_at?: string;
+          email: string;
+          full_name?: string | null;
+          id: string;
+          interests?: string[];
+          is_verified?: boolean;
+          locale?: string;
+          reputation_score?: number;
+          role?: Database["public"]["Enums"]["user_role"];
+          updated_at?: string;
+          username?: string | null;
+        };
+        Update: {
+          avatar_url?: string | null;
+          badges?: string[];
+          bio?: string | null;
+          community_role?: string | null;
+          created_at?: string;
+          email?: string;
+          full_name?: string | null;
+          id?: string;
+          interests?: string[];
+          is_verified?: boolean;
+          locale?: string;
+          reputation_score?: number;
+          role?: Database["public"]["Enums"]["user_role"];
+          updated_at?: string;
+          username?: string | null;
+        };
+        Relationships: [];
+      };
+      whistleblower_submissions: {
+        Row: {
+          category: string;
+          encrypted_content: string;
+          id: string;
+          provider_hint: string | null;
+          status: string;
+          submitted_at: string;
+        };
+        Insert: {
+          category: string;
+          encrypted_content: string;
+          id?: string;
+          provider_hint?: string | null;
+          status?: string;
+          submitted_at?: string;
+        };
+        Update: {
+          category?: string;
+          encrypted_content?: string;
+          id?: string;
+          provider_hint?: string | null;
+          status?: string;
+          submitted_at?: string;
         };
         Relationships: [];
       };
     };
+    Views: {
+      feed_incidents: {
+        Row: {
+          affected_users_count: number | null;
+          ai_model_id: string | null;
+          ai_moderation_reason: string | null;
+          ai_moderation_score: number | null;
+          ai_provider_id: string | null;
+          category: Database["public"]["Enums"]["incident_category"] | null;
+          comments_count: number | null;
+          contains_pii: boolean | null;
+          created_at: string | null;
+          cross_audit_completed_at: string | null;
+          cross_audit_confidence: number | null;
+          cross_audit_model: string | null;
+          cross_audit_reasoning: string | null;
+          cross_audit_triage_models: string[] | null;
+          cross_audit_truth_score: number | null;
+          description: string | null;
+          description_masked: string | null;
+          description_tr: string | null;
+          feed_score: number | null;
+          id: string | null;
+          incident_date: string | null;
+          ip_hash: string | null;
+          is_anonymous: boolean | null;
+          language: string | null;
+          location_country: string | null;
+          model_custom_name: string | null;
+          moderated_at: string | null;
+          moderation_note: string | null;
+          moderator_id: string | null;
+          moderator_notes: string | null;
+          pii_categories: string[] | null;
+          provider_custom_name: string | null;
+          published_at: string | null;
+          reviewed_at: string | null;
+          search_vector: unknown;
+          severity: Database["public"]["Enums"]["incident_severity"] | null;
+          shares_count: number | null;
+          source_url: string | null;
+          status: Database["public"]["Enums"]["incident_status"] | null;
+          title: string | null;
+          title_masked: string | null;
+          title_tr: string | null;
+          updated_at: string | null;
+          upvotes_count: number | null;
+          user_agent: string | null;
+          user_id: string | null;
+          views_count: number | null;
+        };
+        Insert: {
+          affected_users_count?: number | null;
+          ai_model_id?: string | null;
+          ai_moderation_reason?: string | null;
+          ai_moderation_score?: number | null;
+          ai_provider_id?: string | null;
+          category?: Database["public"]["Enums"]["incident_category"] | null;
+          comments_count?: number | null;
+          contains_pii?: boolean | null;
+          created_at?: string | null;
+          cross_audit_completed_at?: string | null;
+          cross_audit_confidence?: number | null;
+          cross_audit_model?: string | null;
+          cross_audit_reasoning?: string | null;
+          cross_audit_triage_models?: string[] | null;
+          cross_audit_truth_score?: number | null;
+          description?: string | null;
+          description_masked?: string | null;
+          description_tr?: string | null;
+          feed_score?: never;
+          id?: string | null;
+          incident_date?: string | null;
+          ip_hash?: string | null;
+          is_anonymous?: boolean | null;
+          language?: string | null;
+          location_country?: string | null;
+          model_custom_name?: string | null;
+          moderated_at?: string | null;
+          moderation_note?: string | null;
+          moderator_id?: string | null;
+          moderator_notes?: string | null;
+          pii_categories?: string[] | null;
+          provider_custom_name?: string | null;
+          published_at?: string | null;
+          reviewed_at?: string | null;
+          search_vector?: unknown;
+          severity?: Database["public"]["Enums"]["incident_severity"] | null;
+          shares_count?: number | null;
+          source_url?: string | null;
+          status?: Database["public"]["Enums"]["incident_status"] | null;
+          title?: string | null;
+          title_masked?: string | null;
+          title_tr?: string | null;
+          updated_at?: string | null;
+          upvotes_count?: number | null;
+          user_agent?: string | null;
+          user_id?: string | null;
+          views_count?: number | null;
+        };
+        Update: {
+          affected_users_count?: number | null;
+          ai_model_id?: string | null;
+          ai_moderation_reason?: string | null;
+          ai_moderation_score?: number | null;
+          ai_provider_id?: string | null;
+          category?: Database["public"]["Enums"]["incident_category"] | null;
+          comments_count?: number | null;
+          contains_pii?: boolean | null;
+          created_at?: string | null;
+          cross_audit_completed_at?: string | null;
+          cross_audit_confidence?: number | null;
+          cross_audit_model?: string | null;
+          cross_audit_reasoning?: string | null;
+          cross_audit_triage_models?: string[] | null;
+          cross_audit_truth_score?: number | null;
+          description?: string | null;
+          description_masked?: string | null;
+          description_tr?: string | null;
+          feed_score?: never;
+          id?: string | null;
+          incident_date?: string | null;
+          ip_hash?: string | null;
+          is_anonymous?: boolean | null;
+          language?: string | null;
+          location_country?: string | null;
+          model_custom_name?: string | null;
+          moderated_at?: string | null;
+          moderation_note?: string | null;
+          moderator_id?: string | null;
+          moderator_notes?: string | null;
+          pii_categories?: string[] | null;
+          provider_custom_name?: string | null;
+          published_at?: string | null;
+          reviewed_at?: string | null;
+          search_vector?: unknown;
+          severity?: Database["public"]["Enums"]["incident_severity"] | null;
+          shares_count?: number | null;
+          source_url?: string | null;
+          status?: Database["public"]["Enums"]["incident_status"] | null;
+          title?: string | null;
+          title_masked?: string | null;
+          title_tr?: string | null;
+          updated_at?: string | null;
+          upvotes_count?: number | null;
+          user_agent?: string | null;
+          user_id?: string | null;
+          views_count?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "incidents_ai_model_id_fkey";
+            columns: ["ai_model_id"];
+            isOneToOne: false;
+            referencedRelation: "ai_models";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "incidents_ai_provider_id_fkey";
+            columns: ["ai_provider_id"];
+            isOneToOne: false;
+            referencedRelation: "ai_providers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "incidents_ai_provider_id_fkey";
+            columns: ["ai_provider_id"];
+            isOneToOne: false;
+            referencedRelation: "provider_leaderboard";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "incidents_moderator_id_fkey";
+            columns: ["moderator_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "incidents_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      incidents_localized: {
+        Row: {
+          affected_users_count: number | null;
+          ai_model_id: string | null;
+          ai_moderation_reason: string | null;
+          ai_moderation_score: number | null;
+          ai_provider_id: string | null;
+          category: Database["public"]["Enums"]["incident_category"] | null;
+          comments_count: number | null;
+          contains_pii: boolean | null;
+          created_at: string | null;
+          cross_audit_completed_at: string | null;
+          cross_audit_confidence: number | null;
+          cross_audit_model: string | null;
+          cross_audit_reasoning: string | null;
+          cross_audit_triage_models: string[] | null;
+          cross_audit_truth_score: number | null;
+          description: string | null;
+          description_display: string | null;
+          description_masked: string | null;
+          description_tr: string | null;
+          eu_act_data_privacy_score: number | null;
+          eu_act_non_discrimination_score: number | null;
+          eu_act_risk_category: string | null;
+          eu_act_transparency_score: number | null;
+          id: string | null;
+          import_attribution: string | null;
+          import_external_id: string | null;
+          incident_date: string | null;
+          incident_source: string | null;
+          ip_hash: string | null;
+          is_anonymous: boolean | null;
+          language: string | null;
+          location_country: string | null;
+          model_custom_name: string | null;
+          moderated_at: string | null;
+          moderation_note: string | null;
+          moderator_id: string | null;
+          moderator_notes: string | null;
+          pii_categories: string[] | null;
+          provider_custom_name: string | null;
+          published_at: string | null;
+          reviewed_at: string | null;
+          search_vector: unknown;
+          severity: Database["public"]["Enums"]["incident_severity"] | null;
+          shares_count: number | null;
+          source_url: string | null;
+          status: Database["public"]["Enums"]["incident_status"] | null;
+          title: string | null;
+          title_display: string | null;
+          title_masked: string | null;
+          title_tr: string | null;
+          updated_at: string | null;
+          upvotes_count: number | null;
+          user_agent: string | null;
+          user_id: string | null;
+          views_count: number | null;
+        };
+        Insert: {
+          affected_users_count?: number | null;
+          ai_model_id?: string | null;
+          ai_moderation_reason?: string | null;
+          ai_moderation_score?: number | null;
+          ai_provider_id?: string | null;
+          category?: Database["public"]["Enums"]["incident_category"] | null;
+          comments_count?: number | null;
+          contains_pii?: boolean | null;
+          created_at?: string | null;
+          cross_audit_completed_at?: string | null;
+          cross_audit_confidence?: number | null;
+          cross_audit_model?: string | null;
+          cross_audit_reasoning?: string | null;
+          cross_audit_triage_models?: string[] | null;
+          cross_audit_truth_score?: number | null;
+          description?: string | null;
+          description_display?: never;
+          description_masked?: string | null;
+          description_tr?: string | null;
+          eu_act_data_privacy_score?: number | null;
+          eu_act_non_discrimination_score?: number | null;
+          eu_act_risk_category?: string | null;
+          eu_act_transparency_score?: number | null;
+          id?: string | null;
+          import_attribution?: string | null;
+          import_external_id?: string | null;
+          incident_date?: string | null;
+          incident_source?: string | null;
+          ip_hash?: string | null;
+          is_anonymous?: boolean | null;
+          language?: string | null;
+          location_country?: string | null;
+          model_custom_name?: string | null;
+          moderated_at?: string | null;
+          moderation_note?: string | null;
+          moderator_id?: string | null;
+          moderator_notes?: string | null;
+          pii_categories?: string[] | null;
+          provider_custom_name?: string | null;
+          published_at?: string | null;
+          reviewed_at?: string | null;
+          search_vector?: unknown;
+          severity?: Database["public"]["Enums"]["incident_severity"] | null;
+          shares_count?: number | null;
+          source_url?: string | null;
+          status?: Database["public"]["Enums"]["incident_status"] | null;
+          title?: string | null;
+          title_display?: never;
+          title_masked?: string | null;
+          title_tr?: string | null;
+          updated_at?: string | null;
+          upvotes_count?: number | null;
+          user_agent?: string | null;
+          user_id?: string | null;
+          views_count?: number | null;
+        };
+        Update: {
+          affected_users_count?: number | null;
+          ai_model_id?: string | null;
+          ai_moderation_reason?: string | null;
+          ai_moderation_score?: number | null;
+          ai_provider_id?: string | null;
+          category?: Database["public"]["Enums"]["incident_category"] | null;
+          comments_count?: number | null;
+          contains_pii?: boolean | null;
+          created_at?: string | null;
+          cross_audit_completed_at?: string | null;
+          cross_audit_confidence?: number | null;
+          cross_audit_model?: string | null;
+          cross_audit_reasoning?: string | null;
+          cross_audit_triage_models?: string[] | null;
+          cross_audit_truth_score?: number | null;
+          description?: string | null;
+          description_display?: never;
+          description_masked?: string | null;
+          description_tr?: string | null;
+          eu_act_data_privacy_score?: number | null;
+          eu_act_non_discrimination_score?: number | null;
+          eu_act_risk_category?: string | null;
+          eu_act_transparency_score?: number | null;
+          id?: string | null;
+          import_attribution?: string | null;
+          import_external_id?: string | null;
+          incident_date?: string | null;
+          incident_source?: string | null;
+          ip_hash?: string | null;
+          is_anonymous?: boolean | null;
+          language?: string | null;
+          location_country?: string | null;
+          model_custom_name?: string | null;
+          moderated_at?: string | null;
+          moderation_note?: string | null;
+          moderator_id?: string | null;
+          moderator_notes?: string | null;
+          pii_categories?: string[] | null;
+          provider_custom_name?: string | null;
+          published_at?: string | null;
+          reviewed_at?: string | null;
+          search_vector?: unknown;
+          severity?: Database["public"]["Enums"]["incident_severity"] | null;
+          shares_count?: number | null;
+          source_url?: string | null;
+          status?: Database["public"]["Enums"]["incident_status"] | null;
+          title?: string | null;
+          title_display?: never;
+          title_masked?: string | null;
+          title_tr?: string | null;
+          updated_at?: string | null;
+          upvotes_count?: number | null;
+          user_agent?: string | null;
+          user_id?: string | null;
+          views_count?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "incidents_ai_model_id_fkey";
+            columns: ["ai_model_id"];
+            isOneToOne: false;
+            referencedRelation: "ai_models";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "incidents_ai_provider_id_fkey";
+            columns: ["ai_provider_id"];
+            isOneToOne: false;
+            referencedRelation: "ai_providers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "incidents_ai_provider_id_fkey";
+            columns: ["ai_provider_id"];
+            isOneToOne: false;
+            referencedRelation: "provider_leaderboard";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "incidents_moderator_id_fkey";
+            columns: ["moderator_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "incidents_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      provider_leaderboard: {
+        Row: {
+          id: string | null;
+          incident_count: number | null;
+          is_verified: boolean | null;
+          logo_url: string | null;
+          name: string | null;
+          response_count: number | null;
+          slug: string | null;
+          trust_score: number | null;
+          website_url: string | null;
+        };
+        Relationships: [];
+      };
+      suggestions_localized: {
+        Row: {
+          category: string | null;
+          comments_count: number | null;
+          created_at: string | null;
+          description: string | null;
+          description_display: string | null;
+          description_tr: string | null;
+          id: string | null;
+          is_anonymous: boolean | null;
+          status: Database["public"]["Enums"]["suggestion_status"] | null;
+          title: string | null;
+          title_display: string | null;
+          title_tr: string | null;
+          updated_at: string | null;
+          upvotes_count: number | null;
+          user_id: string | null;
+        };
+        Insert: {
+          category?: string | null;
+          comments_count?: number | null;
+          created_at?: string | null;
+          description?: string | null;
+          description_display?: never;
+          description_tr?: string | null;
+          id?: string | null;
+          is_anonymous?: boolean | null;
+          status?: Database["public"]["Enums"]["suggestion_status"] | null;
+          title?: string | null;
+          title_display?: never;
+          title_tr?: string | null;
+          updated_at?: string | null;
+          upvotes_count?: number | null;
+          user_id?: string | null;
+        };
+        Update: {
+          category?: string | null;
+          comments_count?: number | null;
+          created_at?: string | null;
+          description?: string | null;
+          description_display?: never;
+          description_tr?: string | null;
+          id?: string | null;
+          is_anonymous?: boolean | null;
+          status?: Database["public"]["Enums"]["suggestion_status"] | null;
+          title?: string | null;
+          title_display?: never;
+          title_tr?: string | null;
+          updated_at?: string | null;
+          upvotes_count?: number | null;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "suggestions_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+    };
     Functions: {
+      increment_incident_views: {
+        Args: { p_incident_id: string };
+        Returns: undefined;
+      };
+      increment_poll_count: {
+        Args: { p_choice: string; p_poll_id: string };
+        Returns: undefined;
+      };
       is_admin: { Args: { uid: string }; Returns: boolean };
+      is_advisor: { Args: { uid: string }; Returns: boolean };
+      is_ceo: { Args: { uid: string }; Returns: boolean };
       is_moderator: { Args: { uid: string }; Returns: boolean };
       normalize_takedown_status: {
         Args: { s: string };
@@ -1825,6 +2884,9 @@ export type CompositeTypes<
     : never;
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       evidence_kind: ["screenshot", "video", "document", "url", "transcript", "other"],

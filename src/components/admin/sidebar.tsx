@@ -66,6 +66,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
             icon: Download,
             active: pathname.startsWith("/admin/import"),
           },
+          {
+            href: "/admin/investors",
+            label: "Investor Applications",
+            icon: TrendingUp,
+            active: pathname.startsWith("/admin/investors"),
+          },
         ]
       : []),
     {

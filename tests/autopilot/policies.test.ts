@@ -16,6 +16,7 @@ import {
   weeklyReportPolicy,
   weeklyPollPolicy,
   submitWhistleblowerPolicy,
+  submitInvestorPolicy,
   policies,
   isAutopilotPolicyName,
   getPolicy,
@@ -24,8 +25,8 @@ import {
 } from "@/lib/autopilot/policies";
 
 describe("autopilot policies", () => {
-  it("exposes 16 named policies", () => {
-    expect(policyNames().length).toBe(16);
+  it("exposes 17 named policies", () => {
+    expect(policyNames().length).toBe(17);
   });
 
   it("each policy has a unique action", () => {
@@ -122,5 +123,10 @@ describe("autopilot policies", () => {
   it("submitWhistleblowerPolicy has standard config", () => {
     expect(submitWhistleblowerPolicy.config.action).toBe("submitWhistleblower");
     expect(submitWhistleblowerPolicy.config.onExhaust).toBe("toast_warn");
+  });
+
+  it("submitInvestorPolicy has standard config", () => {
+    expect(submitInvestorPolicy.config.action).toBe("submitInvestor");
+    expect(submitInvestorPolicy.config.onExhaust).toBe("toast_warn");
   });
 });

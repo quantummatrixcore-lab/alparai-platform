@@ -198,6 +198,18 @@ export const submitWhistleblowerPolicy: AutopilotPolicy = {
   },
 };
 
+export const submitInvestorPolicy: AutopilotPolicy = {
+  config: {
+    action: "submitInvestor",
+    retry: { ...DEFAULT_RETRY, attempts: 3, baseMs: 500, maxMs: 4_000 },
+    breaker: { ...DEFAULT_BREAKER, threshold: 12, cooldownMs: 30_000 },
+    budget: { maxMs: 6_000, maxTokens: 800 },
+    idempotency: { ...DEFAULT_IDEMPOTENCY, enabled: true, hashInputs: true },
+    onExhaust: "toast_warn",
+    redactionFields: ["password", "token", "secret", "api_key", "email"],
+  },
+};
+
 export const policies = {
   submitIncident: submitIncidentPolicy,
   submitContact: submitContactPolicy,
@@ -215,6 +227,7 @@ export const policies = {
   weeklyReport: weeklyReportPolicy,
   weeklyPoll: weeklyPollPolicy,
   submitWhistleblower: submitWhistleblowerPolicy,
+  submitInvestor: submitInvestorPolicy,
 } as const;
 
 export type AutopilotPolicyName = keyof typeof policies;

@@ -206,3 +206,25 @@ export const newsletterSubscriptionSchema = z.object({
 });
 
 export type NewsletterSubscriptionInput = z.infer<typeof newsletterSubscriptionSchema>;
+
+// =============================================================================
+// Investor Application
+// =============================================================================
+export const investorApplicationSchema = z.object({
+  fullName: z.string().min(2, "Full name must be at least 2 characters").max(100),
+  title: z.string().min(2, "Title/role must be at least 2 characters").max(150),
+  company: z.string().min(2, "Company/fund must be at least 2 characters").max(150),
+  linkedinUrl: z
+    .string()
+    .url("Must be a valid URL")
+    .regex(/linkedin\.com/, "Must be a valid LinkedIn URL"),
+  email: z.string().email("Must be a valid email address"),
+  checkSize: z.string().min(1, "Typical check size must be selected"),
+  whyInterested: z
+    .string()
+    .max(500, "Why interested must be at most 500 characters")
+    .optional()
+    .nullable(),
+});
+
+export type InvestorApplicationInput = z.infer<typeof investorApplicationSchema>;

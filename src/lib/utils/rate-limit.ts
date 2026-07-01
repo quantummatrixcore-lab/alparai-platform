@@ -22,6 +22,7 @@ export const RATE_LIMIT_KEYS = {
   incident_affected: "ratelimit:incident_affected",
   onboarding: "ratelimit:onboarding",
   expert_application: "ratelimit:expert_application",
+  investor_application: "ratelimit:investor_application",
   provider_response: "ratelimit:provider_response",
 } as const;
 
@@ -146,6 +147,12 @@ function getLimiters(): Record<string, Ratelimit> {
       prefix: "alpar",
     }),
     [RATE_LIMIT_KEYS.expert_application]: new Ratelimit({
+      redis: _redis,
+      limiter: Ratelimit.slidingWindow(5, "1 h"),
+      analytics: true,
+      prefix: "alpar",
+    }),
+    [RATE_LIMIT_KEYS.investor_application]: new Ratelimit({
       redis: _redis,
       limiter: Ratelimit.slidingWindow(5, "1 h"),
       analytics: true,
