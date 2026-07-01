@@ -6,7 +6,7 @@ import { useFormStatus } from "react-dom";
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Send, CheckCircle2 } from "lucide-react";
@@ -74,30 +74,54 @@ export function ExpertsForm() {
           error={state.fieldErrors?.name?.[0]}
         />
         <Input
-          name="titleInstitution"
-          label={t("form_title_institution")}
+          name="email"
+          type="email"
+          label={t("form_email")}
           required
-          minLength={2}
-          maxLength={200}
-          error={state.fieldErrors?.titleInstitution?.[0]}
+          error={state.fieldErrors?.email?.[0]}
         />
       </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Input
+          name="title"
+          label={t("form_title")}
+          required
+          minLength={2}
+          maxLength={100}
+          error={state.fieldErrors?.title?.[0]}
+        />
+        <Input
+          name="institution"
+          label={t("form_institution")}
+          required
+          minLength={2}
+          maxLength={100}
+          error={state.fieldErrors?.institution?.[0]}
+        />
+      </div>
+      <Select
+        name="expertiseArea"
+        label={t("form_expertise")}
+        required
+        placeholder={t("form_expertise_placeholder")}
+        defaultValue=""
+        options={[
+          { value: "legal", label: "Legal & Policy" },
+          { value: "medical", label: "Medical & Clinical" },
+          { value: "cybersecurity", label: "Cybersecurity" },
+          { value: "research", label: "Academic Research" },
+          { value: "ethics", label: "Ethics & Philosophy" },
+          { value: "policy", label: "Policy & Governance" },
+          { value: "other", label: "Other" },
+        ]}
+        error={state.fieldErrors?.expertiseArea?.[0]}
+      />
       <Input
         name="linkedinUrl"
         type="url"
         label={t("form_linkedin")}
-        required
         error={state.fieldErrors?.linkedinUrl?.[0]}
         placeholder="https://linkedin.com/in/username"
-      />
-      <Textarea
-        name="expertise"
-        label={t("form_expertise")}
-        required
-        minLength={5}
-        maxLength={500}
-        error={state.fieldErrors?.expertise?.[0]}
-        rows={4}
       />
       <div className="pt-2">
         <SubmitBtn>{t("form_submit")}</SubmitBtn>
