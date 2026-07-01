@@ -24,6 +24,14 @@ lerna-debug.log*
 .env
 .env.local
 .env.*.local
+.env.production
+.env.development
+.env.staging
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
 
 # vercel
 .vercel
@@ -67,3 +75,6 @@ graph.json
 graph.html
 GRAPH_REPORT.md
 graphify-out/
+
+# private engine package (submodule — not for public repo)
+src/engine/

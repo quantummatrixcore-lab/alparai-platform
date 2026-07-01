@@ -49,10 +49,10 @@ ALPAR is a public, independent, verifiable record of how AI systems behave in th
 ## Quickstart
 
 ```bash
-git clone https://github.com/quantummatrixcore-lab/sikayetvar
-cd sikayetvar
+git clone https://github.com/quantummatrixcore-lab/Alparai.com
+cd Alparai.com
 cp .env.example .env.local
-# fill in Supabase, Resend, Upstash, etc.
+# fill in Supabase, Resend, Upstash, etc. — see CONTRIBUTING.md
 pnpm install
 pnpm db:reset      # apply Supabase migrations
 pnpm dev           # http://localhost:3000
@@ -95,6 +95,12 @@ src/
 │   │   ├── leaderboard/       # AI provider ranking
 │   │   ├── suggestions/       # Feature requests
 │   │   ├── legal/             # Privacy, Terms, Takedown, Cookies
+│   │   ├── pricing/           # Pricing tiers
+│   │   ├── security/          # Security & compliance
+│   │   ├── dmca/              # DMCA policy
+│   │   ├── moderation/        # Moderation policy
+│   │   ├── blog/              # Blog + articles
+│   │   ├── academy/           # Expert application
 │   │   ├── admin/             # Moderator panel
 │   │   ├── auth/              # Sign-in + OAuth callback
 │   │   ├── profile/           # User profile
@@ -177,6 +183,16 @@ We operate as an **intermediary platform** in line with:
 
 We do not pre-moderate submissions (except automated PII scanning). Liability for the accuracy of submissions rests with the user. See [Terms](./src/app/[locale]/legal/terms/page.tsx) and [Takedown Policy](./src/app/[locale]/legal/takedown/page.tsx).
 
+## Open Source
+
+ALPAR AI is open source under **AGPL-3.0**.
+
+**What's open:** Frontend, data schema, validation pipeline, GDPR/KVKK compliance code, and the full incident lifecycle — because "we're transparent" requires proof, not promises.
+
+**What's closed:** The moderation engine and spam detection layer — making these public would let bad actors reverse-engineer bypass methods. This is the same approach taken by AIID and most accountability platforms.
+
+> AGPL-3.0 means: if you run a hosted instance or fork this, you must release your changes under the same license. Commercial licensing available — contact [hello@alparai.com](mailto:hello@alparai.com).
+
 ## Contributing
 
 We welcome contributions. See [CONTRIBUTING.md](./CONTRIBUTING.md).
@@ -187,4 +203,4 @@ We welcome contributions. See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ---
 
-Made with care for the AI era. · `alparai.online`
+Made with care for the AI era. · [alparai.com](https://alparai.com)
