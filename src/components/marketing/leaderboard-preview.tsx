@@ -71,7 +71,7 @@ export function LeaderboardPreview({ entries }: { entries: LeaderboardEntry[] })
                   </span>
                   <div className="min-w-0 flex-1">
                     <Link
-                      href={`/brand/${e.provider_slug}`}
+                      href={`/press-kit/${e.provider_slug}`}
                       className="text-fg-primary hover:text-brand-400 block truncate text-sm font-semibold"
                     >
                       {e.provider_name}

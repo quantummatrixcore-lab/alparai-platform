@@ -23,7 +23,7 @@ export default async function BrandOG({
   if (!provider) {
     return new ImageResponse(
       <div style={{ width: "100%", height: "100%", display: "flex", background: "#0a0f1e" }} />,
-      { ...size }
+      { ...size },
     );
   }
 
@@ -112,6 +112,6 @@ export default async function BrandOG({
         <span style={{ fontSize: 20, fontWeight: 600, color: "#06b6d4" }}>alparai.com</span>
       </div>
     </div>,
-    { ...size }
+    { ...size },
   );
 }

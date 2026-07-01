@@ -30,7 +30,7 @@ const navItems: NavItem[] = [
   { href: "/dilemmas", labelKey: "dilemmas", icon: Scale },
   { href: "/blog", labelKey: "blog", icon: BookOpen },
   { href: "/academy", labelKey: "academy", icon: GraduationCap },
-  { href: "/brand", labelKey: "presskit", icon: Award },
+  { href: "/press-kit", labelKey: "presskit", icon: Award },
 ];
 
 export function Nav({

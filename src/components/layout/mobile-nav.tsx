@@ -16,7 +16,7 @@ const links = [
   { href: "/dilemmas", key: "dilemmas" },
   { href: "/blog", key: "blog" },
   { href: "/academy", key: "academy" },
-  { href: "/brand", key: "presskit" },
+  { href: "/press-kit", key: "presskit" },
 ] as const;
 
 export function MobileNav({

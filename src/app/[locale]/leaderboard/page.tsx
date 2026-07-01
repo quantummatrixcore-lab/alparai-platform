@@ -224,7 +224,7 @@ export default async function LeaderboardPage({
                   </span>
                 </div>
                 <Link
-                  href={`/brand/${p.slug}`}
+                  href={`/press-kit/${p.slug}`}
                   className="text-brand-400 hover:text-brand-300 flex items-center gap-1 self-start underline sm:self-auto"
                 >
                   {t("read_all_incidents")} &rarr;
@@ -278,7 +278,7 @@ export default async function LeaderboardPage({
                     </td>
                     <td className="p-4">
                       <Link
-                        href={`/brand/${p.slug}`}
+                        href={`/press-kit/${p.slug}`}
                         className="text-fg-primary hover:text-brand-400 group flex items-center gap-3 font-medium transition-colors"
                       >
                         {p.logo_url ? (

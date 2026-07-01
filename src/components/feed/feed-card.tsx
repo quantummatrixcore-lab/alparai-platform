@@ -130,7 +130,7 @@ export function FeedCard({
               <div>
                 <div className="flex items-center gap-2">
                   <Link
-                    href={`/brand/${incident.provider_slug}`}
+                    href={`/press-kit/${incident.provider_slug}`}
                     className="text-fg-primary hover:text-brand-400 text-sm font-bold transition-colors"
                   >
                     {incident.provider_name}

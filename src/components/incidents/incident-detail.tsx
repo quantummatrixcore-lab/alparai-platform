@@ -302,7 +302,7 @@ export function IncidentDetailView({
               label={tCommon("provider")}
               value={
                 <Link
-                  href={`/brand/${incident.provider_slug}`}
+                  href={`/press-kit/${incident.provider_slug}`}
                   className="text-brand-400 hover:underline"
                 >
                   {incident.provider_name}

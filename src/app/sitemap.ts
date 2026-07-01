@@ -154,7 +154,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   for (const p of (providers as Array<{ slug: string }>) ?? []) {
     for (const locale of locales) {
       base.push({
-        url: `${APP_URL}/${locale}/brand/${p.slug}`,
+        url: `${APP_URL}/${locale}/press-kit/${p.slug}`,
         lastModified: new Date(),
         changeFrequency: "daily",
         priority: 0.7,
