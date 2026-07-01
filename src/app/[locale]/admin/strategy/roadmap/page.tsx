@@ -51,6 +51,94 @@ export default async function RoadmapPage({ params }: { params: Promise<{ locale
           )}
         </div>
 
+        {/* Strategic Scenarios Section */}
+        <div className="mb-10">
+          <h2 className="mb-4 text-lg font-bold text-white">
+            {locale === "tr" ? "Stratejik Yol Haritası Senaryoları" : "Strategic Roadmap Scenarios"}
+          </h2>
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            {/* Scenario A */}
+            <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-purple-500/5 p-5 backdrop-blur-md">
+              <div className="absolute top-0 right-0 rounded-bl-xl border-b border-l border-purple-500/20 bg-purple-500/10 px-3 py-1 text-[10px] font-extrabold tracking-wider text-purple-400 uppercase">
+                {locale === "tr" ? "Senaryo A" : "Scenario A"}
+              </div>
+              <span className="text-[10px] font-extrabold tracking-widest text-purple-400 uppercase">
+                {locale === "tr"
+                  ? "İhbar & Olay Genişletmesi"
+                  : "Whistleblower & Incident Expansion"}
+              </span>
+              <h3 className="mt-1 text-base font-black text-white">
+                {locale === "tr" ? "Küresel YZ Suç Veritabanı" : "Global AI Crime Database"}
+              </h3>
+              <p className="text-fg-secondary mt-3 text-xs leading-relaxed">
+                {locale === "tr"
+                  ? "Yapay zeka sistemlerinin neden olduğu siber suç, manipülasyon ve büyük veri ihlallerini kayıt altına alan ve kamuoyuna duyuran küresel veri havuzu."
+                  : "A global repository documenting and publicizing cybercrime, manipulation, and data breaches caused by artificial intelligence systems."}
+              </p>
+              <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-3">
+                <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
+                  Status
+                </span>
+                <span className="rounded border border-purple-500/20 bg-purple-500/10 px-2 py-0.5 text-[9px] font-black text-purple-400 uppercase">
+                  {locale === "tr" ? "Geliştiriliyor (Faz 2)" : "In Development (Phase 2)"}
+                </span>
+              </div>
+            </div>
+
+            {/* Scenario B */}
+            <div className="relative overflow-hidden rounded-2xl border border-blue-500/20 bg-blue-500/5 p-5 backdrop-blur-md">
+              <div className="absolute top-0 right-0 rounded-bl-xl border-b border-l border-blue-500/20 bg-blue-500/10 px-3 py-1 text-[10px] font-extrabold tracking-wider text-blue-400 uppercase">
+                {locale === "tr" ? "Senaryo B" : "Scenario B"}
+              </div>
+              <span className="text-[10px] font-extrabold tracking-widest text-blue-400 uppercase">
+                {locale === "tr" ? "Sertifikasyon & Karne" : "Certification & Scorecard"}
+              </span>
+              <h3 className="mt-1 text-base font-black text-white">
+                {locale === "tr" ? "Etik Değerlendirme Çerçevesi" : "Ethical Evaluation Framework"}
+              </h3>
+              <p className="text-fg-secondary mt-3 text-xs leading-relaxed">
+                {locale === "tr"
+                  ? "Modellerin şeffaflık, ayrımcılık yapmama ve veri gizliliği kriterlerine göre puanlanması ve AB YZ Yasası (EU AI Act) uyumluluk karnelerinin oluşturulması."
+                  : "Scoring models based on transparency, non-discrimination, and privacy criteria, generating EU AI Act compliance scorecards."}
+              </p>
+              <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-3">
+                <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
+                  Status
+                </span>
+                <span className="rounded border border-blue-500/20 bg-blue-500/10 px-2 py-0.5 text-[9px] font-black text-blue-400 uppercase">
+                  {locale === "tr" ? "Planlanıyor" : "Active Planning"}
+                </span>
+              </div>
+            </div>
+
+            {/* Scenario C */}
+            <div className="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 backdrop-blur-md">
+              <div className="absolute top-0 right-0 rounded-bl-xl border-b border-l border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-[10px] font-extrabold tracking-wider text-emerald-400 uppercase">
+                {locale === "tr" ? "Senaryo C" : "Scenario C"}
+              </div>
+              <span className="text-[10px] font-extrabold tracking-widest text-emerald-400 uppercase">
+                {locale === "tr" ? "Arabuluculuk & Şeffaflık" : "Mediation & Transparency"}
+              </span>
+              <h3 className="mt-1 text-base font-black text-white">
+                {locale === "tr" ? "Halka Açık YZ Agoraları" : "Public AI Agoras"}
+              </h3>
+              <p className="text-fg-secondary mt-3 text-xs leading-relaxed">
+                {locale === "tr"
+                  ? "YZ sağlayıcıları ile hak ihlaline uğrayan kullanıcılar arasında 'Mahkeme Öncesi' arabuluculuk sağlayan bağımsız hakem heyeti paneli."
+                  : "Independent arbitration panel providing pre-court mediation between AI providers and users affected by rights violations."}
+              </p>
+              <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-3">
+                <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
+                  Status
+                </span>
+                <span className="rounded border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[9px] font-black text-emerald-400 uppercase">
+                  {locale === "tr" ? "Gelecek Hedef" : "Planned"}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Roadmap milestones timeline */}
         <RoadmapClient
           initialMilestones={initialMilestones}

@@ -10,5 +10,15 @@
   "github": {
     "silent": false,
     "autoAlias": true
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/import-incidents?source=aiaaic",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/import-incidents?source=aiid",
+      "schedule": "0 3 * * *"
+    }
+  ]
 }
