@@ -1233,6 +1233,7 @@
     "brand_profile_desc": "{providerName} trust score, verified AI incidents, and response tracking."
   },
   "transparency": {
+    "description": "ALPAR AI Transparency Report. Real-time metrics on moderation, audit logs, and provider responses.",
     "totalReports": "Total reports",
     "publishRate": "Publish rate",
     "pendingReview": "Pending review",

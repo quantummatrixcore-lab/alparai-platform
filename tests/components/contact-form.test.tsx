@@ -37,15 +37,15 @@ describe("ContactForm Component", () => {
     expect(screen.getByLabelText("category", { exact: false })).toBeDefined();
     expect(screen.getByLabelText("subject", { exact: false })).toBeDefined();
     expect(screen.getByLabelText("message", { exact: false })).toBeDefined();
-    expect(screen.getByRole("button", { name: "submit" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "form.submit" })).toBeDefined();
   });
 
   test("renders success state card when state.ok is true", () => {
     vi.mocked(useActionState).mockImplementationOnce(() => [{ ok: true }, vi.fn(), false]);
 
     render(<ContactForm />);
-    expect(screen.getByText("sent_title")).toBeDefined();
-    expect(screen.getByText("sent_desc")).toBeDefined();
+    expect(screen.getByText("form.sent_title")).toBeDefined();
+    expect(screen.getByText("form.sent_desc")).toBeDefined();
     expect(screen.queryByLabelText("name")).toBeNull();
   });
 

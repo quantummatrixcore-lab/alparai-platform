@@ -33,9 +33,9 @@ function SubmitBtn({ children }: { children: React.ReactNode }) {
 
 export function ContactForm() {
   const [state, formAction] = useActionState(submitContact, initialState);
-  const t = useTranslations("contact.form");
+  const t = useTranslations("contact");
   useEffect(() => {
-    if (state.ok) toast.success(t("sent_toast"));
+    if (state.ok) toast.success(t("form.sent_toast"));
     else if (state.error) toast.error(state.error);
   }, [state, t]);
 
@@ -44,8 +44,8 @@ export function ContactForm() {
       <Card variant="elevated">
         <CardContent className="py-12 text-center">
           <CheckCircle2 className="text-success-500 mx-auto h-12 w-12" />
-          <h2 className="text-fg-primary mt-4 text-xl font-semibold">{t("sent_title")}</h2>
-          <p className="text-fg-muted mt-2 text-sm">{t("sent_desc")}</p>
+          <h2 className="text-fg-primary mt-4 text-xl font-semibold">{t("form.sent_title")}</h2>
+          <p className="text-fg-muted mt-2 text-sm">{t("form.sent_desc")}</p>
         </CardContent>
       </Card>
     );
@@ -64,7 +64,7 @@ export function ContactForm() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Input
           name="name"
-          label={t("name")}
+          label={t("form.name")}
           required
           minLength={2}
           maxLength={100}
@@ -73,29 +73,29 @@ export function ContactForm() {
         <Input
           name="email"
           type="email"
-          label={t("email")}
+          label={t("form.email")}
           required
           error={state.fieldErrors?.email?.[0]}
         />
       </div>
       <Select
         name="category"
-        label={t("category")}
+        label={t("form.category")}
         required
         defaultValue="general"
         options={[
-          { value: "general", label: t("category_general") },
-          { value: "press", label: t("category_press") },
-          { value: "partnership", label: t("category_partnership") },
-          { value: "investor", label: t("category_investor") },
-          { value: "security", label: t("category_security") },
-          { value: "legal", label: t("category_legal") },
+          { value: "general", label: t("form.category_general") },
+          { value: "press", label: t("form.category_press") },
+          { value: "partnership", label: t("form.category_partnership") },
+          { value: "investor", label: t("form.category_investor") },
+          { value: "security", label: t("form.category_security") },
+          { value: "legal", label: t("form.category_legal") },
         ]}
         error={state.fieldErrors?.category?.[0]}
       />
       <Input
         name="subject"
-        label={t("subject")}
+        label={t("form.subject")}
         required
         minLength={5}
         maxLength={200}
@@ -103,14 +103,14 @@ export function ContactForm() {
       />
       <Textarea
         name="message"
-        label={t("message")}
+        label={t("form.message")}
         required
         rows={6}
         minLength={20}
         maxLength={5000}
         error={state.fieldErrors?.message?.[0]}
       />
-      <SubmitBtn>{t("submit")}</SubmitBtn>
+      <SubmitBtn>{t("form.submit")}</SubmitBtn>
     </form>
   );
 }

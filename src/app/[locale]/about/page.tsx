@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { Wordmark } from "@/components/layout/wordmark";
 import { Sparkles, Users, Shield, Globe, ArrowRight, Linkedin } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { FounderStory } from "@/components/marketing/founder-story";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -21,6 +20,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "about" });
   const tApp = await getTranslations({ locale, namespace: "app" });
+  const tCommon = await getTranslations({ locale, namespace: "common" });
 
   return (
     <div>
@@ -156,16 +156,12 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           </div>
 
           <div className="mt-16 text-center">
-            <Link href="/submit">
-              <Button
-                size="lg"
-                className="group"
-                rightIcon={
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                }
-              >
-                {tApp("description")}
-              </Button>
+            <Link
+              href="/submit"
+              className="bg-brand-500 hover:bg-brand-600 active:bg-brand-700 group inline-flex h-12 items-center justify-center rounded-md px-6 text-base font-medium text-white transition-colors hover:shadow-[0_0_20px_rgba(27,149,192,0.4)] focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
+            >
+              {tCommon("nav.submit")}
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
         </Container>

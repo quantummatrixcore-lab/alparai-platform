@@ -12,14 +12,18 @@ interface CounterProps {
 
 function AnimatedNumber({ value }: CounterProps) {
   const ref = React.useRef<HTMLSpanElement>(null);
-  const motionValue = useMotionValue(0);
+  const motionValue = useMotionValue(value);
   const springValue = useSpring(motionValue, {
     damping: 30,
     stiffness: 100,
   });
 
   React.useEffect(() => {
-    motionValue.set(value);
+    motionValue.set(0);
+    const timer = setTimeout(() => {
+      motionValue.set(value);
+    }, 50);
+    return () => clearTimeout(timer);
   }, [value, motionValue]);
 
   React.useEffect(() => {
@@ -30,7 +34,7 @@ function AnimatedNumber({ value }: CounterProps) {
     });
   }, [springValue]);
 
-  return <span ref={ref}>0</span>;
+  return <span ref={ref}>{value.toLocaleString()}</span>;
 }
 
 interface LiveStatsProps {

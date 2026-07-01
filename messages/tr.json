@@ -1233,6 +1233,7 @@
     "brand_profile_desc": "{providerName} güven skoru, doğrulanmış yapay zeka hataları ve yanıt takibi."
   },
   "transparency": {
+    "description": "ALPAR AI Şeffaflık Raporu. Moderasyon, denetim günlükleri ve sağlayıcı yanıtları hakkında gerçek zamanlı metrikler.",
     "totalReports": "Toplam rapor",
     "publishRate": "Yayınlanma oranı",
     "pendingReview": "İnceleme bekliyor",
