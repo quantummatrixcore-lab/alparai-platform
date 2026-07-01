@@ -15,6 +15,7 @@ const links = [
   { href: "/leaderboard", key: "leaderboard" },
   { href: "/models", key: "models" },
   { href: "/experts", key: "experts" },
+  { href: "/academy", key: "academy" },
   { href: "/blog", key: "blog" },
   { href: "/transparency", key: "transparency" },
   { href: "/about", key: "about" },

@@ -4,7 +4,17 @@ import * as React from "react";
 import { Link, usePathname } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-import { FileText, BarChart3, BookOpen, Cpu, ShieldCheck, Eye, Info, Award } from "lucide-react";
+import {
+  FileText,
+  BarChart3,
+  BookOpen,
+  Cpu,
+  ShieldCheck,
+  Eye,
+  Info,
+  Award,
+  GraduationCap,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import type { ComponentType } from "react";
 
@@ -19,6 +29,7 @@ const navItems: NavItem[] = [
   { href: "/leaderboard", labelKey: "leaderboard", icon: BarChart3 },
   { href: "/models", labelKey: "models", icon: Cpu },
   { href: "/experts", labelKey: "experts", icon: Award },
+  { href: "/academy", labelKey: "academy", icon: GraduationCap },
   { href: "/blog", labelKey: "blog", icon: BookOpen },
   { href: "/transparency", labelKey: "transparency", icon: Eye },
   { href: "/about", labelKey: "about", icon: Info },

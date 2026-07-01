@@ -10,7 +10,7 @@ import type { SwotItem } from "@/types";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "admin" });
-  return { title: `${t("strategy_swot") || "SWOT Analysis"} | ALPAR AI` };
+  return { title: `${t("swot_title") || "SWOT Analysis"} | ALPAR AI` };
 }
 
 export default async function SwotPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -25,6 +25,7 @@ export default async function SwotPage({ params }: { params: Promise<{ locale: s
   const { data } = await supabase.from("strategy_swot_items").select("*").order("created_at");
 
   const initialItems = (data ?? []) as SwotItem[];
+  const t = await getTranslations({ locale, namespace: "admin" });
 
   return (
     <div className="min-h-screen py-8">
@@ -35,18 +36,14 @@ export default async function SwotPage({ params }: { params: Promise<{ locale: s
             <div className="flex items-center gap-2">
               <GridIcon className="h-6 w-6 text-purple-400" />
               <h1 className="text-2xl font-extrabold tracking-tight text-white md:text-3xl">
-                {locale === "tr" ? "SWOT Analizi Matrisi" : "SWOT Analysis Board"}
+                {t("swot_title")}
               </h1>
             </div>
-            <p className="text-fg-muted mt-1 text-sm">
-              {locale === "tr"
-                ? "Şirketin güçlü/zayıf yönlerini, pazardaki fırsat ve tehdit unsurlarını listeler."
-                : "Analyze internal strengths & weaknesses alongside external opportunities & threats."}
-            </p>
+            <p className="text-fg-muted mt-1 text-sm">{t("swot_desc")}</p>
           </div>
           {isReadOnly && (
             <span className="bg-brand-500/10 text-brand-300 border-brand-500/20 rounded-full border px-3 py-1 text-xs font-semibold tracking-wider uppercase">
-              {locale === "tr" ? "Salt Okunur" : "Read-Only"}
+              {t("read_only")}
             </span>
           )}
         </div>

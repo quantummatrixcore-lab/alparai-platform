@@ -16,15 +16,22 @@ export const expertApplicationSchema = z.object({
     .string()
     .min(2, "Name must be at least 2 characters")
     .max(100, "Name must be at most 100 characters"),
-  titleInstitution: z
+  title: z
     .string()
-    .min(2, "Title/Institution must be at least 2 characters")
-    .max(200, "Title/Institution must be at most 200 characters"),
-  expertise: z
+    .min(2, "Title must be at least 2 characters")
+    .max(100, "Title must be at most 100 characters"),
+  institution: z
     .string()
-    .min(5, "Expertise must be at least 5 characters")
-    .max(500, "Expertise must be at most 500 characters"),
-  linkedinUrl: z.string().url("Please provide a valid LinkedIn URL"),
+    .min(2, "Institution must be at least 2 characters")
+    .max(100, "Institution must be at most 100 characters"),
+  expertiseArea: z.enum(
+    ["legal", "medical", "cybersecurity", "research", "ethics", "policy", "other"],
+    {
+      errorMap: () => ({ message: "Please select a valid area of expertise" }),
+    },
+  ),
+  linkedinUrl: z.string().url("Please provide a valid LinkedIn URL").optional().or(z.literal("")),
+  email: z.string().email("Please provide a valid email address").max(200),
 });
 
 export type ExpertApplicationInput = z.infer<typeof expertApplicationSchema>;
@@ -51,9 +58,11 @@ export const submitExpertPolicy: AutopilotPolicy = {
 
 interface ExpertWorkInput {
   name: string;
-  titleInstitution: string;
-  expertise: string;
-  linkedinUrl: string;
+  title: string;
+  institution: string;
+  expertiseArea: string;
+  linkedinUrl?: string;
+  email: string;
   ip: string;
   userAgent: string;
 }
@@ -66,9 +75,11 @@ const runExpertWork = async (
     const admin = createAdminClient();
     const { error: dbError } = await admin.from("expert_applications" as never).insert({
       name: data.name,
-      title_institution: data.titleInstitution,
-      expertise: data.expertise,
-      linkedin_url: data.linkedinUrl,
+      title_institution: `${data.title} - ${data.institution}`,
+      expertise: data.expertiseArea, // Note: legacy column used to store the dropdown value
+      linkedin_url: data.linkedinUrl || null,
+      email: data.email,
+      expertise_area: data.expertiseArea,
       status: "pending",
     } as never);
     if (dbError) {
@@ -87,13 +98,15 @@ const runExpertWork = async (
       from: `ALPAR AI Expert Panel <${APP_EMAIL}>`,
       to: APP_EMAIL,
       subject: `[Expert Panel Application] ${data.name}`,
-      text: `Expert Panel Application:\n\nName: ${data.name}\nTitle/Institution: ${data.titleInstitution}\nArea of Expertise: ${data.expertise}\nLinkedIn: ${data.linkedinUrl}\n\n--\nIP Hash: ${hashIp(data.ip)}`,
+      text: `Expert Panel Application:\n\nName: ${data.name}\nEmail: ${data.email}\nTitle: ${data.title}\nInstitution: ${data.institution}\nArea of Expertise: ${data.expertiseArea}\nLinkedIn: ${data.linkedinUrl || "N/A"}\n\n--\nIP Hash: ${hashIp(data.ip)}`,
       html: `
         <h2>Expert Panel Application</h2>
         <p><strong>Name:</strong> ${data.name}</p>
-        <p><strong>Title/Institution:</strong> ${data.titleInstitution}</p>
-        <p><strong>Area of Expertise:</strong> ${data.expertise}</p>
-        <p><strong>LinkedIn:</strong> <a href="${data.linkedinUrl}" target="_blank" rel="noopener noreferrer">${data.linkedinUrl}</a></p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Title:</strong> ${data.title}</p>
+        <p><strong>Institution:</strong> ${data.institution}</p>
+        <p><strong>Area of Expertise:</strong> ${data.expertiseArea}</p>
+        <p><strong>LinkedIn:</strong> ${data.linkedinUrl ? `<a href="${data.linkedinUrl}" target="_blank" rel="noopener noreferrer">${data.linkedinUrl}</a>` : "N/A"}</p>
         <hr/>
         <p style="font-size: 11px; color: #666;">IP Hash: ${hashIp(data.ip)}</p>
       `,
@@ -119,9 +132,11 @@ export async function submitExpert(_prev: ExpertState, formData: FormData): Prom
 
   const raw = {
     name: String(formData.get("name") ?? ""),
-    titleInstitution: String(formData.get("titleInstitution") ?? ""),
-    expertise: String(formData.get("expertise") ?? ""),
-    linkedinUrl: String(formData.get("linkedinUrl") ?? ""),
+    title: String(formData.get("title") ?? ""),
+    institution: String(formData.get("institution") ?? ""),
+    expertiseArea: String(formData.get("expertiseArea") ?? ""),
+    linkedinUrl: formData.get("linkedinUrl") ? String(formData.get("linkedinUrl")) : undefined,
+    email: String(formData.get("email") ?? ""),
   };
 
   const parsed = expertApplicationSchema.safeParse(raw);
@@ -138,16 +153,20 @@ export async function submitExpert(_prev: ExpertState, formData: FormData): Prom
     submitExpertPolicy,
     [
       parsed.data.name,
-      parsed.data.titleInstitution,
-      parsed.data.expertise,
-      parsed.data.linkedinUrl,
+      parsed.data.title,
+      parsed.data.institution,
+      parsed.data.expertiseArea,
+      parsed.data.linkedinUrl || "",
+      parsed.data.email,
     ],
     (ctx) =>
       runExpertWork(ctx, {
         name: parsed.data.name,
-        titleInstitution: parsed.data.titleInstitution,
-        expertise: parsed.data.expertise,
+        title: parsed.data.title,
+        institution: parsed.data.institution,
+        expertiseArea: parsed.data.expertiseArea,
         linkedinUrl: parsed.data.linkedinUrl,
+        email: parsed.data.email,
         ip,
         userAgent,
       }),

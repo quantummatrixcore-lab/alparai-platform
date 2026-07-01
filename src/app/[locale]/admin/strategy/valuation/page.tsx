@@ -10,7 +10,7 @@ import type { StrategyValuation } from "@/types";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "admin" });
-  return { title: `${t("strategy_valuation") || "Valuation Calculator"} | ALPAR AI` };
+  return { title: `${t("val_title") || "Valuation Calculator"} | ALPAR AI` };
 }
 
 export default async function ValuationPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -28,6 +28,7 @@ export default async function ValuationPage({ params }: { params: Promise<{ loca
     .order("snapshot_date", { ascending: false });
 
   const initialValuations = (data ?? []) as StrategyValuation[];
+  const t = await getTranslations({ locale, namespace: "admin" });
 
   return (
     <div className="min-h-screen py-8">
@@ -38,18 +39,14 @@ export default async function ValuationPage({ params }: { params: Promise<{ loca
             <div className="flex items-center gap-2">
               <TrendingUp className="h-6 w-6 text-amber-400" />
               <h1 className="text-2xl font-extrabold tracking-tight text-white md:text-3xl">
-                {locale === "tr" ? "Şirket Değerleme Simülatörü" : "Company Valuation Simulator"}
+                {t("val_title")}
               </h1>
             </div>
-            <p className="text-fg-muted mt-1 text-sm">
-              {locale === "tr"
-                ? "Berkus, Scorecard ve Girişim Sermayesi (VC) yöntemlerine göre pre-money değerleme modelleri."
-                : "Simulate valuation caps with Berkus, Scorecard, and VC exit methodologies."}
-            </p>
+            <p className="text-fg-muted mt-1 text-sm">{t("val_desc")}</p>
           </div>
           {isReadOnly && (
             <span className="bg-brand-500/10 text-brand-300 border-brand-500/20 rounded-full border px-3 py-1 text-xs font-semibold tracking-wider uppercase">
-              {locale === "tr" ? "Salt Okunur" : "Read-Only"}
+              {t("read_only")}
             </span>
           )}
         </div>

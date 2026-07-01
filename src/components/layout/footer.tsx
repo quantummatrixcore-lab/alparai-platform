@@ -27,6 +27,7 @@ const legalLinks = [
 
 const aboutLinks = [
   { href: "/about", key: "about" },
+  { href: "/academy", key: "academy" },
   { href: "/contact", key: "contact" },
   { href: "/transparency", key: "transparency" },
 ] as const;
