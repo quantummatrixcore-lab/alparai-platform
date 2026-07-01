@@ -53,6 +53,12 @@ export const incidentSubmissionSchema = z.object({
   locationCountry: z.string().length(2, "Country must be ISO 3166-1 alpha-2").optional().nullable(),
   language: z.string().min(2).max(5).default("en"),
   isAnonymous: z.boolean().default(true),
+  isExpert: z.boolean().default(false),
+  expertFix: z
+    .string()
+    .max(5000, "Expert fix proposal must be at most 5,000 characters")
+    .optional()
+    .nullable(),
   sourceUrl: z.string().url().optional().nullable(),
   evidence: z
     .array(
@@ -150,7 +156,7 @@ export const contactFormSchema = z.object({
   email: z.string().email(),
   subject: z.string().min(5).max(200),
   message: z.string().min(20).max(5000),
-  category: z.enum(["general", "press", "partnership", "security", "legal"]),
+  category: z.enum(["general", "press", "partnership", "security", "legal", "investor"]),
 });
 
 export type ContactFormInput = z.infer<typeof contactFormSchema>;

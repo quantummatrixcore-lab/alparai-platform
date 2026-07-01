@@ -5,7 +5,7 @@ import { useState, useTransition } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, X, ExternalLink, Calendar, Award } from "lucide-react";
+import { Check, X, ExternalLink, Calendar, Award, Mail } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { reviewExpertApplication } from "@/actions/admin";
 import { toast } from "sonner";
@@ -15,8 +15,10 @@ import { useLocale } from "next-intl";
 export interface ExpertApplicationItem {
   id: string;
   name: string;
+  email?: string;
   title_institution: string;
   expertise: string;
+  expertise_area?: string;
   linkedin_url: string;
   status: "pending" | "approved" | "rejected";
   created_at: string;
@@ -115,22 +117,33 @@ function ExpertApplicationRow({ application }: { application: ExpertApplicationI
               </span>
             </div>
 
-            <p className="text-fg-primary text-sm font-semibold">{application.title_institution}</p>
-
-            <p className="text-fg-muted bg-bg-secondary/40 border-border-subtle rounded-md border p-3 text-sm italic">
-              &ldquo;{application.expertise}&rdquo;
+            <p className="text-fg-primary flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-semibold">
+              <span>{application.title_institution}</span>
+              {application.email && (
+                <span className="text-fg-muted flex items-center gap-1 text-xs font-normal">
+                  <Mail className="h-3.5 w-3.5" />
+                  {application.email}
+                </span>
+              )}
             </p>
 
-            <div className="pt-1">
-              <a
-                href={application.linkedin_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-brand-400 hover:text-brand-300 inline-flex items-center gap-1 text-xs font-semibold"
-              >
-                {t("view_linkedin", { defaultValue: "View LinkedIn Profile" })}
-                <ExternalLink className="h-3.5 w-3.5" />
-              </a>
+            <div className="flex flex-wrap gap-2 pt-1">
+              <Badge variant="outline" className="text-xs">
+                {application.expertise_area
+                  ? `Area: ${application.expertise_area}`
+                  : `Area: ${application.expertise}`}
+              </Badge>
+              {application.linkedin_url && (
+                <a
+                  href={application.linkedin_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand-400 hover:text-brand-300 inline-flex items-center gap-1 text-xs font-semibold"
+                >
+                  {t("view_linkedin", { defaultValue: "View LinkedIn Profile" })}
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              )}
             </div>
           </div>
 

@@ -28,13 +28,10 @@ export function ExpertForm() {
         <div className="bg-brand-500/10 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
           <CheckCircle2 className="text-brand-400 h-8 w-8" />
         </div>
-        <h3 className="text-2xl font-semibold">Application Received</h3>
-        <p className="text-fg-muted">
-          Thank you for applying to the ALPAR AI Expert Panel. We will review your application and
-          get back to you shortly.
-        </p>
+        <h3 className="text-2xl font-semibold">{t("form_success_title")}</h3>
+        <p className="text-fg-muted">{t("form_success_body")}</p>
         <Button variant="outline" className="mt-4" onClick={() => setIsSuccess(false)}>
-          Submit Another Application
+          {t("form_submit_another")}
         </Button>
       </div>
     );
@@ -139,17 +136,19 @@ export function ExpertForm() {
           id="expertiseArea"
           name="expertiseArea"
           required
+          defaultValue=""
           className="border-border-subtle bg-bg-secondary text-fg-primary placeholder:text-fg-muted focus:ring-brand-500 flex h-10 w-full rounded-md border px-3 py-2 text-sm focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <option value="" disabled selected>
-            Select your area of expertise
+          <option value="" disabled>
+            {t("form_expertise_placeholder")}
           </option>
-          <option value="legal">Legal & Policy</option>
-          <option value="medical">Medical & Clinical</option>
-          <option value="cybersecurity">Cybersecurity</option>
-          <option value="research">Academic Research</option>
-          <option value="ethics">Ethics & Philosophy</option>
-          <option value="other">Other</option>
+          <option value="legal">{t("expertise_legal")}</option>
+          <option value="medical">{t("expertise_medical")}</option>
+          <option value="cybersecurity">{t("expertise_cybersecurity")}</option>
+          <option value="research">{t("expertise_research")}</option>
+          <option value="ethics">{t("expertise_ethics")}</option>
+          <option value="policy">{t("expertise_policy")}</option>
+          <option value="other">{t("expertise_other")}</option>
         </select>
         {state.fieldErrors?.expertiseArea && (
           <p className="text-danger-500 text-sm">{state.fieldErrors.expertiseArea[0]}</p>

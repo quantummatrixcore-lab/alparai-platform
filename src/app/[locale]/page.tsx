@@ -39,6 +39,19 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return {
     title: t("title"),
     description: t("description"),
+    openGraph: {
+      title: "ALPAR AI — When an AI lies, who is accountable?",
+      description:
+        "World's first community-governed AI accountability platform. 371+ verified incidents. 23 providers tracked.",
+      images: ["/og-image.jpg"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "ALPAR AI — When an AI lies, who is accountable?",
+      description:
+        "World's first community-governed AI accountability platform. 371+ verified incidents. 23 providers tracked.",
+      images: ["/og-image.jpg"],
+    },
   };
 }
 

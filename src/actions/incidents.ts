@@ -66,6 +66,8 @@ interface SubmitWorkInput {
     model_custom: string;
     incident_date: string;
     is_anonymous: boolean;
+    is_expert: boolean;
+    expert_fix: string;
     consents: { truth: boolean; age: boolean; terms: boolean };
   };
 }
@@ -132,6 +134,8 @@ const runSubmitWork = async (
     incident_date: incidentDateISO,
     language: locale,
     is_anonymous: raw.is_anonymous,
+    is_expert: raw.is_expert,
+    expert_fix: raw.expert_fix || null,
     location_country: null,
     source_url: null,
     ip_hash: hashIp(data.ip),
@@ -300,6 +304,8 @@ export async function submitIncident(
     model_custom: String(formData.get("model_custom") ?? ""),
     incident_date: String(formData.get("incident_date") ?? ""),
     is_anonymous: formData.get("is_anonymous") === "on",
+    is_expert: formData.get("is_expert") === "on",
+    expert_fix: String(formData.get("expert_fix") ?? ""),
     consents: {
       truth: formData.get("consent_truth") === "on",
       anonymous: formData.get("consent_anonymous") === "on",
@@ -328,6 +334,8 @@ export async function submitIncident(
     incidentDate: incidentDateISO.slice(0, 10),
     language: locale,
     isAnonymous: raw.is_anonymous,
+    isExpert: raw.is_expert,
+    expertFix: raw.expert_fix || null,
     sourceUrl: null,
     consent: {
       truthfulness: true,

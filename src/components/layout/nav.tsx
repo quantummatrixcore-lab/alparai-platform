@@ -8,12 +8,11 @@ import {
   FileText,
   BarChart3,
   BookOpen,
-  Cpu,
   ShieldCheck,
-  Eye,
-  Info,
   Award,
   GraduationCap,
+  Home,
+  Scale,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import type { ComponentType } from "react";
@@ -25,14 +24,13 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
+  { href: "/", labelKey: "home", icon: Home },
   { href: "/incidents", labelKey: "incidents", icon: FileText },
   { href: "/leaderboard", labelKey: "leaderboard", icon: BarChart3 },
-  { href: "/models", labelKey: "models", icon: Cpu },
-  { href: "/experts", labelKey: "experts", icon: Award },
-  { href: "/academy", labelKey: "academy", icon: GraduationCap },
+  { href: "/dilemmas", labelKey: "dilemmas", icon: Scale },
   { href: "/blog", labelKey: "blog", icon: BookOpen },
-  { href: "/transparency", labelKey: "transparency", icon: Eye },
-  { href: "/about", labelKey: "about", icon: Info },
+  { href: "/academy", labelKey: "academy", icon: GraduationCap },
+  { href: "/brand", labelKey: "presskit", icon: Award },
 ];
 
 export function Nav({

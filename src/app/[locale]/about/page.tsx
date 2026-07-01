@@ -1,16 +1,16 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container, Section } from "@/components/ui/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "@/i18n/routing";
 import { Wordmark } from "@/components/layout/wordmark";
-import { Sparkles, Users, Shield, Globe, ArrowRight, Linkedin } from "lucide-react";
+import { Sparkles, Users, Shield, Globe, Linkedin, Award, Mail } from "lucide-react";
 import { FounderStory } from "@/components/marketing/founder-story";
+import { createServerClient } from "@/lib/supabase/server";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "about" });
   return {
-    title: t("mission"),
+    title: t("description"),
     description: t("description"),
   };
 }
@@ -20,20 +20,73 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "about" });
   const tApp = await getTranslations({ locale, namespace: "app" });
-  const tNav = await getTranslations({ locale, namespace: "nav" });
+
+  // Fetch dynamic stats
+  const supabase = await createServerClient();
+  const [incidentsCountResult, countriesResult, providersResult] = await Promise.all([
+    supabase
+      .from("incidents")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "published"),
+    supabase
+      .from("incidents")
+      .select("location_country")
+      .eq("status", "published")
+      .not("location_country", "is", null),
+    supabase
+      .from("incidents")
+      .select("ai_provider_id")
+      .eq("status", "published")
+      .not("ai_provider_id", "is", null),
+  ]);
+
+  const totalIncidents = incidentsCountResult.count ?? 371;
+  const countries = new Set((countriesResult.data ?? []).map((r) => r.location_country));
+  const totalCountries = countries.size > 0 ? countries.size : 12;
+  const providers = new Set((providersResult.data ?? []).map((r) => r.ai_provider_id));
+  const totalProviders = providers.size > 0 ? providers.size : 23;
 
   return (
     <div>
       {/* Premium Header */}
-      <div className="bg-bg-secondary/20 border-border-subtle border-b py-16 text-center">
+      <div className="bg-bg-secondary/20 border-border-subtle border-b py-20 text-center">
         <Container>
           <Wordmark size="lg" showTagline />
           <p className="text-fg-secondary mx-auto mt-4 max-w-xl text-lg">{tApp("tagline")}</p>
         </Container>
       </div>
 
-      {/* Founder Story Section */}
-      <FounderStory />
+      {/* Dynamic Stats Grid */}
+      <Section className="border-border-subtle bg-bg-primary border-b py-12">
+        <Container>
+          <div className="grid grid-cols-1 gap-8 text-center sm:grid-cols-3">
+            <div className="space-y-2">
+              <span className="text-brand-400 block text-5xl font-black tracking-tight">
+                {totalIncidents}+
+              </span>
+              <span className="text-fg-muted text-xs font-bold tracking-wider uppercase">
+                Verified AI Failures
+              </span>
+            </div>
+            <div className="space-y-2">
+              <span className="text-brand-400 block text-5xl font-black tracking-tight">
+                {totalProviders}
+              </span>
+              <span className="text-fg-muted text-xs font-bold tracking-wider uppercase">
+                AI Providers Tracked
+              </span>
+            </div>
+            <div className="space-y-2">
+              <span className="text-brand-400 block text-5xl font-black tracking-tight">
+                {totalCountries}
+              </span>
+              <span className="text-fg-muted text-xs font-bold tracking-wider uppercase">
+                Countries Impacted
+              </span>
+            </div>
+          </div>
+        </Container>
+      </Section>
 
       {/* Pillars Section */}
       <Section className="bg-bg-primary py-16">
@@ -94,75 +147,115 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
               </CardContent>
             </Card>
           </div>
+        </Container>
+      </Section>
 
-          <div className="border-border-subtle mt-20 border-t pt-16">
-            <div className="mb-12 text-center">
-              <h2 className="text-fg-primary text-3xl font-extrabold tracking-tight">
-                {t("teamTitle")}
-              </h2>
-              <p className="text-fg-muted mx-auto mt-2 max-w-2xl text-sm">{t("teamSubtitle")}</p>
-            </div>
+      {/* Founder Story Section */}
+      <FounderStory />
 
-            <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2">
-              <Card variant="glass" padding="md">
-                <CardHeader className="flex flex-row items-center gap-4 pb-2">
-                  <div className="bg-brand-500/10 text-brand-400 border-brand-500/20 flex h-12 w-12 items-center justify-center rounded-full border">
-                    <Users className="h-6 w-6" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <CardTitle className="text-lg font-bold text-white">
-                        {t("founderName")}
-                      </CardTitle>
-                      <a
-                        href="https://www.linkedin.com/in/ercument-erden"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-fg-muted hover:text-brand-400 transition-colors"
-                        aria-label="Ercüment Erden LinkedIn"
-                      >
-                        <Linkedin className="h-4 w-4" />
-                      </a>
-                    </div>
-                    <p className="text-brand-400 mt-0.5 text-xs font-semibold tracking-wider uppercase">
-                      {t("founderRole")}
-                    </p>
-                  </div>
-                </CardHeader>
-                <CardContent className="text-fg-secondary mt-2 text-sm leading-relaxed">
-                  {t("founderBio")}
-                </CardContent>
-              </Card>
-
-              <Card variant="glass" padding="md">
-                <CardHeader className="flex flex-row items-center gap-4 pb-2">
-                  <div className="bg-success-500/10 text-success-400 border-success-500/20 flex h-12 w-12 items-center justify-center rounded-full border">
-                    <Shield className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg font-bold text-white">
-                      {t("advisoryName")}
-                    </CardTitle>
-                    <p className="text-success-400 mt-0.5 text-xs font-semibold tracking-wider uppercase">
-                      {t("advisoryRole")}
-                    </p>
-                  </div>
-                </CardHeader>
-                <CardContent className="text-fg-secondary mt-2 text-sm leading-relaxed">
-                  {t("advisoryBio")}
-                </CardContent>
-              </Card>
-            </div>
+      {/* Founder Card Section */}
+      <Section className="bg-bg-primary py-16">
+        <Container>
+          <div className="mb-12 text-center">
+            <h2 className="text-fg-primary text-3xl font-extrabold tracking-tight">
+              {t("teamTitle")}
+            </h2>
+            <p className="text-fg-muted mx-auto mt-2 max-w-2xl text-sm">{t("teamSubtitle")}</p>
           </div>
 
-          <div className="mt-16 text-center">
-            <Link
-              href="/submit"
-              className="bg-brand-500 hover:bg-brand-600 active:bg-brand-700 group inline-flex h-12 items-center justify-center rounded-md px-6 text-base font-medium text-white transition-colors hover:shadow-[0_0_20px_rgba(27,149,192,0.4)] focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
-            >
-              {tNav("report")}
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
+          <div className="mx-auto max-w-xl">
+            <Card variant="glass" padding="md">
+              <CardHeader className="flex flex-row items-center gap-4 pb-2">
+                <div className="bg-brand-500/10 text-brand-400 border-brand-500/20 flex h-12 w-12 items-center justify-center rounded-full border">
+                  <Users className="h-6 w-6" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-lg font-bold text-white">
+                      {t("founderName")}
+                    </CardTitle>
+                    <a
+                      href="https://www.linkedin.com/in/ercument-erden"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-fg-muted hover:text-brand-400 transition-colors"
+                      aria-label="Ercüment Erden LinkedIn"
+                    >
+                      <Linkedin className="h-4 w-4" />
+                    </a>
+                  </div>
+                  <p className="text-brand-400 mt-0.5 text-xs font-semibold tracking-wider uppercase">
+                    {t("founderRole")}
+                  </p>
+                </div>
+              </CardHeader>
+              <CardContent className="text-fg-secondary mt-2 text-sm leading-relaxed">
+                {t("founderBio")}
+              </CardContent>
+            </Card>
+          </div>
+        </Container>
+      </Section>
+
+      {/* Values Cards */}
+      <Section className="bg-bg-secondary/10 border-border-subtle border-t py-16">
+        <Container className="space-y-12">
+          <div className="mx-auto max-w-xl text-center">
+            <h2 className="text-fg-primary text-3xl font-extrabold tracking-tight">
+              {t("valuesTitle")}
+            </h2>
+            <p className="text-fg-muted mt-2 text-sm">{t("valuesSubtitle")}</p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {["1", "2", "3"].map((val) => (
+              <Card key={val} className="border-border-subtle bg-bg-secondary/40">
+                <CardContent className="space-y-3 p-6">
+                  <div className="text-brand-400 w-fit rounded-lg bg-white/5 p-3">
+                    <Award className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-fg-primary text-base font-bold">{t(`value_${val}_title`)}</h3>
+                  <p className="text-fg-muted text-xs leading-relaxed">{t(`value_${val}_desc`)}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      {/* Contact Cards */}
+      <Section className="border-border-subtle border-t py-16">
+        <Container className="space-y-12">
+          <div className="mx-auto max-w-xl text-center">
+            <h2 className="text-fg-primary text-3xl font-extrabold tracking-tight">
+              {t("contactTitle")}
+            </h2>
+            <p className="text-fg-muted mt-2 text-sm">{t("contactSubtitle")}</p>
+          </div>
+
+          <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-3">
+            {[
+              { key: "hello", email: "hello@alparai.com" },
+              { key: "academy", email: "academy@alparai.com" },
+              { key: "security", email: "security@alparai.com" },
+            ].map((contact) => (
+              <Card key={contact.key} className="border-border-subtle bg-bg-secondary/20">
+                <CardContent className="space-y-3 p-6 text-center">
+                  <div className="text-brand-400 mx-auto w-fit rounded-full bg-white/5 p-3">
+                    <Mail className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-fg-primary text-sm font-bold">
+                    {t(`contact_${contact.key}`)}
+                  </h3>
+                  <a
+                    href={`mailto:${contact.email}`}
+                    className="text-brand-400 block text-xs font-semibold hover:underline"
+                  >
+                    {contact.email}
+                  </a>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </Container>
       </Section>

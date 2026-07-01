@@ -47,6 +47,9 @@ export function IncidentForm({
   const [selectedModel, setSelectedModel] = useState("");
   const [customModelName, setCustomModelName] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
+  const [severity, setSeverity] = useState<IncidentSeverity>("medium");
+  const [isExpert, setIsExpert] = useState(false);
+  const [expertFix, setExpertFix] = useState("");
   const [consents, setConsents] = useState({
     truth: false,
     age: false,
@@ -63,6 +66,9 @@ export function IncidentForm({
     selectedModel: string;
     customModelName: string;
     isAnonymous: boolean;
+    severity: IncidentSeverity;
+    isExpert: boolean;
+    expertFix: string;
   };
 
   const draftValues = useMemo<IncidentDraft>(
@@ -74,6 +80,9 @@ export function IncidentForm({
       selectedModel,
       customModelName,
       isAnonymous,
+      severity,
+      isExpert,
+      expertFix,
     }),
     [
       title,
@@ -83,6 +92,9 @@ export function IncidentForm({
       selectedModel,
       customModelName,
       isAnonymous,
+      severity,
+      isExpert,
+      expertFix,
     ],
   );
 
@@ -94,6 +106,9 @@ export function IncidentForm({
     setSelectedModel(saved.selectedModel);
     setCustomModelName(saved.customModelName);
     setIsAnonymous(saved.isAnonymous);
+    setSeverity(saved.severity ?? "medium");
+    setIsExpert(saved.isExpert ?? false);
+    setExpertFix(saved.expertFix ?? "");
   }, []);
 
   const handleRestoreNotify = useCallback(() => {
@@ -257,6 +272,25 @@ export function IncidentForm({
           {t("submit_live_counter", { count: totalIncidents, verified: totalIncidents })}
         </div>
       )}
+
+      {/* Premium Privacy Banner */}
+      <div className="bg-bg-secondary/40 border-border-subtle/50 relative overflow-hidden rounded-xl border p-4 backdrop-blur-md">
+        <div className="flex gap-3">
+          <div className="bg-brand-500/10 border-brand-500/20 text-brand-400 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border">
+            <Shield className="h-5 w-5" />
+          </div>
+          <div className="space-y-1 text-left">
+            <h4 className="text-fg-primary flex items-center gap-1.5 text-sm font-bold">
+              <span>{t("privacy_banner_title")}</span>
+              <span className="bg-brand-500/15 text-brand-400 rounded-full px-2 py-0.5 text-[9px] font-black tracking-wider uppercase">
+                🔒 KVKK/GDPR SAFE
+              </span>
+            </h4>
+            <p className="text-fg-muted text-xs leading-relaxed">{t("privacy_banner_desc")}</p>
+          </div>
+        </div>
+      </div>
+
       {piiDetected && <PIIBanner />}
       {state.formError && (
         <div
@@ -355,7 +389,7 @@ export function IncidentForm({
           </div>
         </div>
 
-        <div className="border-border-subtle/50 grid grid-cols-1 gap-4 border-t pt-2 sm:grid-cols-3">
+        <div className="border-border-subtle/50 grid grid-cols-1 gap-4 border-t pt-2 sm:grid-cols-2">
           <Select
             name="category"
             label={t("category")}
@@ -363,14 +397,6 @@ export function IncidentForm({
             placeholder="—"
             options={categoryOptions}
             error={state.fieldErrors?.category?.[0]}
-          />
-          <Select
-            name="severity"
-            label={t("severity")}
-            required
-            options={severityOptions}
-            defaultValue="medium"
-            error={state.fieldErrors?.severity?.[0]}
           />
           <Input
             name="incident_date"
@@ -380,6 +406,70 @@ export function IncidentForm({
             error={state.fieldErrors?.incident_date?.[0]}
           />
         </div>
+
+        {/* Severity Radio Group Segment */}
+        <div className="border-border-subtle/50 space-y-1.5 border-t pt-4 text-left">
+          <label className="text-fg-primary block text-sm font-medium">{t("severity")}</label>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {severityOptions.map((opt) => {
+              const isActive = severity === opt.value;
+              const borderColors = {
+                low: isActive
+                  ? "border-brand-500/80 bg-brand-500/10 text-brand-400 font-bold"
+                  : "border-border-subtle bg-bg-secondary/20 hover:border-white/20 text-fg-secondary",
+                medium: isActive
+                  ? "border-success-500/80 bg-success-500/10 text-success-400 font-bold"
+                  : "border-border-subtle bg-bg-secondary/20 hover:border-white/20 text-fg-secondary",
+                high: isActive
+                  ? "border-warning-500/80 bg-warning-500/10 text-warning-400 font-bold"
+                  : "border-border-subtle bg-bg-secondary/20 hover:border-white/20 text-fg-secondary",
+                critical: isActive
+                  ? "border-danger-500/80 bg-danger-500/10 text-danger-400 font-bold"
+                  : "border-border-subtle bg-bg-secondary/20 hover:border-white/20 text-fg-secondary",
+              };
+              return (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setSeverity(opt.value)}
+                  className={`flex cursor-pointer flex-col items-center justify-center rounded-lg border px-3 py-2.5 text-center transition-all ${borderColors[opt.value]}`}
+                >
+                  <span className="text-xs font-bold tracking-wider uppercase">{opt.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          <input type="hidden" name="severity" value={severity} />
+          {state.fieldErrors?.severity?.[0] && (
+            <p className="text-danger-400 mt-1 text-xs">{state.fieldErrors.severity[0]}</p>
+          )}
+        </div>
+      </div>
+
+      {/* Expert Section */}
+      <div className="border-border-subtle bg-bg-secondary/30 space-y-4 rounded-md border p-4 text-left">
+        <Checkbox
+          name="is_expert"
+          label={t("is_expert")}
+          description={t("is_expert_hint")}
+          checked={isExpert}
+          onChange={(e) => setIsExpert(e.target.checked)}
+        />
+        {isExpert && (
+          <div className="animate-in fade-in slide-in-from-top-1 space-y-1.5 pl-7 duration-200">
+            <Textarea
+              name="expert_fix"
+              label={t("expert_fix")}
+              placeholder={t("expert_fix_placeholder")}
+              rows={4}
+              maxLength={5000}
+              value={expertFix}
+              onChange={(e) => setExpertFix(e.target.value)}
+              hint={`${expertFix.length}/5000`}
+              error={state.fieldErrors?.expertFix?.[0]}
+            />
+          </div>
+        )}
       </div>
 
       <div>

@@ -34,11 +34,13 @@ export const metadata: Metadata = {
       "Community-driven incident reporting platform for AI systems. Like Trustpilot, but for AI.",
     locale: "en_US",
     url: "/",
+    images: ["/og-image.jpg"],
   },
   twitter: {
     card: "summary_large_image",
     site: "@alparai",
     creator: "@alparai",
+    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,

@@ -13,13 +13,10 @@ const links = [
   { href: "/", key: "home" },
   { href: "/incidents", key: "incidents" },
   { href: "/leaderboard", key: "leaderboard" },
-  { href: "/models", key: "models" },
-  { href: "/experts", key: "experts" },
-  { href: "/academy", key: "academy" },
+  { href: "/dilemmas", key: "dilemmas" },
   { href: "/blog", key: "blog" },
-  { href: "/transparency", key: "transparency" },
-  { href: "/about", key: "about" },
-  { href: "/contact", key: "contact" },
+  { href: "/academy", key: "academy" },
+  { href: "/brand", key: "presskit" },
 ] as const;
 
 export function MobileNav({

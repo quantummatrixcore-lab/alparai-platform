@@ -36,68 +36,41 @@ export default async function LeaderboardPage({
   const supabase = await createServerClient();
   const t = await getTranslations({ locale, namespace: "leaderboard" });
 
-  const { data: providers } = await supabase
-    .from("ai_providers")
-    .select("id, slug, name, logo_url, is_verified, website_url, trust_score")
-    .neq("slug", "alpar-autopilot")
+  const { data: leaderboardData } = await supabase
+    .from("provider_leaderboard")
+    .select(
+      "id, slug, name, logo_url, is_verified, website_url, trust_score, incident_count, response_count",
+    )
     .order("name");
 
-  // Bulk fetch published incidents and published responses to count in memory
-  const { data: incidents } = await supabase
-    .from("incidents")
-    .select("ai_provider_id")
-    .eq("status", "published");
-
-  const { data: responses } = await supabase
-    .from("ai_provider_responses")
-    .select("ai_provider_id")
-    .eq("is_published", true);
-
-  const incidentCountsMap = new Map<string, number>();
-  if (incidents) {
-    for (const incident of incidents) {
-      if (incident.ai_provider_id) {
-        incidentCountsMap.set(
-          incident.ai_provider_id,
-          (incidentCountsMap.get(incident.ai_provider_id) ?? 0) + 1,
-        );
-      }
-    }
-  }
-
-  const responseCountsMap = new Map<string, number>();
-  if (responses) {
-    for (const resp of responses) {
-      if (resp.ai_provider_id) {
-        responseCountsMap.set(
-          resp.ai_provider_id,
-          (responseCountsMap.get(resp.ai_provider_id) ?? 0) + 1,
-        );
-      }
-    }
-  }
-
   const stats = (
-    (providers as Array<{
-      id: string;
-      slug: string;
-      name: string;
+    (leaderboardData ?? []) as Array<{
+      id: string | null;
+      slug: string | null;
+      name: string | null;
       logo_url: string | null;
-      is_verified: boolean;
+      is_verified: boolean | null;
       website_url: string | null;
       trust_score: number | null;
-    }>) ?? []
+      incident_count: number | null;
+      response_count: number | null;
+    }>
   ).map((p) => {
-    const total = incidentCountsMap.get(p.id) ?? 0;
-    const responded = responseCountsMap.get(p.id) ?? 0;
+    const total = p.incident_count ?? 0;
+    const responded = p.response_count ?? 0;
     const responseRate = total > 0 ? Math.round((responded / total) * 100) : 0;
 
     return {
-      ...p,
+      id: p.id ?? "",
+      slug: p.slug ?? "",
+      name: p.name ?? "Unknown",
+      logo_url: p.logo_url,
+      is_verified: !!p.is_verified,
+      website_url: p.website_url,
+      trust_score: p.trust_score ?? 70,
       incident_count: total,
       response_count: responded,
       response_rate: responseRate,
-      trust_score: p.trust_score ?? 70,
     };
   });
 

@@ -847,6 +847,8 @@ export type Database = {
           incident_source: string;
           import_external_id: string | null;
           import_attribution: string | null;
+          is_expert: boolean;
+          expert_fix: string | null;
         };
         Insert: {
           ai_model_id?: string | null;
@@ -897,6 +899,8 @@ export type Database = {
           incident_source?: string;
           import_external_id?: string | null;
           import_attribution?: string | null;
+          is_expert?: boolean;
+          expert_fix?: string | null;
         };
         Update: {
           ai_model_id?: string | null;
@@ -947,6 +951,8 @@ export type Database = {
           incident_source?: string;
           import_external_id?: string | null;
           import_attribution?: string | null;
+          is_expert?: boolean;
+          expert_fix?: string | null;
         };
         Relationships: [
           {
@@ -1625,7 +1631,42 @@ export type Database = {
       };
     };
     Views: {
-      [_ in never]: never;
+      provider_leaderboard: {
+        Row: {
+          id: string | null;
+          slug: string | null;
+          name: string | null;
+          logo_url: string | null;
+          is_verified: boolean | null;
+          website_url: string | null;
+          trust_score: number | null;
+          incident_count: number | null;
+          response_count: number | null;
+        };
+        Insert: {
+          id?: string | null;
+          slug?: string | null;
+          name?: string | null;
+          logo_url?: string | null;
+          is_verified?: boolean | null;
+          website_url?: string | null;
+          trust_score?: number | null;
+          incident_count?: number | null;
+          response_count?: number | null;
+        };
+        Update: {
+          id?: string | null;
+          slug?: string | null;
+          name?: string | null;
+          logo_url?: string | null;
+          is_verified?: boolean | null;
+          website_url?: string | null;
+          trust_score?: number | null;
+          incident_count?: number | null;
+          response_count?: number | null;
+        };
+        Relationships: [];
+      };
     };
     Functions: {
       is_admin: { Args: { uid: string }; Returns: boolean };

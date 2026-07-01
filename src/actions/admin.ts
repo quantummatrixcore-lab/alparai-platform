@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
+import type { Database } from "@/types/database";
 import { requireModerator } from "@/lib/auth/session";
 import {
   withAutopilot,
@@ -44,7 +45,8 @@ const runModerationWork = async (
   data: ModerationWorkInput,
 ): Promise<AttemptOutcome<{ id: string; newStatus: string }>> => {
   const admin = createAdminClient();
-  const newStatus = data.decision === "approve" ? "published" : "rejected";
+  const newStatus: "published" | "rejected" =
+    data.decision === "approve" ? "published" : "rejected";
   const { error } = await admin
     .from("incidents")
     .update({
@@ -53,7 +55,7 @@ const runModerationWork = async (
       moderated_at: new Date().toISOString(),
       moderation_note: data.moderationNote,
       published_at: newStatus === "published" ? new Date().toISOString() : null,
-    })
+    } as Database["public"]["Tables"]["incidents"]["Update"])
     .eq("id", data.incidentId);
   if (error) {
     return { kind: "retryable", error: error.message };
