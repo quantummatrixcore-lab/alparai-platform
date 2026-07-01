@@ -20,7 +20,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "about" });
   const tApp = await getTranslations({ locale, namespace: "app" });
-  const tCommon = await getTranslations({ locale, namespace: "common" });
+  const tNav = await getTranslations({ locale, namespace: "nav" });
 
   return (
     <div>
@@ -160,7 +160,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
               href="/submit"
               className="bg-brand-500 hover:bg-brand-600 active:bg-brand-700 group inline-flex h-12 items-center justify-center rounded-md px-6 text-base font-medium text-white transition-colors hover:shadow-[0_0_20px_rgba(27,149,192,0.4)] focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
             >
-              {tCommon("nav.submit")}
+              {tNav("report")}
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
