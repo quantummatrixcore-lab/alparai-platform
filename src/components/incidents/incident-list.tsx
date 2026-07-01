@@ -1,8 +1,9 @@
 import * as React from "react";
 import { IncidentCard } from "./incident-card";
 import { EmptyState, Skeleton } from "@/components/ui/feedback";
-import { useTranslations } from "next-intl";
-import { AlertCircle } from "lucide-react";
+import { useTranslations, useLocale } from "next-intl";
+import { AlertCircle, Plus } from "lucide-react";
+import { Link } from "@/i18n/routing";
 import type { IncidentListItem } from "@/types";
 
 export function IncidentList({
@@ -15,9 +16,13 @@ export function IncidentList({
   error?: string | null;
 }) {
   const t = useTranslations("incident");
+  const locale = useLocale();
   if (error) {
     return (
-      <div className="rounded-md border border-danger-500/30 bg-danger-500/5 p-4 text-sm text-danger-400" role="alert">
+      <div
+        className="border-danger-500/30 bg-danger-500/5 text-danger-400 rounded-md border p-4 text-sm"
+        role="alert"
+      >
         <div className="flex items-center gap-2">
           <AlertCircle className="h-4 w-4" />
           {error}
@@ -35,7 +40,25 @@ export function IncidentList({
     );
   }
   if (!incidents.length) {
-    return <EmptyState title={t("no_incidents")} />;
+    return (
+      <EmptyState
+        title={t("no_incidents")}
+        description={
+          locale === "tr"
+            ? "Bu filtreye uyan vaka yok. Bir vaka bildirmek ister misin?"
+            : "No incidents match this filter. Would you like to report an incident?"
+        }
+        action={
+          <Link
+            href="/submit"
+            className="bg-danger-500 hover:bg-danger-600 focus-visible:ring-danger-500 inline-flex h-9 items-center gap-2 rounded-lg px-4 text-xs font-bold text-white shadow-lg transition-all"
+          >
+            <Plus className="h-4 w-4" />
+            {locale === "tr" ? "Vaka Bildir" : "Report Incident"}
+          </Link>
+        }
+      />
+    );
   }
   return (
     <div className="space-y-3">

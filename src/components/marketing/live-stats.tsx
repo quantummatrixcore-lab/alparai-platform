@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { motion, animate, useInView } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Container } from "@/components/ui/layout";
 import { AlertCircle, Cpu, Globe } from "lucide-react";
@@ -11,30 +11,25 @@ interface CounterProps {
 }
 
 function AnimatedNumber({ value }: CounterProps) {
+  const [count, setCount] = React.useState(0);
   const ref = React.useRef<HTMLSpanElement>(null);
-  const motionValue = useMotionValue(value);
-  const springValue = useSpring(motionValue, {
-    damping: 30,
-    stiffness: 100,
-  });
+  const isInView = useInView(ref, { once: true, amount: 0.1 });
 
   React.useEffect(() => {
-    motionValue.set(0);
-    const timer = setTimeout(() => {
-      motionValue.set(value);
-    }, 50);
-    return () => clearTimeout(timer);
-  }, [value, motionValue]);
+    if (value === 0 || !isInView) return;
 
-  React.useEffect(() => {
-    return springValue.on("change", (latest) => {
-      if (ref.current) {
-        ref.current.textContent = Math.floor(latest).toLocaleString();
-      }
+    const controls = animate(0, value, {
+      duration: 1.5,
+      ease: "easeOut",
+      onUpdate: (latest) => {
+        setCount(Math.round(latest));
+      },
     });
-  }, [springValue]);
 
-  return <span ref={ref}>{value.toLocaleString()}</span>;
+    return () => controls.stop();
+  }, [value, isInView]);
+
+  return <span ref={ref}>{count.toLocaleString()}</span>;
 }
 
 interface LiveStatsProps {

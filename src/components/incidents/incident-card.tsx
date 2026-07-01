@@ -162,11 +162,16 @@ export function IncidentCard({
                 </Badge>
               )}
             </div>
-            {incident.is_anonymous && (
-              <Badge variant="muted" size="sm">
-                {t("anonymous")}
-              </Badge>
-            )}
+            <div className="flex shrink-0 items-center gap-2">
+              {incident.is_anonymous && (
+                <Badge variant="muted" size="sm">
+                  {t("anonymous")}
+                </Badge>
+              )}
+              <span className="rounded border border-white/5 bg-slate-950/80 px-2 py-0.5 text-[10px] font-bold text-slate-400">
+                {getFormattedBadgeDate(incident.incident_date, locale)}
+              </span>
+            </div>
           </div>
           <Link
             href={`/incidents/${incident.id}`}
@@ -331,4 +336,71 @@ function TimelineIndicator({ status, t }: { status: IncidentStatus; t: (key: str
       })}
     </div>
   );
+}
+
+function getFormattedBadgeDate(dateString: string, locale: string): string {
+  try {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+    if (diffDays >= 0 && diffDays <= 30) {
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+      if (diffHours < 1) {
+        const diffMins = Math.floor(diffMs / (1000 * 60));
+        if (locale === "tr") {
+          return `${Math.max(1, diffMins)} dakika önce`;
+        }
+        return `${Math.max(1, diffMins)}m ago`;
+      }
+      if (diffHours < 24) {
+        if (locale === "tr") {
+          return `${diffHours} saat önce`;
+        }
+        return `${diffHours}h ago`;
+      }
+      const days = Math.floor(diffDays);
+      if (locale === "tr") {
+        return `${days} gün önce`;
+      }
+      return `${days}d ago`;
+    } else {
+      if (locale === "tr") {
+        const monthsTR = [
+          "Ocak",
+          "Şubat",
+          "Mart",
+          "Nisan",
+          "Mayıs",
+          "Haziran",
+          "Temmuz",
+          "Ağustos",
+          "Eylül",
+          "Ekim",
+          "Kasım",
+          "Aralık",
+        ];
+        return `${monthsTR[date.getMonth()]} ${date.getFullYear()}`;
+      } else {
+        const monthsEN = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+        return `${monthsEN[date.getMonth()]} ${date.getFullYear()}`;
+      }
+    }
+  } catch {
+    return "";
+  }
 }

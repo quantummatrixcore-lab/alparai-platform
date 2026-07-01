@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, animate, useInView } from "framer-motion";
 import { Link } from "@/i18n/routing";
 import { ArrowRight, ShieldAlert, Target, Trophy, Quote, Radio } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -274,32 +274,26 @@ export function HeroSection({
 
 function AnimatedValue({ value }: { value: number | string }) {
   const numVal = typeof value === "number" ? value : 0;
-  const [count, setCount] = React.useState(numVal);
+  const [count, setCount] = React.useState(0);
+  const ref = React.useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, amount: 0.1 });
 
   React.useEffect(() => {
-    if (numVal === 0) return;
-    let start = 0;
-    const duration = 1000;
-    const stepTime = 16;
-    const steps = duration / stepTime;
-    const increment = Math.max(1, Math.ceil(numVal / steps));
+    if (numVal === 0 || !isInView) return;
 
-    setCount(0);
+    const controls = animate(0, numVal, {
+      duration: 1.5,
+      ease: "easeOut",
+      onUpdate: (latest) => {
+        setCount(Math.round(latest));
+      },
+    });
 
-    const timer = setInterval(() => {
-      start += increment;
-      if (start >= numVal) {
-        setCount(numVal);
-        clearInterval(timer);
-      } else {
-        setCount(start);
-      }
-    }, stepTime);
-    return () => clearInterval(timer);
-  }, [numVal]);
+    return () => controls.stop();
+  }, [numVal, isInView]);
 
   if (typeof value === "string") return <>{value}</>;
-  return <>{count.toLocaleString()}</>;
+  return <span ref={ref}>{count.toLocaleString()}</span>;
 }
 
 function LiveStatCard({
