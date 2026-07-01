@@ -1,19 +1,22 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Wordmark } from "@/components/layout/wordmark";
 import { Download, Mail, Globe, Award, FileText } from "lucide-react";
 
-export async function generateMetadata() {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "pressKit" });
   return {
-    title: "Press Kit — ALPAR AI",
-    description: "Brand guidelines, logos, and media assets for ALPAR AI.",
+    title: `${t("title")} — ALPAR AI`,
+    description: t("subtitle"),
   };
 }
 
 export default async function PressKitPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "pressKit" });
 
   return (
     <div>
@@ -21,13 +24,13 @@ export default async function PressKitPage({ params }: { params: Promise<{ local
         <Container>
           <div className="mx-auto max-w-3xl space-y-4">
             <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-bold tracking-wider text-emerald-400 uppercase">
-              Media Resources
+              {t("mediaResources")}
             </span>
             <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-              Press Kit & Brand Assets
+              {t("title")}
             </h1>
             <p className="mx-auto max-w-xl text-lg leading-relaxed text-slate-400">
-              Official brand guidelines, logos, and resources for media coverage of ALPAR AI.
+              {t("subtitle")}
             </p>
           </div>
         </Container>
@@ -40,21 +43,12 @@ export default async function PressKitPage({ params }: { params: Promise<{ local
             <Card className="border-white/5 bg-[#0F1E2E]">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <FileText className="h-5 w-5 text-emerald-400" /> About ALPAR AI
+                  <FileText className="h-5 w-5 text-emerald-400" /> {t("brandStoryTitle")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4 text-sm leading-relaxed text-slate-300">
-                <p>
-                  ALPAR AI is the world’s first community-governed AI accountability and trust
-                  infrastructure, designed to track, audit, and address AI failures, hallucinations,
-                  and compliance deviations in real-time.
-                </p>
-                <p>
-                  By combining community incident reporting, cryptographically verified auditing
-                  logs, and independent moderation policies compliant with EU AI Act and local data
-                  protection regulations, ALPAR AI bridges the trust gap between AI builders and the
-                  general public.
-                </p>
+                <p>{t("brandStoryP1")}</p>
+                <p>{t("brandStoryP2")}</p>
               </CardContent>
             </Card>
 
@@ -62,25 +56,22 @@ export default async function PressKitPage({ params }: { params: Promise<{ local
             <Card className="border-white/5 bg-[#0F1E2E]">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <Award className="h-5 w-5 text-emerald-400" /> Brand Identity
+                  <Award className="h-5 w-5 text-emerald-400" /> {t("brandIdentityTitle")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <p className="text-sm leading-relaxed text-slate-300">
-                  Please use our official brand marks and colors in all publications. Do not
-                  distort, modify, or change the aspect ratio of the logos.
-                </p>
+                <p className="text-sm leading-relaxed text-slate-300">{t("brandIdentityDesc")}</p>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-white/5 bg-[#08121C] p-6 text-center">
                     <Wordmark size="md" />
-                    <span className="text-xs text-slate-400">ALPAR AI Wordmark (Dark Theme)</span>
+                    <span className="text-xs text-slate-400">{t("darkThemeLabel")}</span>
                   </div>
                   <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-white/5 bg-[#08121C] p-6 text-center">
                     <div className="text-2xl font-black tracking-tighter text-emerald-400">
                       ALPAR AI
                     </div>
-                    <span className="text-xs text-slate-400">Standard Logotype</span>
+                    <span className="text-xs text-slate-400">{t("standardLogotype")}</span>
                   </div>
                 </div>
               </CardContent>
@@ -90,7 +81,7 @@ export default async function PressKitPage({ params }: { params: Promise<{ local
             <Card className="border-white/5 bg-[#0F1E2E]">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <Globe className="h-5 w-5 text-emerald-400" /> Color Palette
+                  <Globe className="h-5 w-5 text-emerald-400" /> {t("colorPaletteTitle")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -120,15 +111,13 @@ export default async function PressKitPage({ params }: { params: Promise<{ local
                 <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400">
                   <Download className="h-6 w-6" />
                 </div>
-                <h3 className="text-sm font-bold text-white">Download Assets</h3>
-                <p className="text-xs text-slate-400">
-                  Get high-resolution logos, product screenshots, and executive headshots.
-                </p>
+                <h3 className="text-sm font-bold text-white">{t("downloadTitle")}</h3>
+                <p className="text-xs text-slate-400">{t("downloadDesc")}</p>
                 <a
                   href="/brand-assets.zip"
                   className="block w-full rounded-md bg-emerald-400 px-4 py-2.5 text-xs font-bold text-[#0A1622] shadow-lg shadow-emerald-400/10 transition-colors hover:bg-emerald-300"
                 >
-                  Download Media Kit (.zip)
+                  {t("downloadCta")}
                 </a>
               </CardContent>
             </Card>
@@ -136,11 +125,9 @@ export default async function PressKitPage({ params }: { params: Promise<{ local
             <Card className="border-white/5 bg-[#0F1E2E]">
               <CardContent className="space-y-3 p-4">
                 <p className="inline-flex items-center gap-2 text-sm font-semibold text-white">
-                  <Mail className="h-4 w-4 text-emerald-400" /> Media Contact
+                  <Mail className="h-4 w-4 text-emerald-400" /> {t("mediaContactTitle")}
                 </p>
-                <p className="text-xs text-slate-400">
-                  For press inquiries, interviews, or expert commentary on AI safety.
-                </p>
+                <p className="text-xs text-slate-400">{t("mediaContactDesc")}</p>
                 <a
                   href="mailto:press@alparai.com"
                   className="block border-t border-white/5 pt-2 text-sm font-bold text-emerald-400 hover:text-emerald-300"

@@ -36,20 +36,32 @@ const ClosingSection = dynamic(() =>
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "app" });
+
+  const supabase = await createServerClient();
+  const [{ count: incidentCount }, { data: providers }] = await Promise.all([
+    supabase
+      .from("incidents")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "published"),
+    supabase.from("ai_providers").select("id"),
+  ]);
+
+  const incidents = (incidentCount ?? 371).toString();
+  const providerCount = (providers?.length ?? 23).toString();
+  const ogDescription = `World's first community-governed AI accountability platform. ${incidents}+ verified incidents. ${providerCount} providers tracked.`;
+
   return {
     title: t("title"),
     description: t("description"),
     openGraph: {
       title: "ALPAR AI — When an AI lies, who is accountable?",
-      description:
-        "World's first community-governed AI accountability platform. 371+ verified incidents. 23 providers tracked.",
+      description: ogDescription,
       images: ["/og-image.jpg"],
     },
     twitter: {
       card: "summary_large_image",
       title: "ALPAR AI — When an AI lies, who is accountable?",
-      description:
-        "World's first community-governed AI accountability platform. 371+ verified incidents. 23 providers tracked.",
+      description: ogDescription,
       images: ["/og-image.jpg"],
     },
   };

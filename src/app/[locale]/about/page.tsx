@@ -65,7 +65,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                 {totalIncidents}+
               </span>
               <span className="text-fg-muted text-xs font-bold tracking-wider uppercase">
-                Verified AI Failures
+                {t("statsVerified")}
               </span>
             </div>
             <div className="space-y-2">
@@ -73,7 +73,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                 {totalProviders}
               </span>
               <span className="text-fg-muted text-xs font-bold tracking-wider uppercase">
-                AI Providers Tracked
+                {t("statsProviders")}
               </span>
             </div>
             <div className="space-y-2">
@@ -81,7 +81,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                 {totalCountries}
               </span>
               <span className="text-fg-muted text-xs font-bold tracking-wider uppercase">
-                Countries Impacted
+                {t("statsCountries")}
               </span>
             </div>
           </div>
