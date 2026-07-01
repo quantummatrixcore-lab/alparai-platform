@@ -8,9 +8,16 @@ vi.mock("server-only", () => ({}));
 
 const mockUpsert = vi.fn();
 const mockSelect = vi.fn();
-const mockFrom = vi.fn(() => ({
-  upsert: mockUpsert,
-}));
+const mockFrom = vi.fn((table) => {
+  if (table === "ai_providers") {
+    return {
+      select: vi.fn().mockResolvedValue({ data: [], error: null }),
+    };
+  }
+  return {
+    upsert: mockUpsert,
+  };
+});
 
 vi.mock("@/lib/supabase/admin", () => ({
   createAdminClient: () => ({ from: mockFrom }),

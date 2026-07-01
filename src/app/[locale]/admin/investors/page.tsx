@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { Container } from "@/components/ui/layout";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -7,9 +7,11 @@ import { TrendingUp } from "lucide-react";
 import { InvestorApplicationsList } from "@/components/admin/investor-applications-list";
 import type { InvestorApplicationItem } from "@/components/admin/investor-applications-list";
 
-export const metadata = {
-  title: "Investor Applications — Admin Panel",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "admin" });
+  return { title: t("investors_title") };
+}
 
 export default async function AdminInvestorsPage({
   params,
@@ -18,6 +20,7 @@ export default async function AdminInvestorsPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "admin" });
 
   const user = await getCurrentUser();
   if (!user) redirect(`/${locale}/auth/signin?next=/${locale}/admin/investors`);
@@ -45,11 +48,9 @@ export default async function AdminInvestorsPage({
     <Container className="py-10">
       <header className="mb-6">
         <h1 className="text-fg-primary inline-flex items-center gap-2 text-2xl font-bold">
-          <TrendingUp className="h-6 w-6 text-emerald-400" /> Investor Applications
+          <TrendingUp className="h-6 w-6 text-emerald-400" /> {t("investors_heading")}
         </h1>
-        <p className="text-fg-muted mt-1 text-sm">
-          Review, approve, or reject access requests for the gated investor portal.
-        </p>
+        <p className="text-fg-muted mt-1 text-sm">{t("investors_desc")}</p>
       </header>
 
       <InvestorApplicationsList applications={applications} />

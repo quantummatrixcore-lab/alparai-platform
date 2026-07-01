@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { requireAdmin } from "@/lib/auth/session";
 import { getSocialPosts, getSocialTemplates, getSocialAssets } from "@/actions/social";
 import { SocialDashboardClient } from "@/components/admin/social-dashboard-client";
@@ -8,7 +7,6 @@ export default async function AdminSocialPage({ params }: { params: Promise<{ lo
   const { locale } = await params;
   setRequestLocale(locale);
 
-  // Guard access to admin/ceo
   await requireAdmin();
 
   const [posts, templates, assets] = await Promise.all([
@@ -19,8 +17,11 @@ export default async function AdminSocialPage({ params }: { params: Promise<{ lo
 
   return (
     <SocialDashboardClient
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       initialPosts={posts as any}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       initialTemplates={templates as any}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       initialAssets={assets as any}
     />
   );
