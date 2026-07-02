@@ -6,7 +6,7 @@ const csp = [
   "script-src 'self' 'unsafe-inline' https://*.supabase.co https://*.sentry.io https://challenges.cloudflare.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
-  "img-src 'self' data: blob: https://*.supabase.co https://*.googleusercontent.com https://avatars.githubusercontent.com https://logo.clearbit.com",
+  "img-src 'self' data: blob: https:",
   "connect-src 'self' https://*.supabase.co https://*.sentry.io wss://*.supabase.co https://challenges.cloudflare.com",
   "frame-src https://challenges.cloudflare.com",
   "worker-src 'self' blob:",

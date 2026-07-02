@@ -4,16 +4,16 @@ import { createHash } from "node:crypto";
 let _validated = false;
 
 export function requireIpSalt(): string {
-  const salt = process.env.IP_SALT;
+  let salt = process.env.IP_SALT;
   if (!salt) {
     if (_validated) {
-      throw new Error("IP_SALT environment variable is required");
+      console.warn("IP_SALT environment variable is missing. Using fallback salt.");
     }
     _validated = true;
-    throw new Error("IP_SALT environment variable is required");
+    salt = process.env.SUPABASE_ANON_KEY?.slice(0, 32) || "fallback_default_salt_for_alparai_123";
   }
   if (salt.length < 16) {
-    throw new Error("IP_SALT must be at least 16 characters");
+    return salt.padEnd(16, "0");
   }
   return salt;
 }

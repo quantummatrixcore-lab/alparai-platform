@@ -35,13 +35,14 @@ export default async function LeaderboardPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ filter?: string; sort?: string; order?: string }>;
+  searchParams: Promise<{ filter?: string; sort?: string; order?: string; q?: string }>;
 }) {
   const { locale } = await params;
-  const { filter, sort, order } = (await searchParams) ?? {};
+  const { filter, sort, order, q } = (await searchParams) ?? {};
   const currentFilter = filter || "all";
   const currentSort = sort || "score";
   const currentOrder = order || (currentSort === "provider" ? "asc" : "desc");
+  const searchQuery = q || "";
 
   setRequestLocale(locale);
   const supabase = await createServerClient();
@@ -99,8 +100,9 @@ export default async function LeaderboardPage({
     }));
 
   const filteredStats = rankedStats.filter((p) => {
-    if (currentFilter === "verified") return p.is_verified;
-    if (currentFilter === "with_incidents") return p.incident_count > 0;
+    if (currentFilter === "verified" && !p.is_verified) return false;
+    if (currentFilter === "with_incidents" && p.incident_count <= 0) return false;
+    if (searchQuery && !p.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
   });
 
@@ -139,7 +141,8 @@ export default async function LeaderboardPage({
     if (!isCurrent) {
       nextOrder = key === "provider" ? "asc" : "desc";
     }
-    return `/leaderboard?filter=${currentFilter}&sort=${key}&order=${nextOrder}`;
+    const qParam = searchQuery ? `&q=${encodeURIComponent(searchQuery)}` : "";
+    return `/leaderboard?filter=${currentFilter}&sort=${key}&order=${nextOrder}${qParam}`;
   };
 
   const renderSortIcon = (key: string) => {
@@ -203,6 +206,23 @@ export default async function LeaderboardPage({
         >
           {t("filter_with_incidents")}
         </Link>
+      </div>
+
+      <div className="mb-6">
+        <form method="GET" action="/leaderboard" className="relative max-w-md">
+          {currentFilter !== "all" && <input type="hidden" name="filter" value={currentFilter} />}
+          {currentSort !== "score" && <input type="hidden" name="sort" value={currentSort} />}
+          {currentOrder !== "desc" && <input type="hidden" name="order" value={currentOrder} />}
+          <div className="relative">
+            <input
+              type="search"
+              name="q"
+              defaultValue={searchQuery}
+              placeholder={locale === "tr" ? "Sağlayıcı ara..." : "Search providers..."}
+              className="border-border-subtle bg-bg-secondary text-fg-primary placeholder:text-fg-muted focus:ring-brand-500 flex h-10 w-full rounded-md border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
+            />
+          </div>
+        </form>
       </div>
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
