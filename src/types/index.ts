@@ -277,3 +277,12 @@ export interface StrategyMetricsSnapshot {
   health_score: number; // 0-100
   created_at: string;
 }
+
+export interface StrategyTodo {
+  id: string;
+  priority: number;
+  title: string;
+  is_completed: boolean;
+  created_at: string;
+  updated_at: string;
+}

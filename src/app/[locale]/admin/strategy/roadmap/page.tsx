@@ -4,8 +4,9 @@ import { Container } from "@/components/ui/layout";
 import { requireAdvisor } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { RoadmapClient } from "@/components/admin/strategy/roadmap-client";
+import { RoadmapTodosClient } from "@/components/admin/strategy/todos-client";
 import { Compass } from "lucide-react";
-import type { StrategyMilestone } from "@/types";
+import type { StrategyMilestone, StrategyTodo } from "@/types";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -22,9 +23,18 @@ export default async function RoadmapPage({ params }: { params: Promise<{ locale
   const isReadOnly = user.role === "advisor";
 
   const supabase = await createServerClient();
-  const { data } = await supabase.from("strategy_milestones").select("*").order("quarter");
+  const { data: milestonesData } = await supabase
+    .from("strategy_milestones")
+    .select("*")
+    .order("quarter");
+  const { data: todosData } = await supabase
+    .from("strategy_todos")
+    .select("*")
+    .order("priority")
+    .order("created_at");
 
-  const initialMilestones = (data ?? []) as StrategyMilestone[];
+  const initialMilestones = (milestonesData ?? []) as StrategyMilestone[];
+  const initialTodos = (todosData ?? []) as StrategyTodo[];
 
   return (
     <div className="min-h-screen py-8">
@@ -145,6 +155,9 @@ export default async function RoadmapPage({ params }: { params: Promise<{ locale
           isReadOnly={isReadOnly}
           locale={locale}
         />
+
+        {/* Roadmap To-Dos / Checklists */}
+        <RoadmapTodosClient initialTodos={initialTodos} isReadOnly={isReadOnly} locale={locale} />
       </Container>
     </div>
   );
