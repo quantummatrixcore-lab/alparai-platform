@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import createIntlMiddleware from "next-intl/middleware";
 import { updateSession } from "@/lib/supabase/middleware";
 import { routing } from "@/i18n/routing";
@@ -6,6 +6,13 @@ import { routing } from "@/i18n/routing";
 const intlMiddleware = createIntlMiddleware(routing);
 
 export async function proxy(request: NextRequest) {
+  // Server actions use POST with a Next-Action header.
+  // Skip intl middleware + session refresh for action POSTs to avoid
+  // redirects or cookie mutations that break the action response.
+  if (request.headers.has("next-action")) {
+    return NextResponse.next();
+  }
+
   const requestId = request.headers.get("x-request-id") ?? crypto.randomUUID();
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-request-id", requestId);
@@ -15,8 +22,22 @@ export async function proxy(request: NextRequest) {
     headers: requestHeaders,
   });
 
-  const intlResponse = intlMiddleware(requestWithId);
-  const response = await updateSession(requestWithId, intlResponse);
+  let intlResponse;
+  try {
+    intlResponse = intlMiddleware(requestWithId);
+  } catch (err) {
+    console.error("[proxy] intlMiddleware threw:", err);
+    return NextResponse.next();
+  }
+
+  let response;
+  try {
+    response = await updateSession(requestWithId, intlResponse);
+  } catch (err) {
+    console.error("[proxy] updateSession threw:", err);
+    response = intlResponse;
+  }
+
   response.headers.set("x-request-id", requestId);
   return response;
 }
