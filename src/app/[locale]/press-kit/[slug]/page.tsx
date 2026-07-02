@@ -1,14 +1,13 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Link } from "@/i18n/routing";
-import Image from "next/image";
 import { createServerClient } from "@/lib/supabase/server";
+import { ProviderLogo } from "@/components/leaderboard/provider-logo";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { IncidentList } from "@/components/incidents/incident-list";
 import {
-  Building2,
   Globe,
   Mail,
   ExternalLink,
@@ -144,20 +143,9 @@ export default async function BrandPage({
       <Card variant="gradient" className="mb-8">
         <CardHeader>
           <div className="flex items-start gap-4">
-            {providerLogo ? (
-              <Image
-                src={providerLogo}
-                alt={`${providerName} logo`}
-                width={64}
-                height={64}
-                unoptimized
-                className="border-border-subtle bg-bg-tertiary rounded-md border object-contain"
-              />
-            ) : (
-              <div className="border-border-subtle bg-bg-tertiary flex h-16 w-16 items-center justify-center rounded-md border">
-                <Building2 className="text-fg-muted h-8 w-8" />
-              </div>
-            )}
+            <div className="border-border-subtle bg-bg-tertiary relative h-16 w-16 shrink-0 overflow-hidden rounded-md border shadow-sm">
+              <ProviderLogo src={providerLogo} name={providerName} size="lg" />
+            </div>
             <div className="flex-1 space-y-2">
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-fg-primary text-2xl font-bold">{providerName}</h1>

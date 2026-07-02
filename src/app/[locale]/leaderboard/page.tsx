@@ -5,12 +5,21 @@ import { createServerClient } from "@/lib/supabase/server";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, MessageSquare, TrendingUp, TrendingDown, AlertCircle, Plus } from "lucide-react";
+import {
+  Trophy,
+  MessageSquare,
+  TrendingUp,
+  TrendingDown,
+  AlertCircle,
+  Plus,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+} from "lucide-react";
 import { cn, formatNumber } from "@/lib/utils";
 import { Link } from "@/i18n/routing";
 import { ProviderLogo } from "@/components/leaderboard/provider-logo";
 import { ShareButtons } from "@/components/incidents/share-buttons";
-import Image from "next/image";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -26,11 +35,13 @@ export default async function LeaderboardPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ filter?: string }>;
+  searchParams: Promise<{ filter?: string; sort?: string; order?: string }>;
 }) {
   const { locale } = await params;
-  const { filter } = (await searchParams) ?? {};
+  const { filter, sort, order } = (await searchParams) ?? {};
   const currentFilter = filter || "all";
+  const currentSort = sort || "score";
+  const currentOrder = order || (currentSort === "provider" ? "asc" : "desc");
 
   setRequestLocale(locale);
   const supabase = await createServerClient();
@@ -74,20 +85,74 @@ export default async function LeaderboardPage({
     };
   });
 
-  const filteredStats = stats.filter((p) => {
+  const rankedStats = [...stats]
+    .sort((a, b) => {
+      const scoreA = a.trust_score ?? 70;
+      const scoreB = b.trust_score ?? 70;
+      if (scoreB !== scoreA) return scoreB - scoreA;
+      if (a.incident_count !== b.incident_count) return a.incident_count - b.incident_count;
+      return a.name.localeCompare(b.name);
+    })
+    .map((p, idx) => ({
+      ...p,
+      rank: idx + 1,
+    }));
+
+  const filteredStats = rankedStats.filter((p) => {
     if (currentFilter === "verified") return p.is_verified;
     if (currentFilter === "with_incidents") return p.incident_count > 0;
     return true;
   });
 
   const sorted = filteredStats.sort((a, b) => {
+    const isAsc = currentOrder === "asc";
+
+    if (currentSort === "provider") {
+      return isAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+    }
+
+    if (currentSort === "incidents") {
+      return isAsc ? a.incident_count - b.incident_count : b.incident_count - a.incident_count;
+    }
+
+    if (currentSort === "responses") {
+      return isAsc ? a.response_count - b.response_count : b.response_count - a.response_count;
+    }
+
+    if (currentSort === "rate") {
+      return isAsc ? a.response_rate - b.response_rate : b.response_rate - a.response_rate;
+    }
+
+    // Default or "score"
     const scoreA = a.trust_score ?? 70;
     const scoreB = b.trust_score ?? 70;
-    if (scoreB !== scoreA) return scoreB - scoreA;
-    // Secondary sort: incident count ascending or name
-    if (a.incident_count !== b.incident_count) return a.incident_count - b.incident_count;
+    if (scoreB !== scoreA) {
+      return isAsc ? scoreA - scoreB : scoreB - scoreA;
+    }
+    // Secondary sort
     return a.name.localeCompare(b.name);
   });
+
+  const getSortLink = (key: string) => {
+    const isCurrent = currentSort === key;
+    let nextOrder = currentOrder === "asc" ? "desc" : "asc";
+    if (!isCurrent) {
+      nextOrder = key === "provider" ? "asc" : "desc";
+    }
+    return `/leaderboard?filter=${currentFilter}&sort=${key}&order=${nextOrder}`;
+  };
+
+  const renderSortIcon = (key: string) => {
+    if (currentSort !== key)
+      return (
+        <ArrowUpDown className="ml-1 h-3.5 w-3.5 shrink-0 opacity-40 transition-opacity group-hover:opacity-75" />
+      );
+    return currentOrder === "asc" ? (
+      <ArrowUp className="text-brand-400 ml-1 h-3.5 w-3.5 shrink-0" />
+    ) : (
+      <ArrowDown className="text-brand-400 ml-1 h-3.5 w-3.5 shrink-0" />
+    );
+  };
 
   return (
     <Container className="py-10">
@@ -258,38 +323,80 @@ export default async function LeaderboardPage({
                 <caption className="sr-only">{t("caption")}</caption>
                 <thead>
                   <tr className="border-border-subtle text-fg-muted border-b text-left text-xs font-semibold tracking-wider uppercase">
-                    <th className="w-12 p-4">{t("rank")}</th>
-                    <th className="p-4">{t("provider")}</th>
-                    <th className="p-4 text-right">{t("incidents")}</th>
+                    <th className="w-12 p-4">
+                      <Link
+                        href={getSortLink("score")}
+                        className="group hover:text-fg-primary inline-flex items-center transition-colors"
+                      >
+                        {t("rank")}
+                        {renderSortIcon("score")}
+                      </Link>
+                    </th>
+                    <th className="p-4">
+                      <Link
+                        href={getSortLink("provider")}
+                        className="group hover:text-fg-primary inline-flex items-center transition-colors"
+                      >
+                        {t("provider")}
+                        {renderSortIcon("provider")}
+                      </Link>
+                    </th>
                     <th className="p-4 text-right">
-                      <span className="inline-flex items-center gap-1">
-                        <MessageSquare className="h-3 w-3" />
+                      <Link
+                        href={getSortLink("incidents")}
+                        className="group hover:text-fg-primary inline-flex w-full items-center justify-end transition-colors"
+                      >
+                        {t("incidents")}
+                        {renderSortIcon("incidents")}
+                      </Link>
+                    </th>
+                    <th className="p-4 text-right">
+                      <Link
+                        href={getSortLink("responses")}
+                        className="group hover:text-fg-primary inline-flex w-full items-center justify-end transition-colors"
+                      >
+                        <MessageSquare className="mr-1 h-3 w-3" />
                         {t("responses")}
-                      </span>
+                        {renderSortIcon("responses")}
+                      </Link>
                     </th>
                     <th className="p-4 text-right">
-                      <span className="inline-flex items-center gap-1">{t("responseRate")}</span>
+                      <Link
+                        href={getSortLink("rate")}
+                        className="group hover:text-fg-primary inline-flex w-full items-center justify-end transition-colors"
+                      >
+                        {t("responseRate")}
+                        {renderSortIcon("rate")}
+                      </Link>
                     </th>
-                    <th className="p-4 text-right">{t("trustScore")}</th>
+                    <th className="p-4 text-right">
+                      <Link
+                        href={getSortLink("score")}
+                        className="group hover:text-fg-primary inline-flex w-full items-center justify-end transition-colors"
+                      >
+                        {t("trustScore")}
+                        {renderSortIcon("score")}
+                      </Link>
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-border-subtle divide-y">
-                  {sorted.map((p, i) => (
+                  {sorted.map((p) => (
                     <tr key={p.id} className="hover:bg-bg-tertiary/30">
                       <td className="p-4">
                         <span
                           className={cn(
                             "inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold",
-                            i === 0
+                            p.rank === 1
                               ? "bg-warning-500/15 text-warning-500"
-                              : i === 1
+                              : p.rank === 2
                                 ? "bg-fg-muted/15 text-fg-muted"
-                                : i === 2
+                                : p.rank === 3
                                   ? "bg-warning-700/15 text-warning-700"
                                   : "bg-bg-tertiary text-fg-muted",
                           )}
                         >
-                          {i + 1}
+                          {p.rank}
                         </span>
                       </td>
                       <td className="p-4">
@@ -297,21 +404,9 @@ export default async function LeaderboardPage({
                           href={`/press-kit/${p.slug}`}
                           className="text-fg-primary hover:text-brand-400 group flex items-center gap-3 font-medium transition-colors"
                         >
-                          {p.logo_url ? (
-                            <div className="border-border-subtle bg-bg-primary relative h-10 w-10 shrink-0 overflow-hidden rounded-md border shadow-sm transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_15px_rgba(231,76,60,0.3)]">
-                              <Image
-                                src={p.logo_url}
-                                alt={`${p.name} logo`}
-                                fill
-                                className="object-contain p-1.5"
-                                sizes="40px"
-                              />
-                            </div>
-                          ) : (
-                            <div className="border-border-subtle bg-bg-primary relative h-10 w-10 shrink-0 overflow-hidden rounded-md border shadow-sm">
-                              <ProviderLogo src={null} name={p.name} />
-                            </div>
-                          )}
+                          <div className="border-border-subtle bg-bg-primary relative h-10 w-10 shrink-0 overflow-hidden rounded-md border shadow-sm transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_15px_rgba(231,76,60,0.3)]">
+                            <ProviderLogo src={p.logo_url} name={p.name} size="sm" />
+                          </div>
                           <span className="text-fg-primary">{p.name}</span>
                         </Link>
                       </td>

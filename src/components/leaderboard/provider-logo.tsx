@@ -9,12 +9,6 @@ interface ProviderLogoProps {
   size?: "sm" | "md" | "lg";
 }
 
-const SIZE_CLASS = {
-  sm: "h-8 w-8 text-xs",
-  md: "h-12 w-12 text-base",
-  lg: "h-16 w-16 text-xl",
-} as const;
-
 const SIZE_NUMBERS = {
   sm: 32,
   md: 48,
@@ -53,20 +47,26 @@ function getInitials(name: string): string {
   return (first + last).toUpperCase();
 }
 
-export function ProviderLogo({ src, name, size = "md" }: ProviderLogoProps) {
+export function ProviderLogo({
+  src,
+  name,
+  size = "md",
+  className,
+}: ProviderLogoProps & { className?: string }) {
   const [imgError, setImgError] = useState(false);
   const initials = getInitials(name);
   const palette = hashStringToColor(name);
-  const sizeClass = SIZE_CLASS[size];
   const sizePx = SIZE_NUMBERS[size];
 
   if (!src || imgError) {
     return (
       <div
-        className={`flex items-center justify-center rounded-md font-black tracking-tight ${palette.bg} ${palette.fg} ${sizeClass}`}
+        className={`flex items-center justify-center rounded-md font-black tracking-tight ${palette.bg} ${palette.fg} h-full w-full ${className || ""}`}
         aria-label={`${name} logo placeholder`}
       >
-        {initials}
+        <span className={size === "sm" ? "text-xs" : size === "lg" ? "text-xl" : "text-base"}>
+          {initials}
+        </span>
       </div>
     );
   }
@@ -78,7 +78,7 @@ export function ProviderLogo({ src, name, size = "md" }: ProviderLogoProps) {
       width={sizePx}
       height={sizePx}
       unoptimized
-      className={`h-full w-full rounded-md object-contain p-1.5`}
+      className={`h-full w-full rounded-md object-contain p-1.5 ${className || ""}`}
       onError={() => setImgError(true)}
     />
   );
