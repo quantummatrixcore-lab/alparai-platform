@@ -1690,6 +1690,33 @@ export type Database = {
           },
         ];
       };
+      strategy_todos: {
+        Row: {
+          created_at: string;
+          id: string;
+          is_completed: boolean;
+          priority: number;
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          is_completed?: boolean;
+          priority?: number;
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          is_completed?: boolean;
+          priority?: number;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       strategy_risks: {
         Row: {
           code: string;

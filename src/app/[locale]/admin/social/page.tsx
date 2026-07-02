@@ -17,12 +17,9 @@ export default async function AdminSocialPage({ params }: { params: Promise<{ lo
 
   return (
     <SocialDashboardClient
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      initialPosts={posts as any}
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      initialTemplates={templates as any}
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      initialAssets={assets as any}
+      initialPosts={posts}
+      initialTemplates={templates}
+      initialAssets={assets}
     />
   );
 }

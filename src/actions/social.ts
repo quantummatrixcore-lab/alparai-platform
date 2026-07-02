@@ -1,38 +1,42 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { createServerClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/auth/session";
 import { revalidatePath } from "next/cache";
+import type {
+  SocialPost,
+  SocialTemplate,
+  SocialAsset,
+} from "@/components/admin/social-dashboard-client";
 
-export async function getSocialPosts(): Promise<any[]> {
+export async function getSocialPosts(): Promise<SocialPost[]> {
   await requireAdmin();
-  const supabase = (await createServerClient()) as any;
+  const supabase = await createServerClient();
   const { data, error } = await supabase
     .from("social_posts")
     .select("*")
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
-  return data || [];
+  return (data || []) as SocialPost[];
 }
 
-export async function getSocialTemplates(): Promise<any[]> {
+export async function getSocialTemplates(): Promise<SocialTemplate[]> {
   await requireAdmin();
-  const supabase = (await createServerClient()) as any;
+  const supabase = await createServerClient();
   const { data, error } = await supabase.from("social_templates").select("*").order("name");
   if (error) throw new Error(error.message);
-  return data || [];
+  return (data || []) as SocialTemplate[];
 }
 
-export async function getSocialAssets(): Promise<any[]> {
+export async function getSocialAssets(): Promise<SocialAsset[]> {
   await requireAdmin();
-  const supabase = (await createServerClient()) as any;
+  const supabase = await createServerClient();
   const { data, error } = await supabase
     .from("social_assets")
     .select("*")
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
-  return data || [];
+  return (data || []) as SocialAsset[];
 }
 
 export async function createSocialPost(post: {
@@ -61,7 +65,7 @@ export async function createSocialPost(post: {
   shares_count?: number;
 }) {
   const user = await requireAdmin();
-  const supabase = (await createServerClient()) as any;
+  const supabase = await createServerClient();
   const { error } = await supabase.from("social_posts").insert({
     ...post,
     created_by: user.id,
@@ -100,7 +104,7 @@ export async function updateSocialPost(
   },
 ) {
   await requireAdmin();
-  const supabase = (await createServerClient()) as any;
+  const supabase = await createServerClient();
   const { error } = await supabase
     .from("social_posts")
     .update({

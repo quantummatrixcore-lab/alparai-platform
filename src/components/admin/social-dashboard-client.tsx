@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import * as React from "react";
@@ -26,7 +25,7 @@ import { cn } from "@/lib/utils";
 import { createSocialPost, updateSocialPost } from "@/actions/social";
 import { toast } from "sonner";
 
-interface SocialPost {
+export interface SocialPost {
   id: string;
   platform: "linkedin" | "x" | "instagram" | "facebook" | "whatsapp";
   status: "draft" | "scheduled" | "published" | "archived";
@@ -56,7 +55,7 @@ interface SocialPost {
   updated_at: string;
 }
 
-interface SocialTemplate {
+export interface SocialTemplate {
   id: string;
   name: string;
   platform: "linkedin" | "x" | "instagram" | "all";
@@ -80,7 +79,7 @@ interface SocialTemplate {
   created_at: string;
 }
 
-interface SocialAsset {
+export interface SocialAsset {
   id: string;
   asset_type: "image" | "video" | "carousel" | "reel" | "story";
   title: string;
@@ -91,7 +90,7 @@ interface SocialAsset {
   created_at: string;
 }
 
-interface Props {
+export interface Props {
   initialPosts: SocialPost[];
   initialTemplates: SocialTemplate[];
   initialAssets: SocialAsset[];
@@ -203,7 +202,9 @@ export function SocialDashboardClient({
     setEditingPost(null);
     setFormTitle(`Draft from template: ${template.name}`);
     setFormBody(template.template_body);
-    setFormPlatform(template.platform === "all" ? "linkedin" : (template.platform as any));
+    setFormPlatform(
+      template.platform === "all" ? "linkedin" : (template.platform as SocialPost["platform"]),
+    );
     setFormContentType(template.content_type);
     setFormStatus("draft");
     setFormScheduledAt("");
@@ -755,7 +756,7 @@ export function SocialDashboardClient({
                   </label>
                   <select
                     value={formPlatform}
-                    onChange={(e) => setFormPlatform(e.target.value as any)}
+                    onChange={(e) => setFormPlatform(e.target.value as SocialPost["platform"])}
                     className="bg-bg-primary border-border-subtle text-fg-primary w-full rounded-xl border px-3 py-2 focus:outline-none"
                   >
                     <option value="linkedin">LinkedIn</option>
@@ -770,7 +771,9 @@ export function SocialDashboardClient({
                   </label>
                   <select
                     value={formContentType}
-                    onChange={(e) => setFormContentType(e.target.value as any)}
+                    onChange={(e) =>
+                      setFormContentType(e.target.value as SocialPost["content_type"])
+                    }
                     className="bg-bg-primary border-border-subtle text-fg-primary w-full rounded-xl border px-3 py-2 focus:outline-none"
                   >
                     <option value="manifesto">
@@ -826,7 +829,7 @@ export function SocialDashboardClient({
                   </label>
                   <select
                     value={formStatus}
-                    onChange={(e) => setFormStatus(e.target.value as any)}
+                    onChange={(e) => setFormStatus(e.target.value as SocialPost["status"])}
                     className="bg-bg-primary border-border-subtle text-fg-primary w-full rounded-xl border px-3 py-2 focus:outline-none"
                   >
                     <option value="draft">

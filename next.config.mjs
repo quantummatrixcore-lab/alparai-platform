@@ -108,6 +108,26 @@ const nextConfig = {
         destination: "/:locale/dilemmas",
         permanent: true,
       },
+      {
+        source: "/:locale/brand",
+        destination: "/:locale/press-kit",
+        permanent: true,
+      },
+      {
+        source: "/:locale/brand/:slug*",
+        destination: "/:locale/press-kit/:slug*",
+        permanent: true,
+      },
+      {
+        source: "/brand",
+        destination: "/press-kit",
+        permanent: true,
+      },
+      {
+        source: "/brand/:slug*",
+        destination: "/press-kit/:slug*",
+        permanent: true,
+      },
     ];
   },
 };

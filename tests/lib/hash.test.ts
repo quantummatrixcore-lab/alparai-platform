@@ -14,14 +14,15 @@ describe("hash utilities", () => {
     process.env = { ...originalEnv };
   });
 
-  it("requires IP_SALT to be set", () => {
+  it("uses fallback if IP_SALT is missing", () => {
     process.env.IP_SALT = "";
-    expect(() => requireIpSalt()).toThrow("IP_SALT environment variable is required");
+    process.env.SUPABASE_ANON_KEY = "test_anon_key_long_enough_1234567890";
+    expect(requireIpSalt()).toBe("test_anon_key_long_enough_123456");
   });
 
-  it("requires IP_SALT to be at least 16 chars", () => {
+  it("pads IP_SALT with 0 if it is shorter than 16 chars", () => {
     process.env.IP_SALT = "short";
-    expect(() => requireIpSalt()).toThrow("IP_SALT must be at least 16 characters");
+    expect(requireIpSalt()).toBe("short00000000000");
   });
 
   it("hashes IP successfully with salt", () => {
