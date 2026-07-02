@@ -220,10 +220,10 @@ describe("getConnectorStatuses", () => {
 
     const result = await getConnectorStatuses();
     expect(result).toHaveLength(3);
-    expect(result[0].name).toContain("Reddit");
-    expect(result[0].pending_count).toBe(1);
-    expect(result[1].name).toContain("Hacker News");
-    expect(result[1].pending_count).toBe(1);
+    expect(result[0]!.name).toContain("Reddit");
+    expect(result[0]!.pending_count).toBe(1);
+    expect(result[1]!.name).toContain("Hacker News");
+    expect(result[1]!.pending_count).toBe(1);
   });
 });
 

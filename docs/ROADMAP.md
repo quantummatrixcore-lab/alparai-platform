@@ -109,13 +109,12 @@ Product Hunt:
 
 ## ÖNCELİK 1 — ACİL (Bu Hafta)
 
-□ Cloudflare Email Routing
-hello@alparai.com
-press@alparai.com
-academy@alparai.com
-security@alparai.com
-→ Hepsi ercuerden@gmail.com'a yönlendir
-→ cloudflare.com → Email → Email Routing
+✅ Cloudflare Email Routing — TAMAMLANDI (2 Temmuz 2026)
+hello@alparai.com → quantum.matrix.core@gmail.com
+press@alparai.com → quantum.matrix.core@gmail.com
+academy@alparai.com → quantum.matrix.core@gmail.com
+security@alparai.com → quantum.matrix.core@gmail.com
+4 kural aktif, Resend domain verified
 
 □ Twitter/X hesabı aç: @alparai_official
 □ LinkedIn Şirket Sayfası aç
@@ -160,28 +159,24 @@ Emily M. Bender (@emilymbender)
 Margaret Mitchell (@mmitchell_ai)
 → X'ten kısa mesaj, haber linki ile
 
-□ AI Medya Outreach
-MIT Technology Review: tips@technologyreview.com
-404 Media: tips@404media.co
-Import AI: jack@anthropic.com
-Semafor: tips@semafor.com
-The Information: tips@theinformation.com
+✅ AI Medya Outreach — TAMAMLANDI (2 Temmuz 2026)
+TechCrunch: tips@techcrunch.com → ✅ gönderildi
+Wired: tips@wired.com → ✅ gönderildi
+404 Media: tips@404media.co → ✅ gönderildi
+Semafor: tips@semafor.com → ✅ gönderildi
+The Information: tips@theinformation.com → ✅ gönderildi
+Import AI: jack@importai.substack.com → ✅ gönderildi
 
-□ Uluslararası Genel Medya
-TechCrunch: tips@techcrunch.com
-Wired: tips@wired.com
-Guardian WhatsApp: +44 7867 825056
-BBC WhatsApp: +44 7756 165803
+✅ Uluslararası Genel Medya — TAMAMLANDI (2 Temmuz 2026)
+Guardian: tips@theguardian.com → ✅ gönderildi
+BBC: +44 7756 165803 → ⏳ WhatsApp ile tekrar gönderilecek
 
-□ AI Güvenlik Kuruluşları
-AI Incident Database: contact@partnershiponai.org
-AI Now Institute: contact@ainowinstitute.org
-DAIR Institute: contact@dair-institute.org
-EFF: info@eff.org
+✅ AI Güvenlik Kuruluşları — TAMAMLANDI (2 Temmuz 2026)
+EFF: info@eff.org → ✅ gönderildi
+AI Now Institute: contact@ainowinstitute.org → ✅ gönderildi
 
-□ Anthropic Verified Respondent Teklifi
-→ press@anthropic.com
-→ Metin hazır
+✅ Anthropic Verified Respondent Teklifi — TAMAMLANDI (2 Temmuz 2026)
+press@anthropic.com → ✅ gönderildi
 
 □ Anthropic API Kredisi Başvurusu
 → anthropic.com/startups

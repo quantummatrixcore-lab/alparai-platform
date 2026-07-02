@@ -186,8 +186,10 @@ export default async function StrategyOverviewPage({
                   </div>
                   <p className="mt-2 text-xl font-extrabold text-white">
                     {latestSnapshot.runway_months
-                      ? `${latestSnapshot.runway_months} Ay`
-                      : "Belirsiz"}
+                      ? `${latestSnapshot.runway_months} ${locale === "tr" ? "Ay" : "Mo."}`
+                      : locale === "tr"
+                        ? "Belirsiz"
+                        : "Unknown"}
                   </p>
                 </div>
               </div>
