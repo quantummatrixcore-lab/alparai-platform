@@ -52,7 +52,7 @@ export function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
       onClick={() => onOpenChange(false)}
       role="presentation"
     >
@@ -64,21 +64,21 @@ export function Modal({
         aria-describedby={description ? "modal-desc" : undefined}
         onClick={(e) => e.stopPropagation()}
         className={cn(
-          "w-full rounded-xl border border-border-subtle bg-bg-elevated shadow-2xl",
+          "border-border-subtle bg-bg-elevated w-full rounded-xl border shadow-2xl",
           sizeMap[size],
           "max-h-[90vh] overflow-y-auto",
-          className
+          className,
         )}
       >
         <div className="flex items-start justify-between gap-4 p-6 pb-4">
           <div className="space-y-1">
             {title && (
-              <h2 id="modal-title" className="text-lg font-semibold text-fg-primary">
+              <h2 id="modal-title" className="text-fg-primary text-lg font-semibold">
                 {title}
               </h2>
             )}
             {description && (
-              <p id="modal-desc" className="text-sm text-fg-muted">
+              <p id="modal-desc" className="text-fg-muted text-sm">
                 {description}
               </p>
             )}

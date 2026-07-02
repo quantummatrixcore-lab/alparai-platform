@@ -4,7 +4,9 @@ vi.mock("server-only", () => ({}));
 
 import { summarizeRuns, type PersistedAutopilotRunWithMeta } from "@/lib/autopilot/persistence";
 
-const baseRun = (overrides: Partial<PersistedAutopilotRunWithMeta>): PersistedAutopilotRunWithMeta => ({
+const baseRun = (
+  overrides: Partial<PersistedAutopilotRunWithMeta>,
+): PersistedAutopilotRunWithMeta => ({
   id: "id",
   status: "ok",
   attempts: 1,
@@ -50,7 +52,7 @@ describe("summarizeRuns", () => {
   it("computes p50 and p95 percentiles", () => {
     const durations = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
     const runs: PersistedAutopilotRunWithMeta[] = durations.map((d) =>
-      baseRun({ duration_ms: d, action: "submitIncident" })
+      baseRun({ duration_ms: d, action: "submitIncident" }),
     );
     const s = summarizeRuns(runs);
     expect(s.p50DurationMs).toBeGreaterThanOrEqual(40);

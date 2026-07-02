@@ -40,14 +40,18 @@ export const emitTelemetry = <T>(
   payload: AutopilotTelemetryPayload,
   result: AutopilotResult<T>,
   error: unknown,
-  redactionFields?: ReadonlyArray<string>
+  redactionFields?: ReadonlyArray<string>,
 ): void => {
   const fields = getRedactionFields(redactionFields);
   const errorMessage = error ? toErrorMessage(error) : null;
   const safeError = errorMessage ? String(redactForLog(errorMessage, fields)) : null;
   const safeMetadata = redactForLog(payload, fields);
 
-  if (result.kind === "exhausted" || result.kind === "budget_exceeded" || result.kind === "circuit_open") {
+  if (
+    result.kind === "exhausted" ||
+    result.kind === "budget_exceeded" ||
+    result.kind === "circuit_open"
+  ) {
     if (_sentry) {
       _sentry("autopilot.exhausted", {
         action: payload.action,
@@ -96,6 +100,5 @@ export const safeCaptureException = (err: unknown, context: Record<string, unkno
   try {
     const message = err instanceof Error ? err.message : toErrorMessage(err);
     _sentry(message, { ...context, source: "autopilot" });
-  } catch {
-  }
+  } catch {}
 };

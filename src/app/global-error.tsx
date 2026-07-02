@@ -15,7 +15,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
         level: "error",
         msg: "Global unhandled error",
         err: { name: error.name, message: error.message, digest: error.digest },
-      })
+      }),
     );
   }, [error]);
 
@@ -41,7 +41,9 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
             Something went wrong / Bir şeyler ters gitti
           </h1>
           {error.digest && (
-            <p style={{ fontSize: "0.75rem", color: "#94a3b8" }}>Error ID / Hata Kodu: {error.digest}</p>
+            <p style={{ fontSize: "0.75rem", color: "#94a3b8" }}>
+              Error ID / Hata Kodu: {error.digest}
+            </p>
           )}
         </div>
         <button

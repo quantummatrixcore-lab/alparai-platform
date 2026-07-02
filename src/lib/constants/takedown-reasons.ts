@@ -19,8 +19,7 @@ export interface TakedownReasonOption {
   translationKey: string;
 }
 
-export const TAKEDOWN_REASON_OPTIONS: TakedownReasonOption[] =
-  TAKEDOWN_REASON_KEYS.map((key) => ({
-    value: key,
-    translationKey: `takedown.reasons.${key}`,
-  }));
+export const TAKEDOWN_REASON_OPTIONS: TakedownReasonOption[] = TAKEDOWN_REASON_KEYS.map((key) => ({
+  value: key,
+  translationKey: `takedown.reasons.${key}`,
+}));

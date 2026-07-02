@@ -8,7 +8,8 @@ import {
 describe("incidentSubmissionSchema", () => {
   const base = {
     title: "Hallucinated legal citation in answer",
-    description: "The model cited a non-existent court case in its response to my legal question. This is dangerous.",
+    description:
+      "The model cited a non-existent court case in its response to my legal question. This is dangerous.",
     category: "hallucination" as const,
     severity: "high" as const,
     consent: {

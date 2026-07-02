@@ -7,7 +7,7 @@ import type { AttemptContext, AttemptOutcome } from "./types";
 
 export type WorkerHandler = (
   job: QueueJob,
-  ctx: AttemptContext
+  ctx: AttemptContext,
 ) => Promise<AttemptOutcome<unknown>>;
 
 const handlers = new Map<string, WorkerHandler>();
@@ -63,7 +63,7 @@ const processJob = async (job: QueueJob): Promise<"ok" | "retry" | "fail"> => {
     policy,
     [job.id, job.idempotencyKey],
     async (ctx) => handler(job, ctx),
-    { context: { userId: null, ipHash: null, clientIdempotencyKey: job.idempotencyKey } }
+    { context: { userId: null, ipHash: null, clientIdempotencyKey: job.idempotencyKey } },
   );
   if (result.kind === "ok" || result.kind === "replayed") return "ok";
   if (result.kind === "exhausted" || result.kind === "budget_exceeded") return "fail";
@@ -71,7 +71,7 @@ const processJob = async (job: QueueJob): Promise<"ok" | "retry" | "fail"> => {
 };
 
 export const runAutopilotWorkerOnce = async (
-  options: Partial<WorkerOptions> = {}
+  options: Partial<WorkerOptions> = {},
 ): Promise<WorkerRunStats> => {
   const batchSize = options.batchSize ?? 5;
   const queue = getQueue();
@@ -98,7 +98,7 @@ export const runAutopilotWorkerOnce = async (
 };
 
 export const runAutopilotWorker = async (
-  options: Partial<WorkerOptions> = {}
+  options: Partial<WorkerOptions> = {},
 ): Promise<WorkerRunStats> => {
   const pollIntervalMs = options.pollIntervalMs ?? 1_000;
   const maxEmptyPolls = options.maxEmptyPolls ?? 60;

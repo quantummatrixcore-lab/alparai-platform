@@ -20,11 +20,11 @@ export async function updateSession(request: NextRequest, response: NextResponse
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
           cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
+            response.cookies.set(name, value, options),
           );
         },
       },
-    }
+    },
   );
 
   // Refresh session — IMPORTANT: must be called to keep the session alive

@@ -84,9 +84,11 @@ const runExpertWork = async (
     } as never);
     if (dbError) {
       console.error("[submitExpert] Database insert failed:", dbError);
+      return { kind: "retryable", error: dbError.message };
     }
   } catch (dbEx) {
     console.error("[submitExpert] Database exception:", dbEx);
+    return { kind: "retryable", error: dbEx instanceof Error ? dbEx.message : "db_error" };
   }
 
   const resend = getResendClient();

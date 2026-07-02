@@ -16,20 +16,13 @@ export function Container({
     full: "max-w-none",
   };
   return (
-    <div
-      className={cn("mx-auto w-full px-4 sm:px-6 lg:px-8", sizeMap[size], className)}
-      {...props}
-    >
+    <div className={cn("mx-auto w-full px-4 sm:px-6 lg:px-8", sizeMap[size], className)} {...props}>
       {children}
     </div>
   );
 }
 
-export function Section({
-  className,
-  children,
-  ...props
-}: React.HTMLAttributes<HTMLElement>) {
+export function Section({ className, children, ...props }: React.HTMLAttributes<HTMLElement>) {
   return (
     <section className={cn("py-12 md:py-16 lg:py-20", className)} {...props}>
       {children}
@@ -62,7 +55,7 @@ export function Stack({
         align && `items-${align}`,
         justify && `justify-${justify}`,
         wrap && "flex-wrap",
-        className
+        className,
       )}
       {...props}
     >
@@ -84,8 +77,8 @@ export function Divider({
       aria-orientation={orientation}
       className={cn(
         "bg-border-subtle",
-        orientation === "horizontal" ? "h-px w-full" : "w-px h-full",
-        className
+        orientation === "horizontal" ? "h-px w-full" : "h-full w-px",
+        className,
       )}
     />
   );

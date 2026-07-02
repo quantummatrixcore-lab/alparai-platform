@@ -13,7 +13,9 @@ const canonicalize = (input: unknown): string => {
   }
   if (typeof input === "object") {
     const keys = Object.keys(input as Record<string, unknown>).sort();
-    const parts = keys.map((k) => `${JSON.stringify(k)}:${canonicalize((input as Record<string, unknown>)[k])}`);
+    const parts = keys.map(
+      (k) => `${JSON.stringify(k)}:${canonicalize((input as Record<string, unknown>)[k])}`,
+    );
     return `{${parts.join(",")}}`;
   }
   return JSON.stringify(input);
@@ -22,7 +24,7 @@ const canonicalize = (input: unknown): string => {
 export const computeIdempotencyKey = (
   action: string,
   inputs: ReadonlyArray<unknown>,
-  config: IdempotencyConfig
+  config: IdempotencyConfig,
 ): IdempotencyKey => {
   if (!config.enabled) {
     return createIdempotencyKey(`noop:${action}:${Date.now()}:${Math.random()}`);
@@ -36,7 +38,7 @@ export const computeIdempotencyKey = (
 };
 
 export const parseClientIdempotencyKey = (
-  raw: string | null | undefined
+  raw: string | null | undefined,
 ): IdempotencyKey | null => {
   if (!raw) return null;
   const trimmed = raw.trim();
@@ -49,17 +51,14 @@ export const resolveIdempotencyKey = (
   config: IdempotencyConfig,
   action: string,
   inputs: ReadonlyArray<unknown>,
-  clientHeader: string | null
+  clientHeader: string | null,
 ): IdempotencyKey => {
   const client = parseClientIdempotencyKey(clientHeader);
   if (client) return client;
   return computeIdempotencyKey(action, inputs, config);
 };
 
-export const redactForLog = (
-  value: unknown,
-  redactionFields: ReadonlyArray<string>
-): unknown => {
+export const redactForLog = (value: unknown, redactionFields: ReadonlyArray<string>): unknown => {
   if (value === null || value === undefined) return value;
   if (Array.isArray(value)) {
     return value.map((v) => redactForLog(v, redactionFields));

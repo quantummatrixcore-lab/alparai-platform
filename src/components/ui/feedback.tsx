@@ -12,7 +12,7 @@ export function Spinner({
   const sizeMap = { sm: "h-4 w-4", md: "h-6 w-6", lg: "h-8 w-8" };
   return (
     <Loader2
-      className={cn("animate-spin text-brand-500", sizeMap[size], className)}
+      className={cn("text-brand-500 animate-spin", sizeMap[size], className)}
       aria-label="Loading"
       role="status"
     />
@@ -23,11 +23,11 @@ export function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivEl
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-md bg-bg-tertiary",
+        "bg-bg-tertiary relative overflow-hidden rounded-md",
         "before:absolute before:inset-0 before:-translate-x-full",
         "before:animate-[shimmer_1.5s_infinite]",
         "before:bg-gradient-to-r before:from-transparent before:via-white/5 before:to-transparent",
-        className
+        className,
       )}
       {...props}
     />
@@ -50,14 +50,14 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-border-subtle bg-bg-secondary/50 p-12 text-center",
-        className
+        "border-border-subtle bg-bg-secondary/50 flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed p-12 text-center",
+        className,
       )}
     >
-      {icon && <div className="text-4xl text-fg-muted">{icon}</div>}
+      {icon && <div className="text-fg-muted text-4xl">{icon}</div>}
       <div className="space-y-1">
-        <h3 className="text-lg font-semibold text-fg-primary">{title}</h3>
-        {description && <p className="max-w-md text-sm text-fg-muted">{description}</p>}
+        <h3 className="text-fg-primary text-lg font-semibold">{title}</h3>
+        {description && <p className="text-fg-muted max-w-md text-sm">{description}</p>}
       </div>
       {action}
     </div>
@@ -74,11 +74,11 @@ export function ErrorState({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-danger-500/30 bg-danger-500/5 p-8 text-center">
+    <div className="border-danger-500/30 bg-danger-500/5 flex flex-col items-center justify-center gap-4 rounded-xl border p-8 text-center">
       <div className="text-4xl">⚠️</div>
       <div className="space-y-1">
-        <h3 className="text-lg font-semibold text-fg-primary">{title}</h3>
-        {description && <p className="max-w-md text-sm text-fg-muted">{description}</p>}
+        <h3 className="text-fg-primary text-lg font-semibold">{title}</h3>
+        {description && <p className="text-fg-muted max-w-md text-sm">{description}</p>}
       </div>
       {action}
     </div>

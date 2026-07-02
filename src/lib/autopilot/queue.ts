@@ -109,7 +109,7 @@ export const getQueue = (): QueueHandle => {
 export const enqueueAutopilotJob = async (
   action: string,
   idempotencyKey: IdempotencyKey,
-  payload: unknown
+  payload: unknown,
 ): Promise<string | null> => {
   const q = getQueue();
   const job: QueueJob = {

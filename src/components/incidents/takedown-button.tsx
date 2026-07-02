@@ -34,7 +34,15 @@ export function TakedownButton({ incidentId }: { incidentId: string }) {
       >
         {t("report_inappropriate")}
       </Button>
-      <Modal open={open} onOpenChange={setOpen} title={t("takedown")} description={t("takedownDesc", { defaultValue: "Submit a takedown or correction request. We review all submissions within 7 days." })}>
+      <Modal
+        open={open}
+        onOpenChange={setOpen}
+        title={t("takedown")}
+        description={t("takedownDesc", {
+          defaultValue:
+            "Submit a takedown or correction request. We review all submissions within 7 days.",
+        })}
+      >
         <form
           onSubmit={(e) => {
             e.preventDefault();

@@ -62,7 +62,7 @@ export function VoteButtons({
           userVote === 1
             ? "bg-success-500/15 text-success-400"
             : "text-fg-muted hover:bg-bg-tertiary hover:text-success-400",
-          (disabled || pending) && "cursor-not-allowed opacity-50"
+          (disabled || pending) && "cursor-not-allowed opacity-50",
         )}
         aria-label={tFeed("upvote", { defaultValue: "Upvote" })}
         aria-pressed={userVote === 1}
@@ -78,7 +78,7 @@ export function VoteButtons({
           userVote === -1
             ? "bg-danger-500/15 text-danger-400"
             : "text-fg-muted hover:bg-bg-tertiary hover:text-danger-400",
-          (disabled || pending) && "cursor-not-allowed opacity-50"
+          (disabled || pending) && "cursor-not-allowed opacity-50",
         )}
         aria-label={tFeed("downvote", { defaultValue: "Downvote" })}
         aria-pressed={userVote === -1}

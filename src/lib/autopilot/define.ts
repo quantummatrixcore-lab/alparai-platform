@@ -1,10 +1,5 @@
 import type { AutopilotConfig, AutopilotPolicy } from "./types";
-import {
-  DEFAULT_BREAKER,
-  DEFAULT_BUDGET,
-  DEFAULT_IDEMPOTENCY,
-  DEFAULT_RETRY,
-} from "./types";
+import { DEFAULT_BREAKER, DEFAULT_BUDGET, DEFAULT_IDEMPOTENCY, DEFAULT_RETRY } from "./types";
 
 export const definePolicy = (config: AutopilotConfig): AutopilotPolicy => {
   return { config: validateConfig(config) };

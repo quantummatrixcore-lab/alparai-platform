@@ -32,9 +32,7 @@ export interface AdminAutopilotResult {
   error?: string;
 }
 
-export async function getAdminAutopilotSnapshot(
-  limit = 100
-): Promise<AdminAutopilotResult> {
+export async function getAdminAutopilotSnapshot(limit = 100): Promise<AdminAutopilotResult> {
   const admin = await requireAdmin();
   if (!admin) return { ok: false, error: "Forbidden" };
   const runs = await listRecentRuns(limit);

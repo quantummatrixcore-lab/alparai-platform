@@ -46,7 +46,12 @@ describe("idempotency", () => {
   });
 
   it("resolveIdempotencyKey prefers client when valid", () => {
-    const result = resolveIdempotencyKey(DEFAULT_IDEMPOTENCY, "submit", [{ a: 1 }], "client-key-1234");
+    const result = resolveIdempotencyKey(
+      DEFAULT_IDEMPOTENCY,
+      "submit",
+      [{ a: 1 }],
+      "client-key-1234",
+    );
     expect(String(result).startsWith("client:")).toBe(true);
   });
 

@@ -19,7 +19,7 @@ export interface SearchResult {
 
 export async function searchIncidents(
   query: string,
-  limit = 20
+  limit = 20,
 ): Promise<{ ok: boolean; results: SearchResult[]; error?: string }> {
   if (!query || query.trim().length < 2) {
     return { ok: true, results: [] };
@@ -51,7 +51,7 @@ export async function searchIncidents(
     logger.error(
       "searchIncidents error",
       { query: sanitized },
-      error instanceof Error ? error : undefined
+      error instanceof Error ? error : undefined,
     );
     return { ok: false, results: [], error: "Search failed" };
   }

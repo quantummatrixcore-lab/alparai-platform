@@ -8,14 +8,7 @@ import type { Database } from "@/types/database";
 type IncidentSeverity = Database["public"]["Enums"]["incident_severity"];
 type IncidentStatus = Database["public"]["Enums"]["incident_status"];
 
-type BadgeVariant =
-  | "default"
-  | "brand"
-  | "success"
-  | "warning"
-  | "danger"
-  | "outline"
-  | "muted";
+type BadgeVariant = "default" | "brand" | "success" | "warning" | "danger" | "outline" | "muted";
 
 const variantClasses: Record<BadgeVariant, string> = {
   default: "bg-bg-tertiary text-fg-primary border border-border-subtle",
@@ -45,10 +38,10 @@ export function Badge({
     <span
       className={cn(
         "inline-flex items-center gap-1.5 rounded-full font-medium",
-        "uppercase tracking-wider",
+        "tracking-wider uppercase",
         size === "sm" ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-1 text-xs",
         variantClasses[variant],
-        className
+        className,
       )}
       {...props}
     >
@@ -61,7 +54,7 @@ export function Badge({
             variant === "warning" && "bg-warning-500",
             variant === "brand" && "bg-brand-500",
             (variant === "default" || variant === "muted" || variant === "outline") &&
-              "bg-fg-muted"
+              "bg-fg-muted",
           )}
           aria-hidden="true"
         />

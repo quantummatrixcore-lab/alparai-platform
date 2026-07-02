@@ -12,11 +12,17 @@ export interface BudgetSnapshot {
 export const computeElapsedMs = (startedAt: number, now: number = Date.now()): number =>
   Math.max(0, now - startedAt);
 
-export const computeRemainingMs = (config: BudgetConfig, startedAt: number, now: number = Date.now()): number =>
-  Math.max(0, config.maxMs - computeElapsedMs(startedAt, now));
+export const computeRemainingMs = (
+  config: BudgetConfig,
+  startedAt: number,
+  now: number = Date.now(),
+): number => Math.max(0, config.maxMs - computeElapsedMs(startedAt, now));
 
-export const isBudgetExceededMs = (config: BudgetConfig, startedAt: number, now: number = Date.now()): boolean =>
-  computeElapsedMs(startedAt, now) >= config.maxMs;
+export const isBudgetExceededMs = (
+  config: BudgetConfig,
+  startedAt: number,
+  now: number = Date.now(),
+): boolean => computeElapsedMs(startedAt, now) >= config.maxMs;
 
 export const isBudgetExceededTokens = (config: BudgetConfig, costTokens: number): boolean =>
   costTokens >= config.maxTokens;
@@ -25,7 +31,7 @@ export const makeBudgetSnapshot = (
   config: BudgetConfig,
   startedAt: number,
   costTokens: number,
-  now: number = Date.now()
+  now: number = Date.now(),
 ): BudgetSnapshot => {
   const costMs = computeElapsedMs(startedAt, now);
   return {

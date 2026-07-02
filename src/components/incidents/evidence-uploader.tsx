@@ -77,7 +77,7 @@ export function EvidenceUploader({
           dragOver
             ? "border-brand-500 bg-brand-500/5"
             : "border-border-subtle hover:border-brand-500/50 hover:bg-bg-tertiary/30",
-          disabled && "pointer-events-none opacity-50"
+          disabled && "pointer-events-none opacity-50",
         )}
         role="button"
         tabIndex={0}

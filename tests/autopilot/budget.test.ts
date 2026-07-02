@@ -7,7 +7,12 @@ import {
   makeBudgetSnapshot,
   estimateMaxAttempts,
 } from "@/lib/autopilot/budget";
-import { DEFAULT_BUDGET, DEFAULT_RETRY, type BudgetConfig, type RetryConfig } from "@/lib/autopilot/types";
+import {
+  DEFAULT_BUDGET,
+  DEFAULT_RETRY,
+  type BudgetConfig,
+  type RetryConfig,
+} from "@/lib/autopilot/types";
 
 const cfg: BudgetConfig = { maxMs: 5_000, maxTokens: 1_000 };
 

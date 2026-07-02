@@ -18,7 +18,7 @@ interface IncidentExportInput {
 
 const runIncidentsExportWork = async (
   _ctx: AttemptContext,
-  data: IncidentExportInput
+  data: IncidentExportInput,
 ): Promise<AttemptOutcome<{ csv: string; rowCount: number }>> => {
   const db = createAdminClient();
   const { data: rawData, error } = await db
@@ -29,10 +29,13 @@ const runIncidentsExportWork = async (
   if (error) {
     return { kind: "retryable", error: error.message };
   }
-  const rows = (rawData as unknown as Pick<
-    IncidentRow,
-    "id" | "title_masked" | "category" | "severity" | "status" | "created_at" | "published_at"
-  >[] | null) ?? [];
+  const rows =
+    (rawData as unknown as
+      | Pick<
+          IncidentRow,
+          "id" | "title_masked" | "category" | "severity" | "status" | "created_at" | "published_at"
+        >[]
+      | null) ?? [];
   void data;
   const headers = ["id", "title", "category", "severity", "status", "created_at", "published_at"];
   const csv = [
@@ -46,7 +49,7 @@ const runIncidentsExportWork = async (
         row.status,
         row.created_at,
         row.published_at ?? "",
-      ].join(",")
+      ].join(","),
     ),
   ].join("\n");
   return { kind: "success", value: { csv, rowCount: rows.length } };
@@ -65,7 +68,7 @@ export async function exportIncidentsCSV(): Promise<{ ok: boolean; csv?: string;
     exportDataPolicy,
     ["incidents", admin.id],
     (ctx) => runIncidentsExportWork(ctx, { adminId: admin.id }),
-    { context: { userId: admin.id, ipHash: hashIp(ip), clientIdempotencyKey: null } }
+    { context: { userId: admin.id, ipHash: hashIp(ip), clientIdempotencyKey: null } },
   );
   if (result.kind === "ok" || result.kind === "replayed") {
     if (result.kind === "ok") return { ok: true, csv: result.value.csv };
@@ -80,7 +83,7 @@ interface AuditExportInput {
 
 const runAuditExportWork = async (
   _ctx: AttemptContext,
-  data: AuditExportInput
+  data: AuditExportInput,
 ): Promise<AttemptOutcome<{ csv: string; rowCount: number }>> => {
   const db = createAdminClient();
   const { data: rawData, error } = await db
@@ -91,16 +94,21 @@ const runAuditExportWork = async (
   if (error) {
     return { kind: "retryable", error: error.message };
   }
-  const rows = (rawData as unknown as Pick<
-    AuditLogRow,
-    "id" | "actor_id" | "action" | "entity_type" | "entity_id" | "created_at"
-  >[] | null) ?? [];
+  const rows =
+    (rawData as unknown as
+      | Pick<
+          AuditLogRow,
+          "id" | "actor_id" | "action" | "entity_type" | "entity_id" | "created_at"
+        >[]
+      | null) ?? [];
   void data;
   const headers = ["id", "actor_id", "action", "entity_type", "entity_id", "created_at"];
   const csv = [
     headers.join(","),
     ...rows.map((row) =>
-      [row.id, row.actor_id ?? "", row.action, row.entity_type, row.entity_id, row.created_at].join(",")
+      [row.id, row.actor_id ?? "", row.action, row.entity_type, row.entity_id, row.created_at].join(
+        ",",
+      ),
     ),
   ].join("\n");
   return { kind: "success", value: { csv, rowCount: rows.length } };
@@ -119,7 +127,7 @@ export async function exportAuditLogCSV(): Promise<{ ok: boolean; csv?: string; 
     exportDataPolicy,
     ["audit_log", admin.id],
     (ctx) => runAuditExportWork(ctx, { adminId: admin.id }),
-    { context: { userId: admin.id, ipHash: hashIp(ip), clientIdempotencyKey: null } }
+    { context: { userId: admin.id, ipHash: hashIp(ip), clientIdempotencyKey: null } },
   );
   if (result.kind === "ok" || result.kind === "replayed") {
     if (result.kind === "ok") return { ok: true, csv: result.value.csv };

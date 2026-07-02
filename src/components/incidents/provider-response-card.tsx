@@ -23,10 +23,10 @@ export function ProviderResponseCard({
   const locale = useLocale();
   return (
     <Card variant="gradient" padding="md" className="border-brand-500/30">
-      <div className="flex items-center justify-between gap-2 mb-3">
+      <div className="mb-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <Building2 className="h-4 w-4 text-brand-400" aria-hidden="true" />
-          <span className="font-semibold text-fg-primary">{providerName}</span>
+          <Building2 className="text-brand-400 h-4 w-4" aria-hidden="true" />
+          <span className="text-fg-primary font-semibold">{providerName}</span>
           <Badge variant="brand" size="sm">
             {t("aiResponse")}
           </Badge>
@@ -43,12 +43,8 @@ export function ProviderResponseCard({
           </Badge>
         )}
       </div>
-      <CardContent className="text-sm text-fg-primary whitespace-pre-wrap">
-        {response}
-      </CardContent>
-      <p className="mt-3 text-xs text-fg-muted">
-        {formatDate(new Date(createdAt), locale)}
-      </p>
+      <CardContent className="text-fg-primary text-sm whitespace-pre-wrap">{response}</CardContent>
+      <p className="text-fg-muted mt-3 text-xs">{formatDate(new Date(createdAt), locale)}</p>
     </Card>
   );
 }

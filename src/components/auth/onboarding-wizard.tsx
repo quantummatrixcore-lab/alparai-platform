@@ -126,7 +126,10 @@ export function OnboardingWizard({ locale }: OnboardingWizardProps) {
         <CardHeader className="space-y-4">
           {/* Progress Indicators */}
           <div className="text-fg-muted flex items-center justify-between font-mono text-xs">
-            <span>{tAuth("step", { defaultValue: "STEP" })} {step} {tAuth("of_2", { defaultValue: "OF 2" })}</span>
+            <span>
+              {tAuth("step", { defaultValue: "STEP" })} {step}{" "}
+              {tAuth("of_2", { defaultValue: "OF 2" })}
+            </span>
             <div className="flex gap-1.5">
               <span
                 className={`h-1.5 w-8 rounded-full transition-all duration-300 ${step >= 1 ? "bg-brand-500" : "bg-bg-tertiary"}`}
@@ -284,7 +287,10 @@ export function OnboardingWizard({ locale }: OnboardingWizardProps) {
                     </span>
                   </div>
                   <p className="text-fg-muted text-[11px] leading-relaxed">
-                    {tAuth("badgeDesc", { defaultValue: "Exclusive early-adopter verification badge awarded to our first 100 beta participants." })}
+                    {tAuth("badgeDesc", {
+                      defaultValue:
+                        "Exclusive early-adopter verification badge awarded to our first 100 beta participants.",
+                    })}
                   </p>
                 </div>
               </div>

@@ -38,7 +38,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             error
               ? "border-danger-500 focus:ring-danger-500"
               : "border-border-subtle focus:border-brand-500",
-            className
+            className,
           )}
           {...props}
         >
@@ -70,6 +70,6 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         )}
       </div>
     );
-  }
+  },
 );
 Select.displayName = "Select";

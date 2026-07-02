@@ -103,7 +103,9 @@ export function TakedownForm() {
         minLength={50}
         maxLength={4000}
         rows={6}
-        placeholder={t("takedownDetailsPlaceholder", { defaultValue: "Provide a clear explanation with supporting evidence." })}
+        placeholder={t("takedownDetailsPlaceholder", {
+          defaultValue: "Provide a clear explanation with supporting evidence.",
+        })}
       />
       <Input
         name="identity_proof_url"

@@ -39,7 +39,7 @@ export function formatDate(
     year: "numeric",
     month: "short",
     day: "numeric",
-  }
+  },
 ): string {
   const d = typeof date === "string" ? new Date(date) : date;
   return new Intl.DateTimeFormat(locale, options).format(d);
@@ -48,10 +48,7 @@ export function formatDate(
 /**
  * Format a date as a relative time (e.g. "2h ago").
  */
-export function formatRelativeTime(
-  date: Date | string,
-  locale = "en"
-): string {
+export function formatRelativeTime(date: Date | string, locale = "en"): string {
   const d = typeof date === "string" ? new Date(date) : date;
   const diff = Date.now() - d.getTime();
   const seconds = Math.floor(diff / 1000);

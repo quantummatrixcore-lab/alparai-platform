@@ -1,5 +1,13 @@
 import { describe, it, expect } from "vitest";
-import { cn, formatDate, formatRelativeTime, formatNumber, slugify, sha256, getInitials } from "@/lib/utils";
+import {
+  cn,
+  formatDate,
+  formatRelativeTime,
+  formatNumber,
+  slugify,
+  sha256,
+  getInitials,
+} from "@/lib/utils";
 
 describe("utils", () => {
   it("cn merges classes", () => {

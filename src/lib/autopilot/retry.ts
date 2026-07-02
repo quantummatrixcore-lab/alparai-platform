@@ -3,7 +3,7 @@ import type { BackoffStrategy, RetryConfig } from "./types";
 export const computeBackoffMs = (
   attempt: number,
   config: RetryConfig,
-  random: () => number = Math.random
+  random: () => number = Math.random,
 ): number => {
   const safeAttempt = Math.max(1, attempt);
   const base = (() => {
@@ -39,11 +39,7 @@ export const isRetryableError = (error: unknown): boolean => {
   if (error instanceof Error) {
     const name = error.name.toLowerCase();
     if (name === "aborterror" || name === "aborterror") return false;
-    if (
-      name.includes("timeout") ||
-      name.includes("network") ||
-      name.includes("fetch")
-    ) {
+    if (name.includes("timeout") || name.includes("network") || name.includes("fetch")) {
       return true;
     }
     const msg = error.message.toLowerCase();

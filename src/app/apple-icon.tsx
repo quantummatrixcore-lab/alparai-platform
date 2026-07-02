@@ -82,6 +82,6 @@ export default function AppleIcon() {
       </div>
       <div style={{ display: "flex", position: "relative", zIndex: 1 }}>A</div>
     </div>,
-    { ...size }
+    { ...size },
   );
 }

@@ -59,8 +59,20 @@ export interface AutopilotConfig {
 
 export type AutopilotResult<T> =
   | { kind: "ok"; value: T; attempts: number; durationMs: number; idempotencyKey: IdempotencyKey }
-  | { kind: "replayed"; value: unknown; originalId: string; attempts: number; idempotencyKey: IdempotencyKey }
-  | { kind: "exhausted"; error: string; attempts: number; durationMs: number; idempotencyKey: IdempotencyKey }
+  | {
+      kind: "replayed";
+      value: unknown;
+      originalId: string;
+      attempts: number;
+      idempotencyKey: IdempotencyKey;
+    }
+  | {
+      kind: "exhausted";
+      error: string;
+      attempts: number;
+      durationMs: number;
+      idempotencyKey: IdempotencyKey;
+    }
   | { kind: "circuit_open"; cooldownMs: number; idempotencyKey: IdempotencyKey }
   | { kind: "budget_exceeded"; costMs: number; attempts: number; idempotencyKey: IdempotencyKey }
   | { kind: "idempotency_violation"; reason: string; idempotencyKey: IdempotencyKey };
@@ -142,8 +154,7 @@ export const SAFE_REDACTION_FIELDS: ReadonlyArray<string> = [
 ];
 
 export const createAttemptId = (raw: string): AttemptId => raw as AttemptId;
-export const createIdempotencyKey = (raw: string): IdempotencyKey =>
-  raw as IdempotencyKey;
+export const createIdempotencyKey = (raw: string): IdempotencyKey => raw as IdempotencyKey;
 
 export const attemptsOf = <T>(result: AutopilotResult<T>): number => {
   if ("attempts" in result && typeof result.attempts === "number") return result.attempts;

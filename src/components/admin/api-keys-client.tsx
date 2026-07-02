@@ -35,10 +35,26 @@ export function ApiKeysClient({ initialKeys }: Props) {
       description: t("openrouter_desc"),
     },
     { value: "cohere", name: "Cohere", description: t("cohere_desc") },
-    { value: "huggingface", name: "HuggingFace", description: t("huggingface_desc", { defaultValue: "HuggingFace keys" }) },
-    { value: "google", name: "Google Gemini", description: t("google_desc", { defaultValue: "Gemini keys" }) },
-    { value: "google_vertex", name: "Google Vertex", description: t("google_vertex_desc", { defaultValue: "Vertex AI keys" }) },
-    { value: "blackbox", name: "Blackbox AI", description: t("blackbox_desc", { defaultValue: "Blackbox keys" }) },
+    {
+      value: "huggingface",
+      name: "HuggingFace",
+      description: t("huggingface_desc", { defaultValue: "HuggingFace keys" }),
+    },
+    {
+      value: "google",
+      name: "Google Gemini",
+      description: t("google_desc", { defaultValue: "Gemini keys" }),
+    },
+    {
+      value: "google_vertex",
+      name: "Google Vertex",
+      description: t("google_vertex_desc", { defaultValue: "Vertex AI keys" }),
+    },
+    {
+      value: "blackbox",
+      name: "Blackbox AI",
+      description: t("blackbox_desc", { defaultValue: "Blackbox keys" }),
+    },
   ];
 
   const handleSave = (e: React.FormEvent) => {

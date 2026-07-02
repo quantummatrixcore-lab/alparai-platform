@@ -24,17 +24,11 @@ export function WorkerTickButton() {
 
   return (
     <div className="inline-flex items-center gap-3">
-      <Button
-        type="button"
-        size="sm"
-        onClick={handle}
-        disabled={isPending}
-        variant="secondary"
-      >
+      <Button type="button" size="sm" onClick={handle} disabled={isPending} variant="secondary">
         <Play className="mr-1 h-4 w-4" />
         {t("tick_button")}
       </Button>
-      {result ? <span className="text-xs text-fg-muted">{result}</span> : null}
+      {result ? <span className="text-fg-muted text-xs">{result}</span> : null}
     </div>
   );
 }

@@ -33,7 +33,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             error
               ? "border-danger-500 focus:ring-danger-500"
               : "border-border-subtle focus:border-brand-500",
-            className
+            className,
           )}
           {...props}
         />
@@ -49,6 +49,6 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         )}
       </div>
     );
-  }
+  },
 );
 Textarea.displayName = "Textarea";

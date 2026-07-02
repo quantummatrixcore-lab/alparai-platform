@@ -13,8 +13,7 @@ export interface BreakerDecision {
   cooldownMs: number;
 }
 
-const isRecord = (v: unknown): v is Record<string, unknown> =>
-  typeof v === "object" && v !== null;
+const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null;
 
 export class CircuitBreaker {
   private state: BreakerState = "closed";

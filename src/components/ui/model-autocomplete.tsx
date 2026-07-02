@@ -87,7 +87,7 @@ export function ModelAutocomplete({
     const q = query.toLowerCase().trim();
     return options
       .filter(
-        (o) => o.label.toLowerCase().includes(q) || (o.hint?.toLowerCase().includes(q) ?? false)
+        (o) => o.label.toLowerCase().includes(q) || (o.hint?.toLowerCase().includes(q) ?? false),
       )
       .slice(0, 100);
   }, [query, options]);
@@ -146,7 +146,7 @@ export function ModelAutocomplete({
             "focus:ring-brand-500 focus:ring-offset-bg-primary focus:ring-2 focus:ring-offset-2 focus:outline-none",
             "flex items-center justify-between gap-2",
             error ? "border-danger-500" : "border-border-subtle focus:border-brand-500",
-            disabled && "cursor-not-allowed opacity-50"
+            disabled && "cursor-not-allowed opacity-50",
           )}
         >
           {displayValue ? (
@@ -186,7 +186,7 @@ export function ModelAutocomplete({
             <ChevronDown
               className={cn(
                 "text-fg-muted h-4 w-4 shrink-0 transition-transform",
-                open && "rotate-180"
+                open && "rotate-180",
               )}
             />
           </div>
@@ -227,7 +227,7 @@ export function ModelAutocomplete({
                   onClick={() => handleSelect(opt)}
                   className={cn(
                     "hover:bg-bg-tertiary flex w-full items-center gap-2 px-3 py-2 text-left text-sm",
-                    opt.value === value && !customMode && "bg-bg-tertiary"
+                    opt.value === value && !customMode && "bg-bg-tertiary",
                   )}
                 >
                   <span
@@ -235,7 +235,7 @@ export function ModelAutocomplete({
                       "flex h-4 w-4 shrink-0 items-center justify-center rounded",
                       opt.value === value && !customMode
                         ? "bg-brand-500 text-white"
-                        : "border-border-strong border"
+                        : "border-border-strong border",
                     )}
                   >
                     {opt.value === value && !customMode && <Check className="h-3 w-3" />}

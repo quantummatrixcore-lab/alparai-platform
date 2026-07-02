@@ -90,7 +90,7 @@ export function ProviderCombobox({
     const q = query.toLowerCase().trim();
     return options
       .filter(
-        (o) => o.label.toLowerCase().includes(q) || (o.hint?.toLowerCase().includes(q) ?? false)
+        (o) => o.label.toLowerCase().includes(q) || (o.hint?.toLowerCase().includes(q) ?? false),
       )
       .slice(0, 100);
   }, [query, options]);
@@ -155,7 +155,7 @@ export function ProviderCombobox({
             "transition-colors duration-200",
             "focus:ring-brand-500 focus:ring-offset-bg-primary focus:ring-2 focus:ring-offset-2 focus:outline-none",
             "flex items-center justify-between gap-2",
-            error ? "border-danger-500" : "border-border-subtle focus:border-brand-500"
+            error ? "border-danger-500" : "border-border-subtle focus:border-brand-500",
           )}
         >
           {customMode && customValue ? (
@@ -234,7 +234,7 @@ export function ProviderCombobox({
                   onClick={() => handleSelect(opt)}
                   className={cn(
                     "hover:bg-bg-tertiary flex w-full items-center gap-2 px-3 py-2 text-left text-sm",
-                    opt.value === value && "bg-bg-tertiary"
+                    opt.value === value && "bg-bg-tertiary",
                   )}
                 >
                   <span
@@ -242,7 +242,7 @@ export function ProviderCombobox({
                       "flex h-4 w-4 shrink-0 items-center justify-center rounded",
                       opt.value === value
                         ? "bg-brand-500 text-white"
-                        : "border-border-strong border"
+                        : "border-border-strong border",
                     )}
                   >
                     {opt.value === value && <Check className="h-3 w-3" />}

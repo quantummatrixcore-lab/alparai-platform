@@ -16,7 +16,7 @@ export function createAdminClient() {
     const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
     if (!url || !key) {
       throw new Error(
-        "Missing Supabase admin credentials. Set SUPABASE_SERVICE_ROLE_KEY in .env.local"
+        "Missing Supabase admin credentials. Set SUPABASE_SERVICE_ROLE_KEY in .env.local",
       );
     }
     adminClient = createClient<Database>(url, key, {
