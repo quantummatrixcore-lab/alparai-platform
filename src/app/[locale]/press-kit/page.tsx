@@ -1,8 +1,12 @@
+export const revalidate = 60;
+
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Wordmark } from "@/components/layout/wordmark";
-import { Download, Mail, Globe, Award, FileText } from "lucide-react";
+import { createServerClient } from "@/lib/supabase/server";
+import { Download, Mail, Globe, Award, FileText, BarChart3, Code2 } from "lucide-react";
+import { Link } from "@/i18n/routing";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -17,6 +21,29 @@ export default async function PressKitPage({ params }: { params: Promise<{ local
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "pressKit" });
+
+  const supabase = await createServerClient();
+
+  const [incidentsResult, providersResult, responsesResult] = await Promise.all([
+    supabase
+      .from("incidents")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "published"),
+    supabase.from("ai_providers").select("trust_score"),
+    supabase.from("ai_provider_responses").select("id", { count: "exact", head: true }),
+  ]);
+
+  const totalIncidents = incidentsResult.count ?? 0;
+  const totalProviders = providersResult.data?.length ?? 0;
+  const totalResponses = responsesResult.count ?? 0;
+  const avgTrustScore =
+    totalProviders > 0 && providersResult.data
+      ? Math.round(
+          providersResult.data.reduce((s, p) => s + (p.trust_score ?? 0), 0) / totalProviders,
+        )
+      : 0;
+
+  const isEn = locale === "en";
 
   return (
     <div>
@@ -49,6 +76,49 @@ export default async function PressKitPage({ params }: { params: Promise<{ local
               <CardContent className="space-y-4 text-sm leading-relaxed text-slate-300">
                 <p>{t("brandStoryP1")}</p>
                 <p>{t("brandStoryP2")}</p>
+              </CardContent>
+            </Card>
+
+            {/* Platform Stats — Facts & Figures */}
+            <Card className="border-emerald-500/20 bg-[#0F1E2E]">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <BarChart3 className="h-5 w-5 text-emerald-400" />
+                  {isEn ? "Facts & Figures" : "Platform İstatistikleri"}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                  <div className="rounded-lg border border-white/5 bg-[#08121C] p-4 text-center">
+                    <dd className="text-3xl font-black text-emerald-400">{totalIncidents}</dd>
+                    <dt className="mt-1 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                      {isEn ? "Reported Incidents" : "Kayıtlı Vakalar"}
+                    </dt>
+                  </div>
+                  <div className="rounded-lg border border-white/5 bg-[#08121C] p-4 text-center">
+                    <dd className="text-3xl font-black text-emerald-400">{totalProviders}</dd>
+                    <dt className="mt-1 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                      {isEn ? "AI Providers" : "Takip Edilen Sağlayıcılar"}
+                    </dt>
+                  </div>
+                  <div className="rounded-lg border border-white/5 bg-[#08121C] p-4 text-center">
+                    <dd className="text-3xl font-black text-emerald-400">{totalResponses}</dd>
+                    <dt className="mt-1 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                      {isEn ? "Official Responses" : "Resmi Yanıtlar"}
+                    </dt>
+                  </div>
+                  <div className="rounded-lg border border-white/5 bg-[#08121C] p-4 text-center">
+                    <dd className="text-3xl font-black text-emerald-400">{avgTrustScore}</dd>
+                    <dt className="mt-1 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                      {isEn ? "Avg Trust Score" : "Ort. Trust Skoru"}
+                    </dt>
+                  </div>
+                </dl>
+                <p className="mt-3 text-center text-[10px] text-slate-500">
+                  {isEn
+                    ? "Live data — updated every 60 seconds"
+                    : "Canlı veri — 60 saniyede bir güncellenir"}
+                </p>
               </CardContent>
             </Card>
 
@@ -134,6 +204,27 @@ export default async function PressKitPage({ params }: { params: Promise<{ local
                 >
                   press@alparai.com
                 </a>
+              </CardContent>
+            </Card>
+
+            {/* Developer API */}
+            <Card className="border-blue-500/20 bg-[#0F1E2E]">
+              <CardContent className="space-y-3 p-4">
+                <p className="inline-flex items-center gap-2 text-sm font-semibold text-white">
+                  <Code2 className="h-4 w-4 text-blue-400" />
+                  {isEn ? "Developer API" : "Geliştirici API"}
+                </p>
+                <p className="text-xs text-slate-400">
+                  {isEn
+                    ? "Public REST API for researchers and journalists. Rate-limited, CORS-enabled."
+                    : "Araştırmacılar ve gazeteciler için açık REST API. Rate-limit ve CORS desteğiyle."}
+                </p>
+                <Link
+                  href="/api-docs"
+                  className="block border-t border-white/5 pt-2 text-sm font-bold text-blue-400 hover:text-blue-300"
+                >
+                  {isEn ? "View API Docs →" : "API Dokümantasyonu →"}
+                </Link>
               </CardContent>
             </Card>
           </div>
