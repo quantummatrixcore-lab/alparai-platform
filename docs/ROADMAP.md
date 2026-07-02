@@ -220,6 +220,23 @@ EFF: info@eff.org
 → AI silah sorusu
 → Tartışma yaratır
 
+□ Newsletter başlat
+"ALPAR AI Monthly Trust Report"
+Substack — ücretsiz
+İlk sayı: Bu ayın vakaları + istatistikler
+
+□ Product Hunt lansmanı planla
+Hedef tarih: 2-3 hafta sonra
+Hazırlık: 500 upvote için önceden
+topluluk oluşturulmalı
+
+□ Podcast outreach
+Latent Space: latent.space
+Practical AI: changelog.com/practicalai
+Last Week in AI: lastweekin.ai
+→ Kısa pitch maili: Grok hikayesi +
+platform lansmanı
+
 ## ÖNCELİK 3 — ÖNEMLİ (1-3 Ay)
 
 □ EIC Pre-Accelerator Başvurusu
