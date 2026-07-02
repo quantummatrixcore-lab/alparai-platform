@@ -53,64 +53,69 @@ export async function submitSuggestion(
   _prev: SubmitSuggestionState,
   formData: FormData,
 ): Promise<SubmitSuggestionState> {
-  const user = await getCurrentUser();
-  if (!user) {
-    const t = await getTranslations("errors");
-    return { ok: false, error: t("sign_in_to_suggest") };
-  }
-  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.suggestion_submission}:${user.id}`);
-  if (!rl.ok) {
-    return { ok: false, error: `Too many suggestions. Try again in ${rl.retryAfter}s.` };
-  }
-  const raw = {
-    title: String(formData.get("title") ?? ""),
-    description: String(formData.get("description") ?? ""),
-    category: String(formData.get("category") ?? "feature"),
-  };
-  const parsed = suggestionSubmissionSchema.safeParse({
-    ...raw,
-    category:
-      raw.category as unknown as Database["public"]["Tables"]["suggestions"]["Insert"]["category"],
-    isAnonymous: false,
-  });
-  if (!parsed.success) {
-    return { ok: false, fieldErrors: parsed.error.flatten().fieldErrors };
-  }
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      const t = await getTranslations("errors");
+      return { ok: false, error: t("sign_in_to_suggest") };
+    }
+    const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.suggestion_submission}:${user.id}`);
+    if (!rl.ok) {
+      return { ok: false, error: `Too many suggestions. Try again in ${rl.retryAfter}s.` };
+    }
+    const raw = {
+      title: String(formData.get("title") ?? ""),
+      description: String(formData.get("description") ?? ""),
+      category: String(formData.get("category") ?? "feature"),
+    };
+    const parsed = suggestionSubmissionSchema.safeParse({
+      ...raw,
+      category:
+        raw.category as unknown as Database["public"]["Tables"]["suggestions"]["Insert"]["category"],
+      isAnonymous: false,
+    });
+    if (!parsed.success) {
+      return { ok: false, fieldErrors: parsed.error.flatten().fieldErrors };
+    }
 
-  const result = await withAutopilot<{ id: string }>(
-    submitSuggestionPolicy,
-    [user.id, parsed.data.title, parsed.data.category],
-    (ctx) =>
-      runSuggestionWork(ctx, {
-        userId: user.id,
-        title: parsed.data.title,
-        description: parsed.data.description,
-        category: parsed.data.category,
-      }),
-    { context: { userId: user.id, ipHash: null, clientIdempotencyKey: null } },
-  );
+    const result = await withAutopilot<{ id: string }>(
+      submitSuggestionPolicy,
+      [user.id, parsed.data.title, parsed.data.category],
+      (ctx) =>
+        runSuggestionWork(ctx, {
+          userId: user.id,
+          title: parsed.data.title,
+          description: parsed.data.description,
+          category: parsed.data.category,
+        }),
+      { context: { userId: user.id, ipHash: null, clientIdempotencyKey: null } },
+    );
 
-  if (result.kind === "ok" || result.kind === "replayed") {
-    revalidatePath("/suggestions");
-    revalidatePath("/dilemmas");
+    if (result.kind === "ok" || result.kind === "replayed") {
+      revalidatePath("/suggestions");
+      revalidatePath("/dilemmas");
+      return {
+        ok: true,
+        autopilot: {
+          attempts: attemptsOf(result),
+          durationMs: durationOf(result),
+          kind: result.kind,
+        },
+      };
+    }
     return {
-      ok: true,
+      ok: false,
+      error: "Failed to submit suggestion",
       autopilot: {
         attempts: attemptsOf(result),
         durationMs: durationOf(result),
         kind: result.kind,
       },
     };
+  } catch (e) {
+    console.error("[submitSuggestion] Unhandled exception:", e);
+    return { ok: false, error: "An unexpected error occurred. Please try again." };
   }
-  return {
-    ok: false,
-    error: "Failed to submit suggestion",
-    autopilot: {
-      attempts: attemptsOf(result),
-      durationMs: durationOf(result),
-      kind: result.kind,
-    },
-  };
 }
 
 interface VoteWorkInput {
@@ -147,36 +152,41 @@ const runSuggestionVoteWork = async (
 };
 
 export async function upvoteSuggestion(suggestionId: string) {
-  const user = await getCurrentUser();
-  if (!user) {
-    const t = await getTranslations("errors");
-    return { ok: false, error: t("sign_in_to_upvote") };
-  }
-  const admin = createAdminClient();
-  const { data: existing } = await admin
-    .from("suggestion_votes")
-    .select("user_id")
-    .eq("suggestion_id", suggestionId)
-    .eq("user_id", user.id)
-    .maybeSingle();
-  const alreadyVoted = Boolean(existing);
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      const t = await getTranslations("errors");
+      return { ok: false, error: t("sign_in_to_upvote") };
+    }
+    const admin = createAdminClient();
+    const { data: existing } = await admin
+      .from("suggestion_votes")
+      .select("user_id")
+      .eq("suggestion_id", suggestionId)
+      .eq("user_id", user.id)
+      .maybeSingle();
+    const alreadyVoted = Boolean(existing);
 
-  const result = await withAutopilot<{ toggled: "added" | "removed" }>(
-    submitSuggestionPolicy,
-    [user.id, suggestionId, "vote"],
-    (ctx) =>
-      runSuggestionVoteWork(ctx, {
-        suggestionId,
-        userId: user.id,
-        alreadyVoted,
-      }),
-    { context: { userId: user.id, ipHash: null, clientIdempotencyKey: null } },
-  );
+    const result = await withAutopilot<{ toggled: "added" | "removed" }>(
+      submitSuggestionPolicy,
+      [user.id, suggestionId, "vote"],
+      (ctx) =>
+        runSuggestionVoteWork(ctx, {
+          suggestionId,
+          userId: user.id,
+          alreadyVoted,
+        }),
+      { context: { userId: user.id, ipHash: null, clientIdempotencyKey: null } },
+    );
 
-  if (result.kind === "ok" || result.kind === "replayed") {
-    revalidatePath("/suggestions");
-    revalidatePath("/dilemmas");
-    return { ok: true };
+    if (result.kind === "ok" || result.kind === "replayed") {
+      revalidatePath("/suggestions");
+      revalidatePath("/dilemmas");
+      return { ok: true };
+    }
+    return { ok: false, error: "vote_failed" };
+  } catch (e) {
+    console.error("[upvoteSuggestion] Unhandled exception:", e);
+    return { ok: false, error: "An unexpected error occurred." };
   }
-  return { ok: false, error: "vote_failed" };
 }

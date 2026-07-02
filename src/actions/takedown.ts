@@ -61,61 +61,66 @@ const runTakedownRequestWork = async (
 export async function submitTakedownRequest(
   input: z.infer<typeof requestSchema>,
 ): Promise<TakedownResult> {
-  const parsed = requestSchema.safeParse(input);
-  if (!parsed.success) {
-    return { ok: false, error: "Invalid form data" };
-  }
-  const hdrs = await headers();
-  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
-  const clientIdempotencyKey = hdrs.get("x-idempotency-key");
-  const ipHash = hashIp(ip);
+  try {
+    const parsed = requestSchema.safeParse(input);
+    if (!parsed.success) {
+      return { ok: false, error: "Invalid form data" };
+    }
+    const hdrs = await headers();
+    const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
+    const clientIdempotencyKey = hdrs.get("x-idempotency-key");
+    const ipHash = hashIp(ip);
 
-  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.takedown_submission}:${ip ?? "anon"}`);
-  if (!rl.ok) {
-    return { ok: false, error: `Too many requests. Try again in ${rl.retryAfter}s.` };
-  }
+    const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.takedown_submission}:${ip ?? "anon"}`);
+    if (!rl.ok) {
+      return { ok: false, error: `Too many requests. Try again in ${rl.retryAfter}s.` };
+    }
 
-  const result = await withAutopilot<{ id: string }>(
-    submitTakedownPolicy,
-    [
-      parsed.data.target_url,
-      parsed.data.requester_email,
-      parsed.data.reason,
-      parsed.data.identity_proof_url,
-    ],
-    (ctx) => runTakedownRequestWork(ctx, { parsed: parsed.data, ipHash }),
-    {
-      context: { userId: null, ipHash, clientIdempotencyKey },
-    },
-  );
-
-  if (result.kind === "ok" || result.kind === "replayed") {
-    return {
-      ok: true,
-      message: "Request received",
-      autopilot: {
-        attempts: attemptsOf(result),
-        durationMs: durationOf(result),
-        kind: result.kind,
+    const result = await withAutopilot<{ id: string }>(
+      submitTakedownPolicy,
+      [
+        parsed.data.target_url,
+        parsed.data.requester_email,
+        parsed.data.reason,
+        parsed.data.identity_proof_url,
+      ],
+      (ctx) => runTakedownRequestWork(ctx, { parsed: parsed.data, ipHash }),
+      {
+        context: { userId: null, ipHash, clientIdempotencyKey },
       },
-    };
+    );
+
+    if (result.kind === "ok" || result.kind === "replayed") {
+      return {
+        ok: true,
+        message: "Request received",
+        autopilot: {
+          attempts: attemptsOf(result),
+          durationMs: durationOf(result),
+          kind: result.kind,
+        },
+      };
+    }
+    if (
+      result.kind === "circuit_open" ||
+      result.kind === "budget_exceeded" ||
+      result.kind === "exhausted"
+    ) {
+      return {
+        ok: false,
+        error: `Failed to submit. Please email ${APP_TAKEDOWN_EMAIL}`,
+        autopilot: {
+          attempts: attemptsOf(result),
+          durationMs: durationOf(result),
+          kind: result.kind,
+        },
+      };
+    }
+    return { ok: false, error: "Unexpected error" };
+  } catch (e) {
+    console.error("[submitTakedownRequest] Unhandled exception:", e);
+    return { ok: false, error: "An unexpected error occurred. Please try again." };
   }
-  if (
-    result.kind === "circuit_open" ||
-    result.kind === "budget_exceeded" ||
-    result.kind === "exhausted"
-  ) {
-    return {
-      ok: false,
-      error: `Failed to submit. Please email ${APP_TAKEDOWN_EMAIL}`,
-      autopilot: {
-        attempts: attemptsOf(result),
-        durationMs: durationOf(result),
-        kind: result.kind,
-      },
-    };
-  }
-  return { ok: false, error: "Unexpected error" };
 }
 
 const inlineSchema = z.object({
@@ -156,54 +161,59 @@ const runInlineTakedownWork = async (
 };
 
 export async function submitTakedown(input: z.infer<typeof inlineSchema>): Promise<TakedownResult> {
-  const user = await getCurrentUser();
-  const parsed = inlineSchema.safeParse(input);
-  if (!parsed.success) return { ok: false, error: "Invalid data" };
-  const hdrs = await headers();
-  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
-  const clientIdempotencyKey = hdrs.get("x-idempotency-key");
-  const ipHash = hashIp(ip);
+  try {
+    const user = await getCurrentUser();
+    const parsed = inlineSchema.safeParse(input);
+    if (!parsed.success) return { ok: false, error: "Invalid data" };
+    const hdrs = await headers();
+    const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
+    const clientIdempotencyKey = hdrs.get("x-idempotency-key");
+    const ipHash = hashIp(ip);
 
-  const rlKey = user?.id
-    ? `${RATE_LIMIT_KEYS.takedown_submission}:${user.id}`
-    : `${RATE_LIMIT_KEYS.takedown_submission}:${ip ?? "anon"}`;
-  const rl = await checkRateLimit(rlKey);
-  if (!rl.ok) {
-    return { ok: false, error: `Too many requests. Try again in ${rl.retryAfter}s.` };
-  }
+    const rlKey = user?.id
+      ? `${RATE_LIMIT_KEYS.takedown_submission}:${user.id}`
+      : `${RATE_LIMIT_KEYS.takedown_submission}:${ip ?? "anon"}`;
+    const rl = await checkRateLimit(rlKey);
+    if (!rl.ok) {
+      return { ok: false, error: `Too many requests. Try again in ${rl.retryAfter}s.` };
+    }
 
-  const result = await withAutopilot<{ id: string }>(
-    submitTakedownPolicy,
-    [parsed.data.incidentId, parsed.data.contactEmail, parsed.data.reason, user?.id ?? "anon"],
-    (ctx) =>
-      runInlineTakedownWork(ctx, {
-        parsed: parsed.data,
-        userId: user?.id ?? null,
-        requesterName: user?.fullName ?? "Anonymous",
-        ipHash,
-      }),
-    { context: { userId: user?.id ?? null, ipHash, clientIdempotencyKey } },
-  );
+    const result = await withAutopilot<{ id: string }>(
+      submitTakedownPolicy,
+      [parsed.data.incidentId, parsed.data.contactEmail, parsed.data.reason, user?.id ?? "anon"],
+      (ctx) =>
+        runInlineTakedownWork(ctx, {
+          parsed: parsed.data,
+          userId: user?.id ?? null,
+          requesterName: user?.fullName ?? "Anonymous",
+          ipHash,
+        }),
+      { context: { userId: user?.id ?? null, ipHash, clientIdempotencyKey } },
+    );
 
-  if (result.kind === "ok" || result.kind === "replayed") {
-    revalidatePath(`/incidents/${parsed.data.incidentId}`);
+    if (result.kind === "ok" || result.kind === "replayed") {
+      revalidatePath(`/incidents/${parsed.data.incidentId}`);
+      return {
+        ok: true,
+        message: "Submitted",
+        autopilot: {
+          attempts: attemptsOf(result),
+          durationMs: durationOf(result),
+          kind: result.kind,
+        },
+      };
+    }
     return {
-      ok: true,
-      message: "Submitted",
+      ok: false,
+      error: "Failed to submit",
       autopilot: {
         attempts: attemptsOf(result),
         durationMs: durationOf(result),
         kind: result.kind,
       },
     };
+  } catch (e) {
+    console.error("[submitTakedown] Unhandled exception:", e);
+    return { ok: false, error: "An unexpected error occurred. Please try again." };
   }
-  return {
-    ok: false,
-    error: "Failed to submit",
-    autopilot: {
-      attempts: attemptsOf(result),
-      durationMs: durationOf(result),
-      kind: result.kind,
-    },
-  };
 }

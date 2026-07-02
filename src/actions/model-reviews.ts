@@ -67,79 +67,84 @@ export async function submitModelReview(
   _prev: SubmitModelReviewState,
   formData: FormData,
 ): Promise<SubmitModelReviewState> {
-  const user = await getCurrentUser();
-  if (!user) {
-    const t = await getTranslations("errors");
-    return { ok: false, error: t("sign_in_to_review") };
-  }
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      const t = await getTranslations("errors");
+      return { ok: false, error: t("sign_in_to_review") };
+    }
 
-  const modelId = String(formData.get("modelId") ?? "");
-  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.model_review}:${user.id}`);
-  if (!rl.ok) {
-    return { ok: false, error: `Too many actions. Try again in ${rl.retryAfter}s.` };
-  }
+    const modelId = String(formData.get("modelId") ?? "");
+    const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.model_review}:${user.id}`);
+    if (!rl.ok) {
+      return { ok: false, error: `Too many actions. Try again in ${rl.retryAfter}s.` };
+    }
 
-  const raw = {
-    modelId,
-    isAnonymous: formData.get("isAnonymous") === "true",
-    scoreOverall: Number(formData.get("scoreOverall") ?? 0),
-    scoreAccuracy: formData.get("scoreAccuracy") ? Number(formData.get("scoreAccuracy")) : null,
-    scoreSafety: formData.get("scoreSafety") ? Number(formData.get("scoreSafety")) : null,
-    scoreCreativity: formData.get("scoreCreativity")
-      ? Number(formData.get("scoreCreativity"))
-      : null,
-    scoreSpeed: formData.get("scoreSpeed") ? Number(formData.get("scoreSpeed")) : null,
-    scoreValue: formData.get("scoreValue") ? Number(formData.get("scoreValue")) : null,
-    title: formData.get("title") ? String(formData.get("title")) : null,
-    body: formData.get("body") ? String(formData.get("body")) : null,
-  };
+    const raw = {
+      modelId,
+      isAnonymous: formData.get("isAnonymous") === "true",
+      scoreOverall: Number(formData.get("scoreOverall") ?? 0),
+      scoreAccuracy: formData.get("scoreAccuracy") ? Number(formData.get("scoreAccuracy")) : null,
+      scoreSafety: formData.get("scoreSafety") ? Number(formData.get("scoreSafety")) : null,
+      scoreCreativity: formData.get("scoreCreativity")
+        ? Number(formData.get("scoreCreativity"))
+        : null,
+      scoreSpeed: formData.get("scoreSpeed") ? Number(formData.get("scoreSpeed")) : null,
+      scoreValue: formData.get("scoreValue") ? Number(formData.get("scoreValue")) : null,
+      title: formData.get("title") ? String(formData.get("title")) : null,
+      body: formData.get("body") ? String(formData.get("body")) : null,
+    };
 
-  const parsed = modelReviewSchema.safeParse(raw);
-  if (!parsed.success) {
-    return { ok: false, fieldErrors: parsed.error.flatten().fieldErrors };
-  }
+    const parsed = modelReviewSchema.safeParse(raw);
+    if (!parsed.success) {
+      return { ok: false, fieldErrors: parsed.error.flatten().fieldErrors };
+    }
 
-  const result = await withAutopilot<{ id: string }>(
-    submitModelReviewPolicy,
-    [user.id, parsed.data.modelId, parsed.data.scoreOverall],
-    (ctx) =>
-      runModelReviewWork(ctx, {
-        userId: user.id,
-        modelId: parsed.data.modelId,
-        isAnonymous: parsed.data.isAnonymous,
-        scoreOverall: parsed.data.scoreOverall,
-        scoreAccuracy: parsed.data.scoreAccuracy ?? null,
-        scoreSafety: parsed.data.scoreSafety ?? null,
-        scoreCreativity: parsed.data.scoreCreativity ?? null,
-        scoreSpeed: parsed.data.scoreSpeed ?? null,
-        scoreValue: parsed.data.scoreValue ?? null,
-        title: parsed.data.title ?? null,
-        body: parsed.data.body ?? null,
-      }),
-    { context: { userId: user.id, ipHash: null, clientIdempotencyKey: null } },
-  );
+    const result = await withAutopilot<{ id: string }>(
+      submitModelReviewPolicy,
+      [user.id, parsed.data.modelId, parsed.data.scoreOverall],
+      (ctx) =>
+        runModelReviewWork(ctx, {
+          userId: user.id,
+          modelId: parsed.data.modelId,
+          isAnonymous: parsed.data.isAnonymous,
+          scoreOverall: parsed.data.scoreOverall,
+          scoreAccuracy: parsed.data.scoreAccuracy ?? null,
+          scoreSafety: parsed.data.scoreSafety ?? null,
+          scoreCreativity: parsed.data.scoreCreativity ?? null,
+          scoreSpeed: parsed.data.scoreSpeed ?? null,
+          scoreValue: parsed.data.scoreValue ?? null,
+          title: parsed.data.title ?? null,
+          body: parsed.data.body ?? null,
+        }),
+      { context: { userId: user.id, ipHash: null, clientIdempotencyKey: null } },
+    );
 
-  if (result.kind === "ok" || result.kind === "replayed") {
-    revalidatePath(`/models`);
+    if (result.kind === "ok" || result.kind === "replayed") {
+      revalidatePath(`/models`);
+      return {
+        ok: true,
+        autopilot: {
+          attempts: attemptsOf(result),
+          durationMs: durationOf(result),
+          kind: result.kind,
+        },
+      };
+    }
+
     return {
-      ok: true,
+      ok: false,
+      error: "Failed to submit review",
       autopilot: {
         attempts: attemptsOf(result),
         durationMs: durationOf(result),
         kind: result.kind,
       },
     };
+  } catch (e) {
+    console.error("[submitModelReview] Unhandled exception:", e);
+    return { ok: false, error: "An unexpected error occurred. Please try again." };
   }
-
-  return {
-    ok: false,
-    error: "Failed to submit review",
-    autopilot: {
-      attempts: attemptsOf(result),
-      durationMs: durationOf(result),
-      kind: result.kind,
-    },
-  };
 }
 
 export async function voteModelReview(reviewId: string) {

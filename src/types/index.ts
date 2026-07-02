@@ -286,3 +286,26 @@ export interface StrategyTodo {
   created_at: string;
   updated_at: string;
 }
+
+export interface ExternalIncidentQueueItem {
+  id: string;
+  source: string;
+  external_url: string;
+  title: string;
+  body: string;
+  source_score: number;
+  status: "pending" | "accepted" | "rejected" | "duplicate";
+  fetched_at: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface StrategyInnovation {
+  id: string;
+  title: string;
+  description: string;
+  priority: "low" | "medium" | "high" | "critical";
+  status: "idea" | "in_progress" | "done";
+  created_at: string;
+  updated_at: string;
+}

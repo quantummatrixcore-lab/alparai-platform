@@ -25,6 +25,7 @@ import {
   Compass,
   Download,
   Award,
+  Lightbulb,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
@@ -104,6 +105,16 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       icon: Zap,
       active: pathname.startsWith("/admin/autopilot"),
     },
+    ...(user.role === "admin" || user.role === "ceo"
+      ? [
+          {
+            href: "/admin/innovations",
+            label: t("innovations", { defaultValue: "Innovations" }),
+            icon: Lightbulb,
+            active: pathname.startsWith("/admin/innovations"),
+          },
+        ]
+      : []),
     {
       href: "/admin/analysis",
       label: t("analytics"),

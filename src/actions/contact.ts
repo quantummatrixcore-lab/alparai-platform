@@ -56,71 +56,76 @@ export async function submitContact(
   _prev: ContactState,
   formData: FormData,
 ): Promise<ContactState> {
-  const hdrs = await headers();
-  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  const userAgent = hdrs.get("user-agent") ?? "unknown";
+  try {
+    const hdrs = await headers();
+    const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+    const userAgent = hdrs.get("user-agent") ?? "unknown";
 
-  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.contact_submission}:${ip}`);
-  if (!rl.ok) {
-    return { ok: false, formError: `Too many submissions. Try again in ${rl.retryAfter}s.` };
-  }
+    const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.contact_submission}:${ip}`);
+    if (!rl.ok) {
+      return { ok: false, formError: `Too many submissions. Try again in ${rl.retryAfter}s.` };
+    }
 
-  const raw = {
-    name: String(formData.get("name") ?? ""),
-    email: String(formData.get("email") ?? ""),
-    subject: String(formData.get("subject") ?? ""),
-    message: String(formData.get("message") ?? ""),
-    category: String(formData.get("category") ?? "general"),
-  };
-  const parsed = contactFormSchema.safeParse(raw);
-  if (!parsed.success) {
-    return {
-      ok: false,
-      fieldErrors: parsed.error.flatten().fieldErrors,
+    const raw = {
+      name: String(formData.get("name") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      subject: String(formData.get("subject") ?? ""),
+      message: String(formData.get("message") ?? ""),
+      category: String(formData.get("category") ?? "general"),
     };
-  }
-  const clientIdempotencyKey = hdrs.get("x-idempotency-key");
+    const parsed = contactFormSchema.safeParse(raw);
+    if (!parsed.success) {
+      return {
+        ok: false,
+        fieldErrors: parsed.error.flatten().fieldErrors,
+      };
+    }
+    const clientIdempotencyKey = hdrs.get("x-idempotency-key");
 
-  const result = await withAutopilot<{ sent: boolean; channel: "email" | "log" }>(
-    submitContactPolicy,
-    [parsed.data.email, parsed.data.subject, parsed.data.message, parsed.data.category],
-    (ctx) =>
-      runContactWork(ctx, {
-        name: parsed.data.name,
-        email: parsed.data.email,
-        subject: parsed.data.subject,
-        message: parsed.data.message,
-        category: parsed.data.category,
-        ip,
-        userAgent,
-      }),
-    {
-      context: {
-        userId: null,
-        ipHash: hashIp(ip),
-        clientIdempotencyKey,
+    const result = await withAutopilot<{ sent: boolean; channel: "email" | "log" }>(
+      submitContactPolicy,
+      [parsed.data.email, parsed.data.subject, parsed.data.message, parsed.data.category],
+      (ctx) =>
+        runContactWork(ctx, {
+          name: parsed.data.name,
+          email: parsed.data.email,
+          subject: parsed.data.subject,
+          message: parsed.data.message,
+          category: parsed.data.category,
+          ip,
+          userAgent,
+        }),
+      {
+        context: {
+          userId: null,
+          ipHash: hashIp(ip),
+          clientIdempotencyKey,
+        },
       },
-    },
-  );
+    );
 
-  if (result.kind === "ok" || result.kind === "replayed") {
-    return {
-      ok: true,
-      autopilot: {
-        attempts: attemptsOf(result),
-        durationMs: durationOf(result),
-        kind: result.kind,
-      },
-    };
+    if (result.kind === "ok" || result.kind === "replayed") {
+      return {
+        ok: true,
+        autopilot: {
+          attempts: attemptsOf(result),
+          durationMs: durationOf(result),
+          kind: result.kind,
+        },
+      };
+    }
+    if (result.kind === "circuit_open") {
+      return { ok: false, formError: "Service temporarily unavailable. Please email us directly." };
+    }
+    if (result.kind === "budget_exceeded") {
+      return { ok: false, formError: "Request timed out. Please try again shortly." };
+    }
+    if (result.kind === "exhausted") {
+      return { ok: false, formError: "Failed to send. Please email us directly." };
+    }
+    return { ok: false, formError: "Unexpected error." };
+  } catch (e) {
+    console.error("[submitContact] Unhandled exception:", e);
+    return { ok: false, formError: "An unexpected error occurred. Please try again." };
   }
-  if (result.kind === "circuit_open") {
-    return { ok: false, formError: "Service temporarily unavailable. Please email us directly." };
-  }
-  if (result.kind === "budget_exceeded") {
-    return { ok: false, formError: "Request timed out. Please try again shortly." };
-  }
-  if (result.kind === "exhausted") {
-    return { ok: false, formError: "Failed to send. Please email us directly." };
-  }
-  return { ok: false, formError: "Unexpected error." };
 }

@@ -119,89 +119,94 @@ export async function submitInvestor(
   _prev: InvestorState,
   formData: FormData,
 ): Promise<InvestorState> {
-  const hdrs = await headers();
-  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  const userAgent = hdrs.get("user-agent") ?? "unknown";
+  try {
+    const hdrs = await headers();
+    const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+    const userAgent = hdrs.get("user-agent") ?? "unknown";
 
-  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.investor_application}:${ip}`);
-  if (!rl.ok) {
-    return { ok: false, formError: `Too many submissions. Try again in ${rl.retryAfter}s.` };
-  }
+    const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.investor_application}:${ip}`);
+    if (!rl.ok) {
+      return { ok: false, formError: `Too many submissions. Try again in ${rl.retryAfter}s.` };
+    }
 
-  const raw = {
-    fullName: String(formData.get("fullName") ?? ""),
-    title: String(formData.get("title") ?? ""),
-    company: String(formData.get("company") ?? ""),
-    linkedinUrl: String(formData.get("linkedinUrl") ?? ""),
-    email: String(formData.get("email") ?? ""),
-    checkSize: String(formData.get("checkSize") ?? ""),
-    whyInterested: formData.get("whyInterested") ? String(formData.get("whyInterested")) : null,
-  };
-
-  const parsed = investorApplicationSchema.safeParse(raw);
-  if (!parsed.success) {
-    return {
-      ok: false,
-      fieldErrors: parsed.error.flatten().fieldErrors,
+    const raw = {
+      fullName: String(formData.get("fullName") ?? ""),
+      title: String(formData.get("title") ?? ""),
+      company: String(formData.get("company") ?? ""),
+      linkedinUrl: String(formData.get("linkedinUrl") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      checkSize: String(formData.get("checkSize") ?? ""),
+      whyInterested: formData.get("whyInterested") ? String(formData.get("whyInterested")) : null,
     };
-  }
 
-  const clientIdempotencyKey = hdrs.get("x-idempotency-key");
+    const parsed = investorApplicationSchema.safeParse(raw);
+    if (!parsed.success) {
+      return {
+        ok: false,
+        fieldErrors: parsed.error.flatten().fieldErrors,
+      };
+    }
 
-  const result = await withAutopilot<{ sent: boolean; channel: "email" | "log" }>(
-    submitInvestorPolicy,
-    [
-      parsed.data.fullName,
-      parsed.data.title,
-      parsed.data.company,
-      parsed.data.linkedinUrl,
-      parsed.data.email,
-      parsed.data.checkSize,
-      parsed.data.whyInterested || "",
-    ],
-    (ctx) =>
-      runInvestorWork(ctx, {
+    const clientIdempotencyKey = hdrs.get("x-idempotency-key");
+
+    const result = await withAutopilot<{ sent: boolean; channel: "email" | "log" }>(
+      submitInvestorPolicy,
+      [
+        parsed.data.fullName,
+        parsed.data.title,
+        parsed.data.company,
+        parsed.data.linkedinUrl,
+        parsed.data.email,
+        parsed.data.checkSize,
+        parsed.data.whyInterested || "",
+      ],
+      (ctx) =>
+        runInvestorWork(ctx, {
+          fullName: parsed.data.fullName,
+          title: parsed.data.title,
+          company: parsed.data.company,
+          linkedinUrl: parsed.data.linkedinUrl,
+          email: parsed.data.email,
+          checkSize: parsed.data.checkSize,
+          whyInterested: parsed.data.whyInterested,
+          ip,
+          userAgent,
+        }),
+      {
+        context: {
+          userId: null,
+          ipHash: hashIp(ip),
+          clientIdempotencyKey,
+        },
+      },
+    );
+
+    if (result.kind === "ok" || result.kind === "replayed") {
+      return {
+        ok: true,
         fullName: parsed.data.fullName,
-        title: parsed.data.title,
-        company: parsed.data.company,
-        linkedinUrl: parsed.data.linkedinUrl,
         email: parsed.data.email,
-        checkSize: parsed.data.checkSize,
-        whyInterested: parsed.data.whyInterested,
-        ip,
-        userAgent,
-      }),
-    {
-      context: {
-        userId: null,
-        ipHash: hashIp(ip),
-        clientIdempotencyKey,
-      },
-    },
-  );
-
-  if (result.kind === "ok" || result.kind === "replayed") {
-    return {
-      ok: true,
-      fullName: parsed.data.fullName,
-      email: parsed.data.email,
-      autopilot: {
-        attempts: attemptsOf(result),
-        durationMs: durationOf(result),
-        kind: result.kind,
-      },
-    };
+        autopilot: {
+          attempts: attemptsOf(result),
+          durationMs: durationOf(result),
+          kind: result.kind,
+        },
+      };
+    }
+    if (result.kind === "circuit_open") {
+      return { ok: false, formError: "Service temporarily unavailable. Please try again later." };
+    }
+    if (result.kind === "budget_exceeded") {
+      return { ok: false, formError: "Request timed out. Please try again shortly." };
+    }
+    if (result.kind === "exhausted") {
+      return { ok: false, formError: "Failed to send. Please try again later." };
+    }
+    return { ok: false, formError: "Unexpected error occurred." };
+  } catch (e) {
+    console.error("[submitInvestor] Unhandled exception:", e);
+    return { ok: false, formError: "An unexpected error occurred. Please try again." };
   }
-  if (result.kind === "circuit_open") {
-    return { ok: false, formError: "Service temporarily unavailable. Please try again later." };
-  }
-  if (result.kind === "budget_exceeded") {
-    return { ok: false, formError: "Request timed out. Please try again shortly." };
-  }
-  if (result.kind === "exhausted") {
-    return { ok: false, formError: "Failed to send. Please try again later." };
-  }
-  return { ok: false, formError: "Unexpected error occurred." };
 }
 
 // ----------------------------------------------------

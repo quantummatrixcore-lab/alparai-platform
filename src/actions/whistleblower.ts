@@ -53,38 +53,43 @@ async function runSubmitWhistleblowerWork(
 export async function submitWhistleblowerAction(
   data: SubmitWhistleblowerInput,
 ): Promise<SubmitWhistleblowerResult> {
-  if (!data.encryptedContent || !data.category) {
-    return { ok: false, error: "Missing required fields" };
+  try {
+    if (!data.encryptedContent || !data.category) {
+      return { ok: false, error: "Missing required fields" };
+    }
+
+    const hdrs = await headers();
+    const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+    const rlKey = `${RATE_LIMIT_KEYS.whistleblower_submission}:${ip}`;
+    const rl = await checkRateLimit(rlKey);
+    if (!rl.ok) {
+      return { ok: false, error: `Too many submissions. Try again in ${rl.retryAfter}s.` };
+    }
+
+    const timestamp = new Date().toISOString().slice(0, 16); // Minute-level idempotency
+    const idempotencyKey = `whistleblower:${ip}:${timestamp}`;
+
+    const result = await withAutopilot<{ id: string }>(
+      submitWhistleblowerPolicy,
+      [idempotencyKey, data.category],
+      (ctx) => runSubmitWhistleblowerWork(ctx, data),
+      { context: { userId: null, ipHash: null, clientIdempotencyKey: idempotencyKey } },
+    );
+
+    if (result.kind === "ok") {
+      try {
+        revalidatePath("/admin");
+      } catch {}
+      return { ok: true, submissionId: result.value.id };
+    }
+
+    if (result.kind === "replayed") {
+      return { ok: true };
+    }
+
+    return { ok: false, error: "Submission failed" };
+  } catch (e) {
+    console.error("[submitWhistleblowerAction] Unhandled exception:", e);
+    return { ok: false, error: "An unexpected error occurred. Please try again." };
   }
-
-  const hdrs = await headers();
-  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  const rlKey = `${RATE_LIMIT_KEYS.whistleblower_submission}:${ip}`;
-  const rl = await checkRateLimit(rlKey);
-  if (!rl.ok) {
-    return { ok: false, error: `Too many submissions. Try again in ${rl.retryAfter}s.` };
-  }
-
-  const timestamp = new Date().toISOString().slice(0, 16); // Minute-level idempotency
-  const idempotencyKey = `whistleblower:${ip}:${timestamp}`;
-
-  const result = await withAutopilot<{ id: string }>(
-    submitWhistleblowerPolicy,
-    [idempotencyKey, data.category],
-    (ctx) => runSubmitWhistleblowerWork(ctx, data),
-    { context: { userId: null, ipHash: null, clientIdempotencyKey: idempotencyKey } },
-  );
-
-  if (result.kind === "ok") {
-    try {
-      revalidatePath("/admin");
-    } catch {}
-    return { ok: true, submissionId: result.value.id };
-  }
-
-  if (result.kind === "replayed") {
-    return { ok: true };
-  }
-
-  return { ok: false, error: "Submission failed" };
 }

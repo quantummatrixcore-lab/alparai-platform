@@ -123,82 +123,87 @@ const runExpertWork = async (
 };
 
 export async function submitExpert(_prev: ExpertState, formData: FormData): Promise<ExpertState> {
-  const hdrs = await headers();
-  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  const userAgent = hdrs.get("user-agent") ?? "unknown";
+  try {
+    const hdrs = await headers();
+    const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+    const userAgent = hdrs.get("user-agent") ?? "unknown";
 
-  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.expert_application}:${ip}`);
-  if (!rl.ok) {
-    return { ok: false, formError: `Too many submissions. Try again in ${rl.retryAfter}s.` };
-  }
+    const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.expert_application}:${ip}`);
+    if (!rl.ok) {
+      return { ok: false, formError: `Too many submissions. Try again in ${rl.retryAfter}s.` };
+    }
 
-  const raw = {
-    name: String(formData.get("name") ?? ""),
-    title: String(formData.get("title") ?? ""),
-    institution: String(formData.get("institution") ?? ""),
-    expertiseArea: String(formData.get("expertiseArea") ?? ""),
-    linkedinUrl: formData.get("linkedinUrl") ? String(formData.get("linkedinUrl")) : undefined,
-    email: String(formData.get("email") ?? ""),
-  };
-
-  const parsed = expertApplicationSchema.safeParse(raw);
-  if (!parsed.success) {
-    return {
-      ok: false,
-      fieldErrors: parsed.error.flatten().fieldErrors,
+    const raw = {
+      name: String(formData.get("name") ?? ""),
+      title: String(formData.get("title") ?? ""),
+      institution: String(formData.get("institution") ?? ""),
+      expertiseArea: String(formData.get("expertiseArea") ?? ""),
+      linkedinUrl: formData.get("linkedinUrl") ? String(formData.get("linkedinUrl")) : undefined,
+      email: String(formData.get("email") ?? ""),
     };
-  }
 
-  const clientIdempotencyKey = hdrs.get("x-idempotency-key");
+    const parsed = expertApplicationSchema.safeParse(raw);
+    if (!parsed.success) {
+      return {
+        ok: false,
+        fieldErrors: parsed.error.flatten().fieldErrors,
+      };
+    }
 
-  const result = await withAutopilot<{ sent: boolean; channel: "email" | "log" }>(
-    submitExpertPolicy,
-    [
-      parsed.data.name,
-      parsed.data.title,
-      parsed.data.institution,
-      parsed.data.expertiseArea,
-      parsed.data.linkedinUrl || "",
-      parsed.data.email,
-    ],
-    (ctx) =>
-      runExpertWork(ctx, {
-        name: parsed.data.name,
-        title: parsed.data.title,
-        institution: parsed.data.institution,
-        expertiseArea: parsed.data.expertiseArea,
-        linkedinUrl: parsed.data.linkedinUrl,
-        email: parsed.data.email,
-        ip,
-        userAgent,
-      }),
-    {
-      context: {
-        userId: null,
-        ipHash: hashIp(ip),
-        clientIdempotencyKey,
+    const clientIdempotencyKey = hdrs.get("x-idempotency-key");
+
+    const result = await withAutopilot<{ sent: boolean; channel: "email" | "log" }>(
+      submitExpertPolicy,
+      [
+        parsed.data.name,
+        parsed.data.title,
+        parsed.data.institution,
+        parsed.data.expertiseArea,
+        parsed.data.linkedinUrl || "",
+        parsed.data.email,
+      ],
+      (ctx) =>
+        runExpertWork(ctx, {
+          name: parsed.data.name,
+          title: parsed.data.title,
+          institution: parsed.data.institution,
+          expertiseArea: parsed.data.expertiseArea,
+          linkedinUrl: parsed.data.linkedinUrl,
+          email: parsed.data.email,
+          ip,
+          userAgent,
+        }),
+      {
+        context: {
+          userId: null,
+          ipHash: hashIp(ip),
+          clientIdempotencyKey,
+        },
       },
-    },
-  );
+    );
 
-  if (result.kind === "ok" || result.kind === "replayed") {
-    return {
-      ok: true,
-      autopilot: {
-        attempts: attemptsOf(result),
-        durationMs: durationOf(result),
-        kind: result.kind,
-      },
-    };
+    if (result.kind === "ok" || result.kind === "replayed") {
+      return {
+        ok: true,
+        autopilot: {
+          attempts: attemptsOf(result),
+          durationMs: durationOf(result),
+          kind: result.kind,
+        },
+      };
+    }
+    if (result.kind === "circuit_open") {
+      return { ok: false, formError: "Service temporarily unavailable. Please try again later." };
+    }
+    if (result.kind === "budget_exceeded") {
+      return { ok: false, formError: "Request timed out. Please try again shortly." };
+    }
+    if (result.kind === "exhausted") {
+      return { ok: false, formError: "Failed to send. Please try again later." };
+    }
+    return { ok: false, formError: "Unexpected error occurred." };
+  } catch (e) {
+    console.error("[submitExpert] Unhandled exception:", e);
+    return { ok: false, formError: "An unexpected error occurred. Please try again." };
   }
-  if (result.kind === "circuit_open") {
-    return { ok: false, formError: "Service temporarily unavailable. Please try again later." };
-  }
-  if (result.kind === "budget_exceeded") {
-    return { ok: false, formError: "Request timed out. Please try again shortly." };
-  }
-  if (result.kind === "exhausted") {
-    return { ok: false, formError: "Failed to send. Please try again later." };
-  }
-  return { ok: false, formError: "Unexpected error occurred." };
 }

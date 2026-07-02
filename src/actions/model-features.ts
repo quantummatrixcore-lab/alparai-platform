@@ -62,67 +62,72 @@ export async function submitModelFeatureRequest(
   _prev: SubmitModelFeatureRequestState,
   formData: FormData,
 ): Promise<SubmitModelFeatureRequestState> {
-  const user = await getCurrentUser();
-  if (!user) {
-    const t = await getTranslations("errors");
-    return { ok: false, error: t("sign_in_to_feature") };
-  }
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      const t = await getTranslations("errors");
+      return { ok: false, error: t("sign_in_to_feature") };
+    }
 
-  const modelId = String(formData.get("modelId") ?? "");
-  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.model_feature_request}:${user.id}`);
-  if (!rl.ok) {
-    return { ok: false, error: `Too many actions. Try again in ${rl.retryAfter}s.` };
-  }
+    const modelId = String(formData.get("modelId") ?? "");
+    const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.model_feature_request}:${user.id}`);
+    if (!rl.ok) {
+      return { ok: false, error: `Too many actions. Try again in ${rl.retryAfter}s.` };
+    }
 
-  const raw = {
-    modelId,
-    isAnonymous: formData.get("isAnonymous") === "true",
-    title: String(formData.get("title") ?? ""),
-    description: formData.get("description") ? String(formData.get("description")) : null,
-    category: String(formData.get("category") ?? "feature"),
-  };
+    const raw = {
+      modelId,
+      isAnonymous: formData.get("isAnonymous") === "true",
+      title: String(formData.get("title") ?? ""),
+      description: formData.get("description") ? String(formData.get("description")) : null,
+      category: String(formData.get("category") ?? "feature"),
+    };
 
-  const parsed = modelFeatureRequestSchema.safeParse(raw);
-  if (!parsed.success) {
-    return { ok: false, fieldErrors: parsed.error.flatten().fieldErrors };
-  }
+    const parsed = modelFeatureRequestSchema.safeParse(raw);
+    if (!parsed.success) {
+      return { ok: false, fieldErrors: parsed.error.flatten().fieldErrors };
+    }
 
-  const result = await withAutopilot<{ id: string }>(
-    submitModelFeatureRequestPolicy,
-    [user.id, parsed.data.modelId, parsed.data.title],
-    (ctx) =>
-      runModelFeatureWork(ctx, {
-        userId: user.id,
-        modelId: parsed.data.modelId,
-        isAnonymous: parsed.data.isAnonymous,
-        title: parsed.data.title,
-        description: parsed.data.description ?? null,
-        category: parsed.data.category,
-      }),
-    { context: { userId: user.id, ipHash: null, clientIdempotencyKey: null } },
-  );
+    const result = await withAutopilot<{ id: string }>(
+      submitModelFeatureRequestPolicy,
+      [user.id, parsed.data.modelId, parsed.data.title],
+      (ctx) =>
+        runModelFeatureWork(ctx, {
+          userId: user.id,
+          modelId: parsed.data.modelId,
+          isAnonymous: parsed.data.isAnonymous,
+          title: parsed.data.title,
+          description: parsed.data.description ?? null,
+          category: parsed.data.category,
+        }),
+      { context: { userId: user.id, ipHash: null, clientIdempotencyKey: null } },
+    );
 
-  if (result.kind === "ok" || result.kind === "replayed") {
-    revalidatePath(`/models`);
+    if (result.kind === "ok" || result.kind === "replayed") {
+      revalidatePath(`/models`);
+      return {
+        ok: true,
+        autopilot: {
+          attempts: attemptsOf(result),
+          durationMs: durationOf(result),
+          kind: result.kind,
+        },
+      };
+    }
+
     return {
-      ok: true,
+      ok: false,
+      error: "Failed to submit feature request",
       autopilot: {
         attempts: attemptsOf(result),
         durationMs: durationOf(result),
         kind: result.kind,
       },
     };
+  } catch (e) {
+    console.error("[submitModelFeatureRequest] Unhandled exception:", e);
+    return { ok: false, error: "An unexpected error occurred. Please try again." };
   }
-
-  return {
-    ok: false,
-    error: "Failed to submit feature request",
-    autopilot: {
-      attempts: attemptsOf(result),
-      durationMs: durationOf(result),
-      kind: result.kind,
-    },
-  };
 }
 
 export async function voteModelFeatureRequest(requestId: string) {

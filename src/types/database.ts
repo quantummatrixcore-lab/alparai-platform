@@ -1690,6 +1690,75 @@ export type Database = {
           },
         ];
       };
+      external_incidents_queue: {
+        Row: {
+          created_at: string;
+          id: string;
+          source: string;
+          external_url: string;
+          title: string;
+          body: string;
+          source_score: number;
+          status: string;
+          fetched_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          source: string;
+          external_url: string;
+          title: string;
+          body: string;
+          source_score?: number;
+          status?: string;
+          fetched_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          source?: string;
+          external_url?: string;
+          title?: string;
+          body?: string;
+          source_score?: number;
+          status?: string;
+          fetched_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      strategy_innovations: {
+        Row: {
+          created_at: string;
+          id: string;
+          title: string;
+          description: string;
+          priority: string;
+          status: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          title: string;
+          description: string;
+          priority?: string;
+          status?: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          title?: string;
+          description?: string;
+          priority?: string;
+          status?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       strategy_todos: {
         Row: {
           created_at: string;

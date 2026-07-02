@@ -62,64 +62,69 @@ export async function subscribeNewsletter(
   _prev: NewsletterState,
   formData: FormData,
 ): Promise<NewsletterState> {
-  const hdrs = await headers();
-  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  try {
+    const hdrs = await headers();
+    const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
 
-  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.contact_submission}:${ip}`);
-  if (!rl.ok) {
-    return { ok: false, formError: `Too many requests. Try again in ${rl.retryAfter}s.` };
-  }
+    const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.contact_submission}:${ip}`);
+    if (!rl.ok) {
+      return { ok: false, formError: `Too many requests. Try again in ${rl.retryAfter}s.` };
+    }
 
-  const raw = {
-    email: String(formData.get("email") ?? ""),
-    locale: String(formData.get("locale") ?? "en"),
-  };
-
-  const parsed = newsletterSubscriptionSchema.safeParse(raw);
-  if (!parsed.success) {
-    return {
-      ok: false,
-      fieldErrors: parsed.error.flatten().fieldErrors,
+    const raw = {
+      email: String(formData.get("email") ?? ""),
+      locale: String(formData.get("locale") ?? "en"),
     };
-  }
 
-  const clientIdempotencyKey = hdrs.get("x-idempotency-key");
+    const parsed = newsletterSubscriptionSchema.safeParse(raw);
+    if (!parsed.success) {
+      return {
+        ok: false,
+        fieldErrors: parsed.error.flatten().fieldErrors,
+      };
+    }
 
-  const result = await withAutopilot<{ subscribed: boolean }>(
-    subscribeNewsletterPolicy,
-    [parsed.data.email, parsed.data.locale],
-    (ctx) =>
-      runNewsletterWork(ctx, {
-        email: parsed.data.email,
-        locale: parsed.data.locale,
-      }),
-    {
-      context: {
-        userId: null,
-        ipHash: hashIp(ip),
-        clientIdempotencyKey,
+    const clientIdempotencyKey = hdrs.get("x-idempotency-key");
+
+    const result = await withAutopilot<{ subscribed: boolean }>(
+      subscribeNewsletterPolicy,
+      [parsed.data.email, parsed.data.locale],
+      (ctx) =>
+        runNewsletterWork(ctx, {
+          email: parsed.data.email,
+          locale: parsed.data.locale,
+        }),
+      {
+        context: {
+          userId: null,
+          ipHash: hashIp(ip),
+          clientIdempotencyKey,
+        },
       },
-    },
-  );
+    );
 
-  if (result.kind === "ok" || result.kind === "replayed") {
-    return {
-      ok: true,
-      autopilot: {
-        attempts: attemptsOf(result),
-        durationMs: durationOf(result),
-        kind: result.kind,
-      },
-    };
+    if (result.kind === "ok" || result.kind === "replayed") {
+      return {
+        ok: true,
+        autopilot: {
+          attempts: attemptsOf(result),
+          durationMs: durationOf(result),
+          kind: result.kind,
+        },
+      };
+    }
+    if (result.kind === "circuit_open") {
+      return { ok: false, formError: "Service temporarily unavailable. Please try again later." };
+    }
+    if (result.kind === "budget_exceeded") {
+      return { ok: false, formError: "Request timed out. Please try again." };
+    }
+    if (result.kind === "exhausted") {
+      return { ok: false, formError: "Failed to subscribe. Please try again." };
+    }
+    return { ok: false, formError: "Unexpected error." };
+  } catch (e) {
+    console.error("[subscribeNewsletter] Unhandled exception:", e);
+    return { ok: false, formError: "An unexpected error occurred. Please try again." };
   }
-  if (result.kind === "circuit_open") {
-    return { ok: false, formError: "Service temporarily unavailable. Please try again later." };
-  }
-  if (result.kind === "budget_exceeded") {
-    return { ok: false, formError: "Request timed out. Please try again." };
-  }
-  if (result.kind === "exhausted") {
-    return { ok: false, formError: "Failed to subscribe. Please try again." };
-  }
-  return { ok: false, formError: "Unexpected error." };
 }
