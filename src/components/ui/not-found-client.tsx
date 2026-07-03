@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Link } from "@/i18n/routing";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { Container } from "@/components/ui/layout";
 import { Home, FileSearch, ArrowLeft, AlertCircle } from "lucide-react";
 
@@ -18,7 +18,7 @@ interface NotFoundClientProps {
   backLabel: string;
 }
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
@@ -26,7 +26,7 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 24 },
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
 };

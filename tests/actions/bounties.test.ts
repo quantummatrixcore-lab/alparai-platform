@@ -32,7 +32,7 @@ describe("claimBounty", () => {
   it("returns forbidden when not admin", async () => {
     vi.mocked(requireAdmin).mockResolvedValue(null as never);
     const result = await claimBounty({
-      incidentId: "00000000-0000-0000-0000-000000000001",
+      incidentId: "11111111-1111-4111-8111-111111111111",
       severityScore: 80,
     });
     expect(result.ok).toBe(false);
@@ -42,7 +42,7 @@ describe("claimBounty", () => {
   it("returns error when incident not found", async () => {
     mockAdmin._mocks.mockMaybeSingle.mockResolvedValue({ data: null, error: null });
     const result = await claimBounty({
-      incidentId: "00000000-0000-0000-0000-000000000001",
+      incidentId: "11111111-1111-4111-8111-111111111111",
       severityScore: 80,
     });
     expect(result.ok).toBe(false);
@@ -60,7 +60,7 @@ describe("claimBounty", () => {
 
   it("returns bountyId on success", async () => {
     const incident = {
-      id: "00000000-0000-0000-0000-000000000001",
+      id: "11111111-1111-4111-8111-111111111111",
       user_id: "user-1",
       ai_provider_id: "provider-1",
       severity: "high",
@@ -71,7 +71,7 @@ describe("claimBounty", () => {
     mockAdmin._mocks.mockMaybeSingle.mockResolvedValueOnce({ data: null, error: null });
     mockAdmin._mocks.mockInsertSelectSingle.mockResolvedValue({ data: bounty, error: null });
     const result = await claimBounty({
-      incidentId: "00000000-0000-0000-0000-000000000001",
+      incidentId: "11111111-1111-4111-8111-111111111111",
       severityScore: 80,
     });
     expect(result.ok).toBe(true);
@@ -83,7 +83,7 @@ describe("updateBountyStatus", () => {
   it("returns forbidden when not moderator", async () => {
     vi.mocked(requireModerator).mockResolvedValue(null as never);
     const result = await updateBountyStatus({
-      bountyId: "00000000-0000-0000-0000-000000000001",
+      bountyId: "11111111-1111-4111-8111-111111111111",
       status: "validated",
     });
     expect(result.ok).toBe(false);
@@ -92,7 +92,7 @@ describe("updateBountyStatus", () => {
 
   it("returns error on invalid status", async () => {
     const result = await updateBountyStatus({
-      bountyId: "00000000-0000-0000-0000-000000000001",
+      bountyId: "11111111-1111-4111-8111-111111111111",
       status: "invalid_status" as never,
     });
     expect(result.ok).toBe(false);

@@ -6,7 +6,7 @@ import { Share2, Link as LinkIcon, Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { trackEvent } from "@/lib/analytics";
 
 // High-fidelity brand SVG icons
@@ -99,7 +99,7 @@ export function ShareButtons({
   const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(title + " " + fullUrl)}`;
   const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(fullUrl)}`;
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0, y: 10 },
     visible: {
       opacity: 1,
@@ -110,7 +110,7 @@ export function ShareButtons({
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { scale: 0.8, opacity: 0 },
     visible: { scale: 1, opacity: 1, transition: { type: "spring", stiffness: 300, damping: 15 } },
   };

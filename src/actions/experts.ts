@@ -27,7 +27,7 @@ export const expertApplicationSchema = z.object({
   expertiseArea: z.enum(
     ["legal", "medical", "cybersecurity", "research", "ethics", "policy", "other"],
     {
-      errorMap: () => ({ message: "Please select a valid area of expertise" }),
+      message: "Please select a valid area of expertise",
     },
   ),
   linkedinUrl: z.string().url("Please provide a valid LinkedIn URL").optional().or(z.literal("")),

@@ -79,16 +79,16 @@ export const incidentSubmissionSchema = z.object({
     .optional(),
   consent: z.object({
     truthfulness: z.literal(true, {
-      errorMap: () => ({ message: "You must confirm the truthfulness of your submission" }),
+      message: "You must confirm the truthfulness of your submission",
     }),
     anonymousPublication: z.literal(true, {
-      errorMap: () => ({ message: "You must accept anonymous publication" }),
+      message: "You must accept anonymous publication",
     }),
     age18Plus: z.literal(true, {
-      errorMap: () => ({ message: "You must be 18 or older to submit" }),
+      message: "You must be 18 or older to submit",
     }),
     termsOfService: z.literal(true, {
-      errorMap: () => ({ message: "You must accept the Terms of Service" }),
+      message: "You must accept the Terms of Service",
     }),
   }),
 });

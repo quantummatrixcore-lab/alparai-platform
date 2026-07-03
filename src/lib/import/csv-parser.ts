@@ -189,7 +189,7 @@ function mapGeneric(
   if (!parsed.success) {
     return {
       row: null,
-      error: `Row ${rowIndex}: ${parsed.error.errors.map((e) => e.message).join(", ")}`,
+      error: `Row ${rowIndex}: ${parsed.error.issues.map((e) => e.message).join(", ")}`,
     };
   }
 
