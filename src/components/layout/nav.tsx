@@ -13,6 +13,8 @@ import {
   GraduationCap,
   Home,
   Scale,
+  Eye,
+  Shield,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import type { ComponentType } from "react";
@@ -28,6 +30,8 @@ const navItems: NavItem[] = [
   { href: "/incidents", labelKey: "incidents", icon: FileText },
   { href: "/leaderboard", labelKey: "leaderboard", icon: BarChart3 },
   { href: "/dilemmas", labelKey: "dilemmas", icon: Scale },
+  { href: "/ai-act", labelKey: "ai_act", icon: Shield },
+  { href: "/transparency", labelKey: "transparency", icon: Eye },
   { href: "/blog", labelKey: "blog", icon: BookOpen },
   { href: "/academy", labelKey: "academy", icon: GraduationCap },
   { href: "/press-kit", labelKey: "presskit", icon: Award },
