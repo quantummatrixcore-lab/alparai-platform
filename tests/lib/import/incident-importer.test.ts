@@ -42,6 +42,10 @@ const makeRow = (overrides?: Partial<ImportIncidentRow>): ImportIncidentRow => (
   sourceUrl: "https://example.com",
   importAttribution: "AIAAIC Registry (CC BY 4.0)",
   language: "en",
+  euActRiskCategory: null,
+  euActSeriousIncidentClass: null,
+  euActHighRiskSystemCategory: null,
+  euActReportingDeadlineDays: null,
   ...overrides,
 });
 

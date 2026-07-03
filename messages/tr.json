@@ -648,6 +648,7 @@
       "dilemmas": "İkilemler",
       "submit_report": "Rapor Gönder",
       "transparency": "Şeffaflık",
+      "ai_act": "Yapay Zeka Yasası",
       "about": "Hakkında",
       "pricing": "Fiyatlandırma",
       "security": "Güvenlik",
@@ -1280,6 +1281,7 @@
     "totalReports": "Toplam rapor",
     "publishRate": "Yayınlanma oranı",
     "pendingReview": "İnceleme bekliyor",
+    "verifiedThisWeek": "Bu hafta doğrulananlar",
     "providerResponseRate": "Sağlayıcı yanıt oranı",
     "submit": "Gönder",
     "submitDesc": "Kullanıcılar kanıt, yapay zeka çıktı ekran görüntüleri ve bağlamla birlikte olay raporları gönderir.",
@@ -1317,6 +1319,19 @@
     "roadmapIntro": "Kurumsal entegrasyonu ve tam şeffaflığı garanti altına almak amacıyla, ALPAR AI endüstri standartlarında uyumluluk sertifikalarını hedeflemektedir.",
     "soc2Desc": "Hedef: 2026'nın 3. çeyreği. Sürekli güvenlik günlük kaydı, denetim izleri ve sıkı veri erişim politikaları kurulumu.",
     "isoDesc": "Hedef: 2027'nin 1. çeyreği. Tüm bilgi akışı süreçlerinde Bilgi Güvenliği Yönetim Sistemi (ISMS) uygulaması."
+  },
+  "ai-act": {
+    "title": "AB Yapay Zeka Yasası Ciddi Olay Takipçisi",
+    "subtitle": "Olayları Madde 73 ciddi olay raporlama çerçevesiyle eşleştiren gerçek zamanlı, bağımsız kamu sicili.",
+    "obligations": "Madde 73 Yükümlülükleri",
+    "obligationsDesc": "2 Ağustos 2026'dan itibaren AB'deki yapay zeka sağlayıcıları ciddi olayları (ölüm, sağlık tehlikeleri, kritik altyapı kesintileri veya temel hak ihlalleri) 2 ila 15 gün içinde bildirmek zorundadır. ALPAR ilk bağımsız takipçiyi sunar.",
+    "filterAll": "Tüm Risk Seviyeleri",
+    "trackerCTA": "Ciddi Bir Yapay Zeka Olayı Bildir",
+    "riskTier": "AB Risk Seviyesi",
+    "incidentClass": "Ciddi Olay Sınıfı",
+    "reportingDeadline": "Raporlama Süresi",
+    "days": "{count} gün",
+    "noIncidents": "Bu risk seviyesinde sınıflandırılmış bir olay henüz bulunmuyor."
   },
   "models": {
     "page_title": "AI Modelleri Dizini",

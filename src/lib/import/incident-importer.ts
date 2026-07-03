@@ -157,6 +157,10 @@ export async function importIncidents(
         import_external_id: row.externalId,
         import_attribution: row.importAttribution,
         ai_provider_id: matchedProviderId,
+        eu_act_risk_category: row.euActRiskCategory ?? null,
+        eu_act_serious_incident_class: row.euActSeriousIncidentClass ?? null,
+        eu_act_high_risk_system_category: row.euActHighRiskSystemCategory ?? null,
+        eu_act_reporting_deadline_days: row.euActReportingDeadlineDays ?? null,
       };
     });
 

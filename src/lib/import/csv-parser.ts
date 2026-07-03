@@ -26,6 +26,10 @@ export interface ImportIncidentRow {
   sourceUrl: string | null;
   importAttribution: string;
   language: string;
+  euActRiskCategory: string | null;
+  euActSeriousIncidentClass: string | null;
+  euActHighRiskSystemCategory: string | null;
+  euActReportingDeadlineDays: number | null;
 }
 
 export interface ParseResult {
@@ -58,6 +62,79 @@ const AIAAIC_CATEGORY_MAP: Record<string, Database["public"]["Enums"]["incident_
   accountability: "other",
 };
 
+interface EuActMapping {
+  riskCategory: string | null;
+  seriousIncidentClass: string | null;
+  highRiskSystemCategory: string | null;
+  reportingDeadlineDays: number | null;
+}
+
+export const EU_TAXONOMY_MAP: Record<
+  Database["public"]["Enums"]["incident_category"],
+  EuActMapping
+> = {
+  bias: {
+    riskCategory: "High Risk",
+    seriousIncidentClass: "fundamental-rights",
+    highRiskSystemCategory: "services",
+    reportingDeadlineDays: 15,
+  },
+  privacy: {
+    riskCategory: "High Risk",
+    seriousIncidentClass: "fundamental-rights",
+    highRiskSystemCategory: null,
+    reportingDeadlineDays: 15,
+  },
+  security: {
+    riskCategory: "High Risk",
+    seriousIncidentClass: "critical-infrastructure",
+    highRiskSystemCategory: "infrastructure",
+    reportingDeadlineDays: 10,
+  },
+  manipulation: {
+    riskCategory: "Unacceptable Risk",
+    seriousIncidentClass: "fundamental-rights",
+    highRiskSystemCategory: null,
+    reportingDeadlineDays: 15,
+  },
+  harassment: {
+    riskCategory: "Unacceptable Risk",
+    seriousIncidentClass: "fundamental-rights",
+    highRiskSystemCategory: null,
+    reportingDeadlineDays: 15,
+  },
+  misinformation: {
+    riskCategory: "Specific Transparency",
+    seriousIncidentClass: "fundamental-rights",
+    highRiskSystemCategory: null,
+    reportingDeadlineDays: 15,
+  },
+  hallucination: {
+    riskCategory: "Specific Transparency",
+    seriousIncidentClass: "fundamental-rights",
+    highRiskSystemCategory: null,
+    reportingDeadlineDays: 15,
+  },
+  inaccessibility: {
+    riskCategory: "Minimal",
+    seriousIncidentClass: null,
+    highRiskSystemCategory: null,
+    reportingDeadlineDays: null,
+  },
+  copyright: {
+    riskCategory: "Minimal",
+    seriousIncidentClass: null,
+    highRiskSystemCategory: null,
+    reportingDeadlineDays: null,
+  },
+  other: {
+    riskCategory: "Minimal",
+    seriousIncidentClass: null,
+    highRiskSystemCategory: null,
+    reportingDeadlineDays: null,
+  },
+};
+
 function mapAiaaic(
   raw: Record<string, string>,
   rowIndex: number,
@@ -80,6 +157,8 @@ function mapAiaaic(
     return { row: null, error: `Row ${rowIndex}: description too short` };
   }
 
+  const euActMapping = EU_TAXONOMY_MAP[category];
+
   return {
     row: {
       externalId: `aiaaic-${externalId}`,
@@ -92,6 +171,10 @@ function mapAiaaic(
       sourceUrl,
       importAttribution: "AIAAIC Registry (CC BY 4.0) — aiaaic.org",
       language: "en",
+      euActRiskCategory: euActMapping.riskCategory,
+      euActSeriousIncidentClass: euActMapping.seriousIncidentClass,
+      euActHighRiskSystemCategory: euActMapping.highRiskSystemCategory,
+      euActReportingDeadlineDays: euActMapping.reportingDeadlineDays,
     },
     error: null,
   };
@@ -119,6 +202,8 @@ function mapAiid(
     return { row: null, error: `Row ${rowIndex}: description too short` };
   }
 
+  const euActMapping = EU_TAXONOMY_MAP["other"];
+
   return {
     row: {
       externalId: `aiid-${externalId}`,
@@ -131,6 +216,10 @@ function mapAiid(
       sourceUrl,
       importAttribution: "AI Incident Database (CC BY-SA 4.0) — incidentdatabase.ai",
       language: "en",
+      euActRiskCategory: euActMapping.riskCategory,
+      euActSeriousIncidentClass: euActMapping.seriousIncidentClass,
+      euActHighRiskSystemCategory: euActMapping.highRiskSystemCategory,
+      euActReportingDeadlineDays: euActMapping.reportingDeadlineDays,
     },
     error: null,
   };
@@ -196,6 +285,8 @@ function mapGeneric(
   const d = parsed.data;
   const extId = d.external_id ?? `news-${rowIndex}`;
 
+  const euActMapping = EU_TAXONOMY_MAP[d.category];
+
   return {
     row: {
       externalId: extId,
@@ -208,6 +299,10 @@ function mapGeneric(
       sourceUrl: d.source_url ?? null,
       importAttribution: "Curated news source",
       language: "en",
+      euActRiskCategory: euActMapping.riskCategory,
+      euActSeriousIncidentClass: euActMapping.seriousIncidentClass,
+      euActHighRiskSystemCategory: euActMapping.highRiskSystemCategory,
+      euActReportingDeadlineDays: euActMapping.reportingDeadlineDays,
     },
     error: null,
   };

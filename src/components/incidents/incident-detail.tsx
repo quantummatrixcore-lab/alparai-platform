@@ -90,6 +90,16 @@ export function IncidentDetailView({
                 {t("anonymous")}
               </UIBadge>
             )}
+            {incident.eu_act_risk_category && (
+              <UIBadge variant="brand" className="border-brand-500/30 bg-brand-500/10 font-bold">
+                EU AI Act: {incident.eu_act_risk_category}
+              </UIBadge>
+            )}
+            {incident.eu_act_serious_incident_class && (
+              <UIBadge variant="danger" className="font-bold">
+                Art. 73: {incident.eu_act_serious_incident_class}
+              </UIBadge>
+            )}
           </div>
           <h1 className="text-fg-primary text-3xl leading-tight font-bold tracking-tight">
             {displayTitle}

@@ -24,7 +24,7 @@ ALPAR is a public, independent, verifiable record of how AI systems behave in th
 - 🌍 **EN + TR bilingual** (i18n with `next-intl`, `/en/...` and `/tr/...`).
 - 🏛️ **Intermediary legal model** — like Trustpilot / sikayetvar.com. We host user content; users are responsible for what they submit. (See [Terms](./docs/LEGAL.md) and [KVKK compliance](./docs/KVKK.md).)
 - 🤖 **AI providers' right to respond** — verified providers can post an official response on any incident.
-- 📊 **Leaderboard** — ranked by incident count, lower is better.
+- 📊 **Leaderboard** — ranked by Trust Score (response rate, resolution rate, and response time).
 - 💡 **Suggestion system** — community votes, we build what matters.
 - ⚖️ **Takedown queue** — 7-day SLA, GDPR/KVKK aligned.
 - 📜 **AGPL-3.0** — anyone can audit, run, and contribute.

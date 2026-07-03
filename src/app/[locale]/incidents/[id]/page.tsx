@@ -145,6 +145,11 @@ export default async function IncidentDetailPage({
     incident_source: (r["incident_source"] as string | null) ?? undefined,
     import_external_id: (r["import_external_id"] as string | null) ?? null,
     import_attribution: (r["import_attribution"] as string | null) ?? null,
+    eu_act_risk_category: (r["eu_act_risk_category"] as string | null) ?? null,
+    eu_act_serious_incident_class: (r["eu_act_serious_incident_class"] as string | null) ?? null,
+    eu_act_high_risk_system_category:
+      (r["eu_act_high_risk_system_category"] as string | null) ?? null,
+    eu_act_reporting_deadline_days: (r["eu_act_reporting_deadline_days"] as number | null) ?? null,
   };
 
   let userVote: -1 | 0 | 1 = 0;

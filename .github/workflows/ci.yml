@@ -40,6 +40,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Check for committed .env files
+        run: |
+          committed_envs=$(git ls-files | grep -E '^\.env' | grep -v '^\.env\.example$' || true)
+          if [ -n "$committed_envs" ]; then
+            echo "CRITICAL SECURITY ERROR: The following .env files are tracked in git:"
+            echo "$committed_envs"
+            exit 1
+          fi
+
       - name: Run lint
         run: pnpm lint
 

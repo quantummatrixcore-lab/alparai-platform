@@ -56,12 +56,27 @@ export async function GET(request: Request) {
   const category = url.searchParams.get("category");
   const severity = url.searchParams.get("severity");
   const provider = url.searchParams.get("provider");
+  const euRisk = url.searchParams.get("eu_risk");
+
+  // API Key Authentication (Basic check for now, matching ENTERPRISE_API_KEY env or specific tier)
+  const authHeader = request.headers.get("authorization");
+  const validApiKey = process.env.ENTERPRISE_API_KEY || "sk_alpar_test_123";
+  if (
+    !authHeader ||
+    !authHeader.startsWith("Bearer ") ||
+    authHeader.split(" ")[1] !== validApiKey
+  ) {
+    return NextResponse.json(
+      { error: "unauthorized", message: "Invalid or missing API key." },
+      { status: 401, headers: corsHeaders(origin) },
+    );
+  }
 
   const supabase = await createServerClient();
   let query = supabase
     .from("incidents")
     .select(
-      "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, user_id, cross_audit_truth_score, cross_audit_confidence, ai_models(name)",
+      "id, title_masked, description_masked, severity, status, category, eu_act_risk_category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, user_id, cross_audit_truth_score, cross_audit_confidence, ai_models(name)",
     )
     .eq("status", "published")
     .order("created_at", { ascending: false })
@@ -69,6 +84,7 @@ export async function GET(request: Request) {
 
   if (category) query = query.eq("category", category as never);
   if (severity) query = query.eq("severity", severity as never);
+  if (euRisk) query = query.eq("eu_act_risk_category", euRisk as never);
 
   const { data, error } = await query;
   if (error) {
@@ -93,6 +109,7 @@ export async function GET(request: Request) {
     description: row["description_masked"],
     severity: row["severity"],
     category: row["category"],
+    eu_act_risk_category: row["eu_act_risk_category"] ?? null,
     is_anonymous: row["is_anonymous"] ?? false,
     incident_date: row["incident_date"],
     views: row["views_count"] ?? 0,

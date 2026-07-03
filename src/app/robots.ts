@@ -23,6 +23,7 @@ export default function robots(): MetadataRoute.Robots {
           "/security",
           "/academy",
           "/transparency",
+          "/ai-act",
           "/experts",
           "/invest",
         ],

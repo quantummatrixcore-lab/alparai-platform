@@ -1,18 +1,34 @@
 import "server-only";
 import { createHash } from "node:crypto";
 
-let _validated = false;
-
 export function requireIpSalt(): string {
-  let salt = process.env.IP_SALT;
-  if (!salt) {
-    if (_validated) {
-      console.warn("IP_SALT environment variable is missing. Using fallback salt.");
+  const salt = process.env.IP_SALT;
+
+  if (process.env.NODE_ENV === "production") {
+    if (!salt) {
+      throw new Error(
+        "CRITICAL SECURITY ERROR: IP_SALT environment variable is missing in production.",
+      );
     }
-    _validated = true;
-    salt = process.env.SUPABASE_ANON_KEY?.slice(0, 32) || "fallback_default_salt_for_alparai_123";
+    if (salt.length < 16) {
+      throw new Error(
+        "CRITICAL SECURITY ERROR: IP_SALT environment variable must be at least 16 characters in production.",
+      );
+    }
+    return salt;
+  }
+
+  // Development/Test fallback
+  if (!salt) {
+    console.warn(
+      "WARNING: IP_SALT environment variable is missing. Using insecure development fallback.",
+    );
+    return "fallback_default_salt_for_alparai_dev_123";
   }
   if (salt.length < 16) {
+    console.warn(
+      "WARNING: IP_SALT is shorter than 16 characters. Using padded fallback in development.",
+    );
     return salt.padEnd(16, "0");
   }
   return salt;

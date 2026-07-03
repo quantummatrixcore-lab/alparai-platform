@@ -1,4 +1,4 @@
-export const revalidate = 30;
+export const revalidate = 3600; // 1 hour ISR cache
 
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
@@ -38,20 +38,26 @@ export default async function TransparencyPage({
 
   const supabase = await createServerClient();
 
+  // Query optimized with the new transparency_stats view
+  const { data: statsRow } = await supabase.from("transparency_stats").select("*").maybeSingle();
+
+  const stats = statsRow as {
+    total_incidents: number | null;
+    verified_this_week: number | null;
+    provider_response_rate: number | null;
+  } | null;
+
+  const totalIncidents = stats?.total_incidents ?? 0;
+  const verifiedThisWeek = stats?.verified_this_week ?? 0;
+  const responseRate = stats?.provider_response_rate ?? 0;
+
   const [
-    { count: totalIncidents },
-    { count: publishedIncidents },
     { count: pendingIncidents },
     { count: totalProviders },
     { count: totalResponses },
     { count: totalUsers },
     { count: totalTakedowns },
   ] = await Promise.all([
-    supabase.from("incidents").select("*", { count: "exact", head: true }),
-    supabase
-      .from("incidents")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "published"),
     supabase
       .from("incidents")
       .select("*", { count: "exact", head: true })
@@ -62,15 +68,9 @@ export default async function TransparencyPage({
     supabase.from("takedown_requests").select("*", { count: "exact", head: true }),
   ]);
 
-  const responseRate =
-    (totalIncidents ?? 0) > 0
-      ? Math.round(((totalResponses ?? 0) / (totalIncidents ?? 1)) * 100)
-      : 0;
-
+  const totalAllIncidents = totalIncidents + (pendingIncidents ?? 0);
   const publishRate =
-    (totalIncidents ?? 0) > 0
-      ? Math.round(((publishedIncidents ?? 0) / (totalIncidents ?? 1)) * 100)
-      : 0;
+    totalAllIncidents > 0 ? Math.round((totalIncidents / totalAllIncidents) * 100) : 0;
 
   return (
     <Container className="py-12">
@@ -118,8 +118,8 @@ export default async function TransparencyPage({
               <Clock className="text-warning-500 h-5 w-5" />
             </div>
             <div>
-              <p className="text-fg-primary text-2xl font-bold">{pendingIncidents ?? 0}</p>
-              <p className="text-fg-muted text-xs">{tTransparency("pendingReview")}</p>
+              <p className="text-fg-primary text-2xl font-bold">{verifiedThisWeek}</p>
+              <p className="text-fg-muted text-xs">{tTransparency("verifiedThisWeek")}</p>
             </div>
           </CardContent>
         </Card>
@@ -173,12 +173,12 @@ export default async function TransparencyPage({
             <Row
               icon={<FileText className="h-3.5 w-3.5" />}
               label={tTransparency("incidentsReported")}
-              value={totalIncidents ?? 0}
+              value={totalAllIncidents}
             />
             <Row
               icon={<CheckCircle2 className="h-3.5 w-3.5" />}
               label={tTransparency("publishedLabel")}
-              value={publishedIncidents ?? 0}
+              value={totalIncidents}
             />
             <Row
               icon={<Clock className="h-3.5 w-3.5" />}

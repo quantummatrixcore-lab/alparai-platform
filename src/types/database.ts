@@ -976,6 +976,9 @@ export type Database = {
           eu_act_non_discrimination_score: number | null;
           eu_act_risk_category: string | null;
           eu_act_transparency_score: number | null;
+          eu_act_serious_incident_class: string | null;
+          eu_act_high_risk_system_category: string | null;
+          eu_act_reporting_deadline_days: number | null;
           expert_fix: string | null;
           id: string;
           import_attribution: string | null;
@@ -1033,6 +1036,9 @@ export type Database = {
           eu_act_non_discrimination_score?: number | null;
           eu_act_risk_category?: string | null;
           eu_act_transparency_score?: number | null;
+          eu_act_serious_incident_class?: string | null;
+          eu_act_high_risk_system_category?: string | null;
+          eu_act_reporting_deadline_days?: number | null;
           expert_fix?: string | null;
           id?: string;
           import_attribution?: string | null;
@@ -1090,6 +1096,9 @@ export type Database = {
           eu_act_non_discrimination_score?: number | null;
           eu_act_risk_category?: string | null;
           eu_act_transparency_score?: number | null;
+          eu_act_serious_incident_class?: string | null;
+          eu_act_high_risk_system_category?: string | null;
+          eu_act_reporting_deadline_days?: number | null;
           expert_fix?: string | null;
           id?: string;
           import_attribution?: string | null;
@@ -2340,6 +2349,24 @@ export type Database = {
       };
     };
     Views: {
+      transparency_stats: {
+        Row: {
+          total_incidents: number | null;
+          verified_this_week: number | null;
+          provider_response_rate: number | null;
+        };
+        Insert: {
+          total_incidents?: number | null;
+          verified_this_week?: number | null;
+          provider_response_rate?: number | null;
+        };
+        Update: {
+          total_incidents?: number | null;
+          verified_this_week?: number | null;
+          provider_response_rate?: number | null;
+        };
+        Relationships: [];
+      };
       feed_incidents: {
         Row: {
           affected_users_count: number | null;

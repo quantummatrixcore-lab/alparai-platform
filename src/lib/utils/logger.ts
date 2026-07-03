@@ -1,3 +1,5 @@
+import * as Sentry from "@sentry/nextjs";
+
 type LogLevel = "debug" | "info" | "warn" | "error";
 
 type LogContext = Record<string, unknown>;
@@ -39,8 +41,6 @@ function shouldLog(level: LogLevel): boolean {
   return true;
 }
 
-import * as Sentry from "@sentry/nextjs";
-
 function log(level: LogLevel, message: string, context?: LogContext, error?: Error) {
   if (!shouldLog(level)) return;
   const entry: LogEntry = {
@@ -64,11 +64,7 @@ function log(level: LogLevel, message: string, context?: LogContext, error?: Err
     }
   } else if (level === "warn") {
     console.warn(formatted);
-    try {
-      Sentry.captureMessage(message, { level: "warning", extra: context });
-    } catch (sentryErr) {
-      console.error("[Logger] Failed to report warn to Sentry:", sentryErr);
-    }
+    // Sentry warnings disabled per PF.2
   } else {
     console.info(formatted);
   }

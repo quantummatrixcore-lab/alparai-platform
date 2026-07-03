@@ -78,6 +78,10 @@ export interface IncidentDetail {
   incident_source?: string;
   import_external_id?: string | null;
   import_attribution?: string | null;
+  eu_act_risk_category?: string | null;
+  eu_act_serious_incident_class?: string | null;
+  eu_act_high_risk_system_category?: string | null;
+  eu_act_reporting_deadline_days?: number | null;
 }
 
 export interface EvidenceItem {

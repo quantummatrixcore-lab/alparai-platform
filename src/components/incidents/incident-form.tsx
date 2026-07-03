@@ -12,7 +12,7 @@ import { ProviderCombobox, type ComboboxOption } from "@/components/ui/provider-
 import { ModelAutocomplete, type ModelOption } from "@/components/ui/model-autocomplete";
 import { EvidenceUploader, SubmitButton } from "./evidence-uploader";
 import { PIIBanner } from "./pii-banner";
-import { Shield, CheckCircle2 } from "lucide-react";
+import { Shield, CheckCircle2, Link as LinkIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { submitIncident, type SubmitIncidentState } from "@/actions/incidents";
@@ -55,6 +55,43 @@ export function IncidentForm({
     age: false,
     terms: false,
   });
+
+  const [importUrl, setImportUrl] = useState("");
+  const [isImporting, setIsImporting] = useState(false);
+  const [importError, setImportError] = useState("");
+
+  const handleImportUrl = async (e: React.FormEvent | React.MouseEvent) => {
+    e.preventDefault();
+    if (!importUrl) return;
+
+    setIsImporting(true);
+    setImportError("");
+    try {
+      const res = await fetch("/api/v1/extract", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: importUrl }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Failed to extract");
+
+      setTitle(data.title || "");
+      setDescription(data.description || "");
+      if (data.providerId) {
+        setSelectedProvider(data.providerId);
+        // Clear custom names if valid provider
+        setCustomProviderName("");
+      }
+      toast.success(t("import_success", { defaultValue: "Imported successfully!" }));
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "An unknown error occurred";
+      setImportError(message);
+      toast.error(t("import_error", { defaultValue: "Could not import data from this URL." }));
+    } finally {
+      setIsImporting(false);
+    }
+  };
 
   const DRAFT_KEY = "alpar_incident_draft";
 
@@ -300,6 +337,40 @@ export function IncidentForm({
           {state.formError}
         </div>
       )}
+
+      {/* URL Import Section */}
+      <div className="border-brand-500/20 bg-brand-500/5 space-y-3 rounded-lg border p-4">
+        <h3 className="text-fg-primary flex items-center gap-2 text-sm font-semibold">
+          <LinkIcon className="h-4 w-4" />
+          {t("import_url_title", { defaultValue: "Paste Chat Link (1-Click Fill)" })}
+        </h3>
+        <p className="text-fg-muted text-xs">
+          {t("import_url_desc", {
+            defaultValue:
+              "Paste a shared link from ChatGPT, Claude, or Grok to automatically fill out this form.",
+          })}
+        </p>
+        <div className="flex gap-2">
+          <Input
+            name="import_url"
+            placeholder="https://chatgpt.com/share/..."
+            value={importUrl}
+            onChange={(e) => setImportUrl(e.target.value)}
+            className="flex-1"
+          />
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={handleImportUrl}
+            disabled={isImporting || !importUrl}
+          >
+            {isImporting
+              ? tCommon("loading", { defaultValue: "Loading..." })
+              : t("import_btn", { defaultValue: "Import" })}
+          </Button>
+        </div>
+        {importError && <p className="text-danger-400 text-xs">{importError}</p>}
+      </div>
 
       <Input
         name="title"

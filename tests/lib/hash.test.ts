@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import "../helpers/setup";
 import {
   hashIp,
@@ -8,21 +8,36 @@ import {
 } from "@/lib/utils/hash";
 
 describe("hash utilities", () => {
-  const originalEnv = process.env;
-
-  beforeEach(() => {
-    process.env = { ...originalEnv };
+  afterEach(() => {
+    vi.unstubAllEnvs();
   });
 
-  it("uses fallback if IP_SALT is missing", () => {
-    process.env.IP_SALT = "";
-    process.env.SUPABASE_ANON_KEY = "test_anon_key_long_enough_1234567890";
-    expect(requireIpSalt()).toBe("test_anon_key_long_enough_123456");
+  it("uses fallback if IP_SALT is missing in dev", () => {
+    vi.stubEnv("IP_SALT", "");
+    vi.stubEnv("NODE_ENV", "development");
+    expect(requireIpSalt()).toBe("fallback_default_salt_for_alparai_dev_123");
   });
 
-  it("pads IP_SALT with 0 if it is shorter than 16 chars", () => {
-    process.env.IP_SALT = "short";
+  it("pads IP_SALT with 0 if it is shorter than 16 chars in dev", () => {
+    vi.stubEnv("IP_SALT", "short");
+    vi.stubEnv("NODE_ENV", "development");
     expect(requireIpSalt()).toBe("short00000000000");
+  });
+
+  it("throws error in production if IP_SALT is missing", () => {
+    vi.stubEnv("IP_SALT", "");
+    vi.stubEnv("NODE_ENV", "production");
+    expect(() => requireIpSalt()).toThrow(
+      "CRITICAL SECURITY ERROR: IP_SALT environment variable is missing in production.",
+    );
+  });
+
+  it("throws error in production if IP_SALT is shorter than 16 chars", () => {
+    vi.stubEnv("IP_SALT", "short");
+    vi.stubEnv("NODE_ENV", "production");
+    expect(() => requireIpSalt()).toThrow(
+      "CRITICAL SECURITY ERROR: IP_SALT environment variable must be at least 16 characters in production.",
+    );
   });
 
   it("hashes IP successfully with salt", () => {

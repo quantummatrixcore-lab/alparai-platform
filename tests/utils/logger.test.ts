@@ -1,6 +1,13 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { logger } from "@/lib/utils/logger";
 
+import * as Sentry from "@sentry/nextjs";
+
+vi.mock("@sentry/nextjs", () => ({
+  captureException: vi.fn(),
+  captureMessage: vi.fn(),
+}));
+
 describe("logger", () => {
   let infoSpy: ReturnType<typeof vi.spyOn>;
   let warnSpy: ReturnType<typeof vi.spyOn>;
@@ -10,6 +17,7 @@ describe("logger", () => {
     infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
     warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
@@ -51,5 +59,29 @@ describe("logger", () => {
   it("handles missing context gracefully", () => {
     logger.info("no ctx");
     expect(infoSpy).toHaveBeenCalled();
+  });
+
+  it("does not send warning messages to Sentry", () => {
+    logger.warn("some warning");
+    expect(warnSpy).toHaveBeenCalled();
+    expect(Sentry.captureMessage).not.toHaveBeenCalled();
+  });
+
+  it("sends error messages to Sentry", () => {
+    logger.error("some error");
+    expect(errorSpy).toHaveBeenCalled();
+    expect(Sentry.captureMessage).toHaveBeenCalledWith("some error", {
+      level: "error",
+      extra: undefined,
+    });
+  });
+
+  it("sends exceptions to Sentry on error with exception object", () => {
+    const err = new Error("exception error");
+    logger.error("some error text", { foo: "bar" }, err);
+    expect(errorSpy).toHaveBeenCalled();
+    expect(Sentry.captureException).toHaveBeenCalledWith(err, {
+      extra: { foo: "bar" },
+    });
   });
 });

@@ -648,6 +648,7 @@
       "dilemmas": "Dilemmas",
       "submit_report": "Submit Report",
       "transparency": "Transparency",
+      "ai_act": "AI Act Tracker",
       "about": "About",
       "pricing": "Pricing",
       "security": "Security",
@@ -1280,6 +1281,7 @@
     "totalReports": "Total reports",
     "publishRate": "Publish rate",
     "pendingReview": "Pending review",
+    "verifiedThisWeek": "Verified this week",
     "providerResponseRate": "Provider response rate",
     "submit": "Submit",
     "submitDesc": "Users submit incident reports with evidence, AI output screenshots, and context.",
@@ -1317,6 +1319,19 @@
     "roadmapIntro": "To guarantee trust and institutional readiness, ALPAR AI is pursuing industry-standard compliance certifications.",
     "soc2Desc": "Target: Q3 2026. Setting up continuous security logging, audit trails, and strict data access policies.",
     "isoDesc": "Target: Q1 2027. Implementation of an Information Security Management System (ISMS) across all pipelines."
+  },
+  "ai-act": {
+    "title": "EU AI Act Serious Incident Tracker",
+    "subtitle": "Real-time, independent registry mapping incidents to the Article 73 serious incident framework.",
+    "obligations": "Article 73 Obligations",
+    "obligationsDesc": "Starting August 2, 2026, AI providers in the EU must report serious incidents (death, health hazards, critical infrastructure disruption, or fundamental rights violations) within 2 to 15 days. ALPAR provides the first public, independent tracker.",
+    "filterAll": "All Risk Tiers",
+    "trackerCTA": "Report a Serious AI Incident",
+    "riskTier": "EU Risk Tier",
+    "incidentClass": "Serious Incident Class",
+    "reportingDeadline": "Reporting Deadline",
+    "days": "{count} days",
+    "noIncidents": "No incidents classified under this risk tier yet."
   },
   "models": {
     "page_title": "AI Models Directory",
