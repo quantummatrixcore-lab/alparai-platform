@@ -86,7 +86,7 @@
     "prettier-plugin-tailwindcss": "^0.6.9",
     "tailwindcss": "^4.0.0",
     "ts-morph": "^28.0.0",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "vitest": "^3.2.0"
   },
   "overrides": {
