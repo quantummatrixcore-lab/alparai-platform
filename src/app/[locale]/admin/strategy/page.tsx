@@ -5,6 +5,7 @@ import { requireAdvisor } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { HealthGauge } from "@/components/admin/strategy/health-gauge";
 import { Link } from "@/i18n/routing";
+import { STRATEGY_METRICS_DEFAULTS, DEFAULT_VALUATION_PRE_MONEY } from "@/lib/constants";
 import {
   ShieldAlert,
   TrendingUp,
@@ -65,15 +66,8 @@ export default async function StrategyOverviewPage({
   const risks = (risksRes.data ?? []) as StrategyRisk[];
   const valuations = (valuationsRes.data ?? []) as StrategyValuation[];
   const milestones = (milestonesRes.data ?? []) as StrategyMilestone[];
-  const latestSnapshot = (snapshotsRes.data?.[0] ?? {
-    health_score: 92,
-    total_users: 47,
-    total_incidents: 12,
-    active_providers: 6,
-    media_mentions_count: 0,
-    mrr_cents: 0,
-    runway_months: 18.0,
-  }) as StrategyMetricsSnapshot;
+  const latestSnapshot = (snapshotsRes.data?.[0] ??
+    STRATEGY_METRICS_DEFAULTS) as StrategyMetricsSnapshot;
 
   // Process SWOT counts
   const strengthsCount = swotItems.filter((i) => i.category === "strength").length;
@@ -320,7 +314,7 @@ export default async function StrategyOverviewPage({
                   <span className="text-lg font-extrabold text-emerald-400">
                     {valuations.length > 0
                       ? formatCurrency(valuations[0]!.result_pre_money * 100)
-                      : "$2,340,000"}
+                      : formatCurrency(DEFAULT_VALUATION_PRE_MONEY * 100)}
                   </span>
                 </div>
               </div>

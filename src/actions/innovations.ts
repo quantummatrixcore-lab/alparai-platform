@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { createServerClient } from "@/lib/supabase/server";
@@ -62,8 +61,8 @@ export async function acceptExternalIncident(
       title_masked: queueItem.title,
       description: queueItem.body,
       description_masked: queueItem.body,
-      category: category as any,
-      severity: severity as any,
+      category: category as never,
+      severity: severity as never,
       source_url: queueItem.external_url,
       incident_date: new Date().toISOString(),
       language: "en",
@@ -121,10 +120,10 @@ export async function triggerManualFetch(): Promise<{ success: boolean; message:
       success: true,
       message: `Fetched: ${data.total_fetched}, Inserted: ${data.inserted_or_updated}`,
     };
-  } catch (error: any) {
+  } catch (error) {
     return {
       success: false,
-      message: error.message || "Failed to fetch",
+      message: error instanceof Error ? error.message : "Failed to fetch",
     };
   }
 }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { createServerClient } from "@/lib/supabase/server";
@@ -19,6 +18,7 @@ export async function upsertSwotItemAction(data: {
   status: "active" | "done" | "archived";
 }): Promise<{ success: boolean; id: string }> {
   const user = await requireCEO();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const supabase = (await createServerClient()) as any;
 
   const payload = {
@@ -62,6 +62,7 @@ export async function upsertSwotItemAction(data: {
 
 export async function deleteSwotItemAction(id: string): Promise<{ success: boolean }> {
   await requireCEO();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const supabase = (await createServerClient()) as any;
 
   const { error } = await supabase.from("strategy_swot_items").delete().eq("id", id);
@@ -86,6 +87,7 @@ export async function upsertRiskAction(data: {
   status: "active" | "mitigated" | "triggered" | "closed";
 }): Promise<{ success: boolean; id: string }> {
   const user = await requireCEO();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const supabase = (await createServerClient()) as any;
 
   const payload = {
@@ -130,6 +132,7 @@ export async function upsertRiskAction(data: {
 
 export async function deleteRiskAction(id: string): Promise<{ success: boolean }> {
   await requireCEO();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const supabase = (await createServerClient()) as any;
 
   const { error } = await supabase.from("strategy_risks").delete().eq("id", id);
@@ -144,11 +147,12 @@ export async function deleteRiskAction(id: string): Promise<{ success: boolean }
  */
 export async function saveValuationAction(data: {
   method: "berkus" | "scorecard" | "vc" | "average";
-  inputs: Record<string, any>;
+  inputs: Record<string, unknown>;
   result_pre_money: number;
   notes: string | null;
 }): Promise<{ success: boolean; id: string }> {
   const user = await requireCEO();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const supabase = (await createServerClient()) as any;
 
   const { data: inserted, error } = await supabase
@@ -184,6 +188,7 @@ export async function upsertMilestoneAction(data: {
   linked_metric: string | null;
 }): Promise<{ success: boolean; id: string }> {
   const user = await requireCEO();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const supabase = (await createServerClient()) as any;
 
   const payload = {
@@ -226,6 +231,7 @@ export async function upsertMilestoneAction(data: {
 
 export async function deleteMilestoneAction(id: string): Promise<{ success: boolean }> {
   await requireCEO();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const supabase = (await createServerClient()) as any;
 
   const { error } = await supabase.from("strategy_milestones").delete().eq("id", id);
@@ -248,6 +254,7 @@ export async function createMetricsSnapshotAction(data: {
   health_score: number;
 }): Promise<{ success: boolean; id: string }> {
   await requireCEO();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const supabase = (await createServerClient()) as any;
 
   const { data: inserted, error } = await supabase

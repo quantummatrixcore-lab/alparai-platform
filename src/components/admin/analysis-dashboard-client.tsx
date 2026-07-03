@@ -1,22 +1,17 @@
-/* eslint-disable */
 "use client";
 
 import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   LayoutDashboard,
   Database,
   FileText,
   CheckCircle2,
-  XCircle,
   AlertTriangle,
   TrendingUp,
   ChevronLeft,
   ChevronRight,
   Search,
-  Filter,
   Clock,
-  ArrowUpRight,
   Lock,
   ExternalLink,
 } from "lucide-react";

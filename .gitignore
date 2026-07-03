@@ -57,8 +57,6 @@ test-results
 # dev artifacts
 ts-errors.txt
 ALPARAI-360-AUDIT-REPORT.md
-*.mjs
-!next.config.mjs
 
 # os
 Thumbs.db

@@ -59,3 +59,20 @@ export const SUGGESTION_STATUSES = [
   { value: "declined", label: "Declined" },
 ] as const;
 export type SuggestionStatus = (typeof SUGGESTION_STATUSES)[number]["value"];
+
+// Default dashboard / metrics values
+export const DEFAULT_RESPONSE_RATE = 82.5 as const;
+export const DEFAULT_TRUST_SCORE = 78.0 as const;
+
+// Default strategy overview metric fallback values
+export const STRATEGY_METRICS_DEFAULTS = {
+  health_score: 92,
+  total_users: 47,
+  total_incidents: 12,
+  active_providers: 6,
+  media_mentions_count: 0,
+  mrr_cents: 0,
+  runway_months: 18.0,
+} as const;
+
+export const DEFAULT_VALUATION_PRE_MONEY = 2340000 as const; // $2,340,000

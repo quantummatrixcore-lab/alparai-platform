@@ -10,6 +10,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { AlertTriangle, ShieldCheck, Activity } from "lucide-react";
 import type { IncidentListItem } from "@/types";
 import { toIncidentListItems } from "@/lib/mappers";
+import { DEFAULT_RESPONSE_RATE, DEFAULT_TRUST_SCORE } from "@/lib/constants";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -145,8 +146,8 @@ export default async function AdminDashboardPage({
       {/* Upgraded Hero Metrics */}
       <HeroMetrics
         totalIncidents={stats.total}
-        responseRate={82.5}
-        trustScore={78.0}
+        responseRate={DEFAULT_RESPONSE_RATE}
+        trustScore={DEFAULT_TRUST_SCORE}
         activeProviders={stats.providers}
       />
 

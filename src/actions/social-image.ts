@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { requireAdmin } from "@/lib/auth/session";
@@ -29,7 +28,7 @@ export async function generateSocialImageAction(
     const { base64, mimeType } = res;
     const buffer = Buffer.from(base64, "base64");
 
-    // 3. Upload buffer to Supabase Storage in "social-assets" bucket
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const supabase = (await createServerClient()) as any;
     const fileExt = mimeType === "image/png" ? "png" : "jpg";
     const fileName = `${postId}/${Date.now()}.${fileExt}`;
