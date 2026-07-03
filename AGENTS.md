@@ -45,12 +45,14 @@ pnpm db:migrate       # supabase migration up
 | Add a PII regex       | `src/lib/pii/guardian.ts`                                  |
 | Add a rate limit      | `src/lib/utils/rate-limit.ts` + `RATE_LIMITS` in constants |
 
-> ⚠️ **MASTER ANALYSIS RULE:**
-> AI analysis files are in the `docs/` folder. Reading order:
+> 🛡️ **AGENT BOOT PROTOCOL (MANDATORY):**
 >
-> 1. **First** read `docs/MASTER-ANALYSIS-SUMMARY.md` (summary, ~500 lines, token-saving)
-> 2. **Only** when necessary read `docs/MASTER-ANALYSIS.md` (full analysis, ~4700 lines, 13 models)
->    The original file is very long and consumes ~50-80K tokens per read. Prefer the summary.
+> 1. **FIRST** read `docs/BOOTSTRAP.md` (~500 tokens — system overview + rules)
+> 2. **THEN** use `graphify query "<question>"` for any architecture/code question
+> 3. **NEVER** read files > 10KB directly. Use graphify or line-limited views (max 100 lines).
+> 4. **NEVER** read deleted analysis files (docs/MASTER-ANALYSIS\*.md — outdated June 2026 data).
+> 5. If `graphify-out/` is stale, run `graphify update .` (AST-only, no API cost).
+> 6. Graphify auto-updates on every `git commit` via pre-commit hook.
 
 ## Safety
 
@@ -62,9 +64,9 @@ pnpm db:migrate       # supabase migration up
 ## Links
 
 - README: [`README.md`](./README.md)
+- Bootstrap: [`docs/BOOTSTRAP.md`](./docs/BOOTSTRAP.md) ← AI agents read this FIRST
 - Architecture: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md)
-- Master Analysis Summary: [`docs/MASTER-ANALYSIS-SUMMARY.md`](./docs/MASTER-ANALYSIS-SUMMARY.md) ← AI models read this first
-- Master Analysis (full): [`docs/MASTER-ANALYSIS.md`](./docs/MASTER-ANALYSIS.md) ← deep reference only
+- Knowledge Graph: [`graphify-out/GRAPH_REPORT.md`](./graphify-out/GRAPH_REPORT.md) ← full architecture map (auto-updated)
 - Security: [`docs/SECURITY.md`](./docs/SECURITY.md)
 - KVKK: [`docs/KVKK.md`](./docs/KVKK.md)
 - ADRs: [`docs/adr/`](./docs/adr/)
