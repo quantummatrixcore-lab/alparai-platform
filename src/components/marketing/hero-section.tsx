@@ -122,11 +122,7 @@ export function HeroSection({
           >
             {/* LIVE badge */}
             <div className="flex items-center gap-2">
-              <motion.div
-                animate={{ opacity: [1, 0.3, 1] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-                className="bg-danger-500 h-2 w-2 rounded-full shadow-[0_0_8px_rgba(230,57,70,0.8)]"
-              />
+              <span className="bg-danger-500 h-2 w-2 animate-pulse rounded-full shadow-[0_0_8px_rgba(230,57,70,0.8)]" />
               <span className="text-danger-400 text-xs font-black tracking-[0.2em] uppercase">
                 {t("live_data")}
               </span>
