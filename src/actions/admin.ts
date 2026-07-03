@@ -550,3 +550,37 @@ export async function importIncidentsAction(formData: FormData): Promise<ImportI
     parseErrors,
   };
 }
+
+export async function toggleVerifiedRespondent(
+  providerId: string,
+  isVerified: boolean,
+  contactEmail?: string | null,
+): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const adminUser = await requireAdmin();
+    const admin = createAdminClient();
+
+    const { error } = await admin
+      .from("ai_providers")
+      .update({
+        is_verified_respondent: isVerified,
+        verified_respondent_at: isVerified ? new Date().toISOString() : null,
+        respondent_contact_email: isVerified ? contactEmail || null : null,
+        respondent_verified_by: isVerified ? adminUser.id : null,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any)
+      .eq("id", providerId);
+
+    if (error) {
+      return { ok: false, error: error.message };
+    }
+
+    revalidatePath("/[locale]/admin", "layout");
+    revalidatePath("/[locale]/leaderboard", "page");
+    revalidatePath("/", "page");
+    return { ok: true };
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    return { ok: false, error: msg };
+  }
+}

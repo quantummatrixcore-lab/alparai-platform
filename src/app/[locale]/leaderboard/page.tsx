@@ -15,6 +15,7 @@ import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
+  ShieldCheck,
 } from "lucide-react";
 import { cn, formatNumber } from "@/lib/utils";
 import { Link } from "@/i18n/routing";
@@ -51,12 +52,12 @@ export default async function LeaderboardPage({
   const { data: leaderboardData } = await supabase
     .from("provider_leaderboard")
     .select(
-      "id, slug, name, logo_url, is_verified, website_url, trust_score, incident_count, response_count",
+      "id, slug, name, logo_url, is_verified, website_url, trust_score, incident_count, response_count, is_verified_respondent",
     )
     .order("name");
 
   const stats = (
-    (leaderboardData ?? []) as Array<{
+    (leaderboardData ?? []) as unknown as Array<{
       id: string | null;
       slug: string | null;
       name: string | null;
@@ -66,6 +67,7 @@ export default async function LeaderboardPage({
       trust_score: number | null;
       incident_count: number | null;
       response_count: number | null;
+      is_verified_respondent: boolean | null;
     }>
   ).map((p) => {
     const total = p.incident_count ?? 0;
@@ -83,6 +85,7 @@ export default async function LeaderboardPage({
       incident_count: total,
       response_count: responded,
       response_rate: responseRate,
+      is_verified_respondent: !!p.is_verified_respondent,
     };
   });
 
@@ -428,6 +431,11 @@ export default async function LeaderboardPage({
                             <ProviderLogo src={p.logo_url} name={p.name} size="sm" />
                           </div>
                           <span className="text-fg-primary">{p.name}</span>
+                          {p.is_verified_respondent && (
+                            <span title="Verified Respondent">
+                              <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-400" />
+                            </span>
+                          )}
                         </Link>
                       </td>
                       <td className="text-fg-secondary p-4 text-right">

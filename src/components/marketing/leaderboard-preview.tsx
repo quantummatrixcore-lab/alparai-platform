@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Link } from "@/i18n/routing";
 import { Card, CardContent } from "@/components/ui/card";
-import { Trophy, TrendingDown, TrendingUp, Minus } from "lucide-react";
+import { Trophy, TrendingDown, TrendingUp, Minus, ShieldCheck } from "lucide-react";
 import { cn, formatNumber } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import type { LeaderboardEntry } from "@/types";
@@ -70,14 +70,38 @@ export function LeaderboardPreview({ entries }: { entries: LeaderboardEntry[] })
                     {i + 1}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <Link
-                      href={`/press-kit/${e.provider_slug}`}
-                      className="text-fg-primary hover:text-brand-400 block truncate text-sm font-semibold"
-                    >
-                      {e.provider_name}
-                    </Link>
-                    <p className="text-fg-muted text-xs">
-                      {formatNumber(e.incident_count)} {t("incidents").toLowerCase()}
+                    <div className="flex items-center gap-1">
+                      <Link
+                        href={`/press-kit/${e.provider_slug}`}
+                        className="text-fg-primary hover:text-brand-400 block truncate text-sm font-semibold"
+                      >
+                        {e.provider_name}
+                      </Link>
+                      {e.is_verified_respondent && (
+                        <span title="Verified Respondent">
+                          <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-fg-muted flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs">
+                      <span>
+                        {formatNumber(e.incident_count)} {t("incidents").toLowerCase()}
+                      </span>
+                      <span className="text-slate-700">•</span>
+                      <span
+                        className={cn(
+                          "inline-flex items-center text-[10px] font-bold tracking-wide",
+                          e.response_rate !== undefined && e.response_rate >= 70
+                            ? "text-success-400"
+                            : e.response_rate !== undefined && e.response_rate >= 30
+                              ? "text-warning-400"
+                              : "text-danger-400",
+                        )}
+                      >
+                        {e.response_rate !== undefined
+                          ? `${e.response_rate}% ${t("responseRate")}`
+                          : `N/A ${t("responseRate")}`}
+                      </span>
                     </p>
                   </div>
                   <span

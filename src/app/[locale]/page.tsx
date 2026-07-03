@@ -77,7 +77,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const supabase = await createServerClient();
   const tCommon = await getTranslations({ locale, namespace: "common" });
 
-  const [incidentsResult, incidentsCountResult, providersResult, countriesResult, countDataResult] =
+  const [incidentsResult, incidentsCountResult, providersResult, countriesResult] =
     await Promise.all([
       supabase
         .from("incidents")
@@ -92,19 +92,16 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         .select("id", { count: "exact", head: true })
         .eq("status", "published"),
       supabase
-        .from("ai_providers")
-        .select("id, slug, name, description, logo_url, website_url, is_verified, trust_score")
+        .from("provider_leaderboard")
+        .select(
+          "id, slug, name, logo_url, website_url, is_verified, trust_score, incident_count, response_count, is_verified_respondent",
+        )
         .order("name"),
       supabase
         .from("incidents")
         .select("location_country")
         .eq("status", "published")
         .not("location_country", "is", null),
-      supabase
-        .from("incidents")
-        .select("ai_provider_id")
-        .eq("status", "published")
-        .not("ai_provider_id", "is", null),
     ]);
 
   if (incidentsCountResult.error) {
@@ -116,15 +113,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   if (incidentsResult.error) {
     console.error("Supabase error for incidents list:", incidentsResult.error);
   }
-  if (countDataResult.error) {
-    console.error("Supabase error for provider counts:", countDataResult.error);
+  if (providersResult.error) {
+    console.error("Supabase error for provider leaderboard:", providersResult.error);
   }
 
   const providerMap = new Map(
-    ((providersResult.data as Array<{ id: string; slug: string; name: string }>) ?? []).map((p) => [
-      p.id,
-      p,
-    ]),
+    (
+      (providersResult.data as unknown as Array<{ id: string; slug: string; name: string }>) ?? []
+    ).map((p) => [p.id, p]),
   );
 
   const incidents: IncidentListItem[] = toIncidentListItems(incidentsResult.data).map((item) => {
@@ -139,31 +135,27 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     };
   });
 
-  const incidentCountsByProvider = new Map<string, number>();
-  if (providersResult.data && countDataResult.data) {
-    const countData = countDataResult.data as Array<{ ai_provider_id: string }>;
-    for (const row of countData) {
-      incidentCountsByProvider.set(
-        row.ai_provider_id,
-        (incidentCountsByProvider.get(row.ai_provider_id) ?? 0) + 1,
-      );
-    }
-  }
-
   const leaderboard: LeaderboardEntry[] = (
-    (providersResult.data as Array<Record<string, unknown>>) ?? []
+    (providersResult.data as unknown as Array<Record<string, unknown>>) ?? []
   )
     .filter((p) => p["slug"] !== "alpar-autopilot")
-    .map((p) => ({
-      provider_id: p["id"] as string,
-      provider_name: (p["name"] as string) ?? "",
-      provider_slug: (p["slug"] as string) ?? "",
-      incident_count: incidentCountsByProvider.get(p["id"] as string) ?? 0,
-      resolved_count: 0,
-      avg_severity: 0,
-      trend: 0,
-      trust_score: (p["trust_score"] as number) ?? 70,
-    }))
+    .map((p) => {
+      const total = (p["incident_count"] as number) ?? 0;
+      const responded = (p["response_count"] as number) ?? 0;
+      const responseRate = total > 0 ? Math.round((responded / total) * 100) : 0;
+      return {
+        provider_id: p["id"] as string,
+        provider_name: (p["name"] as string) ?? "",
+        provider_slug: (p["slug"] as string) ?? "",
+        incident_count: total,
+        resolved_count: responded,
+        avg_severity: 0,
+        trend: 0,
+        trust_score: (p["trust_score"] as number) ?? 70,
+        response_rate: responseRate,
+        is_verified_respondent: !!p["is_verified_respondent"],
+      };
+    })
     .sort((a, b) => {
       const scoreA = a.trust_score ?? 70;
       const scoreB = b.trust_score ?? 70;

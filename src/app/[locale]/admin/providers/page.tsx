@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Building2 } from "lucide-react";
+import { VerifiedRespondentToggle } from "@/components/admin/verified-respondent-toggle";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -30,7 +31,9 @@ export default async function AdminProvidersPage({
   const admin = createAdminClient();
   const { data } = await admin
     .from("ai_providers")
-    .select("id, slug, name, website_url, contact_email, is_verified, created_at")
+    .select(
+      "id, slug, name, website_url, contact_email, is_verified, is_verified_respondent, respondent_contact_email, created_at",
+    )
     .order("name");
 
   return (
@@ -51,10 +54,11 @@ export default async function AdminProvidersPage({
                 <th className="p-4">{t("slug")}</th>
                 <th className="p-4">{t("website")}</th>
                 <th className="p-4">{t("status")}</th>
+                <th className="p-4">Respondent</th>
               </tr>
             </thead>
             <tbody className="divide-border-subtle divide-y">
-              {((data as Array<Record<string, unknown>>) ?? []).map((p) => (
+              {((data as unknown as Array<Record<string, unknown>>) ?? []).map((p) => (
                 <tr key={p["id"] as string} className="hover:bg-bg-tertiary/30">
                   <td className="text-fg-primary p-4 font-medium">{p["name"] as string}</td>
                   <td className="text-fg-muted p-4 font-mono text-xs">{p["slug"] as string}</td>
@@ -82,6 +86,14 @@ export default async function AdminProvidersPage({
                         {t("unverified")}
                       </Badge>
                     )}
+                  </td>
+                  <td className="p-4">
+                    <VerifiedRespondentToggle
+                      providerId={p["id"] as string}
+                      isVerified={!!p["is_verified_respondent"]}
+                      contactEmail={p["respondent_contact_email"] as string | null}
+                      providerName={p["name"] as string}
+                    />
                   </td>
                 </tr>
               ))}
