@@ -9,6 +9,7 @@ import { revalidatePath } from "next/cache";
 export async function generateSocialImageAction(
   postId: string,
   prompt: string,
+  aspectRatio = "1:1",
 ): Promise<{ ok: true; imageUrl: string } | { ok: false; error: string }> {
   try {
     // 1. Require admin auth
@@ -20,7 +21,7 @@ export async function generateSocialImageAction(
 
     // 2. Generate image using VertexImagenAdapter
     const adapter = new VertexImagenAdapter();
-    const res = await adapter.generateImage(prompt);
+    const res = await adapter.generateImage(prompt, aspectRatio);
     if (!res.ok) {
       return { ok: false, error: res.error };
     }

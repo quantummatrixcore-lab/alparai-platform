@@ -13,6 +13,7 @@ export class VertexImagenAdapter {
 
   async generateImage(
     prompt: string,
+    aspectRatio = "1:1",
   ): Promise<{ ok: true; base64: string; mimeType: string } | { ok: false; error: string }> {
     const apiKey = await resolveApiKey("google_vertex", "VERTEX_API_KEY");
     if (!apiKey) {
@@ -36,7 +37,7 @@ export class VertexImagenAdapter {
           instances: [{ prompt }],
           parameters: {
             sampleCount: 1,
-            aspectRatio: "1:1",
+            aspectRatio,
             outputMimeType: "image/jpeg",
           },
         }),

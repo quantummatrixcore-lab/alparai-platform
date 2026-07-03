@@ -127,6 +127,7 @@ export function SocialDashboardClient({
   const [formImagePrompt, setFormImagePrompt] = useState("");
   const [formImageUrl, setFormImageUrl] = useState("");
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const [imageAspectRatio, setImageAspectRatio] = useState<string>("1:1");
 
   // Copy indicator states
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -146,7 +147,11 @@ export function SocialDashboardClient({
     startTransition(async () => {
       try {
         const { generateSocialImageAction } = await import("@/actions/social-image");
-        const res = await generateSocialImageAction(editingPost.id, formImagePrompt);
+        const res = await generateSocialImageAction(
+          editingPost.id,
+          formImagePrompt,
+          imageAspectRatio,
+        );
         if (res.ok) {
           setFormImageUrl(res.imageUrl);
           toast.success("Image generated successfully!");
@@ -183,6 +188,7 @@ export function SocialDashboardClient({
       setFormExternalUrl(post.external_url || "");
       setFormImagePrompt(post.image_prompt || "");
       setFormImageUrl(post.image_url || "");
+      setImageAspectRatio("1:1");
     } else {
       setEditingPost(null);
       setFormTitle("");
@@ -194,6 +200,7 @@ export function SocialDashboardClient({
       setFormExternalUrl("");
       setFormImagePrompt("");
       setFormImageUrl("");
+      setImageAspectRatio("1:1");
     }
     setShowFormModal(true);
   };
@@ -211,6 +218,7 @@ export function SocialDashboardClient({
     setFormExternalUrl("");
     setFormImagePrompt("");
     setFormImageUrl("");
+    setImageAspectRatio("1:1");
     setActiveTab("drafts");
     setShowFormModal(true);
   };
@@ -908,16 +916,47 @@ export function SocialDashboardClient({
                       )}
                     </button>
                   ) : (
-                    <button
-                      type="button"
-                      disabled
-                      className="bg-brand-500/50 flex cursor-not-allowed items-center gap-1 rounded-xl px-3 py-2 text-xs font-semibold text-white/50 transition-all"
-                    >
-                      <Sparkles className="h-3 w-3" />
-                      Generate
-                    </button>
+                    <span className="text-fg-muted self-center text-xs">
+                      Save post to enable image generation
+                    </span>
                   )}
                 </div>
+
+                {/* Aspect Ratio Selector */}
+                {editingPost && (
+                  <div className="flex items-center gap-4 pt-1">
+                    <span className="text-fg-secondary text-xs font-semibold">Aspect Ratio:</span>
+                    <div className="flex gap-3">
+                      {[
+                        { value: "1:1", label: "1:1 Square" },
+                        { value: "4:3", label: "4:3 Article" },
+                        { value: "16:9", label: "16:9 Banner" },
+                      ].map((opt) => (
+                        <label
+                          key={opt.value}
+                          className="flex cursor-pointer items-center gap-1.5 text-xs"
+                        >
+                          <input
+                            type="radio"
+                            name="image_aspect_ratio"
+                            value={opt.value}
+                            checked={imageAspectRatio === opt.value}
+                            onChange={(e) => setImageAspectRatio(e.target.value)}
+                            className="text-brand-500 focus:ring-brand-500 border-border-subtle h-3.5 w-3.5"
+                          />
+                          <span
+                            className={cn(
+                              "text-fg-muted hover:text-fg-primary font-medium transition-colors",
+                              imageAspectRatio === opt.value && "text-brand-400 font-bold",
+                            )}
+                          >
+                            {opt.value}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 {!editingPost && (
                   <p className="text-fg-muted text-[10px]">
                     * Save the post as a draft first to enable image generation.
