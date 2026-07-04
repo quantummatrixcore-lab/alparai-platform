@@ -76,3 +76,7 @@ graphify-out/
 
 # private engine package (submodule — not for public repo)
 src/engine/
+
+# exports
+exports/
+
