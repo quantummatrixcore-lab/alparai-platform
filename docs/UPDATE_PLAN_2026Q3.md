@@ -173,3 +173,43 @@ An external review suggested adding a root `middleware.ts`. This is a false posi
 **v1.1 (2026-07-04)** — Triaged external review (OpenCode / mimo-v2-pro). Adopted: IP_SALT fallback removal (confirmed in `src/lib/utils/hash.ts` — real vulnerability, now PF.1), logger warn-noise fix (PF.2, partially valid — debug-in-prod was already disabled), T13.4 split into URL-first (T13.4a) + auto-capture (T14.5), explicit Art. 73 mapping table + tests (T13.2a/b), pagination/meta criteria on T13.3, ISR + stats view on T13.5, a11y smoke on T13.6. Rejected as false positives: "missing root middleware.ts" (project is Next 16; `src/proxy.ts` is the middleware successor and already complete) and ".env files tracked in git" (verified clean; kept only as a CI guard, PF.3).
 
 **v1.2 (2026-07-04)** — Triaged second external review (DeepSeek via OpenCode). Adopted: precise north-star metric definition + baseline requirement (PF.4); "Ready ≠ Compliant" wording rule (Guardrail #10); ≥100-incident launch gate; Launch Ops founder checklist (press, competitor watch). Already handled in v1.1: T13.4 split (reviewer re-flagged the v1.0 version). Rejected again: "missing src/middleware.ts / sessions will break" — false positive; `src/proxy.ts` (Next 16 middleware successor) is present and complete, and the reviewer's own follow-up retracted the claim. Do not create `src/middleware.ts`.
+
+---
+
+## Sprint 15 — Board DD Remediation (v1.3 addition; execute after Sprint 14, EXCEPT T15.1 which is urgent)
+
+Source: Series A due-diligence board review (2026-07-04). Code-executable findings only.
+
+### T15.1 — Remove the "auto-penalty for blocking" clause (URGENT — legal/credibility risk)
+- **File:** `src/lib/ai/cross-audit-engine.ts` (DEBATE_SUPREME_COURT_PROMPT, "THE TRANSPARENCY ULTIMATUM" block).
+- **Work:** Delete the automatic-downgrade/penalty instruction entirely. Provider blocking/throttling may be *recorded as a neutral fact* in reasoning, never auto-scored. Editorial responses to provider behavior are human decisions.
+- **Accept:** no prompt text instructs models to penalize any provider for non-cooperation; existing tests pass.
+
+### T15.2 — Cost pre-filter before cross-audit (COGS control)
+- **Files:** new `src/lib/ai/pre-triage.ts`; call site where `runCrossAudit` is invoked.
+- **Work:** Rule-based, zero-LLM gate before the 6-8-call debate pipeline: min description length, duplicate/near-duplicate detection, existing rate-limit signals, spam heuristics. Rejected items get status `needs_review`, never auto-published. Log per-incident pipeline cost estimate.
+- **Accept:** unit-tested filter; measurable skip rate reported in logs; no incident bypasses PII masking.
+
+### T15.3 — Submit funnel instrumentation
+- **Files:** `src/app/[locale]/submit/`, Plausible event calls.
+- **Work:** Emit events: `submit_start`, `submit_url_added`, `submit_complete`; preserve UTM params through the flow.
+- **Accept:** events visible in Plausible; no PII in event payloads.
+
+### T15.4 — Coordinated-submission guard
+- **Files:** `src/actions/incidents.ts`, existing Upstash rate-limit utils, moderation queue.
+- **Work:** Flag bursts of submissions targeting one provider from correlated sources (hashed-IP velocity). Flagged items require human moderation before publish.
+- **Accept:** synthetic burst test triggers the flag; normal traffic unaffected.
+
+### T15.5 — Human gate on high-severity legal labels
+- **Files:** incident publish flow, admin moderation UI.
+- **Work:** "High Risk" / "Unacceptable Risk" EU-Act labels require admin approval before public display; all Art. 73 labels render with the "informational only, not legal advice" disclaimer (EN+TR).
+- **Accept:** unapproved high-severity labels never render publicly; Playwright spec covers it.
+
+### T15.6 — Reporter reputation loop (network effect)
+- **Files:** `src/app/[locale]/profile/`, OG image generation.
+- **Work:** Public profile shows "N verified incidents" badge with shareable OG card. No leaderboard of reporters yet (gaming risk) — just the individual credential.
+- **Accept:** badge bilingual, count from published incidents only, OG card renders.
+
+**Sprint 15 guardrails:** no new routes; Backlog freeze still applies; every task ships with tests; `pnpm validate` green.
+
+**v1.3 (2026-07-04)** — Added Sprint 15 from Series A board review. Key drivers: legal exposure in Supreme Court prompt (T15.1), undefined cross-audit unit economics (T15.2), zero funnel visibility behind the 15k-followers/0-users signal (T15.3).
