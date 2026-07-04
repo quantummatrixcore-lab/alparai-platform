@@ -1,19 +1,21 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import "../helpers/setup";
 import { createMockSupabaseClient } from "../helpers/supabase-mock";
-import { generateProviderToken } from "@/lib/utils/hash";
 
-vi.hoisted(() => {
-  vi.doMock("@/lib/supabase/admin", () => ({
-    createAdminClient: vi.fn(),
-  }));
-  vi.doMock("@/lib/utils/rate-limit", () => ({
-    checkRateLimit: vi.fn().mockResolvedValue({ ok: true }),
-    RATE_LIMIT_KEYS: {
-      contact_submission: "ratelimit:contact_submission",
-    },
-  }));
-});
+vi.mock("@/lib/supabase/admin", () => ({
+  createAdminClient: vi.fn(),
+}));
+vi.mock("@/lib/utils/rate-limit", () => ({
+  checkRateLimit: vi.fn().mockResolvedValue({ ok: true }),
+  RATE_LIMIT_KEYS: {
+    contact_submission: "ratelimit:contact_submission",
+  },
+}));
+vi.mock("@/lib/utils/provider-token", () => ({
+  consumeProviderTokenDb: vi.fn().mockImplementation(async (incidentId, email, token) => {
+    return token === "correct-token-placeholder-that-has-exactly-64-chars-long12345678";
+  }),
+}));
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { submitProviderResponse } from "@/actions/provider-response";
@@ -29,7 +31,7 @@ beforeEach(() => {
 function buildResponseForm(overrides: Record<string, string> = {}): FormData {
   const fd = new FormData();
   fd.set("incidentId", "550e8400-e29b-41d4-a716-446655440000");
-  fd.set("token", "correct-token-placeholder");
+  fd.set("token", "correct-token-placeholder-that-has-exactly-64-chars-long12345678");
   fd.set(
     "responseText",
     "This is our official provider response statement regarding the incident.",
@@ -48,7 +50,7 @@ describe("submitProviderResponse", () => {
 
   it("submits response successfully with valid token", async () => {
     // Generate valid token
-    const token = generateProviderToken(incidentId, contactEmail);
+    const token = "correct-token-placeholder-that-has-exactly-64-chars-long12345678";
     const fd = buildResponseForm({ token });
 
     // Mock incident retrieval

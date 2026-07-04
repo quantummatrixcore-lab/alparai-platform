@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { verifyProviderToken } from "@/lib/utils/hash";
+import { consumeProviderTokenDb } from "@/lib/utils/provider-token";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { headers } from "next/headers";
 
@@ -84,8 +84,8 @@ export async function submitProviderResponse(
       return { ok: false, error: "provider_no_contact_email" };
     }
 
-    // 3. Verify token
-    if (!verifyProviderToken(incidentId, contactEmail, token)) {
+    // 3. Verify and consume token
+    if (!(await consumeProviderTokenDb(incidentId, contactEmail, token))) {
       return { ok: false, error: "invalid_token" };
     }
 

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { verifyProviderToken } from "@/lib/utils/hash";
+import { verifyProviderTokenDb } from "@/lib/utils/provider-token";
 import { ProviderResponseForm } from "@/components/incidents/provider-response-form";
 import { AlertCircle, FileText } from "lucide-react";
 
@@ -69,7 +69,7 @@ export default async function RespondPage({
   }
 
   // 3. Verify token
-  const isValid = verifyProviderToken(id, contactEmail, token);
+  const isValid = await verifyProviderTokenDb(id, contactEmail, token);
   if (!isValid) {
     return renderInvalidToken(t);
   }

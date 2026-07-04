@@ -9,7 +9,8 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { maskPII } from "@/lib/pii/guardian";
 import { incidentSubmissionSchema, type IncidentSubmissionInput } from "@/lib/validation/schemas";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
-import { hashIp, generateProviderToken } from "@/lib/utils/hash";
+import { hashIp } from "@/lib/utils/hash";
+import { generateAndSaveProviderToken } from "@/lib/utils/provider-token";
 import { headers } from "next/headers";
 import {
   withAutopilot,
@@ -282,7 +283,10 @@ const runSubmitWork = async (
           .maybeSingle();
 
         if (provider?.is_verified && provider?.contact_email) {
-          const providerToken = generateProviderToken(incidentId, provider.contact_email);
+          const providerToken = await generateAndSaveProviderToken(
+            incidentId,
+            provider.contact_email,
+          );
           const providerHtml = getProviderAlertEmail({
             providerName: provider.name,
             incidentId,

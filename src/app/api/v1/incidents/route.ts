@@ -5,6 +5,9 @@ import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { headers } from "next/headers";
 import { logger } from "@/lib/utils/logger";
 
+import { createAdminClient } from "@/lib/supabase/admin";
+import { timingSafeEqual } from "crypto";
+
 const ALLOWED_ORIGINS = [
   "https://alparai.com",
   "https://www.alparai.com",
@@ -17,9 +20,18 @@ function corsHeaders(origin: string | null) {
   return {
     "Access-Control-Allow-Origin": allowedOrigin,
     "Access-Control-Allow-Methods": "GET, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Max-Age": "86400",
   };
+}
+
+function safeCompare(a: string, b: string): boolean {
+  const aBuf = Buffer.from(a);
+  const bBuf = Buffer.from(b);
+  if (aBuf.length !== bBuf.length) {
+    return false;
+  }
+  return timingSafeEqual(aBuf, bBuf);
 }
 
 export async function OPTIONS(request: Request) {
@@ -34,50 +46,140 @@ export async function GET(request: Request) {
   const origin = request.headers.get("origin");
   const hdrs = await headers();
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.api_general}:${ip}`);
+
+  // 1. API Key Authentication & Tier Identification
+  const authHeader = request.headers.get("authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return NextResponse.json(
+      { error: "unauthorized", message: "Missing or invalid Authorization header." },
+      { status: 401, headers: corsHeaders(origin) },
+    );
+  }
+
+  const apiKey = authHeader.split(" ")[1];
+  if (!apiKey) {
+    return NextResponse.json(
+      { error: "unauthorized", message: "API key is empty." },
+      { status: 401, headers: corsHeaders(origin) },
+    );
+  }
+
+  const adminClient = createAdminClient();
+  const { data: dbKeys, error: dbKeysErr } = await adminClient
+    .from("api_keys")
+    .select("provider, api_key");
+
+  if (dbKeysErr) {
+    logger.error("Failed to retrieve api_keys from database", undefined, dbKeysErr);
+    return NextResponse.json(
+      { error: "internal_error" },
+      { status: 500, headers: corsHeaders(origin) },
+    );
+  }
+
+  let tier: "free" | "developer" | "enterprise" | null = null;
+  let rlKey: string = RATE_LIMIT_KEYS.api_free;
+
+  // Validate against environment variable if configured (no hardcoded fallback)
+  const entEnvKey = process.env.ENTERPRISE_API_KEY;
+  if (entEnvKey && safeCompare(apiKey, entEnvKey)) {
+    tier = "enterprise";
+    rlKey = RATE_LIMIT_KEYS.api_enterprise;
+  } else if (dbKeys) {
+    for (const row of dbKeys) {
+      if (safeCompare(apiKey, row.api_key)) {
+        if (row.provider === "client_enterprise") {
+          tier = "enterprise";
+          rlKey = RATE_LIMIT_KEYS.api_enterprise;
+          break;
+        } else if (row.provider === "client_developer") {
+          tier = "developer";
+          rlKey = RATE_LIMIT_KEYS.api_developer;
+          break;
+        } else if (row.provider === "client_free") {
+          tier = "free";
+          rlKey = RATE_LIMIT_KEYS.api_free;
+          break;
+        }
+      }
+    }
+  }
+
+  if (!tier) {
+    return NextResponse.json(
+      { error: "unauthorized", message: "Invalid API key." },
+      { status: 401, headers: corsHeaders(origin) },
+    );
+  }
+
+  // 2. Rate Limit Enforcement
+  const rl = await checkRateLimit(`${rlKey}:${ip}`);
+  const rateHeaders = {
+    ...corsHeaders(origin),
+    "X-API-Tier": tier,
+    "X-RateLimit-Limit": rl.limit?.toString() ?? "5",
+    "X-RateLimit-Remaining": rl.remaining?.toString() ?? "0",
+    "X-RateLimit-Reset": rl.retryAfter?.toString() ?? "60",
+  };
+
   if (!rl.ok) {
     return NextResponse.json(
-      { error: "rate_limited", retryAfter: rl.retryAfter },
+      { error: "rate_limited", retryAfter: rl.retryAfter, tier },
       {
         status: 429,
         headers: {
-          ...corsHeaders(origin),
+          ...rateHeaders,
           "Retry-After": rl.retryAfter?.toString() ?? "60",
-          "X-RateLimit-Limit": rl.limit?.toString() ?? "100",
-          "X-RateLimit-Remaining": rl.remaining?.toString() ?? "0",
-          "X-RateLimit-Reset": rl.retryAfter?.toString() ?? "60",
         },
       },
     );
   }
 
+  // 3. Query Parsing
   const url = new URL(request.url);
   const limit = Math.min(parseInt(url.searchParams.get("limit") ?? "20", 10), 100);
   const category = url.searchParams.get("category");
   const severity = url.searchParams.get("severity");
-  const provider = url.searchParams.get("provider");
   const euRisk = url.searchParams.get("eu_risk");
-
-  // API Key Authentication (Basic check for now, matching ENTERPRISE_API_KEY env or specific tier)
-  const authHeader = request.headers.get("authorization");
-  const validApiKey = process.env.ENTERPRISE_API_KEY || "sk_alpar_test_123";
-  if (
-    !authHeader ||
-    !authHeader.startsWith("Bearer ") ||
-    authHeader.split(" ")[1] !== validApiKey
-  ) {
-    return NextResponse.json(
-      { error: "unauthorized", message: "Invalid or missing API key." },
-      { status: 401, headers: corsHeaders(origin) },
-    );
-  }
+  const provider = url.searchParams.get("provider");
+  const model = url.searchParams.get("model");
 
   const supabase = await createServerClient();
+
+  let selectString = `
+    id,
+    title_masked,
+    description_masked,
+    severity,
+    status,
+    category,
+    eu_act_risk_category,
+    is_anonymous,
+    incident_date,
+    views_count,
+    upvotes_count,
+    created_at,
+    cross_audit_truth_score,
+    cross_audit_confidence,
+    is_expert,
+    expert_fix
+  `;
+
+  if (provider) {
+    selectString += `, ai_providers!inner(name, slug)`;
+  } else {
+    selectString += `, ai_providers(name, slug)`;
+  }
+
+  if (model) {
+    selectString += `, ai_models!inner(name)`;
+  } else {
+    selectString += `, ai_models(name)`;
+  }
+
   let query = supabase
     .from("incidents")
-    .select(
-      "id, title_masked, description_masked, severity, status, category, eu_act_risk_category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, user_id, cross_audit_truth_score, cross_audit_confidence, ai_models(name), is_expert, expert_fix",
-    )
+    .select(selectString)
     .eq("status", "published")
     .order("created_at", { ascending: false })
     .limit(limit);
@@ -85,6 +187,8 @@ export async function GET(request: Request) {
   if (category) query = query.eq("category", category as never);
   if (severity) query = query.eq("severity", severity as never);
   if (euRisk) query = query.eq("eu_act_risk_category", euRisk as never);
+  if (provider) query = query.eq("ai_providers.slug", provider);
+  if (model) query = query.ilike("ai_models.name", `%${model}%`);
 
   const { data, error } = await query;
   if (error) {
@@ -95,46 +199,47 @@ export async function GET(request: Request) {
     );
   }
 
-  let items = (data ?? []) as Array<Record<string, unknown>>;
-  if (provider) {
-    items = items.filter((i) => {
-      const model = i["ai_models"] as { name: string } | null;
-      return model?.name?.toLowerCase().includes(provider.toLowerCase());
-    });
-  }
+  const items = (data ?? []) as unknown as Array<Record<string, unknown>>;
+  const out = items.map((row) => {
+    const providerObj = row["ai_providers"] as { name: string; slug: string } | null;
+    const modelObj = row["ai_models"] as { name: string } | null;
 
-  const out = items.map((row) => ({
-    id: row["id"],
-    title: row["title_masked"],
-    description: row["description_masked"],
-    severity: row["severity"],
-    category: row["category"],
-    eu_act_risk_category: row["eu_act_risk_category"] ?? null,
-    is_anonymous: row["is_anonymous"] ?? false,
-    incident_date: row["incident_date"],
-    views: row["views_count"] ?? 0,
-    upvotes: row["upvotes_count"] ?? 0,
-    model: (row["ai_models"] as { name: string } | null)?.name ?? null,
-    truth_score: row["cross_audit_truth_score"] ?? null,
-    confidence: row["cross_audit_confidence"] ?? null,
-    verification_level: row["is_expert"] ? "expert" : "community",
-    expert_fix: row["expert_fix"] ?? null,
-    created_at: row["created_at"],
-  }));
+    return {
+      id: row["id"],
+      title: row["title_masked"],
+      description: row["description_masked"],
+      severity: row["severity"],
+      category: row["category"],
+      eu_act_risk_category: row["eu_act_risk_category"] ?? null,
+      is_anonymous: row["is_anonymous"] ?? false,
+      incident_date: row["incident_date"],
+      views: row["views_count"] ?? 0,
+      upvotes: row["upvotes_count"] ?? 0,
+      provider: providerObj ? { name: providerObj.name, slug: providerObj.slug } : null,
+      model: modelObj?.name ?? null,
+      truth_score: row["cross_audit_truth_score"] ?? null,
+      confidence: row["cross_audit_confidence"] ?? null,
+      verification_level: row["is_expert"] ? "expert" : "community",
+      expert_fix: row["expert_fix"] ?? null,
+      created_at: row["created_at"],
+    };
+  });
 
   return NextResponse.json(
     {
       data: out,
-      meta: { count: out.length, limit, generated_at: new Date().toISOString() },
+      meta: {
+        count: out.length,
+        limit,
+        tier,
+        generated_at: new Date().toISOString(),
+      },
     },
     {
       status: 200,
       headers: {
-        ...corsHeaders(origin),
+        ...rateHeaders,
         "Cache-Control": "public, max-age=60, s-maxage=300, stale-while-revalidate=600",
-        "X-RateLimit-Limit": rl.limit?.toString() ?? "100",
-        "X-RateLimit-Remaining": rl.remaining?.toString() ?? "100",
-        "X-RateLimit-Reset": rl.retryAfter?.toString() ?? "0",
       },
     },
   );
