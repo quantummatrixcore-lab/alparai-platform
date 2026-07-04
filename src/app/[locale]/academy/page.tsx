@@ -16,6 +16,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { ExpertForm } from "./expert-form";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const resolvedParams = await params;
@@ -29,6 +30,15 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function AcademyPage({ params }: { params: Promise<{ locale: string }> }) {
   const resolvedParams = await params;
   const t = await getTranslations({ locale: resolvedParams.locale, namespace: "academy" });
+
+  const admin = createAdminClient();
+  const [{ data: stats }, { count: providersCount }] = await Promise.all([
+    admin.from("transparency_stats").select("total_incidents").single(),
+    admin.from("ai_providers").select("*", { count: "exact", head: true }),
+  ]);
+
+  const totalIncidents = stats?.total_incidents ? `${stats.total_incidents}+` : "350+";
+  const displayProviders = providersCount ? `${providersCount}+` : "40+";
 
   return (
     <div className="bg-bg-primary text-fg-primary selection:bg-brand-500/30 min-h-screen">
@@ -95,11 +105,11 @@ export default async function AcademyPage({ params }: { params: Promise<{ locale
         <Container>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             <div className="bg-bg-secondary border-border-subtle flex flex-col items-center justify-center rounded-xl border p-8">
-              <div className="text-brand-400 mb-2 text-4xl font-bold">350+</div>
+              <div className="text-brand-400 mb-2 text-4xl font-bold">{totalIncidents}</div>
               <div className="text-fg-muted text-center font-medium">{t("stat_incidents")}</div>
             </div>
             <div className="bg-bg-secondary border-border-subtle flex flex-col items-center justify-center rounded-xl border p-8">
-              <div className="text-brand-400 mb-2 text-4xl font-bold">40+</div>
+              <div className="text-brand-400 mb-2 text-4xl font-bold">{displayProviders}</div>
               <div className="text-fg-muted text-center font-medium">{t("stat_providers")}</div>
             </div>
             <div className="bg-brand-500/10 border-brand-500/30 relative flex flex-col items-center justify-center overflow-hidden rounded-xl border p-8">
@@ -161,7 +171,7 @@ export default async function AcademyPage({ params }: { params: Promise<{ locale
               <div className="from-brand-500/20 absolute inset-0 rounded-full bg-gradient-to-tr to-transparent blur-3xl" />
               <div className="bg-bg-tertiary border-border-subtle relative overflow-hidden rounded-2xl border p-8">
                 <ShieldCheck className="text-brand-400/50 absolute -right-4 -bottom-4 h-24 w-24" />
-                <h3 className="mb-4 text-xl font-bold">EU AI Act • Article 50</h3>
+                <h3 className="mb-4 text-xl font-bold">EU AI Act • Article 53</h3>
                 <p className="text-fg-muted relative z-10 text-sm leading-relaxed">
                   Providers of general-purpose AI models shall provide... information and
                   documentation to the AI Office and, upon request, to national competent

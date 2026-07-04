@@ -298,10 +298,8 @@ export default async function AIActTrackerPage({
                 <div className="flex gap-2">
                   <Calendar className="h-4 w-4 shrink-0 text-emerald-400" />
                   <div>
-                    <h5 className="text-fg-primary font-bold">August 2, 2026</h5>
-                    <p className="mt-0.5">
-                      Serious incident reporting enters full application across the EU.
-                    </p>
+                    <h5 className="text-fg-primary font-bold">{t("obligationsDate")}</h5>
+                    <p className="mt-0.5">{t("obligationsSubDesc")}</p>
                   </div>
                 </div>
               </div>
