@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { saveOnboardingData } from "@/actions/onboarding";
@@ -28,9 +28,14 @@ export function OnboardingWizard({ locale }: OnboardingWizardProps) {
   const t = useTranslations("onboarding");
   const tAuth = useTranslations("auth");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const claim = searchParams.get("claim") || "";
+  const roleParam = searchParams.get("role") || "";
 
   const [step, setStep] = useState(1);
-  const [selectedRole, setSelectedRole] = useState<string>("");
+  const [selectedRole, setSelectedRole] = useState<string>(
+    roleParam === "provider" ? "provider" : "",
+  );
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -159,6 +164,22 @@ export function OnboardingWizard({ locale }: OnboardingWizardProps) {
                 <h3 className="text-fg-primary mb-1 text-base font-bold">{t("roleTitle")}</h3>
                 <p className="text-fg-muted text-xs">{t("roleDesc")}</p>
               </div>
+
+              {claim && (
+                <div className="bg-brand-500/10 border-brand-500/20 text-brand-400 flex items-center gap-3 rounded-xl border p-4 text-xs font-semibold">
+                  <Shield className="text-brand-400 h-5 w-5 shrink-0" />
+                  <div>
+                    <span className="mb-0.5 block font-bold">
+                      {locale === "tr" ? "Profil Talebi Aktif" : "Profile Claim Active"}
+                    </span>
+                    <span className="text-fg-secondary">
+                      {locale === "tr"
+                        ? `${claim.toUpperCase()} profilini sahiplenmek üzeresiniz. Lütfen devam etmek için "Yapay Zeka Sağlayıcısı" rolünü seçin.`
+                        : `You are claiming the profile for ${claim.toUpperCase()}. Please select the "AI Provider" role to proceed.`}
+                    </span>
+                  </div>
+                </div>
+              )}
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 {roles.map((r) => {

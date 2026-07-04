@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -24,7 +25,13 @@ export default async function OnboardingPage({ params }: { params: Promise<{ loc
 
   return (
     <Container size="narrow" className="py-12 md:py-20">
-      <OnboardingWizard locale={locale} />
+      <Suspense
+        fallback={
+          <div className="text-fg-muted text-center font-mono text-xs">Loading onboarding...</div>
+        }
+      >
+        <OnboardingWizard locale={locale} />
+      </Suspense>
     </Container>
   );
 }

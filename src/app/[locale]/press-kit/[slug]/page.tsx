@@ -67,9 +67,12 @@ export default async function BrandPage({
   const t = await getTranslations({ locale, namespace: "brand" });
   const supabase = await createServerClient();
 
-  const { data: provider } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: provider } = await (supabase as any)
     .from("ai_providers")
-    .select("id, name, slug, description, website_url, contact_email, logo_url, is_verified")
+    .select(
+      "id, name, slug, description, website_url, contact_email, logo_url, is_verified, is_verified_respondent",
+    )
     .eq("slug", slug.toLowerCase())
     .maybeSingle();
   if (!provider) notFound();
@@ -110,6 +113,7 @@ export default async function BrandPage({
   const providerContact = providerRow["contact_email"] as string | null;
   const providerLogo = providerRow["logo_url"] as string | null;
   const isVerified = (providerRow["is_verified"] as boolean) ?? false;
+  const isVerifiedRespondent = (providerRow["is_verified_respondent"] as boolean) ?? false;
 
   const allIncidents = (allIncidentsRes.data as Array<Record<string, unknown>>) ?? [];
   const responses = (responsesRes.data as Array<Record<string, unknown>>) ?? [];
@@ -152,6 +156,15 @@ export default async function BrandPage({
                 {isVerified && (
                   <Badge variant="success" dot>
                     {t("verified")}
+                  </Badge>
+                )}
+                {isVerifiedRespondent && (
+                  <Badge
+                    variant="success"
+                    className="flex items-center gap-1 border-emerald-500/30 bg-emerald-500/15 font-bold text-emerald-400"
+                  >
+                    <Shield className="h-3 w-3 shrink-0 text-emerald-400" />
+                    {t("verified_respondent")}
                   </Badge>
                 )}
               </div>
@@ -226,6 +239,26 @@ export default async function BrandPage({
           </CardContent>
         )}
       </Card>
+
+      {!isVerifiedRespondent && (
+        <Card className="border-brand-500/20 bg-brand-500/5 mb-8 overflow-hidden">
+          <CardContent className="flex flex-col justify-between gap-4 p-6 sm:flex-row sm:items-center">
+            <div className="space-y-1">
+              <span className="bg-brand-500/10 text-brand-400 border-brand-500/20 inline-flex rounded-full border px-2.5 py-0.5 text-xs font-semibold tracking-wider uppercase">
+                {t("unclaimed_profile")}
+              </span>
+              <h3 className="text-fg-primary text-base font-bold">{t("claim_cta_title")}</h3>
+              <p className="text-fg-secondary max-w-2xl text-sm">{t("claim_cta_desc")}</p>
+            </div>
+            <Link
+              href={`/${locale}/onboarding?role=provider&claim=${providerSlug}`}
+              className="bg-brand-500 hover:bg-brand-600 focus-visible:ring-brand-500 inline-flex h-10 shrink-0 items-center justify-center rounded-xl px-5 text-sm font-bold text-white shadow-lg transition-all"
+            >
+              {t("claim_button")}
+            </Link>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <Card>

@@ -1276,7 +1276,12 @@
     "incidentsResponded": "Yanıt verilen olaylar",
     "incidentsReported": "Bildirilen olaylar ({count})",
     "brand_profile": "Marka Profili",
-    "brand_profile_desc": "{providerName} güven skoru, doğrulanmış yapay zeka hataları ve yanıt takibi."
+    "brand_profile_desc": "{providerName} güven skoru, doğrulanmış yapay zeka hataları ve yanıt takibi.",
+    "unclaimed_profile": "Sahiplenilmemiş Profil",
+    "claim_cta_title": "Bu şirket sizin mi? Bu profili ücretsiz sahiplenin",
+    "claim_cta_desc": "Olaylara resmi yanıtlar vermek, marka varlıklarınızı özelleştirmek ve geliştirici metriklerine erişmek için bu profili sahiplenin.",
+    "claim_button": "Profili Sahiplen",
+    "verified_respondent": "Doğrulanmış Temsilci"
   },
   "transparency": {
     "description": "ALPAR AI Şeffaflık Raporu. Moderasyon, denetim günlükleri ve sağlayıcı yanıtları hakkında gerçek zamanlı metrikler.",

@@ -1276,7 +1276,12 @@
     "incidentsResponded": "Incidents responded",
     "incidentsReported": "Incidents reported ({count})",
     "brand_profile": "Brand Profile",
-    "brand_profile_desc": "{providerName} trust score, verified AI incidents, and response tracking."
+    "brand_profile_desc": "{providerName} trust score, verified AI incidents, and response tracking.",
+    "unclaimed_profile": "Unclaimed Profile",
+    "claim_cta_title": "Is this your company? Claim this profile — free",
+    "claim_cta_desc": "Claim this profile to respond to incidents officially, customize your brand assets, and access developer metrics.",
+    "claim_button": "Claim Profile",
+    "verified_respondent": "Verified Respondent"
   },
   "transparency": {
     "description": "ALPAR AI Transparency Report. Real-time metrics on moderation, audit logs, and provider responses.",
