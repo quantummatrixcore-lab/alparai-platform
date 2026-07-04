@@ -128,6 +128,13 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
           </Card>
         ))}
       </div>
+
+      <div className="text-fg-muted mt-16 text-center text-xs">
+        {t("neutrality_notice")}{" "}
+        <Link href="/legal/neutrality" className="text-brand-400 font-medium hover:underline">
+          {t("neutrality_link")}
+        </Link>
+      </div>
     </Container>
   );
 }

@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { getWhistleblowerConfirmationEmail, getAdminNotificationEmail } from "@/emails/templates";
+import {
+  getWhistleblowerConfirmationEmail,
+  getAdminNotificationEmail,
+  getProviderAlertEmail,
+} from "@/emails/templates";
 
 describe("Email Templates", () => {
   const originalEnv = process.env;
@@ -125,6 +129,44 @@ describe("Email Templates", () => {
         severity: "low",
       });
       expect(html).toContain("color: #3b82f6");
+    });
+  });
+
+  describe("getProviderAlertEmail", () => {
+    const providerParams = {
+      providerName: "OpenAI",
+      incidentId: "inc-98765",
+      title: "Data Leak via ChatGPT Plus",
+      category: "privacy" as const,
+      severity: "high" as const,
+      token: "mock-token-12345-67890",
+      locale: "en" as const,
+    };
+
+    it("should generate English provider alert template with correct values", () => {
+      process.env.NEXT_PUBLIC_APP_URL = "https://custom-app.com";
+      const html = getProviderAlertEmail(providerParams);
+
+      expect(html).toContain("ALPAR AI PROVIDER ALERT");
+      expect(html).toContain("Dear OpenAI Team,");
+      expect(html).toContain("Data Leak via ChatGPT Plus");
+      expect(html).toContain("privacy");
+      expect(html).toContain("high");
+      expect(html).toContain(
+        "https://custom-app.com/incidents/inc-98765/respond?token=mock-token-12345-67890",
+      );
+      expect(html).toContain("color: #f97316"); // high severity color
+    });
+
+    it("should generate Turkish provider alert template with correct values", () => {
+      const html = getProviderAlertEmail({
+        ...providerParams,
+        locale: "tr",
+      });
+
+      expect(html).toContain("Sayın OpenAI Yetkilisi,");
+      expect(html).toContain("Yapay Zekanız İçin Yeni Olay Raporu");
+      expect(html).toContain("Resmi Yanıt Yayınla");
     });
   });
 });

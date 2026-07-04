@@ -1158,7 +1158,20 @@
     "imprintDisclaimerText": "Bu platformun içeriği kullanıcılar tarafından sağlanmaktadır. ALPAR AI, AB E-Ticaret Direktifi Madde 14 kapsamında aracı hizmet sağlayıcı olarak hareket eder ve kullanıcılar tarafından oluşturulan içeriklerden sorumlu değildir.",
     "termsDesc": "ALPAR AI Kullanım Koşulları.",
     "cookiesDesc": "ALPAR AI Çerez Politikası.",
-    "privacyDesc": "ALPAR AI Gizlilik Politikası."
+    "privacyDesc": "ALPAR AI Gizlilik Politikası.",
+    "neutralityTitle": "Tarafsızlık Şartı",
+    "neutralityDesc": "Bağımsız, tarafsız ve şeffaf yapay zeka olay barındırma taahhüdümüz.",
+    "neutralitySubtitle": "Adil Tahkim ve Hesap Verebilirlik",
+    "nIntroduction": "1. Tarafsızlık Pozisyonumuz",
+    "nIntroductionText": "ALPAR AI, gönüllü ve topluluk tarafından yönetilen bir güven sicilidir. Yapay zeka geliştiricilerinden, devlet regülatörlerinden veya ticari kuruluşlardan bağımsızdır. Amacımız yapay zeka sistem davranışlarının doğrulanabilir, halka açık ve şeffaf bir kaydını tutmaktır.",
+    "nIntermediary": "2. Aracı Hizmet Sağlayıcı Statüsü",
+    "nIntermediaryText": "AB E-Ticaret Direktifi Madde 14 ve yerel kanunlar uyarınca ALPAR AI pasif bir barındırıcıdır. Olay raporlarını yazmaz, düzenlemez veya onaylamayız. Raporların doğruluğu bildirenin sorumluluğundadır.",
+    "nRightOfReply": "3. Doğrulanmış Sağlayıcı Yanıt Hakkı",
+    "nRightOfReplyText": "Adil temsile inanıyoruz. Yayınlanan bir olayla ilişkili her yapay zeka sağlayıcısının mutlak ve acil yanıt hakkı vardır. Doğrulanmış yanıtlar olay detay sayfasının en üstüne iğnelenir.",
+    "nModeration": "4. Topluluk Odaklı Moderasyon",
+    "nModerationText": "İçerik moderasyonu ve doğrulaması gönüllü moderatörler ve bağımsız uzmanlar tarafından yürütülür. ALPAR AI yönetimi ticari talepleri veya dış baskıları karşılamak için raporları değiştirmez veya kaldırmaz.",
+    "nArbitration": "5. Çözüm ve Kaldırma",
+    "nArbitrationText": "Raporların doğruluğuyla ilgili ihtilaflar şeffaf bir şekilde çözülür. İçerik kaldırma talepleri E-Ticaret Direktifi Madde 14 kapsamındaki yasal prosedürlerimize göre ele alınır."
   },
   "dilemmas": {
     "pageTitle": "Yapay Zeka Dilemmaları",
@@ -1751,7 +1764,9 @@
     "enterprise_feature_2": "Gerçek zamanlı webhook entegrasyonu",
     "enterprise_feature_3": "SLA garantileri ve özel destek",
     "enterprise_feature_4": "Beyaz etiketli risk kontrol panelleri",
-    "enterprise_cta": "Destekle İletişime Geç"
+    "enterprise_cta": "Destekle İletişime Geç",
+    "neutrality_notice": "Tüm içerik barındırma ve ihtilaf çözümleri tarafsızlık taahhüdümüze tabidir.",
+    "neutrality_link": "Tarafsızlık Şartımızı okuyun."
   },
   "security": {
     "title": "Güvenlik & Uyumluluk — ALPAR AI",

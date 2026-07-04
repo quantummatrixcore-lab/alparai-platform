@@ -344,3 +344,218 @@ export function getAdminNotificationEmail({ id, title, category, severity }: Adm
     </html>
   `;
 }
+
+interface ProviderAlertParams {
+  providerName: string;
+  incidentId: string;
+  title: string;
+  category: string;
+  severity: string;
+  token: string;
+  locale: "en" | "tr";
+}
+
+export function getProviderAlertEmail({
+  providerName,
+  incidentId,
+  title,
+  category,
+  severity,
+  token,
+  locale,
+}: ProviderAlertParams): string {
+  const isTr = locale === "tr";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://alparai.com";
+  const actionUrl = `${appUrl}/incidents/${incidentId}/respond?token=${token}`;
+
+  const subject = isTr
+    ? `[ALPAR AI] Yapay Zekanız İçin Yeni Olay Raporu: ${title.substring(0, 30)}...`
+    : `[ALPAR AI] New Incident Report for Your AI: ${title.substring(0, 30)}...`;
+
+  const greeting = isTr ? `Sayın ${providerName} Yetkilisi,` : `Dear ${providerName} Team,`;
+
+  const bodyText = isTr
+    ? "ALPAR AI şeffaflık platformunda, geliştirdiğiniz veya sunduğunuz yapay zeka sistemi hakkında yeni bir olay bildirimi doğrulanmıştır. Profiliniz doğrulanmış bir sağlayıcı olduğu için Madde 73 taksonomisine uygun olarak resmi yanıt hakkınız bulunmaktadır."
+    : "A new incident involving your AI system has been verified on the ALPAR AI transparency platform. As a verified provider, you have the official right of reply under the Article 73 taxonomy.";
+
+  const detailsTitle = isTr ? "Olay Detayları" : "Incident Details";
+  const labelCategory = isTr ? "Kategori" : "Category";
+  const labelSeverity = isTr ? "Önem Derecesi" : "Severity";
+
+  const ctaText = isTr ? "Resmi Yanıt Yayınla" : "Publish Official Response";
+  const ctaDesc = isTr
+    ? "Aşağıdaki butonla şifresiz ve hızlı bir şekilde resmi counter-statement (karşı açıklama) yayınlayabilirsiniz. Bu açıklama olay sayfasında en üstte iğnelenecektir."
+    : "Click below to publish an official counter-statement. Your response will be pinned at the top of the incident page.";
+
+  const footerText = isTr
+    ? "Bu e-posta otomatik olarak gönderilmiştir. Lütfen yanıtlamayınız."
+    : "This is an automated email. Please do not reply directly to this message.";
+
+  const severityColor =
+    severity === "critical"
+      ? "#ef4444"
+      : severity === "high"
+        ? "#f97316"
+        : severity === "medium"
+          ? "#eab308"
+          : "#3b82f6";
+
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <title>${subject}</title>
+        <style>
+          body {
+            background-color: #09090b;
+            color: #f4f4f5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+          }
+          .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #18181b;
+            border: 1px solid #00ff88;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+          }
+          .header {
+            background: linear-gradient(135deg, #00ff88, #059669);
+            padding: 30px 40px;
+            text-align: center;
+          }
+          .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            color: #09090b;
+            text-transform: uppercase;
+          }
+          .content {
+            padding: 40px;
+          }
+          .greeting {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+          }
+          .body-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #a1a1aa;
+            margin-bottom: 32px;
+          }
+          .card {
+            background-color: #09090b;
+            border: 1px solid #27272a;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+          }
+          .card h2 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #27272a;
+            padding-bottom: 8px;
+          }
+          .incident-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #00ff88;
+            margin-bottom: 16px;
+          }
+          .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+          }
+          .detail-label {
+            color: #71717a;
+            font-weight: 600;
+          }
+          .detail-value {
+            color: #e4e4e7;
+            font-weight: 700;
+          }
+          .btn-container {
+            text-align: center;
+            margin: 32px 0;
+          }
+          .btn {
+            background-color: #00ff88;
+            color: #09090b;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 800;
+            text-decoration: none;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+          }
+          .btn:hover {
+            background-color: #34d399;
+          }
+          .footer {
+            background-color: #09090b;
+            padding: 20px 40px;
+            border-top: 1px solid #27272a;
+            text-align: center;
+            font-size: 12px;
+            color: #52525b;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>ALPAR AI PROVIDER ALERT</h1>
+          </div>
+          <div class="content">
+            <div class="greeting">${greeting}</div>
+            <div class="body-text">${bodyText}</div>
+            
+            <div class="card">
+              <h2>${detailsTitle}</h2>
+              <div class="incident-title">${title}</div>
+              
+              <div class="detail-row">
+                <span class="detail-label">${labelCategory}:</span>
+                <span class="detail-value">${category}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">${labelSeverity}:</span>
+                <span class="detail-value" style="color: ${severityColor}; text-transform: uppercase;">
+                  ${severity}
+                </span>
+              </div>
+            </div>
+
+            <p style="font-size: 14px; color: #a1a1aa; line-height: 1.5; margin-bottom: 8px;">
+              ${ctaDesc}
+            </p>
+            <div class="btn-container">
+              <a href="${actionUrl}" class="btn">${ctaText}</a>
+            </div>
+          </div>
+          <div class="footer">
+            <p>${footerText}</p>
+            <p style="margin-top: 4px; font-weight: bold; color: #71717a;">ALPAR AI — Trust Infrastructure for AI Accountability</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+}

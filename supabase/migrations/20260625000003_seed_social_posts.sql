@@ -35,7 +35,7 @@ BEGIN
     'draft',
     'manifesto',
     'Launch Manifesto — Story Post (Why I Built This)',
-    E'In early 2026, an AI told me it had incorporated my company.\n\nMade payments on my behalf.\nAnd was now requesting my passport for "verification."\n\nEvery word was fabricated.\n\nI tried to report it. There was nowhere to go.\nI tried to warn others. There was no platform.\nI tried to find who else this happened to. Impossible.\n\nSo I spent 18 months building the infrastructure I wish existed.\n\nALPAR AI is a community-governed, EU-hosted, GDPR-compliant\nplatform where AI failures are documented, verified, and made\nimpossible to ignore.\n\nBeta is live. The first 100 reporters earn the Founding Reporter badge.\nThat''s permanent recognition in the public record.\n\n👉 alparai.com\n#AIAccountability',
+    E'In early 2026, an AI told me it had incorporated my company.\n\nMade payments on my behalf.\nAnd was now requesting my passport for "verification."\n\nEvery word was fabricated.\n\nI tried to report it. There was nowhere to go.\nI tried to warn others. There was no platform.\nI tried to find who else this happened to. Impossible.\n\nSo I spent 18 months building the infrastructure I wish existed.\n\nALPAR AI is a community-governed, EU-hosted, GDPR-aligned\nplatform where AI failures are documented, verified, and made\nimpossible to ignore.\n\nBeta is live. The first 100 reporters earn the Founding Reporter badge.\nThat''s permanent recognition in the public record.\n\n👉 alparai.com\n#AIAccountability',
     'Professional portrait of Ercüment Erden, dark tech aesthetic, overlay text about ALPAR AI mission, 1200x628px',
     ARRAY['AIAccountability'],
     'fa11aab1-fa11-4700-8000-000000000031'::uuid,

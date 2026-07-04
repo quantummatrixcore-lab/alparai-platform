@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { saveOnboardingData } from "@/actions/onboarding";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Link } from "@/i18n/routing";
 
 import { toast } from "sonner";
 import {
@@ -327,6 +328,15 @@ export function OnboardingWizard({ locale }: OnboardingWizardProps) {
             </motion.div>
           )}
         </AnimatePresence>
+
+        <div className="border-border-subtle/50 text-fg-muted mt-6 border-t pt-4 text-center text-xs">
+          {locale === "tr"
+            ? "İçerik barındırma ve sağlayıcı ilişkilerimiz "
+            : "Our content hosting and provider relationships follow our "}
+          <Link href="/legal/neutrality" className="text-brand-400 font-medium hover:underline">
+            {locale === "tr" ? "Tarafsızlık Şartı'na tabidir." : "Neutrality Charter."}
+          </Link>
+        </div>
       </CardContent>
     </Card>
   );

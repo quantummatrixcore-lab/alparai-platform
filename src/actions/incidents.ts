@@ -9,7 +9,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { maskPII } from "@/lib/pii/guardian";
 import { incidentSubmissionSchema, type IncidentSubmissionInput } from "@/lib/validation/schemas";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
-import { hashIp } from "@/lib/utils/hash";
+import { hashIp, generateProviderToken } from "@/lib/utils/hash";
 import { headers } from "next/headers";
 import {
   withAutopilot,
@@ -20,7 +20,11 @@ import {
 } from "@/lib/autopilot";
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
 import { getResendClient } from "@/lib/email/resend";
-import { getWhistleblowerConfirmationEmail, getAdminNotificationEmail } from "@/emails/templates";
+import {
+  getWhistleblowerConfirmationEmail,
+  getAdminNotificationEmail,
+  getProviderAlertEmail,
+} from "@/emails/templates";
 import type { Database } from "@/types/database";
 
 export interface SubmitIncidentState {
@@ -266,6 +270,42 @@ const runSubmitWork = async (
           html: adminHtml,
         }),
       );
+
+      // 3. Send alert to AI Provider if they are claimed/verified and have contact email
+      const providerId = providerIsCustom ? null : raw.provider_id || null;
+      if (providerId) {
+        const adminClient = createAdminClient();
+        const { data: provider } = await adminClient
+          .from("ai_providers")
+          .select("name, contact_email, is_verified")
+          .eq("id", providerId)
+          .maybeSingle();
+
+        if (provider?.is_verified && provider?.contact_email) {
+          const providerToken = generateProviderToken(incidentId, provider.contact_email);
+          const providerHtml = getProviderAlertEmail({
+            providerName: provider.name,
+            incidentId,
+            title: raw.title,
+            category: raw.category,
+            severity: raw.severity,
+            token: providerToken,
+            locale,
+          });
+
+          emailPromises.push(
+            resend.emails.send({
+              from: "ALPAR AI Alerts <alerts@alparai.com>",
+              to: provider.contact_email,
+              subject:
+                locale === "tr"
+                  ? `[ALPAR AI] Yapay Zekanız İçin Yeni Olay Raporu: ${raw.title.substring(0, 30)}...`
+                  : `[ALPAR AI] New Incident Report for Your AI: ${raw.title.substring(0, 30)}...`,
+              html: providerHtml,
+            }),
+          );
+        }
+      }
 
       await Promise.all(emailPromises);
       logger.info("Resend emails dispatched successfully", { incidentId });

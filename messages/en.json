@@ -1158,7 +1158,20 @@
     "imprintDisclaimerText": "The contents of this platform are user-submitted. ALPAR AI acts as an intermediary host according to Article 14 of the EU E-Commerce Directive and is not responsible for user-generated content.",
     "termsDesc": "ALPAR AI Terms of Service.",
     "cookiesDesc": "ALPAR AI Cookie Policy.",
-    "privacyDesc": "ALPAR AI Privacy Policy."
+    "privacyDesc": "ALPAR AI Privacy Policy.",
+    "neutralityTitle": "Neutrality Charter",
+    "neutralityDesc": "Our commitment to independent, unbiased, and transparent AI incident hosting.",
+    "neutralitySubtitle": "Fair Arbitration & Accountability",
+    "nIntroduction": "1. Our Position on Neutrality",
+    "nIntroductionText": "ALPAR AI is a voluntary, community-governed trust registry. We are independent of any AI developers, government regulators, or commercial entities. Our purpose is to host a verifiable, public, and transparent record of AI system behavior.",
+    "nIntermediary": "2. Intermediary Status",
+    "nIntermediaryText": "Under Article 14 of the EU E-Commerce Directive and local laws, ALPAR AI acts as a passive hosting provider. We do not write, edit, or endorse incident reports. The responsibility for the truthfulness of each report lies with the reporter.",
+    "nRightOfReply": "3. Verified Provider Right of Reply",
+    "nRightOfReplyText": "We believe in fair representation. Every AI provider associated with a published incident has an absolute, immediate right of reply. Verified responses are pinned at the top of the incident detail page, ensuring equal visibility.",
+    "nModeration": "4. Community-Based Moderation",
+    "nModerationText": "Content moderation and verification are conducted by volunteer moderators and independent experts. ALPAR AI administration does not alter or suppress reports to satisfy commercial requests or external pressure.",
+    "nArbitration": "5. Resolution & Takedown",
+    "nArbitrationText": "Disputes regarding the accuracy of reports are resolved transparently. Takedown requests are handled strictly in accordance with our legal procedures under Article 14 of the E-Commerce Directive."
   },
   "dilemmas": {
     "pageTitle": "AI Dilemmas",
@@ -1751,7 +1764,9 @@
     "enterprise_feature_2": "Real-time webhook integration",
     "enterprise_feature_3": "SLA guarantees & dedicated support",
     "enterprise_feature_4": "Whitelabel risk dashboards",
-    "enterprise_cta": "Contact Support"
+    "enterprise_cta": "Contact Support",
+    "neutrality_notice": "All content hosting and dispute resolutions follow our strict commitment to neutrality.",
+    "neutrality_link": "Read our Neutrality Charter."
   },
   "security": {
     "title": "Security & Compliance — ALPAR AI",
