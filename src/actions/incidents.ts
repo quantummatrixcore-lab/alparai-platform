@@ -65,6 +65,7 @@ interface SubmitWorkInput {
     model_id: string;
     model_custom: string;
     incident_date: string;
+    source_url: string | null;
     is_anonymous: boolean;
     is_expert: boolean;
     expert_fix: string;
@@ -137,7 +138,7 @@ const runSubmitWork = async (
     is_expert: raw.is_expert,
     expert_fix: raw.expert_fix || null,
     location_country: null,
-    source_url: null,
+    source_url: raw.source_url,
     ip_hash: hashIp(data.ip),
     user_agent: userAgent,
     contains_pii: containsPii,
@@ -303,6 +304,7 @@ export async function submitIncident(
     model_id: String(formData.get("model_id") ?? ""),
     model_custom: String(formData.get("model_custom") ?? ""),
     incident_date: String(formData.get("incident_date") ?? ""),
+    source_url: String(formData.get("source_url") ?? "") || null,
     is_anonymous: formData.get("is_anonymous") === "on",
     is_expert: formData.get("is_expert") === "on",
     expert_fix: String(formData.get("expert_fix") ?? ""),
@@ -336,7 +338,7 @@ export async function submitIncident(
     isAnonymous: raw.is_anonymous,
     isExpert: raw.is_expert,
     expertFix: raw.expert_fix || null,
-    sourceUrl: null,
+    sourceUrl: raw.source_url,
     consent: {
       truthfulness: true,
       anonymousPublication: true,

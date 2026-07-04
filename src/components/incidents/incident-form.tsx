@@ -60,9 +60,36 @@ export function IncidentForm({
   const [isImporting, setIsImporting] = useState(false);
   const [importError, setImportError] = useState("");
 
+  const KNOWN_SHARE_DOMAINS = [
+    "chatgpt.com",
+    "openai.com",
+    "claude.ai",
+    "grok.com",
+    "x.com",
+    "gemini.google.com",
+  ];
+
+  const isValidShareUrl = (url: string): boolean => {
+    try {
+      const parsed = new URL(url);
+      return KNOWN_SHARE_DOMAINS.some((d) => parsed.hostname.includes(d));
+    } catch {
+      return false;
+    }
+  };
+
   const handleImportUrl = async (e: React.FormEvent | React.MouseEvent) => {
     e.preventDefault();
     if (!importUrl) return;
+
+    if (!isValidShareUrl(importUrl)) {
+      setImportError(
+        t("import_invalid_domain", {
+          defaultValue: "Only ChatGPT, Claude, Grok, and Gemini share links are supported.",
+        }),
+      );
+      return;
+    }
 
     setIsImporting(true);
     setImportError("");
@@ -80,7 +107,6 @@ export function IncidentForm({
       setDescription(data.description || "");
       if (data.providerId) {
         setSelectedProvider(data.providerId);
-        // Clear custom names if valid provider
         setCustomProviderName("");
       }
       toast.success(t("import_success", { defaultValue: "Imported successfully!" }));
@@ -511,6 +537,7 @@ export function IncidentForm({
             })}
           </div>
           <input type="hidden" name="severity" value={severity} />
+          {importUrl && <input type="hidden" name="source_url" value={importUrl} />}
           {state.fieldErrors?.severity?.[0] && (
             <p className="text-danger-400 mt-1 text-xs">{state.fieldErrors.severity[0]}</p>
           )}
