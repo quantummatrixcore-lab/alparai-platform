@@ -283,3 +283,5 @@ A complete surface audit (all routes, actions, lib modules, 72 migrations) found
 `/invest` and `/investor-portal` are public. Verify with counsel that wording avoids regulated public-solicitation language (SPK/EU prospectus rules). Agents must not edit investment-related copy autonomously.
 
 **v1.5 (2026-07-04)** — Full-repo 360 audit. Found existing social module, gamification, autopilot framework, connectors; corrected Sprint 15/16 to extend rather than duplicate. Added Sprint 17 (Academy credibility: Art. 53 fix, partner labeling, live stats, expert badge) and Sprint 18 (wiring: autopilot control room, connectors→social, watches→notifications). Execution order: T15.1 → T17 → Sprint 14 → Sprint 15 rest → Sprint 16 (as corrected) → Sprint 18.
+
+**v1.6 (2026-07-04)** — REGULATORY PIVOT: EU Digital Omnibus adopted (Council 29 Jun 2026) defers high-risk/Art. 73 obligations to 2 Dec 2027 (Annex III) / 2 Aug 2028 (Annex I). All "Aug 2, 2026 = obligations start" claims are now WRONG and must be swept (new task T17.5). Launch narrative pivots to "The Accountability Gap". Orchestration moved to docs/MASTER_PLAN_2026H2.md — that file wins on conflicts.
