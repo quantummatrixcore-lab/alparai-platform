@@ -213,3 +213,42 @@ Source: Series A due-diligence board review (2026-07-04). Code-executable findin
 **Sprint 15 guardrails:** no new routes; Backlog freeze still applies; every task ships with tests; `pnpm validate` green.
 
 **v1.3 (2026-07-04)** — Added Sprint 15 from Series A board review. Key drivers: legal exposure in Supreme Court prompt (T15.1), undefined cross-audit unit economics (T15.2), zero funnel visibility behind the 15k-followers/0-users signal (T15.3).
+
+---
+
+## Sprint 16 — Marketing Automation Engine (v1.4; max automation, min manual)
+
+**Principle:** AI generates 100% of marketing output using existing infra (Gemini adapter, Vertex Imagen, Resend, cron). Founder's only manual act: a one-click daily approval queue. Auto-post switches exist per channel but default OFF until legal review of spam/GDPR exposure.
+
+### T16.1 — Incident → content engine (core)
+- **Files:** new `src/lib/marketing/content-engine.ts`; new migration `marketing_queue` table (RLS: admin-only); new cron `src/app/api/cron/generate-marketing/route.ts`.
+- **Work:** For each newly published incident, auto-generate and queue: (a) X post draft, (b) LinkedIn post draft (hook-first, link-in-comment format), (c) share-card image via `VertexImagenAdapter` (dark slate/emerald brand style). Use existing Gemini adapter chain with failover; PII-masked fields only; log per-item generation cost.
+- **Accept:** publishing an incident enqueues 3 assets within 15 min; queue items carry status draft/approved/posted/rejected.
+
+### T16.2 — One-click approval queue (the only manual step)
+- **Files:** new admin panel section `src/components/admin/marketing-queue*`.
+- **Work:** List queued assets with preview (text + image); Approve / Edit / Reject buttons; "Copy" button per platform for manual paste when auto-post is off.
+- **Accept:** approve→posted pipeline works end-to-end; mobile-usable (founder approves from phone).
+
+### T16.3 — Auto-post connectors (switchable)
+- **Files:** new `src/lib/marketing/publishers/` (x.ts, linkedin.ts); env flags `MARKETING_AUTOPOST_X`, `MARKETING_AUTOPOST_LINKEDIN`.
+- **Work:** X API v2 + LinkedIn API posting for approved items. Missing keys → connector disabled gracefully, Copy button remains.
+- **Accept:** with test keys, an approved item posts; without keys, no errors.
+
+### T16.4 — Weekly digest autopilot
+- **Files:** new cron `src/app/api/cron/weekly-digest/route.ts`; Resend template.
+- **Work:** Every Monday: compose digest from `transparency_stats` + top-3 incidents (Gemini summary, EN+TR); send via Resend to newsletter subscribers (existing list, double-opt-in only); enqueue matching social thread in approval queue.
+- **Accept:** digest renders correctly; unsubscribe link works; only opted-in recipients.
+
+### T16.5 — Milestone press-release generator
+- **Files:** `src/lib/marketing/press-release.ts`; trigger checks in the digest cron.
+- **Work:** On milestones (100th published incident, Aug-2 launch day, first provider claim): auto-draft press release EN+TR from live stats, generate hero image (Imagen), queue for approval with pre-filled Resend send to the media-contacts table. **Send requires explicit founder approval — no exception** (GDPR/CAN-SPAM).
+- **Accept:** milestone fires exactly once; draft cites only real DB numbers.
+
+### T16.6 — AI Act countdown series (pre-Aug-2)
+- **Work:** One-shot script generates the full countdown post series (T-21, T-14, T-7, T-3, T-1, launch day; EN+TR, X+LinkedIn variants + Imagen cards) into the approval queue, scheduled by date.
+- **Accept:** queue shows the dated series; each unlocks on its date.
+
+**Sprint 16 guardrails:** (1) Nothing posts or emails externally without an approved queue item — auto-post flags only skip the *click*, never the queue. (2) No cold outreach to individuals; media-contacts table is founder-curated. (3) All generation costs logged per item. (4) Marketing copy obeys Guardrail #10 (Ready, never Compliant). (5) All content from PII-masked fields only.
+
+**v1.4 (2026-07-04)** — Added Sprint 16: full marketing automation (content engine, approval queue, auto-post connectors, weekly digest, milestone press releases, AI Act countdown). Founder manual surface reduced to a one-click daily approval.
