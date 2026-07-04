@@ -252,3 +252,34 @@ Source: Series A due-diligence board review (2026-07-04). Code-executable findin
 **Sprint 16 guardrails:** (1) Nothing posts or emails externally without an approved queue item — auto-post flags only skip the *click*, never the queue. (2) No cold outreach to individuals; media-contacts table is founder-curated. (3) All generation costs logged per item. (4) Marketing copy obeys Guardrail #10 (Ready, never Compliant). (5) All content from PII-masked fields only.
 
 **v1.4 (2026-07-04)** — Added Sprint 16: full marketing automation (content engine, approval queue, auto-post connectors, weekly digest, milestone press releases, AI Act countdown). Founder manual surface reduced to a one-click daily approval.
+
+---
+
+## v1.5 — Full-Repo 360 Audit: Corrections & New Sprints (2026-07-04)
+
+A complete surface audit (all routes, actions, lib modules, 72 migrations) found existing subsystems that earlier sprint specs would duplicate. **These corrections OVERRIDE earlier task text where they conflict.**
+
+### Corrections to earlier sprints (Antigravity: read before executing Sprint 15/16)
+
+- **Sprint 16 / T16.1-T16.2 CORRECTION:** Do NOT create a `marketing_queue` table. The social module already exists: `social_posts`, `social_templates`, `social_assets` (migrations `20260625000001`, `20260627000001`), actions in `src/actions/social.ts`, image generation via `src/actions/social-image.ts` (Imagen). Build the content engine ON TOP of these: cron writes generated drafts into `social_posts` (status draft), approval UI extends the existing admin social components, publishers post approved `social_posts` rows.
+- **Sprint 15 / T15.6 CORRECTION:** Reporter reputation must reuse the existing gamification schema (`20260608000005_gamification_and_anonymous.sql`, `20260608180000_gamification.sql`) — surface the existing reputation/badges on public profiles; do not create a parallel reputation system.
+- **Sprint 16 / T16.4 NOTE:** News/content ingestion already flows via `src/lib/connectors/` (HackerNews, Reddit, RSS) → `external_queue`. The weekly digest should draw from `ecosystem_news` + `transparency_stats`, not re-fetch.
+
+### Sprint 17 — Academy Credibility Patch (small, high-priority; before Aug 2)
+
+- **T17.1 — Fix legal citation:** `src/app/[locale]/academy/page.tsx` cites "EU AI Act • Article 50" with text that belongs to **Article 53** (GPAI documentation duties). Correct the heading and verify quote wording against the official text. A wrong article number on a regulatory-positioning page is a credibility bug.
+- **T17.2 — University tier labeling:** The three university tier cards (Boğaziçi/ODTÜ/İTÜ, Koç/Bilkent/Sabancı, TUM/ETH/Oxford) must be labeled "Target / Invited partners" (EN+TR) unless a signed MOU exists. Implied-partnership claims are a reputational and legal risk for a trust platform.
+- **T17.3 — Live stats:** Replace hardcoded "350+ / 40+" numbers with values from `transparency_stats` view.
+- **T17.4 — Surface expert verification:** Expert-fix fields exist (`20260701203000_add_incident_expert_fix_fields.sql`) but are invisible. Add an "Expert Verified" badge tier on incident pages (above AI-verified), and `verification_level` (`ai_verified` | `expert_verified`) to `/api/v1/incidents` responses + `docs/API.md`.
+
+### Sprint 18 — Wiring Sprint (connect existing engines; after Sprint 16)
+
+- **T18.1 — Autopilot control room:** Admin panel: last N `autopilot_runs` with cost/outcome, per-worker enable/disable, and a global kill-switch env flag honored by the worker. An autonomous system with one founder needs a visible off button.
+- **T18.2 — Connectors → distribution:** Accepted `external_queue` items and `ecosystem_news` feed a "news to comment on" list inside the social approval queue (reply/quote-post drafts) — the "go where the fire is" GTM tactic, automated.
+- **T18.3 — Watches → retention loop:** `watchProvider` exists; wire watched-provider events (new incident, official response) to Resend notifications with opt-in/opt-out. First retention mechanism on the platform.
+- **T18.4 — Cross-audit → pre-triage integration check:** After T15.2 lands, verify autopilot auto-moderation consumes the pre-triage verdict instead of running its own duplicate path.
+
+### Founder-only legal check (non-code)
+`/invest` and `/investor-portal` are public. Verify with counsel that wording avoids regulated public-solicitation language (SPK/EU prospectus rules). Agents must not edit investment-related copy autonomously.
+
+**v1.5 (2026-07-04)** — Full-repo 360 audit. Found existing social module, gamification, autopilot framework, connectors; corrected Sprint 15/16 to extend rather than duplicate. Added Sprint 17 (Academy credibility: Art. 53 fix, partner labeling, live stats, expert badge) and Sprint 18 (wiring: autopilot control room, connectors→social, watches→notifications). Execution order: T15.1 → T17 → Sprint 14 → Sprint 15 rest → Sprint 16 (as corrected) → Sprint 18.
