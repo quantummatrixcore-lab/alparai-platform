@@ -113,6 +113,41 @@ export async function updateSocialPost(
     })
     .eq("id", id);
   if (error) throw new Error(error.message);
+
+  // If status is updated to published, check auto-post connectors
+  if (updates.status === "published") {
+    const { data: post, error: fetchErr } = await supabase
+      .from("social_posts")
+      .select("platform, body_text, title")
+      .eq("id", id)
+      .single();
+
+    if (!fetchErr && post) {
+      if (post.platform === "x" && process.env.MARKETING_AUTOPOST_X === "true") {
+        const { publishToX } = await import("@/lib/marketing/publishers/x");
+        const res = await publishToX(post.body_text);
+        if (res.success && res.postId) {
+          await supabase
+            .from("social_posts")
+            .update({ external_url: `https://x.com/status/${res.postId}` })
+            .eq("id", id);
+        }
+      } else if (
+        post.platform === "linkedin" &&
+        process.env.MARKETING_AUTOPOST_LINKEDIN === "true"
+      ) {
+        const { publishToLinkedIn } = await import("@/lib/marketing/publishers/linkedin");
+        const res = await publishToLinkedIn(post.body_text, post.title);
+        if (res.success && res.shareId) {
+          await supabase
+            .from("social_posts")
+            .update({ external_url: `https://linkedin.com/feed/update/${res.shareId}` })
+            .eq("id", id);
+        }
+      }
+    }
+  }
+
   revalidatePath("/admin/social", "page");
   return { success: true };
 }

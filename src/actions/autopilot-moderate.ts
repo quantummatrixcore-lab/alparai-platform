@@ -100,7 +100,7 @@ async function runAutoModerationWork(
   // Fetch incident
   const { data: incident, error: fetchError } = await admin
     .from("incidents")
-    .select("title, description, status")
+    .select("title, description, status, eu_act_risk_category")
     .eq("id", incidentId)
     .single();
 
@@ -120,7 +120,14 @@ async function runAutoModerationWork(
   let finalStatus: Database["public"]["Enums"]["incident_status"] = "pending_review";
   let moderatorNotes = `AI Moderation score: ${evaluation.score}. Reason: ${evaluation.reason}`;
 
-  if (evaluation.score >= 85) {
+  const isHighOrUnacceptable = ["High-Risk", "Unacceptable-Risk"].includes(
+    incident.eu_act_risk_category || "",
+  );
+
+  if (isHighOrUnacceptable) {
+    finalStatus = "pending_review";
+    moderatorNotes = `Held for human gate review due to ${incident.eu_act_risk_category} classification. (Score: ${evaluation.score}). Reason: ${evaluation.reason}`;
+  } else if (evaluation.score >= 85) {
     finalStatus = "published";
     moderatorNotes = `Auto-approved by ALPAR Autopilot (Score: ${evaluation.score}). Reason: ${evaluation.reason}`;
   } else if (evaluation.score <= 30) {

@@ -455,6 +455,56 @@ export class NonRetryableError extends Error {
   }
 }
 
+export function runPreTriageCogsGate(
+  title: string,
+  description: string,
+): { ok: boolean; reason?: string } {
+  const cleanTitle = title.trim();
+  const cleanDesc = description.trim();
+
+  if (cleanTitle.length < 5) {
+    return { ok: false, reason: "Title too short (minimum 5 characters)" };
+  }
+
+  if (cleanDesc.length < 30) {
+    return { ok: false, reason: "Description too short (minimum 30 characters)" };
+  }
+
+  // Gibberish / spam patterns (repeating characters or nonsense)
+  if (/^(.)\1{4,}/.test(cleanTitle) || /^(.)\1{9,}/.test(cleanDesc)) {
+    return { ok: false, reason: "Gibberish pattern detected (repeating characters)" };
+  }
+
+  // Common spam words / test entries
+  const spamRegex = /\b(test123|asdfasdf|qwerty|foo\s*bar|spamspam|testing\s*incident)\b/i;
+  if (spamRegex.test(cleanTitle) || spamRegex.test(cleanDesc)) {
+    return { ok: false, reason: "Nonsense/Test content pattern detected" };
+  }
+
+  return { ok: true };
+}
+
+export function estimateDebateCogs(
+  title: string,
+  description: string,
+): { inputTokens: number; outputTokens: number; costUsd: number } {
+  const textLen = title.length + description.length;
+  const inputCharCount = textLen * 7 + 25000; // 7 turns of context accumulation + prompts
+  const outputCharCount = 6000; // 7 turns of model outputs
+
+  const inputTokens = Math.ceil(inputCharCount / 4);
+  const outputTokens = Math.ceil(outputCharCount / 4);
+
+  // Pricing: average input $1.5/M tokens, output $6.0/M tokens (mixture of Sonnet/Gemini/Haiku)
+  const costUsd = (inputTokens / 1_000_000) * 1.5 + (outputTokens / 1_000_000) * 6.0;
+
+  return {
+    inputTokens,
+    outputTokens,
+    costUsd: parseFloat(costUsd.toFixed(5)),
+  };
+}
+
 /**
  * Execute the pipeline logic once.
  */
@@ -481,10 +531,44 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
   const safeTitle = maskPII(incident.title_masked || incident.title).masked;
   const safeDescription = maskPII(incident.description_masked || incident.description).masked;
 
-  logger.info("[CrossAudit] Starting Debate Pipeline", {
+  // Run pre-triage COGS gate
+  const gate = runPreTriageCogsGate(safeTitle, safeDescription);
+  if (!gate.ok) {
+    logger.info("[CrossAudit] Pre-triage COGS gate rejected incident", {
+      incidentId,
+      reason: gate.reason,
+    });
+
+    // Save zero score to database directly and skip debate pipeline
+    await admin
+      .from("incidents")
+      .update({
+        cross_audit_truth_score: 0,
+        cross_audit_confidence: 1.0,
+        cross_audit_reasoning: `Filtered by pre-triage COGS gate: ${gate.reason}`,
+        cross_audit_completed_at: new Date().toISOString(),
+        cross_audit_model: "cogs-gate-v1",
+      })
+      .eq("id", incidentId);
+
+    return {
+      truthScore: 0,
+      confidence: 1.0,
+      reasoning: `Filtered by pre-triage COGS gate: ${gate.reason}`,
+      supremeCourtModel: "cogs-gate-v1",
+      triageModels: [],
+      totalLatencyMs: 0,
+    };
+  }
+
+  const costEst = estimateDebateCogs(safeTitle, safeDescription);
+  logger.info("[CrossAudit] Starting Debate Pipeline with COGS cost estimation", {
     incidentId,
     category: incident.category,
     severity: incident.severity,
+    estimatedCostUsd: costEst.costUsd,
+    estimatedInputTokens: costEst.inputTokens,
+    estimatedOutputTokens: costEst.outputTokens,
   });
 
   // Turn 1: Parallel Initial Evaluation
@@ -600,20 +684,35 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
 
   const triageModels = [initA.model, initB.model];
 
+  const isHighOrUnacceptableRisk = ["High-Risk", "Unacceptable-Risk"].includes(
+    supremeResult.euActRiskCategory || "",
+  );
+  const updatePayload: Record<string, unknown> = {
+    cross_audit_truth_score: supremeResult.truthScore,
+    cross_audit_confidence: supremeResult.confidence,
+    cross_audit_reasoning: supremeResult.reasoning,
+    cross_audit_model: supremeResult.model,
+    cross_audit_triage_models: triageModels,
+    cross_audit_completed_at: new Date().toISOString(),
+    eu_act_transparency_score: supremeResult.euActTransparencyScore,
+    eu_act_non_discrimination_score: supremeResult.euActNonDiscriminationScore,
+    eu_act_data_privacy_score: supremeResult.euActDataPrivacyScore,
+    eu_act_risk_category: supremeResult.euActRiskCategory,
+  };
+
+  if (isHighOrUnacceptableRisk) {
+    logger.info(
+      `[CrossAudit] Incident classified as ${supremeResult.euActRiskCategory}. Enforcing human moderation gate.`,
+      { incidentId },
+    );
+    updatePayload.status = "pending_review";
+    updatePayload.published_at = null;
+    updatePayload.moderator_notes = `Held/Reverted for human gate review due to High-Risk/Unacceptable-Risk classification (${supremeResult.euActRiskCategory}).`;
+  }
+
   const { error: updateError } = await admin
     .from("incidents")
-    .update({
-      cross_audit_truth_score: supremeResult.truthScore,
-      cross_audit_confidence: supremeResult.confidence,
-      cross_audit_reasoning: supremeResult.reasoning,
-      cross_audit_model: supremeResult.model,
-      cross_audit_triage_models: triageModels,
-      cross_audit_completed_at: new Date().toISOString(),
-      eu_act_transparency_score: supremeResult.euActTransparencyScore,
-      eu_act_non_discrimination_score: supremeResult.euActNonDiscriminationScore,
-      eu_act_data_privacy_score: supremeResult.euActDataPrivacyScore,
-      eu_act_risk_category: supremeResult.euActRiskCategory,
-    } as never)
+    .update(updatePayload as never)
     .eq("id", incidentId);
 
   if (updateError) {

@@ -1,0 +1,216 @@
+import "server-only";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { callWithFailover, TRIAGE_SLOT_1_CHAIN } from "@/lib/ai/openrouter-gateway";
+import { VertexImagenAdapter } from "@/lib/ai/adapters/vertex-imagen";
+import { logger } from "@/lib/utils/logger";
+
+interface GeneratedContent {
+  x_post: string;
+  linkedin_post: string;
+  image_prompt: string;
+}
+
+/**
+ * Generate marketing posts and a share-card image for a newly published incident.
+ */
+export async function generateMarketingAssets(incidentId: string): Promise<boolean> {
+  const admin = createAdminClient();
+
+  // 1. Fetch incident details (PII-masked fields only)
+  const { data: incident, error: fetchError } = await admin
+    .from("incidents")
+    .select("id, title_masked, description_masked, category, severity, eu_act_risk_category")
+    .eq("id", incidentId)
+    .single();
+
+  if (fetchError || !incident) {
+    logger.error("[ContentEngine] Incident not found for marketing generation", {
+      incidentId,
+      error: fetchError?.message,
+    });
+    return false;
+  }
+
+  const title = incident.title_masked || "AI Incident Alert";
+  const description = incident.description_masked || "No description provided.";
+  const category = incident.category || "unknown";
+  const severity = incident.severity || "medium";
+  const riskCategory = incident.eu_act_risk_category || "Minimal";
+
+  logger.info("[ContentEngine] Starting marketing generation", { incidentId });
+
+  // 2. Build Prompt conforming to Guardrail #10
+  const systemPrompt =
+    "You are a world-class Social Media Manager and Growth Hacker for ALPAR AI, the independent global rating and accountability agency for AI systems.";
+  const userPrompt = `Write two social media post drafts (one for X/Twitter and one for LinkedIn) and an image generation prompt for a newly documented AI incident.
+
+Incident Details:
+Title: ${title}
+Description: ${description}
+Category: ${category}
+Severity: ${severity}
+EU AI Act Risk Category: ${riskCategory}
+
+Rules for X/Twitter Post:
+- Max 250 characters.
+- Engaging, punchy, highlight the AI failure mode and the accountability gap.
+- Cites the EU AI Act taxonomy alignment if applicable, but never claims compliance.
+- No hashtags.
+
+Rules for LinkedIn Post:
+- Hook-first format (first line must be an engaging hook).
+- In-depth, structural, professional tone.
+- Links-in-comments format: end the post mentioning that the full report and evidence are in the comments/platform.
+- Cites the EU AI Act taxonomy alignment if applicable, but never claims compliance.
+- No hashtags.
+
+Ensure BOTH posts strictly follow Guardrail #10:
+- Use "AI Act Ready" or "aligned with the Art. 73 taxonomy" / "annex III taxonomy aligned".
+- NEVER claim "AI Act Compliant", "official reporting channel", or that reporting on ALPAR fulfills a provider's legal Art. 73 duty.
+- Keep the tone neutral, fact-based, and objective.
+
+Output your response strictly as a JSON object:
+{
+  "x_post": "X post content text...",
+  "linkedin_post": "LinkedIn post content text...",
+  "image_prompt": "An artistic/conceptual high-quality 3D render representing this AI failure mode (e.g. AI medical advice safety issue, deepfake trust violation, system bias) for our brand visual. The style should be modern, clean, glassmorphic, and fit our dark slate (#0A1622) and emerald (#00FF88) color scheme. Minimal text. 8k resolution."
+}
+`;
+
+  let generated: GeneratedContent | null = null;
+  const startTextTime = performance.now();
+
+  try {
+    const res = await callWithFailover(
+      {
+        systemPrompt,
+        userMessage: userPrompt,
+        temperature: 0.2,
+        responseFormat: "json",
+      },
+      TRIAGE_SLOT_1_CHAIN,
+    );
+    if (res.ok && res.data?.content) {
+      const parsed = JSON.parse(res.data.content);
+      if (parsed.x_post && parsed.linkedin_post && parsed.image_prompt) {
+        generated = parsed as GeneratedContent;
+      }
+    }
+  } catch (err) {
+    logger.error(
+      "[ContentEngine] Gemini/OpenRouter text generation failed",
+      undefined,
+      err instanceof Error ? err : undefined,
+    );
+  }
+
+  const textLatencyMs = Math.round(performance.now() - startTextTime);
+  // Log generation cost (DeepSeek input is ~$0.14/M, output $0.28/M tokens)
+  const textCostEst = (userPrompt.length / 4 / 1_000_000) * 0.14 + (1000 / 4 / 1_000_000) * 0.28;
+  logger.info("[ContentEngine] Text generation finished", {
+    latencyMs: textLatencyMs,
+    estimatedCostUsd: parseFloat(textCostEst.toFixed(6)),
+  });
+
+  if (!generated) {
+    logger.error("[ContentEngine] Could not parse generated JSON structure");
+    return false;
+  }
+
+  // 3. Generate image using VertexImagenAdapter (System-level bypass)
+  let imageUrl: string | null = null;
+  const startImgTime = performance.now();
+
+  try {
+    const adapter = new VertexImagenAdapter();
+    const imgRes = await adapter.generateImage(generated.image_prompt, "1:1");
+    if (imgRes.ok) {
+      const { base64, mimeType } = imgRes;
+      const buffer = Buffer.from(base64, "base64");
+      const fileExt = mimeType === "image/png" ? "png" : "jpg";
+      const fileName = `${incidentId}/marketing-${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await admin.storage
+        .from("social-assets")
+        .upload(fileName, buffer, {
+          contentType: mimeType,
+          upsert: true,
+        });
+
+      if (!uploadError) {
+        const { data } = admin.storage.from("social-assets").getPublicUrl(fileName);
+        imageUrl = data?.publicUrl || null;
+      } else {
+        logger.warn("[ContentEngine] Failed to upload image to storage", {
+          error: uploadError.message,
+        });
+      }
+    } else {
+      logger.warn("[ContentEngine] Vertex Imagen image generation failed", { error: imgRes.error });
+    }
+  } catch (err) {
+    logger.error(
+      "[ContentEngine] Image generation threw exception",
+      undefined,
+      err instanceof Error ? err : undefined,
+    );
+  }
+
+  const imgLatencyMs = Math.round(performance.now() - startImgTime);
+  // Imagen cost: flat $0.03 per image
+  const imgCostEst = imageUrl ? 0.03 : 0.0;
+  logger.info("[ContentEngine] Image generation finished", {
+    latencyMs: imgLatencyMs,
+    estimatedCostUsd: imgCostEst,
+  });
+
+  const totalCostUsd = parseFloat((textCostEst + imgCostEst).toFixed(5));
+
+  // 4. Insert draft posts into social_posts table
+  const insertPayloads = [
+    {
+      platform: "x" as const,
+      status: "draft" as const,
+      content_type: "incident_spotlight" as const,
+      title: `Incident Spotlight: ${title}`,
+      body_text: generated.x_post,
+      image_prompt: generated.image_prompt,
+      image_url: imageUrl,
+      linked_incident_id: incidentId,
+      estimated_reach: 0,
+      likes: 0,
+      comments_count: 0,
+      shares_count: 0,
+    },
+    {
+      platform: "linkedin" as const,
+      status: "draft" as const,
+      content_type: "incident_spotlight" as const,
+      title: `Incident Spotlight: ${title}`,
+      body_text: generated.linkedin_post,
+      image_prompt: generated.image_prompt,
+      image_url: imageUrl,
+      linked_incident_id: incidentId,
+      estimated_reach: 0,
+      likes: 0,
+      comments_count: 0,
+      shares_count: 0,
+    },
+  ];
+
+  const { error: dbError } = await admin.from("social_posts").insert(insertPayloads);
+  if (dbError) {
+    logger.error("[ContentEngine] Failed to insert social posts into database", {
+      error: dbError.message,
+    });
+    return false;
+  }
+
+  logger.info("[ContentEngine] Marketing assets queued successfully", {
+    incidentId,
+    imageUrl,
+    totalCostUsd,
+  });
+
+  return true;
+}

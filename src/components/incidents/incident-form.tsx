@@ -55,6 +55,7 @@ export function IncidentForm({
     age: false,
     terms: false,
   });
+  const allConsents = consents.truth && consents.age && consents.terms;
 
   const [importUrl, setImportUrl] = useState("");
   const [isImporting, setIsImporting] = useState(false);
@@ -88,11 +89,13 @@ export function IncidentForm({
           defaultValue: "Only ChatGPT, Claude, Grok, and Gemini share links are supported.",
         }),
       );
+      trackEvent("submit_funnel_import_fail", { error: "invalid_domain", url: importUrl });
       return;
     }
 
     setIsImporting(true);
     setImportError("");
+    trackEvent("submit_funnel_import_attempt", { url: importUrl });
     try {
       const res = await fetch("/api/v1/extract", {
         method: "POST",
@@ -109,10 +112,12 @@ export function IncidentForm({
         setSelectedProvider(data.providerId);
         setCustomProviderName("");
       }
+      trackEvent("submit_funnel_import_success", { providerId: data.providerId });
       toast.success(t("import_success", { defaultValue: "Imported successfully!" }));
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "An unknown error occurred";
       setImportError(message);
+      trackEvent("submit_funnel_import_fail", { error: message });
       toast.error(t("import_error", { defaultValue: "Could not import data from this URL." }));
     } finally {
       setIsImporting(false);
@@ -186,14 +191,32 @@ export function IncidentForm({
   });
 
   useEffect(() => {
+    trackEvent("submit_funnel_start");
+  }, []);
+
+  useEffect(() => {
     if (state.ok) {
       clearDraft(DRAFT_KEY);
       trackEvent("Incident Submitted");
+      trackEvent("submit_funnel_success");
       toast.success(t("submitted"));
     } else if (state.error) {
+      trackEvent("submit_funnel_error", { error: state.error });
       toast.error(state.error);
     }
   }, [state, t]);
+
+  useEffect(() => {
+    if (isExpert) {
+      trackEvent("submit_funnel_expert_checked");
+    }
+  }, [isExpert]);
+
+  useEffect(() => {
+    if (allConsents) {
+      trackEvent("submit_funnel_consents_accepted");
+    }
+  }, [allConsents]);
 
   useEffect(() => {
     let active = true;
@@ -317,6 +340,7 @@ export function IncidentForm({
     setSelectedModel("");
     if (customName && value !== "custom:other") setCustomProviderName(customName);
     else if (value !== "custom:other") setCustomProviderName("");
+    trackEvent("submit_funnel_provider_selected", { provider: value });
   };
 
   const handleModelChange = (value: string, isCustom: boolean) => {
@@ -325,7 +349,6 @@ export function IncidentForm({
     else if (value !== "custom:other") setCustomModelName("");
   };
 
-  const allConsents = consents.truth && consents.age && consents.terms;
   const canSubmit = allConsents && selectedProvider && title.trim() && description.trim();
 
   return (

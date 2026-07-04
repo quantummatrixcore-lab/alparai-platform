@@ -221,4 +221,91 @@ describe("Cross-Audit Engine (Debate Protocol)", () => {
     const result = await runCrossAudit("inc-invalid");
     expect(result).toBeNull();
   });
+
+  describe("Pre-Triage COGS Gate & Cost Estimation", () => {
+    it("should reject short titles", () => {
+      const result = runPreTriageCogsGate(
+        "AI",
+        "This is a very long description that has more than thirty characters to pass description check.",
+      );
+      expect(result.ok).toBe(false);
+      expect(result.reason).toContain("Title too short");
+    });
+
+    it("should reject short descriptions", () => {
+      const result = runPreTriageCogsGate("AI Medical Chatbot Suggests Harm", "Too short");
+      expect(result.ok).toBe(false);
+      expect(result.reason).toContain("Description too short");
+    });
+
+    it("should reject repeating character gibberish", () => {
+      const result = runPreTriageCogsGate(
+        "aaaaa",
+        "This is a very long description that has more than thirty characters to pass description check.",
+      );
+      expect(result.ok).toBe(false);
+      expect(result.reason).toContain("Gibberish pattern");
+    });
+
+    it("should reject known test/spam keywords", () => {
+      const result = runPreTriageCogsGate(
+        "AI Chatbot Test",
+        "This is a test123 incident submission with test details for testing purposes.",
+      );
+      expect(result.ok).toBe(false);
+      expect(result.reason).toContain("Nonsense/Test content");
+    });
+
+    it("should approve valid incident details", () => {
+      const result = runPreTriageCogsGate(
+        "AI Medical Chatbot Suggests Harm",
+        "The medical chatbot told me to drink bleach to cure my cold.",
+      );
+      expect(result.ok).toBe(true);
+    });
+
+    it("should estimate cost correctly based on character lengths", () => {
+      const estimate = estimateDebateCogs("AI Chatbot", "Some details");
+      expect(estimate.costUsd).toBeGreaterThan(0);
+      expect(estimate.inputTokens).toBeGreaterThan(0);
+      expect(estimate.outputTokens).toBeGreaterThan(0);
+    });
+
+    it("should return early with 0 truthScore when pre-triage gate rejects the incident", async () => {
+      mockAdminClient.from.mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            single: vi.fn().mockResolvedValue({
+              data: {
+                id: "inc-123",
+                title: "Test",
+                description: "Too short",
+                title_masked: "Test",
+                description_masked: "Too short",
+                category: "hallucination",
+                severity: "medium",
+              },
+              error: null,
+            }),
+          }),
+        }),
+        update: vi.fn().mockReturnValue({
+          eq: vi.fn().mockResolvedValue({
+            data: null,
+            error: null,
+          }),
+        }),
+      } as any);
+
+      const result = await runCrossAudit("inc-123");
+      expect(result).not.toBeNull();
+      if (result) {
+        expect(result.truthScore).toBe(0);
+        expect(result.confidence).toBe(1.0);
+        expect(result.supremeCourtModel).toBe("cogs-gate-v1");
+      }
+    });
+  });
 });
+
+import { runPreTriageCogsGate, estimateDebateCogs } from "@/lib/ai/cross-audit-engine";

@@ -125,8 +125,7 @@ describe("submitIncident", () => {
     });
     const result = await submitIncident({ ok: false }, buildFormData());
     expect(result.ok).toBe(false);
-    expect(result.formError).toContain("Too many");
-    expect(result.formError).toContain("300");
+    expect(result.formError).toContain("System is experiencing high load");
   });
 
   it("returns error when consents are not all accepted", async () => {

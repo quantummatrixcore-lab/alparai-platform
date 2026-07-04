@@ -27,6 +27,7 @@ export const RATE_LIMIT_KEYS = {
   expert_application: "ratelimit:expert_application",
   investor_application: "ratelimit:investor_application",
   provider_response: "ratelimit:provider_response",
+  global_incident_burst_guard: "ratelimit:global_incident_burst_guard",
 } as const;
 
 let _redis: Redis | null = null;
@@ -47,6 +48,12 @@ function getLimiters(): Record<string, Ratelimit> {
     });
   }
   _limiters = {
+    [RATE_LIMIT_KEYS.global_incident_burst_guard]: new Ratelimit({
+      redis: _redis,
+      limiter: Ratelimit.slidingWindow(10, "1 m"),
+      analytics: true,
+      prefix: "alpar",
+    }),
     [RATE_LIMIT_KEYS.incident_submission]: new Ratelimit({
       redis: _redis,
       limiter: Ratelimit.slidingWindow(5, "1 h"),

@@ -1,6 +1,16 @@
 import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, FileText, Clock, Eye, Globe, Tag, Shield, CheckCircle2 } from "lucide-react";
+import {
+  Building2,
+  FileText,
+  Clock,
+  Eye,
+  Globe,
+  Tag,
+  Shield,
+  CheckCircle2,
+  AlertTriangle,
+} from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { formatDate, formatRelativeTime, cn } from "@/lib/utils";
 import { VoteButtons } from "./vote-buttons";
@@ -131,6 +141,13 @@ export function IncidentDetailView({
         </header>
 
         <PIIBanner />
+
+        {["High-Risk", "Unacceptable-Risk"].includes(incident.eu_act_risk_category || "") && (
+          <div className="border-warning-500/30 bg-warning-500/5 text-warning-400 flex items-start gap-2.5 rounded-lg border p-4 text-xs leading-relaxed">
+            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
+            <div>{t("risk_disclaimer", { risk: incident.eu_act_risk_category || "" })}</div>
+          </div>
+        )}
 
         <Card>
           <CardContent className="prose prose-invert text-fg-primary max-w-none whitespace-pre-wrap">

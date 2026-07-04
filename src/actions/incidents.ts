@@ -333,6 +333,18 @@ export async function submitIncident(
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   const clientIdempotencyKey = hdrs.get("x-idempotency-key");
   const userIdForRl = user?.id ?? "anonymous";
+
+  // 1. Global Burst Guard (Max 10 submissions per minute globally across all IPs)
+  const globalRl = await checkRateLimit(`${RATE_LIMIT_KEYS.global_incident_burst_guard}:global`);
+  if (!globalRl.ok) {
+    logger.warn("[BurstGuard] Coordinated submission burst blocked", { ip, userId: userIdForRl });
+    return {
+      ok: false,
+      formError: "System is experiencing high load. Please try again in 1 minute.",
+    };
+  }
+
+  // 2. Per-user Rate Limit
   const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.incident_submission}:${userIdForRl}:${ip}`);
   if (!rl.ok) {
     return { ok: false, formError: `Too many submissions. Try again in ${rl.retryAfter}s.` };
