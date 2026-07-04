@@ -33,6 +33,8 @@ type RawIncidentRow = Record<string, unknown> & {
   cross_audit_truth_score?: number | null;
   cross_audit_confidence?: number | null;
   affected_users_count?: number | null;
+  is_expert?: boolean | null;
+  expert_fix?: string | null;
 };
 
 export function toIncidentListItem(row: RawIncidentRow): IncidentListItem {
@@ -58,6 +60,8 @@ export function toIncidentListItem(row: RawIncidentRow): IncidentListItem {
     cross_audit_truth_score: row.cross_audit_truth_score ?? null,
     cross_audit_confidence: row.cross_audit_confidence ?? null,
     affected_count: row.affected_users_count ?? 0,
+    is_expert: row.is_expert ?? false,
+    expert_fix: row.expert_fix ?? null,
   };
 }
 

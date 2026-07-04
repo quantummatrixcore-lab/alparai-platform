@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, FileText, Clock, Eye, Globe, Tag, Shield } from "lucide-react";
+import { Building2, FileText, Clock, Eye, Globe, Tag, Shield, CheckCircle2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { formatDate, formatRelativeTime, cn } from "@/lib/utils";
 import { VoteButtons } from "./vote-buttons";
@@ -84,6 +84,15 @@ export function IncidentDetailView({
             <UIBadge variant="muted">
               <Building2 className="h-3 w-3" /> {incident.provider_name}
             </UIBadge>
+            {incident.is_expert && (
+              <UIBadge
+                variant="success"
+                className="border-emerald-500/20 bg-emerald-500/10 font-bold text-emerald-400"
+              >
+                <CheckCircle2 className="mr-1 h-3 w-3 text-emerald-400" aria-hidden="true" />
+                {t("expert_verified", { defaultValue: "Expert Verified" })}
+              </UIBadge>
+            )}
             {incident.model_name && <UIBadge variant="muted">{incident.model_name}</UIBadge>}
             {incident.is_anonymous && (
               <UIBadge variant="muted" size="sm">

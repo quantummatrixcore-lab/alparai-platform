@@ -30,6 +30,8 @@ describe("mappers", () => {
         cross_audit_truth_score: 85,
         cross_audit_confidence: 90,
         affected_users_count: 1000,
+        is_expert: true,
+        expert_fix: "Perform data sanitation",
       };
 
       const result = toIncidentListItem(rawRow);
@@ -56,6 +58,8 @@ describe("mappers", () => {
         cross_audit_truth_score: 85,
         cross_audit_confidence: 90,
         affected_count: 1000,
+        is_expert: true,
+        expert_fix: "Perform data sanitation",
       });
     });
 
@@ -88,6 +92,8 @@ describe("mappers", () => {
         cross_audit_truth_score: null,
         cross_audit_confidence: null,
         affected_count: 0,
+        is_expert: false,
+        expert_fix: null,
       });
     });
 

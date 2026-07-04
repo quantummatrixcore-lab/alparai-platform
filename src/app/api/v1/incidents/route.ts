@@ -76,7 +76,7 @@ export async function GET(request: Request) {
   let query = supabase
     .from("incidents")
     .select(
-      "id, title_masked, description_masked, severity, status, category, eu_act_risk_category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, user_id, cross_audit_truth_score, cross_audit_confidence, ai_models(name)",
+      "id, title_masked, description_masked, severity, status, category, eu_act_risk_category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, user_id, cross_audit_truth_score, cross_audit_confidence, ai_models(name), is_expert, expert_fix",
     )
     .eq("status", "published")
     .order("created_at", { ascending: false })
@@ -117,6 +117,8 @@ export async function GET(request: Request) {
     model: (row["ai_models"] as { name: string } | null)?.name ?? null,
     truth_score: row["cross_audit_truth_score"] ?? null,
     confidence: row["cross_audit_confidence"] ?? null,
+    verification_level: row["is_expert"] ? "expert" : "community",
+    expert_fix: row["expert_fix"] ?? null,
     created_at: row["created_at"],
   }));
 

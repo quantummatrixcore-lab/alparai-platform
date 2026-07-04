@@ -16,7 +16,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { ExpertForm } from "./expert-form";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const resolvedParams = await params;
@@ -31,10 +31,10 @@ export default async function AcademyPage({ params }: { params: Promise<{ locale
   const resolvedParams = await params;
   const t = await getTranslations({ locale: resolvedParams.locale, namespace: "academy" });
 
-  const admin = createAdminClient();
+  const supabase = await createClient();
   const [{ data: stats }, { count: providersCount }] = await Promise.all([
-    admin.from("transparency_stats").select("total_incidents").single(),
-    admin.from("ai_providers").select("*", { count: "exact", head: true }),
+    supabase.from("transparency_stats").select("total_incidents").single(),
+    supabase.from("ai_providers").select("*", { count: "exact", head: true }),
   ]);
 
   const totalIncidents = stats?.total_incidents ? `${stats.total_incidents}+` : "350+";

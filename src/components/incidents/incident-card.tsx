@@ -146,6 +146,15 @@ export function IncidentCard({
                 <Building2 className="h-3 w-3" aria-hidden="true" />
                 {incident.provider_name}
               </Badge>
+              {incident.is_expert && (
+                <Badge
+                  variant="success"
+                  className="border-emerald-500/20 bg-emerald-500/10 font-bold text-emerald-400"
+                >
+                  <CheckCircle2 className="mr-1 h-3 w-3 text-emerald-400" aria-hidden="true" />
+                  {t("expert_verified", { defaultValue: "Expert Verified" })}
+                </Badge>
+              )}
               <Badge variant="outline">{tCat(incident.category)}</Badge>
               {incident.cross_audit_truth_score !== null && (
                 <Badge

@@ -131,6 +131,7 @@
     "submit_page_subtitle": "No login required. You can submit anonymously. PII is masked automatically. A moderator reviews every submission before publication.",
     "anon_badge": "100% Anonymous",
     "new_badge": "JUST IN",
+    "expert_verified": "Expert Verified",
     "anon_badge_desc": "No email, no name, no tracking. Only what you choose to share.",
     "title_placeholder": "Briefly describe the incident",
     "description_placeholder": "What did the AI say or do? Be specific — quotes, screenshots, and context make verification faster and your report stronger.",

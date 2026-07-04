@@ -131,6 +131,7 @@
     "submit_page_subtitle": "Giriş gerekmez. Anonim olarak gönderebilirsiniz. KVT otomatik olarak maskelenir. Her gönderi yayınlanmadan önce bir moderatör tarafından incelenir.",
     "anon_badge": "%100 Anonim",
     "new_badge": "YENİ",
+    "expert_verified": "Uzman Onaylı",
     "anon_badge_desc": "E-posta yok, isim yok, izleme yok. Sadece paylaşmayı seçtiğiniz bilgiler.",
     "title_placeholder": "Olayı kısaca tanımlayın",
     "description_placeholder": "Yapay zeka ne söyledi veya ne yaptı? Spesifik olun — alıntılar, ekran görüntüleri ve bağlam, doğrulamayı hızlandırır ve raporunuzu güçlendirir.",
