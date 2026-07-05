@@ -191,14 +191,25 @@ export function IncidentForm({
   });
 
   useEffect(() => {
-    trackEvent("submit_funnel_start");
+    const params = new URLSearchParams(window.location.search);
+    const utm: Record<string, string> = {};
+    ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"].forEach((key) => {
+      const val = params.get(key);
+      if (val) utm[key] = val;
+    });
+    trackEvent("submit_start", utm);
   }, []);
 
   useEffect(() => {
     if (state.ok) {
       clearDraft(DRAFT_KEY);
-      trackEvent("Incident Submitted");
-      trackEvent("submit_funnel_success");
+      const params = new URLSearchParams(window.location.search);
+      const utm: Record<string, string> = {};
+      ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"].forEach((key) => {
+        const val = params.get(key);
+        if (val) utm[key] = val;
+      });
+      trackEvent("submit_complete", utm);
       toast.success(t("submitted"));
     } else if (state.error) {
       trackEvent("submit_funnel_error", { error: state.error });

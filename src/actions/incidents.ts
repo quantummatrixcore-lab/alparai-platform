@@ -372,6 +372,24 @@ export async function submitIncident(
     },
   };
 
+  // 3. Coordinated Content Burst Guard (detect identical rapid spam)
+  const contentIdentifer = (raw.source_url || raw.title).trim().toLowerCase();
+  const contentHash = Buffer.from(contentIdentifer).toString("base64").slice(0, 40);
+  const coordRl = await checkRateLimit(
+    `${RATE_LIMIT_KEYS.coordinated_incident_burst_guard}:${contentHash}`,
+  );
+  if (!coordRl.ok) {
+    logger.warn("[BurstGuard] Coordinated submission content burst blocked", {
+      ip,
+      userId: userIdForRl,
+      contentIdentifer,
+    });
+    return {
+      ok: false,
+      formError: "This incident has already been submitted recently by another user.",
+    };
+  }
+
   const requiredConsents = raw.consents.truth && raw.consents.age && raw.consents.terms;
   if (!requiredConsents) {
     const t = await getTranslations("errors");

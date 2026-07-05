@@ -103,9 +103,9 @@ export function SocialDashboardClient({
 }: Props) {
   const tAdmin = useTranslations("admin");
   const [posts, setPosts] = useState<SocialPost[]>(initialPosts);
-  const [activeTab, setActiveTab] = useState<"calendar" | "drafts" | "templates" | "analytics">(
-    "drafts",
-  );
+  const [activeTab, setActiveTab] = useState<
+    "queue" | "calendar" | "drafts" | "templates" | "analytics"
+  >("queue");
   const [isPending, startTransition] = useTransition();
 
   // Form states for creating/editing posts
@@ -333,6 +333,11 @@ export function SocialDashboardClient({
   };
 
   const tabs = [
+    {
+      id: "queue",
+      label: tAdmin("tabQueue", { defaultValue: "Approval Queue" }),
+      icon: AlertCircle,
+    },
     { id: "drafts", label: tAdmin("tabDrafts", { defaultValue: "Drafts" }), icon: FileText },
     {
       id: "calendar",
@@ -402,6 +407,121 @@ export function SocialDashboardClient({
 
       {/* Filter and Content Area */}
       <div className="space-y-6">
+        {/* Tab 0: Approval Queue */}
+        {activeTab === "queue" && (
+          <div className="space-y-4">
+            <div className="border-border-subtle/50 flex items-center justify-between border-b pb-3">
+              <h2 className="text-fg-primary flex items-center gap-2 text-lg font-bold">
+                <AlertCircle className="text-warning-400 h-5 w-5" />
+                {tAdmin("pendingApprovalQueue", { defaultValue: "Pending Approval Queue" })}
+              </h2>
+              <span className="bg-brand-500/10 text-brand-400 rounded-full px-2.5 py-0.5 text-xs font-bold">
+                {posts.filter((p) => p.status === "draft").length}{" "}
+                {tAdmin("itemsPending", { defaultValue: "pending" })}
+              </span>
+            </div>
+
+            <div className="space-y-4">
+              {posts
+                .filter((p) => p.status === "draft")
+                .map((post) => {
+                  const limit = getPlatformLimit(post.platform);
+                  const isOverLimit = post.body_text.length > limit;
+                  return (
+                    <div
+                      key={post.id}
+                      className="bg-bg-secondary/40 border-border-subtle hover:border-brand-500/30 flex flex-col justify-between gap-4 rounded-2xl border p-5 transition-all duration-300"
+                    >
+                      <div className="flex flex-col justify-between gap-4 md:flex-row">
+                        <div className="flex-1 space-y-2">
+                          <div className="flex items-center gap-2">
+                            <div className="text-fg-primary flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-bold">
+                              {getPlatformIcon(post.platform)}
+                              <span className="capitalize">{post.platform}</span>
+                            </div>
+                            <span className="text-warning-400 bg-warning-500/10 border-warning-500/20 rounded border px-2 py-0.5 text-[10px] font-bold uppercase">
+                              {post.content_type.replace("_", " ")}
+                            </span>
+                          </div>
+                          <h3 className="text-fg-primary text-base font-bold">{post.title}</h3>
+                          <p className="text-fg-secondary border-border-subtle/50 rounded-lg border bg-black/20 p-4 font-mono text-xs leading-relaxed whitespace-pre-wrap">
+                            {post.body_text}
+                          </p>
+                        </div>
+
+                        {post.image_url && (
+                          <div className="h-36 w-full shrink-0 overflow-hidden rounded-lg border border-white/10 md:w-36">
+                            <img
+                              src={post.image_url}
+                              alt={post.title}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="border-border-subtle/50 flex flex-col items-center justify-between gap-3 border-t pt-4 sm:flex-row">
+                        <div className="text-fg-muted flex items-center gap-3 text-[10px] font-semibold">
+                          <span>
+                            Characters:{" "}
+                            <span
+                              className={cn(
+                                isOverLimit ? "text-danger-400 font-bold" : "text-fg-secondary",
+                              )}
+                            >
+                              {post.body_text.length}
+                            </span>
+                            /{limit}
+                          </span>
+                          <span>Created {new Date(post.created_at).toLocaleDateString()}</span>
+                        </div>
+
+                        <div className="flex w-full items-center justify-end gap-2 sm:w-auto">
+                          <button
+                            onClick={() => handleCopy(post.id, post.body_text)}
+                            className="text-fg-secondary hover:text-fg-primary rounded-lg border border-white/10 bg-white/5 p-2 transition-all hover:bg-white/10"
+                            title="Copy to Clipboard"
+                          >
+                            {copiedId === post.id ? (
+                              <Check className="text-success-400 h-4 w-4" />
+                            ) : (
+                              <Copy className="h-4 w-4" />
+                            )}
+                          </button>
+                          <button
+                            onClick={() => handleOpenForm(post)}
+                            className="text-fg-secondary hover:text-fg-primary rounded-lg border border-white/10 bg-white/5 p-2 transition-all hover:bg-white/10"
+                            title="Edit Draft"
+                          >
+                            <Edit3 className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => handleQuickPublish(post)}
+                            className="from-success-600 to-success-500 hover:from-success-500 hover:to-success-400 flex items-center gap-2 rounded-xl bg-gradient-to-r px-4 py-2 text-xs font-bold text-white shadow-lg transition-all"
+                          >
+                            <Check className="h-3.5 w-3.5" />
+                            Approve & Post
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+
+              {posts.filter((p) => p.status === "draft").length === 0 && (
+                <div className="border-border-subtle w-full rounded-2xl border border-dashed p-12 text-center">
+                  <Check className="text-success-400 mx-auto mb-3 h-8 w-8" />
+                  <div className="text-fg-muted py-8 text-center text-sm">
+                    {tAdmin("allApproved", {
+                      defaultValue: "All campaign posts approved! Approval queue is empty.",
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Tab 1: Drafts */}
         {activeTab === "drafts" && (
           <div className="space-y-4">
