@@ -12,6 +12,7 @@ import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { hashIp } from "@/lib/utils/hash";
 import { generateAndSaveProviderToken } from "@/lib/utils/provider-token";
 import { headers } from "next/headers";
+import { createHash } from "node:crypto";
 import {
   withAutopilot,
   submitIncidentPolicy,
@@ -323,6 +324,65 @@ const runSubmitWork = async (
   return { kind: "success", value: { id: incidentId } };
 };
 
+export async function preTriageCheck(
+  title: string,
+  description: string,
+): Promise<{ ok: boolean; reason?: string }> {
+  // 1. Length checks: description must have at least 15 words. Title must be >= 10 chars.
+  const words = description.trim().split(/\s+/).filter(Boolean);
+  if (words.length < 15) {
+    return { ok: false, reason: "Description contains fewer than 15 words" };
+  }
+  if (title.trim().length < 10) {
+    return { ok: false, reason: "Title is too short (min 10 characters)" };
+  }
+
+  // 2. Junk heuristics
+  const descriptionLower = description.toLowerCase();
+  const titleLower = title.toLowerCase();
+  const keyboardMashes = ["asdf", "qwerty", "zxcvb", "12345", "aaaaa", "bbbbb", "ccccc"];
+  for (const mash of keyboardMashes) {
+    if (descriptionLower.includes(mash) || titleLower.includes(mash)) {
+      return { ok: false, reason: "Junk heuristics triggered: keyboard mash pattern detected" };
+    }
+  }
+
+  const hasLongWord = description.split(/\s+/).some((w) => w.length > 45 && !w.startsWith("http"));
+  if (hasLongWord) {
+    return { ok: false, reason: "Junk heuristics triggered: excessively long word detected" };
+  }
+
+  const charFreq: Record<string, number> = {};
+  const cleanedText = description.replace(/\s+/g, "");
+  for (const char of cleanedText) {
+    charFreq[char] = (charFreq[char] || 0) + 1;
+  }
+  const maxFreq = Math.max(...Object.values(charFreq));
+  if (cleanedText.length > 20 && maxFreq / cleanedText.length > 0.4) {
+    return { ok: false, reason: "Repetitive character frequency exceeds threshold" };
+  }
+
+  // 3. Duplicate check in DB (checking last 30 days)
+  const admin = createAdminClient();
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  const { data: duplicate } = await admin
+    .from("incidents")
+    .select("id")
+    .eq("title", title.trim())
+    .gt("created_at", thirtyDaysAgo)
+    .limit(1)
+    .maybeSingle();
+
+  if (duplicate) {
+    return {
+      ok: false,
+      reason: "Duplicate check triggered: an incident with this exact title already exists",
+    };
+  }
+
+  return { ok: true };
+}
+
 export async function submitIncident(
   _prev: SubmitIncidentState,
   formData: FormData,
@@ -374,7 +434,7 @@ export async function submitIncident(
 
   // 3. Coordinated Content Burst Guard (detect identical rapid spam)
   const contentIdentifer = (raw.source_url || raw.title).trim().toLowerCase();
-  const contentHash = Buffer.from(contentIdentifer).toString("base64").slice(0, 40);
+  const contentHash = createHash("sha256").update(contentIdentifer).digest("hex");
   const coordRl = await checkRateLimit(
     `${RATE_LIMIT_KEYS.coordinated_incident_burst_guard}:${contentHash}`,
   );
@@ -440,20 +500,36 @@ export async function submitIncident(
 
   if (result.kind === "ok") {
     const incidentId = result.value.id;
-    import("@/actions/autopilot-moderate").then(({ autoModerateIncidentAction }) => {
-      autoModerateIncidentAction(incidentId).catch((err) => {
-        logger.error("Async auto-moderation failed", err);
+
+    // Run rule-based pre-triage COGS check BEFORE invoking LLM moderation and cross-audit
+    const triage = await preTriageCheck(raw.title, raw.description);
+    if (!triage.ok) {
+      // Failed pre-triage: status set/kept as pending_review, bypassed AI, never auto-published
+      const admin = createAdminClient();
+      await admin
+        .from("incidents")
+        .update({
+          status: "pending_review",
+          moderator_notes: `Failed pre-triage COGS gate: ${triage.reason}. Retained in queue for manual review. LLM moderation bypassed.`,
+        })
+        .eq("id", incidentId);
+    } else {
+      import("@/actions/autopilot-moderate").then(({ autoModerateIncidentAction }) => {
+        autoModerateIncidentAction(incidentId).catch((err) => {
+          logger.error("Async auto-moderation failed", err);
+        });
       });
-    });
-    import("@/lib/ai/cross-audit-engine").then(({ runCrossAudit }) => {
-      runCrossAudit(incidentId).catch((err) => {
-        logger.error(
-          "[CrossAudit] Async cross-audit pipeline failed",
-          { incidentId },
-          err instanceof Error ? err : undefined,
-        );
+      import("@/lib/ai/cross-audit-engine").then(({ runCrossAudit }) => {
+        runCrossAudit(incidentId).catch((err) => {
+          logger.error(
+            "[CrossAudit] Async cross-audit pipeline failed",
+            { incidentId },
+            err instanceof Error ? err : undefined,
+          );
+        });
       });
-    });
+    }
+
     revalidatePath("/incidents");
     revalidatePath("/admin");
     return {

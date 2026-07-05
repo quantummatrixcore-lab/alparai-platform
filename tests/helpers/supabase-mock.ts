@@ -5,21 +5,38 @@ export function createMockSupabaseClient() {
   const mockSingle = vi.fn().mockResolvedValue({ data: null, error: null });
   const mockMaybeSingle = vi.fn().mockResolvedValue({ data: null, error: null });
 
+  const mockLimit = vi.fn().mockImplementation(() => ({
+    maybeSingle: mockMaybeSingle,
+    single: mockSingle,
+  }));
+
+  const mockGt = vi.fn().mockImplementation(() => ({
+    limit: mockLimit,
+    maybeSingle: mockMaybeSingle,
+    single: mockSingle,
+  }));
+
   const innerEq = vi.fn().mockReturnValue({
     single: mockSingle,
     maybeSingle: mockMaybeSingle,
+    gt: mockGt,
+    limit: mockLimit,
   });
 
   const outerEq = vi.fn().mockReturnValue({
     single: mockSingle,
     maybeSingle: mockMaybeSingle,
     eq: innerEq,
+    gt: mockGt,
+    limit: mockLimit,
   });
 
   const mockSelect = vi.fn().mockReturnValue({
     single: mockSingle,
     maybeSingle: mockMaybeSingle,
     eq: outerEq,
+    gt: mockGt,
+    limit: mockLimit,
   });
 
   const mockInsertSelectSingle = vi.fn().mockResolvedValue({ data: null, error: null });

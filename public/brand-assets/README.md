@@ -4,8 +4,8 @@ ALPAR AI is the trust infrastructure for AI accountability. Use these brand asse
 
 ## Color Palette
 
-- **Primary Accent (Corporate Blue)**: `#0F62FE` (IBM Blue / Trust & Authority).
-- **Secondary Accent (Cyber Blue)**: `#008DF8` (Precision / Connectivity).
+- **Primary Accent (Emerald Green)**: `#00FF88` (Representing safety, compliance readiness, active rating status).
+- **Secondary Accent (Cyber Cyan)**: `#00E5FF` (Representing AI, precision audit tools, connectivity).
 - **Dark Background (Deep Slate)**: `#0A1622` / `#0B1622`.
 - **Text & Details (Off-White)**: `#F8FAFC` / `#CBD5E1`.
 
