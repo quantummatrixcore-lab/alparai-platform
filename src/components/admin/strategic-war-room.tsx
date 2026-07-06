@@ -4,28 +4,49 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Robot, GlobeHemisphereWest, Scan, Database, Pulse } from "@phosphor-icons/react";
 
-const NODES = [
-  { id: 1, label: "Core AI Engine", type: "system", x: 50, y: 50, status: "healthy" },
-  { id: 2, label: "EU Node Alpha", type: "region", x: 20, y: 30, status: "healthy" },
-  { id: 3, label: "US Node Beta", type: "region", x: 80, y: 30, status: "warning" },
-  { id: 4, label: "Data Lake", type: "data", x: 50, y: 80, status: "healthy" },
-  { id: 5, label: "Audit Agent", type: "system", x: 20, y: 70, status: "healthy" },
-  { id: 6, label: "Threat DB", type: "data", x: 80, y: 70, status: "critical" },
-];
+export interface LiveProvider {
+  id: string;
+  name: string;
+  status: string;
+}
 
-const CONNECTIONS = [
-  { source: 1, target: 2 },
-  { source: 1, target: 3 },
-  { source: 1, target: 4 },
-  { source: 2, target: 5 },
-  { source: 3, target: 6 },
-  { source: 4, target: 5 },
-  { source: 4, target: 6 },
-];
+interface StrategicWarRoomProps {
+  liveProviders?: LiveProvider[];
+}
 
-export function StrategicWarRoom() {
-  const [activeNode, setActiveNode] = useState<number | null>(null);
+export function StrategicWarRoom({ liveProviders = [] }: StrategicWarRoomProps) {
+  const [activeNode, setActiveNode] = useState<string | number | null>(null);
   const [pulse, setPulse] = useState(false);
+
+  // Generate nodes dynamically
+  const NODES = [
+    { id: "core", label: "Core ALPAR Engine", type: "system", x: 50, y: 50, status: "healthy" },
+    { id: "db", label: "Global Threat DB", type: "data", x: 50, y: 85, status: "healthy" },
+  ];
+
+  const CONNECTIONS = [{ source: "core", target: "db" }];
+
+  // Map live providers to a circle around the core
+  liveProviders.forEach((provider, idx) => {
+    const angle = (idx / Math.max(liveProviders.length, 1)) * Math.PI * 2 - Math.PI / 2;
+    // Radius of 35% around the center (50, 50)
+    const x = 50 + 35 * Math.cos(angle);
+    const y = 50 + 30 * Math.sin(angle);
+    NODES.push({
+      id: provider.id,
+      label: provider.name,
+      type: "region",
+      x,
+      y,
+      status:
+        provider.status === "active"
+          ? "healthy"
+          : provider.status === "degraded"
+            ? "warning"
+            : "critical",
+    });
+    CONNECTIONS.push({ source: "core", target: provider.id });
+  });
 
   useEffect(() => {
     const interval = setInterval(() => setPulse((p) => !p), 2000);
@@ -54,7 +75,11 @@ export function StrategicWarRoom() {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)] bg-[size:40px_40px]" />
 
         {/* SVG Connections */}
-        <svg className="pointer-events-none absolute inset-0 h-full w-full">
+        <svg
+          className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+        >
           {CONNECTIONS.map((conn, i) => {
             const source = NODES.find((n) => n.id === conn.source);
             const target = NODES.find((n) => n.id === conn.target);
@@ -62,10 +87,11 @@ export function StrategicWarRoom() {
             return (
               <motion.line
                 key={i}
-                x1={`${source.x}%`}
-                y1={`${source.y}%`}
-                x2={`${target.x}%`}
-                y2={`${target.y}%`}
+                x1={source.x}
+                y1={source.y}
+                x2={target.x}
+                y2={target.y}
+                vectorEffect="non-scaling-stroke"
                 stroke={
                   activeNode === source.id || activeNode === target.id
                     ? "#06b6d4"

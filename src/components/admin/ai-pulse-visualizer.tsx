@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 import {
   AreaChart,
   Area,
@@ -10,7 +10,9 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import { Pulse, TrendUp, Cpu, Lightning } from "@phosphor-icons/react";
+import { Pulse, TrendUp, Cpu, Lightning, Sparkle } from "@phosphor-icons/react";
+import { scoutNewAIIncidents } from "@/actions/scout";
+import { toast } from "sonner";
 
 const INITIAL_DATA = Array.from({ length: 20 }, (_, i) => ({
   time: `${i}s`,
@@ -20,6 +22,18 @@ const INITIAL_DATA = Array.from({ length: 20 }, (_, i) => ({
 
 export function AIPulseVisualizer() {
   const [data, setData] = useState(INITIAL_DATA);
+  const [isPending, startTransition] = useTransition();
+
+  const handleScout = () => {
+    startTransition(async () => {
+      const result = await scoutNewAIIncidents();
+      if (result.success) {
+        toast.success(`Vertex AI: Scouted ${result.count} new incidents`);
+      } else {
+        toast.error(`Vertex Scout Failed: ${result.error}`);
+      }
+    });
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,10 +53,21 @@ export function AIPulseVisualizer() {
   return (
     <div className="flex h-full w-full flex-col overflow-hidden rounded-xl border border-white/10 bg-neutral-950/80 p-6 shadow-[0_8px_32px_rgba(0,0,0,0.5)] backdrop-blur-xl">
       <div className="mb-6 flex items-center justify-between border-b border-white/5 pb-4">
-        <h2 className="inline-flex items-center gap-2 font-mono text-lg font-bold tracking-widest text-white uppercase">
-          <Pulse weight="duotone" className="text-brand-400 h-6 w-6" />
-          AI Pulse Ecosystem
-        </h2>
+        <div className="flex items-center gap-4">
+          <h2 className="inline-flex items-center gap-2 font-mono text-lg font-bold tracking-widest text-white uppercase">
+            <Pulse weight="duotone" className="text-brand-400 h-6 w-6" />
+            AI Pulse Ecosystem
+          </h2>
+          <button
+            onClick={handleScout}
+            disabled={isPending}
+            className="group relative inline-flex items-center gap-1.5 overflow-hidden rounded-md border border-cyan-500/30 bg-cyan-950/30 px-3 py-1 font-mono text-xs font-semibold text-cyan-300 transition-all hover:bg-cyan-900/50 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isPending && <span className="absolute inset-0 block animate-pulse bg-cyan-400/20" />}
+            <Sparkle weight="duotone" className={`h-4 w-4 ${isPending ? "animate-spin" : ""}`} />
+            {isPending ? "Scouting..." : "Vertex Scout"}
+          </button>
+        </div>
         <div className="flex gap-4">
           <div className="text-brand-300 flex items-center gap-2 font-mono text-xs">
             <Lightning weight="duotone" className="h-4 w-4" /> Throughput

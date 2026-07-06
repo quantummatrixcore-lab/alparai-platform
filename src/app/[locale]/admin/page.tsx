@@ -49,6 +49,7 @@ export default async function AdminDashboardPage({
     { count: recent24h },
     { data: pendingData },
     { data: auditData },
+    { data: activeProviders },
   ] = await Promise.all([
     admin.from("incidents").select("*", { count: "exact", head: true }),
     admin
@@ -80,6 +81,7 @@ export default async function AdminDashboardPage({
       .select("id, action, entity_type, created_at")
       .order("created_at", { ascending: false })
       .limit(5),
+    admin.from("ai_providers").select("id, name, trust_score").limit(10),
   ]);
 
   const stats: AdminStats = {
@@ -159,7 +161,7 @@ export default async function AdminDashboardPage({
       {/* 360 Degree Advanced Visualizations */}
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <StrategicWarRoom />
+          <StrategicWarRoom liveProviders={activeProviders || []} />
         </div>
         <div>
           <AIPulseVisualizer />
