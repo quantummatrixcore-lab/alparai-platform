@@ -1,7 +1,9 @@
 import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 
 test.describe("Accessibility", () => {
   test.beforeEach(async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "dark" });
     await page.addInitScript(() => {
       window.localStorage.setItem(
         "alpar_cookie_consent",
@@ -103,5 +105,35 @@ test.describe("Accessibility", () => {
     await page.goto("/tr");
     const langTr = await page.locator("html").getAttribute("lang");
     expect(langTr).toBe("tr");
+  });
+
+  test("Home page has no axe accessibility violations", async ({ page }) => {
+    await page.goto("/en");
+    await page.waitForLoadState("domcontentloaded");
+    const results = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .disableRules(["color-contrast"])
+      .analyze();
+    expect(results.violations).toEqual([]);
+  });
+
+  test("Submit page has no axe accessibility violations", async ({ page }) => {
+    await page.goto("/en/submit");
+    await page.waitForLoadState("domcontentloaded");
+    const results = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .disableRules(["color-contrast"])
+      .analyze();
+    expect(results.violations).toEqual([]);
+  });
+
+  test("AI Act Tracker page has no axe accessibility violations", async ({ page }) => {
+    await page.goto("/en/ai-act");
+    await page.waitForLoadState("domcontentloaded");
+    const results = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .disableRules(["color-contrast"])
+      .analyze();
+    expect(results.violations).toEqual([]);
   });
 });

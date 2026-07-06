@@ -806,7 +806,25 @@
     "run_updated": "Updated",
     "run_error": "Last error",
     "tick_button": "Run worker tick",
-    "empty_runs": "No autopilot runs yet."
+    "empty_runs": "No autopilot runs yet.",
+    "kill_switch_active_title": "Global Kill Switch is ACTIVE",
+    "kill_switch_active_desc": "All worker processing is completely halted by environmental kill switch.",
+    "kill_switch_inactive_title": "Global Kill Switch is Inactive",
+    "kill_switch_inactive_desc": "Autopilot operations are running normally under standard safety policies.",
+    "section_workers": "Autopilot Workers",
+    "empty_workers": "No worker configurations found.",
+    "worker_name": "Worker",
+    "worker_status": "Status",
+    "worker_updated": "Last Action",
+    "worker_action": "Toggle",
+    "status_enabled": "Enabled",
+    "status_disabled": "Disabled",
+    "btn_disable": "Disable",
+    "btn_enable": "Enable",
+    "stats_cost": "Estimated Cost",
+    "stats_tokens": "Total Tokens",
+    "dashboard": "Dashboard",
+    "moderation": "Moderation"
   },
   "takedown": {
     "reasons": {

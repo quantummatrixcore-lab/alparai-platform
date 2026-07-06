@@ -11,6 +11,13 @@ import {
 } from "@/lib/autopilot";
 import { getPolicy, policyNames } from "@/lib/autopilot";
 import type { BreakerSnapshot } from "@/lib/autopilot";
+import { createAdminClient } from "@/lib/supabase/admin";
+
+export interface AutopilotWorkerConfig {
+  worker_name: string;
+  enabled: boolean;
+  updated_at: string;
+}
 
 export interface AdminAutopilotSnapshot {
   runs: PersistedAutopilotRunWithMeta[];
@@ -24,6 +31,8 @@ export interface AdminAutopilotSnapshot {
     budgetTokens: number;
   }>;
   queue: { available: boolean; size: number };
+  workerConfigs: AutopilotWorkerConfig[];
+  globalKillSwitch: boolean;
 }
 
 export interface AdminAutopilotResult {
@@ -51,6 +60,23 @@ export async function getAdminAutopilotSnapshot(limit = 100): Promise<AdminAutop
       budgetTokens: cfg.budget.maxTokens,
     };
   });
+
+  const dbAdmin = createAdminClient();
+  const { data: configsData } = (await dbAdmin
+    .from("autopilot_worker_config" as never)
+    .select("worker_name, enabled, updated_at")) as unknown as {
+    data: { worker_name: string; enabled: boolean; updated_at: string }[] | null;
+    error: unknown;
+  };
+
+  const workerConfigs = (configsData || []).map((row) => ({
+    worker_name: String(row.worker_name),
+    enabled: Boolean(row.enabled),
+    updated_at: String(row.updated_at),
+  }));
+
+  const globalKillSwitch = process.env.AUTOPILOT_KILL_SWITCH === "true";
+
   const { getQueue } = await import("@/lib/autopilot");
   const q = getQueue();
   const size = await q.size();
@@ -62,6 +88,8 @@ export async function getAdminAutopilotSnapshot(limit = 100): Promise<AdminAutop
       breakers,
       policies,
       queue: { available: q.available, size },
+      workerConfigs,
+      globalKillSwitch,
     },
   };
 }
@@ -84,4 +112,28 @@ export async function triggerAutopilotWorkerTick(): Promise<{
     retried: stats.retried,
     failed: stats.failed,
   };
+}
+
+export async function toggleAutopilotWorker(
+  workerName: string,
+  enabled: boolean,
+): Promise<{ ok: boolean; error?: string }> {
+  const admin = await requireAdmin();
+  if (!admin) return { ok: false, error: "Forbidden" };
+
+  const dbAdmin = createAdminClient();
+  const { error } = (await dbAdmin.from("autopilot_worker_config" as never).upsert(
+    {
+      worker_name: workerName,
+      enabled,
+      updated_at: new Date().toISOString(),
+      updated_by: admin.id,
+    } as never,
+    { onConflict: "worker_name" },
+  )) as unknown as { error: { message: string } | null };
+
+  if (error) {
+    return { ok: false, error: error.message };
+  }
+  return { ok: true };
 }

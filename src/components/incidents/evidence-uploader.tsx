@@ -94,17 +94,18 @@ export function EvidenceUploader({
           <p className="text-fg-primary text-sm font-medium">{t("evidence")}</p>
           <p className="text-fg-muted text-xs">{t("evidence_hint")}</p>
         </div>
-        <input
-          ref={inputRef}
-          name={name}
-          type="file"
-          multiple
-          accept={accept}
-          className="hidden"
-          disabled={disabled}
-          onChange={(e) => addFiles(e.target.files)}
-        />
       </div>
+      <input
+        ref={inputRef}
+        name={name}
+        type="file"
+        multiple
+        accept={accept}
+        className="hidden"
+        disabled={disabled}
+        aria-label={t("evidence")}
+        onChange={(e) => addFiles(e.target.files)}
+      />
       {error && (
         <p className="text-danger-500 text-xs" role="alert">
           {error}

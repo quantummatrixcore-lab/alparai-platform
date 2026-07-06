@@ -7,6 +7,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { getAdminAutopilotSnapshot } from "@/actions/admin-autopilot";
 import { Activity, ShieldCheck, Workflow } from "lucide-react";
 import { WorkerTickButton } from "@/components/admin/autopilot-tick-button";
+import { AutopilotWorkerToggles } from "@/components/admin/autopilot-worker-toggles";
 
 export async function generateMetadata() {
   return { title: "Autopilot" };
@@ -49,15 +50,19 @@ export default async function AdminAutopilotPage({
       </Container>
     );
   }
-  const { runs, stats, breakers, policies, queue } = result.snapshot;
+  const { runs, stats, breakers, policies, queue, workerConfigs, globalKillSwitch } =
+    result.snapshot;
 
   return (
-    <Container className="py-10">
-      <header className="mb-6 flex items-center justify-between">
-        <h1 className="text-fg-primary inline-flex items-center gap-2 text-2xl font-bold">
-          <Activity className="text-brand-400 h-6 w-6" />
-          {t("admin_title")}
-        </h1>
+    <Container className="space-y-8 py-10">
+      <header className="flex items-center justify-between border-b border-white/10 pb-5">
+        <div>
+          <h1 className="text-fg-primary inline-flex items-center gap-2.5 text-2xl font-bold tracking-tight">
+            <Activity className="text-brand-400 h-6 w-6" />
+            {t("admin_title")}
+          </h1>
+          <p className="text-fg-muted mt-1 text-sm">{t("admin_subtitle")}</p>
+        </div>
         <nav className="flex flex-wrap items-center gap-2 text-sm">
           <Link href={"/admin" as never} className="text-fg-muted hover:text-brand-400">
             <ShieldCheck className="mr-1 inline h-4 w-4" />
@@ -69,19 +74,24 @@ export default async function AdminAutopilotPage({
           </Link>
         </nav>
       </header>
-      <p className="text-fg-muted mb-6">{t("admin_subtitle")}</p>
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-7">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-9">
         <Stat label={t("stats_total")} value={stats.total} />
         <Stat label={t("stats_succeeded")} value={stats.succeeded} accent="ok" />
         <Stat label={t("stats_failed")} value={stats.failed} accent="danger" />
         <Stat label={t("stats_replayed")} value={stats.replayed} />
         <Stat label={t("stats_retried")} value={stats.retried} accent="warn" />
+        <Stat label={t("stats_cost")} value={`$${stats.estimatedCostUSD.toFixed(4)}`} accent="ok" />
+        <Stat label={t("stats_tokens")} value={stats.totalTokens.toLocaleString()} />
         <Stat label={t("stats_p50")} value={formatMs(stats.p50DurationMs)} />
         <Stat label={t("stats_p95")} value={formatMs(stats.p95DurationMs)} />
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+      {/* Workers Management Component */}
+      <AutopilotWorkerToggles workerConfigs={workerConfigs} globalKillSwitch={globalKillSwitch} />
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle className="inline-flex items-center gap-2">
@@ -143,7 +153,7 @@ export default async function AdminAutopilotPage({
         </Card>
       </div>
 
-      <Card className="mt-6">
+      <Card>
         <CardHeader>
           <CardTitle>{t("section_queue")}</CardTitle>
         </CardHeader>
@@ -158,7 +168,7 @@ export default async function AdminAutopilotPage({
         </CardContent>
       </Card>
 
-      <Card className="mt-6">
+      <Card>
         <CardHeader>
           <CardTitle>{t("section_runs")}</CardTitle>
         </CardHeader>
@@ -222,17 +232,17 @@ function Stat({
 }) {
   const colour =
     accent === "ok"
-      ? "text-success-400"
+      ? "text-emerald-400"
       : accent === "warn"
-        ? "text-warning-500"
+        ? "text-amber-500"
         : accent === "danger"
-          ? "text-danger-400"
+          ? "text-rose-400"
           : "text-fg-primary";
   return (
     <Card>
       <CardContent className="p-4">
-        <p className="text-fg-muted text-xs">{label}</p>
-        <p className={`mt-1 text-2xl font-bold ${colour}`}>{value}</p>
+        <p className="text-fg-muted text-xs whitespace-nowrap">{label}</p>
+        <p className={`mt-1 truncate text-lg font-bold sm:text-xl ${colour}`}>{value}</p>
       </CardContent>
     </Card>
   );
@@ -241,23 +251,27 @@ function Stat({
 function BreakerPill({ state }: { state: "closed" | "open" | "half_open" }) {
   const colour =
     state === "closed"
-      ? "bg-success-500/10 text-success-300"
+      ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
       : state === "half_open"
-        ? "bg-warning-500/10 text-warning-500"
-        : "bg-danger-500/10 text-danger-400";
-  return <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${colour}`}>{state}</span>;
+        ? "bg-amber-500/10 text-amber-500 border border-amber-500/20"
+        : "bg-rose-500/10 text-rose-400 border border-rose-500/20";
+  return (
+    <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${colour}`}>{state}</span>
+  );
 }
 
 function RunStatusPill({ status }: { status: string }) {
   const colour =
-    status === "ok"
-      ? "bg-success-500/10 text-success-300"
+    status === "ok" || status === "succeeded"
+      ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
       : status === "replayed"
-        ? "bg-brand-500/10 text-brand-300"
+        ? "bg-purple-500/10 text-purple-400 border border-purple-500/20"
         : status === "circuit_open" || status === "exhausted"
-          ? "bg-danger-500/10 text-danger-400"
+          ? "bg-rose-500/10 text-rose-400 border border-rose-500/20"
           : status === "budget_exceeded"
-            ? "bg-warning-500/10 text-warning-500"
-            : "bg-fg-muted/10 text-fg-secondary";
-  return <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${colour}`}>{status}</span>;
+            ? "bg-amber-500/10 text-amber-500 border border-amber-500/20"
+            : "bg-white/5 text-fg-secondary border border-white/10";
+  return (
+    <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${colour}`}>{status}</span>
+  );
 }

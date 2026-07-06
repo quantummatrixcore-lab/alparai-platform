@@ -806,7 +806,25 @@
     "run_updated": "Güncellendi",
     "run_error": "Son hata",
     "tick_button": "Worker tick çalıştır",
-    "empty_runs": "Henüz otopilot çalışması yok."
+    "empty_runs": "Henüz otopilot çalışması yok.",
+    "kill_switch_active_title": "Global Acil Durdurma (Kill Switch) AKTİF",
+    "kill_switch_active_desc": "Tüm arka plan işlemleri çevre değişkeni acil durdurma anahtarı tarafından durduruldu.",
+    "kill_switch_inactive_title": "Global Acil Durdurma Devre Dışı",
+    "kill_switch_inactive_desc": "Otopilot işlemleri standart güvenlik politikaları altında normal çalışıyor.",
+    "section_workers": "Otopilot Worker Yapılandırmaları",
+    "empty_workers": "Herhangi bir worker yapılandırması bulunamadı.",
+    "worker_name": "Worker",
+    "worker_status": "Durum",
+    "worker_updated": "Son Aksiyon",
+    "worker_action": "Değiştir",
+    "status_enabled": "Aktif",
+    "status_disabled": "Devre Dışı",
+    "btn_disable": "Durdur",
+    "btn_enable": "Başlat",
+    "stats_cost": "Tahmini Maliyet",
+    "stats_tokens": "Toplam Token",
+    "dashboard": "Kontrol Paneli",
+    "moderation": "Moderasyon"
   },
   "takedown": {
     "reasons": {

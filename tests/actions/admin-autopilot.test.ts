@@ -6,6 +6,28 @@ vi.hoisted(() => {
   vi.doMock("@/lib/auth/session", () => ({
     requireAdmin: vi.fn(),
   }));
+  vi.doMock("@/lib/supabase/admin", () => ({
+    createAdminClient: () => ({
+      from: (table: string) => {
+        if (table === "autopilot_worker_config") {
+          return {
+            select: () =>
+              Promise.resolve({
+                data: [
+                  { worker_name: "moderation", enabled: true, updated_at: "2026-07-06T12:00:00Z" },
+                ],
+                error: null,
+              }),
+            upsert: () => Promise.resolve({ error: null }),
+          };
+        }
+        return {
+          select: () => Promise.resolve({ data: [], error: null }),
+          upsert: () => Promise.resolve({ error: null }),
+        };
+      },
+    }),
+  }));
   vi.doMock("@/lib/autopilot", () => ({
     listRecentRuns: vi.fn(),
     summarizeRuns: vi.fn(),
@@ -27,7 +49,11 @@ import {
   policyNames,
   getQueue,
 } from "@/lib/autopilot";
-import { getAdminAutopilotSnapshot, triggerAutopilotWorkerTick } from "@/actions/admin-autopilot";
+import {
+  getAdminAutopilotSnapshot,
+  triggerAutopilotWorkerTick,
+  toggleAutopilotWorker,
+} from "@/actions/admin-autopilot";
 
 let testAdmin: ReturnType<typeof createTestAdmin>;
 
@@ -77,6 +103,8 @@ describe("getAdminAutopilotSnapshot", () => {
     expect(result.snapshot?.queue.available).toBe(true);
     expect(result.snapshot?.policies).toHaveLength(1);
     expect(result.snapshot?.policies[0]?.action).toBe("submitIncident");
+    expect(result.snapshot?.workerConfigs).toHaveLength(1);
+    expect(result.snapshot?.workerConfigs[0]?.worker_name).toBe("moderation");
   });
 
   it("includes breaker state for all policies", async () => {
@@ -108,5 +136,19 @@ describe("triggerAutopilotWorkerTick", () => {
     expect(result.succeeded).toBe(4);
     expect(result.retried).toBe(1);
     expect(result.failed).toBe(0);
+  });
+});
+
+describe("toggleAutopilotWorker", () => {
+  it("returns forbidden when not admin", async () => {
+    vi.mocked(requireAdmin).mockResolvedValue(null as never);
+    const result = await toggleAutopilotWorker("moderation", false);
+    expect(result.ok).toBe(false);
+    expect(result.error).toBe("Forbidden");
+  });
+
+  it("returns ok true on success", async () => {
+    const result = await toggleAutopilotWorker("moderation", false);
+    expect(result.ok).toBe(true);
   });
 });

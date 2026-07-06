@@ -4,6 +4,8 @@ import type { QueueJob } from "./queue";
 import { withAutopilot, getPolicy } from "./index";
 import { policies } from "./policies";
 import type { AttemptContext, AttemptOutcome } from "./types";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { logger } from "@/lib/utils/logger";
 
 export type WorkerHandler = (
   job: QueueJob,
@@ -38,6 +40,27 @@ export interface WorkerRunStats {
 const isRegisteredAction = (action: string): action is keyof typeof policies =>
   Object.prototype.hasOwnProperty.call(policies, action);
 
+export const isWorkerEnabled = async (workerName: string): Promise<boolean> => {
+  if (process.env.AUTOPILOT_KILL_SWITCH === "true") {
+    return false;
+  }
+  try {
+    const admin = createAdminClient();
+    const { data, error } = (await admin
+      .from("autopilot_worker_config" as never)
+      .select("enabled")
+      .eq("worker_name" as never, workerName)
+      .maybeSingle()) as unknown as { data: { enabled: boolean } | null; error: unknown };
+
+    if (error || !data) {
+      return true;
+    }
+    return !!data.enabled;
+  } catch {
+    return true;
+  }
+};
+
 const defaultHandlerFor = (action: string): WorkerHandler => {
   if (!isRegisteredAction(action)) {
     throw new Error(`[autopilot worker] no policy registered for action ${action}`);
@@ -58,6 +81,11 @@ const processJob = async (job: QueueJob): Promise<"ok" | "retry" | "fail"> => {
   if (!isRegisteredAction(job.action)) {
     return "fail";
   }
+  const enabled = await isWorkerEnabled(job.action);
+  if (!enabled) {
+    logger.warn(`[autopilot worker] worker for action ${job.action} is disabled, skipping`);
+    return "retry";
+  }
   const policy = getPolicy(job.action);
   const result = await withAutopilot(
     policy,
@@ -73,8 +101,6 @@ const processJob = async (job: QueueJob): Promise<"ok" | "retry" | "fail"> => {
 export const runAutopilotWorkerOnce = async (
   options: Partial<WorkerOptions> = {},
 ): Promise<WorkerRunStats> => {
-  const batchSize = options.batchSize ?? 5;
-  const queue = getQueue();
   const started = Date.now();
   const stats: WorkerRunStats = {
     processed: 0,
@@ -84,6 +110,15 @@ export const runAutopilotWorkerOnce = async (
     emptyPolls: 0,
     durationMs: 0,
   };
+  if (process.env.AUTOPILOT_KILL_SWITCH === "true") {
+    logger.warn(
+      `[autopilot worker] Global AUTOPILOT_KILL_SWITCH is enabled, skipping runAutopilotWorkerOnce`,
+    );
+    stats.durationMs = Date.now() - started;
+    return stats;
+  }
+  const batchSize = options.batchSize ?? 5;
+  const queue = getQueue();
   const jobs = await queue.pull(batchSize);
   for (const job of jobs) {
     const outcome = await processJob(job);
@@ -114,6 +149,12 @@ export const runAutopilotWorker = async (
   };
   const started = Date.now();
   while (!signal.aborted) {
+    if (process.env.AUTOPILOT_KILL_SWITCH === "true") {
+      logger.warn(
+        `[autopilot worker] Global AUTOPILOT_KILL_SWITCH is enabled, halting worker loop`,
+      );
+      break;
+    }
     const batch = await queue.pull(options.batchSize ?? 5);
     if (batch.length === 0) {
       aggregate.emptyPolls += 1;

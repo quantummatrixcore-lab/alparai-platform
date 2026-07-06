@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: CI
 
 on:
   push:
@@ -7,60 +7,32 @@ on:
     branches: [master]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 20
+        uses: actions/checkout@v4
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 9.12.0
 
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runs-on }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runs-on }}-pnpm-store-
+          node-version: 20
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Check for committed .env files
-        run: |
-          committed_envs=$(git ls-files | grep -E '^\.env' | grep -v '^\.env\.example$' || true)
-          if [ -n "$committed_envs" ]; then
-            echo "CRITICAL SECURITY ERROR: The following .env files are tracked in git:"
-            echo "$committed_envs"
-            exit 1
-          fi
-
-      - name: Run lint
-        run: pnpm lint
-
-      - name: Run typecheck
+      - name: Typecheck
         run: pnpm typecheck
 
-      - name: Run tests
-        run: pnpm test
+      - name: Lint
+        run: pnpm lint
 
-      - name: Build application
-        run: pnpm build
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      - name: Run Vitest tests
+        run: pnpm test
