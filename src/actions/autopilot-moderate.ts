@@ -11,12 +11,15 @@ import {
 } from "@/lib/autopilot";
 import { revalidatePath } from "next/cache";
 import { getResendClient } from "@/lib/email/resend";
+import { resolveApiKey } from "@/lib/ai/api-keys";
 
 async function evaluateIncidentWithGemini(
   title: string,
   description: string,
 ): Promise<{ score: number; reason: string; costTokens?: number } | null> {
-  const apiKey = process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY;
+  const apiKey =
+    (await resolveApiKey("google", "GOOGLE_API_KEY")) ||
+    (await resolveApiKey("google_vertex", "VERTEX_API_KEY"));
   if (!apiKey) {
     logger.error("No Google API Key found for incident moderation Gemini call");
     return null;

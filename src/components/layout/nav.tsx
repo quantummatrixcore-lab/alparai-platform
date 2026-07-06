@@ -97,8 +97,8 @@ export function Nav({
               />
             )}
             <span className="relative z-10 flex items-center gap-1 xl:gap-1.5 2xl:gap-2">
-              <Icon className="h-4 w-4" aria-hidden="true" />
-              {t(item.labelKey)}
+              <Icon className="hidden h-4 w-4 2xl:block" aria-hidden="true" />
+              <span>{t(item.labelKey)}</span>
             </span>
           </Link>
         );
@@ -118,7 +118,7 @@ export function Nav({
           aria-haspopup="true"
         >
           <span className="relative z-10 flex items-center gap-1 xl:gap-1.5 2xl:gap-2">
-            <BookOpen className="h-4 w-4" aria-hidden="true" />
+            <BookOpen className="hidden h-4 w-4 2xl:block" aria-hidden="true" />
             {t("resources")}
             <ChevronDown
               className={cn(

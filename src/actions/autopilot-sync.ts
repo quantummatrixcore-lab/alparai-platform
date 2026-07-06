@@ -9,6 +9,7 @@ import {
   type AttemptContext,
 } from "@/lib/autopilot";
 import { revalidatePath } from "next/cache";
+import { resolveApiKey } from "@/lib/ai/api-keys";
 
 const RSS_FEEDS = [
   { url: "https://www.technologyreview.com/feed/", source: "MIT Technology Review" },
@@ -68,7 +69,9 @@ async function classifyAndTranslateNewsWithGemini(
   summary_en: string;
   summary_tr: string;
 } | null> {
-  const apiKey = process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY;
+  const apiKey =
+    (await resolveApiKey("google", "GOOGLE_API_KEY")) ||
+    (await resolveApiKey("google_vertex", "VERTEX_API_KEY"));
   if (!apiKey) {
     logger.error("No Google API Key found for news sync Gemini call");
     return null;

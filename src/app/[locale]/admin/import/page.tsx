@@ -1,7 +1,7 @@
 import React from "react";
 import { setRequestLocale } from "next-intl/server";
 import { requireAdmin } from "@/lib/auth/session";
-import { createServerClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { ImportQueueClient, type ImportedIncident } from "@/components/admin/import-queue-client";
 import { CsvUploadForm } from "@/components/admin/csv-upload-form";
 import { Container } from "@/components/ui/layout";
@@ -22,11 +22,13 @@ export default async function AdminImportPage({ params }: PageProps) {
 
   await requireAdmin();
 
-  const supabase = await createServerClient();
+  const admin = createAdminClient();
 
-  const { data: pendingIncidents, error } = await supabase
+  const { data: pendingIncidents, error } = await admin
     .from("incidents")
-    .select("*")
+    .select(
+      "id, title, description, category, severity, incident_date, incident_source, import_external_id, import_attribution, source_url",
+    )
     .eq("status", "pending_review")
     .in("incident_source", ["aiaaic_import", "aiid_import", "news_curated"])
     .order("created_at", { ascending: false });

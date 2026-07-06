@@ -226,6 +226,7 @@
     "imported_incident_attribution_desc": "Bu olay, açık kaynaklı dış bir veri tabanından içe aktarılmıştır. CC BY 4.0 veya kamu malı lisansı altındadır. Orijinal kaynak detayları aşağıda yer almaktadır."
   },
   "categories": {
+    "safety": "Güvenlik ihlali",
     "hallucination": "Halüsinasyon",
     "bias": "Önyargı / Ayrımcılık",
     "privacy": "Mahremiyet ihlali",
@@ -787,6 +788,8 @@
     "select": "Seçiniz"
   },
   "autopilot": {
+    "dashboard": "Yönetici Paneli",
+    "moderation": "Moderasyon",
     "title": "Kendini iyileştiren gönderim",
     "subtitle": "Raporunuz dayanıklı şekilde işleniyor. Genellikle birkaç saniye sürer.",
     "processing": "Raporunuz işleniyor…",
@@ -1013,7 +1016,14 @@
     "placeholder_content": "Mesajınızı buraya yazın... Ham kod, log çıktıları veya kanıtlar ekleyebilirsiniz.",
     "encrypt": "Şifrele ve Gönder",
     "success": "Teşekkürler. İhbarınız alındı ve inceleme sırasına eklendi. Kimliğinizi açığa çıkaracak hiçbir veri kaydedilmemiştir.",
-    "notice": "IP adresinizi, tarayıcı bilgilerinizi veya parmak izi verilerinizi asla kaydetmiyoruz. Bu form Tor Tarayıcı ile uyumludur."
+    "notice": "IP adresinizi, tarayıcı bilgilerinizi veya parmak izi verilerinizi asla kaydetmiyoruz. Bu form Tor Tarayıcı ile uyumludur.",
+    "zeroKnowledge": "Sıfır Bilgi Şifrelemesi",
+    "providerHint": "YZ Sağlayıcısı (örn. OpenAI, Anthropic)",
+    "successTitle": "Gönderim Başarılı",
+    "submitAnother": "Yeni Bir İhbar Gönder",
+    "encryptingPayload": "Veriler şifreleniyor...",
+    "encrypting": "Şifreleniyor...",
+    "transmitting": "İletiliyor..."
   },
   "about": {
     "mission": "Misyonumuz",

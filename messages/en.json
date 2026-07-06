@@ -226,6 +226,7 @@
     "imported_incident_attribution_desc": "This incident was imported from an external open database. Licensed under CC BY 4.0 or public domain. Original source details below."
   },
   "categories": {
+    "safety": "Safety violation",
     "hallucination": "Hallucination",
     "bias": "Bias / Discrimination",
     "privacy": "Privacy violation",
@@ -787,6 +788,8 @@
     "select": "Select"
   },
   "autopilot": {
+    "dashboard": "Dashboard",
+    "moderation": "Moderation",
     "title": "Self-healing submission",
     "subtitle": "Your report is being processed resiliently. This usually takes a few seconds.",
     "processing": "Processing your report…",
@@ -1013,7 +1016,14 @@
     "placeholder_content": "Write your message here... You can also paste raw code, logs, or evidence.",
     "encrypt": "Encrypt & Submit",
     "success": "Thank you. Your submission was received and queued for review. No identifiable metadata has been saved.",
-    "notice": "We do not log your IP, your user agent, or any fingerprinting data. This form is Tor Browser compatible."
+    "notice": "We do not log your IP, your user agent, or any fingerprinting data. This form is Tor Browser compatible.",
+    "zeroKnowledge": "Zero-Knowledge Encryption",
+    "providerHint": "AI Provider (e.g. OpenAI, Anthropic)",
+    "successTitle": "Submission Successful",
+    "submitAnother": "Submit Another Report",
+    "encryptingPayload": "Encrypting payload...",
+    "encrypting": "Encrypting...",
+    "transmitting": "Transmitting..."
   },
   "about": {
     "mission": "Our mission",
