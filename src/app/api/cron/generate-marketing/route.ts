@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { generateMarketingAssets } from "@/lib/marketing/content-engine";
+import { generateMarketingAssets, generateNewsSocialPosts } from "@/lib/marketing/content-engine";
 import { logger } from "@/lib/utils/logger";
 
 export const dynamic = "force-dynamic";
@@ -57,29 +57,76 @@ export async function GET(request: NextRequest) {
     // 3. Find incidents that need marketing assets generated
     const pendingIncidents = incidents.filter((inc) => !linkedIncidentIds.has(inc.id));
 
-    if (pendingIncidents.length === 0) {
-      return NextResponse.json({
-        message: "All published incidents already have social assets generated.",
-      });
+    // 4. Process up to 3 incidents to avoid Vercel Function timeouts (10s on hobby, 60s/900s on pro)
+    const processedIds: string[] = [];
+    if (pendingIncidents.length > 0) {
+      const toProcess = pendingIncidents.slice(0, 3);
+      for (const inc of toProcess) {
+        logger.info(`[GenerateMarketingCron] Generating assets for incident: ${inc.id}`);
+        const success = await generateMarketingAssets(inc.id);
+        if (success) {
+          processedIds.push(inc.id);
+        }
+      }
     }
 
-    // 4. Process up to 3 incidents to avoid Vercel Function timeouts (10s on hobby, 60s/900s on pro)
-    const toProcess = pendingIncidents.slice(0, 3);
-    const processedIds: string[] = [];
+    // === NEWS PROCESSING ===
+    // 5. Fetch accepted news (up to 30)
+    const { data: newsItems, error: newsError } = await admin
+      .from("ecosystem_news")
+      .select("id")
+      .eq("status", "accepted")
+      .order("published_at", { ascending: false })
+      .limit(30);
 
-    for (const inc of toProcess) {
-      logger.info(`[GenerateMarketingCron] Generating assets for incident: ${inc.id}`);
-      const success = await generateMarketingAssets(inc.id);
-      if (success) {
-        processedIds.push(inc.id);
+    if (newsError) {
+      throw new Error(`Failed to fetch news: ${newsError.message}`);
+    }
+
+    // 6. Fetch all linked news ids from social_posts
+    const { data: newsPosts, error: newsPostError } = await admin
+      .from("social_posts")
+      .select("linked_news_id")
+      .not("linked_news_id", "is", null);
+
+    if (newsPostError) {
+      throw new Error(`Failed to fetch news social posts: ${newsPostError.message}`);
+    }
+
+    const linkedNewsIds = new Set(
+      (newsPosts ?? [])
+        .map((p) => p.linked_news_id)
+        .filter((id): id is string => typeof id === "string"),
+    );
+
+    // 7. Find news items that need social drafts generated
+    const pendingNews = (newsItems ?? []).filter((item) => !linkedNewsIds.has(item.id));
+
+    const processedNewsIds: string[] = [];
+    if (pendingNews.length > 0) {
+      // Process up to 3 news items per run
+      const newsToProcess = pendingNews.slice(0, 3);
+      for (const item of newsToProcess) {
+        logger.info(`[GenerateMarketingCron] Generating assets for news: ${item.id}`);
+        const success = await generateNewsSocialPosts(item.id);
+        if (success) {
+          processedNewsIds.push(item.id);
+        }
       }
     }
 
     return NextResponse.json({
       success: true,
-      found: pendingIncidents.length,
-      processed: processedIds.length,
-      processedIds,
+      incidents: {
+        found: pendingIncidents.length,
+        processed: processedIds.length,
+        processedIds,
+      },
+      news: {
+        found: pendingNews.length,
+        processed: processedNewsIds.length,
+        processedIds: processedNewsIds,
+      },
     });
   } catch (error) {
     const message =

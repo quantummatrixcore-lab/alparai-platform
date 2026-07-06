@@ -20,7 +20,7 @@ export default async function RoadmapPage({ params }: { params: Promise<{ locale
 
   // Authenticate user & check advisor access
   const user = await requireAdvisor();
-  const isReadOnly = user.role === "advisor";
+  const isReadOnly = (user.role as string) === "advisor";
 
   const supabase = await createServerClient();
   const { data: milestonesData } = await supabase

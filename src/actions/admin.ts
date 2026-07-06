@@ -17,6 +17,8 @@ import { requireAdmin } from "@/lib/auth/session";
 import { getResendClient } from "@/lib/email/resend";
 import { generateProviderToken } from "@/lib/utils/hash";
 import { logger } from "@/lib/utils/logger";
+import { getExpertVerificationEmail } from "@/emails/templates";
+import { checkRateLimit } from "@/lib/utils/rate-limit";
 import { parseIncidentCSV } from "@/lib/import/csv-parser";
 import { importIncidents } from "@/lib/import/incident-importer";
 import type { IncidentSource } from "@/lib/import/csv-parser";
@@ -65,7 +67,7 @@ const runModerationWork = async (
     try {
       const { data: incident } = await admin
         .from("incidents")
-        .select("id, title, title_masked, ai_provider_id")
+        .select("id, title, title_masked, ai_provider_id, is_expert, user_id")
         .eq("id", data.incidentId)
         .maybeSingle();
 
@@ -116,6 +118,64 @@ https://alparai.com`,
               respondLink,
             });
           }
+        }
+      }
+
+      // 2. If it's an expert incident, send confirmation to original reporter
+      if (incident && incident.is_expert && incident.user_id) {
+        try {
+          const { data: reporterUser } = await admin
+            .from("users")
+            .select("email, locale, full_name")
+            .eq("id", incident.user_id)
+            .maybeSingle();
+
+          if (reporterUser && reporterUser.email) {
+            const { data: prefs } = await admin
+              .from("email_preferences")
+              .select("reporter_notifications")
+              .eq("user_id", incident.user_id)
+              .maybeSingle();
+
+            const notificationsEnabled = prefs ? prefs.reporter_notifications : true;
+
+            if (notificationsEnabled) {
+              const rlCheck = await checkRateLimit(`ratelimit:email_notification:${incident.user_id}`);
+              if (rlCheck.ok) {
+                const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://alparai.com";
+                const unsubscribeUrl = `${appUrl}/${reporterUser.locale || "en"}/settings`;
+                const emailHtml = getExpertVerificationEmail({
+                  title: incident.title_masked || incident.title || "Incident",
+                  expertName: reporterUser.full_name || "ALPAR AI Expert",
+                  actionUrl: `${appUrl}/${reporterUser.locale || "en"}/incidents/${incident.id}`,
+                  locale: reporterUser.locale || "en",
+                  unsubscribeUrl,
+                });
+
+                const resend = getResendClient();
+                if (resend) {
+                  await resend.emails.send({
+                    from: "ALPAR AI <noreply@alparai.com>",
+                    to: reporterUser.email,
+                    subject: reporterUser.locale === "tr"
+                      ? "[ALPAR AI] Uzman Doğrulaması Başarılı"
+                      : "[ALPAR AI] Expert Verification Successful",
+                    html: emailHtml,
+                  });
+                  logger.info("Sent expert verification email to reporter via Resend", {
+                    incidentId: incident.id,
+                    reporterEmail: reporterUser.email,
+                  });
+                }
+              }
+            }
+          }
+        } catch (emailErr) {
+          logger.error(
+            "Failed to send expert verification email to reporter",
+            { incidentId: data.incidentId },
+            emailErr instanceof Error ? emailErr : undefined,
+          );
         }
       }
     } catch (emailErr) {
@@ -359,7 +419,7 @@ export async function promoteUser(
 
   const { error: updateError } = await db
     .from("users")
-    .update({ role: parsedRole.data })
+    .update({ role: parsedRole.data as any })
     .eq("id", target.id);
 
   if (updateError) return { ok: false, error: "Failed to update" };

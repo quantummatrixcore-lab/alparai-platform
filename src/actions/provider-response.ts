@@ -6,6 +6,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { consumeProviderTokenDb } from "@/lib/utils/provider-token";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { headers } from "next/headers";
+import { getResendClient } from "@/lib/email/resend";
+import { getProviderResponseNotificationEmail } from "@/emails/templates";
 
 const responseInputSchema = z.object({
   incidentId: z.string().uuid(),
@@ -55,7 +57,7 @@ export async function submitProviderResponse(
     // 1. Fetch incident
     const { data: incident, error: incidentErr } = await admin
       .from("incidents")
-      .select("id, ai_provider_id, status")
+      .select("id, title, title_masked, ai_provider_id, status, user_id")
       .eq("id", incidentId)
       .maybeSingle();
 
@@ -71,7 +73,7 @@ export async function submitProviderResponse(
     // 2. Fetch provider
     const { data: provider, error: providerErr } = await admin
       .from("ai_providers")
-      .select("id, contact_email")
+      .select("id, name, contact_email")
       .eq("id", providerId)
       .maybeSingle();
 
@@ -128,6 +130,56 @@ export async function submitProviderResponse(
 
       if (insertErr) {
         return { ok: false, error: insertErr.message };
+      }
+    }
+
+    // Send email notification to original reporter if applicable
+    if (incident.user_id) {
+      try {
+        const { data: reporterUser } = await admin
+          .from("users")
+          .select("email, locale")
+          .eq("id", incident.user_id)
+          .maybeSingle();
+
+        if (reporterUser && reporterUser.email) {
+          const { data: prefs } = await admin
+            .from("email_preferences")
+            .select("reporter_notifications")
+            .eq("user_id", incident.user_id)
+            .maybeSingle();
+
+          const notificationsEnabled = prefs ? prefs.reporter_notifications : true;
+
+          if (notificationsEnabled) {
+            const rlCheck = await checkRateLimit(`ratelimit:email_notification:${incident.user_id}`);
+            if (rlCheck.ok) {
+              const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://alparai.com";
+              const unsubscribeUrl = `${appUrl}/${reporterUser.locale || "en"}/settings`;
+              const emailHtml = getProviderResponseNotificationEmail({
+                title: incident.title_masked || incident.title || "Incident",
+                providerName: provider.name,
+                actionUrl: `${appUrl}/${reporterUser.locale || "en"}/incidents/${incidentId}`,
+                locale: reporterUser.locale || "en",
+                unsubscribeUrl,
+              });
+
+              const resend = getResendClient();
+              if (resend) {
+                await resend.emails.send({
+                  from: "ALPAR AI <noreply@alparai.com>",
+                  to: reporterUser.email,
+                  subject: reporterUser.locale === "tr"
+                    ? `[ALPAR AI] Resmi Yanıt Alındı: ${provider.name}`
+                    : `[ALPAR AI] Official Response Received: ${provider.name}`,
+                  html: emailHtml,
+                });
+              }
+            }
+          }
+        }
+      } catch (emailErr) {
+        console.error("[submitProviderResponse] Failed to send email to reporter:", emailErr);
       }
     }
 

@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import { submitIncident, type SubmitIncidentState } from "@/actions/incidents";
 import { useFormAutosave, clearDraft } from "@/hooks/use-form-autosave";
 import { GoogleSignInButton } from "@/components/auth/auth-buttons";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import type { AIProvider, AIModel, IncidentCategory, IncidentSeverity } from "@/types";
 import { trackEvent } from "@/lib/analytics";
 
@@ -38,7 +38,9 @@ export function IncidentForm({
   const t = useTranslations("incident");
   const tCat = useTranslations("categories");
   const tCommon = useTranslations("common");
+  const router = useRouter();
   const [state, formAction] = useActionState(submitIncident, initialState);
+  const [processingStage, setProcessingStage] = useState<string | null>(null);
   const [piiDetected, setPiiDetected] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -211,11 +213,79 @@ export function IncidentForm({
       });
       trackEvent("submit_complete", utm);
       toast.success(t("submitted"));
+
+      if (state.incidentId) {
+        setProcessingStage("queued");
+
+        const eventSource = new EventSource(`/api/incidents/${state.incidentId}/status`);
+
+        eventSource.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            const stage = data.stage;
+            if (stage === "complete") {
+              setProcessingStage("complete");
+              eventSource.close();
+              router.push(`/incidents/${state.incidentId}`);
+            } else if (stage === "failed" || stage === "not_found") {
+              setProcessingStage(null);
+              eventSource.close();
+            } else {
+              setProcessingStage(stage);
+            }
+          } catch (err) {
+            console.error("SSE parse error", err);
+          }
+        };
+
+        const handlePollFallback = () => {
+          eventSource.close();
+          let attempts = 0;
+          const interval = setInterval(async () => {
+            attempts++;
+            if (attempts > 18) { // 90 seconds max
+              clearInterval(interval);
+              setProcessingStage(null);
+              toast.error(t("processing_timeout", { defaultValue: "Analysis is taking longer than expected. You will receive an email once complete." }));
+              return;
+            }
+
+            try {
+              const res = await fetch(`/api/v1/incidents/${state.incidentId}`);
+              if (res.ok) {
+                const data = await res.json();
+                if (data.incident && data.incident.status !== "pending_review") {
+                  clearInterval(interval);
+                  setProcessingStage("complete");
+                  router.push(`/incidents/${state.incidentId}`);
+                }
+              }
+            } catch {
+              // Ignore fetch errors during polling
+            }
+          }, 5000);
+          return interval;
+        };
+
+        let pollInterval: NodeJS.Timeout | null = null;
+        eventSource.onerror = () => {
+          if (!pollInterval) {
+            pollInterval = handlePollFallback();
+          }
+        };
+
+        return () => {
+          eventSource.close();
+          if (pollInterval) {
+            clearInterval(pollInterval);
+          }
+        };
+      }
     } else if (state.error) {
       trackEvent("submit_funnel_error", { error: state.error });
       toast.error(state.error);
     }
-  }, [state, t]);
+  }, [state, t, router]);
 
   useEffect(() => {
     if (isExpert) {
@@ -361,6 +431,28 @@ export function IncidentForm({
   };
 
   const canSubmit = allConsents && selectedProvider && title.trim() && description.trim();
+
+  if (processingStage) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 text-center space-y-6">
+        <div className="relative flex items-center justify-center">
+          <div className="h-20 w-20 animate-spin rounded-full border-4 border-brand-500/20 border-t-brand-500"></div>
+          <Shield className="absolute h-8 w-8 text-brand-400 animate-pulse" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-xl font-semibold text-fg-primary">
+            {t("processing_title", { defaultValue: "Raporunuz Analiz Ediliyor" })}
+          </h2>
+          <p className="text-sm text-fg-muted max-w-sm">
+            {processingStage === "queued" && t("processing_queued", { defaultValue: "🔍 Rapor sıraya alındı, analiz başlatılıyor..." })}
+            {processingStage === "analyzing" && t("processing_analyzing", { defaultValue: "🛡️ Güvenlik, uyumluluk ve içerik moderasyonu denetleniyor..." })}
+            {processingStage === "scoring" && t("processing_scoring", { defaultValue: "⚖️ Yapay zeka etki ve TruthScore analizleri yapılıyor..." })}
+            {processingStage === "complete" && t("processing_complete", { defaultValue: "✅ Analiz tamamlandı! Yönlendiriliyorsunuz..." })}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form action={formAction} className="space-y-6">

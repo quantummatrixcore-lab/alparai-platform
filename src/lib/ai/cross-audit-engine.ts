@@ -698,6 +698,7 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
     eu_act_non_discrimination_score: supremeResult.euActNonDiscriminationScore,
     eu_act_data_privacy_score: supremeResult.euActDataPrivacyScore,
     eu_act_risk_category: supremeResult.euActRiskCategory,
+    processing_stage: "complete",
   };
 
   if (isHighOrUnacceptableRisk) {
@@ -753,6 +754,12 @@ export async function runCrossAudit(incidentId: string): Promise<TruthScoreResul
     return null;
   }
 
+  const admin = createAdminClient();
+  await admin
+    .from("incidents")
+    .update({ processing_stage: "scoring" } as never)
+    .eq("id", incidentId);
+
   const maxAttempts = 3;
   let attempt = 0;
   let delay = 1000;
@@ -795,24 +802,26 @@ export async function runCrossAudit(incidentId: string): Promise<TruthScoreResul
     error: errorMsg,
   });
 
-  // Only attempt to write the failure log to DB if it wasn't a NonRetryableError
-  if (!(lastError instanceof NonRetryableError)) {
-    try {
-      const admin = createAdminClient();
-      await admin
-        .from("incidents")
-        .update({
-          cross_audit_reasoning: `[DLQ ERROR] All audit retries failed. Last error: ${errorMsg}`,
-          cross_audit_completed_at: new Date().toISOString(),
-        })
-        .eq("id", incidentId);
-    } catch (dbErr) {
-      logger.error(
-        "[CrossAudit] Failed to write DLQ failure to database",
-        undefined,
-        dbErr instanceof Error ? dbErr : new Error(String(dbErr)),
-      );
+  // Write the failure log to DB
+  try {
+    const admin = createAdminClient();
+    const updateData: Record<string, unknown> = {
+      processing_stage: "complete",
+    };
+    if (!(lastError instanceof NonRetryableError)) {
+      updateData.cross_audit_reasoning = `[DLQ ERROR] All audit retries failed. Last error: ${errorMsg}`;
+      updateData.cross_audit_completed_at = new Date().toISOString();
     }
+    await admin
+      .from("incidents")
+      .update(updateData as never)
+      .eq("id", incidentId);
+  } catch (dbErr) {
+    logger.error(
+      "[CrossAudit] Failed to write DLQ failure to database",
+      undefined,
+      dbErr instanceof Error ? dbErr : new Error(String(dbErr)),
+    );
   }
 
   return null;

@@ -18,11 +18,12 @@ export default async function AdminLayout({
   if (!user) {
     redirect(`/${locale}/auth/signin?next=/${locale}/admin`);
   }
+  const userRole = user.role as string;
   if (
-    user.role !== "moderator" &&
-    user.role !== "admin" &&
-    user.role !== "ceo" &&
-    user.role !== "advisor"
+    userRole !== "moderator" &&
+    userRole !== "admin" &&
+    userRole !== "ceo" &&
+    userRole !== "advisor"
   ) {
     redirect(`/${locale}`);
   }

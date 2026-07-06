@@ -5,6 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getCurrentUser } from "@/lib/auth/session";
 import { formatDate } from "@/lib/utils";
+import { EmailPreferencesForm } from "@/components/settings/email-preferences-form";
+import { getEmailPreferences } from "@/actions/email-preferences";
+import { AccountDeletionForm } from "@/components/settings/account-deletion-form";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -18,6 +22,14 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
   const t = await getTranslations({ locale, namespace: "settings" });
   const user = await getCurrentUser();
   if (!user) redirect(`/${locale}/auth/signin?next=/${locale}/settings`);
+
+  const prefs = await getEmailPreferences(user.id);
+  const admin = createAdminClient();
+  const { data: dbUser } = await admin
+    .from("users")
+    .select("delete_requested_at, delete_scheduled_for")
+    .eq("id", user.id)
+    .maybeSingle();
 
   return (
     <Container size="narrow" className="py-10">
@@ -38,6 +50,14 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
       </Card>
       <Card className="mt-6">
         <CardHeader>
+          <CardTitle>{t("notifications", { defaultValue: "Notifications" })}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <EmailPreferencesForm userId={user.id} initialPreferences={prefs} />
+        </CardContent>
+      </Card>
+      <Card className="mt-6">
+        <CardHeader>
           <CardTitle>{t("privacy")}</CardTitle>
         </CardHeader>
         <CardContent className="text-fg-muted text-sm">
@@ -52,6 +72,18 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
             </a>
             .
           </p>
+        </CardContent>
+      </Card>
+      <Card className="mt-6 border-danger-500/30">
+        <CardHeader>
+          <CardTitle className="text-danger-400">{t("delete_account", { defaultValue: "Delete Account" })}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <AccountDeletionForm 
+            deleteRequestedAt={dbUser?.delete_requested_at || null} 
+            deleteScheduledFor={dbUser?.delete_scheduled_for || null}
+            locale={locale}
+          />
         </CardContent>
       </Card>
     </Container>

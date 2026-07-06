@@ -216,6 +216,12 @@ describe("Cross-Audit Engine (Debate Protocol)", () => {
           }),
         }),
       }),
+      update: vi.fn().mockReturnValue({
+        eq: vi.fn().mockResolvedValue({
+          data: null,
+          error: null,
+        }),
+      }),
     } as any);
 
     const result = await runCrossAudit("inc-invalid");

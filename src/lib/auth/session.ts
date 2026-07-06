@@ -80,7 +80,8 @@ export async function requireCEO(): Promise<SessionUser> {
 
 export async function requireAdvisor(): Promise<SessionUser> {
   const user = await requireUser();
-  if (user.role !== "advisor" && user.role !== "ceo" && user.role !== "admin") {
+  const userRole = user.role as string;
+  if (userRole !== "advisor" && userRole !== "ceo" && userRole !== "admin") {
     throw new Error("FORBIDDEN");
   }
   return user;

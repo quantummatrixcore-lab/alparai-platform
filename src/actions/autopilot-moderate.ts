@@ -112,6 +112,11 @@ async function runAutoModerationWork(
     return { kind: "success", value: { score: 0, status: incident.status } }; // Already processed
   }
 
+  await admin
+    .from("incidents")
+    .update({ processing_stage: "analyzing" } as never)
+    .eq("id", incidentId);
+
   const evaluation = await evaluateIncidentWithGemini(incident.title, incident.description);
   if (!evaluation) {
     return { kind: "retryable", error: "Failed to evaluate incident with Gemini API" };

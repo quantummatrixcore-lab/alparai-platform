@@ -510,8 +510,9 @@ export async function submitIncident(
         .from("incidents")
         .update({
           status: "pending_review",
+          processing_stage: "complete",
           moderator_notes: `Failed pre-triage COGS gate: ${triage.reason}. Retained in queue for manual review. LLM moderation bypassed.`,
-        })
+        } as never)
         .eq("id", incidentId);
     } else {
       import("@/actions/autopilot-moderate").then(({ autoModerateIncidentAction }) => {

@@ -214,3 +214,141 @@ Output your response strictly as a JSON object:
 
   return true;
 }
+
+/**
+ * Generate social posts for a newly accepted ecosystem news item.
+ */
+export async function generateNewsSocialPosts(newsId: string): Promise<boolean> {
+  const admin = createAdminClient();
+
+  // 1. Fetch news details
+  const { data: news, error: fetchError } = await admin
+    .from("ecosystem_news")
+    .select("id, title_en, summary_en, category, severity")
+    .eq("id", newsId)
+    .single();
+
+  if (fetchError || !news) {
+    logger.error("[ContentEngine] News item not found for social generation", {
+      newsId,
+      error: fetchError?.message,
+    });
+    return false;
+  }
+
+  const title = news.title_en || "AI Ecosystem News Alert";
+  const summary = news.summary_en || "No summary provided.";
+  const category = news.category || "news";
+  const severity = news.severity || "medium";
+
+  logger.info("[ContentEngine] Starting news social posts generation", { newsId });
+
+  const systemPrompt =
+    "You are a world-class Social Media Manager and Growth Hacker for ALPAR AI, the independent global rating and accountability agency for AI systems.";
+  const userPrompt = `Write two social media post drafts (one for X/Twitter and one for LinkedIn) for a newly accepted AI ecosystem news item.
+
+News Details:
+Title: ${title}
+Summary: ${summary}
+Category: ${category}
+Severity: ${severity}
+
+Rules for X/Twitter Post:
+- Max 250 characters.
+- Engaging, punchy, highlight the news significance.
+- No hashtags.
+
+Rules for LinkedIn Post:
+- Hook-first format (first line must be an engaging hook).
+- In-depth, structural, professional tone.
+- No hashtags.
+
+Output your response strictly as a JSON object:
+{
+  "x_post": "X post content text...",
+  "linkedin_post": "LinkedIn post content text..."
+}
+`;
+
+  let generated: { x_post: string; linkedin_post: string } | null = null;
+  const startTextTime = performance.now();
+
+  try {
+    const res = await callWithFailover(
+      {
+        systemPrompt,
+        userMessage: userPrompt,
+        temperature: 0.2,
+        responseFormat: "json",
+      },
+      TRIAGE_SLOT_1_CHAIN,
+    );
+    if (res.ok && res.data?.content) {
+      const parsed = JSON.parse(res.data.content);
+      if (parsed.x_post && parsed.linkedin_post) {
+        generated = parsed as { x_post: string; linkedin_post: string };
+      }
+    }
+  } catch (err) {
+    logger.error(
+      "[ContentEngine] Gemini/OpenRouter news text generation failed",
+      undefined,
+      err instanceof Error ? err : undefined,
+    );
+  }
+
+  const textLatencyMs = Math.round(performance.now() - startTextTime);
+  const textCostEst = (userPrompt.length / 4 / 1_000_000) * 0.14 + (1000 / 4 / 1_000_000) * 0.28;
+  logger.info("[ContentEngine] News text generation finished", {
+    latencyMs: textLatencyMs,
+    estimatedCostUsd: parseFloat(textCostEst.toFixed(6)),
+  });
+
+  if (!generated) {
+    logger.error("[ContentEngine] Could not parse generated news JSON structure");
+    return false;
+  }
+
+  // 2. Insert draft posts into social_posts table
+  const insertPayloads = [
+    {
+      platform: "x" as const,
+      status: "draft" as const,
+      content_type: "incident_spotlight" as const,
+      title: `Ecosystem News: ${title}`,
+      body_text: generated.x_post,
+      linked_news_id: newsId,
+      estimated_reach: 0,
+      likes: 0,
+      comments_count: 0,
+      shares_count: 0,
+    },
+    {
+      platform: "linkedin" as const,
+      status: "draft" as const,
+      content_type: "incident_spotlight" as const,
+      title: `Ecosystem News: ${title}`,
+      body_text: generated.linkedin_post,
+      linked_news_id: newsId,
+      estimated_reach: 0,
+      likes: 0,
+      comments_count: 0,
+      shares_count: 0,
+    },
+  ];
+
+  const { error: dbError } = await admin.from("social_posts").insert(insertPayloads);
+  if (dbError) {
+    logger.error("[ContentEngine] Failed to insert news social posts into database", {
+      error: dbError.message,
+    });
+    return false;
+  }
+
+  logger.info("[ContentEngine] News social posts queued successfully", {
+    newsId,
+    totalCostUsd: parseFloat(textCostEst.toFixed(5)),
+  });
+
+  return true;
+}

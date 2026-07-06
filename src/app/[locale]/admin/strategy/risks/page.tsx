@@ -19,7 +19,7 @@ export default async function RisksPage({ params }: { params: Promise<{ locale: 
 
   // Authenticate user & check advisor access
   const user = await requireAdvisor();
-  const isReadOnly = user.role === "advisor";
+  const isReadOnly = (user.role as string) === "advisor";
 
   const supabase = await createServerClient();
   const { data } = await supabase.from("strategy_risks").select("*").order("code");
