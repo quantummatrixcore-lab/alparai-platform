@@ -732,6 +732,11 @@
     "blackbox_desc": "Blackbox AI coding assistant models"
   },
   "common": {
+    "share": "Share",
+    "showMore": "Show more",
+    "github": "GitHub",
+    "twitter": "Twitter",
+    "email": "Email",
     "nav": {
       "submit": "Submit"
     },

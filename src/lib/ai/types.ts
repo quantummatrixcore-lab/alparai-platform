@@ -32,20 +32,14 @@ export interface GatewayResponse {
 
 export interface GatewayError {
   code:
-    | "rate_limit"
-    | "timeout"
-    | "api_error"
-    | "no_api_key"
-    | "parse_error"
-    | "unsupported_provider";
+    "rate_limit" | "timeout" | "api_error" | "no_api_key" | "parse_error" | "unsupported_provider";
   message: string;
   model: string;
   statusCode?: number;
 }
 
 export type GatewayResult =
-  | { ok: true; data: GatewayResponse }
-  | { ok: false; error: GatewayError };
+  { ok: true; data: GatewayResponse } | { ok: false; error: GatewayError };
 
 export interface ProviderAdapter {
   call(request: GatewayRequest): Promise<GatewayResult>;

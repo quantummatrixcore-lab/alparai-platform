@@ -74,13 +74,15 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
           </p>
         </CardContent>
       </Card>
-      <Card className="mt-6 border-danger-500/30">
+      <Card className="border-danger-500/30 mt-6">
         <CardHeader>
-          <CardTitle className="text-danger-400">{t("delete_account", { defaultValue: "Delete Account" })}</CardTitle>
+          <CardTitle className="text-danger-400">
+            {t("delete_account", { defaultValue: "Delete Account" })}
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <AccountDeletionForm 
-            deleteRequestedAt={dbUser?.delete_requested_at || null} 
+          <AccountDeletionForm
+            deleteRequestedAt={dbUser?.delete_requested_at || null}
             deleteScheduledFor={dbUser?.delete_scheduled_for || null}
             locale={locale}
           />

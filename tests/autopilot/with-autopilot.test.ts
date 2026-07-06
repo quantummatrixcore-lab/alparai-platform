@@ -139,14 +139,10 @@ describe("withAutopilot", () => {
 
   it("exposes breaker snapshot", async () => {
     const policy = buildPolicy();
-    await withAutopilot(
-      policy,
-      [{ a: 1 }],
-      async (): Promise<AttemptOutcome<{ id: string }>> => ({
-        kind: "success",
-        value: { id: "x" },
-      }),
-    );
+    await withAutopilot(policy, [{ a: 1 }], async (): Promise<AttemptOutcome<{ id: string }>> => ({
+      kind: "success",
+      value: { id: "x" },
+    }));
     const snap = breakerSnapshot("testAction");
     expect(snap).not.toBeNull();
   });

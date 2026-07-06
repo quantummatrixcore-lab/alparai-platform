@@ -732,6 +732,11 @@
     "blackbox_desc": "Blackbox AI kodlama asistanı modelleri"
   },
   "common": {
+    "share": "Paylaş",
+    "showMore": "Daha fazla göster",
+    "github": "GitHub",
+    "twitter": "Twitter",
+    "email": "E-posta",
     "nav": {
       "submit": "Gönder"
     },

@@ -243,10 +243,16 @@ export function IncidentForm({
           let attempts = 0;
           const interval = setInterval(async () => {
             attempts++;
-            if (attempts > 18) { // 90 seconds max
+            if (attempts > 18) {
+              // 90 seconds max
               clearInterval(interval);
               setProcessingStage(null);
-              toast.error(t("processing_timeout", { defaultValue: "Analysis is taking longer than expected. You will receive an email once complete." }));
+              toast.error(
+                t("processing_timeout", {
+                  defaultValue:
+                    "Analysis is taking longer than expected. You will receive an email once complete.",
+                }),
+              );
               return;
             }
 
@@ -434,20 +440,32 @@ export function IncidentForm({
 
   if (processingStage) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-center space-y-6">
+      <div className="flex flex-col items-center justify-center space-y-6 py-16 text-center">
         <div className="relative flex items-center justify-center">
-          <div className="h-20 w-20 animate-spin rounded-full border-4 border-brand-500/20 border-t-brand-500"></div>
-          <Shield className="absolute h-8 w-8 text-brand-400 animate-pulse" />
+          <div className="border-brand-500/20 border-t-brand-500 h-20 w-20 animate-spin rounded-full border-4"></div>
+          <Shield className="text-brand-400 absolute h-8 w-8 animate-pulse" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-xl font-semibold text-fg-primary">
+          <h2 className="text-fg-primary text-xl font-semibold">
             {t("processing_title", { defaultValue: "Raporunuz Analiz Ediliyor" })}
           </h2>
-          <p className="text-sm text-fg-muted max-w-sm">
-            {processingStage === "queued" && t("processing_queued", { defaultValue: "🔍 Rapor sıraya alındı, analiz başlatılıyor..." })}
-            {processingStage === "analyzing" && t("processing_analyzing", { defaultValue: "🛡️ Güvenlik, uyumluluk ve içerik moderasyonu denetleniyor..." })}
-            {processingStage === "scoring" && t("processing_scoring", { defaultValue: "⚖️ Yapay zeka etki ve TruthScore analizleri yapılıyor..." })}
-            {processingStage === "complete" && t("processing_complete", { defaultValue: "✅ Analiz tamamlandı! Yönlendiriliyorsunuz..." })}
+          <p className="text-fg-muted max-w-sm text-sm">
+            {processingStage === "queued" &&
+              t("processing_queued", {
+                defaultValue: "🔍 Rapor sıraya alındı, analiz başlatılıyor...",
+              })}
+            {processingStage === "analyzing" &&
+              t("processing_analyzing", {
+                defaultValue: "🛡️ Güvenlik, uyumluluk ve içerik moderasyonu denetleniyor...",
+              })}
+            {processingStage === "scoring" &&
+              t("processing_scoring", {
+                defaultValue: "⚖️ Yapay zeka etki ve TruthScore analizleri yapılıyor...",
+              })}
+            {processingStage === "complete" &&
+              t("processing_complete", {
+                defaultValue: "✅ Analiz tamamlandı! Yönlendiriliyorsunuz...",
+              })}
           </p>
         </div>
       </div>

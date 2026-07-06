@@ -152,7 +152,9 @@ export async function submitProviderResponse(
           const notificationsEnabled = prefs ? prefs.reporter_notifications : true;
 
           if (notificationsEnabled) {
-            const rlCheck = await checkRateLimit(`ratelimit:email_notification:${incident.user_id}`);
+            const rlCheck = await checkRateLimit(
+              `ratelimit:email_notification:${incident.user_id}`,
+            );
             if (rlCheck.ok) {
               const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://alparai.com";
               const unsubscribeUrl = `${appUrl}/${reporterUser.locale || "en"}/settings`;
@@ -169,9 +171,10 @@ export async function submitProviderResponse(
                 await resend.emails.send({
                   from: "ALPAR AI <noreply@alparai.com>",
                   to: reporterUser.email,
-                  subject: reporterUser.locale === "tr"
-                    ? `[ALPAR AI] Resmi Yanıt Alındı: ${provider.name}`
-                    : `[ALPAR AI] Official Response Received: ${provider.name}`,
+                  subject:
+                    reporterUser.locale === "tr"
+                      ? `[ALPAR AI] Resmi Yanıt Alındı: ${provider.name}`
+                      : `[ALPAR AI] Official Response Received: ${provider.name}`,
                   html: emailHtml,
                 });
               }

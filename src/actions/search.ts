@@ -44,8 +44,7 @@ export async function searchIncidents(
     .limit(limit);
 
   const data = rawData as unknown as
-    | Pick<IncidentRow, "id" | "title_masked" | "category" | "severity" | "created_at">[]
-    | null;
+    Pick<IncidentRow, "id" | "title_masked" | "category" | "severity" | "created_at">[] | null;
 
   if (error) {
     logger.error(

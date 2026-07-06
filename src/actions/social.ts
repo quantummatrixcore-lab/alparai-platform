@@ -43,12 +43,7 @@ export async function createSocialPost(post: {
   platform: "linkedin" | "x" | "instagram" | "facebook" | "whatsapp";
   status: "draft" | "scheduled" | "published" | "archived";
   content_type:
-    | "manifesto"
-    | "case_study"
-    | "weekly_report"
-    | "incident_spotlight"
-    | "thread"
-    | "poll";
+    "manifesto" | "case_study" | "weekly_report" | "incident_spotlight" | "thread" | "poll";
   title: string;
   body_text: string;
   image_prompt?: string | null;
@@ -81,12 +76,7 @@ export async function updateSocialPost(
     platform?: "linkedin" | "x" | "instagram" | "facebook" | "whatsapp";
     status?: "draft" | "scheduled" | "published" | "archived";
     content_type?:
-      | "manifesto"
-      | "case_study"
-      | "weekly_report"
-      | "incident_spotlight"
-      | "thread"
-      | "poll";
+      "manifesto" | "case_study" | "weekly_report" | "incident_spotlight" | "thread" | "poll";
     title?: string;
     body_text?: string;
     image_prompt?: string | null;

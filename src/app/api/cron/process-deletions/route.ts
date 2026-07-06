@@ -34,9 +34,9 @@ export async function GET(request: NextRequest) {
     }
 
     const softDeletedIds: string[] = [];
-    for (const user of (softPending ?? [])) {
+    for (const user of softPending ?? []) {
       logger.info(`[ProcessDeletionsCron] Soft-deleting user: ${user.id}`);
-      
+
       // Update public.users record
       const { error: userUpdateErr } = await admin
         .from("users")
@@ -53,7 +53,9 @@ export async function GET(request: NextRequest) {
         .eq("id", user.id);
 
       if (userUpdateErr) {
-        logger.error(`[ProcessDeletionsCron] Failed to soft-delete user ${user.id}: ${userUpdateErr.message}`);
+        logger.error(
+          `[ProcessDeletionsCron] Failed to soft-delete user ${user.id}: ${userUpdateErr.message}`,
+        );
         continue;
       }
 
@@ -69,7 +71,9 @@ export async function GET(request: NextRequest) {
         .eq("user_id", user.id);
 
       if (prefErr) {
-        logger.warn(`[ProcessDeletionsCron] Failed to clear email preferences for user ${user.id}: ${prefErr.message}`);
+        logger.warn(
+          `[ProcessDeletionsCron] Failed to clear email preferences for user ${user.id}: ${prefErr.message}`,
+        );
       }
 
       softDeletedIds.push(user.id);
@@ -88,24 +92,32 @@ export async function GET(request: NextRequest) {
     }
 
     const hardDeletedIds: string[] = [];
-    for (const user of (hardPending ?? [])) {
+    for (const user of hardPending ?? []) {
       logger.info(`[ProcessDeletionsCron] Hard-deleting user: ${user.id}`);
-      
+
       // Delete user from Supabase Auth (cascades to public.users or we delete manually)
       try {
         const { error: authErr } = await admin.auth.admin.deleteUser(user.id);
         if (authErr) {
-          logger.error(`[ProcessDeletionsCron] Auth deletion failed for user ${user.id}: ${authErr.message}`);
-          
+          logger.error(
+            `[ProcessDeletionsCron] Auth deletion failed for user ${user.id}: ${authErr.message}`,
+          );
+
           // Try manual table deletion as fallback
           const { error: dbDelErr } = await admin.from("users").delete().eq("id", user.id);
           if (dbDelErr) {
-            logger.error(`[ProcessDeletionsCron] Database fallback deletion failed for user ${user.id}: ${dbDelErr.message}`);
+            logger.error(
+              `[ProcessDeletionsCron] Database fallback deletion failed for user ${user.id}: ${dbDelErr.message}`,
+            );
             continue;
           }
         }
       } catch (e) {
-        logger.error(`[ProcessDeletionsCron] Exception during hard deletion of user ${user.id}`, undefined, e instanceof Error ? e : undefined);
+        logger.error(
+          `[ProcessDeletionsCron] Exception during hard deletion of user ${user.id}`,
+          undefined,
+          e instanceof Error ? e : undefined,
+        );
         continue;
       }
 

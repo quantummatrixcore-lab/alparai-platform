@@ -576,7 +576,9 @@ export function getProviderResponseNotificationEmail({
   unsubscribeUrl,
 }: ProviderResponseNotificationParams): string {
   const isTr = locale === "tr";
-  const subject = isTr ? `[ALPAR AI] Resmi Yanıt Alındı: ${providerName}` : `[ALPAR AI] Official Response Received: ${providerName}`;
+  const subject = isTr
+    ? `[ALPAR AI] Resmi Yanıt Alındı: ${providerName}`
+    : `[ALPAR AI] Official Response Received: ${providerName}`;
   const greeting = isTr ? "Merhaba Muhabir," : "Hello Reporter,";
   const bodyText = isTr
     ? `Bildirdiğiniz olayla ilgili ${providerName} firmasından resmi bir açıklama geldi. Yanıtı hemen inceleyebilirsiniz.`
@@ -727,7 +729,9 @@ export function getExpertVerificationEmail({
   unsubscribeUrl,
 }: ExpertVerificationParams): string {
   const isTr = locale === "tr";
-  const subject = isTr ? "[ALPAR AI] Uzman Doğrulaması Başarılı" : "[ALPAR AI] Expert Verification Successful";
+  const subject = isTr
+    ? "[ALPAR AI] Uzman Doğrulaması Başarılı"
+    : "[ALPAR AI] Expert Verification Successful";
   const greeting = isTr ? "Merhaba Muhabir," : "Hello Reporter,";
   const bodyText = isTr
     ? `Rapor ettiğiniz olay bir alan uzmanı (${expertName}) tarafından doğrulanmıştır.`
