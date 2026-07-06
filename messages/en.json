@@ -336,6 +336,13 @@
     "badgeDesc": "Exclusive early-adopter verification badge awarded to our first 100 beta participants."
   },
   "admin": {
+    "nav_group_oversight": "360° Oversight",
+    "nav_group_ecosystem": "AI Ecosystem & Intel",
+    "nav_group_operations": "Operations & Content",
+    "nav_group_community": "Community & Growth",
+    "nav_group_settings": "System Settings",
+    "api_metrics": "API Gateway Hub",
+    "ai_pulse": "AI Pulse",
     "strategy_header": "Strategic Board",
     "strategy_overview": "Overview",
     "strategy_swot": "SWOT Analysis",

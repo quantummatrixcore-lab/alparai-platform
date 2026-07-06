@@ -24,7 +24,7 @@ export function ActivityFeed({ activities }: { activities: ActivityItem[] }) {
       {activities.map((act) => (
         <div
           key={act.id}
-          className="flex items-start gap-3 rounded-xl border border-white/5 bg-neutral-950/20 p-3 transition hover:bg-neutral-950/40"
+          className="group flex items-start gap-3 rounded-xl border border-white/5 bg-neutral-950/20 p-3 transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-500/30 hover:bg-neutral-900/60 hover:shadow-[0_4px_15px_rgba(6,182,212,0.1)]"
         >
           <div className="mt-0.5 shrink-0 rounded-lg border border-white/5 bg-neutral-900 p-2">
             {icons[act.type] || <Clock className="h-4 w-4" />}

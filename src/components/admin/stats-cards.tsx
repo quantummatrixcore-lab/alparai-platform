@@ -12,6 +12,7 @@ import {
   ShieldAlert,
   Server,
 } from "lucide-react";
+import { motion, type Variants } from "framer-motion";
 
 export interface AdminStats {
   total: number;
@@ -94,19 +95,48 @@ export function StatsCards({ stats }: { stats: AdminStats }) {
     },
   ];
 
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.05 },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, scale: 0.95, y: 10 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: { type: "spring" as const, stiffness: 350, damping: 25 },
+    },
+  };
+
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-4">
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-4"
+    >
       {cards.map((c) => (
-        <div
+        <motion.div
           key={c.label}
-          className="group relative flex flex-col overflow-hidden rounded-lg border border-white/10 bg-neutral-900/60 p-4 shadow-md backdrop-blur-xl transition-all duration-300 hover:border-white/20"
+          variants={itemVariants}
+          className="group relative flex flex-col overflow-hidden rounded-xl border border-white/5 bg-neutral-900/40 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-neutral-800/60 hover:shadow-2xl"
         >
+          {/* Spotlight Hover Gradient */}
           <div
-            className={`absolute top-0 left-0 h-0.5 w-full bg-gradient-to-r ${c.gradient} opacity-40 transition-opacity group-hover:opacity-100`}
+            className={`absolute inset-0 bg-gradient-to-br ${c.gradient} opacity-0 transition-opacity duration-500 group-hover:opacity-10`}
           />
-          <div className="flex items-center justify-between">
+          {/* Top Line Gradient */}
+          <div
+            className={`absolute top-0 left-0 h-0.5 w-full bg-gradient-to-r ${c.gradient} opacity-30 transition-opacity duration-300 group-hover:opacity-100`}
+          />
+          <div className="relative z-10 flex items-center justify-between">
             <div
-              className={`inline-flex h-8 w-8 items-center justify-center rounded-md border border-white/10 bg-white/5 ${c.color} ${c.glow}`}
+              className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/5 bg-white/5 ${c.color} ${c.glow} transition-transform duration-300 group-hover:scale-110`}
             >
               {c.icon}
             </div>
@@ -116,12 +146,14 @@ export function StatsCards({ stats }: { stats: AdminStats }) {
               </span>
             )}
           </div>
-          <p className="mt-3 font-mono text-2xl font-extrabold tracking-tight text-white">
+          <p className="relative z-10 mt-4 font-mono text-3xl font-black tracking-tighter text-white drop-shadow-sm transition-transform duration-300 group-hover:translate-x-1">
             {c.value.toLocaleString()}
           </p>
-          <p className="text-fg-muted mt-1 font-sans text-xs">{c.label}</p>
-        </div>
+          <p className="text-fg-muted relative z-10 mt-1.5 font-sans text-xs font-medium tracking-wide">
+            {c.label}
+          </p>
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 }

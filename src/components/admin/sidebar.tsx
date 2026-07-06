@@ -4,30 +4,31 @@ import * as React from "react";
 import { useState } from "react";
 import { Link, usePathname } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
+import { motion } from "framer-motion";
 import {
-  LayoutDashboard,
-  ShieldAlert,
-  FileDown,
+  SquaresFour,
+  ShieldWarning,
+  FileArrowDown,
   Users,
   Cpu,
-  Zap,
-  BarChart3,
+  Lightning,
+  ChartBar,
   Clock,
-  LogOut,
+  SignOut,
   Globe,
-  Menu,
-  X,
+  List,
   ShieldCheck,
   Key,
-  Share2,
-  Grid,
-  TrendingUp,
+  ShareNetwork,
+  GridFour,
+  TrendUp,
   Compass,
-  Download,
-  Award,
+  DownloadSimple,
+  Medal,
   Lightbulb,
   Megaphone,
-} from "lucide-react";
+  Pulse,
+} from "@phosphor-icons/react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
 import { Wordmark } from "../layout/wordmark";
@@ -47,63 +48,33 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
-  const navItems = [
+  const oversightItems = [
+    { href: "/admin", label: t("dashboard"), icon: SquaresFour, active: pathname === "/admin" },
     {
-      href: "/admin",
-      label: t("dashboard"),
-      icon: LayoutDashboard,
-      active: pathname === "/admin",
+      href: "/admin/analysis",
+      label: t("analytics"),
+      icon: ChartBar,
+      active: pathname.startsWith("/admin/analysis"),
     },
     {
-      href: "/admin/moderation",
-      label: t("moderation_queue"),
-      icon: ShieldAlert,
-      active: pathname.startsWith("/admin/moderation"),
+      href: "/admin/api-metrics",
+      label: t("api_metrics") || "API Hub",
+      icon: Pulse,
+      active: pathname.startsWith("/admin/api-metrics"),
     },
-    ...(user.role === "admin" || user.role === "ceo"
-      ? [
-          {
-            href: "/admin/import",
-            label: t("import_queue") || "Import Queue",
-            icon: Download,
-            active: pathname.startsWith("/admin/import"),
-          },
-          {
-            href: "/admin/investors",
-            label: "Investor Applications",
-            icon: TrendingUp,
-            active: pathname.startsWith("/admin/investors"),
-          },
-        ]
-      : []),
+  ];
+
+  const ecosystemItems = [
     {
-      href: "/admin/takedown",
-      label: t("stats_takedown_requests"),
-      icon: FileDown,
-      active: pathname.startsWith("/admin/takedown"),
-    },
-    {
-      href: "/admin/users",
-      label: t("users"),
-      icon: Users,
-      active: pathname.startsWith("/admin/users"),
-    },
-    {
-      href: "/admin/experts",
-      label: t("expertApplications", { defaultValue: "Experts" }),
-      icon: Award,
-      active: pathname.startsWith("/admin/experts"),
-    },
-    {
-      href: "/admin/providers",
-      label: t("providers"),
-      icon: Cpu,
-      active: pathname.startsWith("/admin/providers"),
+      label: t("nav_aiPulse"),
+      href: "/admin/ai-pulse",
+      icon: Pulse,
+      active: pathname.startsWith("/admin/ai-pulse"),
     },
     {
       href: "/admin/autopilot",
       label: t("autopilot"),
-      icon: Zap,
+      icon: Lightning,
       active: pathname.startsWith("/admin/autopilot"),
     },
     ...(user.role === "admin" || user.role === "ceo"
@@ -116,6 +87,68 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
           },
         ]
       : []),
+  ];
+
+  const operationsItems = [
+    {
+      href: "/admin/moderation",
+      label: t("moderation_queue"),
+      icon: ShieldWarning,
+      active: pathname.startsWith("/admin/moderation"),
+    },
+    {
+      href: "/admin/takedown",
+      label: t("stats_takedown_requests"),
+      icon: FileArrowDown,
+      active: pathname.startsWith("/admin/takedown"),
+    },
+    ...(user.role === "admin" || user.role === "ceo"
+      ? [
+          {
+            href: "/admin/import",
+            label: t("import_queue") || "Import Queue",
+            icon: DownloadSimple,
+            active: pathname.startsWith("/admin/import"),
+          },
+        ]
+      : []),
+  ];
+
+  const communityItems = [
+    {
+      href: "/admin/users",
+      label: t("users"),
+      icon: Users,
+      active: pathname.startsWith("/admin/users"),
+    },
+    {
+      href: "/admin/experts",
+      label: t("expertApplications", { defaultValue: "Experts" }),
+      icon: Medal,
+      active: pathname.startsWith("/admin/experts"),
+    },
+    {
+      href: "/admin/providers",
+      label: t("providers"),
+      icon: Cpu,
+      active: pathname.startsWith("/admin/providers"),
+    },
+    ...(user.role === "admin" || user.role === "ceo"
+      ? [
+          {
+            href: "/admin/investors",
+            label: "Investor Applications",
+            icon: TrendUp,
+            active: pathname.startsWith("/admin/investors"),
+          },
+        ]
+      : []),
+    {
+      href: "/admin/social",
+      label: t("social_media_hub") || "Social Media Hub",
+      icon: ShareNetwork,
+      active: pathname.startsWith("/admin/social"),
+    },
     ...(user.role === "admin" || user.role === "ceo"
       ? [
           {
@@ -126,29 +159,20 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
           },
         ]
       : []),
+  ];
+
+  const settingsItems = [
     {
-      href: "/admin/analysis",
-      label: t("analytics"),
-      icon: BarChart3,
-      active: pathname.startsWith("/admin/analysis"),
-    },
-    {
-      href: "/admin/social",
-      label: t("social_media_hub") || "Social Media Hub",
-      icon: Share2,
-      active: pathname.startsWith("/admin/social"),
+      href: "/admin/audit",
+      label: t("audit_log"),
+      icon: Clock,
+      active: pathname.startsWith("/admin/audit"),
     },
     {
       href: "/admin/api-keys",
       label: t("api_keys"),
       icon: Key,
       active: pathname.startsWith("/admin/api-keys"),
-    },
-    {
-      href: "/admin/audit",
-      label: t("audit_log"),
-      icon: Clock,
-      active: pathname.startsWith("/admin/audit"),
     },
   ];
 
@@ -158,134 +182,103 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     {
       href: "/admin/strategy",
       label: t("strategy_overview") || "Overview",
-      icon: BarChart3,
+      icon: Compass,
       active: pathname === "/admin/strategy",
     },
     {
       href: "/admin/strategy/swot",
-      label: t("strategy_swot") || "SWOT Board",
-      icon: Grid,
-      active: pathname.startsWith("/admin/strategy/swot"),
+      label: "SWOT",
+      icon: GridFour,
+      active: pathname === "/admin/strategy/swot",
     },
     {
       href: "/admin/strategy/risks",
-      label: t("strategy_risks") || "Risk Matrix",
-      icon: ShieldAlert,
-      active: pathname.startsWith("/admin/strategy/risks"),
-    },
-    {
-      href: "/admin/strategy/valuation",
-      label: t("strategy_valuation") || "Valuation Calculator",
-      icon: TrendingUp,
-      active: pathname.startsWith("/admin/strategy/valuation"),
-    },
-    {
-      href: "/admin/strategy/roadmap",
-      label: t("strategy_roadmap") || "OKR Roadmap",
-      icon: Compass,
-      active: pathname.startsWith("/admin/strategy/roadmap"),
+      label: "Risks",
+      icon: ShieldCheck,
+      active: pathname === "/admin/strategy/risks",
     },
   ];
 
+  const renderNavGroup = (title: string, items: typeof oversightItems) => (
+    <div className="mt-8 first:mt-2">
+      <h3 className="text-fg-muted mb-2 px-4 text-[10px] font-bold tracking-widest uppercase">
+        {title}
+      </h3>
+      <div className="space-y-1.5 px-4">
+        {items.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.href}
+              href={item.href as never}
+              onClick={() => setIsOpen(false)}
+              className={cn(
+                "group relative flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-300",
+                item.active ? "text-brand-300" : "text-fg-secondary hover:text-fg-primary",
+              )}
+            >
+              {item.active && (
+                <motion.div
+                  layoutId="sidebar-active-pill"
+                  className="bg-brand-500/15 border-brand-500 pointer-events-none absolute inset-0 rounded-xl border-l-2 shadow-[inset_0_0_12px_rgba(168,85,247,0.15)]"
+                  transition={{ type: "spring" as const, stiffness: 350, damping: 30 }}
+                />
+              )}
+              <Icon
+                weight="duotone"
+                className={cn(
+                  "relative z-10 h-4 w-4 transition-colors duration-300",
+                  item.active
+                    ? "text-brand-400 drop-shadow-[0_0_5px_rgba(168,85,247,0.5)]"
+                    : "text-fg-muted group-hover:text-fg-primary drop-shadow-[0_0_3px_rgba(255,255,255,0.1)]",
+                )}
+              />
+              <span className="relative z-10 truncate">{item.label}</span>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+
   return (
     <>
-      {/* Mobile Top Bar */}
-      <div className="bg-bg-secondary/80 border-border-subtle fixed top-0 right-0 left-0 z-30 flex h-16 items-center justify-between border-b px-4 backdrop-blur-md md:hidden">
-        <Link href="/" className="flex items-center">
-          <Wordmark size="sm" />
-        </Link>
-        <div className="flex items-center gap-2">
-          <LanguageSwitcher className="h-8" />
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="bg-bg-tertiary border-border-strong text-fg-primary flex h-10 w-10 items-center justify-center rounded-lg border focus:outline-none"
-            aria-label="Toggle Menu"
-          >
-            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
-        </div>
-      </div>
+      <button
+        onClick={() => setIsOpen(true)}
+        className="text-fg-secondary bg-bg-primary/80 fixed top-4 left-4 z-40 rounded-xl border border-white/5 p-2.5 shadow-lg backdrop-blur-xl lg:hidden"
+      >
+        <List weight="duotone" className="h-5 w-5" />
+      </button>
 
-      {/* Sidebar Container */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
       <aside
         className={cn(
-          "bg-bg-secondary/95 border-border-subtle md:bg-bg-secondary/40 fixed top-0 bottom-0 left-0 z-40 flex w-64 flex-col border-r shadow-2xl transition-transform duration-300 md:sticky md:translate-x-0 md:backdrop-blur-md",
+          "bg-bg-secondary/40 fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-white/5 shadow-[4px_0_24px_rgba(0,0,0,0.5)] backdrop-blur-2xl transition-transform duration-500 lg:static lg:translate-x-0",
           isOpen ? "translate-x-0" : "-translate-x-full",
-          "pt-16 md:pt-0", // Add padding top only on mobile since top bar is present
         )}
       >
-        {/* Brand / Logo */}
-        <div className="border-border-subtle hidden h-16 items-center justify-between border-b px-6 md:flex">
-          <Link href="/" className="flex items-center gap-2">
-            <Wordmark size="sm" />
-            <span className="bg-brand-500/10 text-brand-300 border-brand-500/20 rounded-md border px-1.5 py-0.5 text-[10px] font-bold tracking-wider uppercase">
-              Admin
-            </span>
+        <div className="flex h-16 shrink-0 items-center justify-between border-b border-white/5 px-6">
+          <Link href="/admin" className="flex items-center gap-3">
+            <div className="relative h-8 w-8">
+              <Image src="/logo.png" alt="ALPAR" fill className="object-contain" />
+            </div>
+            <Wordmark className="text-xl" />
           </Link>
         </div>
 
-        {/* Scrollable Navigation */}
-        <nav className="flex-1 space-y-1 overflow-y-auto px-4 py-6">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setIsOpen(false)}
-                className={cn(
-                  "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-300",
-                  item.active
-                    ? "bg-brand-500/15 text-brand-300 border-brand-500 border-l-2 shadow-[inset_0_0_12px_rgba(168,85,247,0.15)]"
-                    : "text-fg-secondary hover:bg-bg-tertiary/40 hover:text-fg-primary",
-                )}
-              >
-                <Icon
-                  className={cn(
-                    "h-4 w-4 transition-colors duration-300",
-                    item.active ? "text-brand-400" : "text-fg-muted group-hover:text-fg-primary",
-                  )}
-                />
-                <span className="truncate">{item.label}</span>
-              </Link>
-            );
-          })}
-
-          {hasStrategyAccess && (
-            <>
-              <div className="px-4 pt-6 pb-2">
-                <span className="text-fg-muted/60 font-mono text-[10px] font-bold tracking-wider uppercase">
-                  {t("strategy_header") || "Strategy"}
-                </span>
-              </div>
-              {strategyItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setIsOpen(false)}
-                    className={cn(
-                      "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-300",
-                      item.active
-                        ? "bg-brand-500/15 text-brand-300 border-brand-500 border-l-2 shadow-[inset_0_0_12px_rgba(168,85,247,0.15)]"
-                        : "text-fg-secondary hover:bg-bg-tertiary/40 hover:text-fg-primary",
-                    )}
-                  >
-                    <Icon
-                      className={cn(
-                        "h-4 w-4 transition-colors duration-300",
-                        item.active
-                          ? "text-brand-400"
-                          : "text-fg-muted group-hover:text-fg-primary",
-                      )}
-                    />
-                    <span className="truncate">{item.label}</span>
-                  </Link>
-                );
-              })}
-            </>
-          )}
+        <nav className="scrollbar-hide flex-1 overflow-y-auto py-4">
+          {renderNavGroup(t("nav_group_oversight") || "360° Oversight", oversightItems)}
+          {renderNavGroup(t("nav_group_ecosystem") || "AI Ecosystem", ecosystemItems)}
+          {renderNavGroup(t("nav_group_operations") || "Operations", operationsItems)}
+          {renderNavGroup(t("nav_group_community") || "Community", communityItems)}
+          {hasStrategyAccess && renderNavGroup(t("strategy_header") || "Strategy", strategyItems)}
+          {renderNavGroup(t("nav_group_settings") || "Settings", settingsItems)}
         </nav>
 
         {/* User Profile Footer */}
@@ -321,7 +314,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
                         : "bg-brand-500/10 text-brand-300 border-brand-500/20",
                   )}
                 >
-                  <ShieldCheck className="h-2.5 w-2.5" />
+                  <ShieldCheck weight="duotone" className="h-2.5 w-2.5" />
                   {user.role}
                 </span>
               </div>
@@ -340,7 +333,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
                 href="/"
                 className="text-fg-muted hover:bg-bg-tertiary/60 hover:text-fg-primary flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition"
               >
-                <Globe className="h-3.5 w-3.5" />
+                <Globe weight="duotone" className="h-3.5 w-3.5" />
                 {tNav("home")}
               </Link>
             </div>
@@ -349,7 +342,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
                 type="submit"
                 className="text-danger-400 hover:bg-danger-500/10 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition"
               >
-                <LogOut className="h-3.5 w-3.5" />
+                <SignOut weight="duotone" className="h-3.5 w-3.5" />
                 {tAuth("signOut") ?? "Çıkış Yap"}
               </button>
             </form>

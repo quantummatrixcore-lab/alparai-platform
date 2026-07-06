@@ -2,6 +2,7 @@
 
 import React from "react";
 import { FileText, Cpu, ShieldCheck, Zap, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { motion, type Variants } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface MetricCardProps {
@@ -47,6 +48,12 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
       rose: "rgba(244, 63, 94, 0.1)",
     }[color] || "rgba(168, 85, 247, 0.1)";
 
+  const lastX = width - padding;
+  const lastY =
+    data.length > 0
+      ? height - padding - ((data[data.length - 1]! - min) / range) * (height - padding * 2)
+      : 0;
+
   return (
     <svg width={width} height={height} className="overflow-visible">
       <path
@@ -54,9 +61,28 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
         fill={fillColor}
       />
       <polyline fill="none" stroke={strokeColor} strokeWidth="2" points={points} />
+      {/* Active Glowing Dot */}
+      <circle
+        cx={lastX}
+        cy={lastY}
+        r="5"
+        fill={strokeColor}
+        opacity="0.4"
+        className="animate-pulse"
+      />
+      <circle cx={lastX} cy={lastY} r="2" fill="#fff" stroke={strokeColor} strokeWidth="1" />
     </svg>
   );
 }
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring" as const, stiffness: 300, damping: 24 },
+  },
+};
 
 function MetricCard({
   title,
@@ -82,7 +108,8 @@ function MetricCard({
   }[color];
 
   return (
-    <div
+    <motion.div
+      variants={itemVariants}
       className={cn(
         "bg-bg-secondary/40 flex flex-col justify-between rounded-2xl border p-5 backdrop-blur-xl transition-all duration-300",
         glowClasses,
@@ -120,7 +147,7 @@ function MetricCard({
           <Sparkline data={sparklineData} color={color} />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -136,7 +163,14 @@ export function HeroMetrics({
   activeProviders: number;
 }) {
   return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={{
+        visible: { transition: { staggerChildren: 0.1 } },
+      }}
+      className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+    >
       <MetricCard
         title="Total Incidents"
         value={totalIncidents}
@@ -173,6 +207,6 @@ export function HeroMetrics({
         sparklineData={[30, 32, 35, 36, 38, 39, 40, 41, 42]}
         color="rose"
       />
-    </div>
+    </motion.div>
   );
 }

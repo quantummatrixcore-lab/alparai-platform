@@ -336,6 +336,13 @@
     "badgeDesc": "İlk 100 beta katılımcımıza verilen özel erken benimseyen doğrulama rozeti."
   },
   "admin": {
+    "nav_group_oversight": "360° Gözlem",
+    "nav_group_ecosystem": "AI Ekosistemi & Haberler",
+    "nav_group_operations": "Operasyon & İçerik",
+    "nav_group_community": "Topluluk & Büyüme",
+    "nav_group_settings": "Sistem Ayarları",
+    "api_metrics": "API Yönetim Merkezi",
+    "ai_pulse": "Yapay Zeka Radarı",
     "strategy_header": "Stratejik Yönetim",
     "strategy_overview": "Genel Görünüm",
     "strategy_swot": "SWOT Analizi",

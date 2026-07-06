@@ -59,7 +59,7 @@ function ModerationRow({ incident }: { incident: IncidentListItem }) {
   };
 
   return (
-    <Card>
+    <Card className="group hover:border-brand-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(168,85,247,0.1)]">
       <CardContent className="p-4">
         <div className="flex flex-wrap items-start gap-3">
           <div className="min-w-0 flex-1">

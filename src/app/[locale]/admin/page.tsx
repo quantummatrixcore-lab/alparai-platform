@@ -5,9 +5,11 @@ import { StatsCards, type AdminStats } from "@/components/admin/stats-cards";
 import { HeroMetrics } from "@/components/admin/hero-metrics";
 import { ActivityFeed } from "@/components/admin/activity-feed";
 import { ModerationQueue } from "@/components/admin/moderation-queue";
+import { StrategicWarRoom } from "@/components/admin/strategic-war-room";
+import { AIPulseVisualizer } from "@/components/admin/ai-pulse-visualizer";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { AlertTriangle, ShieldCheck, Activity } from "lucide-react";
+import { Warning, ShieldCheck, Pulse } from "@phosphor-icons/react";
 import type { IncidentListItem } from "@/types";
 import { toIncidentListItems } from "@/lib/mappers";
 import { DEFAULT_RESPONSE_RATE, DEFAULT_TRUST_SCORE } from "@/lib/constants";
@@ -130,7 +132,10 @@ export default async function AdminDashboardPage({
       <header className="flex flex-col gap-4 border-b border-white/10 pb-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="inline-flex items-center gap-2.5 text-2xl font-bold tracking-tight text-white">
-            <ShieldCheck className="text-brand-400 h-6 w-6 drop-shadow-[0_0_8px_rgba(168,85,247,0.4)]" />
+            <ShieldCheck
+              weight="duotone"
+              className="text-brand-400 h-6 w-6 drop-shadow-[0_0_8px_rgba(168,85,247,0.4)]"
+            />
             {t("dashboardTitle")}
           </h1>
           <p className="text-fg-secondary mt-1 font-mono text-sm">{user.email}</p>
@@ -151,6 +156,16 @@ export default async function AdminDashboardPage({
         activeProviders={stats.providers}
       />
 
+      {/* 360 Degree Advanced Visualizations */}
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <StrategicWarRoom />
+        </div>
+        <div>
+          <AIPulseVisualizer />
+        </div>
+      </div>
+
       {/* Classic 8-stats Grid */}
       <StatsCards stats={stats} />
 
@@ -160,7 +175,7 @@ export default async function AdminDashboardPage({
           <div className="border-t-brand-500/30 rounded-lg border border-white/10 bg-neutral-900/60 p-6 shadow-md backdrop-blur-xl">
             <div className="mb-5 flex items-center justify-between border-b border-white/5 pb-3">
               <h2 className="text-md inline-flex items-center gap-2 font-semibold text-white">
-                <AlertTriangle className="text-brand-400 h-5 w-5" />
+                <Warning weight="duotone" className="h-4 w-4 shrink-0 text-amber-500" />
                 {t("moderation_queue")} ({queue.length})
               </h2>
             </div>
@@ -174,7 +189,7 @@ export default async function AdminDashboardPage({
           <div className="border-t-brand-500/30 rounded-lg border border-white/10 bg-neutral-900/60 p-6 shadow-md backdrop-blur-xl">
             <div className="mb-4 border-b border-white/5 pb-3">
               <h2 className="text-md inline-flex items-center gap-2 font-semibold text-white">
-                <Activity className="text-brand-400 h-4 w-4" />
+                <Pulse weight="duotone" className="text-brand-400 h-4 w-4" />
                 {locale === "tr" ? "Son Aktiviteler" : "Recent Activities"}
               </h2>
             </div>
@@ -185,7 +200,7 @@ export default async function AdminDashboardPage({
           <div className="rounded-lg border border-white/10 border-t-cyan-500/30 bg-neutral-900/60 p-6 shadow-md backdrop-blur-xl">
             <div className="mb-4 flex items-center justify-between border-b border-white/5 pb-3">
               <h2 className="text-md inline-flex items-center gap-2 font-semibold text-white">
-                <Activity className="h-4 w-4 text-cyan-400" />
+                <Pulse weight="duotone" className="h-4 w-4 text-cyan-400" />
                 {t("platform_overview")}
               </h2>
             </div>
