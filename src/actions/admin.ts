@@ -140,7 +140,9 @@ https://alparai.com`,
             const notificationsEnabled = prefs ? prefs.reporter_notifications : true;
 
             if (notificationsEnabled) {
-              const rlCheck = await checkRateLimit(`ratelimit:email_notification:${incident.user_id}`);
+              const rlCheck = await checkRateLimit(
+                `ratelimit:email_notification:${incident.user_id}`,
+              );
               if (rlCheck.ok) {
                 const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://alparai.com";
                 const unsubscribeUrl = `${appUrl}/${reporterUser.locale || "en"}/settings`;
@@ -157,9 +159,10 @@ https://alparai.com`,
                   await resend.emails.send({
                     from: "ALPAR AI <noreply@alparai.com>",
                     to: reporterUser.email,
-                    subject: reporterUser.locale === "tr"
-                      ? "[ALPAR AI] Uzman Doğrulaması Başarılı"
-                      : "[ALPAR AI] Expert Verification Successful",
+                    subject:
+                      reporterUser.locale === "tr"
+                        ? "[ALPAR AI] Uzman Doğrulaması Başarılı"
+                        : "[ALPAR AI] Expert Verification Successful",
                     html: emailHtml,
                   });
                   logger.info("Sent expert verification email to reporter via Resend", {
@@ -419,7 +422,7 @@ export async function promoteUser(
 
   const { error: updateError } = await db
     .from("users")
-    .update({ role: parsedRole.data as any })
+    .update({ role: parsedRole.data as "user" | "moderator" | "admin" | "ceo" })
     .eq("id", target.id);
 
   if (updateError) return { ok: false, error: "Failed to update" };

@@ -7,6 +7,7 @@ import { Wordmark } from "@/components/layout/wordmark";
 import { createServerClient } from "@/lib/supabase/server";
 import { Download, Mail, Globe, Award, FileText, BarChart3, Code2 } from "lucide-react";
 import { Link } from "@/i18n/routing";
+import { PRESS_RELEASES } from "@/lib/constants/press-releases";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -172,6 +173,51 @@ export default async function PressKitPage({ params }: { params: Promise<{ local
                 </div>
               </CardContent>
             </Card>
+
+            {/* Press Releases */}
+            <div className="space-y-4 pt-6">
+              <h2 className="flex items-center gap-2 text-xl font-bold text-white">
+                <FileText className="h-5 w-5 text-emerald-400" /> {t("pressReleasesTitle")}
+              </h2>
+              <p className="text-sm text-slate-400">{t("pressReleasesDesc")}</p>
+
+              <div className="grid grid-cols-1 gap-4">
+                {PRESS_RELEASES.map((release) => (
+                  <Link
+                    key={release.slug}
+                    href={`/${locale}/press-kit/releases/${release.slug}`}
+                    className="group flex flex-col justify-between gap-4 rounded-xl border border-white/5 bg-[#08121C] p-6 transition-all hover:border-emerald-500/30 hover:bg-[#0A1622]"
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3">
+                        <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold tracking-wider text-emerald-400">
+                          {release.date}
+                        </span>
+                        <div className="flex gap-2">
+                          {release.tags[isEn ? "en" : "tr"].slice(0, 2).map((tag) => (
+                            <span
+                              key={tag}
+                              className="text-[10px] tracking-wider text-slate-500 uppercase"
+                            >
+                              #{tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <h3 className="text-lg leading-tight font-bold text-white transition-colors group-hover:text-emerald-400">
+                        {release.title[isEn ? "en" : "tr"]}
+                      </h3>
+                      <p className="line-clamp-2 text-sm leading-relaxed text-slate-400">
+                        {release.spot[isEn ? "en" : "tr"]}
+                      </p>
+                    </div>
+                    <div className="flex items-center text-xs font-bold text-emerald-500">
+                      {t("readMore")}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Sidebar */}

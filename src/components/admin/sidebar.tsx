@@ -26,6 +26,7 @@ import {
   Download,
   Award,
   Lightbulb,
+  Megaphone,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
@@ -112,6 +113,16 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
             label: t("innovations", { defaultValue: "Innovations" }),
             icon: Lightbulb,
             active: pathname.startsWith("/admin/innovations"),
+          },
+        ]
+      : []),
+    ...(user.role === "admin" || user.role === "ceo"
+      ? [
+          {
+            href: "/admin/outreach",
+            label: t("outreach_hub") || "Outreach Hub",
+            icon: Megaphone,
+            active: pathname.startsWith("/admin/outreach"),
           },
         ]
       : []),

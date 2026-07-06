@@ -10,11 +10,13 @@ export interface EmailPreferencesState {
 
 export async function getEmailPreferences(userId: string) {
   const admin = createAdminClient();
-  let { data, error } = await admin
+  const { data: fetchedData, error } = await admin
     .from("email_preferences")
     .select("weekly_digest, watches, reporter_notifications")
     .eq("user_id", userId)
     .maybeSingle();
+
+  let data = fetchedData;
 
   if (error) {
     console.error("Failed to fetch email preferences:", error);
