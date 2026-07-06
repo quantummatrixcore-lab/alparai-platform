@@ -1,5 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
-import { Radio, Cpu, Pulse } from "@phosphor-icons/react";
+import { Radio, Cpu, Pulse } from "@phosphor-icons/react/dist/ssr";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function AiPulsePage({ params }: { params: Promise<{ locale: string }> }) {

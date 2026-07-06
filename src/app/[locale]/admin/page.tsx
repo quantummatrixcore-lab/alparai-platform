@@ -9,7 +9,7 @@ import { StrategicWarRoom } from "@/components/admin/strategic-war-room";
 import { AIPulseVisualizer } from "@/components/admin/ai-pulse-visualizer";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { Warning, ShieldCheck, Pulse } from "@phosphor-icons/react";
+import { Warning, ShieldCheck, Pulse } from "@phosphor-icons/react/dist/ssr";
 import type { IncidentListItem } from "@/types";
 import { toIncidentListItems } from "@/lib/mappers";
 import { DEFAULT_RESPONSE_RATE, DEFAULT_TRUST_SCORE } from "@/lib/constants";

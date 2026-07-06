@@ -7,7 +7,7 @@ import { Robot, GlobeHemisphereWest, Scan, Database, Pulse } from "@phosphor-ico
 export interface LiveProvider {
   id: string;
   name: string;
-  status: string;
+  trust_score: number | null;
 }
 
 interface StrategicWarRoomProps {
@@ -39,9 +39,9 @@ export function StrategicWarRoom({ liveProviders = [] }: StrategicWarRoomProps) 
       x,
       y,
       status:
-        provider.status === "active"
+        (provider.trust_score ?? 80) >= 80
           ? "healthy"
-          : provider.status === "degraded"
+          : (provider.trust_score ?? 80) >= 50
             ? "warning"
             : "critical",
     });

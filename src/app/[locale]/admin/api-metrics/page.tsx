@@ -1,5 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
-import { Pulse, HardDrives, ShieldWarning, Lightning } from "@phosphor-icons/react";
+import { Pulse, HardDrives, ShieldWarning, Lightning } from "@phosphor-icons/react/dist/ssr";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // Mock data until real API analytics are integrated

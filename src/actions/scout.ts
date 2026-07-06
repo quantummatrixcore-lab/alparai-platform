@@ -55,6 +55,7 @@ Format of each object in the array:
             .from("ai_providers")
             .insert({
               name: item.ai_provider_name,
+              slug: item.ai_provider_name.toLowerCase().replace(/[^a-z0-9]/g, "-"),
               website_url: `https://${item.ai_provider_name.toLowerCase().replace(/[^a-z]/g, "")}.com`,
               trust_score: 80,
             })
@@ -65,7 +66,9 @@ Format of each object in the array:
       }
 
       await admin.from("incidents").insert({
+        title: item.title,
         title_masked: item.title,
+        description: item.description,
         description_masked: item.description,
         severity: item.severity || "medium",
         category: item.category || "AI Event",
