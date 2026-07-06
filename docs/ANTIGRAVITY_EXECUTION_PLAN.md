@@ -1,6 +1,7 @@
 # ALPAR AI — Antigravity Full Execution Plan (H2 2026, single document)
 
 > **For the Executor (Antigravity).** This is the complete, self-contained work order from now to end of 2026. It consolidates and SUPERSEDES the remaining tasks of MASTER_PLAN_2026H2.md and UPDATE_PLAN_2026Q3.md. Execute stages **in order (A→H)**. Do not skip ahead, do not add unplanned work.
+> **PACING RULE — dates are DEADLINES, not waiting periods.** Finish a stage → push → report → get Architect approval → start the next stage IMMEDIATELY, regardless of the calendar. If you are ahead of schedule, keep going. The ONLY calendar locks are: (a) the feature freeze during launch week (Aug 1–9) — Stage D activities replace feature work in that window whenever it arrives; (b) queue items with their own scheduled dates (countdown posts, Monday digests) fire on their dates automatically and never block you.
 > **State at issue (2026-07-05):** Phases 0–3 complete and approved at `f433263`. 406 published incidents. Countdown posts queued (first unlocks Jul 12). Launch: Aug 2, "Accountability Gap" narrative.
 
 ---
@@ -20,7 +21,7 @@
 
 ---
 
-## STAGE A — Pre-Launch Safety (deadline: Jul 20)
+## STAGE A — Pre-Launch Safety (hard deadline: Jul 20 — earlier is better)
 
 **A1. Autopilot control room.** Admin section: last 50 `autopilot_runs` (worker, outcome, duration, cost fields where present), per-worker enable/disable stored in DB, global `AUTOPILOT_KILL_SWITCH` env honored by `src/lib/autopilot/worker.ts` before any run. *Accept:* flipping the switch stops all autonomous actions within one cycle; panel bilingual; admin-only RLS.
 
@@ -30,7 +31,7 @@
 
 **A4. Load sanity.** Add DB indexes if missing for: incidents(status, published_at), incidents provider FK, social_posts(status, scheduled_at). Confirm `/ai-act` and leaderboard queries paginate (no unbounded selects). *Accept:* EXPLAIN or PostgREST limit evidence in walkthrough.
 
-## STAGE B — Wiring (Jul 20 → Aug 1)
+## STAGE B — Wiring (hard deadline: Aug 1)
 
 **B1. News → social queue.** Accepted `external_queue` items + `ecosystem_news` rows generate "reply/quote draft" entries into `social_posts` (status draft, kind=news_reply) via the existing content engine; drafts cite the ALPAR data point they should quote. *Accept:* new accepted news item yields a queued draft within one cron cycle.
 
@@ -38,7 +39,7 @@
 
 **B3. Autopilot/pre-triage dedup.** Confirm `autoModerateIncidentAction` consumes the `preTriageCheck` verdict rather than duplicating cheap checks; wire the pre-triage cost log into a weekly cost summary row (table or log query documented). *Accept:* single triage path proven by test.
 
-## STAGE C — API Productization (Aug 1 → Aug 15)
+## STAGE C — API Productization (hard deadline: Aug 15; start as soon as B is approved)
 
 **C1. `client_api_keys` table (T14.5).** sha256-hashed key, tier, customer_label, created_at, revoked_at, last_used_at; lookup by hash index; migrate `client_*` rows out of `api_keys` (which returns to LLM-provider secrets only); admin UI: create/revoke/label keys, show key once at creation. *Accept:* revoked key 401s; two enterprise customers can hold distinct keys; unit tests.
 
@@ -46,11 +47,11 @@
 
 **C3. Usage metering.** Log per-key request counts (Upstash counter or table) surfaced in admin next to each key. *Accept:* counts visible and correct after test calls.
 
-## STAGE D — Launch Week (Aug 1 → Aug 9): FREEZE + SUPPORT
+## STAGE D — Launch Week (CALENDAR-LOCKED: Aug 1–9): FREEZE + SUPPORT — runs in parallel, pauses other stages during that window only
 
 Feature freeze. Only: monitor Sentry, fix P0/P1 bugs, keep queues flowing. Prepare `docs/RUNBOOK_LAUNCH.md` before Aug 1: what to check hourly on launch day (error rate, submit funnel counts, cross-audit failures, respond-token errors), rollback procedure (revert commit → auto-deploy), contacts/escalation. *Accept:* runbook exists; founder can execute it without you.
 
-## STAGE E — Growth Loops (Aug 10 → Sep 15)
+## STAGE E — Growth Loops (hard deadline: Sep 15; start when C is approved and freeze is over)
 
 **E1. Weekly digest cron (finalize T16.4).** Monday digest from `transparency_stats` + top-3 incidents (Gemini summary EN+TR) → Resend to double-opt-in subscribers + social thread draft into queue. *Accept:* one full dry-run to a test list.
 
@@ -60,7 +61,7 @@ Feature freeze. Only: monitor Sentry, fix P0/P1 bugs, keep queues flowing. Prepa
 
 **E4. SEO pass.** Incident pages: structured data (Article/Report schema.org), related-incidents block (same provider/category), breadcrumbs; verify sitemap covers incidents + `/ai-act` + transparency. *Accept:* rich-results test passes on 3 sample pages.
 
-## STAGE F — Academy & Expert Portal (Sep 15 → Nov 15)
+## STAGE F — Academy & Expert Portal (hard deadline: Nov 15; start when E is approved)
 
 **F1. Expert review queue.** Approved experts get a dashboard listing incidents awaiting expert verification in their discipline; actions: verify / annotate (`expert_fix` fields) / decline. Expert action upgrades incident to `expert_verified` and re-renders badges + API `verification_level`. *Accept:* full flow with a test expert account; RLS: experts see only assigned scope.
 
@@ -68,7 +69,7 @@ Feature freeze. Only: monitor Sentry, fix P0/P1 bugs, keep queues flowing. Prepa
 
 **F3. "State of AI Incidents Q4" generator.** Script assembling live stats + top cases + taxonomy breakdown into a Markdown/PDF draft for founder + expert co-authors. *Accept:* generated draft cites only real DB numbers; founder approves before any publication.
 
-## STAGE G — Data Quality & Scale (continuous from Sep)
+## STAGE G — Data Quality & Scale (continuous; start when F is approved or in idle time with approval)
 
 **G1.** Taxonomy coverage: ≥80% of imported incidents carry Art. 73 class; report monthly coverage %. **G2.** Dedup sweep across the existing corpus (near-duplicate titles/URLs) → merge tool in admin. **G3.** i18n completeness check script (missing TR keys fail CI). **G4.** Monthly cost report: cross-audit spend, pre-triage skip rate, Imagen/Veo usage.
 
