@@ -1,17 +1,24 @@
-# ALPAR AI — Antigravity Full Execution Plan v2 (H2 2026)
+# ALPAR AI — Antigravity Full Execution Plan v3 (H2 2026)
 
-> **Revised by Architect (Claude Opus 4.6) on 2026-07-06.** This revision integrates product-market fit priorities into the existing technical roadmap. Changes from v1 are marked with 🆕 or ✏️.
+> **Revised by Architect (Claude Opus 4.7) on 2026-07-07.** This revision reconciles what Antigravity actually shipped between `a96c9ca` and `861fe46` with the v2 roadmap, hardens Standing Rules against out-of-scope drift, and tightens the Reporting Protocol.
 >
-> **Core Thesis of This Revision:** The platform is technically mature (406 incidents, full automation pipeline, RLS, i18n, accessibility). The bottleneck is no longer code — it's **users.** Every stage below now has a "user impact" lens: if a task doesn't bring users, retain users, or make users share — it gets deprioritized or cut.
+> **Core Thesis (unchanged):** Platform is technically mature (406 incidents, full automation pipeline, RLS, i18n, accessibility). Bottleneck is **users, not code.** Every task carries a "user impact" lens.
 >
-> **State at issue (2026-07-06):** Stages 0–3 + Stage A complete and approved at `a96c9ca`. 406 published incidents. Countdown posts queued (first unlocks Jul 12). Launch: Aug 2, "Accountability Gap" narrative.
+> **State at issue (2026-07-07):**
+> - Stages 0–3 + Stage A ✅ complete (`a96c9ca`)
+> - Stage B partially delivered (`4cbeee2` news→social + GDPR delete, `f4cd43b` press releases + outreach hub)
+> - Out-of-scope commits shipped (`ea2ebc9`, `52fcba8`, `f4cd43b` war room + AI pulse visualizer + outreach hub) — retro-approved in Stage B-extra below
+> - Working tree at `861fe46`
+> - 21 days to launch (Aug 2), "Accountability Gap" narrative
+>
+> **Repo hygiene (enforced 2026-07-07):** Single active branch: `master`. All feature/dependabot/release-please branches deleted. No PR is opened on a plan document.
 
 ---
 
 ## STANDING RULES (violations fail review automatically)
 
 1. **Push before report.** Every report ends with an `origin/master` commit hash. Unpushed work does not exist.
-2. **No out-of-scope commits.** Ideas beyond this plan → write a proposal note, await Architect approval. Master is not a sandbox.
+2. **No out-of-scope commits.** Ideas beyond this plan → write a `docs/PROPOSALS/NNN-name.md` and stop. Architect approval REQUIRED before implementation. Master is not a sandbox. ✏️ *Enforcement tightened: retro-approval is a one-time courtesy; any new out-of-scope commit after 2026-07-07 will be reverted, not merged.*
 3. **No hardcoded credential fallbacks** (`|| "..."`) in any auth path. Secrets exist only in env/DB (hashed where inbound).
 4. **Brand is dark slate `#0A1622` + emerald `#00FF88`.** Never change brand assets without founder approval.
 5. **Wording:** "AI Act **Ready/aligned**", never "compliant"; high-risk labels always carry the informational-only disclaimer. Regulatory dates: high-risk/Art. 73 obligations = **2 Dec 2027** (Digital Omnibus).
@@ -22,153 +29,186 @@
 10. **Quality gate per stage:** `pnpm typecheck` + full vitest + eslint 0 warnings; Playwright for touched flows; report which Accept criteria you verified and how.
 11. **Haftalık DB snapshot.** Her Pazartesi `supabase db dump` (PII-masked) çıktısını güvenli depolamaya kaydet. FREE tier inaktivite kontrolü: Supabase dashboard'a en az ayda 1 login. Önceki `alparai-db` kaybı tekrarlanmamalı.
 12. **Her migration dosyası rollback yorumu içerir.** Dosyanın sonunda `-- ROLLBACK:` yorum bloğu olarak geri alma SQL'i yer alır.
-13. 🆕 **"User-zero" test.** Every user-facing feature must be manually tested as a first-time anonymous visitor on production before marking Accept. If you can't explain the value to a non-technical person in one sentence, simplify.
+13. **"User-zero" test.** Every user-facing feature must be manually tested as a first-time anonymous visitor on production before marking Accept. If you can't explain the value to a non-technical person in one sentence, simplify.
+14. 🆕 **Plan documents are read-only for the Executor.** Only the Architect edits `docs/ANTIGRAVITY_EXECUTION_PLAN.md`, `docs/MASTER_PLAN_2026H2.md`, `docs/UPDATE_PLAN_2026Q3.md`. Executor may append proposals to `docs/PROPOSALS/`.
+15. 🆕 **Single-branch workflow.** Work directly on `master` with small, reviewable commits. No feature branches, no PRs on plan docs. Emergency hotfix branches must be deleted within 24h of merge.
+16. 🆕 **Stage completion requires an Architect approval line** in the report block: `Architect-Approval: <commit-hash> <YYYY-MM-DD>`. Executor may not self-mark a stage complete.
 
 ---
 
-## ~~STAGE A — Pre-Launch Safety~~ ✅ COMPLETE (`a96c9ca`)
+## ~~STAGE A — Pre-Launch Safety~~ ✅ COMPLETE (`a96c9ca`, Architect-Approval: `a96c9ca` 2026-07-06)
 
-All items (A1–A5) completed and verified. Autopilot control room, CI, indexes, prod readiness, and accessibility pass all green.
-
----
-
-## STAGE B — Core UX Loop ✏️ (hard deadline: Jul 25 — earlier is better)
-
-> **v1 title was "Wiring". Renamed to reflect the real goal: making the submit→result→share loop feel instant and alive.**
-
-**B1. 🆕 Real-time submit feedback (SSE).** After `submitIncident` fires the cross-audit engine, the user currently sees nothing until page reload. This is the #1 UX gap. Implement:
-
-- A Server-Sent Events endpoint at `/api/incidents/[id]/status` that streams processing stages: `queued` → `analyzing` → `scoring` → `complete`.
-- `submitIncident` action writes stage updates to a lightweight `incident_processing_status` column (or Upstash pub/sub if column is too noisy).
-- Client-side: `IncidentForm` post-submit state shows an animated progress card with live stage labels ("🔍 Kaynaklar taranıyor...", "⚖️ TruthScore hesaplanıyor...") using `EventSource`.
-- On `complete`: auto-redirect to `/incidents/[id]` with a celebratory micro-animation ("✅ Raporunuz yayınlandı!").
-- Graceful degradation: if SSE disconnects, fall back to polling every 5s; if the audit takes >60s, show "Detaylı analiz devam ediyor — sonucu e-posta ile alacaksınız."
-- _Accept:_ submit → live feedback within 2s; complete redirect within 90s for standard incidents; works on mobile Safari; Playwright e2e test covering the full SSE flow with a mocked audit.
-
-**B2. ✏️ Reporter notification loop (expanded from v1 "Watches → notifications").** v1 only covered watchers. This revision adds **the reporter** as the primary notification target:
-
-- **Immediate:** Whistleblower confirmation email (already exists via `getWhistleblowerConfirmationEmail` — verify it fires reliably).
-- **On provider response:** Email the original reporter: "X şirketinden resmi yanıt geldi — görüntülemek için tıklayın." New template `getProviderResponseNotificationEmail()` in `src/emails/templates.ts`.
-- **On expert verification:** Email the reporter: "Raporunuz uzman tarafından doğrulandı."
-- **Weekly digest for active reporters:** If a user has ≥1 published incident, Monday digest of their incidents' stats (views, votes, provider responses). Opt-in only.
-- Strict: one-click unsubscribe, per-user daily cap (max 3 emails/day), `email_preferences` table with RLS.
-- _Accept:_ e2e demo with a test reporter account receiving all 3 email types; unsubscribe kills all; daily cap enforced; bilingual templates.
-
-**B3. News → social queue.** _(Unchanged from v1 B1.)_ Accepted `ecosystem_news` rows (status='accepted') generate "reply/quote draft" entries into `social_posts` via the content engine. _Accept:_ new accepted news item yields a queued draft within one cron cycle.
-
-**B4. Autopilot/pre-triage dedup.** _(Unchanged from v1 B3.)_ Confirm `autoModerateIncidentAction` consumes `preTriageCheck` verdict; wire cost log into weekly summary. _Accept:_ single triage path proven by test.
-
-**B5. ✏️ Veri silme hakkı akışı (KVKK/GDPR).** _(Unchanged from v1 B4.)_ "Hesabımı Sil" → 72h wait → soft-delete → 30d hard-delete cron. _Accept:_ e2e test; deleted user's incidents show "Anonim Kullanıcı"; auto-unsubscribe.
+All items (A1–A5) verified. Autopilot control room, CI, indexes, prod readiness, accessibility pass.
 
 ---
 
-## STAGE C — API Productization (hard deadline: Aug 15; start as soon as B is approved)
+## STAGE B — Core UX Loop (hard deadline: Jul 25)
 
-> _Largely unchanged. One new item (C5) added for embed widget._
+**Delivery status (2026-07-07):**
 
-**C1. `client_api_keys` table (T14.5).** _(Unchanged.)_ SHA-256 hashed keys, tiers, admin UI for create/revoke/label. _Accept:_ revoked key 401s; two enterprise customers hold distinct keys; unit tests.
+| Item | Status | Commit |
+|------|--------|--------|
+| B1. Real-time submit feedback (SSE) | ⬜ Not started | — |
+| B2. Reporter notification loop | ⬜ Not started | — |
+| B3. News → social queue | ✅ Shipped | `4cbeee2` — awaiting Accept-criteria verification |
+| B4. Autopilot/pre-triage dedup | ⬜ Unverified | Possibly folded into `a96c9ca` — Executor to confirm |
+| B5. KVKK/GDPR delete flow | ✅ Shipped | `4cbeee2` — awaiting Accept-criteria verification |
 
-**C2. API docs + dataset.** _(Unchanged.)_ Update `docs/API.md`: v1 filters, tiers/limits, curl examples, remove "No REST endpoints" statement. _Accept:_ documented examples run against prod.
+**Next required Executor action:** Report B3 + B5 Accept-criteria pass/fail table with commit-level evidence; confirm B4 state; begin B1 as top priority.
 
-**C3. Usage metering.** _(Unchanged.)_ Per-key request counts (Upstash or table), surfaced in admin. _Accept:_ counts visible and correct after test calls.
+### B1. Real-time submit feedback (SSE) — TOP PRIORITY
 
-**C4. Tier-based API rate limiting.** _(Unchanged.)_ Free: 100/day, Pro: 1000/day, Enterprise: 10000/day. Upstash sliding window. 429 + `Retry-After`. _Accept:_ free tier 101st request → 429; unit tests.
+- SSE endpoint at `/api/incidents/[id]/status` streaming: `queued` → `analyzing` → `scoring` → `complete`.
+- Stage updates written to `incident_processing_status` column or Upstash pub/sub.
+- `IncidentForm` post-submit shows animated progress card ("🔍 Kaynaklar taranıyor...", "⚖️ TruthScore hesaplanıyor...") via `EventSource`.
+- `complete` → auto-redirect to `/incidents/[id]` with success animation.
+- Fallback: SSE disconnect → poll every 5s. Audit >60s → email-notify message.
+- _Accept:_ live feedback within 2s; complete redirect within 90s standard cases; mobile Safari works; Playwright e2e covers SSE flow with mocked audit.
 
-**C5. 🆕 Embed widget & viral sharing kit.** The `/incidents/[id]/embed` route exists (178 lines) but has no discovery mechanism. Add:
+### B2. Reporter notification loop
 
-- **Embed code generator** on every incident detail page: "Bu raporu sitenize ekleyin" button that reveals a copyable `<iframe>` snippet + `<script>` widget variant.
-- **"Powered by ALPAR AI"** footer badge inside the embed with link back to the full incident page.
-- **Share buttons** (X/LinkedIn/Copy Link) on incident detail with pre-filled text citing the TruthScore.
-- **OG image generation** for each incident: dynamic `/incidents/[id]/opengraph-image` (already has a route — verify it generates a proper card with title + TruthScore + severity badge).
-- _Accept:_ embed renders correctly in an external HTML page; "Powered by" links back; share buttons generate correct URLs; OG image passes Facebook/Twitter card validators; bilingual.
+- **Immediate:** whistleblower confirmation email (verify `getWhistleblowerConfirmationEmail` fires reliably).
+- **On provider response:** new `getProviderResponseNotificationEmail()` in `src/emails/templates.ts` → reporter.
+- **On expert verification:** email reporter.
+- **Weekly digest for active reporters** (≥1 published incident): Monday stats digest, opt-in only.
+- One-click unsubscribe, per-user daily cap 3, `email_preferences` table with RLS.
+- _Accept:_ e2e demo with test reporter receiving all 3 email types; unsubscribe kills all; daily cap enforced; bilingual templates.
+
+### B3. News → social queue ✅ (`4cbeee2` — verification required)
+
+Accepted `ecosystem_news` rows (status='accepted') generate reply/quote draft entries into `social_posts` via the content engine. _Accept:_ new accepted news item yields queued draft within one cron cycle.
+
+### B4. Autopilot/pre-triage dedup
+
+Confirm `autoModerateIncidentAction` consumes `preTriageCheck` verdict (no duplication); wire cost log into weekly summary row. _Accept:_ single triage path proven by test.
+
+### B5. KVKK/GDPR delete flow ✅ (`4cbeee2` — verification required)
+
+"Hesabımı Sil" → 72h wait → soft-delete → 30d hard-delete cron. _Accept:_ e2e test; deleted user's incidents show "Anonim Kullanıcı"; auto-unsubscribe.
+
+### B-extra. RETRO-APPROVED (one-time, out-of-scope commits between `a96c9ca` and `861fe46`)
+
+These items were shipped without prior Architect approval. Retro-approved to avoid revert cost this close to launch. **Executor must report Accept-criteria evidence for each within 48h; unverified items will be reverted.**
+
+- **B-extra.1.** War room / 360° strategic dashboard (`ea2ebc9`) + AI pulse visualizer (`52fcba8`). Admin-only, no public exposure. Verify: admin-only RLS, no PII leak in visualizer feeds, `createAdminClient()` not used from public paths.
+- **B-extra.2.** Press releases + admin outreach hub (`f4cd43b`). Verify: outreach still gated by approval queue (Standing Rule #6), no external email fires without a queue item, contact list is admin-editable only.
+- **B-extra.3.** Live Vertex AI sync (`52fcba8`). Verify: no key leak to client bundle, cost logged, rate-limited.
+
+**No further retro-approvals will be granted.**
 
 ---
 
-## STAGE D — Launch Week (CALENDAR-LOCKED: Aug 1–9) — FREEZE + SUPPORT
+## STAGE C — API Productization (hard deadline: Aug 15; start after B approved)
 
-> _Unchanged from v1._ Feature freeze. Only: monitor Sentry, fix P0/P1 bugs, keep queues flowing.
+**C1. `client_api_keys` table (T14.5).** SHA-256 hashed keys, tiers, admin UI for create/revoke/label. Migrate `client_*` rows out of `api_keys` (which returns to LLM-provider secrets only). _Accept:_ revoked key 401s; two enterprise customers hold distinct keys; unit tests.
+
+**C2. API docs + dataset.** Update `docs/API.md`: v1 filters (category, severity, eu_risk, provider, model), tiers/limits, `verification_level`, curl examples, remove any "No REST endpoints" leftovers. Regenerate sample dataset into gitignored `exports/`. _Accept:_ every documented example runs against prod.
+
+**C3. Usage metering.** Per-key request counts (Upstash sliding-window or table), surfaced in admin next to each key. _Accept:_ counts visible and correct after test calls.
+
+**C4. Tier-based API rate limiting.** Free 100/day, Pro 1000/day, Enterprise 10000/day. Upstash sliding window. 429 + `Retry-After`. _Accept:_ free tier 101st request → 429; unit tests.
+
+**C5. Embed widget & viral sharing kit.** `/incidents/[id]/embed` route exists but is undiscovered.
+
+- **Embed generator** on every incident page: "Bu raporu sitenize ekleyin" → copyable `<iframe>` + `<script>` variant.
+- **"Powered by ALPAR AI"** footer badge inside embed, linking to full incident.
+- **Share buttons** (X/LinkedIn/Copy Link) on incident detail, pre-filled with TruthScore.
+- **OG image** for each incident: dynamic `/incidents/[id]/opengraph-image` — verify card renders title + TruthScore + severity badge.
+- _Accept:_ embed renders in external HTML; "Powered by" links back; share URLs correct; OG image passes Facebook/Twitter card validators; bilingual.
+
+---
+
+## STAGE D — Launch Week (CALENDAR-LOCKED: Aug 1–9)
+
+Feature freeze. Only P0/P1 fixes and queue flow monitoring.
 
 Prepare `docs/RUNBOOK_LAUNCH.md` before Aug 1:
-
-- Error Rate: Sentry >5 unresolved/hour → P0
-- Submit Funnel: submit_start → submit_complete conversion <50% → alarm
-- Cross-Audit Failures: >20% failure rate in last hour → kill switch
-- DB Connections: active >15 on FREE tier → investigate
+- Sentry >5 unresolved/hour → P0
+- Submit funnel `submit_start → submit_complete` conversion <50% → alarm
+- Cross-audit failure rate >20% in last hour → kill switch
+- DB active connections >15 on FREE tier → investigate
 - Rollback: `git revert HEAD && git push` (Vercel auto-deploys)
-- Contacts/escalation.
+- Contacts/escalation ladder
 
-🆕 **D-extra: Launch day user acquisition checklist** (founder executes, Executor prepares assets):
+**D-extra. Launch day acquisition assets** (Executor prepares markdown drafts; founder sends):
+- Hacker News "Show HN" post (EN, ≤80 words + link)
+- Product Hunt page (title, tagline, 5 screenshots, first comment)
+- TR tech media pitch (Webrazzi, Shiftdelete, Technopat) — draft only
+- 3 X/Twitter thread drafts: launch (EN), launch (TR), data thread with top-5 findings from 400+ incidents
 
-- [ ] Hacker News "Show HN" post draft (EN, max 80 words + link)
-- [ ] Product Hunt launch page draft (title, tagline, 5 screenshots, first comment)
-- [ ] Turkish tech media pitch (Webrazzi, Shiftdelete, Technopat) — draft only, founder sends
-- [ ] 3 Twitter/X thread drafts: "We built an AI accountability tracker" (EN), "Yapay zeka hesap verebilirliği" (TR), data-driven thread with top 5 findings from 400+ incidents
-
-_Accept:_ All draft assets exist as markdown files in `docs/launch-assets/`; founder reviews and approves before launch day.
+All under `docs/launch-assets/`. Founder approves before send.
 
 ---
 
-## STAGE E — Growth Loops (hard deadline: Sep 15; start when C approved + freeze over)
+## STAGE E — Growth Loops (hard deadline: Sep 15)
 
-> **✏️ Reframed around the "First 100 Real Users" milestone.** Every item must measurably contribute to acquisition or retention.
+Reframed around "First 100 Real Users" milestone.
 
-**E1. ✏️ Weekly digest cron (finalize T16.4).** Monday digest from `transparency_stats` + top-3 incidents (Gemini summary EN+TR) → Resend to double-opt-in subscribers + social thread draft into queue. 🆕 Add CTA in every digest: "Siz de bir AI deneyiminizi raporlayın → /submit". _Accept:_ one full dry-run to a test list; CTA links work; unsubscribe works.
+**E1. Weekly digest cron (finalize T16.4).** Monday digest from `transparency_stats` + top-3 incidents (Gemini EN+TR summary) → Resend to double-opt-in subscribers + social thread draft into queue. CTA in every digest: "Siz de bir AI deneyiminizi raporlayın → /submit". _Accept:_ dry-run to test list; CTA + unsubscribe verified.
 
-**E2. Milestone press-release generator (T16.5).** _(Unchanged.)_ Triggers: 500th published incident, first claimed profile, first official response. Draft EN+TR + Imagen hero → approval queue. _Accept:_ unit test on trigger idempotency.
+**E2. Milestone press-release generator.** Triggers: 500th published incident, first claimed profile, first official provider response. Draft EN+TR + Imagen hero → approval queue (idempotency test). _Accept:_ trigger fires exactly once per milestone.
 
-**E3. 🆕 Onboarding & first-submit nudge.** New users who sign up but don't submit within 48h → single Resend nudge email: "İlk raporunuzu oluşturun — 2 dakikada tamamlayın." Track: `onboarding_nudge_sent_at` on user profile. Never re-send. _Accept:_ e2e test; email fires exactly once; already-submitted users are excluded.
+**E3. Onboarding & first-submit nudge.** New users not submitting within 48h → single Resend nudge. `onboarding_nudge_sent_at` on profile. _Accept:_ e2e; fires once; already-submitted users excluded.
 
-**E4. ✏️ Reporter reputation surfacing (expanded).** Public profile: gamification badges + "N verified incidents" + **shareable OG card** (dynamic image route `/profile/[id]/opengraph-image`). 🆕 Add "Share your impact" button on profile page generating a pre-filled tweet: "I've reported N AI incidents on @AlparAI — join the accountability movement." _Accept:_ bilingual; counts from published incidents only; OG card renders correctly.
+**E4. Reporter reputation surfacing.** Public profile: gamification badges + "N verified incidents" + shareable OG card (`/profile/[id]/opengraph-image`). "Share your impact" button → pre-filled tweet. _Accept:_ bilingual; counts from published only; OG renders correctly.
 
-**E5. SEO pass.** _(Unchanged.)_ Structured data, related-incidents block, breadcrumbs, sitemap verification. _Accept:_ rich-results test passes on 3 sample pages.
+**E5. SEO pass.** Incident structured data (Article/Report), related-incidents block, breadcrumbs, sitemap verification. _Accept:_ rich-results test passes on 3 samples.
 
-**E6. Health check endpoint.** _(Unchanged from v1 E5.)_ `/api/health` → DB + Upstash + last autopilot run. _Accept:_ 200 OK; degraded when DB down.
+**E6. Health check endpoint.** `/api/health` → DB + Upstash + last autopilot run status. _Accept:_ 200 OK; degraded when DB down.
 
-**E7. 🆕 User acquisition dashboard (admin).** Simple admin page `/admin/growth` showing:
-
-- Daily signups (graph, last 30 days)
-- Daily submissions (organic vs. auto-import, last 30 days)
-- Retention: % of users who submitted ≥2 incidents
+**E7. Growth dashboard (admin).** `/admin/growth`:
+- Daily signups (30d graph)
+- Daily submissions (organic vs auto-import, 30d)
+- Retention: % users with ≥2 incidents
 - Funnel: page view → signup → first submit → second submit
-- Data from existing tables, no new tracking infra needed (Plausible + DB counts).
-- _Accept:_ page renders with real data; bilingual; admin-only RLS.
+- Data from Plausible + DB counts (no new tracking).
+- _Accept:_ real data; bilingual; admin-only RLS.
 
 ---
 
-## STAGE F — Academy & Expert Portal (hard deadline: Nov 15; start when E approved)
+## STAGE F — Academy & Expert Portal (hard deadline: Nov 15)
 
-> _Unchanged from v1._
+**F1. Expert review queue.** Approved experts see incidents awaiting verification in their discipline; actions: verify / annotate (`expert_fix` fields) / decline. Expert action upgrades incident to `expert_verified` + refreshes badges + API `verification_level`. _Accept:_ full flow with test expert; experts see only assigned scope (RLS).
 
-**F1. Expert review queue.** Approved experts get a dashboard listing incidents awaiting expert verification in their discipline; actions: verify / annotate (`expert_fix` fields) / decline. _Accept:_ full flow with a test expert account; RLS: experts see only assigned scope.
+**F2. Academy beta portal.** Read-only research library for approved academics: filtered incident explorer + CSV export (published, PII-masked only) under research-license notice. _Accept:_ export contains zero PII (seeded fake PII test).
 
-**F2. Academy beta portal.** Read-only research library for approved academics: filtered incident explorer + CSV export (published, PII-masked only) under a research-license notice page. _Accept:_ export contains zero PII.
-
-**F3. "State of AI Incidents Q4" generator.** Script assembling live stats + top cases + taxonomy breakdown into a Markdown/PDF draft. _Accept:_ generated draft cites only real DB numbers; founder approves before publication.
+**F3. "State of AI Incidents Q4" generator.** Script assembling live stats + top cases + taxonomy breakdown into Markdown/PDF draft for founder + expert co-authors. _Accept:_ draft cites only real DB numbers; founder approves before publication.
 
 ---
 
-## STAGE G — Data Quality & Scale (continuous; start when F approved or in idle time with approval)
+## STAGE G — Data Quality & Scale (continuous, when idle or F approved)
 
-> _Unchanged from v1._
-
-**G1.** Taxonomy coverage: ≥80% of imported incidents carry Art. 73 class; report monthly coverage %.
-**G2.** Dedup sweep across the existing corpus (near-duplicate titles/URLs) → merge tool in admin.
+**G1.** Taxonomy coverage: ≥80% of imported incidents carry Art. 73 class; monthly coverage % report.
+**G2.** Dedup sweep across corpus (near-duplicate titles/URLs) → admin merge tool.
 **G3.** i18n completeness check script (missing TR keys fail CI).
 **G4.** Monthly cost report: cross-audit spend, pre-triage skip rate, Imagen/Veo usage.
 
 ---
 
-## STAGE H — Continuous Maintenance (weekly, standing)
+## STAGE H — Continuous Maintenance (standing)
 
-> _Unchanged from v1._
-
-Dependabot PRs: merge only after CI green (security patches same week). Sentry triage weekly; recurring errors become fix tasks. Keep CHANGELOG.md per release. Never touch: Backlog-frozen surfaces (dilemmas, bounties, invest\*, feed, newsletter features), brand assets, legal copy, pricing amounts.
+Dependabot PRs: merge only after CI green (security patches same week; feature bumps batched weekly). Sentry triage weekly; recurring errors → fix tasks. `CHANGELOG.md` per release. **Never touch:** backlog-frozen surfaces (dilemmas, bounties, invest*, feed, newsletter), brand assets, legal copy, pricing amounts.
 
 ---
 
 ## REPORTING PROTOCOL
 
-After each stage: push → report to Architect with (1) origin hash, (2) Accept-criteria table with pass/fail + how verified, (3) deviations/blockers, (4) proposal notes if any. Await approval before the next stage. Founder-only items you must NEVER do: send external emails/posts without an approved queue item, contact journalists/universities/investors, edit investment or legal copy, change pricing.
+After each stage: push → report with:
+
+1. `origin/master` commit hash
+2. Accept-criteria pass/fail table with verification method per item
+3. Deviations / blockers
+4. Proposal notes (if any) — filed as `docs/PROPOSALS/NNN-title.md`, not implemented
+5. Await Architect approval line: `Architect-Approval: <hash> <YYYY-MM-DD>` — Executor may NOT self-approve.
+
+**Executor forbidden actions** (founder-only):
+- Sending external emails/posts without an approved queue item
+- Contacting journalists / universities / investors
+- Editing investment or legal copy
+- Changing pricing amounts
+- Editing plan documents (Standing Rule #14)
+- Opening or merging PRs on plan documents
+- Creating new branches (Standing Rule #15)
 
 ---
 
@@ -178,17 +218,27 @@ All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying custo
 
 ---
 
-## CHANGELOG (v1 → v2)
+## CHANGELOG (v2 → v3)
 
-| Change                                                            | Rationale                                                                           |
-| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| Stage A marked complete                                           | All items verified at `a96c9ca`                                                     |
-| Stage B renamed "Core UX Loop", B1 added (SSE real-time feedback) | Submit-and-forget kills retention. Users need instant gratification.                |
-| B2 expanded to include reporter notifications                     | Watchers alone aren't enough. The reporter IS the primary user.                     |
-| C5 added (Embed widget + viral sharing)                           | Zero-cost organic distribution. Embed route exists but is undiscoverable.           |
-| D-extra added (Launch day assets)                                 | Launch without prepared assets = wasted launch day.                                 |
-| E3 added (Onboarding nudge)                                       | 48h nudge email is the simplest retention lever.                                    |
-| E4 expanded (Share your impact)                                   | Social proof + user-generated virality.                                             |
-| E7 added (User acquisition dashboard)                             | "What gets measured gets managed." Can't track first-100-users without a dashboard. |
-| Rule #13 added ("User-zero" test)                                 | Every feature must survive the "show a non-technical person" test.                  |
-| Definition of Done updated                                        | Added ≥100 organic signups as a hard success metric.                                |
+| Change | Rationale |
+|--------|-----------|
+| Repo hygiene note (single-branch, no plan-doc PRs) | Cleanup performed 2026-07-07; workflow now enforced |
+| Standing Rule #2 tightened (retro-approval is one-time) | Prevent recurrence of out-of-scope drift observed between `a96c9ca` and `861fe46` |
+| Standing Rule #14 added (plan docs Architect-only) | Executor edited plan v1→v2 without approval; prevent recurrence |
+| Standing Rule #15 added (single-branch workflow) | Codifies the 2026-07-07 cleanup |
+| Standing Rule #16 added (Architect-Approval line required) | Prevents Executor self-approval |
+| Stage B delivery status table | Reflects actual state at `861fe46` |
+| B-extra section (retro-approval) | War room, press releases, outreach hub, live Vertex sync — accepted once, must be verified within 48h |
+| B1 explicitly marked TOP PRIORITY | Biggest remaining UX gap before launch |
+| Reporting Protocol: Architect-Approval line + PROPOSALS/ path | Machine-checkable stage sign-off |
+| Executor forbidden actions expanded | Adds plan-doc editing, plan-doc PRs, new branches |
+
+---
+
+## IMMEDIATE NEXT STEPS FOR EXECUTOR
+
+1. Report Accept-criteria evidence for B3, B5, B-extra.1–3 (within 48h).
+2. Confirm B4 status (whether folded into `a96c9ca` or still open).
+3. Begin B1 (real-time submit feedback via SSE) — top priority.
+4. All work on `master`. No new branches. No plan-doc edits.
+5. Each commit ≤ single Accept-criterion scope; report after every push.
