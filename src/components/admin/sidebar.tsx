@@ -29,6 +29,11 @@ import {
   Megaphone,
   Pulse,
   X,
+  CaretDown,
+  CaretRight,
+  Brain,
+  Folder,
+  Gear,
 } from "@phosphor-icons/react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
@@ -48,6 +53,18 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
   const tNav = useTranslations("nav");
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
+    oversight: true,
+    ecosystem: true,
+    operations: true,
+    community: true,
+    strategy: true,
+    settings: true,
+  });
+
+  const toggleGroup = (group: string) => {
+    setExpandedGroups((prev) => ({ ...prev, [group]: !prev[group] }));
+  };
 
   const oversightItems = [
     { href: "/admin", label: t("dashboard"), icon: SquaresFour, active: pathname === "/admin" },
@@ -200,47 +217,83 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
   ];
 
-  const renderNavGroup = (title: string, items: typeof oversightItems) => (
-    <div className="mt-8 first:mt-2">
-      <h3 className="text-fg-muted mb-2 px-4 text-[10px] font-bold tracking-widest uppercase">
-        {title}
-      </h3>
-      <div className="space-y-1.5 px-4">
-        {items.map((item) => {
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.href}
-              href={item.href as never}
-              onClick={() => setIsOpen(false)}
-              className={cn(
-                "group relative flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-300",
-                item.active ? "text-brand-300" : "text-fg-secondary hover:text-fg-primary",
-              )}
-            >
-              {item.active && (
-                <motion.div
-                  layoutId="sidebar-active-pill"
-                  className="bg-brand-500/15 border-brand-500 pointer-events-none absolute inset-0 rounded-xl border-l-2 shadow-[inset_0_0_12px_rgba(168,85,247,0.15)]"
-                  transition={{ type: "spring" as const, stiffness: 350, damping: 30 }}
-                />
-              )}
-              <Icon
-                weight="duotone"
-                className={cn(
-                  "relative z-10 h-4 w-4 transition-colors duration-300",
-                  item.active
-                    ? "text-brand-400 drop-shadow-[0_0_5px_rgba(168,85,247,0.5)]"
-                    : "text-fg-muted group-hover:text-fg-primary drop-shadow-[0_0_3px_rgba(255,255,255,0.1)]",
-                )}
-              />
-              <span className="relative z-10 truncate">{item.label}</span>
-            </Link>
-          );
-        })}
+  const renderNavGroup = (
+    id: string,
+    title: string,
+    GroupIcon: React.ComponentType<{
+      weight?: "thin" | "light" | "regular" | "bold" | "fill" | "duotone";
+      className?: string;
+    }>,
+    groupItems: typeof oversightItems,
+  ) => {
+    const isExpanded = expandedGroups[id];
+    return (
+      <div className="mt-4 border-b border-white/5 pb-4 last:border-0 last:pb-0">
+        <button
+          onClick={() => toggleGroup(id)}
+          className="group text-fg-secondary hover:text-fg-primary flex w-full items-center justify-between px-4 py-2 transition-colors duration-200"
+        >
+          <div className="flex items-center gap-2.5">
+            <GroupIcon
+              weight="duotone"
+              className="text-brand-400 group-hover:text-brand-300 h-4.5 w-4.5 drop-shadow-[0_0_8px_rgba(168,85,247,0.3)] transition-colors duration-200"
+            />
+            <span className="text-fg-primary text-[10px] font-black tracking-wider uppercase">
+              {title}
+            </span>
+          </div>
+          {isExpanded ? (
+            <CaretDown
+              weight="bold"
+              className="text-fg-muted group-hover:text-fg-primary h-3.5 w-3.5 transition-colors duration-200"
+            />
+          ) : (
+            <CaretRight
+              weight="bold"
+              className="text-fg-muted group-hover:text-fg-primary h-3.5 w-3.5 transition-colors duration-200"
+            />
+          )}
+        </button>
+
+        {isExpanded && (
+          <div className="mt-2 space-y-1.5 px-2">
+            {groupItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href as never}
+                  onClick={() => setIsOpen(false)}
+                  className={cn(
+                    "group relative flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-300",
+                    item.active ? "text-brand-300" : "text-fg-secondary hover:text-fg-primary",
+                  )}
+                >
+                  {item.active && (
+                    <motion.div
+                      layoutId="sidebar-active-pill"
+                      className="bg-brand-500/15 border-brand-500 pointer-events-none absolute inset-0 rounded-xl border-l-2 shadow-[inset_0_0_12px_rgba(168,85,247,0.15)]"
+                      transition={{ type: "spring" as const, stiffness: 350, damping: 30 }}
+                    />
+                  )}
+                  <Icon
+                    weight="duotone"
+                    className={cn(
+                      "relative z-10 h-4 w-4 transition-colors duration-300",
+                      item.active
+                        ? "text-brand-400 drop-shadow-[0_0_5px_rgba(168,85,247,0.5)]"
+                        : "text-fg-muted group-hover:text-fg-primary drop-shadow-[0_0_3px_rgba(255,255,255,0.1)]",
+                    )}
+                  />
+                  <span className="relative z-10 truncate">{item.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <>
@@ -313,12 +366,33 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
         </div>
 
         <nav className="scrollbar-hide flex-1 overflow-y-auto py-4">
-          {renderNavGroup(t("nav_group_oversight") || "360° Oversight", oversightItems)}
-          {renderNavGroup(t("nav_group_ecosystem") || "AI Ecosystem", ecosystemItems)}
-          {renderNavGroup(t("nav_group_operations") || "Operations", operationsItems)}
-          {renderNavGroup(t("nav_group_community") || "Community", communityItems)}
-          {hasStrategyAccess && renderNavGroup(t("strategy_header") || "Strategy", strategyItems)}
-          {renderNavGroup(t("nav_group_settings") || "Settings", settingsItems)}
+          {renderNavGroup(
+            "oversight",
+            t("nav_group_oversight") || "360° Oversight",
+            ChartBar,
+            oversightItems,
+          )}
+          {renderNavGroup(
+            "ecosystem",
+            t("nav_group_ecosystem") || "AI Ecosystem",
+            Brain,
+            ecosystemItems,
+          )}
+          {renderNavGroup(
+            "operations",
+            t("nav_group_operations") || "Operations",
+            Folder,
+            operationsItems,
+          )}
+          {renderNavGroup(
+            "community",
+            t("nav_group_community") || "Community",
+            Users,
+            communityItems,
+          )}
+          {hasStrategyAccess &&
+            renderNavGroup("strategy", t("strategy_header") || "Strategy", Compass, strategyItems)}
+          {renderNavGroup("settings", t("nav_group_settings") || "Settings", Gear, settingsItems)}
         </nav>
 
         {/* User Profile Footer */}
