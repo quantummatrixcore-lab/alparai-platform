@@ -347,7 +347,9 @@ export async function preTriageCheck(
     }
   }
 
-  const hasLongWord = description.split(/\s+/).some((w) => w.length > 45 && !w.startsWith("http"));
+  const hasLongWord = description
+    .split(/\s+/)
+    .some((w) => w.length > 80 && !w.includes("http") && !w.includes("www"));
   if (hasLongWord) {
     return { ok: false, reason: "Junk heuristics triggered: excessively long word detected" };
   }
