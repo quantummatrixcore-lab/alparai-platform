@@ -36,7 +36,7 @@ vi.mock("@/lib/ai/adapters/vertex-imagen", () => ({
 
 import { publishToX } from "@/lib/marketing/publishers/x";
 import { publishToLinkedIn } from "@/lib/marketing/publishers/linkedin";
-import { generateMarketingAssets } from "@/lib/marketing/content-engine";
+import { generateMarketingAssets, generateNewsSocialPosts } from "@/lib/marketing/content-engine";
 
 describe("Marketing Content Engine & Publishers", () => {
   beforeEach(() => {
@@ -126,6 +126,43 @@ describe("Marketing Content Engine & Publishers", () => {
       mockAdminClient.from.mockImplementation(() => builder);
 
       const success = await generateMarketingAssets("inc-invalid");
+      expect(success).toBe(false);
+    });
+  });
+
+  describe("generateNewsSocialPosts", () => {
+    it("generates news social post drafts successfully", async () => {
+      const builder: any = {
+        select: () => builder,
+        eq: () => builder,
+        single: () =>
+          Promise.resolve({
+            data: {
+              id: "news-123",
+              title_en: "AI Safety Regulation",
+              summary_en: "The EU passes new rules for AI systems.",
+              category: "news",
+              severity: "medium",
+            },
+            error: null,
+          }),
+        insert: () => Promise.resolve({ error: null }),
+      };
+      mockAdminClient.from.mockImplementation(() => builder);
+
+      const success = await generateNewsSocialPosts("news-123");
+      expect(success).toBe(true);
+    });
+
+    it("returns false if news details fetch fails", async () => {
+      const builder: any = {
+        select: () => builder,
+        eq: () => builder,
+        single: () => Promise.resolve({ data: null, error: new Error("DB error") }),
+      };
+      mockAdminClient.from.mockImplementation(() => builder);
+
+      const success = await generateNewsSocialPosts("news-invalid");
       expect(success).toBe(false);
     });
   });
