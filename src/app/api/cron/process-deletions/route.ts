@@ -43,13 +43,13 @@ export async function GET(request: NextRequest) {
         .update({
           is_soft_deleted: true,
           soft_deleted_at: now,
-          email: null,
+          email: `deleted-${user.id}@alparai.local`,
           full_name: "Anonim Kullanıcı",
           avatar_url: null,
           reputation_score: 0,
           badges: [],
           interests: [],
-        } as never)
+        })
         .eq("id", user.id);
 
       if (userUpdateErr) {

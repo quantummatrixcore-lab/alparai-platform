@@ -62,12 +62,9 @@ export async function getAdminAutopilotSnapshot(limit = 100): Promise<AdminAutop
   });
 
   const dbAdmin = createAdminClient();
-  const { data: configsData } = (await dbAdmin
-    .from("autopilot_worker_config" as never)
-    .select("worker_name, enabled, updated_at")) as unknown as {
-    data: { worker_name: string; enabled: boolean; updated_at: string }[] | null;
-    error: unknown;
-  };
+  const { data: configsData } = await dbAdmin
+    .from("autopilot_worker_config")
+    .select("worker_name, enabled, updated_at");
 
   const workerConfigs = (configsData || []).map((row) => ({
     worker_name: String(row.worker_name),
@@ -122,15 +119,15 @@ export async function toggleAutopilotWorker(
   if (!admin) return { ok: false, error: "Forbidden" };
 
   const dbAdmin = createAdminClient();
-  const { error } = (await dbAdmin.from("autopilot_worker_config" as never).upsert(
+  const { error } = await dbAdmin.from("autopilot_worker_config").upsert(
     {
       worker_name: workerName,
       enabled,
       updated_at: new Date().toISOString(),
       updated_by: admin.id,
-    } as never,
+    },
     { onConflict: "worker_name" },
-  )) as unknown as { error: { message: string } | null };
+  );
 
   if (error) {
     return { ok: false, error: error.message };

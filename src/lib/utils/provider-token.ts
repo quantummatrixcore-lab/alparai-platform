@@ -15,8 +15,7 @@ export async function generateAndSaveProviderToken(
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
 
   const admin = createAdminClient();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error } = await (admin as any).from("provider_response_tokens").insert({
+  const { error } = await admin.from("provider_response_tokens").insert({
     incident_id: incidentId,
     token_hash: tokenHash,
     email: email.toLowerCase().trim(),
@@ -42,8 +41,7 @@ export async function verifyProviderTokenDb(
   const tokenHash = hashToken(token);
   const admin = createAdminClient();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (admin as any)
+  const { data, error } = await admin
     .from("provider_response_tokens")
     .select("id")
     .eq("incident_id", incidentId)
@@ -72,8 +70,7 @@ export async function consumeProviderTokenDb(
   const tokenHash = hashToken(token);
   const admin = createAdminClient();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (admin as any)
+  const { data, error } = await admin
     .from("provider_response_tokens")
     .update({ used_at: new Date().toISOString() })
     .eq("incident_id", incidentId)

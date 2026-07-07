@@ -29,11 +29,11 @@ export default async function AdminExpertsPage({
 
   const admin = createAdminClient();
   const { data } = await admin
-    .from("expert_applications" as never)
+    .from("expert_applications")
     .select(
-      "id, name, email, title_institution, expertise, expertise_area, linkedin_url, status, created_at" as never,
+      "id, name, email, title_institution, expertise, expertise_area, linkedin_url, status, created_at",
     )
-    .order("created_at" as never, { ascending: false } as never);
+    .order("created_at", { ascending: false });
 
   const applications = (data as unknown as ExpertApplicationItem[]) ?? [];
 

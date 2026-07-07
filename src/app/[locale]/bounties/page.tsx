@@ -51,11 +51,11 @@ export default async function BountiesPage({ params }: { params: Promise<{ local
   const supabase = await createServerClient();
 
   const { data } = await supabase
-    .from("bug_bounties" as never)
+    .from("bug_bounties")
     .select(
-      "id, severity_score, estimated_reward_cents, status, created_at, notes, incident_id, reporter_id, provider_id, incidents(title_masked, title_tr, category, severity), ai_providers(name, slug, logo_url), reporter:user_profiles!bug_bounties_reporter_id_fkey(full_name, username)" as never,
+      "id, severity_score, estimated_reward_cents, status, created_at, notes, incident_id, reporter_id, provider_id, incidents(title_masked, title_tr, category, severity), ai_providers(name, slug, logo_url), reporter:user_profiles!bug_bounties_reporter_id_fkey(full_name, username)",
     )
-    .in("status", ["validated", "paid", "open"] as never)
+    .in("status", ["validated", "paid", "open"])
     .order("created_at", { ascending: false })
     .limit(50);
 

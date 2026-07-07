@@ -50,12 +50,13 @@ interface ExpertWorkInput {
 }
 
 type ExpertWorkResult =
-  { ok: true; sent: boolean; channel: "email" | "log" } | { ok: false; error: string };
+  | { ok: true; sent: boolean; channel: "email" | "log" }
+  | { ok: false; error: string };
 
 const runExpertWork = async (data: ExpertWorkInput): Promise<ExpertWorkResult> => {
   try {
     const admin = createAdminClient();
-    const { error: dbError } = await admin.from("expert_applications" as never).insert({
+    const { error: dbError } = await admin.from("expert_applications").insert({
       name: data.name,
       title_institution: `${data.title} - ${data.institution}`,
       expertise: data.expertiseArea,
@@ -63,7 +64,7 @@ const runExpertWork = async (data: ExpertWorkInput): Promise<ExpertWorkResult> =
       email: data.email,
       expertise_area: data.expertiseArea,
       status: "pending",
-    } as never);
+    });
     if (dbError) {
       console.error("[submitExpert] Database insert failed:", dbError);
       return { ok: false, error: dbError.message };

@@ -66,7 +66,10 @@ export function Badge({
 
 export function SeverityBadge({ severity }: { severity: IncidentSeverity }) {
   const t = useTranslations("badge.severity");
-  const map: Record<IncidentSeverity, { variant: BadgeVariant; key: string }> = {
+  const map: Record<
+    IncidentSeverity,
+    { variant: BadgeVariant; key: "low" | "medium" | "high" | "critical" }
+  > = {
     low: { variant: "success", key: "low" },
     medium: { variant: "warning", key: "medium" },
     high: { variant: "danger", key: "high" },
@@ -75,14 +78,20 @@ export function SeverityBadge({ severity }: { severity: IncidentSeverity }) {
   const { variant, key } = map[severity];
   return (
     <Badge variant={variant} dot>
-      {t(key as never)}
+      {t(key)}
     </Badge>
   );
 }
 
 export function StatusBadge({ status }: { status: IncidentStatus | string }) {
   const t = useTranslations("badge.status");
-  const map: Record<string, { variant: BadgeVariant; key: string }> = {
+  const map: Record<
+    string,
+    {
+      variant: BadgeVariant;
+      key: "pending_review" | "published" | "rejected" | "archived" | "takedown";
+    }
+  > = {
     pending_review: { variant: "warning", key: "pending_review" },
     published: { variant: "success", key: "published" },
     rejected: { variant: "muted", key: "rejected" },
@@ -90,5 +99,5 @@ export function StatusBadge({ status }: { status: IncidentStatus | string }) {
     takedown: { variant: "danger", key: "takedown" },
   };
   const entry = map[status] ?? { variant: "muted" as const, key: null };
-  return <Badge variant={entry.variant}>{entry.key ? t(entry.key as never) : status}</Badge>;
+  return <Badge variant={entry.variant}>{entry.key ? t(entry.key) : status}</Badge>;
 }

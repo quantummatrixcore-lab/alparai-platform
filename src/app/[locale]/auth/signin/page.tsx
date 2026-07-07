@@ -15,7 +15,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
-const ERROR_KEYS: Record<string, string> = {
+const ERROR_KEYS: Record<
+  string,
+  "oauth_failed" | "otp_failed" | "server_error" | "missing_params"
+> = {
   oauth: "oauth_failed",
   otp: "otp_failed",
   server_error: "server_error",
@@ -41,7 +44,7 @@ export default async function SignInPage({
   const errorMessage = errorKey
     ? (() => {
         try {
-          return t(errorKey as never);
+          return t(errorKey);
         } catch {
           return null;
         }

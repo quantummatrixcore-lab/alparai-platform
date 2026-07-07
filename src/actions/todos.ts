@@ -9,8 +9,7 @@ export async function toggleTodoAction(
   is_completed: boolean,
 ): Promise<{ success: boolean }> {
   await requireCEO();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const supabase = (await createServerClient()) as any;
+  const supabase = await createServerClient();
 
   const { error } = await supabase
     .from("strategy_todos")
@@ -25,8 +24,7 @@ export async function toggleTodoAction(
 
 export async function deleteTodoAction(id: string): Promise<{ success: boolean }> {
   await requireCEO();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const supabase = (await createServerClient()) as any;
+  const supabase = await createServerClient();
 
   const { error } = await supabase.from("strategy_todos").delete().eq("id", id);
   if (error) throw new Error(error.message);
@@ -40,8 +38,7 @@ export async function createTodoAction(
   priority: number,
 ): Promise<{ success: boolean; id: string }> {
   await requireCEO();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const supabase = (await createServerClient()) as any;
+  const supabase = await createServerClient();
 
   const { data: inserted, error } = await supabase
     .from("strategy_todos")

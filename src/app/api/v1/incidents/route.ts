@@ -7,6 +7,7 @@ import { logger } from "@/lib/utils/logger";
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { timingSafeEqual } from "crypto";
+import type { Database } from "@/types/database";
 
 const ALLOWED_ORIGINS = [
   "https://alparai.com",
@@ -184,9 +185,11 @@ export async function GET(request: Request) {
     .order("created_at", { ascending: false })
     .limit(limit);
 
-  if (category) query = query.eq("category", category as never);
-  if (severity) query = query.eq("severity", severity as never);
-  if (euRisk) query = query.eq("eu_act_risk_category", euRisk as never);
+  if (category)
+    query = query.eq("category", category as Database["public"]["Enums"]["incident_category"]);
+  if (severity)
+    query = query.eq("severity", severity as Database["public"]["Enums"]["incident_severity"]);
+  if (euRisk) query = query.eq("eu_act_risk_category", euRisk);
   if (provider) query = query.eq("ai_providers.slug", provider);
   if (model) query = query.ilike("ai_models.name", `%${model}%`);
 

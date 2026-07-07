@@ -4,6 +4,7 @@ import { createServerClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/auth/session";
 import { revalidatePath } from "next/cache";
 import type { ExternalIncidentQueueItem, StrategyInnovation } from "@/types";
+import type { Database } from "@/types/database";
 
 export async function getExternalQueue(): Promise<ExternalIncidentQueueItem[]> {
   await requireAdmin();
@@ -61,8 +62,8 @@ export async function acceptExternalIncident(
       title_masked: queueItem.title,
       description: queueItem.body,
       description_masked: queueItem.body,
-      category: category as never,
-      severity: severity as never,
+      category: category as Database["public"]["Enums"]["incident_category"],
+      severity: severity as Database["public"]["Enums"]["incident_severity"],
       source_url: queueItem.external_url,
       incident_date: new Date().toISOString(),
       language: "en",

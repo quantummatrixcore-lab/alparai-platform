@@ -13,6 +13,7 @@ import {
 } from "@/components/dilemmas/sidebar-engagement";
 import type { IncidentListItem } from "@/types";
 import { toIncidentListItems } from "@/lib/mappers";
+import type { Database } from "@/types/database";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -52,8 +53,10 @@ export default async function IncidentsPage({
     )
     .eq("status", "published");
 
-  if (category) query = query.eq("category", category as never);
-  if (severity) query = query.eq("severity", severity as never);
+  if (category)
+    query = query.eq("category", category as Database["public"]["Enums"]["incident_category"]);
+  if (severity)
+    query = query.eq("severity", severity as Database["public"]["Enums"]["incident_severity"]);
 
   if (q) {
     const sanitized = q

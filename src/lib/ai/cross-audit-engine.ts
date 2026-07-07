@@ -38,6 +38,7 @@ import {
 import { maskPII } from "@/lib/pii/guardian";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logger } from "@/lib/utils/logger";
+import type { Database } from "@/types/database";
 
 export interface InitialEvaluation {
   plausibilityScore: number;
@@ -687,7 +688,7 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
   const isHighOrUnacceptableRisk = ["High-Risk", "Unacceptable-Risk"].includes(
     supremeResult.euActRiskCategory || "",
   );
-  const updatePayload: Record<string, unknown> = {
+  const updatePayload: Database["public"]["Tables"]["incidents"]["Update"] = {
     cross_audit_truth_score: supremeResult.truthScore,
     cross_audit_confidence: supremeResult.confidence,
     cross_audit_reasoning: supremeResult.reasoning,
@@ -713,7 +714,7 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
 
   const { error: updateError } = await admin
     .from("incidents")
-    .update(updatePayload as never)
+    .update(updatePayload)
     .eq("id", incidentId);
 
   if (updateError) {
@@ -755,10 +756,7 @@ export async function runCrossAudit(incidentId: string): Promise<TruthScoreResul
   }
 
   const admin = createAdminClient();
-  await admin
-    .from("incidents")
-    .update({ processing_stage: "scoring" } as never)
-    .eq("id", incidentId);
+  await admin.from("incidents").update({ processing_stage: "scoring" }).eq("id", incidentId);
 
   const maxAttempts = 3;
   let attempt = 0;
@@ -805,17 +803,14 @@ export async function runCrossAudit(incidentId: string): Promise<TruthScoreResul
   // Write the failure log to DB
   try {
     const admin = createAdminClient();
-    const updateData: Record<string, unknown> = {
+    const updateData: Database["public"]["Tables"]["incidents"]["Update"] = {
       processing_stage: "complete",
     };
     if (!(lastError instanceof NonRetryableError)) {
       updateData.cross_audit_reasoning = `[DLQ ERROR] All audit retries failed. Last error: ${errorMsg}`;
       updateData.cross_audit_completed_at = new Date().toISOString();
     }
-    await admin
-      .from("incidents")
-      .update(updateData as never)
-      .eq("id", incidentId);
+    await admin.from("incidents").update(updateData).eq("id", incidentId);
   } catch (dbErr) {
     logger.error(
       "[CrossAudit] Failed to write DLQ failure to database",

@@ -115,10 +115,7 @@ async function runAutoModerationWork(
     return { kind: "success", value: { score: 0, status: incident.status } }; // Already processed
   }
 
-  await admin
-    .from("incidents")
-    .update({ processing_stage: "analyzing" } as never)
-    .eq("id", incidentId);
+  await admin.from("incidents").update({ processing_stage: "analyzing" }).eq("id", incidentId);
 
   const evaluation = await evaluateIncidentWithGemini(incident.title, incident.description);
   if (!evaluation) {

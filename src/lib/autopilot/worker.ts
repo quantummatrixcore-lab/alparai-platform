@@ -46,11 +46,11 @@ export const isWorkerEnabled = async (workerName: string): Promise<boolean> => {
   }
   try {
     const admin = createAdminClient();
-    const { data, error } = (await admin
-      .from("autopilot_worker_config" as never)
+    const { data, error } = await admin
+      .from("autopilot_worker_config")
       .select("enabled")
-      .eq("worker_name" as never, workerName)
-      .maybeSingle()) as unknown as { data: { enabled: boolean } | null; error: unknown };
+      .eq("worker_name", workerName)
+      .maybeSingle();
 
     if (error || !data) {
       return true;

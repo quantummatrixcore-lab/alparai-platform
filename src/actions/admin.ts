@@ -520,13 +520,13 @@ export async function reviewExpertApplication(
   const db = createAdminClient();
 
   const { error } = await db
-    .from("expert_applications" as never)
+    .from("expert_applications")
     .update({
       status: newStatus,
       reviewed_by: mod.id,
       reviewed_at: new Date().toISOString(),
-    } as never)
-    .eq("id" as never, parsed.data.id as never);
+    })
+    .eq("id", parsed.data.id);
 
   if (error) return { ok: false, error: error.message };
 

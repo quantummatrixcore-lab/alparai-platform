@@ -58,7 +58,7 @@ export const persistAutopilotRun = async <T>(
           token_count: tokenCount ?? costTokens ?? 0,
           metadata: { cost_tokens: costTokens ?? 0, cost_cents: costCents ?? 0 },
           updated_at: new Date().toISOString(),
-        } as never,
+        },
         { onConflict: "idempotency_key" },
       )
       .select("id, status, attempts, result_id, idempotency_key")

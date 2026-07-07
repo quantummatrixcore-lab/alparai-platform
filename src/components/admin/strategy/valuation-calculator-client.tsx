@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { saveValuationAction } from "@/actions/strategy";
 import { toast } from "sonner";
 import type { StrategyValuation } from "@/types";
+import type { Json } from "@/types/database";
 
 interface ValuationCalculatorClientProps {
   initialValuations: StrategyValuation[];
@@ -82,7 +83,7 @@ export function ValuationCalculatorClient({
     setIsSaving(true);
 
     let val = 0;
-    let inputsObj: Record<string, unknown> = {};
+    let inputsObj: Json = {};
 
     if (method === "berkus") {
       val = berkusValuation;
