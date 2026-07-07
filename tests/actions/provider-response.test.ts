@@ -2,13 +2,28 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import "../helpers/setup";
 import { createMockSupabaseClient } from "../helpers/supabase-mock";
 
+const { mockSend } = vi.hoisted(() => ({
+  mockSend: vi.fn().mockResolvedValue({ id: "mock-email-id" }),
+}));
+
+vi.mock("@/lib/email/resend", () => ({
+  getResendClient: vi.fn().mockReturnValue({
+    emails: {
+      send: mockSend,
+    },
+  }),
+}));
+
 vi.mock("@/lib/supabase/admin", () => ({
   createAdminClient: vi.fn(),
 }));
+
+import { checkRateLimit } from "@/lib/utils/rate-limit";
 vi.mock("@/lib/utils/rate-limit", () => ({
   checkRateLimit: vi.fn().mockResolvedValue({ ok: true }),
   RATE_LIMIT_KEYS: {
     contact_submission: "ratelimit:contact_submission",
+    email_notification: "ratelimit:email_notification",
   },
 }));
 vi.mock("@/lib/utils/provider-token", () => ({
@@ -148,5 +163,274 @@ describe("submitProviderResponse", () => {
     const result = await submitProviderResponse(null, fd);
     expect(result.ok).toBe(false);
     expect(result.error).toBe("invalid_token");
+  });
+
+  it("sends email when reporter has notifications enabled and rate limit is ok", async () => {
+    const fd = buildResponseForm();
+    mockSend.mockClear();
+    vi.mocked(checkRateLimit).mockResolvedValue({ ok: true });
+
+    mockAdminClient.from.mockImplementation((table: string) => {
+      if (table === "incidents") {
+        return {
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () =>
+                Promise.resolve({
+                  data: {
+                    id: incidentId,
+                    user_id: "user-abc",
+                    ai_provider_id: "provider-123",
+                    status: "published",
+                    title: "Test Title",
+                  },
+                  error: null,
+                }),
+            }),
+          }),
+        };
+      }
+      if (table === "ai_providers") {
+        return {
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () =>
+                Promise.resolve({
+                  data: { id: "provider-123", name: "OpenAI", contact_email: contactEmail },
+                  error: null,
+                }),
+            }),
+          }),
+        };
+      }
+      if (table === "ai_provider_responses") {
+        return {
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () => Promise.resolve({ data: null, error: null }),
+            }),
+          }),
+          insert: () => Promise.resolve({ error: null }),
+        };
+      }
+      if (table === "users") {
+        return {
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () =>
+                Promise.resolve({
+                  data: { email: "reporter@example.com", locale: "en" },
+                  error: null,
+                }),
+            }),
+          }),
+        };
+      }
+      if (table === "email_preferences") {
+        return {
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () =>
+                Promise.resolve({
+                  data: { reporter_notifications: true },
+                  error: null,
+                }),
+            }),
+          }),
+        };
+      }
+      return {
+        select: () => ({
+          eq: () => ({ maybeSingle: () => Promise.resolve({ data: null, error: null }) }),
+        }),
+      };
+    });
+
+    const result = await submitProviderResponse(null, fd);
+    expect(result.ok).toBe(true);
+    expect(mockSend).toHaveBeenCalledTimes(1);
+    expect(mockSend).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: "reporter@example.com",
+        subject: expect.stringContaining("Official Response Received"),
+      }),
+    );
+  });
+
+  it("does not send email when reporter has notifications disabled", async () => {
+    const fd = buildResponseForm();
+    mockSend.mockClear();
+    vi.mocked(checkRateLimit).mockResolvedValue({ ok: true });
+
+    mockAdminClient.from.mockImplementation((table: string) => {
+      if (table === "incidents") {
+        return {
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () =>
+                Promise.resolve({
+                  data: {
+                    id: incidentId,
+                    user_id: "user-abc",
+                    ai_provider_id: "provider-123",
+                    status: "published",
+                    title: "Test Title",
+                  },
+                  error: null,
+                }),
+            }),
+          }),
+        };
+      }
+      if (table === "ai_providers") {
+        return {
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () =>
+                Promise.resolve({
+                  data: { id: "provider-123", name: "OpenAI", contact_email: contactEmail },
+                  error: null,
+                }),
+            }),
+          }),
+        };
+      }
+      if (table === "ai_provider_responses") {
+        return {
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () => Promise.resolve({ data: null, error: null }),
+            }),
+          }),
+          insert: () => Promise.resolve({ error: null }),
+        };
+      }
+      if (table === "users") {
+        return {
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () =>
+                Promise.resolve({
+                  data: { email: "reporter@example.com", locale: "en" },
+                  error: null,
+                }),
+            }),
+          }),
+        };
+      }
+      if (table === "email_preferences") {
+        return {
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () =>
+                Promise.resolve({
+                  data: { reporter_notifications: false },
+                  error: null,
+                }),
+            }),
+          }),
+        };
+      }
+      return {
+        select: () => ({
+          eq: () => ({ maybeSingle: () => Promise.resolve({ data: null, error: null }) }),
+        }),
+      };
+    });
+
+    const result = await submitProviderResponse(null, fd);
+    expect(result.ok).toBe(true);
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  it("does not send email when notification rate limit is exceeded", async () => {
+    const fd = buildResponseForm();
+    mockSend.mockClear();
+    vi.mocked(checkRateLimit).mockImplementation(async (key) => {
+      if (key.includes("email_notification")) {
+        return { ok: false };
+      }
+      return { ok: true };
+    });
+
+    mockAdminClient.from.mockImplementation((table: string) => {
+      if (table === "incidents") {
+        return {
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () =>
+                Promise.resolve({
+                  data: {
+                    id: incidentId,
+                    user_id: "user-abc",
+                    ai_provider_id: "provider-123",
+                    status: "published",
+                    title: "Test Title",
+                  },
+                  error: null,
+                }),
+            }),
+          }),
+        };
+      }
+      if (table === "ai_providers") {
+        return {
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () =>
+                Promise.resolve({
+                  data: { id: "provider-123", name: "OpenAI", contact_email: contactEmail },
+                  error: null,
+                }),
+            }),
+          }),
+        };
+      }
+      if (table === "ai_provider_responses") {
+        return {
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () => Promise.resolve({ data: null, error: null }),
+            }),
+          }),
+          insert: () => Promise.resolve({ error: null }),
+        };
+      }
+      if (table === "users") {
+        return {
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () =>
+                Promise.resolve({
+                  data: { email: "reporter@example.com", locale: "en" },
+                  error: null,
+                }),
+            }),
+          }),
+        };
+      }
+      if (table === "email_preferences") {
+        return {
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () =>
+                Promise.resolve({
+                  data: { reporter_notifications: true },
+                  error: null,
+                }),
+            }),
+          }),
+        };
+      }
+      return {
+        select: () => ({
+          eq: () => ({ maybeSingle: () => Promise.resolve({ data: null, error: null }) }),
+        }),
+      };
+    });
+
+    const result = await submitProviderResponse(null, fd);
+    expect(result.ok).toBe(true);
+    expect(mockSend).not.toHaveBeenCalled();
   });
 });
