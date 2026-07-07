@@ -323,6 +323,78 @@ export function IncidentForm({
   }, [title, description]);
 
   if (state.ok) {
+    if (processingStage) {
+      const stages = ["queued", "analyzing", "scoring", "complete"];
+      const currentIdx = stages.indexOf(processingStage);
+
+      return (
+        <div className="mx-auto max-w-md space-y-8 px-4 py-16 text-center">
+          <div className="space-y-3">
+            <h2 className="text-fg-primary text-2xl font-bold tracking-tight">
+              {t("processing_title", { defaultValue: "Raporunuz Analiz Ediliyor" })}
+            </h2>
+            <p className="text-fg-muted text-sm">
+              {t("processing", { defaultValue: "Raporunuz işleniyor…" })}
+            </p>
+          </div>
+
+          {/* Progress Card */}
+          <div className="border-brand-500/20 rounded-2xl border bg-[#0A1622]/40 p-6 shadow-2xl backdrop-blur-md">
+            <div className="space-y-6 text-left">
+              {stages.map((stage, idx) => {
+                const isPast = idx < currentIdx;
+                const isCurrent = idx === currentIdx;
+
+                let icon = null;
+                if (isPast) {
+                  icon = (
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#00FF88]/20">
+                      <CheckCircle2 className="h-4 w-4 text-[#00FF88]" />
+                    </div>
+                  );
+                } else if (isCurrent) {
+                  icon = (
+                    <div className="flex h-6 w-6 items-center justify-center">
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#00FF88] border-t-transparent" />
+                    </div>
+                  );
+                } else {
+                  icon = <div className="border-fg-muted/20 h-6 w-6 rounded-full border-2" />;
+                }
+
+                const labelKey = `processing_${stage}`;
+                let defaultLabel = "";
+                if (stage === "queued") defaultLabel = "Report queued...";
+                if (stage === "analyzing") defaultLabel = "Checking content...";
+                if (stage === "scoring") defaultLabel = "Calculating score...";
+                if (stage === "complete") defaultLabel = "Analysis complete!";
+
+                return (
+                  <div
+                    key={stage}
+                    className={`flex items-center gap-4 transition-all duration-300 ${
+                      isCurrent ? "scale-[1.02] opacity-100" : isPast ? "opacity-75" : "opacity-40"
+                    }`}
+                  >
+                    {icon}
+                    <span
+                      className={`text-sm font-medium ${
+                        isCurrent
+                          ? "text-[#00FF88] shadow-sm drop-shadow-[0_0_8px_rgba(0,255,136,0.3)]"
+                          : "text-fg-primary"
+                      }`}
+                    >
+                      {t(labelKey, { defaultValue: defaultLabel })}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="space-y-6 px-4 py-12 text-center">
         <div className="bg-success-500/10 border-success-500/20 mx-auto flex h-16 w-16 items-center justify-center rounded-full border">

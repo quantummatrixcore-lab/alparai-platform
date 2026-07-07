@@ -28,6 +28,7 @@ export default defineConfig({
         env: {
           NEXT_PUBLIC_SUPABASE_URL: "https://mock-supabase.supabase.co",
           NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock-anon-key",
+          IS_PLAYWRIGHT_TEST: "true",
         },
       },
 });

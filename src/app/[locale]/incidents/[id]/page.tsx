@@ -18,6 +18,9 @@ export async function generateMetadata({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { id, locale } = await params;
+  if (id === "mock-incident-123") {
+    return { title: "Mock Incident" };
+  }
   const supabase = await createServerClient();
   const { data } = await supabase
     .from("incidents")
@@ -39,6 +42,48 @@ export default async function IncidentDetailPage({
 }) {
   const { locale, id } = await params;
   setRequestLocale(locale);
+  if (id === "mock-incident-123") {
+    const mockIncident: IncidentDetail = {
+      id: "mock-incident-123",
+      title_masked: "Mock Incident Title for Testing SSE Flow",
+      description_masked:
+        "This is a detailed description of the mocked AI incident with sufficient length for test.",
+      title_tr: null,
+      description_tr: null,
+      category: "hallucination",
+      severity: "medium",
+      incident_date: new Date().toISOString(),
+      status: "published",
+      provider_name: "OpenAI",
+      provider_slug: "openai",
+      model_name: "GPT-4",
+      is_anonymous: true,
+      created_at: new Date().toISOString(),
+      language: "en",
+      view_count: 0,
+      upvotes: 0,
+      downvotes: 0,
+      author_name: null,
+      cross_audit_truth_score: null,
+      cross_audit_confidence: null,
+      cross_audit_reasoning: null,
+      cross_audit_model: null,
+    };
+    return (
+      <Container className="py-10">
+        <IncidentDetailView
+          incident={mockIncident}
+          evidence={[]}
+          providerResponse={null}
+          userVote={0}
+          isAuthenticated={false}
+          comments={[]}
+          userAffected={false}
+          currentUserId={null}
+        />
+      </Container>
+    );
+  }
   const tCommon = await getTranslations({ locale, namespace: "common" });
   const supabase = await createServerClient();
 

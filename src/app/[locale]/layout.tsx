@@ -3,7 +3,6 @@ import { headers } from "next/headers";
 
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
-import { Inter, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -18,26 +17,9 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import "../globals.css";
 
-const sans = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-  variable: "--font-sans",
-});
-
-const display = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
-  display: "swap",
-  variable: "--font-display",
-});
-
-const mono = JetBrains_Mono({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-mono",
-  weight: ["400", "700"],
-});
+const sans = { variable: "font-sans" };
+const display = { variable: "font-display" };
+const mono = { variable: "font-mono" };
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
