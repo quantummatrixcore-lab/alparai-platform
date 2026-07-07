@@ -4,10 +4,27 @@ import { VertexGeminiAdapter } from "@/lib/ai/adapters/vertex-gemini";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { logger } from "@/lib/utils/logger";
+import { getCurrentUser } from "@/lib/auth/session";
+import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 
 export async function scoutNewAIIncidents() {
+  const user = await getCurrentUser();
+  const rateLimitKey = `${RATE_LIMIT_KEYS.vertex_scout}:${user?.id ?? "anonymous"}`;
+  const rateCheck = await checkRateLimit(rateLimitKey);
+  if (!rateCheck.ok) {
+    logger.warn("[scoutNewAIIncidents] Rate limit exceeded", {
+      userId: user?.id,
+      retryAfter: rateCheck.retryAfter,
+    });
+    return {
+      success: false,
+      error: `Rate limit exceeded. Retry after ${rateCheck.retryAfter ?? 60}s.`,
+    };
+  }
+
   const admin = createAdminClient();
   const adapter = new VertexGeminiAdapter();
+  const startMs = Date.now();
 
   const prompt = `You are an AI Incident scout. Your job is to simulate fetching the latest cutting-edge AI news and incidents happening right now.
 Generate an array of exactly 2 recent, highly realistic AI incidents involving global AI providers (e.g., OpenAI, Google, Anthropic, xAI).
@@ -22,23 +39,32 @@ Format of each object in the array:
 }`;
 
   const response = await adapter.generateJson(prompt);
+  const latencyMs = Date.now() - startMs;
 
   if (!response.ok) {
     logger.error("[scoutNewAIIncidents] Vertex Gemini generation failed", {
       error: response.error,
+      latencyMs,
     });
     return { success: false, error: response.error };
   }
 
+  // Estimate cost: Gemini 1.5 Flash ~$0.00015/1k input tokens, ~$0.0006/1k output tokens
+  // Rough estimate: 300 input tokens + 400 output tokens per scout call
+  const estimatedCostUsd = (300 / 1000) * 0.00015 + (400 / 1000) * 0.0006;
+  logger.info("[scoutNewAIIncidents] Vertex Gemini call completed", {
+    latencyMs,
+    estimatedCostUsd: estimatedCostUsd.toFixed(6),
+    userId: user?.id,
+  });
+
   try {
     const incidents = Array.isArray(response.data) ? response.data : [response.data];
 
-    // Get the system user id (using a generic system ID or fetching admin)
     const { data: users } = await admin.from("users").select("id").eq("role", "admin").limit(1);
     const userId = users?.[0]?.id;
 
     for (const item of incidents) {
-      // Find or create provider
       let providerId = null;
       if (item.ai_provider_name) {
         const { data: provider } = await admin
