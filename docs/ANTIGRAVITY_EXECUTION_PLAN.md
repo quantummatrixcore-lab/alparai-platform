@@ -1,6 +1,6 @@
-# ALPAR AI — Antigravity Full Execution Plan v3 (H2 2026)
+# ALPAR AI — Antigravity Full Execution Plan v4 (H2 2026)
 
-> **Revised by Architect (Claude Opus 4.7) on 2026-07-07.** This revision reconciles what Antigravity actually shipped between `a96c9ca` and `861fe46` with the v2 roadmap, hardens Standing Rules against out-of-scope drift, and tightens the Reporting Protocol.
+> **Revised by Architect (Claude Fable 5) on 2026-07-07.** v3 reconciled delivery state and hardened rules. v4 adds what v3 lacked: a **launch-critical path** with an explicit cut line — 21 days out, not everything is equal priority, and the Executor must know what to drop if time runs short.
 >
 > **Core Thesis (unchanged):** Platform is technically mature (406 incidents, full automation pipeline, RLS, i18n, accessibility). Bottleneck is **users, not code.** Every task carries a "user impact" lens.
 >
@@ -12,6 +12,34 @@
 > - 21 days to launch (Aug 2), "Accountability Gap" narrative
 >
 > **Repo hygiene (enforced 2026-07-07):** Single active branch: `master`. All feature/dependabot/release-please branches deleted. No PR is opened on a plan document.
+
+---
+
+## 🎯 LAUNCH-CRITICAL PATH (read this before anything else)
+
+Launch is **Aug 2** — 21 days. Everything below is ranked. If deadlines slip, cut from the bottom, never the top.
+
+**MUST exist by Aug 2 (launch blocks without these):**
+
+| # | Item | Deadline | Why blocking |
+|---|------|----------|--------------|
+| 1 | B-extra verification evidence | **Jul 9** | Unverified admin surfaces (war room, outreach hub) are a security unknown at launch |
+| 2 | Countdown queue flowing + founder approval routine | **Jul 12** (first post unlocks) | The launch narrative dies if the queue stalls |
+| 3 | B1 — SSE submit feedback | **Jul 25** | First-time user's first impression; the loop that makes launch traffic convert |
+| 4 | B2a — confirmation + provider-response emails | **Jul 25** | Reporter must feel heard on day one |
+| 5 | `docs/RUNBOOK_LAUNCH.md` | **Aug 1** | Founder must be able to operate launch day without the Executor |
+| 6 | D-extra launch assets (HN, PH, TR media, threads) | **Aug 1** | Launch day without assets = wasted launch day |
+
+**SHOULD ship before launch (cut first if B1 slips):**
+- B4 dedup confirmation (cheap — likely already done in `a96c9ca`)
+- B3/B5 Accept verification reports
+
+**CAN slip past launch (do NOT let these eat pre-launch days):**
+- B2b — expert-verification email + weekly reporter digest (moves to Stage E window)
+- All of Stage C (its Aug 15 deadline is already post-launch; C1 starts Aug 10, after freeze)
+- Anything in E–H
+
+**Rule of thumb:** any hour spent on a CAN-slip item before Aug 2 is a review finding.
 
 ---
 
@@ -65,14 +93,18 @@ All items (A1–A5) verified. Autopilot control room, CI, indexes, prod readines
 - Fallback: SSE disconnect → poll every 5s. Audit >60s → email-notify message.
 - _Accept:_ live feedback within 2s; complete redirect within 90s standard cases; mobile Safari works; Playwright e2e covers SSE flow with mocked audit.
 
-### B2. Reporter notification loop
+### B2. Reporter notification loop — split into launch-required (B2a) and post-launch (B2b)
 
+**B2a — LAUNCH-REQUIRED (deadline Jul 25):**
 - **Immediate:** whistleblower confirmation email (verify `getWhistleblowerConfirmationEmail` fires reliably).
 - **On provider response:** new `getProviderResponseNotificationEmail()` in `src/emails/templates.ts` → reporter.
+- Infrastructure both need: one-click unsubscribe, per-user daily cap 3, `email_preferences` table with RLS.
+- _Accept:_ e2e demo with test reporter receiving both email types; unsubscribe works; daily cap enforced; bilingual.
+
+**B2b — POST-LAUNCH (executes in Stage E window; do not start before Aug 10):**
 - **On expert verification:** email reporter.
 - **Weekly digest for active reporters** (≥1 published incident): Monday stats digest, opt-in only.
-- One-click unsubscribe, per-user daily cap 3, `email_preferences` table with RLS.
-- _Accept:_ e2e demo with test reporter receiving all 3 email types; unsubscribe kills all; daily cap enforced; bilingual templates.
+- _Accept:_ same standards as B2a, reported with Stage E.
 
 ### B3. News → social queue ✅ (`4cbeee2` — verification required)
 
@@ -218,6 +250,15 @@ All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying custo
 
 ---
 
+## CHANGELOG (v3 → v4)
+
+| Change | Rationale |
+|--------|-----------|
+| Launch-Critical Path section added (MUST / SHOULD / CAN-slip) | 21 days out, the Executor needs an explicit cut line, not a flat task list |
+| B2 split into B2a (launch-required) / B2b (post-launch) | Expert-verification email + weekly digest don't block launch; confirmation + provider-response do |
+| Stage C explicitly barred from pre-launch work | Its deadline (Aug 15) is post-launch; pre-launch hours must go to B1/B2a/D |
+| Calendar checkpoints anchored (Jul 9, Jul 12, Jul 25, Aug 1) | Machine-checkable dates replace "earlier is better" |
+
 ## CHANGELOG (v2 → v3)
 
 | Change | Rationale |
@@ -237,8 +278,10 @@ All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying custo
 
 ## IMMEDIATE NEXT STEPS FOR EXECUTOR
 
-1. Report Accept-criteria evidence for B3, B5, B-extra.1–3 (within 48h).
+1. **Jul 9:** Report Accept-criteria evidence for B3, B5, B-extra.1–3.
 2. Confirm B4 status (whether folded into `a96c9ca` or still open).
-3. Begin B1 (real-time submit feedback via SSE) — top priority.
-4. All work on `master`. No new branches. No plan-doc edits.
-5. Each commit ≤ single Accept-criterion scope; report after every push.
+3. Begin B1 (SSE submit feedback) — top of the launch-critical path.
+4. Then B2a only (NOT B2b — that waits for Stage E).
+5. Do not touch Stage C before Aug 10. Any pre-launch hour on a CAN-slip item is a review finding.
+6. All work on `master`. No new branches. No plan-doc edits.
+7. Each commit ≤ single Accept-criterion scope; report after every push.
