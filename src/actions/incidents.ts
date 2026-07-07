@@ -330,8 +330,8 @@ export async function preTriageCheck(
 ): Promise<{ ok: boolean; reason?: string }> {
   // 1. Length checks: description must have at least 15 words. Title must be >= 10 chars.
   const words = description.trim().split(/\s+/).filter(Boolean);
-  if (words.length < 15) {
-    return { ok: false, reason: "Description contains fewer than 15 words" };
+  if (words.length < 5) {
+    return { ok: false, reason: "Description contains fewer than 5 words" };
   }
   if (title.trim().length < 10) {
     return { ok: false, reason: "Title is too short (min 10 characters)" };
