@@ -35,12 +35,12 @@ describe("preTriageCheck", () => {
     expect(result.ok).toBe(true);
   });
 
-  it("rejects description with fewer than 5 words", async () => {
+  it("rejects description with fewer than 15 words", async () => {
     const title = "An eligible AI Act incident title";
     const description = "Too short description.";
     const result = await preTriageCheck(title, description);
     expect(result.ok).toBe(false);
-    expect(result.reason).toContain("fewer than 5 words");
+    expect(result.reason).toContain("fewer than 15 words");
   });
 
   it("rejects title with fewer than 10 characters", async () => {

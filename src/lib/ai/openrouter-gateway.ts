@@ -99,6 +99,17 @@ const adapters: Record<string, ProviderAdapter> = {
  */
 export async function callModel(request: GatewayRequest): Promise<GatewayResult> {
   const provider = request.model.provider || "openrouter";
+  if (provider === "blackbox" && process.env.ENABLE_BLACKBOX_PROVIDER !== "true") {
+    return {
+      ok: false,
+      error: {
+        code: "unsupported_provider",
+        message: `Provider '${provider}' is disabled by feature flag.`,
+        model: request.model.id,
+      },
+    };
+  }
+
   const adapter = adapters[provider];
 
   if (!adapter) {

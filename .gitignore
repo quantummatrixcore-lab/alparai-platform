@@ -80,3 +80,7 @@ src/engine/
 # exports
 exports/
 
+# temp / check scripts
+tmp/
+check-*.mjs
+
