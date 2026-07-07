@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 // Mock server-only
@@ -21,9 +22,46 @@ vi.mock("@/lib/utils/logger", () => ({
   },
 }));
 
+// Mock OpenAI client
+const mockCompletionsCreate = vi.fn();
+vi.mock("openai", () => {
+  class MockOpenAI {
+    chat = {
+      completions: {
+        create: mockCompletionsCreate,
+      },
+    };
+    static RateLimitError = class RateLimitError extends Error {
+      status = 429;
+      constructor(...args: any[]) {
+        super(args[2] || "Rate limit");
+      }
+    };
+    static APIConnectionTimeoutError = class APIConnectionTimeoutError extends Error {
+      constructor(...args: any[]) {
+        super(typeof args[0] === "object" ? args[0]?.message : "Timeout");
+      }
+    };
+    static APIError = class APIError extends Error {
+      status = 500;
+      constructor(...args: any[]) {
+        super(args[2] || "API Error");
+      }
+    };
+  }
+  return {
+    default: MockOpenAI,
+    RateLimitError: MockOpenAI.RateLimitError,
+    APIConnectionTimeoutError: MockOpenAI.APIConnectionTimeoutError,
+    APIError: MockOpenAI.APIError,
+  };
+});
+
 import { CohereAdapter } from "@/lib/ai/adapters/cohere";
 import { GoogleAdapter } from "@/lib/ai/adapters/google";
 import { HuggingFaceAdapter } from "@/lib/ai/adapters/huggingface";
+import { BlackboxAdapter } from "@/lib/ai/adapters/blackbox";
+import OpenAI from "openai";
 
 describe("AI Adapters", () => {
   const mockRequest = {
@@ -502,6 +540,102 @@ describe("AI Adapters", () => {
       if (!result.ok) {
         expect(result.error.code).toBe("api_error");
         expect(result.error.message).toBe("Network Error");
+      }
+    });
+  });
+
+  describe("BlackboxAdapter", () => {
+    const adapter = new BlackboxAdapter();
+
+    it("should return true for isConfigured", () => {
+      expect(adapter.isConfigured()).toBe(true);
+    });
+
+    it("should return no_api_key error when API key is missing", async () => {
+      mockResolveApiKey.mockResolvedValue(null);
+
+      const result = await adapter.call(mockRequest);
+
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.error.code).toBe("no_api_key");
+        expect(result.error.message).toContain("BLACKBOX_API_KEY");
+      }
+    });
+
+    it("should return ok and content on successful call", async () => {
+      mockResolveApiKey.mockResolvedValue("mock-blackbox-key");
+
+      mockCompletionsCreate.mockResolvedValueOnce({
+        model: "blackboxai",
+        choices: [
+          {
+            message: {
+              content: "Hello back from Blackbox AI",
+            },
+          },
+        ],
+        usage: {
+          prompt_tokens: 15,
+          completion_tokens: 20,
+          total_tokens: 35,
+        },
+      });
+
+      const result = await adapter.call(mockRequest);
+
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.data.content).toBe("Hello back from Blackbox AI");
+        expect(result.data.usage.promptTokens).toBe(15);
+        expect(result.data.usage.completionTokens).toBe(20);
+        expect(result.data.usage.totalTokens).toBe(35);
+      }
+    });
+
+    it("should return rate_limit error when rate limited", async () => {
+      mockResolveApiKey.mockResolvedValue("mock-blackbox-key");
+
+      mockCompletionsCreate.mockRejectedValueOnce(
+        new (OpenAI.RateLimitError as any)("Rate limit hit"),
+      );
+
+      const result = await adapter.call(mockRequest);
+
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.error.code).toBe("rate_limit");
+      }
+    });
+
+    it("should return timeout error when request times out", async () => {
+      mockResolveApiKey.mockResolvedValue("mock-blackbox-key");
+
+      mockCompletionsCreate.mockRejectedValueOnce(
+        new (OpenAI.APIConnectionTimeoutError as any)({ message: "Timeout occurred" }),
+      );
+
+      const result = await adapter.call(mockRequest);
+
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.error.code).toBe("timeout");
+      }
+    });
+
+    it("should return api_error on other API error", async () => {
+      mockResolveApiKey.mockResolvedValue("mock-blackbox-key");
+
+      mockCompletionsCreate.mockRejectedValueOnce(
+        new (OpenAI.APIError as any)("API Error status 500"),
+      );
+
+      const result = await adapter.call(mockRequest);
+
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.error.code).toBe("api_error");
+        expect(result.error.statusCode).toBe(500);
       }
     });
   });

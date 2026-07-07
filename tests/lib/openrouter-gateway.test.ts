@@ -51,9 +51,16 @@ vi.mock("@/lib/utils/logger", () => ({
 }));
 
 import OpenAI from "openai";
-import { callModel, callWithFailover, FREE_TRIAGE_MODELS } from "@/lib/ai/openrouter-gateway";
+import { callModel, callWithFailover } from "@/lib/ai/openrouter-gateway";
+import type { GatewayModel } from "@/lib/ai/types";
 
 const openaiMock = new OpenAI() as any;
+
+const MOCK_FREE_TRIAGE_MODELS: readonly GatewayModel[] = [
+  { id: "deepseek/deepseek-chat", provider: "openrouter", tier: "free", maxTokens: 2048 },
+  { id: "meta-llama/llama-3.3-70b:free", provider: "openrouter", tier: "free", maxTokens: 2048 },
+  { id: "qwen/qwen-2.5-72b:free", provider: "openrouter", tier: "free", maxTokens: 2048 },
+] as const;
 
 describe("OpenRouter API Gateway", () => {
   beforeEach(() => {
@@ -81,7 +88,7 @@ describe("OpenRouter API Gateway", () => {
       const res = await callModel({
         systemPrompt: "system",
         userMessage: "user",
-        model: FREE_TRIAGE_MODELS[0]!,
+        model: MOCK_FREE_TRIAGE_MODELS[0]!,
       });
 
       expect(res.ok).toBe(true);
@@ -99,7 +106,7 @@ describe("OpenRouter API Gateway", () => {
       const res = await callModel({
         systemPrompt: "system",
         userMessage: "user",
-        model: FREE_TRIAGE_MODELS[0]!,
+        model: MOCK_FREE_TRIAGE_MODELS[0]!,
       });
 
       expect(res.ok).toBe(false);
@@ -116,7 +123,7 @@ describe("OpenRouter API Gateway", () => {
       const res = await callModel({
         systemPrompt: "system",
         userMessage: "user",
-        model: FREE_TRIAGE_MODELS[0]!,
+        model: MOCK_FREE_TRIAGE_MODELS[0]!,
       });
 
       expect(res.ok).toBe(false);
@@ -138,7 +145,7 @@ describe("OpenRouter API Gateway", () => {
           systemPrompt: "sys",
           userMessage: "usr",
         },
-        FREE_TRIAGE_MODELS,
+        MOCK_FREE_TRIAGE_MODELS,
       );
 
       expect(res.ok).toBe(true);
@@ -161,7 +168,7 @@ describe("OpenRouter API Gateway", () => {
           systemPrompt: "sys",
           userMessage: "usr",
         },
-        FREE_TRIAGE_MODELS,
+        MOCK_FREE_TRIAGE_MODELS,
       );
 
       expect(res.ok).toBe(true);
@@ -185,7 +192,7 @@ describe("OpenRouter API Gateway", () => {
           systemPrompt: "sys",
           userMessage: "usr",
         },
-        FREE_TRIAGE_MODELS,
+        MOCK_FREE_TRIAGE_MODELS,
       );
 
       expect(res.ok).toBe(false);

@@ -27,6 +27,7 @@ import { OpenRouterAdapter } from "./adapters/openrouter";
 import { CohereAdapter } from "./adapters/cohere";
 import { HuggingFaceAdapter } from "./adapters/huggingface";
 import { GoogleAdapter } from "./adapters/google";
+import { BlackboxAdapter } from "./adapters/blackbox";
 
 // Export the type interfaces from the common types file to keep backward compatibility
 export type {
@@ -39,28 +40,30 @@ export type {
 
 // Default model setup for the Cross-Audit Engine (kept for backwards compatibility)
 export const FREE_TRIAGE_MODELS: readonly GatewayModel[] = [
+  { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 2048 },
   { id: "deepseek/deepseek-chat", provider: "openrouter", tier: "free", maxTokens: 2048 },
-  { id: "meta-llama/llama-3.3-70b:free", provider: "openrouter", tier: "free", maxTokens: 2048 },
-  { id: "qwen/qwen-2.5-72b:free", provider: "openrouter", tier: "free", maxTokens: 2048 },
+  { id: "blackboxai", provider: "blackbox", tier: "free", maxTokens: 2048 },
 ] as const;
 
 export const SUPREME_COURT_MODEL: GatewayModel = {
-  id: "anthropic/claude-3.5-sonnet",
-  provider: "openrouter",
+  id: "gemini-1.5-pro",
+  provider: "google",
   tier: "premium",
   maxTokens: 4096,
 } as const;
 
 // Dedicated multi-provider failover chains for each parallel slot
 export const TRIAGE_SLOT_1_CHAIN: readonly GatewayModel[] = [
-  { id: "deepseek/deepseek-chat", provider: "openrouter", tier: "free", maxTokens: 2048 },
   { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 2048 },
+  { id: "deepseek/deepseek-chat", provider: "openrouter", tier: "free", maxTokens: 2048 },
+  { id: "blackboxai", provider: "blackbox", tier: "free", maxTokens: 2048 },
   { id: "command-r", provider: "cohere", tier: "free", maxTokens: 2048 },
 ] as const;
 
 export const TRIAGE_SLOT_2_CHAIN: readonly GatewayModel[] = [
-  { id: "meta-llama/llama-3.3-70b:free", provider: "openrouter", tier: "free", maxTokens: 2048 },
   { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 2048 },
+  { id: "meta-llama/llama-3.3-70b:free", provider: "openrouter", tier: "free", maxTokens: 2048 },
+  { id: "blackboxai", provider: "blackbox", tier: "free", maxTokens: 2048 },
   {
     id: "meta-llama/Llama-3.3-70B-Instruct",
     provider: "huggingface",
@@ -70,14 +73,15 @@ export const TRIAGE_SLOT_2_CHAIN: readonly GatewayModel[] = [
 ] as const;
 
 export const TRIAGE_SLOT_3_CHAIN: readonly GatewayModel[] = [
+  { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 2048 },
   { id: "qwen/qwen-2.5-72b:free", provider: "openrouter", tier: "free", maxTokens: 2048 },
+  { id: "blackboxai", provider: "blackbox", tier: "free", maxTokens: 2048 },
   { id: "command-r", provider: "cohere", tier: "free", maxTokens: 2048 },
-  { id: "Qwen/Qwen2.5-72B-Instruct", provider: "huggingface", tier: "free", maxTokens: 2048 },
 ] as const;
 
 export const SUPREME_COURT_CHAIN: readonly GatewayModel[] = [
-  { id: "anthropic/claude-3.5-sonnet", provider: "openrouter", tier: "premium", maxTokens: 4096 },
   { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
+  { id: "anthropic/claude-3.5-sonnet", provider: "openrouter", tier: "premium", maxTokens: 4096 },
   { id: "openai/gpt-4o", provider: "openrouter", tier: "premium", maxTokens: 4096 },
 ] as const;
 
@@ -87,6 +91,7 @@ const adapters: Record<string, ProviderAdapter> = {
   cohere: new CohereAdapter(),
   huggingface: new HuggingFaceAdapter(),
   google: new GoogleAdapter(),
+  blackbox: new BlackboxAdapter(),
 };
 
 /**
