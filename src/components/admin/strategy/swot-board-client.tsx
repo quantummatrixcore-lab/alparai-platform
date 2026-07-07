@@ -7,13 +7,20 @@ import { upsertSwotItemAction, deleteSwotItemAction } from "@/actions/strategy";
 import { toast } from "sonner";
 import type { SwotItem } from "@/types";
 
+import { useTranslations } from "next-intl";
+
 interface SwotBoardClientProps {
   initialItems: SwotItem[];
   isReadOnly: boolean;
   locale: string;
 }
 
-export function SwotBoardClient({ initialItems, isReadOnly, locale }: SwotBoardClientProps) {
+export function SwotBoardClient({
+  initialItems,
+  isReadOnly,
+  locale: _locale,
+}: SwotBoardClientProps) {
+  const t = useTranslations("admin");
   const [items, setItems] = useState<SwotItem[]>(initialItems);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -47,13 +54,7 @@ export function SwotBoardClient({ initialItems, isReadOnly, locale }: SwotBoardC
 
   const handleDelete = async (id: string) => {
     if (isReadOnly) return;
-    if (
-      !confirm(
-        locale === "tr"
-          ? "Bu maddeyi silmek istediğinize emin misiniz?"
-          : "Are you sure you want to delete this item?",
-      )
-    ) {
+    if (!confirm(t("swot_delete_confirm"))) {
       return;
     }
 
@@ -61,7 +62,7 @@ export function SwotBoardClient({ initialItems, isReadOnly, locale }: SwotBoardC
       const res = await deleteSwotItemAction(id);
       if (res.success) {
         setItems((prev) => prev.filter((item) => item.id !== id));
-        toast.success(locale === "tr" ? "Madde silindi." : "SWOT item deleted.");
+        toast.success(t("swot_item_deleted"));
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Failed to delete SWOT item.");
@@ -103,10 +104,10 @@ export function SwotBoardClient({ initialItems, isReadOnly, locale }: SwotBoardC
 
         if (activeItem.id) {
           setItems((prev) => prev.map((item) => (item.id === activeItem.id ? newItem : item)));
-          toast.success(locale === "tr" ? "Madde güncellendi." : "SWOT item updated.");
+          toast.success(t("swot_item_updated"));
         } else {
           setItems((prev) => [...prev, newItem]);
-          toast.success(locale === "tr" ? "Yeni madde eklendi." : "New SWOT item added.");
+          toast.success(t("swot_item_added"));
         }
         setIsModalOpen(false);
       }
@@ -147,9 +148,7 @@ export function SwotBoardClient({ initialItems, isReadOnly, locale }: SwotBoardC
 
         <div className="max-h-[380px] flex-1 scrollbar-thin space-y-3 overflow-y-auto">
           {quadrantItems.length === 0 ? (
-            <p className="text-fg-muted py-4 text-xs italic">
-              {locale === "tr" ? "Henüz madde eklenmemiş." : "No items added yet."}
-            </p>
+            <p className="text-fg-muted py-4 text-xs italic">{t("swot_no_items")}</p>
           ) : (
             quadrantItems.map((item) => (
               <div
@@ -184,7 +183,7 @@ export function SwotBoardClient({ initialItems, isReadOnly, locale }: SwotBoardC
                 {item.action_plan && (
                   <div className="mt-2.5 border-t border-white/5 pt-2">
                     <span className="text-fg-muted block text-[10px] font-bold tracking-wider uppercase">
-                      {locale === "tr" ? "Eylem Planı:" : "Action Plan:"}
+                      {t("swot_action_plan")}
                     </span>
                     <p className="text-fg-muted/80 mt-0.5 text-xs leading-relaxed italic">
                       {item.action_plan}
@@ -227,40 +226,25 @@ export function SwotBoardClient({ initialItems, isReadOnly, locale }: SwotBoardC
   return (
     <div>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {renderQuadrant(
-          locale === "tr" ? "GÜÇLÜ YÖNLER (STRENGTHS)" : "STRENGTHS",
-          "strength",
-          strengths,
-          {
-            bg: "bg-emerald-500/5",
-            border: "border-emerald-500/10",
-            text: "text-emerald-400",
-            heading: "text-emerald-400",
-          },
-        )}
-        {renderQuadrant(
-          locale === "tr" ? "ZAYIF YÖNLER (WEAKNESSES)" : "WEAKNESSES",
-          "weakness",
-          weaknesses,
-          {
-            bg: "bg-red-500/5",
-            border: "border-red-500/10",
-            text: "text-red-400",
-            heading: "text-red-400",
-          },
-        )}
-        {renderQuadrant(
-          locale === "tr" ? "FIRSATLAR (OPPORTUNITIES)" : "OPPORTUNITIES",
-          "opportunity",
-          opportunities,
-          {
-            bg: "bg-blue-500/5",
-            border: "border-blue-500/10",
-            text: "text-blue-400",
-            heading: "text-blue-400",
-          },
-        )}
-        {renderQuadrant(locale === "tr" ? "TEHDİTLER (THREATS)" : "THREATS", "threat", threats, {
+        {renderQuadrant(t("swot_strengths"), "strength", strengths, {
+          bg: "bg-emerald-500/5",
+          border: "border-emerald-500/10",
+          text: "text-emerald-400",
+          heading: "text-emerald-400",
+        })}
+        {renderQuadrant(t("swot_weaknesses"), "weakness", weaknesses, {
+          bg: "bg-red-500/5",
+          border: "border-red-500/10",
+          text: "text-red-400",
+          heading: "text-red-400",
+        })}
+        {renderQuadrant(t("swot_opportunities"), "opportunity", opportunities, {
+          bg: "bg-blue-500/5",
+          border: "border-blue-500/10",
+          text: "text-blue-400",
+          heading: "text-blue-400",
+        })}
+        {renderQuadrant(t("swot_threats"), "threat", threats, {
           bg: "bg-amber-500/5",
           border: "border-amber-500/10",
           text: "text-amber-400",
@@ -274,13 +258,7 @@ export function SwotBoardClient({ initialItems, isReadOnly, locale }: SwotBoardC
           <div className="bg-bg-secondary border-border-strong w-full max-w-lg rounded-2xl border p-6 shadow-2xl">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-bold text-white uppercase">
-                {activeItem.id
-                  ? locale === "tr"
-                    ? "SWOT Maddesini Düzenle"
-                    : "Edit SWOT Item"
-                  : locale === "tr"
-                    ? "Yeni SWOT Maddesi Ekle"
-                    : "Add SWOT Item"}
+                {activeItem.id ? t("swot_edit_item") : t("swot_add_item")}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -293,7 +271,7 @@ export function SwotBoardClient({ initialItems, isReadOnly, locale }: SwotBoardC
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                  {locale === "tr" ? "Başlık" : "Title"}
+                  {t("swot_title_label")}
                 </label>
                 <input
                   type="text"
@@ -311,7 +289,7 @@ export function SwotBoardClient({ initialItems, isReadOnly, locale }: SwotBoardC
 
               <div>
                 <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                  {locale === "tr" ? "Açıklama" : "Description"}
+                  {t("swot_description_label")}
                 </label>
                 <textarea
                   value={activeItem.description || ""}
@@ -324,7 +302,7 @@ export function SwotBoardClient({ initialItems, isReadOnly, locale }: SwotBoardC
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                    {locale === "tr" ? "Ağırlık/Önem" : "Weight"}
+                    {t("swot_weight_label")}
                   </label>
                   <select
                     value={activeItem.weight}
@@ -344,7 +322,7 @@ export function SwotBoardClient({ initialItems, isReadOnly, locale }: SwotBoardC
 
                 <div>
                   <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                    {locale === "tr" ? "Durum" : "Status"}
+                    {t("swot_status_label")}
                   </label>
                   <select
                     value={activeItem.status}
@@ -365,7 +343,7 @@ export function SwotBoardClient({ initialItems, isReadOnly, locale }: SwotBoardC
 
               <div>
                 <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                  {locale === "tr" ? "Eylem Planı (Mitigation)" : "Action Plan"}
+                  {t("swot_action_plan_label")}
                 </label>
                 <textarea
                   value={activeItem.action_plan || ""}
@@ -377,7 +355,7 @@ export function SwotBoardClient({ initialItems, isReadOnly, locale }: SwotBoardC
 
               <div>
                 <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                  {locale === "tr" ? "Hedef Tarih" : "Target Date"}
+                  {t("swot_target_date_label")}
                 </label>
                 <input
                   type="date"
@@ -393,7 +371,7 @@ export function SwotBoardClient({ initialItems, isReadOnly, locale }: SwotBoardC
                   onClick={() => setIsModalOpen(false)}
                   className="border-border-subtle rounded-xl border px-5 py-2.5 text-sm font-semibold text-white/80 transition hover:bg-white/5 hover:text-white"
                 >
-                  {locale === "tr" ? "İptal" : "Cancel"}
+                  {t("cancel")}
                 </button>
                 <button
                   type="submit"
@@ -403,12 +381,10 @@ export function SwotBoardClient({ initialItems, isReadOnly, locale }: SwotBoardC
                   {isSaving ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      {locale === "tr" ? "Kaydediliyor..." : "Saving..."}
+                      {t("swot_saving")}
                     </>
-                  ) : locale === "tr" ? (
-                    "Kaydet"
                   ) : (
-                    "Save"
+                    t("swot_save")
                   )}
                 </button>
               </div>

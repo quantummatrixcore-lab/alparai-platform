@@ -28,6 +28,7 @@ import {
   Lightbulb,
   Megaphone,
   Pulse,
+  X,
 } from "@phosphor-icons/react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
@@ -137,7 +138,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       ? [
           {
             href: "/admin/investors",
-            label: "Investor Applications",
+            label: t("investors_title") || "Investor Applications",
             icon: TrendUp,
             active: pathname.startsWith("/admin/investors"),
           },
@@ -187,13 +188,13 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
     {
       href: "/admin/strategy/swot",
-      label: "SWOT",
+      label: t("strategy_swot") || "SWOT",
       icon: GridFour,
       active: pathname === "/admin/strategy/swot",
     },
     {
       href: "/admin/strategy/risks",
-      label: "Risks",
+      label: t("strategy_risks") || "Risks",
       icon: ShieldCheck,
       active: pathname === "/admin/strategy/risks",
     },
@@ -243,33 +244,72 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
 
   return (
     <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="text-fg-secondary bg-bg-primary/80 fixed top-4 left-4 z-40 rounded-xl border border-white/5 p-2.5 shadow-lg backdrop-blur-xl lg:hidden"
-      >
-        <List weight="duotone" className="h-5 w-5" />
-      </button>
+      {/* Top Header Bar */}
+      <header className="bg-bg-secondary/40 fixed inset-x-0 top-0 z-30 flex h-16 items-center justify-between border-b border-white/5 px-6 backdrop-blur-xl">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setIsOpen(true)}
+            className="text-fg-secondary hover:text-fg-primary rounded-xl p-2 transition hover:bg-white/5"
+          >
+            <List weight="duotone" className="h-6 w-6" />
+          </button>
+          <Link href="/admin" className="flex items-center gap-3">
+            <div className="relative h-8 w-8">
+              <Image src="/logo.png" alt="ALPAR" fill className="animate-pulse object-contain" />
+            </div>
+            <Wordmark className="text-xl" />
+          </Link>
+        </div>
 
+        <div className="flex items-center gap-4">
+          <LanguageSwitcher className="h-8" />
+          {/* User Profile Avatar */}
+          <div className="border-brand-500/20 relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border shadow-[0_0_8px_rgba(168,85,247,0.15)]">
+            {user.avatarUrl ? (
+              <Image
+                src={user.avatarUrl}
+                alt=""
+                width={36}
+                height={36}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <span className="text-brand-300 text-xs font-bold">
+                {getInitials(user.fullName ?? user.email)}
+              </span>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* Backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
           onClick={() => setIsOpen(false)}
         />
       )}
 
+      {/* Sidebar Drawer */}
       <aside
         className={cn(
-          "bg-bg-secondary/40 fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-white/5 shadow-[4px_0_24px_rgba(0,0,0,0.5)] backdrop-blur-2xl transition-transform duration-500 lg:static lg:translate-x-0",
+          "bg-bg-secondary/95 fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-white/5 shadow-[4px_0_24px_rgba(0,0,0,0.5)] backdrop-blur-2xl transition-transform duration-500",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         <div className="flex h-16 shrink-0 items-center justify-between border-b border-white/5 px-6">
-          <Link href="/admin" className="flex items-center gap-3">
+          <Link href="/admin" className="flex items-center gap-3" onClick={() => setIsOpen(false)}>
             <div className="relative h-8 w-8">
               <Image src="/logo.png" alt="ALPAR" fill className="object-contain" />
             </div>
             <Wordmark className="text-xl" />
           </Link>
+          <button
+            onClick={() => setIsOpen(false)}
+            className="text-fg-muted rounded-xl p-1.5 transition hover:bg-white/5 hover:text-white"
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
 
         <nav className="scrollbar-hide flex-1 overflow-y-auto py-4">
@@ -283,64 +323,19 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
 
         {/* User Profile Footer */}
         <div className="border-border-subtle bg-bg-secondary/60 border-t p-4 backdrop-blur-md">
-          <div className="mb-4 flex items-center gap-3">
-            <div className="border-brand-500/30 relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border shadow-[0_0_10px_rgba(168,85,247,0.2)]">
-              {user.avatarUrl ? (
-                <Image
-                  src={user.avatarUrl}
-                  alt=""
-                  width={40}
-                  height={40}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <span className="text-brand-300 text-sm font-bold">
-                  {getInitials(user.fullName ?? user.email)}
-                </span>
-              )}
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-fg-primary truncate text-sm font-bold">
-                {user.fullName ?? user.email.split("@")[0]}
-              </p>
-              <div className="mt-0.5 flex items-center gap-1.5">
-                <span
-                  className={cn(
-                    "inline-flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-[9px] font-bold tracking-wider uppercase",
-                    user.role === "ceo"
-                      ? "bg-danger-500/10 text-danger-300 border-danger-500/20"
-                      : user.role === "admin"
-                        ? "bg-warning-500/10 text-warning-300 border-warning-500/20"
-                        : "bg-brand-500/10 text-brand-300 border-brand-500/20",
-                  )}
-                >
-                  <ShieldCheck weight="duotone" className="h-2.5 w-2.5" />
-                  {user.role}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <div className="mb-2 flex items-center justify-between gap-2 border-b border-white/5 pb-2">
-              <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
-                {tNav("language_switcher")}
-              </span>
-              <LanguageSwitcher className="h-8" />
-            </div>
-            <div className="flex items-center justify-between gap-2">
-              <Link
-                href="/"
-                className="text-fg-muted hover:bg-bg-tertiary/60 hover:text-fg-primary flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition"
-              >
-                <Globe weight="duotone" className="h-3.5 w-3.5" />
-                {tNav("home")}
-              </Link>
-            </div>
+          <div className="flex items-center justify-between gap-2">
+            <Link
+              href="/"
+              onClick={() => setIsOpen(false)}
+              className="text-fg-muted hover:bg-bg-tertiary/60 hover:text-fg-primary flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition"
+            >
+              <Globe weight="duotone" className="h-3.5 w-3.5" />
+              {tNav("home")}
+            </Link>
             <form action="/api/auth/signout" method="post">
               <button
                 type="submit"
-                className="text-danger-400 hover:bg-danger-500/10 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition"
+                className="text-danger-400 hover:bg-danger-500/10 flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition"
               >
                 <SignOut weight="duotone" className="h-3.5 w-3.5" />
                 {tAuth("signOut") ?? "Çıkış Yap"}
@@ -349,14 +344,6 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
           </div>
         </div>
       </aside>
-
-      {/* Overlay background on mobile */}
-      {isOpen && (
-        <div
-          onClick={() => setIsOpen(false)}
-          className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm md:hidden"
-        />
-      )}
     </>
   );
 }
