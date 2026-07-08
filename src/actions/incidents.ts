@@ -691,8 +691,7 @@ export async function voteOnIncident({
 export async function incrementIncidentViews(incidentId: string) {
   try {
     const admin = createAdminClient();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { error } = await (admin as any).rpc("increment_incident_views", {
+    const { error } = await admin.rpc("increment_incident_views", {
       p_incident_id: incidentId,
     });
     if (error) {

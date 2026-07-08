@@ -630,8 +630,7 @@ export async function toggleVerifiedRespondent(
         verified_respondent_at: isVerified ? new Date().toISOString() : null,
         respondent_contact_email: isVerified ? contactEmail || null : null,
         respondent_verified_by: isVerified ? adminUser.id : null,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any)
+      })
       .eq("id", providerId);
 
     if (error) {

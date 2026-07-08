@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createHash } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -19,7 +18,7 @@ export async function checkEmailCapAndLog(email: string, emailType: string): Pro
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
     const { count, error } = await admin
-      .from("email_sent_logs" as any)
+      .from("email_sent_logs")
       .select("*", { count: "exact", head: true })
       .eq("email_hash", emailHash)
       .gte("sent_at", oneDayAgo);
@@ -39,7 +38,7 @@ export async function checkEmailCapAndLog(email: string, emailType: string): Pro
 
     // Log this email send
 
-    const { error: insertErr } = await admin.from("email_sent_logs" as any).insert({
+    const { error: insertErr } = await admin.from("email_sent_logs").insert({
       email_hash: emailHash,
       email_type: emailType,
     });
