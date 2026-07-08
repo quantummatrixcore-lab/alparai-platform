@@ -36,7 +36,7 @@ export default async function NewsletterPage({ params }: { params: Promise<{ loc
             <div className="flex items-start gap-2.5">
               <Shield className="text-success-500 mt-0.5 h-4 w-4 shrink-0" />
               <div>
-                <h4 className="text-fg-primary text-xs font-bold">{t("gdprCompliant")}</h4>
+                <h4 className="text-fg-primary text-xs font-bold">{t("gdprAligned")}</h4>
                 <p className="text-fg-muted mt-0.5 text-[10px]">{t("gdprDesc")}</p>
               </div>
             </div>

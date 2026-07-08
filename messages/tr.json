@@ -1322,7 +1322,7 @@
       "trust_signals_title": "Platform Güven Sinyalleri",
       "signal_open_source": "AGPL-3.0 Açık Kaynak",
       "signal_eu_hosting": "AB Veri Barındırma",
-      "signal_compliant": "KVKK + GDPR Uyumlu",
+      "signal_aligned": "KVKK + GDPR Hizalı",
       "signal_community_verified": "Topluluk Tarafından Doğrulanmış"
     }
   },
@@ -1564,7 +1564,7 @@
     "success": "Başarıyla abone olundu!",
     "success_toast": "Teşekkürler! Aboneliğiniz tamamlandı.",
     "privacy": "Sıfır spam. İstediğiniz zaman ayrılabilirsiniz.",
-    "gdprCompliant": "GDPR Uyumlu",
+    "gdprAligned": "GDPR Hizalı",
     "gdprDesc": "E-postanız şifrelenmiştir ve güvendedir.",
     "weeklyPulse": "Haftalık Nabız",
     "weeklyPulseDesc": "Haftada bir özet e-posta. Günlük spam yok."
