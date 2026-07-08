@@ -9,9 +9,8 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   // Simple bearer auth if needed, or check secret key
   const authHeader = request.headers.get("authorization");
-  if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new NextResponse("Unauthorized", { status: 401 });
-  }
+  const isAuthorized = authHeader === `Bearer ${process.env.CRON_SECRET}`;
+  if (!isAuthorized) return new NextResponse("Unauthorized", { status: 401 });
 
   const supabase = createAdminClient();
 
