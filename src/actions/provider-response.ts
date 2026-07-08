@@ -8,6 +8,8 @@ import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { headers } from "next/headers";
 import { getResendClient } from "@/lib/email/resend";
 import { getProviderResponseNotificationEmail } from "@/emails/templates";
+import { generateUnsubscribeToken } from "@/lib/utils/unsubscribe";
+import { checkEmailCapAndLog } from "@/lib/email/cap";
 
 const responseInputSchema = z.object({
   incidentId: z.string().uuid(),
@@ -156,27 +158,34 @@ export async function submitProviderResponse(
               `ratelimit:email_notification:${incident.user_id}`,
             );
             if (rlCheck.ok) {
-              const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://alparai.com";
-              const unsubscribeUrl = `${appUrl}/${reporterUser.locale || "en"}/settings`;
-              const emailHtml = getProviderResponseNotificationEmail({
-                title: incident.title_masked || incident.title || "Incident",
-                providerName: provider.name,
-                actionUrl: `${appUrl}/${reporterUser.locale || "en"}/incidents/${incidentId}`,
-                locale: reporterUser.locale || "en",
-                unsubscribeUrl,
-              });
-
               const resend = getResendClient();
               if (resend) {
-                await resend.emails.send({
-                  from: "ALPAR AI <noreply@alparai.com>",
-                  to: reporterUser.email,
-                  subject:
-                    reporterUser.locale === "tr"
-                      ? `[ALPAR AI] Resmi Yanıt Alındı: ${provider.name}`
-                      : `[ALPAR AI] Official Response Received: ${provider.name}`,
-                  html: emailHtml,
-                });
+                const isCapped = !(await checkEmailCapAndLog(
+                  reporterUser.email,
+                  "provider_response",
+                ));
+                if (!isCapped) {
+                  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://alparai.com";
+                  const unsubToken = generateUnsubscribeToken(incident.user_id);
+                  const unsubscribeUrl = `${appUrl}/${reporterUser.locale || "en"}/unsubscribe?userId=${incident.user_id}&token=${unsubToken}&type=reporter_notifications`;
+                  const emailHtml = getProviderResponseNotificationEmail({
+                    title: incident.title_masked || incident.title || "Incident",
+                    providerName: provider.name,
+                    actionUrl: `${appUrl}/${reporterUser.locale || "en"}/incidents/${incidentId}`,
+                    locale: reporterUser.locale || "en",
+                    unsubscribeUrl,
+                  });
+
+                  await resend.emails.send({
+                    from: "ALPAR AI <noreply@alparai.com>",
+                    to: reporterUser.email,
+                    subject:
+                      reporterUser.locale === "tr"
+                        ? `[ALPAR AI] Resmi Yanıt Alındı: ${provider.name}`
+                        : `[ALPAR AI] Official Response Received: ${provider.name}`,
+                    html: emailHtml,
+                  });
+                }
               }
             }
           }

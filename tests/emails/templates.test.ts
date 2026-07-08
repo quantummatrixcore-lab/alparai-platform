@@ -3,6 +3,7 @@ import {
   getWhistleblowerConfirmationEmail,
   getAdminNotificationEmail,
   getProviderAlertEmail,
+  getProviderResponseNotificationEmail,
 } from "@/emails/templates";
 
 describe("Email Templates", () => {
@@ -167,6 +168,43 @@ describe("Email Templates", () => {
       expect(html).toContain("Sayın OpenAI Yetkilisi,");
       expect(html).toContain("Yapay Zekanız İçin Yeni Olay Raporu");
       expect(html).toContain("Resmi Yanıt Yayınla");
+    });
+  });
+
+  describe("getProviderResponseNotificationEmail", () => {
+    const params = {
+      title: "Model hallucinated fake legal advice",
+      providerName: "Anthropic",
+      actionUrl: "https://alparai.com/en/incidents/inc-123",
+      locale: "en",
+      unsubscribeUrl:
+        "https://alparai.com/en/unsubscribe?userId=usr-123&token=tok-123&type=reporter_notifications",
+    };
+
+    it("should generate English template correctly", () => {
+      const html = getProviderResponseNotificationEmail(params);
+
+      expect(html).toContain("[ALPAR AI] Official Response Received: Anthropic");
+      expect(html).toContain("Hello Reporter,");
+      expect(html).toContain("An official response has been received from Anthropic");
+      expect(html).toContain("Model hallucinated fake legal advice");
+      expect(html).toContain("https://alparai.com/en/incidents/inc-123");
+      expect(html).toContain(
+        "https://alparai.com/en/unsubscribe?userId=usr-123&token=tok-123&type=reporter_notifications",
+      );
+      expect(html).toContain("Unsubscribe");
+    });
+
+    it("should generate Turkish template correctly", () => {
+      const html = getProviderResponseNotificationEmail({
+        ...params,
+        locale: "tr",
+      });
+
+      expect(html).toContain("[ALPAR AI] Resmi Yanıt Alındı: Anthropic");
+      expect(html).toContain("Merhaba Muhabir,");
+      expect(html).toContain("Anthropic firmasından resmi bir açıklama geldi");
+      expect(html).toContain("Abonelikten Çık");
     });
   });
 });

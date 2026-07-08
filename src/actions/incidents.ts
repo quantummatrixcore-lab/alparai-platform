@@ -22,6 +22,7 @@ import {
 } from "@/lib/autopilot";
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
 import { getResendClient } from "@/lib/email/resend";
+import { checkEmailCapAndLog } from "@/lib/email/cap";
 import {
   getWhistleblowerConfirmationEmail,
   getAdminNotificationEmail,
@@ -237,24 +238,30 @@ const runSubmitWork = async (
 
       // 1. Send confirmation to whistleblower if logged in
       if (user && user.email) {
-        const html = getWhistleblowerConfirmationEmail({
-          title: raw.title,
-          category: raw.category,
-          severity: raw.severity,
-          date: raw.incident_date || new Date().toLocaleDateString(),
-          locale,
-        });
-
+        const userEmail = user.email;
         emailPromises.push(
-          resend.emails.send({
-            from: "ALPAR AI <noreply@alparai.com>",
-            to: user.email,
-            subject:
-              locale === "tr"
-                ? "Olay Raporunuz Alındı — ALPAR AI"
-                : "Incident Report Received — ALPAR AI",
-            html,
-          }),
+          (async () => {
+            const isCapped = !(await checkEmailCapAndLog(userEmail, "whistleblower_confirmation"));
+            if (!isCapped) {
+              const html = getWhistleblowerConfirmationEmail({
+                title: raw.title,
+                category: raw.category,
+                severity: raw.severity,
+                date: raw.incident_date || new Date().toLocaleDateString(),
+                locale,
+              });
+
+              await resend.emails.send({
+                from: "ALPAR AI <noreply@alparai.com>",
+                to: userEmail,
+                subject:
+                  locale === "tr"
+                    ? "Olay Raporunuz Alındı — ALPAR AI"
+                    : "Incident Report Received — ALPAR AI",
+                html,
+              });
+            }
+          })(),
         );
       }
 
@@ -286,10 +293,8 @@ const runSubmitWork = async (
           .maybeSingle();
 
         if (provider?.is_verified && provider?.contact_email) {
-          const providerToken = await generateAndSaveProviderToken(
-            incidentId,
-            provider.contact_email,
-          );
+          const providerEmail = provider.contact_email;
+          const providerToken = await generateAndSaveProviderToken(incidentId, providerEmail);
           const providerHtml = getProviderAlertEmail({
             providerName: provider.name,
             incidentId,
@@ -301,15 +306,20 @@ const runSubmitWork = async (
           });
 
           emailPromises.push(
-            resend.emails.send({
-              from: "ALPAR AI Alerts <alerts@alparai.com>",
-              to: provider.contact_email,
-              subject:
-                locale === "tr"
-                  ? `[ALPAR AI] Yapay Zekanız İçin Yeni Olay Raporu: ${raw.title.substring(0, 30)}...`
-                  : `[ALPAR AI] New Incident Report for Your AI: ${raw.title.substring(0, 30)}...`,
-              html: providerHtml,
-            }),
+            (async () => {
+              const isCapped = !(await checkEmailCapAndLog(providerEmail, "provider_alert"));
+              if (!isCapped) {
+                await resend.emails.send({
+                  from: "ALPAR AI Alerts <alerts@alparai.com>",
+                  to: providerEmail,
+                  subject:
+                    locale === "tr"
+                      ? `[ALPAR AI] Yapay Zekanız İçin Yeni Olay Raporu: ${raw.title.substring(0, 30)}...`
+                      : `[ALPAR AI] New Incident Report for Your AI: ${raw.title.substring(0, 30)}...`,
+                  html: providerHtml,
+                });
+              }
+            })(),
           );
         }
       }
