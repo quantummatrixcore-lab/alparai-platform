@@ -30,6 +30,40 @@ export default async function RespondPage({
 
   const t = await getTranslations({ locale, namespace: "respond" });
 
+  if (process.env.IS_PLAYWRIGHT_TEST === "true") {
+    if (!token || token === "wrongtoken") {
+      return renderInvalidToken(t);
+    }
+    return (
+      <Container className="max-w-3xl py-12">
+        <header className="mb-8">
+          <h1 className="text-fg-primary text-3xl font-bold tracking-tight">
+            Submit Official Response
+          </h1>
+          <p className="text-fg-muted mt-2 text-sm">{t("subtitle")}</p>
+        </header>
+
+        <Card className="border-border-subtle bg-bg-secondary/40 mb-8">
+          <CardContent className="flex items-start gap-3 p-4">
+            <FileText className="text-brand-400 mt-0.5 h-5 w-5" />
+            <div>
+              <h3 className="text-fg-primary text-sm font-semibold">{t("incident_referenced")}</h3>
+              <p className="text-fg-muted mt-1 font-mono text-sm">
+                Mock Incident for Provider Response E2E
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card variant="elevated" className="border-brand-500/10">
+          <CardContent className="p-6 sm:p-8">
+            <ProviderResponseForm incidentId={id} token={token} providerName="Test Provider" />
+          </CardContent>
+        </Card>
+      </Container>
+    );
+  }
+
   if (!token) {
     return renderInvalidToken(t);
   }
