@@ -1,12 +1,12 @@
-# ALPAR AI — Antigravity Full Execution Plan v6 (H2 2026 → 2027)
+# ALPAR AI — Antigravity Full Execution Plan v7 (H2 2026 → 2027)
 
-> **Revised by Architect (Claude Fable 5) on 2026-07-08.** v6 changes three things: (1) a new **Stage R — repo confidentiality** at top priority after discovering the repo is publicly visible with strategy and security documents inside; (2) the **pacing rule is rewritten** — the Executor never idles waiting for a calendar date; (3) pre-launch scope gains navbar/i18n polish tasks (N-series) and the ecosystem positioning is updated to the Commission's draft Art. 73 guidance.
+> **Revised by Architect (Claude Fable 5) on 2026-07-08 (evening).** v7 adds the **M-series mobile quality sprint** (founder reports mobile UI breakage — launch traffic will be majority-mobile, this is now the top engineering priority), formally opens **Stage C**, and seeds the **I-series innovation pool** for 2027 (proposals only; each needs separate Architect approval).
 >
 > **Core Thesis:** Bottleneck is **users, not code** (2026) → then **revenue, not users** (2027 H1) → then **regulatory moment capture** (2027 H2). Every task carries the lens of its phase.
 >
-> **State at issue (2026-07-08):**
-> - Stages 0–3 + Stage A ✅; Stage B ✅ COMPLETE (`Architect-Approval: 5b1a0f5 2026-07-07`) — B1, B2a, B3, B4, B5, B-extra.1–3 all verified
-> - 360° audit findings (C1 cron bypass, W1–W4) ✅ all closed at `5b1a0f5`
+> **State at issue (2026-07-08 evening):**
+> - Stages 0–3 + A ✅; Stage B ✅ (`Architect-Approval: 5b1a0f5`); N-series + D-prep ✅ (`Architect-Approval: 1d225fe 2026-07-08`) — navbar Academy top-level, i18n strings + CI guard, launch assets, academic pack, runbook, token-rotation checklist all on origin
+> - Stage C: OPEN (started per pacing rule). M-series: OPEN, takes priority over C.
 > - 25 days to launch (Aug 2), "Accountability Gap" narrative
 >
 > **PACING (rewritten in v6):** Deadlines are **latest-acceptable dates, never waiting periods**. The moment a stage is approved, start the next one — even if its deadline is weeks away. The ONLY calendar lock is the **Aug 1–9 launch freeze**: during that window only Stage D work runs; any in-progress stage pauses and resumes Aug 10. An idle Executor is a review finding.
@@ -49,7 +49,21 @@ Launch is **Aug 2**. Everything below is ranked. If deadlines slip, cut from the
 
 ---
 
-## 🆕 N-SERIES — Pre-launch polish (added in v6; deadline Jul 20)
+## 📱 M-SERIES — Mobile Quality Sprint (added in v7; PRIORITY OVER STAGE C; deadline Jul 18)
+
+> Founder reports broken mobile UI. Launch traffic will be majority-mobile (social-driven). Nothing else ships to prod until M1's audit table exists.
+
+**M1. Systematic mobile audit.** Playwright screenshots at three viewports — 375×667 (iPhone SE), 390×844 (iPhone 14), 412×915 (Pixel 7) — for every primary page: home, incidents list, incident detail, submit, /ai-act, /transparency, leaderboard, academy, blog, unsubscribe. For each page × viewport check: (a) horizontal overflow (`document.documentElement.scrollWidth > window.innerWidth`), (b) touch targets ≥44px on interactive elements, (c) text truncation/overlap, (d) z-index/overlay collisions (mobile nav, toasts, modals), (e) fixed elements covering content. Findings → `docs/MOBILE_AUDIT.md` as a table: page | viewport | issue | severity | screenshot ref. *Accept:* audit table covers all pages × 3 viewports; screenshots committed under `docs/mobile-audit/` (or linked from CI artifacts).
+
+**M2. Fix everything M1 found.** One commit per page or per root cause (e.g. a shared component). Before/after screenshots in the report. No visual redesign — fix breakage only; brand rules apply. *Accept:* re-run of M1 audit shows horizontal overflow on 0 pages; all severity-high issues closed.
+
+**M3. Mobile regression lock.** Add mobile-viewport variants of the critical-flow e2e specs (submit, incident detail, nav) + axe checks at 375px to CI. *Accept:* CI runs mobile specs; a deliberately introduced overflow fails CI (demonstrate, then revert).
+
+**Final gate:** founder confirms on a real phone. Founder's word is the Accept.
+
+---
+
+## 🆕 N-SERIES — Pre-launch polish (added in v6; deadline Jul 20) — ✅ N1–N3 COMPLETE (`1d225fe`), N4 pending Architect option choice
 
 **N1. Academy → top-level nav.** Move the Academy link out of the "Resources" dropdown to the main nav bar (`src/components/layout/nav.tsx:38`), alongside incidents/leaderboard/ai_act/transparency. Update `mobile-nav.tsx` ordering to match (Academy visible without expanding anything). Uses existing `nav.academy` key (EN "Academy" / TR "Akademi"). *Accept:* Academy visible in the top bar on desktop + mobile without any dropdown; nav e2e spec updated; bilingual.
 
@@ -245,6 +259,23 @@ Dependabot PRs: merge only after CI green (security patches same week; feature b
 
 ---
 
+## 💡 I-SERIES — Innovation Pool (added in v7; PROPOSAL STATUS ONLY)
+
+> Sourced from the July 2026 ecosystem scan. **None of these are approved for implementation.** Each graduates into a stage only with an explicit Architect approval line. The Executor may write feasibility notes in `docs/PROPOSALS/` but writes no code for them.
+
+| ID | Idea | Why now | Moat effect |
+|----|------|---------|-------------|
+| I1 | **Incident Passport** — one-click export of an ALPAR incident in the Commission's official Art. 73 reporting-template field structure | Commission's draft template is public now; being format-compatible first = becoming the default drafting tool | Every exported passport carries ALPAR provenance |
+| I2 | **ALPAR MCP server / LLM tool** — expose the incident API as a tool AI agents can query ("has this model had incidents?") | Agent ecosystems are exploding; agents citing ALPAR = zero-CAC distribution | Becomes infrastructure, not a website |
+| I3 | **Provider Response SLA badge** — free, embeddable "responds within X days" badge for providers with claimed profiles | Free giveaway that makes providers advertise ALPAR themselves | Two-sided lock-in |
+| I4 | **Insurance/actuarial data feed** — anonymized incident frequency/severity by category for AI-liability underwriters | AI liability insurance is emerging with no loss-history data anywhere | First loss-history dataset in the category |
+| I5 | **Browser extension** — one-click "report this AI output" capturing URL + screenshot into the submit flow | Cuts submission friction to near zero | Volume growth engine |
+| I6 | **Model drift watch** — track provider model-card/version changes, correlate with incident spikes | Providers ship silent updates; nobody correlates them with failures | Unique longitudinal dataset |
+| I7 | **Research sandbox** — hosted notebooks over the PII-masked corpus for approved academics (extends F2) | Deepens university partnerships beyond CSV export | Academic citations = credibility flywheel |
+| I8 | **KVKK bridge** — TR-localized incident notification formatting for Turkish public institutions | ALPAR's TR identity is a wedge no US competitor has | Home-market regulatory moat |
+
+---
+
 ## 🗓️ 2027 HORIZON (long-term roadmap — Architect refines each quarter into stages)
 
 > **The strategic anchor: 2 Dec 2027.** On that day, Art. 73 serious-incident reporting becomes mandatory for high-risk AI systems in the EU. Providers will need incident data, taxonomy mapping, and reporting workflows — overnight. ALPAR's entire 2027 is a countdown to owning that moment: the platform that spent two years cataloguing AI incidents becomes the obvious reference when reporting them becomes law.
@@ -318,6 +349,15 @@ All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying custo
 
 ---
 
+## CHANGELOG (v6 → v7)
+
+| Change | Rationale |
+|--------|-----------|
+| M-series mobile quality sprint added, priority over Stage C | Founder reports broken mobile UI; launch traffic will be majority-mobile |
+| N-series marked complete (`Architect-Approval: 1d225fe 2026-07-08`) | Verified on origin |
+| Stage C formally opened | Pacing rule: N-series approved → C starts; M-series outranks it |
+| I-series innovation pool (8 proposals, no implementation without approval) | July 2026 ecosystem brainstorm captured as governed backlog, not scope creep |
+
 ## CHANGELOG (v5 → v6)
 
 | Change | Rationale |
@@ -366,13 +406,12 @@ All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying custo
 
 ---
 
-## IMMEDIATE NEXT STEPS FOR EXECUTOR (v6, 2026-07-08)
+## IMMEDIATE NEXT STEPS FOR EXECUTOR (v7, 2026-07-08 evening)
 
-1. **R2 token-rotation checklist:** prepare it, hand to founder, verify prod after each rotation. (R1 repo→private is the founder's click — remind them, don't wait on it to start N-series.)
-2. **N1:** Academy link to top-level nav (desktop + mobile) + updated nav e2e spec.
-3. **N2:** 8 hardcoded strings → next-intl (EN+TR).
-4. **N3:** i18n CI guard script + CI wiring.
-5. **D-extra2:** academic outreach pack drafts (`docs/launch-assets/academic/`) + D-extra launch assets + `docs/RUNBOOK_LAUNCH.md` — all before Aug 1.
-6. **Then Stage C immediately** — do not wait for a calendar date; pause during Aug 1–9 freeze only.
-7. N4 (incident content language) requires explicit Architect option approval — do not start it unprompted.
-8. All work on `master`. No new branches. No plan-doc edits. Each commit ≤ single Accept-criterion scope; push → report with origin hash + PASS/FAIL table.
+1. **M1 mobile audit** — before anything else. Audit table + screenshots pushed.
+2. **M2 fixes** — one commit per page/root-cause, before/after evidence.
+3. **M3 mobile regression lock in CI.**
+4. **Then Stage C** (C1 client_api_keys → C2 docs → C3 metering → C4 rate tiers → C5 embed kit), pausing only for the Aug 1–9 freeze.
+5. N4 and all I-series items remain LOCKED without explicit Architect approval.
+6. R2 token rotation: support the founder when they do their dashboard side.
+7. All work on `master`. No new branches. No plan-doc edits. **Reports MUST use the PASS/FAIL Accept-criteria table — narrative-only reports get rejected.**
