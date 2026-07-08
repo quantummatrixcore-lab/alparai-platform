@@ -78,7 +78,7 @@ export function LeaderboardPreview({ entries }: { entries: LeaderboardEntry[] })
                         {e.provider_name}
                       </Link>
                       {e.is_verified_respondent && (
-                        <span title="Verified Respondent">
+                        <span title={t("verified_respondent")}>
                           <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
                         </span>
                       )}

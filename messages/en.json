@@ -289,7 +289,8 @@
     "trust_score_info": "What this score means: A Trust Score of 85+ means the provider responds to >80% of incidents, resolves >40%, and averages <3 days response time. A score below 50 means the provider has not responded to any reported incidents.",
     "read_methodology_link": "Read the detailed Trust Score Methodology →",
     "non_responsive_notice": "{provider} has not responded to {count} incidents. Silence is data.",
-    "read_all_incidents": "Read all incidents"
+    "read_all_incidents": "Read all incidents",
+    "verified_respondent": "Verified Respondent"
   },
   "auth": {
     "signin_with_google": "Continue with Google",
@@ -988,7 +989,9 @@
     "category_ethics": "AI Ethics",
     "category_studies": "Case Studies",
     "category_technical": "Technical",
-    "category_regulatory": "Regulatory"
+    "category_regulatory": "Regulatory",
+    "no_articles": "No articles found",
+    "no_articles_desc": "Try adjusting your filters or search terms."
   },
   "api": {
     "eyebrow": "Developer Resources",
@@ -1807,6 +1810,11 @@
     "form_expertise": "Expertise Area",
     "form_linkedin": "LinkedIn URL (Optional)",
     "form_email": "Email Address",
+    "form_fullname_placeholder": "Dr. Jane Doe",
+    "form_email_placeholder": "jane.doe@university.edu",
+    "form_title_placeholder": "Professor of Law",
+    "form_institution_placeholder": "Oxford University",
+    "form_linkedin_placeholder": "https://linkedin.com/in/...",
     "form_success_title": "Application Received",
     "form_success_body": "Thank you for applying to the ALPAR AI Expert Panel. We will review your application and get back to you shortly.",
     "form_submit_another": "Submit Another Application",

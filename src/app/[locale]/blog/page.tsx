@@ -319,8 +319,8 @@ export default async function BlogIndexPage({
       ) : (
         <div className="border-border-subtle/50 bg-bg-secondary/10 rounded-xl border py-24 text-center">
           <BookOpen className="text-fg-muted mx-auto mb-4 h-12 w-12" />
-          <h3 className="text-fg-primary text-lg font-bold">No articles found</h3>
-          <p className="text-fg-muted mt-1 text-sm">Try adjusting your filters or search terms.</p>
+          <h3 className="text-fg-primary text-lg font-bold">{t("no_articles")}</h3>
+          <p className="text-fg-muted mt-1 text-sm">{t("no_articles_desc")}</p>
         </div>
       )}
 

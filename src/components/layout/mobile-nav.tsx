@@ -16,8 +16,8 @@ const links = [
   { href: "/dilemmas", key: "dilemmas" },
   { href: "/ai-act", key: "ai_act" },
   { href: "/transparency", key: "transparency" },
-  { href: "/blog", key: "blog" },
   { href: "/academy", key: "academy" },
+  { href: "/blog", key: "blog" },
   { href: "/press-kit", key: "presskit" },
 ] as const;
 

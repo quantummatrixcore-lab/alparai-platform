@@ -58,7 +58,7 @@ export function ExpertForm() {
             id="name"
             name="name"
             required
-            placeholder="Dr. Jane Doe"
+            placeholder={t("form_fullname_placeholder")}
             className="border-border-subtle bg-bg-secondary text-fg-primary placeholder:text-fg-muted focus:ring-brand-500 flex h-10 w-full rounded-md border px-3 py-2 text-sm focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           />
           {state.fieldErrors?.name && (
@@ -78,7 +78,7 @@ export function ExpertForm() {
             name="email"
             type="email"
             required
-            placeholder="jane.doe@university.edu"
+            placeholder={t("form_email_placeholder")}
             className="border-border-subtle bg-bg-secondary text-fg-primary placeholder:text-fg-muted focus:ring-brand-500 flex h-10 w-full rounded-md border px-3 py-2 text-sm focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           />
           {state.fieldErrors?.email && (
@@ -97,7 +97,7 @@ export function ExpertForm() {
             id="title"
             name="title"
             required
-            placeholder="Professor of Law"
+            placeholder={t("form_title_placeholder")}
             className="border-border-subtle bg-bg-secondary text-fg-primary placeholder:text-fg-muted focus:ring-brand-500 flex h-10 w-full rounded-md border px-3 py-2 text-sm focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           />
           {state.fieldErrors?.title && (
@@ -116,7 +116,7 @@ export function ExpertForm() {
             id="institution"
             name="institution"
             required
-            placeholder="Oxford University"
+            placeholder={t("form_institution_placeholder")}
             className="border-border-subtle bg-bg-secondary text-fg-primary placeholder:text-fg-muted focus:ring-brand-500 flex h-10 w-full rounded-md border px-3 py-2 text-sm focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           />
           {state.fieldErrors?.institution && (
@@ -166,7 +166,7 @@ export function ExpertForm() {
           id="linkedinUrl"
           name="linkedinUrl"
           type="url"
-          placeholder="https://linkedin.com/in/..."
+          placeholder={t("form_linkedin_placeholder")}
           className="border-border-subtle bg-bg-secondary text-fg-primary placeholder:text-fg-muted focus:ring-brand-500 flex h-10 w-full rounded-md border px-3 py-2 text-sm focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         />
         {state.fieldErrors?.linkedinUrl && (

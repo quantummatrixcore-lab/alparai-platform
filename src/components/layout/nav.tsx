@@ -31,11 +31,11 @@ const mainNavItems: NavItem[] = [
   { href: "/dilemmas", labelKey: "dilemmas", icon: Scale },
   { href: "/ai-act", labelKey: "ai_act", icon: Shield },
   { href: "/transparency", labelKey: "transparency", icon: Eye },
+  { href: "/academy", labelKey: "academy", icon: GraduationCap },
 ];
 
 const resourcesItems: NavItem[] = [
   { href: "/blog", labelKey: "blog", icon: BookOpen },
-  { href: "/academy", labelKey: "academy", icon: GraduationCap },
   { href: "/press-kit", labelKey: "presskit", icon: Award },
 ];
 

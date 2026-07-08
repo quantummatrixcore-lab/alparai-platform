@@ -289,7 +289,8 @@
     "trust_score_info": "Bu skor ne anlama geliyor: 85+ Güven Skoru, sağlayıcının olayların >%80'ine yanıt verdiği, >%40'ını çözdüğü ve ortalama <3 gün yanıt süresine sahip olduğu anlamına gelir. 50'nin altındaki bir skor ise sağlayıcının bildirilen hiçbir olaya yanıt vermediğini gösterir.",
     "read_methodology_link": "Detaylı Güven Skoru Metodolojisini inceleyin →",
     "non_responsive_notice": "{provider} bildirilen {count} olaya yanıt vermedi. Sessizlik de bir veridir.",
-    "read_all_incidents": "Tüm olayları oku"
+    "read_all_incidents": "Tüm olayları oku",
+    "verified_respondent": "Doğrulanmış Yanıtlayıcı"
   },
   "auth": {
     "signin_with_google": "Google ile devam et",
@@ -988,7 +989,9 @@
     "category_ethics": "AI Etiği",
     "category_studies": "Vaka Analizleri",
     "category_technical": "Teknik",
-    "category_regulatory": "Düzenleyici"
+    "category_regulatory": "Düzenleyici",
+    "no_articles": "Yazı bulunamadı",
+    "no_articles_desc": "Arama terimlerinizi veya filtrelerinizi değiştirmeyi deneyin."
   },
   "api": {
     "eyebrow": "Geliştirici Kaynakları",
@@ -1807,6 +1810,11 @@
     "form_expertise": "Uzmanlık Alanı",
     "form_linkedin": "LinkedIn URL (Opsiyonel)",
     "form_email": "E-posta",
+    "form_fullname_placeholder": "Dr. Can Demir",
+    "form_email_placeholder": "can.demir@universite.edu.tr",
+    "form_title_placeholder": "Hukuk Profesörü",
+    "form_institution_placeholder": "Oxford Üniversitesi",
+    "form_linkedin_placeholder": "https://linkedin.com/in/...",
     "form_success_title": "Başvuru Alındı",
     "form_success_body": "ALPAR AI Uzman Paneline başvurduğunuz için teşekkür ederiz. Başvurunuzu inceleyip en kısa sürede size dönüş yapacağız.",
     "form_submit_another": "Yeni Bir Başvuru Gönder",

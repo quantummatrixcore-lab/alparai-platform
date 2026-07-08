@@ -432,7 +432,7 @@ export default async function LeaderboardPage({
                           </div>
                           <span className="text-fg-primary">{p.name}</span>
                           {p.is_verified_respondent && (
-                            <span title="Verified Respondent">
+                            <span title={t("verified_respondent")}>
                               <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-400" />
                             </span>
                           )}
