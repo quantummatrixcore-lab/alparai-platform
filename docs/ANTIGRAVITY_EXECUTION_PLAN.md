@@ -1,43 +1,63 @@
-# ALPAR AI — Antigravity Full Execution Plan v5 (H2 2026 → 2027)
+# ALPAR AI — Antigravity Full Execution Plan v6 (H2 2026 → 2027)
 
-> **Revised by Architect (Claude Fable 5) on 2026-07-07.** v4 added the launch-critical path. v5 extends the horizon: a full **2027 roadmap** anchored on the one date that defines this company — **2 Dec 2027**, when EU AI Act Art. 73 high-risk incident-reporting obligations go live. Everything ALPAR builds until then is positioning to be the reference dataset and reporting rail on that day.
+> **Revised by Architect (Claude Fable 5) on 2026-07-08.** v6 changes three things: (1) a new **Stage R — repo confidentiality** at top priority after discovering the repo is publicly visible with strategy and security documents inside; (2) the **pacing rule is rewritten** — the Executor never idles waiting for a calendar date; (3) pre-launch scope gains navbar/i18n polish tasks (N-series) and the ecosystem positioning is updated to the Commission's draft Art. 73 guidance.
 >
 > **Core Thesis:** Bottleneck is **users, not code** (2026) → then **revenue, not users** (2027 H1) → then **regulatory moment capture** (2027 H2). Every task carries the lens of its phase.
 >
-> **State at issue (2026-07-07, updated):**
-> - Stages 0–3 + Stage A ✅ complete (`a96c9ca`)
-> - Stage B: B1 ✅, B2a-partial ✅, B3 ✅, B5 ✅, B-extra.1–3 ✅ (`Architect-Approval: 5e29c34 2026-07-07`); B2a remainder + B4 in progress
-> - 21 days to launch (Aug 2), "Accountability Gap" narrative
+> **State at issue (2026-07-08):**
+> - Stages 0–3 + Stage A ✅; Stage B ✅ COMPLETE (`Architect-Approval: 5b1a0f5 2026-07-07`) — B1, B2a, B3, B4, B5, B-extra.1–3 all verified
+> - 360° audit findings (C1 cron bypass, W1–W4) ✅ all closed at `5b1a0f5`
+> - 25 days to launch (Aug 2), "Accountability Gap" narrative
 >
-> **Repo hygiene (enforced 2026-07-07):** Single active branch: `master`. All feature/dependabot/release-please branches deleted. No PR is opened on a plan document.
+> **PACING (rewritten in v6):** Deadlines are **latest-acceptable dates, never waiting periods**. The moment a stage is approved, start the next one — even if its deadline is weeks away. The ONLY calendar lock is the **Aug 1–9 launch freeze**: during that window only Stage D work runs; any in-progress stage pauses and resumes Aug 10. An idle Executor is a review finding.
+>
+> **Repo hygiene:** Single active branch: `master`. No PR is opened on a plan document.
 
 ---
 
-## 🎯 LAUNCH-CRITICAL PATH (read this before anything else)
+## 🚨 STAGE R — REPO CONFIDENTIALITY (URGENT — supersedes everything else)
 
-Launch is **Aug 2** — 21 days. Everything below is ranked. If deadlines slip, cut from the bottom, never the top.
+**Discovery (2026-07-08 audit):** the GitHub repo is **public**, exposing: `docs/P1-SPRINT-PLAN.md` (enumerates past security vulnerabilities — an attacker's handbook), `docs/VERCEL-RECOVERY.md` (Vercel account username + recovery path), valuation/MRR/runway seed migrations, SWOT data admitting a past `.env.local` leak, named outreach/grant contact lists, and every strategy/execution plan. Zero stars/forks — likely undiscovered. Git history is clean of actual secrets.
+
+**R1 — FOUNDER, TODAY (1 click):** GitHub → repo **Settings → General → Danger Zone → Change visibility → Private**. Vercel's Git integration keeps deploying from private repos — no downtime. This repo stays private permanently (strategy, plans, runbooks, seeds, audits live here).
+
+**R2 — FOUNDER + Executor, this week: token rotation.** Because SWOT documents a past `.env.local` leak, rotate once: Supabase service-role key, Vercel token, Resend, OpenRouter, Vertex, Upstash. Executor prepares the checklist and verifies the app works after each rotation; founder performs the rotations in each dashboard. *Accept:* all six rotated; prod smoke test green after each.
+
+**R3 — Executor, POST-LAUNCH (not before Aug 10): curated public repo.** Create `alparai-platform` public repo: app source + PUBLIC-OK docs only (API.md, ARCHITECTURE.md, SECURITY.md, EU_AI_ACT_TAXONOMY.md, ADRs, audit methodology), **fresh git history** (init from filtered tree — never push this repo's history). Strategy docs, strategy seed migrations, runbooks, launch assets never enter it. This preserves the AGPL open-source trust card without the exposure. *Accept:* `git ls-files` of the public repo contains zero PRIVATE-flagged files; Architect reviews the file list before the repo goes public.
+
+---
+
+## 🎯 LAUNCH-CRITICAL PATH
+
+Launch is **Aug 2**. Everything below is ranked. If deadlines slip, cut from the bottom, never the top. Deadlines are latest-acceptable dates — finish early, start the next item immediately.
 
 **MUST exist by Aug 2 (launch blocks without these):**
 
 | # | Item | Deadline | Why blocking |
 |---|------|----------|--------------|
-| 1 | B-extra verification evidence | **Jul 9** | Unverified admin surfaces (war room, outreach hub) are a security unknown at launch |
+| 1 | R1 repo → private (founder) + R2 token rotation | **Jul 10** | Public strategy/security docs are an active exposure |
 | 2 | Countdown queue flowing + founder approval routine | **Jul 12** (first post unlocks) | The launch narrative dies if the queue stalls |
-| 3 | B1 — SSE submit feedback | **Jul 25** | First-time user's first impression; the loop that makes launch traffic convert |
-| 4 | B2a — confirmation + provider-response emails | **Jul 25** | Reporter must feel heard on day one |
-| 5 | `docs/RUNBOOK_LAUNCH.md` | **Aug 1** | Founder must be able to operate launch day without the Executor |
-| 6 | D-extra launch assets (HN, PH, TR media, threads) | **Aug 1** | Launch day without assets = wasted launch day |
+| 3 | N1–N3 — navbar Academy top-level, hardcoded strings → i18n, i18n CI guard | **Jul 20** | Academy visibility is a founder priority; polish before traffic arrives |
+| 4 | `docs/RUNBOOK_LAUNCH.md` | **Aug 1** | Founder must be able to operate launch day without the Executor |
+| 5 | D-extra launch assets (HN, PH, TR media, threads) + academic outreach pack | **Aug 1** | Launch day without assets = wasted launch day |
 
-**SHOULD ship before launch (cut first if B1 slips):**
-- B4 dedup confirmation (cheap — likely already done in `a96c9ca`)
-- B3/B5 Accept verification reports
+**NEXT after the above (no waiting — start as soon as MUST items for the day are done):**
+- Stage C (API productization) — start immediately when N-series is approved; pause during Aug 1–9 freeze, resume Aug 10
+- B2b — expert-verification email + weekly reporter digest (Stage E window)
 
-**CAN slip past launch (do NOT let these eat pre-launch days):**
-- B2b — expert-verification email + weekly reporter digest (moves to Stage E window)
-- All of Stage C (its Aug 15 deadline is already post-launch; C1 starts Aug 10, after freeze)
-- Anything in E–H
+**Rule of thumb:** an idle Executor and an hour spent out-of-plan are both review findings.
 
-**Rule of thumb:** any hour spent on a CAN-slip item before Aug 2 is a review finding.
+---
+
+## 🆕 N-SERIES — Pre-launch polish (added in v6; deadline Jul 20)
+
+**N1. Academy → top-level nav.** Move the Academy link out of the "Resources" dropdown to the main nav bar (`src/components/layout/nav.tsx:38`), alongside incidents/leaderboard/ai_act/transparency. Update `mobile-nav.tsx` ordering to match (Academy visible without expanding anything). Uses existing `nav.academy` key (EN "Academy" / TR "Akademi"). *Accept:* Academy visible in the top bar on desktop + mobile without any dropdown; nav e2e spec updated; bilingual.
+
+**N2. Hardcoded strings → next-intl.** Fix the 8 known offenders: `src/app/[locale]/academy/expert-form.tsx` placeholders (lines ~61, 81, 100, 119, 169), `src/app/[locale]/blog/page.tsx:322` "No articles found", `title="Verified Respondent"` tooltips in `src/components/marketing/leaderboard-preview.tsx:81` and `src/app/[locale]/leaderboard/page.tsx:435`. *Accept:* grep for those literals returns 0 in src/; EN+TR keys added.
+
+**N3. i18n CI guard (G3 pulled forward).** Script (`scripts/check-i18n.mjs`) comparing en.json/tr.json key sets; wire into CI so a missing key fails the build. *Accept:* CI fails on a deliberately removed key (demonstrate in report, then restore).
+
+**N4. Incident content language (POST-LAUNCH, Architect decision pending).** The 406 imported incidents are English-only — Turkish pages show English content, which reads as "translation errors". Options: (a) batch-translate published incident summaries via Gemini (cheap model, cost-logged), or (b) show a small "EN" content badge on Turkish pages. Do NOT start without explicit Architect approval of the option.
 
 ---
 
@@ -128,7 +148,9 @@ These items were shipped without prior Architect approval. Retro-approved to avo
 
 ---
 
-## STAGE C — API Productization (hard deadline: Aug 15; start after B approved)
+## STAGE C — API Productization (hard deadline: Aug 15; ✏️ v6: start as soon as N-series is approved — do NOT wait for a date; pause only during the Aug 1–9 freeze)
+
+> **v6 ecosystem note:** the Commission has published **draft guidance + a reporting template for Art. 73 serious incidents** (digital-strategy.ec.europa.eu, stakeholder consultation open). C2's API docs and the future Reporting Assistant (2027 Q3) must target that official template's field structure. Differentiation to state in docs: OneTrust/Prediction Guard sell compliance tooling to providers; ALPAR is the **independent public registry** — referee, not vendor.
 
 **C1. `client_api_keys` table (T14.5).** SHA-256 hashed keys, tiers, admin UI for create/revoke/label. Migrate `client_*` rows out of `api_keys` (which returns to LLM-provider secrets only). _Accept:_ revoked key 401s; two enterprise customers hold distinct keys; unit tests.
 
@@ -159,6 +181,8 @@ Prepare `docs/RUNBOOK_LAUNCH.md` before Aug 1:
 - DB active connections >15 on FREE tier → investigate
 - Rollback: `git revert HEAD && git push` (Vercel auto-deploys)
 - Contacts/escalation ladder
+
+**D-extra2. 🆕 Academic outreach pack** (Executor drafts; FOUNDER sends — Executor never contacts anyone): EN outreach email + 1-page PDF/markdown one-pager for university AI-governance groups. Target list: Harvard Berkman Klein Center, MIT Media Lab / AI governance, Stanford HAI, Oxford Internet Institute + the Academy page's existing "Target/Invited" tiers. Pitch: research access to the incident corpus (F2 portal), co-authorship on the Q4 "State of AI Incidents" report. Do NOT cite any specific survey/statistic unless the founder supplies a verified source. Files under `docs/launch-assets/academic/`. *Accept:* drafts exist, bilingual cover note for founder, zero external sends.
 
 **D-extra. Launch day acquisition assets** (Executor prepares markdown drafts; founder sends):
 - Hacker News "Show HN" post (EN, ≤80 words + link)
@@ -294,6 +318,18 @@ All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying custo
 
 ---
 
+## CHANGELOG (v5 → v6)
+
+| Change | Rationale |
+|--------|-----------|
+| Stage R added at top priority (repo→private, token rotation, curated public repo post-launch) | 2026-07-08 audit found the repo publicly visible with security-vuln docs, valuation data, and strategy plans inside |
+| Pacing rule rewritten: no waiting on dates, only Aug 1–9 freeze is calendar-locked; idle Executor = review finding | Founder correction: the agent must never sit idle because a stage's deadline is in the future |
+| N-series added (Academy top-level nav, hardcoded strings, i18n CI guard, incident-language decision) | Founder priority on Academy visibility; i18n audit found key coverage complete but 8 hardcoded strings + English incident content |
+| D-extra2 academic outreach pack (Harvard Berkman Klein, MIT, Stanford HAI, Oxford + Academy tiers) | Founder wants university engagement; Executor drafts, founder sends; unverified statistics stay out |
+| Stage C start condition changed from "Aug 10" to "as soon as N-series approved" | Same pacing correction |
+| Ecosystem note: Commission draft Art. 73 guidance + reporting template; referee-not-vendor positioning vs OneTrust/Prediction Guard | July 2026 ecosystem scan |
+| Stage B marked complete (`Architect-Approval: 5b1a0f5 2026-07-07`) | All items + audit findings verified on origin |
+
 ## CHANGELOG (v4 → v5)
 
 | Change | Rationale |
@@ -330,12 +366,13 @@ All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying custo
 
 ---
 
-## IMMEDIATE NEXT STEPS FOR EXECUTOR
+## IMMEDIATE NEXT STEPS FOR EXECUTOR (v6, 2026-07-08)
 
-1. **Jul 9:** Report Accept-criteria evidence for B3, B5, B-extra.1–3.
-2. Confirm B4 status (whether folded into `a96c9ca` or still open).
-3. Begin B1 (SSE submit feedback) — top of the launch-critical path.
-4. Then B2a only (NOT B2b — that waits for Stage E).
-5. Do not touch Stage C before Aug 10. Any pre-launch hour on a CAN-slip item is a review finding.
-6. All work on `master`. No new branches. No plan-doc edits.
-7. Each commit ≤ single Accept-criterion scope; report after every push.
+1. **R2 token-rotation checklist:** prepare it, hand to founder, verify prod after each rotation. (R1 repo→private is the founder's click — remind them, don't wait on it to start N-series.)
+2. **N1:** Academy link to top-level nav (desktop + mobile) + updated nav e2e spec.
+3. **N2:** 8 hardcoded strings → next-intl (EN+TR).
+4. **N3:** i18n CI guard script + CI wiring.
+5. **D-extra2:** academic outreach pack drafts (`docs/launch-assets/academic/`) + D-extra launch assets + `docs/RUNBOOK_LAUNCH.md` — all before Aug 1.
+6. **Then Stage C immediately** — do not wait for a calendar date; pause during Aug 1–9 freeze only.
+7. N4 (incident content language) requires explicit Architect option approval — do not start it unprompted.
+8. All work on `master`. No new branches. No plan-doc edits. Each commit ≤ single Accept-criterion scope; push → report with origin hash + PASS/FAIL table.
