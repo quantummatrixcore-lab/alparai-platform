@@ -7,6 +7,7 @@
 > **State at issue (2026-07-08 evening):**
 > - Stages 0–3 + A ✅; Stage B ✅ (`Architect-Approval: 5b1a0f5`); N-series + D-prep ✅ (`Architect-Approval: 1d225fe 2026-07-08`) — navbar Academy top-level, i18n strings + CI guard, launch assets, academic pack, runbook, token-rotation checklist all on origin
 > - Stage C: OPEN (started per pacing rule). M-series: OPEN, takes priority over C.
+> - **Traction baseline (corrected 2026-07-09):** 4 organic incident reports pre-launch (incl. the Grok passport case) — cold-start baseline is 4, not 0. Both marketplace sides now have a first signal.
 > - 25 days to launch (Aug 2), "Accountability Gap" narrative
 >
 > **PACING (rewritten in v6):** Deadlines are **latest-acceptable dates, never waiting periods**. The moment a stage is approved, start the next one — even if its deadline is weeks away. The ONLY calendar lock is the **Aug 1–9 launch freeze**: during that window only Stage D work runs; any in-progress stage pauses and resumes Aug 10. An idle Executor is a review finding.
