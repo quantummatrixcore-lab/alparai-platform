@@ -275,6 +275,36 @@ Dependabot PRs: merge only after CI green (security patches same week; feature b
 | I7 | **Research sandbox** — hosted notebooks over the PII-masked corpus for approved academics (extends F2) | Deepens university partnerships beyond CSV export | Academic citations = credibility flywheel |
 | I8 | **KVKK bridge** — TR-localized incident notification formatting for Turkish public institutions | ALPAR's TR identity is a wedge no US competitor has | Home-market regulatory moat |
 
+### 🌱 I-SERIES → Admin Panel Görünürlüğü (Antigravity görevi — M-series biter bitmez yap)
+
+`strategy_innovations` tablosu ve `/admin/innovations` sayfası MEVCUT (`20260702000200_innovations.sql`; RLS: ceo/admin only). Yalnızca seed gerekiyor.
+
+**Dosya:** `supabase/migrations/20260709000001_seed_i_series_innovations.sql`
+
+Her satır ayrı `INSERT … WHERE NOT EXISTS` ile idempotent eklenir (title başına göre `LIKE 'IX —%'`).
+
+| title | description (TR) | priority | status |
+|-------|-----------------|----------|--------|
+| I1 — Incident Passport (Art. 73 resmi şablon çıktısı) | ALPAR kayıtlarını Komisyon'un resmi Art. 73 bildiri şablonu alanlarına tek tıkla dönüştürür. Taslak şablon kamuya açık; format uyumlu ilk platform olmak varsayılan hazırlık aracı olma fırsatı. Her dışa aktarılan pasaport ALPAR kökenini taşır. | high | idea |
+| I2 — ALPAR MCP Server / LLM Aracı | Olay API'sini yapay zeka ajanlarının sorgulayabileceği bir araç olarak sunar. Ajan ekosistemi büyüyor; ALPAR'ı kullanan ajanlar sıfır CAC dağıtım kanalı. Platform altyapıya dönüşür. | high | idea |
+| I3 — Sağlayıcı Yanıt SLA Rozeti | Talep edilmiş profilli sağlayıcılar için gömülebilir ücretsiz "X gün içinde yanıtlar" rozeti. Sağlayıcılar ALPAR'ı kendileri reklam eder. İki taraflı kilit. | medium | idea |
+| I4 — Sigorta/Aktüeryal Veri Akışı | AI sorumluluk sigortacıları için kategori bazlı anonim olay sıklık/ağırlık verileri. Pazar büyüyor, zarar geçmişi yok. Kategoride ilk zarar verisi. | low | idea |
+| I5 — Tarayıcı Eklentisi | URL + ekran görüntüsü yakalayarak submit akışına tek tıkla raporlama. Raporlama yükünü sıfıra yakın düşürür. Hacim büyüme motoru. | low | idea |
+| I6 — Model Sürüklenme İzleme | Sağlayıcı model kartı/sürüm değişikliklerini izler, olay artışlarıyla ilişkilendirir. Sessiz güncellemeler yaygın; kimse başarısızlıklarla ilişkilendirmiyor. Benzersiz uzunlamasına veri. | low | idea |
+| I7 — Araştırma Sanal Ortamı | PII maskelenmiş veri seti üzerinde onaylı akademisyenler için barındırılan not defterleri (F2 genişletmesi). Akademik alıntılar güvenilirlik vlanı oluşturur. | low | idea |
+| I8 — KVKK Köprüsü | Türk kamu kurumları için KVKK uyumlu yerelleştirilmiş olay bildirim biçimlendirmesi. ALPAR'ın TR kimliği hiçbir ABD rakibinin sahip olmadığı kama. Yerel pazar düzenleyici hendeği. | medium | idea |
+
+**Dosya sonu zorunlu yorum (Standing Rule #12):**
+```sql
+-- ROLLBACK: DELETE FROM public.strategy_innovations WHERE title ~ '^I[1-8] —';
+```
+
+**Accept kriterleri:**
+- `/admin/innovations` sayfasında tam 8 I-serisi kaydı görünür
+- Anon kullanıcı bu kayıtları görmez (RLS korumalı)
+- Migration dosyası rollback yorumu içerir
+- Doğrulama sorgusu: `SELECT title, priority, status FROM public.strategy_innovations WHERE title LIKE 'I% —%' ORDER BY title;`
+
 ---
 
 ## 🗓️ 2027 HORIZON (long-term roadmap — Architect refines each quarter into stages)
