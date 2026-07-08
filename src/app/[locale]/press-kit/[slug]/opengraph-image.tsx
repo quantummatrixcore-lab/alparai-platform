@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createServerClient } from "@/lib/supabase/server";
 
 export const runtime = "edge";
 export const alt = "ALPAR AI — Brand Profile Audit";
@@ -12,7 +12,7 @@ export default async function BrandOG({
   params: Promise<{ slug: string; locale: string }>;
 }) {
   const { slug } = await params;
-  const db = createAdminClient();
+  const db = await createServerClient();
 
   const { data: provider } = await db
     .from("ai_providers")

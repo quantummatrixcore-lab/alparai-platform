@@ -1,12 +1,12 @@
 import { ImageResponse } from "next/og";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createServerClient } from "@/lib/supabase/server";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function Image({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const supabase = createAdminClient();
+  const supabase = await createServerClient();
 
   // Fetch providers
   const { data: providers } = await supabase
