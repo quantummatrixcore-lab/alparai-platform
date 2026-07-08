@@ -17,6 +17,7 @@ interface UnsubscribePageProps {
     userId?: string;
     token?: string;
     type?: string;
+    ok?: string;
   }>;
 }
 
@@ -24,9 +25,46 @@ export default async function UnsubscribePage({ params, searchParams }: Unsubscr
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const { userId, token, type } = await searchParams;
+  const { userId, token, type, ok } = await searchParams;
 
   const isTr = locale === "tr";
+
+  if (ok === "1") {
+    const successMessage = isTr
+      ? "Tüm e-posta bildirimlerinden başarıyla çıkış yaptınız."
+      : "You have been successfully unsubscribed from all email notifications.";
+    return (
+      <Container size="narrow" className="py-20">
+        <Card className="border-emerald-500/20 bg-emerald-500/5">
+          <CardHeader className="text-center">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500">
+              <CheckCircle2 className="h-6 w-6" />
+            </div>
+            <CardTitle className="text-emerald-500">
+              {isTr ? "Abonelik İptal Edildi" : "Unsubscribed Successfully"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-fg-muted text-center">
+            <p className="text-fg-primary mb-4 text-base font-semibold">{successMessage}</p>
+            <p className="text-sm">
+              {isTr
+                ? "Herhangi bir zamanda hesabınıza giriş yaparak Tercihler sayfasından bildirimlerinizi yeniden açabilirsiniz."
+                : "You can turn notifications back on at any time by logging into your account and visiting Settings."}
+            </p>
+            <div className="mt-8 flex justify-center space-x-6">
+              <Link href={`/${locale}`} className="text-sm text-cyan-500 hover:underline">
+                {isTr ? "Ana Sayfa" : "Home"}
+              </Link>
+              <span className="text-fg-muted">|</span>
+              <Link href={`/${locale}/settings`} className="text-sm text-cyan-500 hover:underline">
+                {isTr ? "Ayarlar" : "Settings"}
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </Container>
+    );
+  }
 
   if (!userId || !token) {
     return (

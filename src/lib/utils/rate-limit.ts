@@ -31,6 +31,7 @@ export const RATE_LIMIT_KEYS = {
   coordinated_incident_burst_guard: "ratelimit:coordinated_incident_burst_guard",
   email_notification: "ratelimit:email_notification",
   vertex_scout: "ratelimit:vertex_scout",
+  unsubscribe_attempt: "ratelimit:unsubscribe_attempt",
 } as const;
 
 let _redis: Redis | null = null;
@@ -210,6 +211,12 @@ function getLimiters(): Record<string, Ratelimit> {
     [RATE_LIMIT_KEYS.vertex_scout]: new Ratelimit({
       redis: _redis,
       limiter: Ratelimit.slidingWindow(3, "1 h"),
+      analytics: true,
+      prefix: "alpar",
+    }),
+    [RATE_LIMIT_KEYS.unsubscribe_attempt]: new Ratelimit({
+      redis: _redis,
+      limiter: Ratelimit.slidingWindow(10, "1 d"),
       analytics: true,
       prefix: "alpar",
     }),

@@ -18,6 +18,7 @@ import { getResendClient } from "@/lib/email/resend";
 import { generateProviderToken } from "@/lib/utils/hash";
 import { logger } from "@/lib/utils/logger";
 import { getExpertVerificationEmail } from "@/emails/templates";
+import { generateEmailUnsubscribeToken } from "@/lib/utils/unsubscribe";
 import { checkRateLimit } from "@/lib/utils/rate-limit";
 import { parseIncidentCSV } from "@/lib/import/csv-parser";
 import { importIncidents } from "@/lib/import/incident-importer";
@@ -145,7 +146,8 @@ https://alparai.com`,
               );
               if (rlCheck.ok) {
                 const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://alparai.com";
-                const unsubscribeUrl = `${appUrl}/${reporterUser.locale || "en"}/settings`;
+                const unsubToken = generateEmailUnsubscribeToken(reporterUser.email);
+                const unsubscribeUrl = `${appUrl}/api/unsubscribe?email=${encodeURIComponent(reporterUser.email)}&token=${unsubToken}`;
                 const emailHtml = getExpertVerificationEmail({
                   title: incident.title_masked || incident.title || "Incident",
                   expertName: reporterUser.full_name || "ALPAR AI Expert",

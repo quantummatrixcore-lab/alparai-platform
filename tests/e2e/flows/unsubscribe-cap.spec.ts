@@ -25,7 +25,10 @@ try {
   console.warn("Failed to load .env.local for test runner:", e);
 }
 
-import { generateUnsubscribeToken } from "../../../src/lib/utils/unsubscribe";
+import {
+  generateUnsubscribeToken,
+  generateEmailUnsubscribeToken,
+} from "../../../src/lib/utils/unsubscribe";
 
 test.describe("One-click Unsubscribe Flow", () => {
   test("should show invalid request when params are missing", async ({ page }) => {
@@ -48,5 +51,42 @@ test.describe("One-click Unsubscribe Flow", () => {
 
     const title = page.locator("h3");
     await expect(title).toContainText("Unsubscribed Successfully");
+  });
+
+  test("should successfully unsubscribe via GET API with valid token and redirect", async ({
+    page,
+  }) => {
+    const email = "test-reporter@alparai.com";
+    const token = generateEmailUnsubscribeToken(email);
+
+    await page.goto(`/api/unsubscribe?email=${encodeURIComponent(email)}&token=${token}`);
+
+    await expect(page).toHaveURL(/.*unsubscribe\?ok=1/);
+    const title = page.locator("h3");
+    await expect(title).toContainText("Unsubscribed Successfully");
+  });
+
+  test("should successfully unsubscribe via POST API with valid token", async ({ request }) => {
+    const email = "test-reporter@alparai.com";
+    const token = generateEmailUnsubscribeToken(email);
+
+    const response = await request.post("/api/unsubscribe", {
+      data: { email, token },
+    });
+
+    expect(response.status()).toBe(200);
+    const json = await response.json();
+    expect(json.ok).toBe(true);
+  });
+
+  test("should fail API unsubscribe with invalid token", async ({ request }) => {
+    const email = "test-reporter@alparai.com";
+    const response = await request.get(
+      `/api/unsubscribe?email=${encodeURIComponent(email)}&token=invalidtoken`,
+    );
+
+    expect(response.status()).toBe(400);
+    const text = await response.text();
+    expect(text).toContain("The unsubscribe link is missing or invalid");
   });
 });

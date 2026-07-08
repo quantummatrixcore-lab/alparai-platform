@@ -8,7 +8,7 @@ import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { headers } from "next/headers";
 import { getResendClient } from "@/lib/email/resend";
 import { getProviderResponseNotificationEmail } from "@/emails/templates";
-import { generateUnsubscribeToken } from "@/lib/utils/unsubscribe";
+import { generateEmailUnsubscribeToken } from "@/lib/utils/unsubscribe";
 import { checkEmailCapAndLog } from "@/lib/email/cap";
 
 const responseInputSchema = z.object({
@@ -166,8 +166,8 @@ export async function submitProviderResponse(
                 ));
                 if (!isCapped) {
                   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://alparai.com";
-                  const unsubToken = generateUnsubscribeToken(incident.user_id);
-                  const unsubscribeUrl = `${appUrl}/${reporterUser.locale || "en"}/unsubscribe?userId=${incident.user_id}&token=${unsubToken}&type=reporter_notifications`;
+                  const unsubToken = generateEmailUnsubscribeToken(reporterUser.email);
+                  const unsubscribeUrl = `${appUrl}/api/unsubscribe?email=${encodeURIComponent(reporterUser.email)}&token=${unsubToken}`;
                   const emailHtml = getProviderResponseNotificationEmail({
                     title: incident.title_masked || incident.title || "Incident",
                     providerName: provider.name,
