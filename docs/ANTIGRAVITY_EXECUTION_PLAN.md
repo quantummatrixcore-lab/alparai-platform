@@ -1,6 +1,8 @@
-# ALPAR AI — Antigravity Full Execution Plan v7.3 (H2 2026 → 2027)
+# ALPAR AI — Antigravity Full Execution Plan v7.4 (H2 2026 → 2027)
 
-> **Revised by Architect (Claude Opus 4.7) on 2026-07-08 (late evening).** v7.3 = 360° code-reality audit + priority realignment. Three parallel Explore agents inspected the codebase against plan assumptions. Findings changed the launch-critical path materially.
+> **Revised by Architect (Claude Opus 4.8) on 2026-07-09 (early morning).** v7.4 professional-planning additions on top of v7.3's code-reality alignment: (1) X-series legal/crisis playbook, (2) W-series Aug 2 hour-by-hour launch-day timeline, (3) Y-series T+0 → T+30 growth-signal & pivot-check kit, (4) Standing Rule #20 daily cost-budget alarm. Also processes Antigravity's `bb1fcca` M1 audit — the home page carries the only HIGH-severity finding (3-element horizontal overflow); every other page is LOW-severity touch-target ergonomics.
+>
+> **v7.3 baseline (still valid):** 360° code-reality audit + priority realignment. Three parallel Explore agents inspected the codebase against plan assumptions. Findings changed the launch-critical path materially.
 >
 > **v7.3 core discoveries:**
 > - **B1 (SSE real-time submit), B5 (KVKK delete), C5 (embed widget) are already shipped** — the plan misidentified them as TODO. DB column name is `processing_stage` (not `incident_processing_status`); delete flow lives at `settings/page.tsx` (not `settings/delete-account/`).
@@ -71,7 +73,14 @@ Launch is **Aug 2**. Everything below is ranked. If deadlines slip, cut from the
 
 ---
 
-## 📱 M-SERIES — Mobile Quality Sprint (added in v7, expanded in v7.3; PRIORITY OVER STAGE C; deadline Jul 18)
+## 📱 M-SERIES — Mobile Quality Sprint (v7 → v7.3 → v7.4; M1 ✅ COMPLETE via `bb1fcca`; deadline Jul 18)
+
+> **v7.4 update — M1 result:** Antigravity ran the audit early (before M0 could be committed) and published `docs/MOBILE_AUDIT.md` + 30 screenshots (10 pages × 3 viewports) at `bb1fcca`. Findings:
+> - **HIGH severity — home page only.** Horizontal overflow on all three viewports (scrollWidth 389/404/426 vs. viewport 375/390/412). Root elements: `div.bg-brand-600/8`, `div.bg-warning-500/15`, `div.flex`. **All three overflows share the same shared component** — one fix likely resolves all three viewport rows.
+> - **LOW severity — every other page.** Only issue is touch-target ergonomics (elements < 44px): incidents/leaderboard (~126 each), submit (48), academy/blog (38), ai-act/transparency (32), unsubscribe (33), incident_detail (1).
+> - **Zero overflow on pages other than home.** Which means `incident-list.tsx`, `submit page`, admin table pages, etc. all pass the primary launch-blocker check.
+>
+> **v7.4 revised M2 sequence:** land the home-overflow fix first (blocks launch narrative — the landing page is the first surface for HN/PH/TR press traffic); treat touch-target sweep as post-launch ergonomics (SHOULD, not MUST), unless the founder demands it before Aug 2 on real-device confirmation.
 
 > Founder reports broken mobile UI. Launch traffic will be majority-mobile (social-driven). Nothing else ships to prod until M1's audit table exists.
 
@@ -209,6 +218,134 @@ Send Jul 15; embargo lift Aug 2 at 09:00 TRT. **Executor drafts; founder sends**
 
 ---
 
+## ⏰ W-SERIES — Aug 2 Launch-Day Hour-by-Hour Timeline (v7.4, MUST — assets ready Aug 1)
+
+> Founder must be able to operate the launch day alone. The Executor prepares a single-file playbook (`docs/RUNBOOK_LAUNCH_DAY.md`) that a non-technical person can follow line-by-line while the timer runs. Aug 2 is a Saturday — team-of-one operation is the design constraint.
+
+**All times in Turkey Time (TRT, UTC+3). Convert to local as needed for co-workers.**
+
+| Time (TRT) | Action | Owner | Success signal | Kill switch |
+|------------|--------|-------|----------------|-------------|
+| **Aug 1, 22:00** | Deploy freeze begins — no code merges to master until Aug 10 (Stage D window) | Executor | Last merge commit hash logged in RUNBOOK_LAUNCH_DAY.md | — |
+| **Aug 2, 07:00** | Sanity: Sentry rules armed, cron jobs green (5 registered), health endpoint 200 | Founder | Screenshots into launch log | If red: postpone 24h |
+| **Aug 2, 07:30** | Waitlist early-access email sent (single send from queue) | Founder approves; system sends | Resend log 200; open rate check at T+2h | — |
+| **Aug 2, 08:00** | Turnstile spot-check on submit form | Founder | Test submit completes | Env flag `TURNSTILE_KILL_SWITCH=true` if broken |
+| **Aug 2, 08:30** | Dashboard suite open (Vercel Analytics, Plausible live, Sentry, Supabase, Upstash) | Founder | Baseline snapshot at T-30m | — |
+| **Aug 2, 09:00** | **HN "Show HN: ALPAR AI" post** (from `docs/launch-assets/hacker_news.md`) | Founder | HN URL logged; visitor spike expected T+15m | — |
+| **Aug 2, 09:15** | **Product Hunt page goes live** | Founder | PH ranking screenshot every hour | — |
+| **Aug 2, 09:30** | **TR press embargo lift** — send email to Webrazzi/Shiftdelete/Technopat/Donanım Haber | Founder | Sends logged with subject-line audit | — |
+| **Aug 2, 10:00** | **X/Twitter EN launch thread** publish | Founder | Thread URL logged | — |
+| **Aug 2, 10:15** | **X/Twitter TR launch thread** publish | Founder | Thread URL logged | — |
+| **Aug 2, 11:00** | **LinkedIn founder post** (thought-leadership frame: EU AI Act Art. 73 countdown) | Founder | Post URL logged | — |
+| **Aug 2, 12:00** | **Reddit posts** — r/MachineLearning + r/artificial (check subreddit self-promo rules first) | Founder | Post URLs logged; downvote rate check | Delete + retract if brigaded |
+| **Aug 2, 13:00** | **T+4h dashboard check** — submission velocity, unique visitors, HN rank, PH rank, cross-audit throughput, Sentry error rate | Founder | Numbers into launch log; compare against pre-launch baseline (0) | If Sentry > 20 err/hr: pause new-submit CTA on landing |
+| **Aug 2, 15:00** | **Mid-day response wave** — reply to HN comments (Executor drafts, founder approves+posts) | Founder + Executor | Comment thread active | — |
+| **Aug 2, 18:00** | **T+9h checkpoint** — submission count, first organic report count, unique visitors, geo split (TR vs EN) | Founder | Numbers into launch log | If organic submissions = 0: escalate to founder-in-person outreach |
+| **Aug 2, 21:00** | **EOD summary** — decide Day 2 amplification (second thread? community response? paid boost?) | Founder | Day 2 plan committed | — |
+| **Aug 3, 09:00** | **T+24h retro** — one-page: what worked, what broke, what to change for the week | Founder | Retro in launch log | — |
+
+**Pre-populated kill-switch env flags (must exist in Vercel env by Aug 1):**
+- `AUTOPILOT_KILL_SWITCH=false` (flip true to halt cross-audit)
+- `TURNSTILE_KILL_SWITCH=false` (flip true to bypass challenge on submit — emergency only, use with rate limit up)
+- `SUBMIT_CTA_HIDDEN=false` (flip true to hide "Report an incident" CTA on landing if quality degrades)
+- `RESEND_KILL_SWITCH=false` (flip true to halt all outbound email)
+
+**Communication channel during launch:** single group chat (founder + Executor async via commit messages, since Executor cannot post external comms). If Executor is unavailable, founder follows RUNBOOK_LAUNCH_DAY.md line-by-line.
+
+*Accept (Aug 1):* `docs/RUNBOOK_LAUNCH_DAY.md` exists with this table + copy-ready CTA links + kill-switch commands; all 4 env flags exist in Vercel with baseline `false`.
+
+---
+
+## ⚖️ X-SERIES — Legal & Crisis Playbook (v7.4, MUST — drafts by Jul 25)
+
+> A public accountability platform attracts adversarial attention on day one. Silence is not a strategy. Executor pre-drafts **response templates + decision trees** so the founder can execute within the incident's news cycle (typically 6 hours), not a legal-review cycle (typically 6 days). All templates live under `docs/CRISIS_PLAYBOOK/` and are Architect-approved before launch.
+
+**X1. Provider defamation claim / DMCA takedown notice.**
+
+- **Trigger:** an AI provider (OpenAI, Anthropic, xAI, Google, TR provider) sends a legal letter demanding takedown of an incident record OR threatens defamation suit.
+- **Immediate action (T+0 to T+24h):** do NOT take content down without legal review. Public response: acknowledge receipt, restate the incident is user-reported and links to public source(s), invite provider to file a **claimed profile response** (existing feature) instead.
+- **Template file:** `docs/CRISIS_PLAYBOOK/X1-provider-legal-response.md` (EN + TR variants).
+- **Decision tree:**
+  - Is the incident sourced from a public, verifiable record (news article, court filing, X thread)? → refuse takedown, redirect to claim response.
+  - Is the incident source unverifiable (single-user submission, no corroboration)? → move to `expert_review` queue; if not verified within 72h, retract publicly with note.
+  - Is the DMCA claim a copyright hit (screenshot of AI output)? → check fair use posture; likely retain under research/journalism.
+- **Attorney contact:** founder-provided; slot in RUNBOOK escalation ladder (v7.4 update).
+
+**X2. False incident report / bad-faith submission.**
+
+- **Trigger:** a submitted incident is factually wrong, defamatory toward a person, or a coordinated brigading attempt (e.g. multiple identical submissions from bot network).
+- **Immediate action:** move to `expert_review` if not caught by pre-triage; unpublish (soft-delete) within 24h if evidence of bad faith; issue retraction note on the incident URL (public transparency about the correction).
+- **Template file:** `docs/CRISIS_PLAYBOOK/X2-false-report-retraction.md` — retraction copy + email to reporter explaining the decision.
+- **Standing Rule cross-link:** #19 (numeric-claim honesty) applies to retractions too — the transparency page must show the retraction count.
+
+**X3. Media misinformation campaign about ALPAR.**
+
+- **Trigger:** a news outlet, influencer, or coordinated social campaign accuses ALPAR of bias, methodology fraud, or political affiliation.
+- **Decision gate:** does the outlet have >10k TR or >100k global reach? If **no**, follow silence-and-monitor protocol (do not amplify by responding). If **yes**, publish a public methodology defense within 24h.
+- **Template file:** `docs/CRISIS_PLAYBOOK/X3-methodology-defense.md` — one-pager linking to `docs/EU_AI_ACT_TAXONOMY.md`, TruthScore methodology, and the AGPL open-source repo (post-launch curated public repo).
+- **Never:** attack the accuser personally, block critics on X, or issue a legal threat as first response. Substance-only defense.
+
+**X4. On-platform harassment / doxxing incident.**
+
+- **Trigger:** a reporter's profile is doxxed (real identity revealed against their will), or an incident record contains PII that a subject requests removed.
+- **Immediate action:** honor removal within 24h under KVKK Art. 11 (data subject right to erasure); PII Guardian handles the sanitization automatically for new writes, but historical records may need manual scrubbing.
+- **Template file:** `docs/CRISIS_PLAYBOOK/X4-pii-erasure.md` — user-facing explanation + internal checklist for admin PII removal + audit trail requirement.
+
+**X5. Regulatory inquiry (KVKK / EU DSA / provider regulator).**
+
+- **Trigger:** written request from KVKK (Türkiye), EU DSA authority, or a provider's home regulator.
+- **Response window:** 30 days (KVKK) or per the request's own deadline (whichever is shorter).
+- **Immediate action:** acknowledge receipt within 3 business days; assemble the requested data pack (audit logs, PII processing records, methodology documentation) into `docs/CRISIS_PLAYBOOK/X5-regulator-response-pack/` — pre-templated file structure so the founder can populate one folder per inquiry.
+- **Template file:** `docs/CRISIS_PLAYBOOK/X5-regulator-response.md` + `docs/CRISIS_PLAYBOOK/X5-inquiry-log.md` (running log of every inquiry received).
+
+**X-series Accept:** all five template files exist under `docs/CRISIS_PLAYBOOK/` by Jul 25; RUNBOOK's escalation ladder includes attorney contact + PR contact + KVKK compliance contact; Executor never sends a public response — always founder.
+
+---
+
+## 📊 Y-SERIES — Post-Launch T+0 → T+30 Growth Signal Kit (v7.4, MUST — Y1 ready Aug 2, Y2/Y3 automated)
+
+> The v6 pacing rule bars idle Executors. The Executor's post-launch work is **reading signals fast enough to know what to build next.** Y-series formalizes the read: what to measure, when to declare it, and what triggers a pivot.
+
+**Y1. Day-0/Day-1 signal panel — `/admin/launch-signal` (Executor ships by Aug 1).**
+
+Single admin page updating live during the launch window:
+- Submission velocity (submissions/hour, last 24h) — organic vs. auto-import split via `incident_source`
+- Unique visitor count (Plausible)
+- Traffic source split (Direct / X / HN / PH / TR press / Reddit / LinkedIn)
+- Cross-audit throughput and latency P50/P95
+- Sentry error rate (errors/hour)
+- HN post rank (scraped or manual entry)
+- PH ranking (manual entry)
+
+*Accept:* renders at 10s auto-refresh; admin-only RLS; bilingual; safe if a data source (Plausible, HN) is unreachable.
+
+**Y2. Day-7 kill-metric readout — automated Slack/email report (Aug 9).**
+
+Sunday 20:00 TRT, a cron sends the founder a single-page readout:
+- Total organic reports in the first week
+- **Kill-metric check:** if organic reports < 10 in first 7 days → escalation flag in the report (not automatic pivot — founder decides)
+- Registered users, D3 return rate, D7 return rate
+- Which traffic source produced actual submissions (not just visitors)
+- Top 3 organic incidents by TruthScore
+- Cost report: cross-audit spend, pre-triage skip rate
+
+*Accept:* email arrives Aug 9 20:00 TRT with real numbers; a test-mode dry-run works on Aug 1.
+
+**Y3. Day-30 pivot-check readout — Sept 1 (automated).**
+
+Same layout as Y2 but with the 30-day denominator, plus:
+- Weekly organic-reports trend (line chart, 4 weeks)
+- **Sept 15 kill-metric anchor:** if weekly organic reports < 10 by Sept 15 → founder+Architect strategy session, per the existing kill-criteria clause. Y3 report is the raw input to that session.
+- API tier signup count (Free / Developer / Enterprise) — Stage C validation
+- Expert interest count (Academy expert-form submissions)
+- Media coverage inventory (URL list with reach estimate)
+
+*Accept:* Sept 1 automated email; format matches Y2; historical Y2 numbers included as comparison.
+
+**Y-series design principle:** the Executor does not interpret the data — the Executor delivers a stable, honest report cadence. The **Architect interprets**, the **founder decides**. Numbers speak; nobody spins them.
+
+---
+
 ## STANDING RULES (violations fail review automatically)
 
 1. **Push before report.** Every report ends with an `origin/master` commit hash. Unpushed work does not exist.
@@ -230,6 +367,12 @@ Send Jul 15; embargo lift Aug 2 at 09:00 TRT. **Executor drafts; founder sends**
 17. 🆕 **v7.3 — SHA-256 credential authentication.** Every externally-reachable API endpoint authenticates credentials by hashed comparison (`digest(input, 'sha256') === stored_sha256`), never plain-text equality. Plain-text credential comparison (`api_key === stored`) fails code review automatically. Constant-time comparison via `crypto.timingSafeEqual` remains required on top of the hash check.
 18. 🆕 **v7.3 — Code-reality reconciliation before implementation.** Before starting any stage the Executor greps the codebase against the plan (`docs/API.md`, migration schemas, existing routes, `vercel.json` cron list). Any mismatch → write a proposal note (`docs/PROPOSALS/`), do not write code. This rule was created because v7.3 audit found B1/B5/C5 already shipped, C1 schema unsafe, and 2 crons unregistered — all missed by prior plans.
 19. 🆕 **v7.3 — Numeric-claim honesty.** Any user-facing numeric claim in the app or launch copy (`N incidents`, `N users`, `N providers`) must query the database live and split by source (`incident_source`, `verified_by`, etc.). The word "verified" is reserved for `expert_verified = true` rows only until F1 (expert-review queue) is live. Hardcoded landing-page numbers are a review-fail.
+20. 🆕 **v7.4 — Daily cost-budget alarm & monthly ceiling.** Executor ships a `weekly_cost_summary` cron (or extends the existing weekly summary) that sums `cross-audit spend + Vercel + Supabase + Upstash + Resend + OpenRouter + Vertex` per day and per month. Thresholds:
+    - **Daily > $50 USD** → Sentry warning + admin banner "cost trending high, review last 24h submissions"
+    - **Daily > $100 USD** → automatic pre-triage tightening (raise min description-word threshold from 15 → 25 for 24h) + founder email
+    - **Monthly ceiling $500 USD** — when reached, cross-audit throttles to expert-review queue only until month roll-over; founder email + admin banner
+    - Kill switch `COST_KILL_SWITCH=true` env flag halts new cross-audit calls immediately
+    Rationale: launch traffic 10× organic could 10× spend overnight. A budget alarm is cheaper than a bankrupt Series A pitch.
 
 ---
 
@@ -561,6 +704,13 @@ The Executor works this list top-to-bottom. Every item = its own commit, pushed 
 | 16 | D-extra assets completion (LinkedIn, Reddit, PH screenshots) | SHOULD | 1 d | Launch-day amplification |
 | 17 | RUNBOOK_LAUNCH.md v1.1 — Turnstile / Resend / SSE kill-switches + T-25→T-0 checklist | MUST | 3 h | Founder solo-op capability |
 | 18 | C1b — Two enterprise onboarding keys + revoke test | SHOULD | 2 h | Enterprise readiness |
+| **19** | **🆕 v7.4 W-series — `docs/RUNBOOK_LAUNCH_DAY.md` (hour-by-hour Aug 2 timeline + 4 kill-switch env flags added to Vercel)** | **MUST** | **4 h** | **Founder launch-day solo op** |
+| **20** | **🆕 v7.4 X-series — 5 crisis playbook templates under `docs/CRISIS_PLAYBOOK/` (X1 provider legal, X2 false report, X3 media, X4 PII erasure, X5 regulatory)** | **MUST** | **1 d** | **Legal/PR incident readiness** |
+| **21** | **🆕 v7.4 M2-home — fix home-page horizontal overflow (`div.bg-brand-600/8`, `div.bg-warning-500/15`, `div.flex`; likely one shared component)** | **MUST** | **2 h** | **Landing page HIGH-severity mobile** |
+| **22** | **🆕 v7.4 Y1 — `/admin/launch-signal` page (submission velocity, traffic split, HN/PH rank, Sentry, cross-audit throughput)** | **MUST** | **4 h** | **Launch-day signal reading** |
+| **23** | **🆕 v7.4 Y2 + Y3 — day-7 and day-30 automated readouts (cron + email template)** | **MUST** | **3 h** | **Automated pivot-check input** |
+| **24** | **🆕 v7.4 Standing Rule #20 — daily cost-budget alarm cron + monthly ceiling + `COST_KILL_SWITCH` env** | **MUST** | **3 h** | **Prevent budget blow-up under launch traffic** |
+| 25 | M2-touch (post-launch, SHOULD) — sweep 44px touch-target findings on 9 non-home pages | SHOULD | 1–2 d | Mobile ergonomics polish |
 
 **Post-launch (Aug 10+) items** — do NOT start before Aug 10:
 - C3 — Usage metering
@@ -582,6 +732,10 @@ The following require founder input before or during the sequence above. Executo
 5. **P2 waitlist location.** Home-page banner (recommended) vs. dedicated `/countdown` page.
 6. **B2b scheduling.** Push weekly-digest / expert-verification emails to Aug 10+ freeze exit? *Recommended: yes — M-series + C-series already saturate pre-launch.*
 7. **N4 imported-incident language.** (a) Gemini batch-translation of summaries, (b) small "EN" badge on Turkish pages. Executor drafts feasibility notes for both; founder picks.
+8. **🆕 v7.4 — Attorney + PR contact for X-series.** X1/X3/X5 escalation ladder needs a named lawyer (TR + EU), a PR contact (TR + EN), and a KVKK compliance advisor. Founder provides names + phones + emails; Executor slots into RUNBOOK.
+9. **🆕 v7.4 — Cost-budget ceiling values.** Standing Rule #20 uses $50/day warn, $100/day auto-tighten, $500/month ceiling. Founder confirms or adjusts before Rule #20 cron ships.
+10. **🆕 v7.4 — X3 media-response reach threshold.** Public defense triggered at "outlet >10k TR or >100k global". Founder confirms these thresholds or supplies preferred numbers.
+11. **🆕 v7.4 — Day-2 amplification budget.** If Day-1 numbers are strong, does the founder authorize a paid amplification budget (X ads, LinkedIn boost) and if yes, cap it. If numbers are weak, does the founder want an emergency Day-2 outreach list (contacts to warm up)?
 
 Every decision resolves in `docs/PROPOSALS/NNN-title.md` first — Executor never assumes.
 
@@ -613,6 +767,17 @@ After each stage: push → report with:
 All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying customer flow technically ready (C1–C4); embed widget live with measurable external embeds (C5); **≥100 organic signups tracked in growth dashboard (E7);** expert portal live with ≥1 real expert action; monthly cost + coverage reports automated. Then execution moves to the 2027 Horizon above — the Architect writes each quarter's stage spec in the final 2 weeks of the prior quarter.
 
 ---
+
+## CHANGELOG (v7.3 → v7.4) — Professional Planning Gaps Closed
+
+| Change | Rationale |
+|--------|-----------|
+| **🆕 W-series added** — Aug 2 hour-by-hour launch-day timeline in `docs/RUNBOOK_LAUNCH_DAY.md` (16 timeline rows + 4 pre-populated kill-switch env flags) | Launch-day is Saturday; founder operates alone; line-by-line playbook is the design constraint |
+| **🆕 X-series added** — 5 crisis playbook templates (provider legal, false report, media misinformation, PII erasure, regulatory inquiry) under `docs/CRISIS_PLAYBOOK/` | Public accountability platform draws adversarial attention on day one; silence is not a strategy; response window is news cycle (6h), not legal cycle (6d) |
+| **🆕 Y-series added** — T+0 signal panel + T+7 kill-metric readout + T+30 pivot-check readout | Executor's post-launch job is signal cadence, not interpretation; Sept 15 kill-metric anchor needs raw input |
+| **🆕 Standing Rule #20** — daily cost-budget alarm ($50 warn / $100 auto-tighten / $500 monthly ceiling) + `COST_KILL_SWITCH` env | Launch traffic 10× = spend 10×; cheaper alarm than Series A pitched with $2k COGS/mo |
+| **M1 audit result processed** (`bb1fcca`) — home page is the only HIGH-severity finding (3-element shared-component overflow); every other page is LOW touch-target ergonomics | Antigravity front-ran M1; plan now differentiates M2-home (MUST, launch-blocker) from M2-touch (SHOULD, post-launch) |
+| **Work queue extended to 25 items** (adds M2-home, W-series RUNBOOK, X-series templates, Y1/Y2/Y3 pages+crons, Rule #20 cron) | Single execution sheet stays authoritative |
 
 ## CHANGELOG (v7.2 → v7.3) — 360° Code-Reality Audit
 
