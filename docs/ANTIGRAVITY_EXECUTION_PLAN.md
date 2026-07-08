@@ -1,14 +1,12 @@
-# ALPAR AI — Antigravity Full Execution Plan v4 (H2 2026)
+# ALPAR AI — Antigravity Full Execution Plan v5 (H2 2026 → 2027)
 
-> **Revised by Architect (Claude Fable 5) on 2026-07-07.** v3 reconciled delivery state and hardened rules. v4 adds what v3 lacked: a **launch-critical path** with an explicit cut line — 21 days out, not everything is equal priority, and the Executor must know what to drop if time runs short.
+> **Revised by Architect (Claude Fable 5) on 2026-07-07.** v4 added the launch-critical path. v5 extends the horizon: a full **2027 roadmap** anchored on the one date that defines this company — **2 Dec 2027**, when EU AI Act Art. 73 high-risk incident-reporting obligations go live. Everything ALPAR builds until then is positioning to be the reference dataset and reporting rail on that day.
 >
-> **Core Thesis (unchanged):** Platform is technically mature (406 incidents, full automation pipeline, RLS, i18n, accessibility). Bottleneck is **users, not code.** Every task carries a "user impact" lens.
+> **Core Thesis:** Bottleneck is **users, not code** (2026) → then **revenue, not users** (2027 H1) → then **regulatory moment capture** (2027 H2). Every task carries the lens of its phase.
 >
-> **State at issue (2026-07-07):**
+> **State at issue (2026-07-07, updated):**
 > - Stages 0–3 + Stage A ✅ complete (`a96c9ca`)
-> - Stage B partially delivered (`4cbeee2` news→social + GDPR delete, `f4cd43b` press releases + outreach hub)
-> - Out-of-scope commits shipped (`ea2ebc9`, `52fcba8`, `f4cd43b` war room + AI pulse visualizer + outreach hub) — retro-approved in Stage B-extra below
-> - Working tree at `861fe46`
+> - Stage B: B1 ✅, B2a-partial ✅, B3 ✅, B5 ✅, B-extra.1–3 ✅ (`Architect-Approval: 5e29c34 2026-07-07`); B2a remainder + B4 in progress
 > - 21 days to launch (Aug 2), "Accountability Gap" narrative
 >
 > **Repo hygiene (enforced 2026-07-07):** Single active branch: `master`. All feature/dependabot/release-please branches deleted. No PR is opened on a plan document.
@@ -223,6 +221,52 @@ Dependabot PRs: merge only after CI green (security patches same week; feature b
 
 ---
 
+## 🗓️ 2027 HORIZON (long-term roadmap — Architect refines each quarter into stages)
+
+> **The strategic anchor: 2 Dec 2027.** On that day, Art. 73 serious-incident reporting becomes mandatory for high-risk AI systems in the EU. Providers will need incident data, taxonomy mapping, and reporting workflows — overnight. ALPAR's entire 2027 is a countdown to owning that moment: the platform that spent two years cataloguing AI incidents becomes the obvious reference when reporting them becomes law.
+
+### Q4 2026 — Prove the Engine (Oct–Dec)
+- **First paying API customer** (C1–C4 live; target: 1 signed, 3 in pipeline)
+- **1,000 published incidents** (import pipeline + organic; taxonomy coverage ≥80%)
+- **"State of AI Incidents 2026" report** (F3) — the credibility artifact for press, academics, and investors
+- **Expert network:** ≥5 active experts with real verification actions (F1)
+- *North-star:* Weekly active reporters ≥30; first revenue booked.
+- *Kill/pivot check (Dec 31):* if organic submissions <10/week despite launch + growth loops, pivot primary motion from community-sourced to curated-editorial + API-first.
+
+### Q1 2027 — Revenue Engine (Jan–Mar)
+- **Compliance Readiness Dashboard** (new product surface): providers see their incident exposure mapped to Art. 73 classes, gap analysis, response-rate benchmark vs. peers. Free tier read-only; paid tier = alerts + API + white-label reports.
+- **API v2:** webhook subscriptions (new incident matching filters), bulk export, SLA tiers
+- **Pricing goes live** (founder sets amounts; Executor builds Stripe integration + billing portal)
+- **TR + EU regulatory content engine:** weekly "readiness gap" analyses auto-drafted into approval queue
+- *North-star:* MRR > €1k; ≥3 provider profiles claimed by the companies themselves.
+
+### Q2 2027 — The Authority Position (Apr–Jun)
+- **Academic partnership formalized:** ≥1 university MOU (founder-led; Executor builds the research portal capacity F2 needs)
+- **Methodology audit:** external academic review of TruthScore published — closes the "methodology attack" risk permanently
+- **"180 days to Art. 73" campaign** (Jun 5): repeat of the Aug 2026 countdown playbook, aimed at compliance officers, not tech twitter
+- **SOC 2 Type I readiness** (if enterprise pipeline demands it — founder decision gate)
+- *North-star:* 3 enterprise pilots; ALPAR cited in ≥2 external publications (press or academic).
+
+### Q3 2027 — Scale the Rail (Jul–Sep)
+- **Regulatory Reporting Assistant:** guided Art. 73 report drafting from an ALPAR incident record (export to the format regulators accept). This is the wedge product for Dec 2.
+- **10,000-incident corpus** goal via connector expansion (only sources with clean licensing)
+- **Multi-language expansion decision gate:** DE/FR if EU enterprise demand is real (founder decides on data, not ambition)
+- *North-star:* MRR > €5k; ≥1 provider using the Reporting Assistant in anger.
+
+### Q4 2027 — The Moment (Oct–Dec)
+- **Nov:** "30 days to Art. 73" full-court press: report, webinars (founder), press kit v2
+- **Dec 2:** Art. 73 goes live. ALPAR ships the **live obligation tracker**: which providers are reporting, which aren't. The accountability gap closes — and ALPAR is the scoreboard.
+- **Series A window opens:** dataroom auto-assembled from what already exists (metrics dashboards, cost reports, cohort data — E7/G4 outputs are the dataroom)
+- *North-star:* the Dec 2 news cycle cites ALPAR; MRR > €10k or a signed enterprise contract that implies it.
+
+### Long-term operating principles
+1. **Quarterly re-planning:** each quarter's detail is written by the Architect in the last 2 weeks of the prior quarter; this section is direction, not spec. The Executor never self-derives tasks from the Horizon.
+2. **Revenue tasks outrank feature tasks from Jan 2027.** The 2026 rule was "does it bring users?"; the 2027 rule is "does it bring or protect revenue?"
+3. **The regulatory calendar is the marketing calendar.** Every EU AI Act milestone (guidance publications, delegated acts, the Dec 2 go-live) gets a countdown campaign through the same approval queue.
+4. **Kill criteria stay live:** any quarter missing both its north-stars triggers a founder+Architect strategy session before new feature work is approved.
+
+---
+
 ## REPORTING PROTOCOL
 
 After each stage: push → report with:
@@ -246,9 +290,19 @@ After each stage: push → report with:
 
 ## DEFINITION OF DONE (whole plan)
 
-All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying customer flow technically ready (C1–C4); embed widget live with measurable external embeds (C5); **≥100 organic signups tracked in growth dashboard (E7);** expert portal live with ≥1 real expert action; monthly cost + coverage reports automated. Then request the 2027 plan from the Architect.
+All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying customer flow technically ready (C1–C4); embed widget live with measurable external embeds (C5); **≥100 organic signups tracked in growth dashboard (E7);** expert portal live with ≥1 real expert action; monthly cost + coverage reports automated. Then execution moves to the 2027 Horizon above — the Architect writes each quarter's stage spec in the final 2 weeks of the prior quarter.
 
 ---
+
+## CHANGELOG (v4 → v5)
+
+| Change | Rationale |
+|--------|-----------|
+| 2027 Horizon added (Q4'26 → Q4'27, quarterly) | Long-term direction anchored on 2 Dec 2027 Art. 73 go-live — the single date that defines the company's market moment |
+| Per-quarter north-stars + kill/pivot criteria | Professional plans state failure conditions, not just goals |
+| Long-term operating principles (quarterly re-planning, revenue-first from Jan 2027, regulatory calendar = marketing calendar) | Prevents the Executor deriving tasks from direction; keeps Horizon strategic, stages tactical |
+| Header status refreshed to `5e29c34` approval state | Reflects Stage B partial approval |
+| Definition of Done handoff updated | 2027 plan no longer "requested later" — it's in this document |
 
 ## CHANGELOG (v3 → v4)
 
