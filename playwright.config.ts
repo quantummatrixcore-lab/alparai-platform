@@ -16,6 +16,8 @@ export default defineConfig({
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
     { name: "firefox", use: { ...devices["Desktop Firefox"] } },
     { name: "mobile-safari", use: { ...devices["iPhone 14"] } },
+    { name: "mobile-se", use: { ...devices["iPhone SE"] } },
+    { name: "mobile-pixel", use: { ...devices["Pixel 7"] } },
     { name: "tablet-safari", use: { ...devices["iPad Mini"] } },
   ],
   webServer: process.env.CI

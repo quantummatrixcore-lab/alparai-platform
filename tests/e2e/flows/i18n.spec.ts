@@ -22,21 +22,21 @@ test.describe("i18n Language & Routing Checks", () => {
     const headerTitle = page.locator("html");
     await expect(headerTitle).toHaveAttribute("lang", "en");
 
-    // Skip language switcher click on mobile since it might be in mobile hamburger menu
     if (isMobile) {
-      test.skip();
-      return;
+      const menuBtn = page.getByRole("button", { name: /open menu|menüyü aç/i }).first();
+      await expect(menuBtn).toBeVisible();
+      await menuBtn.click();
     }
 
     // 2. Click Language Switcher to switch to Turkish
-    const trButton = page.getByRole("button", { name: /^TR$/i });
-    const isVisible = await trButton.isVisible();
-    if (isVisible) {
-      await trButton.click();
-      await page.waitForURL(/\/tr/);
+    const trButton = isMobile
+      ? page.locator("#mobile-nav-panel").getByRole("button", { name: /^TR$/i }).first()
+      : page.getByRole("button", { name: /^TR$/i }).first();
+    await expect(trButton).toBeVisible();
+    await trButton.click();
+    await page.waitForURL(/\/tr/);
 
-      // Verify html lang is now 'tr'
-      await expect(page.locator("html")).toHaveAttribute("lang", "tr");
-    }
+    // Verify html lang is now 'tr'
+    await expect(page.locator("html")).toHaveAttribute("lang", "tr");
   });
 });

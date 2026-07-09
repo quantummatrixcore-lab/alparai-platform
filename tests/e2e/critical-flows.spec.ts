@@ -25,17 +25,17 @@ test.describe("Home page", () => {
   });
 
   test("switches language to Turkish", async ({ page, isMobile }) => {
-    if (isMobile) {
-      test.skip();
-      return;
-    }
     await page.goto("/en");
     await page.waitForLoadState("domcontentloaded");
-    const switcher = page.getByRole("button", { name: /^TR$/i });
-    if (!(await switcher.isVisible())) {
-      test.skip();
-      return;
+    if (isMobile) {
+      const menuBtn = page.getByRole("button", { name: /open menu|menüyü aç/i }).first();
+      await expect(menuBtn).toBeVisible();
+      await menuBtn.click();
     }
+    const switcher = isMobile
+      ? page.locator("#mobile-nav-panel").getByRole("button", { name: /^TR$/i }).first()
+      : page.getByRole("button", { name: /^TR$/i }).first();
+    await expect(switcher).toBeVisible();
     await switcher.click();
     await page.waitForURL(/\/tr/, { timeout: 15000 });
   });
