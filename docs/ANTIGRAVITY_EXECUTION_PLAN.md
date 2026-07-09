@@ -1,6 +1,8 @@
-# ALPAR AI — Antigravity Full Execution Plan v7.4 (H2 2026 → 2027)
+# ALPAR AI — Antigravity Full Execution Plan v7.5 (H2 2026 → 2027)
 
-> **Revised by Architect (Claude Opus 4.8) on 2026-07-09 (early morning).** v7.4 professional-planning additions on top of v7.3's code-reality alignment: (1) X-series legal/crisis playbook, (2) W-series Aug 2 hour-by-hour launch-day timeline, (3) Y-series T+0 → T+30 growth-signal & pivot-check kit, (4) Standing Rule #20 daily cost-budget alarm. Also processes Antigravity's `bb1fcca` M1 audit — the home page carries the only HIGH-severity finding (3-element horizontal overflow); every other page is LOW-severity touch-target ergonomics.
+> **Revised by Architect (Claude Fable 5) on 2026-07-09.** v7.5 closes the three gaps that make plans fail in the last mile: (1) **capacity-vs-scope feasibility math + an explicit de-scope ladder** — the MUST list grew four versions in a row and nobody computed whether it fits in 24 calendar days; now it's computed, and what drops first is pre-decided instead of panic-decided; (2) **S-series pre-launch security & data-integrity gate** — secrets scan, dependency audit, security headers, and a backup **restore drill** (an untested backup is not a backup); (3) **Architect Verification Protocol** — per-item spot-check commands so approvals are fast, uniform, and evidence-based rather than trust-based. Also: work queue declared the **single source of truth** for execution order (stage prose is spec, the queue is sequence).
+>
+> **v7.4 additions (still valid):** X-series legal/crisis playbook, W-series Aug 2 hour-by-hour launch-day timeline, Y-series T+0 → T+30 growth-signal & pivot-check kit, Standing Rule #20 daily cost-budget alarm. M1 audit processed — home page is the only HIGH-severity mobile finding; M2 split into M2-home (MUST) and M2-touch (SHOULD, post-launch).
 >
 > **v7.3 baseline (still valid):** 360° code-reality audit + priority realignment. Three parallel Explore agents inspected the codebase against plan assumptions. Findings changed the launch-critical path materially.
 >
@@ -70,6 +72,39 @@ Launch is **Aug 2**. Everything below is ranked. If deadlines slip, cut from the
 - B2b — expert-verification email + weekly reporter digest (Stage E window, Aug 10+)
 
 **Rule of thumb:** an idle Executor and an hour spent out-of-plan are both review findings.
+
+---
+
+## 🧮 SCOPE REALITY CHECK (v7.5 — the math nobody ran)
+
+> Four consecutive versions grew the MUST list. v7.5 computes whether it fits. **It does — but only because of two facts, and only if the approval loop is pipelined.**
+
+**Capacity math (Jul 9 → Aug 1 freeze = 24 calendar days):**
+
+- Remaining MUST work (queue items 1–3, 6–12, 17, 19–24 + S-series; M1 already ✅, M2 reduced to M2-home after audit): **≈ 65–70 focused hours ≈ 9 working days.**
+- Remaining SHOULD work (13–16, 18, 25): **≈ 3–4 working days.**
+- **Verdict: feasible with ~2× slack** — the danger is not hours, it's (a) M2-home surprises (if the overflow is NOT one shared component), (b) approval-loop serialization, (c) unplanned scope. Slack exists **only if nothing new enters the MUST list before Aug 1** — from v7.5 on, any addition must displace an equal-sized item (zero-sum rule).
+
+**Approval pipelining (process fix, supersedes strict serialization):** the Executor no longer idles while awaiting `Architect-Approval:`. Rules:
+1. An item is **done** only when its approval line lands — unchanged.
+2. While awaiting approval, the Executor **starts the next queue item that does not depend on the pending one** (e.g. U-series doesn't depend on V-series).
+3. Never stack two unapproved items that touch the same files — if approval of item N forces rework, item N+1 must not be sitting on top of it.
+4. Architect batches reviews into at most **two daily windows** — the queue is sized so approvals, not hours, were the binding constraint; this unbinds it.
+
+**DE-SCOPE LADDER — pre-decided, in drop order (when slipping, cut from the top of this list, never improvise):**
+
+| Drop order | Item | Why it's safe to drop |
+|-----------|------|----------------------|
+| 1 | M2-touch (9-page 44px sweep) | Already post-launch SHOULD; ergonomics, not breakage |
+| 2 | P4 LinkedIn + Reddit drafts | Founder can improvise these in 30 min on launch day |
+| 3 | D-extra PH screenshot polish | Existing screenshots pass; polish is vanity |
+| 4 | C1b enterprise onboarding keys | No enterprise customer is waiting on Jul 15 |
+| 5 | C5 verification report | Feature already works; report is paperwork |
+| 6 | Y3 day-30 readout | Due Sept 1 — can ship during freeze exit (Aug 10+) |
+| 7 | P3 extra TR outlets (keep Webrazzi only) | One strong TR pitch beats four rushed ones |
+| 8 | X4 + X5 templates (keep X1–X3) | Legal-inquiry probability in week 1 is lower than provider/media/false-report |
+
+**NEVER-DROP set (launch aborts rather than shipping without these):** R1+R2, V-series (KVKK cron), U-series (unsubscribe), C1a (plain-text keys), M2-home, H-series (honesty pass), W-series (launch-day runbook), Standing Rule #20 cron, S1+S4 (secrets scan + restore drill).
 
 ---
 
@@ -343,6 +378,22 @@ Same layout as Y2 but with the 30-day denominator, plus:
 *Accept:* Sept 1 automated email; format matches Y2; historical Y2 numbers included as comparison.
 
 **Y-series design principle:** the Executor does not interpret the data — the Executor delivers a stable, honest report cadence. The **Architect interprets**, the **founder decides**. Numbers speak; nobody spins them.
+
+---
+
+## 🔒 S-SERIES — Pre-Launch Security & Data-Integrity Gate (v7.5, MUST — all green by Jul 28)
+
+> Launch traffic is adversarial traffic. This repo **was public until Stage R1** — assume everything in git history was read. And a backup that has never been restored is a hope, not a backup. Five gates; launch does not proceed with any gate red.
+
+**S1. Full-history secrets scan (MUST — Jul 14).** Run `gitleaks detect --source . --log-opts="--all"` (or trufflehog) across the **entire git history**, not just HEAD — the public-repo window means historical leaks are live leaks. Findings table → `docs/PROPOSALS/S1-secrets-scan.md` (finding | file | commit | rotated? | risk). Every hit feeds the R2 rotation list. *Accept:* scan report committed; zero unrotated live credentials; false positives annotated.
+
+**S2. Dependency audit (MUST — Jul 21).** `pnpm audit` + GitHub Dependabot alerts: **zero high/critical** on production dependencies by Jul 21; re-run Jul 31 before freeze. Moderate findings triaged in the report (fix vs. accepted-with-reason). *Accept:* both run outputs committed to the report; CI includes `pnpm audit --audit-level=high` as non-blocking warning initially, blocking from Aug 10.
+
+**S3. Security headers pass (MUST — Jul 21).** Verify on prod: `Strict-Transport-Security`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and a CSP at least in `Report-Only` mode. **Exception:** `/incidents/[id]/embed` must remain frameable (`frame-ancestors *` on that route only — C5 depends on it); everything else denies framing. *Accept:* securityheaders.com grade A on `/`, embed route still renders in an external iframe.
+
+**S4. Backup restore drill (MUST — Jul 22, repeat Jul 29).** Standing Rule #11 takes snapshots; nobody has proven they restore. Drill: latest Monday `supabase db dump` → restore into a scratch Supabase project → run 5 smoke queries (incident count by source, RLS policy count, latest migration version, a PII-masked sample row, `strategy_innovations` row count) → destroy scratch project. Record **time-to-restore** in `docs/RUNBOOK_LAUNCH.md` (it becomes the RTO number in the escalation ladder). *Accept:* drill log with timestamps + smoke-query outputs committed; RTO < 60 min; drill repeated once more Jul 29 to confirm repeatability.
+
+**S5. Performance budget (SHOULD — Jul 25).** Lighthouse mobile on home, incidents, submit: **Performance ≥ 85, no CLS regression** at the three M-series viewports. Not launch-blocking (per de-scope ladder philosophy: a slow page degrades, a broken cron violates law) — but the launch traffic wave is the one day performance is marketing. *Accept:* three Lighthouse JSON reports committed; regressions filed as M2 follow-ups.
 
 ---
 
@@ -711,6 +762,13 @@ The Executor works this list top-to-bottom. Every item = its own commit, pushed 
 | **23** | **🆕 v7.4 Y2 + Y3 — day-7 and day-30 automated readouts (cron + email template)** | **MUST** | **3 h** | **Automated pivot-check input** |
 | **24** | **🆕 v7.4 Standing Rule #20 — daily cost-budget alarm cron + monthly ceiling + `COST_KILL_SWITCH` env** | **MUST** | **3 h** | **Prevent budget blow-up under launch traffic** |
 | 25 | M2-touch (post-launch, SHOULD) — sweep 44px touch-target findings on 9 non-home pages | SHOULD | 1–2 d | Mobile ergonomics polish |
+| **26** | **🆕 v7.5 S1 — full-history secrets scan (gitleaks) → `docs/PROPOSALS/S1-secrets-scan.md` → feeds R2 rotation** | **MUST** | **2 h** | **Public-repo window = history is compromised until proven clean** |
+| **27** | **🆕 v7.5 S2 — dependency audit (`pnpm audit` + Dependabot, zero high/critical) + CI warning gate** | **MUST** | **2 h** | **Launch-week exploit surface** |
+| **28** | **🆕 v7.5 S3 — security headers pass (HSTS, CSP report-only, frame-deny except `/embed`)** | **MUST** | **3 h** | **Adversarial launch traffic** |
+| **29** | **🆕 v7.5 S4 — backup restore drill (dump → scratch project → 5 smoke queries → RTO into RUNBOOK), repeat Jul 29** | **MUST** | **3 h** | **Untested backup = no backup** |
+| **30** | **🆕 v7.5 S5 — Lighthouse mobile budget (home/incidents/submit ≥ 85)** | SHOULD | **2 h** | **Launch-day performance = marketing** |
+
+**Queue governance (v7.5):** this table is the **single source of truth for execution order** — stage prose defines *what/accept*, the queue defines *when*. Zero-sum rule: nothing enters MUST before Aug 1 without displacing an equal-sized item. When slipping, cut per the De-Scope Ladder — never improvise cuts.
 
 **Post-launch (Aug 10+) items** — do NOT start before Aug 10:
 - C3 — Usage metering
@@ -749,7 +807,25 @@ After each stage: push → report with:
 2. Accept-criteria pass/fail table with verification method per item
 3. Deviations / blockers
 4. Proposal notes (if any) — filed as `docs/PROPOSALS/NNN-title.md`, not implemented
-5. Await Architect approval line: `Architect-Approval: <hash> <YYYY-MM-DD>` — Executor may NOT self-approve.
+5. Await Architect approval line: `Architect-Approval: <hash> <YYYY-MM-DD>` — Executor may NOT self-approve. (Pipelining per the v7.5 Scope Reality Check: awaiting approval ≠ idle; start the next independent item.)
+
+---
+
+## 🔍 ARCHITECT VERIFICATION PROTOCOL (v7.5 — how approvals actually get checked)
+
+> Approvals were trust-based; from v7.5 they are evidence-based and fast. For each item type, the Architect runs these spot-checks against `origin/master` before writing the approval line. The Executor can pre-empt rejection by running the same checks and pasting outputs into the report.
+
+| Item type | Spot-checks (all must pass) |
+|-----------|----------------------------|
+| **Migration** | File ends with `-- ROLLBACK:` block (Rule #12); new table → RLS policies in the same file (Rule #8); seed inserts idempotent (`WHERE NOT EXISTS` / `ON CONFLICT`); no destructive op on prod data |
+| **API route** | Auth path: grep for hash compare + `timingSafeEqual`, no `\|\| "..."` fallback (Rules #3, #17); curl without credentials → 401/400 not 500; rate limit present; PII Guardian on any external write |
+| **UI / component** | Both locales render (no raw key leakage); `scripts/check-i18n.mjs` green (Rule #7); no `createAdminClient()` on a public path (Rule #8); brand colors intact (Rule #4); no "compliant"/"verified" wording violations (Rules #5, #19) |
+| **e2e / CI change** | `--list` shows the new specs on all three mobile projects; deliberate-break demo referenced in report with the revert commit |
+| **Cron / env-flag** | Registered in `vercel.json`; auth header check present (`CRON_SECRET`); kill-switch flag read at entry, not mid-run |
+| **Docs / launch asset** | File exists at stated path; zero external sends (Rule #6); numeric claims live-queried or absent (Rule #19); "DRAFT — founder sends" header on anything outbound |
+| **Any item** | Reported commit hash exists on `origin/master` (Rule #1); diff touches only files the item scoped (Rule #2) |
+
+**Cadence:** Architect reviews in ≤2 daily windows; a report missing spot-check evidence gets one bounce-back, a second miss = review finding.
 
 **Executor forbidden actions** (founder-only):
 - Sending external emails/posts without an approved queue item
@@ -767,6 +843,17 @@ After each stage: push → report with:
 All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying customer flow technically ready (C1–C4); embed widget live with measurable external embeds (C5); **≥100 organic signups tracked in growth dashboard (E7);** expert portal live with ≥1 real expert action; monthly cost + coverage reports automated. Then execution moves to the 2027 Horizon above — the Architect writes each quarter's stage spec in the final 2 weeks of the prior quarter.
 
 ---
+
+## CHANGELOG (v7.4 → v7.5) — Feasibility, Security Gate, Verification Discipline
+
+| Change | Rationale |
+|--------|-----------|
+| **🆕 Scope Reality Check** — capacity math (≈9 MUST working days vs 24 calendar days = feasible with ~2× slack), approval pipelining (await-approval ≠ idle), zero-sum MUST rule | Four versions grew the MUST list; nobody verified it fits; approval serialization was the hidden binding constraint |
+| **🆕 De-Scope Ladder (8 pre-decided drops) + NEVER-DROP set** | Cuts under pressure are improvised and wrong; pre-deciding them removes the panic tax |
+| **🆕 S-series security & data-integrity gate** — S1 full-history secrets scan, S2 dependency audit, S3 security headers (embed-route frame exception), S4 backup **restore drill** with RTO, S5 Lighthouse budget | Repo was public — history is compromised until proven clean; a never-restored backup is a hope, not a backup |
+| **🆕 Architect Verification Protocol** — per-item-type spot-check table (migration / route / UI / e2e / cron / docs), ≤2 daily review windows, evidence-based approvals | Approvals were trust-based and slow; this makes them fast, uniform, and honest |
+| **Work queue extended to 30 items; declared single source of truth for execution order** | One sheet to rule sequence; stage prose stays spec-only |
+| **Reporting Protocol updated** — pipelining note added to approval-wait rule | Consistency with Scope Reality Check |
 
 ## CHANGELOG (v7.3 → v7.4) — Professional Planning Gaps Closed
 
