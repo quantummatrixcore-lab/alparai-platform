@@ -1,10 +1,10 @@
 # Mobile Quality Audit Report
 
-*Generated on: 2026-07-10T18:58:24.268Z*
+*Generated on: 2026-07-10T19:08:21.749Z*
 
 | Page | Viewport | Issue(s) | Severity | Screenshot |
 |------|----------|----------|----------|------------|
-| home | 375x667 (iPhone_SE) | Horizontal Overflow (scrollWidth: 389px vs viewport: 375px) [Elements: div.bg-brand-600/8, div.bg-warning-500/15, div.flex] | Small Touch Targets (78 elements < 44px) | High | ![home 375x667 (iPhone_SE)](./mobile-audit/home-iPhone_SE.png) |
+| home | 375x667 (iPhone_SE) | Small Touch Targets (78 elements < 44px) | Low | ![home 375x667 (iPhone_SE)](./mobile-audit/home-iPhone_SE.png) |
 | incidents | 375x667 (iPhone_SE) | Small Touch Targets (126 elements < 44px) | Low | ![incidents 375x667 (iPhone_SE)](./mobile-audit/incidents-iPhone_SE.png) |
 | incident_detail | 375x667 (iPhone_SE) | Small Touch Targets (1 elements < 44px) | Low | ![incident_detail 375x667 (iPhone_SE)](./mobile-audit/incident_detail-iPhone_SE.png) |
 | submit | 375x667 (iPhone_SE) | Small Touch Targets (48 elements < 44px) | Low | ![submit 375x667 (iPhone_SE)](./mobile-audit/submit-iPhone_SE.png) |
@@ -14,7 +14,7 @@
 | academy | 375x667 (iPhone_SE) | Small Touch Targets (38 elements < 44px) | Low | ![academy 375x667 (iPhone_SE)](./mobile-audit/academy-iPhone_SE.png) |
 | blog | 375x667 (iPhone_SE) | Small Touch Targets (38 elements < 44px) | Low | ![blog 375x667 (iPhone_SE)](./mobile-audit/blog-iPhone_SE.png) |
 | unsubscribe | 375x667 (iPhone_SE) | Small Touch Targets (33 elements < 44px) | Low | ![unsubscribe 375x667 (iPhone_SE)](./mobile-audit/unsubscribe-iPhone_SE.png) |
-| home | 390x844 (iPhone_14) | Horizontal Overflow (scrollWidth: 404px vs viewport: 390px) [Elements: div.bg-brand-600/8, div.bg-warning-500/15, div.flex] | Small Touch Targets (78 elements < 44px) | High | ![home 390x844 (iPhone_14)](./mobile-audit/home-iPhone_14.png) |
+| home | 390x844 (iPhone_14) | Small Touch Targets (78 elements < 44px) | Low | ![home 390x844 (iPhone_14)](./mobile-audit/home-iPhone_14.png) |
 | incidents | 390x844 (iPhone_14) | Small Touch Targets (126 elements < 44px) | Low | ![incidents 390x844 (iPhone_14)](./mobile-audit/incidents-iPhone_14.png) |
 | incident_detail | 390x844 (iPhone_14) | Small Touch Targets (1 elements < 44px) | Low | ![incident_detail 390x844 (iPhone_14)](./mobile-audit/incident_detail-iPhone_14.png) |
 | submit | 390x844 (iPhone_14) | Small Touch Targets (48 elements < 44px) | Low | ![submit 390x844 (iPhone_14)](./mobile-audit/submit-iPhone_14.png) |
@@ -24,7 +24,7 @@
 | academy | 390x844 (iPhone_14) | Small Touch Targets (38 elements < 44px) | Low | ![academy 390x844 (iPhone_14)](./mobile-audit/academy-iPhone_14.png) |
 | blog | 390x844 (iPhone_14) | Small Touch Targets (38 elements < 44px) | Low | ![blog 390x844 (iPhone_14)](./mobile-audit/blog-iPhone_14.png) |
 | unsubscribe | 390x844 (iPhone_14) | Small Touch Targets (33 elements < 44px) | Low | ![unsubscribe 390x844 (iPhone_14)](./mobile-audit/unsubscribe-iPhone_14.png) |
-| home | 412x915 (Pixel_7) | Horizontal Overflow (scrollWidth: 426px vs viewport: 412px) [Elements: div.bg-brand-600/8, div.bg-warning-500/15, div.flex] | Small Touch Targets (78 elements < 44px) | High | ![home 412x915 (Pixel_7)](./mobile-audit/home-Pixel_7.png) |
+| home | 412x915 (Pixel_7) | Small Touch Targets (78 elements < 44px) | Low | ![home 412x915 (Pixel_7)](./mobile-audit/home-Pixel_7.png) |
 | incidents | 412x915 (Pixel_7) | Small Touch Targets (126 elements < 44px) | Low | ![incidents 412x915 (Pixel_7)](./mobile-audit/incidents-Pixel_7.png) |
 | incident_detail | 412x915 (Pixel_7) | Small Touch Targets (1 elements < 44px) | Low | ![incident_detail 412x915 (Pixel_7)](./mobile-audit/incident_detail-Pixel_7.png) |
 | submit | 412x915 (Pixel_7) | Small Touch Targets (48 elements < 44px) | Low | ![submit 412x915 (Pixel_7)](./mobile-audit/submit-Pixel_7.png) |
