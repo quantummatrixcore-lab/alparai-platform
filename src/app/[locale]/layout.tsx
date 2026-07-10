@@ -60,7 +60,7 @@ export default async function LocaleLayout({
           {isEmbed ? (
             <main className="m-0 min-h-screen bg-transparent p-0">{children}</main>
           ) : (
-            <div className="flex min-h-screen flex-col pb-16 lg:pb-0">
+            <div className="flex min-h-screen flex-col pb-16 lg:pb-0 overflow-x-hidden relative w-full">
               <Header user={headerUser} />
               <MainContent>{children}</MainContent>
               <Footer />

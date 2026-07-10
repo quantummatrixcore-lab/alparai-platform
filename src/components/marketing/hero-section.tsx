@@ -130,7 +130,7 @@ export function HeroSection({
 
             {/* Stats Panel */}
             <div className="bg-glass rounded-2xl border border-white/5 p-5 shadow-2xl">
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4">
                 <LiveStatCard
                   value={totalIncidents}
                   label={t("stats_incidents")}
@@ -305,13 +305,13 @@ function LiveStatCard({
 }) {
   return (
     <div
-      className="rounded-xl p-3 text-center"
+      className="rounded-xl p-2 sm:p-3 text-center"
       style={{ boxShadow: `inset 0 0 20px ${glowColor}` }}
     >
-      <p className={`font-mono text-3xl font-black tracking-tight ${accentClass}`}>
+      <p className={`font-mono text-2xl sm:text-3xl font-black tracking-tight ${accentClass}`}>
         <AnimatedValue value={value} />
       </p>
-      <p className="text-fg-muted mt-1 text-[10px] leading-tight font-bold tracking-[0.15em] uppercase">
+      <p className="text-fg-muted mt-1 text-[9px] sm:text-[10px] leading-tight font-bold tracking-[0.15em] uppercase break-words">
         {label}
       </p>
     </div>

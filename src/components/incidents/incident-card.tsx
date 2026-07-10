@@ -280,7 +280,7 @@ export function IncidentCard({
                 </motion.a>
               </div>
             </div>
-            <span className="ml-4 whitespace-nowrap">
+            <span className="ml-3 truncate text-[11px] sm:ml-4 sm:whitespace-nowrap sm:text-xs">
               {t("by")} {incident.author_name ?? t("anonymous")}
             </span>
           </div>

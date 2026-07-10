@@ -165,6 +165,7 @@ html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
 }
 
 h1,
@@ -178,6 +179,7 @@ h6 {
 
 body {
   background-color: var(--bg-primary);
+  overflow-x: hidden;
   background-image:
     radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
     linear-gradient(rgba(255, 255, 255, 0.003) 1px, transparent 1px),
@@ -360,4 +362,10 @@ body {
   [class*="badge"] {
     border: 1px solid currentColor;
   }
+}
+
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
 }

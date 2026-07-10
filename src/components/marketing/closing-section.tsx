@@ -14,10 +14,9 @@ export function ClosingSection() {
     <Section className="border-border-subtle border-t">
       <Container>
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
-          {/* Left Block: Urgent Warning */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: -30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             className="flex flex-col justify-center text-left"
@@ -41,8 +40,8 @@ export function ClosingSection() {
 
           {/* Right Block: The Good News / Hope Balance */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="border-brand-500/20 bg-brand-500/5 flex flex-col justify-center rounded-2xl border p-8 backdrop-blur-sm"
