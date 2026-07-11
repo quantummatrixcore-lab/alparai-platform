@@ -226,5 +226,25 @@ describe("PII Guardian", () => {
         expect(r.masked).toContain("[REDACTED-EMAIL]");
       });
     });
+
+    describe("Turkish address (address_tr)", () => {
+      it("detects full address with street, district, city, postal code", () => {
+        expect(hasPII("Ataturk Mahallesi 123 Sokak No 45 Istanbul 34000")).toBe(true);
+        expect(detectPIITypes("Ataturk Mahallesi 123 Sokak No 45 Istanbul 34000")).toContain(
+          "address_tr",
+        );
+      });
+      it("detects address with postal code", () => {
+        expect(hasPII("Cumhuriyet Cad No 15 Ankara 06420")).toBe(true);
+      });
+      it("masks full address with [REDACTED-ADDRESS]", () => {
+        const r = maskPII("Adres: Istiklal Cad No 123 Beyoglu Istanbul 34421");
+        expect(r.masked).toContain("[REDACTED-ADDRESS]");
+        expect(r.masked).not.toContain("Istiklal");
+      });
+      it("does not false-positive on short text without numbers", () => {
+        expect(hasPII("Cadde sokak mahalle")).toBe(false);
+      });
+    });
   });
 });

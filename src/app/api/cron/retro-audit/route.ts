@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
       .select("id, title_masked")
       .is("cross_audit_truth_score", null)
       .eq("status", "published")
+      .neq("source_badge", "community")
       .limit(10);
 
     if (fetchError) {

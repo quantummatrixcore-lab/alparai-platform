@@ -96,6 +96,21 @@ const PATTERNS: ReadonlyArray<{
     re: /\b(?:(?:0?[1-9]|[12]\d|3[01])[./-](?:0?[1-9]|1[0-2])[./-](?:19|20)\d{2}|(?:19|20)\d{2}[./-](?:0?[1-9]|1[0-2])[./-](?:0?[1-9]|[12]\d|3[01]))\b/g,
     mask: "[REDACTED-DATE]",
   },
+  // Turkish address patterns: built via RegExp to avoid TS parsing issues with Unicode
+  {
+    name: "address_tr",
+    re: new RegExp(
+      "\\b(?:[A-Z][a-zA-Z\u00c0-\u017e]*(?:\\s+[A-Z][a-zA-Z\u00c0-\u017e]*)*?" +
+        "(?:\\s+(?:Mahallesi|Mh|Mah|Caddesi|Cad|Cd|Bulvar\u0131|Bul|Yolu|Meydan\u0131|\u00c7\u0131kmaz\u0131))?" +
+        "(?:[,\\s]+\\d+)?" +
+        "(?:\\s+(?:Sokak|Sk|Sok|Cad|Cd))?" +
+        "\\s+(?:No|Nu|Nr)[.:]?\\s*\\d+(?:\\s*/\\s*\\d+)?" +
+        "[\\s,]+[A-Z][a-zA-Z\u00c0-\u017e]*(?:[\\s,]+[A-Z][a-zA-Z\u00c0-\u017e]*)*" +
+        "[\\s,]*\\d{5})\\b",
+      "g",
+    ),
+    mask: "[REDACTED-ADDRESS]",
+  },
 ];
 
 export interface PiiDetection {

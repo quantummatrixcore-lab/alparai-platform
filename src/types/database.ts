@@ -1100,6 +1100,7 @@ export type Database = {
           ai_moderation_reason: string | null
           ai_moderation_score: number | null
           ai_provider_id: string | null
+          audit_tier: string | null
           category: Database["public"]["Enums"]["incident_category"]
           comments_count: number
           contains_pii: boolean
@@ -1129,6 +1130,7 @@ export type Database = {
           ip_hash: string | null
           is_anonymous: boolean
           is_expert: boolean
+          is_seed: boolean
           language: string
           location_country: string | null
           model_custom_name: string | null
@@ -1145,6 +1147,7 @@ export type Database = {
           severity: Database["public"]["Enums"]["incident_severity"]
           shares_count: number
           source_url: string | null
+          source_badge: string | null
           status: Database["public"]["Enums"]["incident_status"]
           title: string
           title_masked: string | null
@@ -1161,6 +1164,7 @@ export type Database = {
           ai_moderation_reason?: string | null
           ai_moderation_score?: number | null
           ai_provider_id?: string | null
+          audit_tier?: string | null
           category?: Database["public"]["Enums"]["incident_category"]
           comments_count?: number
           contains_pii?: boolean
@@ -1190,6 +1194,7 @@ export type Database = {
           ip_hash?: string | null
           is_anonymous?: boolean
           is_expert?: boolean
+          is_seed?: boolean
           language?: string
           location_country?: string | null
           model_custom_name?: string | null
@@ -1222,6 +1227,7 @@ export type Database = {
           ai_moderation_reason?: string | null
           ai_moderation_score?: number | null
           ai_provider_id?: string | null
+          audit_tier?: string | null
           category?: Database["public"]["Enums"]["incident_category"]
           comments_count?: number
           contains_pii?: boolean
@@ -1251,6 +1257,7 @@ export type Database = {
           ip_hash?: string | null
           is_anonymous?: boolean
           is_expert?: boolean
+          is_seed?: boolean
           language?: string
           location_country?: string | null
           model_custom_name?: string | null
@@ -1267,6 +1274,7 @@ export type Database = {
           severity?: Database["public"]["Enums"]["incident_severity"]
           shares_count?: number
           source_url?: string | null
+          source_badge?: string | null
           status?: Database["public"]["Enums"]["incident_status"]
           title?: string
           title_masked?: string | null
