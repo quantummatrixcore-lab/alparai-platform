@@ -231,15 +231,19 @@
     "imported_incident_attribution_title": "Dış Kaynak Atıf Bilgisi",
     "imported_incident_attribution_desc": "Bu olay, açık kaynaklı dış bir veri tabanından içe aktarılmıştır. CC BY 4.0 veya kamu malı lisansı altındadır. Orijinal kaynak detayları aşağıda yer almaktadır.",
     "source_user_submitted": "Kullanıcı Raporu",
-    "source_aiaaic_import": "İçe Aktarılmış: AIAAIC",
-    "source_aiid_import": "İçe Aktarılmış: AIID",
-    "source_news_curated": "Kürasyon: Haber",
+    "source_aiaaic_import": "AIAAIC İçe Aktarma",
+    "source_aiid_import": "AIID İçe Aktarma",
+    "source_news_curated": "Haber Kürasyonu",
     "source_court_record": "Mahkeme Kaydı",
-    "source_tooltip_user_submitted": "Bu olay doğrudan bir ALPAR AI kullanıcısı tarafından bildirilmiş ve topluluk/moderatörler tarafından doğrulanmıştır.",
-    "source_tooltip_aiaaic_import": "Bu olay AIAAIC veritabanından içe aktarılmıştır.",
-    "source_tooltip_aiid_import": "Bu olay Yapay Zeka Olay Veritabanı'ndan (AIID) içe aktarılmıştır.",
-    "source_tooltip_news_curated": "Bu olay ALPAR AI ekibi tarafından kamuya açık haber kaynaklarından derlenmiştir.",
-    "source_tooltip_court_record": "Bu olay resmi kamu mahkeme kayıtlarından derlenmiştir."
+    "source_tooltip_user_submitted": "Doğrudan bir ALPAR AI kullanıcısı tarafından rapor edildi.",
+    "source_tooltip_aiaaic_import": "AIAAIC veritabanından içe aktarıldı.",
+    "source_tooltip_aiid_import": "AI Incident Database'den içe aktarıldı.",
+    "source_tooltip_news_curated": "Açık haber kaynaklarından derlendi.",
+    "source_tooltip_court_record": "Açık mahkeme kayıtlarından alındı.",
+    "seed_badge": "İçe Aktarıldı — Araştırma Verisi",
+    "seed_badge_tooltip": "Bu olay, platformun lansmanı için küratörlü araştırma verilerinden içe aktarılmıştır.",
+    "imported_badge": "İçe Aktarıldı",
+    "imported_badge_tooltip": "Dış bir kaynaktan içe aktarılmıştır. Orijinal dil korunur."
   },
   "categories": {
     "safety": "Güvenlik ihlali",
@@ -860,7 +864,7 @@
     "select": "Seçiniz"
   },
   "autopilot": {
-    "dashboard": "Yönetici Paneli",
+    "dashboard": "Kontrol Paneli",
     "moderation": "Moderasyon",
     "title": "Kendini iyileştiren gönderim",
     "subtitle": "Raporunuz dayanıklı şekilde işleniyor. Genellikle birkaç saniye sürer.",
@@ -920,9 +924,7 @@
     "btn_disable": "Durdur",
     "btn_enable": "Başlat",
     "stats_cost": "Tahmini Maliyet",
-    "stats_tokens": "Toplam Token",
-    "dashboard": "Kontrol Paneli",
-    "moderation": "Moderasyon"
+    "stats_tokens": "Toplam Token"
   },
   "takedown": {
     "reasons": {
