@@ -16,7 +16,7 @@ ALPAR AI is a public-interest platform and data-repository designed to document 
 
 ### 1. The Incident Corpus
 
-- **Verified Dataset:** Over **408 published incidents** across **59 tracked AI providers**.
+- **Incident Dataset:** Over **408 curated and user-reported cases** across **59 tracked AI providers**.
 - **Historical Depth:** Continuous tracking of algorithmic errors, safety bypasses, privacy violations, and physical accidents.
 - **Categorization:** Mapped directly to the EU AI Act risk categorizations (Unacceptable, High Risk, Specific Transparency, Minimal) and serious incident classifications.
 

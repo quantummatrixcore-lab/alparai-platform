@@ -8,7 +8,7 @@ Bilingual (EN + TR). Each tweet is strictly under 280 characters.
 
 1/ Exactly one week until ALPAR AI goes live on August 2. Here is a sneak peek at what we are shipping to revolutionize AI accountability. 🧵
 
-2/ **The Live Corpus:** Explore 408+ published incidents categorized by severity, provider, and EU AI Act risk profiles. Completely open and queryable.
+2/ **The Live Corpus:** Explore 408+ curated and user-reported cases categorized by severity, provider, and EU AI Act risk profiles. Completely open and queryable.
 
 3/ **Expert Portal:** A structured verification flow allowing AI safety researchers and domain experts to audit incident reports and sign off on fixes.
 
@@ -24,7 +24,7 @@ Bilingual (EN + TR). Each tweet is strictly under 280 characters.
 
 1/ ALPAR AI'ın 2 Ağustos'taki lansmanına tam bir hafta kaldı. Yapay zeka hesap verebilirliğini kökten değiştirecek özelliklerimize erken bir bakış sunuyoruz. 🧵
 
-2/ **Canlı Veri Seti:** Önem derecesi, sağlayıcı ve AB Yapay Zeka Yasası risk profillerine göre kategorize edilmiş 408+ yayınlanmış olayı inceleyin. Tamamen açık ve sorgulanabilir.
+2/ **Canlı Veri Seti:** Önem derecesi, sağlayıcı ve AB Yapay Zeka Yasası risk profillerine göre kategorize edilmiş 408+ küratörlü ve kullanıcı raporu vakasını inceleyin. Tamamen açık ve sorgulanabilir.
 
 3/ **Uzman Portalı:** Yapay zeka güvenliği araştırmacılarının ve alan uzmanlarının olay raporlarını denetlemesine ve düzeltmeleri onaylamasına olanak tanıyan yapılandırılmış akış.
 

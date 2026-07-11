@@ -6,7 +6,7 @@ Dear [Academic/Scholar Name],
 
 We have been following your work at the [Harvard Berkman Klein Center / MIT / Stanford HAI / Oxford Internet Institute] regarding AI governance, safety, and accountability, and we would like to explore a potential research partnership.
 
-ALPAR AI operates as a public trust infrastructure documenting AI accountability and tracking real-world AI incidents. As of today, our platform tracks **408 published AI incidents** across **59 distinct AI providers**, including detailed incident timelines, severity scoring, and official provider responses.
+ALPAR AI operates as a public trust infrastructure documenting AI accountability and tracking real-world AI incidents. As of today, our platform tracks **408 curated and user-reported AI cases** across **59 distinct AI providers**, including detailed incident timelines, severity scoring, and official provider responses.
 
 ### The Research Pitch
 

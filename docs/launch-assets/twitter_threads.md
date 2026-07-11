@@ -6,7 +6,7 @@
 
 1/ Meet ALPAR AI (https://alparai.com) — open-source trust infrastructure for tracking AI incidents and failures in real-time. Why? Because AI accountability shouldn't be a black box. 🧵
 
-2/ We currently track **408 published incidents** across **59 distinct AI providers**. From code generation bugs to autonomous driving failures, we are building the historical record of AI behavior.
+2/ We currently track **408 curated and user-reported cases** across **59 distinct AI providers**. From code generation bugs to autonomous driving failures, we are building the historical record of AI behavior.
 
 3/ Under the hood, ALPAR is open-source (AGPL-3.0) and privacy-first. Our PII Guardian scrubs personal identifiers (emails, phones) client-side before any DB write.
 
@@ -20,7 +20,7 @@
 
 1/ Yapay zeka sistemlerinin hatalarını ve şirketlerin bu hatalara verdikleri yanıtları şeffafça belgeleyen açık kaynaklı güven altyapısı ALPAR AI (https://alparai.com) yayında. 🧵
 
-2/ Canlıda **408 yayınlanmış olay** ve **59 yapay zeka sağlayıcısını** izliyoruz. Hataları ve güvenlik açıklarını detaylı zaman çizelgeleriyle analiz ediyoruz.
+2/ Canlıda **408 küratörlü ve kullanıcı raporu vakasını** ve **59 yapay zeka sağlayıcısını** izliyoruz. Hataları ve güvenlik açıklarını detaylı zaman çizelgeleriyle analiz ediyoruz.
 
 3/ Gizlilik odaklıyız: Geliştirdiğimiz KVT Koruyucu (PII Guardian) sayesinde, paylaşılan veriler veritabanına kaydedilmeden önce e-posta ve telefon gibi hassas veriler otomatik maskelenir.
 
@@ -32,7 +32,7 @@
 
 ## Thread 3: Data-Driven Insights (Top Findings)
 
-1/ What does a database of **408 AI incidents** reveal about the current state of AI safety? Here are our top-5 findings from ALPAR AI's incident corpus: 🧵
+1/ What does a database of **408 curated and user-reported AI cases** reveal about the current state of AI safety? Here are our top-5 findings from ALPAR AI's incident corpus: 🧵
 
 2/ 1. The average Ecosystem Trust Score for major providers stands at 64/100. Silence is common — many providers simply do not respond to public safety reports.
 

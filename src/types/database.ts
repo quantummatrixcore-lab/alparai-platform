@@ -717,25 +717,37 @@ export type Database = {
       }
       email_preferences: {
         Row: {
+          id: string
           reporter_notifications: boolean
           updated_at: string
-          user_id: string
+          user_id: string | null
           watches: boolean
           weekly_digest: boolean
+          email: string | null
+          marketing_opt_in: boolean
+          source: string | null
         }
         Insert: {
+          id?: string
           reporter_notifications?: boolean
           updated_at?: string
-          user_id: string
+          user_id?: string | null
           watches?: boolean
           weekly_digest?: boolean
+          email?: string | null
+          marketing_opt_in?: boolean
+          source?: string | null
         }
         Update: {
+          id?: string
           reporter_notifications?: boolean
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
           watches?: boolean
           weekly_digest?: boolean
+          email?: string | null
+          marketing_opt_in?: boolean
+          source?: string | null
         }
         Relationships: [
           {

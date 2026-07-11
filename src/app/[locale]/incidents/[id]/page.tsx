@@ -195,6 +195,8 @@ export default async function IncidentDetailPage({
     eu_act_high_risk_system_category:
       (r["eu_act_high_risk_system_category"] as string | null) ?? null,
     eu_act_reporting_deadline_days: (r["eu_act_reporting_deadline_days"] as number | null) ?? null,
+    is_expert: (r["is_expert"] as boolean | null) ?? false,
+    expert_fix: (r["expert_fix"] as string | null) ?? null,
   };
 
   let userVote: -1 | 0 | 1 = 0;

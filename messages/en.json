@@ -229,7 +229,17 @@
     "verified": "Verified",
     "timeline": "Incident timeline",
     "imported_incident_attribution_title": "External Source Attribution",
-    "imported_incident_attribution_desc": "This incident was imported from an external open database. Licensed under CC BY 4.0 or public domain. Original source details below."
+    "imported_incident_attribution_desc": "This incident was imported from an external open database. Licensed under CC BY 4.0 or public domain. Original source details below.",
+    "source_user_submitted": "User Report",
+    "source_aiaaic_import": "Imported: AIAAIC",
+    "source_aiid_import": "Imported: AIID",
+    "source_news_curated": "Curation: News",
+    "source_court_record": "Court Record",
+    "source_tooltip_user_submitted": "This incident was submitted directly by an ALPAR AI user and verified by the community/moderators.",
+    "source_tooltip_aiaaic_import": "This incident was imported from the AIAAIC database.",
+    "source_tooltip_aiid_import": "This incident was imported from the AI Incident Database (AIID).",
+    "source_tooltip_news_curated": "This incident was curated from public news sources by ALPAR AI team.",
+    "source_tooltip_court_record": "This incident was sourced from official public court records."
   },
   "categories": {
     "safety": "Safety violation",
@@ -2079,5 +2089,15 @@
     "tableUsageAmount": "Usage Value",
     "tableTimestamp": "Recorded At",
     "noUsageRecords": "No usage records logged in the database yet."
+  },
+  "waitlist": {
+    "title": "ALPAR AI Launches August 2, 2026",
+    "subtitle": "Get early access to our developer APIs, structured datasets, and reporter tools. Join the pre-launch waitlist now.",
+    "email_placeholder": "Enter your professional email",
+    "submit": "Join Waitlist",
+    "submitting": "Joining...",
+    "success": "Welcome to the waitlist!",
+    "success_desc": "We will email you with your early access credentials on August 2. Thank you for building trust with us.",
+    "privacy": "By signing up, you agree to receive early access updates and marketing communications. Opt-out at any time."
   }
 }

@@ -146,6 +146,24 @@ export function IncidentCard({
                 <Building2 className="h-3 w-3" aria-hidden="true" />
                 {incident.provider_name}
               </Badge>
+              {(() => {
+                const source = incident.incident_source || "user_submitted";
+                const isUserSubmitted = source === "user_submitted";
+                return (
+                  <Badge
+                    variant={isUserSubmitted ? "default" : "muted"}
+                    className={cn(
+                      "cursor-help transition-all duration-200",
+                      isUserSubmitted
+                        ? "border-[#00FF88]/20 bg-[#00FF88]/10 font-bold text-[#00FF88]"
+                        : "border-border-subtle bg-bg-tertiary text-fg-muted",
+                    )}
+                    title={t(`source_tooltip_${source}`)}
+                  >
+                    {t(`source_${source}`)}
+                  </Badge>
+                );
+              })()}
               {incident.is_expert && (
                 <Badge
                   variant="success"
@@ -280,7 +298,7 @@ export function IncidentCard({
                 </motion.a>
               </div>
             </div>
-            <span className="ml-3 truncate text-[11px] sm:ml-4 sm:whitespace-nowrap sm:text-xs">
+            <span className="ml-3 truncate text-[11px] sm:ml-4 sm:text-xs sm:whitespace-nowrap">
               {t("by")} {incident.author_name ?? t("anonymous")}
             </span>
           </div>

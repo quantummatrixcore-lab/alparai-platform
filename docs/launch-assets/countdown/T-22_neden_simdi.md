@@ -14,7 +14,7 @@ Bilingual (EN + TR). Each tweet is strictly under 280 characters.
 
 4/ ALPAR AI is designed as the default trust infrastructure to streamline this workflow. We map public AI incidents to regulatory risks in real-time.
 
-5/ We already catalog 408+ published incidents across 59 providers. Get ahead of the compliance curve. Join the pre-launch waitlist now: https://alparai.com
+5/ We already catalog 408+ curated and user-reported cases across 59 providers. Get ahead of the compliance curve. Join the pre-launch waitlist now: https://alparai.com
 
 ---
 
@@ -28,4 +28,4 @@ Bilingual (EN + TR). Each tweet is strictly under 280 characters.
 
 4/ ALPAR AI, bu iş akışını kolaylaştırmak için varsayılan güven altyapısı olarak tasarlandı. Kamuoyundaki AI ihlallerini yasal risklerle gerçek zamanlı eşleştiriyoruz.
 
-5/ Şimdiden 59 sağlayıcı genelinde 408+ yayınlanmış olayı izliyoruz. Regülasyona şimdiden hazır olun. Bekleme listesine katılın: https://alparai.com
+5/ Şimdiden 59 sağlayıcı genelinde 408+ küratörlü ve kullanıcı raporu vakasını izliyoruz. Regülasyona şimdiden hazır olun. Bekleme listesine katılın: https://alparai.com

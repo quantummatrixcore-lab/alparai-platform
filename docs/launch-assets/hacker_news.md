@@ -4,7 +4,7 @@ Hi HN,
 
 We built ALPAR AI (https://alparai.com) to serve as a public, community-governed ledger of real-world AI incidents, safety bypasses, and provider responses.
 
-We track **408 published incidents** across **59 AI providers** (e.g. OpenAI, Google, Anthropic). Our code is entirely open-source (AGPL-3.0) and designed around complete transparency.
+We track **408 curated and user-reported cases** across **59 AI providers** (e.g. OpenAI, Google, Anthropic). Our code is entirely open-source (AGPL-3.0) and designed around complete transparency.
 
 Key Features:
 

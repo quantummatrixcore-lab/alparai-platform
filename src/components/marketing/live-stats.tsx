@@ -5,6 +5,7 @@ import { motion, animate, useInView } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Container } from "@/components/ui/layout";
 import { AlertCircle, Cpu, Globe } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface CounterProps {
   value: number;
@@ -36,10 +37,31 @@ interface LiveStatsProps {
   totalIncidents: number;
   totalProviders: number;
   totalCountries: number;
+  countsBySource?: {
+    user_submitted: number;
+    aiaaic_import: number;
+    aiid_import: number;
+    news_curated: number;
+    court_record: number;
+  };
 }
 
-export function LiveStats({ totalIncidents, totalProviders, totalCountries }: LiveStatsProps) {
+export function LiveStats({
+  totalIncidents,
+  totalProviders,
+  totalCountries,
+  countsBySource,
+}: LiveStatsProps) {
   const t = useTranslations("hero");
+  const tIncident = useTranslations("incident");
+
+  const incidentTooltip = countsBySource
+    ? `${tIncident("source_user_submitted")}: ${countsBySource.user_submitted}\n` +
+      `${tIncident("source_aiaaic_import")}: ${countsBySource.aiaaic_import}\n` +
+      `${tIncident("source_aiid_import")}: ${countsBySource.aiid_import}\n` +
+      `${tIncident("source_news_curated")}: ${countsBySource.news_curated}\n` +
+      `${tIncident("source_court_record")}: ${countsBySource.court_record}`
+    : undefined;
 
   const statItems = [
     {
@@ -47,18 +69,21 @@ export function LiveStats({ totalIncidents, totalProviders, totalCountries }: Li
       value: totalIncidents,
       icon: AlertCircle,
       accent: "text-danger-400 border-danger-500/20 bg-danger-500/5",
+      tooltip: incidentTooltip,
     },
     {
       label: t("stats_providers"),
       value: totalProviders,
       icon: Cpu,
       accent: "text-warning-400 border-warning-500/20 bg-warning-500/5",
+      tooltip: undefined,
     },
     {
       label: t("stats_countries"),
       value: totalCountries,
       icon: Globe,
       accent: "text-brand-400 border-brand-500/20 bg-brand-500/5",
+      tooltip: undefined,
     },
   ];
 
@@ -75,7 +100,12 @@ export function LiveStats({ totalIncidents, totalProviders, totalCountries }: Li
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className={`flex items-center gap-4 rounded-2xl border p-6 backdrop-blur-sm ${item.accent}`}
+                className={cn(
+                  "flex items-center gap-4 rounded-2xl border p-6 backdrop-blur-sm",
+                  item.accent,
+                  item.tooltip && "cursor-help",
+                )}
+                title={item.tooltip}
               >
                 <div className="rounded-xl border border-white/10 bg-white/5 p-3">
                   <Icon className="h-6 w-6" />

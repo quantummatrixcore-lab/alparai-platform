@@ -94,6 +94,24 @@ export function IncidentDetailView({
             <UIBadge variant="muted">
               <Building2 className="h-3 w-3" /> {incident.provider_name}
             </UIBadge>
+            {(() => {
+              const source = incident.incident_source || "user_submitted";
+              const isUserSubmitted = source === "user_submitted";
+              return (
+                <UIBadge
+                  variant={isUserSubmitted ? "default" : "muted"}
+                  className={cn(
+                    "cursor-help transition-all duration-200",
+                    isUserSubmitted
+                      ? "border-[#00FF88]/20 bg-[#00FF88]/10 font-bold text-[#00FF88]"
+                      : "border-border-subtle bg-bg-tertiary text-fg-muted",
+                  )}
+                  title={t(`source_tooltip_${source}`)}
+                >
+                  {t(`source_${source}`)}
+                </UIBadge>
+              );
+            })()}
             {incident.is_expert && (
               <UIBadge
                 variant="success"

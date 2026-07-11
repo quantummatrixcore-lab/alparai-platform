@@ -4,9 +4,9 @@ _Konu: Yapay Zeka Hatalarını Kayıt Altına Alan Yerli Girişim ALPAR AI Tanı
 
 Yapay zeka modellerinin hayatın her alanına entegre olmasıyla birlikte, bu modellerin hataları ve yan etkileri de kritik bir öneme sahip olmaya başladı. Yerli ekip tarafından açık kaynak kodlu (AGPL-3.0) olarak geliştirilen **ALPAR AI** (https://alparai.com), yapay zeka sağlayıcılarının (OpenAI, Google, Anthropic vb.) canlı hatalarını, güvenlik açıklarını ve bu hatalara verdikleri yanıtları kamuya açık bir şekilde belgeleyen bir güven altyapısı sunuyor.
 
-### 408 Doğrulanmış Yapay Zeka Hatası
+### 408 Küratörlü Yapay Zeka Vakası
 
-Platformda lansman günü itibarıyla **408 yayınlanmış olay** ve **59 kayıtlı yapay zeka sağlayıcısı** yer alıyor. Girişim, yapay zeka modellerinin güven skoru metodolojisini (Trust Score) çıkararak, şirketlerin bu hatalara ne kadar hızlı yanıt verdiğini ve kaçını çözdüğünü bağımsız olarak puanlıyor.
+Platformda lansman günü itibarıyla **408 küratörlü ve kullanıcı raporu vakası** ve **59 kayıtlı yapay zeka sağlayıcısı** yer alıyor. Girişim, yapay zeka modellerinin güven skoru metodolojisini (Trust Score) çıkararak, şirketlerin bu hatalara ne kadar hızlı yanıt verdiğini ve kaçını çözdüğünü bağımsız olarak puanlıyor.
 
 ### KVKK/GDPR Uyumlu ve Gizlilik Odaklı (PII Guardian)
 

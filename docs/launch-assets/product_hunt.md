@@ -24,6 +24,6 @@
 
 We are launching ALPAR AI because we believe that AI accountability shouldn't be a black box. As AI systems are deployed in high-risk sectors (medical, legal, financial), tracking their failures is critical for safety and regulation.
 
-We currently host a verified corpus of **408 published incidents** across **59 tracked providers**. Everything we build is open-source (AGPL-3.0) and privacy-first (with automatic client/server PII scrubbing).
+We currently host a corpus of **408 curated and user-reported cases** across **59 tracked providers**. Everything we build is open-source (AGPL-3.0) and privacy-first (with automatic client/server PII scrubbing).
 
 We would love to know what other integration points or data filters (like regulatory frameworks, safety metrics) you'd like to see. Thank you for your support!"

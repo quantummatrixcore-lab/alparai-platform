@@ -6,22 +6,40 @@ import { Link } from "@/i18n/routing";
 import { ArrowRight, ShieldAlert, Target, Trophy, Quote, Radio } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Container } from "@/components/ui/layout";
+import { cn } from "@/lib/utils";
 
 export function HeroSection({
   totalIncidents = 0,
   totalProviders = 0,
   totalCountries = 0,
   topProviders = [],
+  countsBySource,
 }: {
   totalIncidents?: number;
   totalProviders?: number;
   totalCountries?: number;
   topProviders?: Array<{ name: string; count: number; slug: string }>;
+  countsBySource?: {
+    user_submitted: number;
+    aiaaic_import: number;
+    aiid_import: number;
+    news_curated: number;
+    court_record: number;
+  };
 }) {
   const t = useTranslations("hero");
+  const tIncident = useTranslations("incident");
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 150]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+
+  const incidentTooltip = countsBySource
+    ? `${tIncident("source_user_submitted")}: ${countsBySource.user_submitted}\n` +
+      `${tIncident("source_aiaaic_import")}: ${countsBySource.aiaaic_import}\n` +
+      `${tIncident("source_aiid_import")}: ${countsBySource.aiid_import}\n` +
+      `${tIncident("source_news_curated")}: ${countsBySource.news_curated}\n` +
+      `${tIncident("source_court_record")}: ${countsBySource.court_record}`
+    : undefined;
 
   return (
     <section className="bg-bg-primary relative overflow-hidden pt-24 pb-16">
@@ -136,6 +154,7 @@ export function HeroSection({
                   label={t("stats_incidents")}
                   glowColor="rgba(230,57,70,0.15)"
                   accentClass="text-danger-400"
+                  tooltip={incidentTooltip}
                 />
                 <LiveStatCard
                   value={totalProviders}
@@ -297,16 +316,19 @@ function LiveStatCard({
   label,
   glowColor,
   accentClass,
+  tooltip,
 }: {
   value: number | string;
   label: string;
   glowColor: string;
   accentClass: string;
+  tooltip?: string;
 }) {
   return (
     <div
-      className="rounded-xl p-2 text-center sm:p-3"
+      className={cn("rounded-xl p-2 text-center sm:p-3", tooltip && "cursor-help")}
       style={{ boxShadow: `inset 0 0 20px ${glowColor}` }}
+      title={tooltip}
     >
       <p className={`font-mono text-2xl font-black tracking-tight sm:text-3xl ${accentClass}`}>
         <AnimatedValue value={value} />

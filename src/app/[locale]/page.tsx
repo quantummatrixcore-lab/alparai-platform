@@ -9,6 +9,7 @@ import type { IncidentListItem, LeaderboardEntry } from "@/types";
 import { toIncidentListItems } from "@/lib/mappers";
 import { checkAndTriggerNewsSyncPassive } from "@/actions/autopilot-sync";
 import dynamic from "next/dynamic";
+import { WaitlistForm } from "@/components/marketing/waitlist-form";
 
 const LiveStats = dynamic(() =>
   import("@/components/marketing/live-stats").then((mod) => mod.LiveStats),
@@ -77,12 +78,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const supabase = await createServerClient();
   const tCommon = await getTranslations({ locale, namespace: "common" });
 
-  const [incidentsResult, incidentsCountResult, providersResult, countriesResult] =
+  const [incidentsResult, incidentsCountResult, providersResult, countriesResult, sourcesResult] =
     await Promise.all([
       supabase
         .from("incidents")
         .select(
-          "id, title_masked, description_masked, title_tr, description_tr, severity, status, category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, user_id, cross_audit_truth_score, cross_audit_confidence",
+          "id, title_masked, description_masked, title_tr, description_tr, severity, status, category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, user_id, cross_audit_truth_score, cross_audit_confidence, incident_source",
         )
         .eq("status", "published")
         .order("published_at", { ascending: false })
@@ -102,6 +103,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         .select("location_country")
         .eq("status", "published")
         .not("location_country", "is", null),
+      supabase.from("incidents").select("incident_source").eq("status", "published"),
     ]);
 
   if (incidentsCountResult.error) {
@@ -116,6 +118,23 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   if (providersResult.error) {
     console.error("Supabase error for provider leaderboard:", providersResult.error);
   }
+  if (sourcesResult.error) {
+    console.error("Supabase error for incident sources:", sourcesResult.error);
+  }
+
+  const countsBySource = {
+    user_submitted: 0,
+    aiaaic_import: 0,
+    aiid_import: 0,
+    news_curated: 0,
+    court_record: 0,
+  };
+  ((sourcesResult.data as Array<{ incident_source: string | null }>) ?? []).forEach((row) => {
+    const src = row.incident_source || "user_submitted";
+    if (src in countsBySource) {
+      countsBySource[src as keyof typeof countsBySource]++;
+    }
+  });
 
   const providerMap = new Map(
     (
@@ -179,17 +198,50 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   return (
     <>
       <WebSiteJsonLd />
+
+      {/* Premium Pre-Launch Waitlist Banner */}
+      <Section className="relative overflow-hidden border-b border-white/5 bg-slate-950/40 py-10">
+        {/* Ambient top glow */}
+        <div className="bg-brand-500/10 absolute -top-[50%] left-1/2 h-[300px] w-[600px] -translate-x-1/2 rounded-full blur-[80px]" />
+
+        <Container className="relative z-10 max-w-4xl">
+          <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
+            <div>
+              <div className="border-brand-500/30 bg-brand-500/10 text-brand-400 mb-3 inline-flex items-center gap-1.5 rounded-sm border px-3 py-1 text-[10px] font-bold tracking-[0.15em] uppercase">
+                <span className="bg-brand-400 h-1.5 w-1.5 animate-pulse rounded-full" />
+                {locale === "tr" ? "2 AĞUSTOS'TA CANLI" : "LIVE AUGUST 2"}
+              </div>
+              <h2 className="text-fg-primary text-2xl font-black tracking-tight sm:text-3xl">
+                {locale === "tr"
+                  ? "ALPAR AI Lansmanı İçin Geri Sayım"
+                  : "ALPAR AI Launch Countdown"}
+              </h2>
+              <p className="text-fg-secondary mt-2 max-w-md text-sm">
+                {locale === "tr"
+                  ? "Yapay zeka güvenliği ve hesap verebilirlik platformumuza erken erişim sağlayın. Bekleme listesine bugün kaydolun."
+                  : "Secure early access to our community-governed AI safety and accountability ledger. Join the waitlist today."}
+              </p>
+            </div>
+            <div className="bg-glass rounded-2xl border border-white/5 p-6">
+              <WaitlistForm />
+            </div>
+          </div>
+        </Container>
+      </Section>
+
       <HeroSection
         totalIncidents={incidentsCountResult.count ?? 0}
         totalProviders={providersResult.data?.length ?? 0}
         totalCountries={uniqueCountriesCount}
         topProviders={topProvidersForHero}
+        countsBySource={countsBySource}
       />
 
       <LiveStats
         totalIncidents={incidentsCountResult.count ?? 0}
         totalProviders={providersResult.data?.length ?? 0}
         totalCountries={uniqueCountriesCount}
+        countsBySource={countsBySource}
       />
 
       <WhyItMatters />
