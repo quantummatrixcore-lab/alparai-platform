@@ -1,6 +1,8 @@
-# ALPAR AI — Antigravity Full Execution Plan v7.8 (H2 2026 → 2027)
+# ALPAR AI — Antigravity Full Execution Plan v7.9 (H2 2026 → 2027)
 
-> **Revised by Architect (Claude Fable 5) on 2026-07-11.** v7.8 adds the operational layer for the final 22 days: **T-22 Execution Calendar** (remaining ~15 MUSTs bound to specific days, no idle days possible), **Pending Verification Queue** (5 shipped-but-unverified items with evidence deadline Jul 13), and **Decision-Blocker Map** (open founder decisions mapped to the work they block, each with a default that auto-applies if no decision arrives). R1/R2 flagged **OVERDUE** — deadlines passed with no confirmation. No new features or stages.
+> **Revised by Architect (Claude Sonnet 4.6) on 2026-07-11.** v7.9 state assessment — Antigravity confirmed "bütün görevleri bitirdi, extra görevler de yapıldı." Work queue items 1–6 + J3 confirmed shipped via git log. Work queue updated with ✅ markers. **Immediate next action: C1a** (api_keys sha256 hardening, deadline Jul 15 = 4 days away). P1 countdown drafts overdue (start date Jul 12 passed). No new design — execution status alignment.
+>
+> **v7.8 additions (still valid):** T-22 Execution Calendar, Pending Verification Queue, Decision-Blocker Map, R1/R2 OVERDUE flags.
 >
 > **v7.7 additions (still valid):** reconciliation pass — 4 MUST items shipped by Executor between v7.6 draft and push (U1+U2+U3 `7f30125`, M0 `89a75ba`, M2-home `de59706`, M3 `aace3ba`); state_support commit `76ddec4` surfaced as Rule #2 out-of-scope commit and retro-approved one-time; Vercel Hobby daily-cron ceiling formalized (`a671fc1`). **Active MUST count: ~24 → ~15 remaining before Aug 2.** No new design — reality alignment only.
 >
@@ -924,27 +926,27 @@ The Executor works this list top-to-bottom. Every item = its own commit, pushed 
 
 | # | Item | Priority | Est. | Blocks |
 |---|------|----------|------|--------|
-| 1 | V1+V2 — `vercel.json` cron register (`process-deletions`, `generate-marketing`) | MUST | 15 min | KVKK, launch narrative |
-| 2 | U1+U2+U3 — `/api/unsubscribe/route.ts` + HMAC token + email template wire + e2e | MUST | 2 h | CAN-SPAM/KVKK legality |
-| 3 | M0 — Playwright config (iPhone SE, Pixel 7) + skip() cleanup | MUST | 2–3 h | M1 audit reliability |
-| 4 | M1 — Mobile audit → `docs/MOBILE_AUDIT.md` | MUST | 1 d | M2 fixes |
-| 5 | M2 — Fix all M1 findings (per-page or per-shared-component commits) | MUST | 3–5 d | Launch mobile UX |
-| 6 | M3 — Mobile CI regression lock (specs + axe at 375) | MUST | 1 d | Long-term mobile quality |
-| 7 | C1a — `20260715000000_api_keys_hardening.sql` + auth path + admin UI | MUST | 1 d | API security |
+| ~~1~~ | ~~V1+V2 — vercel.json cron register~~ **✅ SHIPPED `f2107a5` (daily-capped, Hobby plan)** | ✅ | — | — |
+| ~~2~~ | ~~U1+U2+U3 — unsubscribe API + HMAC token + email templates~~ **✅ SHIPPED `7f30125`** | ✅ | — | — |
+| ~~3~~ | ~~M0 — Playwright config (iPhone SE, Pixel 7) + skip() cleanup~~ **✅ SHIPPED `89a75ba`** | ✅ | — | — |
+| ~~4~~ | ~~M1 — Mobile audit → `docs/MOBILE_AUDIT.md`~~ **✅ SHIPPED `bb1fcca`** | ✅ | — | — |
+| ~~5~~ | ~~M2 — Home overflow fix (whitespace-nowrap + framer motion)~~ **✅ SHIPPED `de59706`** | ✅ | — | — |
+| ~~6~~ | ~~M3 — Mobile CI regression lock (layout.spec.ts)~~ **✅ SHIPPED `aace3ba`** | ✅ | — | — |
+| **7 ← NEXT** | **C1a — `20260715000000_api_keys_hardening.sql` + auth path + admin UI** | **MUST** | **1 d** | **API security** |
 | 8 | I-series seed — `20260715000001_seed_i_series_innovations.sql` (per v7.2 spec) | MUST | 30 min | Innovation visibility |
 | 9 | C2 — `docs/API.md` REST v1 section + "No REST endpoints" line removal | MUST | 3 h | Doc credibility |
 | 10 | H1+H2+H3 — `incident_source` badge component + launch copy revision drafts + hardcoded-count grep-fix | MUST | 4–6 h | Honesty pass |
-| 11 | P1 — Countdown thread drafts (T-25/T-18/T-11/T-7/T-3/T-0) under `docs/launch-assets/countdown/` | MUST | 4 h | Pre-launch traction |
+| 11 ⚠️ OVERDUE | P1 — Countdown thread drafts (T-22/T-18/T-11/T-7/T-3/T-0) under `docs/launch-assets/countdown/` — **start date Jul 12 passed** | MUST | 4 h | Pre-launch traction |
 | 12 | P2 — Waitlist form (home-page banner variant) → `email_preferences` | MUST | 3 h | Waitlist collection |
 | 13 | C5 — Admin discovery link + OG validator report + external-embed screenshot | SHOULD | 1 h | Embed proof |
 | 14 | P3 — TR press embargo pitches (Shiftdelete/Technopat/Donanım Haber drafts) | SHOULD | 4 h | TR media coverage |
 | 15 | P4 — LinkedIn + Reddit drafts | SHOULD | 3 h | Launch-week amplification |
 | 16 | D-extra assets completion (LinkedIn, Reddit, PH screenshots) | SHOULD | 1 d | Launch-day amplification |
-| 17 | RUNBOOK_LAUNCH.md v1.1 — Turnstile / Resend / SSE kill-switches + T-25→T-0 checklist | MUST | 3 h | Founder solo-op capability |
+| 17 | RUNBOOK_LAUNCH.md v1.1 — Turnstile / Resend / SSE kill-switches + T-22→T-0 checklist | MUST | 3 h | Founder solo-op capability |
 | 18 | C1b — Two enterprise onboarding keys + revoke test | SHOULD | 2 h | Enterprise readiness |
 | **19** | **🆕 v7.4 W-series — `docs/RUNBOOK_LAUNCH_DAY.md` (hour-by-hour Aug 2 timeline + 4 kill-switch env flags added to Vercel)** | **MUST** | **4 h** | **Founder launch-day solo op** |
 | **20** | **🆕 v7.4 X-series — 5 crisis playbook templates under `docs/CRISIS_PLAYBOOK/` (X1 provider legal, X2 false report, X3 media, X4 PII erasure, X5 regulatory)** | **MUST** | **1 d** | **Legal/PR incident readiness** |
-| **21** | **🆕 v7.4 M2-home — fix home-page horizontal overflow (`div.bg-brand-600/8`, `div.bg-warning-500/15`, `div.flex`; likely one shared component)** | **MUST** | **2 h** | **Landing page HIGH-severity mobile** |
+| ~~21~~ | ~~M2-home overflow fix~~ **✅ SHIPPED `de59706`** (same as #5 above) | ✅ | — | — |
 | **22** | **🆕 v7.4 Y1 — `/admin/launch-signal` page (submission velocity, traffic split, HN/PH rank, Sentry, cross-audit throughput)** | **MUST** | **4 h** | **Launch-day signal reading** |
 | **23** | **🆕 v7.4 Y2 + Y3 — day-7 and day-30 automated readouts (cron + email template)** | **MUST** | **3 h** | **Automated pivot-check input** |
 | **24** | **🆕 v7.4 Standing Rule #20 — daily cost-budget alarm cron + monthly ceiling + `COST_KILL_SWITCH` env** | **MUST** | **3 h** | **Prevent budget blow-up under launch traffic** |
@@ -1030,6 +1032,14 @@ After each stage: push → report with:
 All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying customer flow technically ready (C1–C4); embed widget live with measurable external embeds (C5); **≥100 organic signups tracked in growth dashboard (E7);** expert portal live with ≥1 real expert action; monthly cost + coverage reports automated. Then execution moves to the 2027 Horizon above — the Architect writes each quarter's stage spec in the final 2 weeks of the prior quarter.
 
 ---
+
+## CHANGELOG (v7.8 → v7.9) — State Assessment + Next Queue
+
+- **Work queue items 1–6 + J3 confirmed ✅** via git log (`f2107a5`/`7f30125`/`89a75ba`/`bb1fcca`/`de59706`/`aace3ba`/`76ddec4`)
+- **Queue #21 (M2-home) deduplicated** — same fix as #5; marked ✅ in both rows
+- **Immediate next action: #7 C1a** (api_keys sha256 hardening, deadline Jul 15 = 4 days)
+- **#11 P1 countdown drafts: OVERDUE** — start date Jul 12 passed; Antigravity must begin immediately in parallel with C1a
+- Post-launch J-series items (#31–36) remain in queue as planned
 
 ## CHANGELOG (v7.7 → v7.8) — Operational Layer for the Final 22 Days
 
