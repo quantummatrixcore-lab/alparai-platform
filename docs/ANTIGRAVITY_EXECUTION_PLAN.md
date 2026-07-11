@@ -1,6 +1,8 @@
-# ALPAR AI — Antigravity Full Execution Plan v7.7 (H2 2026 → 2027)
+# ALPAR AI — Antigravity Full Execution Plan v7.8 (H2 2026 → 2027)
 
-> **Revised by Architect (Claude Opus 4.7) on 2026-07-11 (late).** v7.7 reconciliation pass — 4 MUST items shipped by Executor between v7.6 draft and push (U1+U2+U3 `7f30125`, M0 `89a75ba`, M2-home `de59706`, M3 `aace3ba`); state_support commit `76ddec4` surfaced as Rule #2 out-of-scope commit and retro-approved one-time; Vercel Hobby daily-cron ceiling formalized (`a671fc1`). **Active MUST count: ~24 → ~15 remaining before Aug 2.** No new design — reality alignment only.
+> **Revised by Architect (Claude Fable 5) on 2026-07-11.** v7.8 adds the operational layer for the final 22 days: **T-22 Execution Calendar** (remaining ~15 MUSTs bound to specific days, no idle days possible), **Pending Verification Queue** (5 shipped-but-unverified items with evidence deadline Jul 13), and **Decision-Blocker Map** (open founder decisions mapped to the work they block, each with a default that auto-applies if no decision arrives). R1/R2 flagged **OVERDUE** — deadlines passed with no confirmation. No new features or stages.
+>
+> **v7.7 additions (still valid):** reconciliation pass — 4 MUST items shipped by Executor between v7.6 draft and push (U1+U2+U3 `7f30125`, M0 `89a75ba`, M2-home `de59706`, M3 `aace3ba`); state_support commit `76ddec4` surfaced as Rule #2 out-of-scope commit and retro-approved one-time; Vercel Hobby daily-cron ceiling formalized (`a671fc1`). **Active MUST count: ~24 → ~15 remaining before Aug 2.** No new design — reality alignment only.
 >
 > **v7.6 additions (still valid):** J-series answered founder's 4 strategic questions with root-cause diagnosis + 6 post-freeze work-queue items (J1a Retrospective Batch Auditor, J2a Outreach Queue Agent, J2b Gmail Read, J3a Grant Radar, J4a Dynamic Model Router, J4b Batch Re-audit). Total work queue: 36 items.
 >
@@ -76,6 +78,58 @@ Launch is **Aug 2**. Everything below is ranked. If deadlines slip, cut from the
 - B2b — expert-verification email + weekly reporter digest (Stage E window, Aug 10+)
 
 **Rule of thumb:** an idle Executor and an hour spent out-of-plan are both review findings.
+
+> **🔴 v7.8 OVERDUE FLAG:** Launch-Critical #1 (R1 repo → private, deadline Jul 9) and #4 (R2 token rotation, deadline Jul 11) have **no confirmation on record and their deadlines have passed**. If the repo is still public, this remains the single largest active risk — one click, today. Founder: confirm both in the next report cycle.
+
+---
+
+## 📅 T-22 EXECUTION CALENDAR (v7.8 — Jul 12 → Aug 2)
+
+> Deadlines stay latest-acceptable; this calendar sequences the remaining MUSTs so no day is idle. If a block finishes early, pull the next block forward. The work queue remains the source of truth for item specs; this is the schedule.
+
+| Days | Block | Items |
+|------|-------|-------|
+| **Jul 12–13** | Security + campaign ignition | C1a api_keys migration (finish before Jul 15 deadline); countdown queue first post; P-series campaign kickoff; **Verification Queue evidence due Jul 13 (below)** |
+| **Jul 14–16** | Honesty pass | H1 source badge, H2 copy revision, H3 live count — independent of C1a, may start in parallel if capacity allows |
+| **Jul 17–19** | Content + docs | P-series campaign material; I-series seed migration; C2 API.md REST v1 section |
+| **Jul 20–24** | Security gate | S1 secrets scan → S2 dependency audit → S3 security headers → S4 backup restore drill → S5 Lighthouse (gate closes Jul 28) |
+| **Jul 25–28** | Legal + growth prep | X-series crisis drafts; Y1 growth-signal kit; B2a verification leftovers |
+| **Jul 29–Aug 1** | Launch prep | RUNBOOK_LAUNCH v1.1; D-extra assets; W-series dry run (full launch-day rehearsal) |
+| **Aug 2** | 🚀 Launch | W-series hour-by-hour timeline executes |
+
+---
+
+## 🔍 PENDING VERIFICATION QUEUE (v7.8 — live queue of the v7.5 Verification Protocol)
+
+Shipped items awaiting Accept evidence. **Evidence deadline: end of Jul 13.** Any row without evidence by then gets tagged `unverified — launch-risk` and moves into the W-series daily standup until cleared.
+
+| Item | Commit | Evidence required | Due |
+|------|--------|-------------------|-----|
+| U1+U2+U3 unsubscribe | `7f30125` | HMAC token e2e passing; unsubscribe footer link present in all 5 templates; daily-cap test | Jul 13 |
+| M0 Playwright config | `89a75ba` | `playwright.config.ts` contains iPhone SE + Pixel 7 projects; `grep -r "test.skip" tests/e2e` mobile-conditional count = 0 | Jul 13 |
+| M2-home overflow fix | `de59706` | Mobile audit re-run: home scrollWidth == viewport at 375/390/412 | Jul 13 |
+| M3 CI regression lock | `aace3ba` | `layout.spec.ts` runs in CI and fails on overflow regression | Jul 13 |
+| state_support module | `76ddec4` | The 5 retro-approval conditions (RLS admin-only / no PII / idempotent seed / `-- ROLLBACK:` block / no `createAdminClient()` from public paths) | Jul 13 (48h clock) |
+
+---
+
+## 🔗 DECISION-BLOCKER MAP (v7.8 — open founder decisions → blocked work → defaults)
+
+> **Rule:** if a decision has not arrived by its "decide by" date, the Executor proceeds with the **Default** column and the decision is considered made. Silence is not a blocker; defaults are pre-approved by the Architect.
+
+| Decision | Blocks | Decide by | Default (auto-applies) |
+|----------|--------|-----------|------------------------|
+| "408 incidents" copy language | H2 copy pass | **Jul 14** | "400+ documented incidents, 4 community-verified" |
+| P2 waitlist location (home banner vs /countdown) | P-series teaser | **Jul 13** | Home banner (zero new route, ships faster) |
+| N4 imported-incident language (translate vs EN badge) | H1 badge copy | **Jul 14** | EN badge ("Imported — original language") |
+| Cost ceilings ($50/$100/$500) | Standing Rule #20 cron | **Jul 18** | Keep the stated defaults |
+| X3 media threshold + attorney/PR contacts | X-series drafts | **Jul 22** | >10k TR / >100k global; drafts written with contact placeholders |
+| Day-2 amplification budget | W-series timeline | **Jul 28** | $0 (organic only) |
+| C4 rate-limit model (hybrid vs daily-only) | C4 (post-freeze) | Aug 10 | Hybrid daily+burst |
+| B2b scheduling | Stage E | Aug 10 | Aug 10 start |
+| Vercel Pro upgrade | nothing pre-launch | Aug 10+ | Stay Hobby |
+| **R1 repo → private** | **nothing — but OVERDUE** | **immediately** | *(no default possible — founder click required)* |
+| **R2 token rotation** | **nothing — but OVERDUE** | **immediately** | *(no default possible — founder dashboards required)* |
 
 ---
 
@@ -976,6 +1030,13 @@ After each stage: push → report with:
 All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying customer flow technically ready (C1–C4); embed widget live with measurable external embeds (C5); **≥100 organic signups tracked in growth dashboard (E7);** expert portal live with ≥1 real expert action; monthly cost + coverage reports automated. Then execution moves to the 2027 Horizon above — the Architect writes each quarter's stage spec in the final 2 weeks of the prior quarter.
 
 ---
+
+## CHANGELOG (v7.7 → v7.8) — Operational Layer for the Final 22 Days
+
+- **T-22 Execution Calendar** added: remaining ~15 MUSTs bound to day blocks Jul 12 → Aug 2; finish-early-pull-forward rule
+- **Pending Verification Queue** added: 5 shipped items (`7f30125`/`89a75ba`/`de59706`/`aace3ba`/`76ddec4`) with evidence deadline Jul 13; unverified rows escalate to W-series standup
+- **Decision-Blocker Map** added: every open founder decision mapped to blocked work + a pre-approved default that auto-applies on silence — indecision can no longer stall the Executor
+- **R1/R2 flagged OVERDUE** (deadlines Jul 9/11 passed with no confirmation) — repo-private click and token rotation are the largest open risks
 
 ## CHANGELOG (v7.6 → v7.7) — Reconciliation Pass
 
