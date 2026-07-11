@@ -139,6 +139,9 @@ export async function GET(request: Request) {
   const category = url.searchParams.get("category");
   const severity = url.searchParams.get("severity");
   const euRisk = url.searchParams.get("eu_risk");
+  const euClass = url.searchParams.get("eu_class");
+  const euHighRisk = url.searchParams.get("eu_high_risk");
+  const euDeadline = url.searchParams.get("eu_deadline");
   const provider = url.searchParams.get("provider");
   const model = url.searchParams.get("model");
 
@@ -152,6 +155,9 @@ export async function GET(request: Request) {
     status,
     category,
     eu_act_risk_category,
+    eu_act_serious_incident_class,
+    eu_act_high_risk_system_category,
+    eu_act_reporting_deadline_days,
     is_anonymous,
     incident_date,
     views_count,
@@ -187,6 +193,9 @@ export async function GET(request: Request) {
   if (severity)
     query = query.eq("severity", severity as Database["public"]["Enums"]["incident_severity"]);
   if (euRisk) query = query.eq("eu_act_risk_category", euRisk);
+  if (euClass) query = query.eq("eu_act_serious_incident_class", euClass);
+  if (euHighRisk) query = query.eq("eu_act_high_risk_system_category", euHighRisk);
+  if (euDeadline) query = query.eq("eu_act_reporting_deadline_days", parseInt(euDeadline, 10));
   if (provider) query = query.eq("ai_providers.slug", provider);
   if (model) query = query.ilike("ai_models.name", `%${model}%`);
 
@@ -211,6 +220,9 @@ export async function GET(request: Request) {
       severity: row["severity"],
       category: row["category"],
       eu_act_risk_category: row["eu_act_risk_category"] ?? null,
+      eu_act_serious_incident_class: row["eu_act_serious_incident_class"] ?? null,
+      eu_act_high_risk_system_category: row["eu_act_high_risk_system_category"] ?? null,
+      eu_act_reporting_deadline_days: row["eu_act_reporting_deadline_days"] ?? null,
       is_anonymous: row["is_anonymous"] ?? false,
       incident_date: row["incident_date"],
       views: row["views_count"] ?? 0,

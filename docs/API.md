@@ -229,14 +229,17 @@ Fetch a list of published incidents.
 
 #### Query Parameters
 
-| Parameter  | Type    | Required | Description                                                                   |
-| :--------- | :------ | :------- | :---------------------------------------------------------------------------- |
-| `limit`    | integer | No       | Maximum number of records to return (1-100). Default is `20`.                 |
-| `category` | string  | No       | Filter by incident category (e.g. `hallucination`, `bias`, `security`, etc.). |
-| `severity` | string  | No       | Filter by severity level (`low`, `medium`, `high`, `critical`).               |
-| `eu_risk`  | string  | No       | Filter by EU AI Act risk category (e.g. `unacceptable`, `high-risk`, etc.).   |
-| `provider` | string  | No       | Filter by provider slug (e.g. `openai`, `anthropic`).                         |
-| `model`    | string  | No       | Filter by model name (case-insensitive partial match).                        |
+| Parameter      | Type    | Required | Description                                                                                |
+| :------------- | :------ | :------- | :----------------------------------------------------------------------------------------- |
+| `limit`        | integer | No       | Maximum number of records to return (1-100). Default is `20`.                              |
+| `category`     | string  | No       | Filter by incident category (e.g. `hallucination`, `bias`, `security`, etc.).              |
+| `severity`     | string  | No       | Filter by severity level (`low`, `medium`, `high`, `critical`).                            |
+| `eu_risk`      | string  | No       | Filter by EU AI Act risk category (e.g. `unacceptable`, `high-risk`, etc.).                |
+| `eu_class`     | string  | No       | Filter by EU AI Act serious incident class (e.g. `death/health`, `fundamental-rights`).    |
+| `eu_high_risk` | string  | No       | Filter by EU AI Act Annex III high-risk system category (e.g. `biometrics`, `employment`). |
+| `eu_deadline`  | integer | No       | Filter by reporting deadline in days (`2`, `10`, `15`).                                    |
+| `provider`     | string  | No       | Filter by provider slug (e.g. `openai`, `anthropic`).                                      |
+| `model`        | string  | No       | Filter by model name (case-insensitive partial match).                                     |
 
 #### Response Format
 
@@ -254,6 +257,9 @@ Returns a JSON object containing the data array and query metadata.
       "severity": "high",
       "category": "hallucination",
       "eu_act_risk_category": "high-risk",
+      "eu_act_serious_incident_class": "death/health",
+      "eu_act_high_risk_system_category": "services",
+      "eu_act_reporting_deadline_days": 10,
       "is_anonymous": false,
       "incident_date": "2026-07-10",
       "views": 42,

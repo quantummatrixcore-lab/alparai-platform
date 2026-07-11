@@ -6,6 +6,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyProviderTokenDb } from "@/lib/utils/provider-token";
 import { ProviderResponseForm } from "@/components/incidents/provider-response-form";
 import { AlertCircle, FileText } from "lucide-react";
+import { Link } from "@/i18n/routing";
 
 export async function generateMetadata({
   params,
@@ -29,6 +30,7 @@ export default async function RespondPage({
   setRequestLocale(locale);
 
   const t = await getTranslations({ locale, namespace: "respond" });
+  const tLegal = await getTranslations({ locale, namespace: "legal" });
 
   if (process.env.IS_PLAYWRIGHT_TEST === "true") {
     if (!token || token === "wrongtoken") {
@@ -60,6 +62,13 @@ export default async function RespondPage({
             <ProviderResponseForm incidentId={id} token={token} providerName="Test Provider" />
           </CardContent>
         </Card>
+
+        <div className="text-fg-muted mt-8 text-center text-xs">
+          {tLegal("neutralitySubtitle")}{" "}
+          <Link href="/legal/neutrality" className="text-brand-400 font-medium hover:underline">
+            {tLegal("neutralityTitle")}
+          </Link>
+        </div>
       </Container>
     );
   }
@@ -131,6 +140,13 @@ export default async function RespondPage({
           <ProviderResponseForm incidentId={id} token={token} providerName={provider.name} />
         </CardContent>
       </Card>
+
+      <div className="text-fg-muted mt-8 text-center text-xs">
+        {tLegal("neutralitySubtitle")}{" "}
+        <Link href="/legal/neutrality" className="text-brand-400 font-medium hover:underline">
+          {tLegal("neutralityTitle")}
+        </Link>
+      </div>
     </Container>
   );
 }

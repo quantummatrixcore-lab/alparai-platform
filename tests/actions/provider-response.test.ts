@@ -252,6 +252,7 @@ describe("submitProviderResponse", () => {
             gte: () => Promise.resolve({ count: 0, error: null }),
           }),
         }),
+        insert: () => Promise.resolve({ error: null }),
       };
     });
 
@@ -436,8 +437,12 @@ describe("submitProviderResponse", () => {
       }
       return {
         select: () => ({
-          eq: () => ({ maybeSingle: () => Promise.resolve({ data: null, error: null }) }),
+          eq: () => ({
+            maybeSingle: () => Promise.resolve({ data: null, error: null }),
+            gte: () => Promise.resolve({ count: 0, error: null }),
+          }),
         }),
+        insert: () => Promise.resolve({ error: null }),
       };
     });
 

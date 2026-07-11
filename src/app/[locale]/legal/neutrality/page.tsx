@@ -25,20 +25,20 @@ export default async function NeutralityCharterPage({
         {t("neutralitySubtitle")}
       </p>
 
-      <h2>{t("nIntroduction")}</h2>
-      <p>{t("nIntroductionText")}</p>
+      <h2>{t("nCore")}</h2>
+      <p>{t("nCoreText")}</p>
+
+      <h2>{t("nPinned")}</h2>
+      <p>{t("nPinnedText")}</p>
+
+      <h2>{t("nTransparency")}</h2>
+      <p>{t("nTransparencyText")}</p>
 
       <h2>{t("nIntermediary")}</h2>
       <p>{t("nIntermediaryText")}</p>
 
       <h2>{t("nRightOfReply")}</h2>
       <p>{t("nRightOfReplyText")}</p>
-
-      <h2>{t("nModeration")}</h2>
-      <p>{t("nModerationText")}</p>
-
-      <h2>{t("nArbitration")}</h2>
-      <p>{t("nArbitrationText")}</p>
     </LegalLayout>
   );
 }
