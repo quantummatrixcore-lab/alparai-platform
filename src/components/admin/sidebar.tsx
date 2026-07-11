@@ -77,6 +77,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       active: pathname.startsWith("/admin/analysis"),
     },
     {
+      href: "/admin/cross-audit-dashboard",
+      label: t("cross_audit_dashboard") || "Cross-Audit",
+      icon: ShieldCheck,
+      active: pathname.startsWith("/admin/cross-audit-dashboard"),
+    },
+    {
       href: "/admin/api-metrics",
       label: t("api_metrics") || "API Hub",
       icon: Pulse,
