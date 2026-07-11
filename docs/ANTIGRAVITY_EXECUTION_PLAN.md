@@ -1,8 +1,10 @@
-# ALPAR AI — Antigravity Full Execution Plan v7.10 (H2 2026 → 2027)
+# ALPAR AI — Antigravity Full Execution Plan v7.11 (H2 2026 → 2027)
 
-> **Revised by Architect (Claude Sonnet 5) on 2026-07-11.** v7.10 adds the **K-series**: founder asked why we don't use free-tier API quotas with models cross-questioning each other for ethics testing, using the 409-incident backlog as source material. Code audit found **this infrastructure already exists** — `src/lib/ai/openrouter-gateway.ts` wires 5 free-tier providers (OpenRouter, Cohere, HuggingFace, Google Gemini, Blackbox) with circuit-breaker failover into `cross-audit-engine.ts`'s 4-stage debate pipeline (initial evaluation → challenge → rebuttal → Supreme Court adjudication) — it just never runs against the seed backlog. K-series wires it up correctly, replaces J1a's generic framing with the real architecture, and adds a non-negotiable safety boundary (free-tier interrogation on imported/public incidents only — never on organic whistleblower submissions).
+> **Revised by Architect (Claude Opus 4.7) on 2026-07-11.** v7.11 expands K-series from single-category (ethics) into a **multi-dimensional AI benchmark platform**: 4 industry-standard categories (hallucination, math/reasoning, instruction-following, robustness) + 4 ALPAR-differentiated categories (ethics, Turkish, EU AI Act, real-world incidents). Same underlying free-tier infrastructure — different question banks and evaluation rubrics per category. **Strategic pivot:** ALPAR is no longer just "AI incident registry" — it becomes "the independent public rater of AI systems" (Moody's-for-AI positioning materializes). Launch discipline preserved: **no K work before Aug 10.** MVP (4 categories) by Sep 15; full 8-category platform in 2027 Q1 as the Compliance Readiness Dashboard companion.
 >
-> **v7.9 additions (still valid):** state assessment — Antigravity confirmed all queued items done via git log. **Immediate next action still: C1a** (api_keys sha256 hardening, deadline Jul 15). P1 countdown drafts overdue.
+> **v7.10 additions (still valid):** K1–K4 core infrastructure (provider audit, free-tier scheduler, seed-only safety boundary, audit_tier provenance). Now framed as "K-CORE" — the substrate that K5–K13 categories all run on top of.
+>
+> **v7.9 additions (still valid):** state assessment. **Immediate next action still: C1a** (api_keys sha256 hardening, deadline Jul 15). P1 countdown drafts overdue.
 >
 > **v7.8 additions (still valid):** T-22 Execution Calendar, Pending Verification Queue, Decision-Blocker Map, R1/R2 OVERDUE flags.
 >
@@ -878,9 +880,71 @@ Her satır ayrı `INSERT … WHERE NOT EXISTS` ile idempotent eklenir (title ba�
 
 **K4 — Audit-Tier Provenance:** add `audit_tier: 'free' | 'paid'` to the incident's audit metadata so a seed incident audited only by free-tier models is never displayed with the same confidence as an organic incident that went through the paid Supreme Court stage. Extends Standing Rule #19 (numeric-claim honesty): "free-tier audited" ≠ `expert_verified`.
 
-**K5 (2027 Horizon only, not approved):** if K1–K4 mature, the same infrastructure could become a public benchmark ("which models handle known AI-incident scenarios responsibly") — a genuine product differentiator. Proposal-only; no build authorization here.
+**K1–K4 = K-CORE.** These are the substrate (providers, scheduler, safety boundary, provenance). Everything below runs on top of them.
 
-**Accept criteria:** 50 seed incidents carry `audit_tier='free'` + a populated `cross_audit_score` by Sep 1; zero `user_submitted` rows touched by the free-tier scheduler (verify via query); provider coverage status visible in admin; $0 spend attributable to K2 in the weekly cost summary (Standing Rule #20).
+**Accept criteria (K-CORE):** 50 seed incidents carry `audit_tier='free'` + a populated `cross_audit_score` by Sep 1; zero `user_submitted` rows touched by the free-tier scheduler (verify via query); provider coverage status visible in admin; $0 spend attributable to K2 in the weekly cost summary (Standing Rule #20).
+
+---
+
+### 🎯 K-BENCHMARK — Multi-Category AI Model Rating Platform (v7.11)
+
+> **Strategic reframe:** the founder's request "not just ethics — hallucination, quality, math, etc." graduates K5 from "flagged for Horizon" into a **program**: ALPAR runs the same 5-provider cross-interrogation across 8 evaluation categories and publishes model ratings. **This is the concrete form of ALPAR's Moody's-for-AI positioning** — the incident registry earns credibility, the benchmark earns dependency. Combined, they make ALPAR unavoidable when Art. 73 goes live.
+
+**Design principle:** every category = same K-CORE pipeline, different (a) question bank, (b) rubric prompt, (c) scoring dimension. Adding a category is a config change plus a seeded question bank, not a new engine. This keeps the surface small even as coverage grows.
+
+**Category ladder (8 total, ordered by ALPAR-differentiation ROI):**
+
+| ID | Category | Question bank source | Why it wins for ALPAR | Phase |
+|----|----------|---------------------|----------------------|-------|
+| **K5** | **Ethics / Safety** (original) | The 409 AI-incident seed backlog — real-world scenarios, not synthetic — plus a curated adversarial jailbreak set | Nobody else grounds ethics tests in a real incident registry. This IS the moat. | **MVP** |
+| **K6** | **Hallucination / Factuality** | TruthfulQA (public) + 200 Turkish-context factual claims curated by us | Turkish factuality is under-benchmarked; global TruthfulQA gives us comparability | **MVP** |
+| **K7** | **Turkish Language Competence** | MMLU-TR (translated + verified) + a bespoke TR legal/medical/regulatory prompt set | Nobody benchmarks TR seriously. This owns the TR market. | **MVP** |
+| **K8** | **EU AI Act Reasoning** | 120 Art. 73 hypothetical scenarios curated by us against the taxonomy in `docs/EU_AI_ACT_TAXONOMY.md` | Nobody has this. Direct wedge into 2027 Dec 2 moment. | **MVP** |
+| **K9** | **Math / Reasoning** | GSM8K + MATH (public) | Comparability to standard leaderboards; commodity but essential | Full platform |
+| **K10** | **Instruction Following** | IFEval (public) | Cheap to run, industry-comparable | Full platform |
+| **K11** | **Robustness / Adversarial** | Jailbreak dataset + prompt-injection corpus | Direct tie to K5 ethics — shared question bank, different rubric | Full platform |
+| **K12** | **Long-Context Retrieval** | Needle-in-haystack, adapted for context windows ≥32k | Standard capability check | Full platform |
+
+**Rating output (public):**
+- `/ratings/{model-slug}` page: category scores (0–100), overall composite, category strength/weakness callouts, last-audited date, sample-size disclosure
+- `/ratings` leaderboard: filterable by category, provider, tier (free vs paid), release date
+- Public JSON API `/api/v1/ratings/{model}` — feeds the future Reporting Assistant and third-party integrators
+- **Methodology page** (`/methodology/benchmarks`) with question-bank composition, evaluation rubric, cross-model debate transcripts (redacted where prompts are proprietary) — this earns academic credibility
+
+**Scoring architecture (extends K-CORE):**
+- **Each category has a scorer prompt** stored in `src/lib/benchmarks/categories/{k5,k6,…}.ts` — a plain TypeScript module exporting `{ id, name, rubric, extractScore }`. Adding K13 = one new file + one config row.
+- **Cross-model rubric:** the same debate mechanism (evaluate → challenge → rebut → adjudicate) runs on each answer. This is unique — nobody else runs multi-model adjudication on benchmark answers; they just compare raw outputs. Multi-model adjudication is the methodological differentiator.
+- **Statistical rigor:** minimum 100 questions per category per model per run; Wilson score interval reported alongside every rating; re-audit trigger when model version changes (K6 ties to J6 — model drift watch).
+
+**Safety boundaries (extend K3 seed-only rule):**
+1. Benchmark runs **never** touch `user_submitted` incidents (K3 preserved verbatim).
+2. Question banks with proprietary/licensed content stay server-side; only aggregate scores + non-derivable examples are published.
+3. Adversarial/jailbreak prompts (K11) run under a separate feature flag (`ENABLE_ADVERSARIAL_BENCHMARK`) with rate-limit + admin-only trigger — no scheduled adversarial runs, no automated pipeline. **The founder must authorize each adversarial run manually** (prevents provider ToS violations from automated jailbreak attempts).
+4. Model providers get a **60-day heads-up** before a new rating publishes for their model (industry standard — avoids "surprise attack" positioning; keeps the door open to enterprise conversations).
+
+**Phase plan (respects launch discipline):**
+
+| Phase | Window | Deliverable |
+|-------|--------|-------------|
+| **K-CORE** | Aug 10 – Aug 25 | K1–K4 shipped; seed re-audit running silently |
+| **K-MVP** (K5+K6+K7+K8) | Aug 26 – Sep 15 | 4 categories live; `/ratings` page + methodology doc published; opening blog post pitched to press |
+| **K-Full** (K9–K12) | Sep 16 – Dec 15 | 4 more categories; public JSON API v1; academic partnership outreach begins (F2 tie-in) |
+| **K-Product** (2027 Q1) | Jan – Mar 2027 | Ratings integrated into Compliance Readiness Dashboard; enterprise/paid tier with per-model alerts, private benchmarks, white-label reports |
+
+**Cost model:** all 8 MVP categories run on K-CORE's free-tier chains. Estimated spend at MVP: **$0**. Estimated spend at K-Full with 30 models × 8 categories × 100 questions × 4 debate stages = 96k free-tier calls/quarter, well inside combined provider free quotas (OpenRouter free ≈no daily cap but per-model RPM; Google AI Studio ≈1500/day; Cohere trial ≈10k/month). Scheduler enforces daily budgets per provider so no single quota blocks a run.
+
+**Founder decisions required (before K-MVP starts, Aug 25):**
+1. **Model roster for MVP.** Recommendation: top 15 models by public API access (GPT-4o, GPT-4o-mini, Claude 3.5 Sonnet, Claude Haiku, Gemini 1.5 Pro/Flash, Llama 3.3 70B, Qwen 2.5 72B, DeepSeek Chat, Mistral Large, Command R+, Grok-2, plus 3 open-source finalists). Founder confirms or edits.
+2. **Publication cadence.** Recommendation: weekly re-audit → `/ratings` updates weekly. Founder can choose bi-weekly if free-tier quotas tighten.
+3. **60-day pre-notification recipient list.** Founder provides the "notify before publishing rating" contact per provider (Anthropic, OpenAI, Google, Meta, etc.); Executor drafts a template email.
+4. **K11 adversarial authorization workflow.** Recommendation: no adversarial runs until at least Dec 2026 (after MVP proves credibility); when enabled, single-click admin trigger with legal-team pre-review. Founder confirms.
+
+**Accept criteria (K-MVP):** 4 categories live at `/ratings`; 15 models rated in each; methodology page published; opening announcement blog live; zero `user_submitted` data used; zero paid-API spend attributable to K-MVP.
+
+**What K-BENCHMARK is NOT:**
+- Not a replacement for LMSYS Chatbot Arena — that's crowdsourced preference; we're rubric-graded on structured categories.
+- Not a real-time SaaS competitive with Vellum/Braintrust — those are eval tools for builders; we are a **public independent rater** (Moody's, not GitHub).
+- Not a hardened AI safety red-team (yet) — K11 is a limited robustness surface, not a full red-team program.
 
 ---
 
@@ -897,6 +961,12 @@ Items graduating from J-series into the work queue (all **post-freeze Aug 10** u
 | 35 | **J3a** — Grant Radar (weekly scan → `grant_opportunities` table) | Post-freeze | LOW |
 | 36 | **J2b** — Gmail Read Integration (founder OAuth pre-req) | Post-freeze | LOW |
 | 37 | **K3+K4** — seed-only safety gate + `audit_tier` provenance column | Post-freeze (ships with K2, same commit) | HIGH |
+| 38 | **K5** — Ethics category MVP (409-grounded question bank + rubric + `/ratings` scaffold) | K-MVP window (Aug 26+) | HIGH |
+| 39 | **K6** — Hallucination/factuality MVP (TruthfulQA + 200 TR claims) | K-MVP window | HIGH |
+| 40 | **K7** — Turkish competence MVP (MMLU-TR + bespoke TR set) | K-MVP window | HIGH |
+| 41 | **K8** — EU AI Act reasoning MVP (120 Art. 73 scenarios) | K-MVP window | HIGH |
+| 42 | **K9–K12** — 4 industry-standard categories (math, IFEval, adversarial, long-context) | K-Full (Sep 16 – Dec 15) | MEDIUM |
+| 43 | **K-Product** — Ratings integrated into Compliance Readiness Dashboard, paid tier | 2027 Q1 | HIGH (revenue) |
 
 ---
 
@@ -909,15 +979,17 @@ Items graduating from J-series into the work queue (all **post-freeze Aug 10** u
 - **1,000 published incidents** (import pipeline + organic; taxonomy coverage ≥80%)
 - **"State of AI Incidents 2026" report** (F3) — the credibility artifact for press, academics, and investors
 - **Expert network:** ≥5 active experts with real verification actions (F1)
-- *North-star:* Weekly active reporters ≥30; first revenue booked.
-- *Kill/pivot check (Dec 31):* if organic submissions <10/week despite launch + growth loops, pivot primary motion from community-sourced to curated-editorial + API-first.
+- **🆕 K-BENCHMARK Full (K9–K12) live:** all 8 categories rating 20+ models publicly at `/ratings`; first citation from a technical publication or ML researcher
+- *North-star:* Weekly active reporters ≥30; first revenue booked; `/ratings` MAU ≥ 3× incident-page MAU (benchmark becomes the traffic engine, incidents the credibility engine).
+- *Kill/pivot check (Dec 31):* if organic submissions <10/week despite launch + growth loops, pivot primary motion from community-sourced to curated-editorial + API-first + benchmark-led (K-BENCHMARK becomes the primary product surface if ratings traffic outperforms incident traffic 5×).
 
 ### Q1 2027 — Revenue Engine (Jan–Mar)
 - **Compliance Readiness Dashboard** (new product surface): providers see their incident exposure mapped to Art. 73 classes, gap analysis, response-rate benchmark vs. peers. Free tier read-only; paid tier = alerts + API + white-label reports.
-- **API v2:** webhook subscriptions (new incident matching filters), bulk export, SLA tiers
-- **Pricing goes live** (founder sets amounts; Executor builds Stripe integration + billing portal)
+- **🆕 K-Product ships alongside CRD:** private benchmarks (customer runs categories against their own model + comparators; results stay private), per-model rating alerts (score change > X → email), white-label rating reports for enterprise; integrates into CRD as "your models rated against peers"
+- **API v2:** webhook subscriptions (new incident matching filters + rating change events), bulk export, SLA tiers
+- **Pricing goes live** (founder sets amounts; Executor builds Stripe integration + billing portal) — pricing spans **both** CRD and K-Product; the benchmark is the higher-usage / lower-commitment upsell
 - **TR + EU regulatory content engine:** weekly "readiness gap" analyses auto-drafted into approval queue
-- *North-star:* MRR > €1k; ≥3 provider profiles claimed by the companies themselves.
+- *North-star:* MRR > €1k; ≥3 provider profiles claimed by the companies themselves; ≥1 paying benchmark customer (K-Product).
 
 ### Q2 2027 — The Authority Position (Apr–Jun)
 - **Academic partnership formalized:** ≥1 university MOU (founder-led; Executor builds the research portal capacity F2 needs)
@@ -1058,6 +1130,17 @@ After each stage: push → report with:
 All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying customer flow technically ready (C1–C4); embed widget live with measurable external embeds (C5); **≥100 organic signups tracked in growth dashboard (E7);** expert portal live with ≥1 real expert action; monthly cost + coverage reports automated. Then execution moves to the 2027 Horizon above — the Architect writes each quarter's stage spec in the final 2 weeks of the prior quarter.
 
 ---
+
+## CHANGELOG (v7.10 → v7.11) — K-BENCHMARK: Multi-Category AI Rating Platform
+
+- Founder request: "not just ethics — hallucination, quality, math, etc." → K-series graduates from single-category (K5) into an 8-category program (K5–K12)
+- **Strategic reframe:** ALPAR = incident registry + independent public rater. Moody's-for-AI positioning now has a concrete surface (`/ratings`).
+- **Category ladder:** K5 Ethics (409-grounded, moat) + K6 Hallucination + K7 Turkish + K8 EU AI Act → MVP; K9 Math + K10 IFEval + K11 Adversarial + K12 Long-context → Full
+- **Phase plan:** K-CORE Aug 10–25 → K-MVP Aug 26–Sep 15 → K-Full Sep 16–Dec 15 → K-Product Q1 2027 (paid tier alongside CRD). **No K work pre-Aug 2** — launch discipline preserved.
+- **Safety additions:** adversarial (K11) behind admin-only manual authorization + legal pre-review; 60-day pre-notification to model providers before ratings publish; K3 seed-only boundary extends to all categories (no `user_submitted` data ever)
+- **Cost:** $0 estimated for MVP + Full (all inside combined free-tier provider quotas)
+- **Work queue:** items 38–43 added (K5, K6, K7, K8, K9–K12 combined, K-Product)
+- **2027 Horizon updated:** Q4 2026 now includes K-Full launch + `/ratings` MAU as north-star; Q1 2027 pairs CRD with K-Product paid tier
 
 ## CHANGELOG (v7.9 → v7.10) — K-Series: Free-Tier Cross-Model Ethics Interrogation
 
