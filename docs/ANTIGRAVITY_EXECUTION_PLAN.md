@@ -1,3 +1,6 @@
+> ⚠️ **ARŞİV (v7.16 sonrası donduruldu).** Güncel operasyonel plan: **`docs/MASTER_PLAN.md` (v8.0)**.
+> Bu dosya tarihsel audit trail'dir; talimat olarak OKUNMAZ. Çelişkide MASTER_PLAN.md kazanır.
+
 # ALPAR AI — Antigravity Full Execution Plan v7.16 (H2 2026 → 2027)
 
 > **Revised by Architect (Claude Fable 5) on 2026-07-11.** v7.16 = **ilk fiili Architect doğrulama taraması + plan hijyeni**. Verification Protocol ilk kez koda karşı çalıştırıldı: 4 kritik shipped iddiadan **3 PASS, 1 FAIL** (C1a migration'da Rule #12 ROLLBACK bloğu eksik — küçük düzeltme kuyruğa girdi). Plan 16 revizyonda 1600+ satıra ulaştı ve Rule #23 tarih yasağıyla çelişen bayat bölümler taşıyor; yeni "CURRENT STATE SNAPSHOT" bölümü tek doğru okuma girişi ilan edildi — tarih içeren eski operasyonel bölümler (T-22 Calendar, Pending Verification Queue, Decision-Blocker Map) **tarihsel arşiv** statüsüne çekildi, silinmedi.
