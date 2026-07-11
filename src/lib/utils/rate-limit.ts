@@ -40,9 +40,9 @@ let _limiters: Record<string, Ratelimit> | null = null;
 function getLimiters(): Record<string, Ratelimit> {
   if (_limiters) return _limiters;
   if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
-    logger.warn(
-      "CRITICAL: Upstash Redis environment variables are missing. Rate limiting is disabled.",
-    );
+    if (process.env.NODE_ENV !== "test") {
+      logger.warn("Upstash Redis environment variables are missing. Rate limiting is disabled.");
+    }
     return {};
   }
   if (!_redis) {

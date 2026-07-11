@@ -32,3 +32,22 @@ vi.mock("next-intl/server", () => ({
   getLocale: vi.fn().mockResolvedValue("en"),
   setRequestLocale: vi.fn(),
 }));
+
+vi.mock("@upstash/redis", () => ({
+  Redis: vi.fn().mockImplementation(() => ({})),
+}));
+
+vi.mock("@upstash/ratelimit", () => ({
+  Ratelimit: Object.assign(
+    vi.fn().mockImplementation(() => ({
+      limit: vi.fn().mockResolvedValue({
+        success: true,
+        remaining: 10,
+        reset: Date.now() + 60_000,
+      }),
+    })),
+    {
+      slidingWindow: vi.fn().mockReturnValue({} as never),
+    },
+  ),
+}));
