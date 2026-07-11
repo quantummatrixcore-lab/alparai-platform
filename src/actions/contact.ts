@@ -8,6 +8,7 @@ import { withAutopilot, submitContactPolicy, attemptsOf, durationOf } from "@/li
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { hashIp } from "@/lib/utils/hash";
+import { logger } from "@/lib/utils/logger";
 
 export interface ContactState {
   ok: boolean;
@@ -125,7 +126,11 @@ export async function submitContact(
     }
     return { ok: false, formError: "Unexpected error." };
   } catch (e) {
-    console.error("[submitContact] Unhandled exception:", e);
+    logger.error(
+      "[submitContact] Unhandled exception",
+      undefined,
+      e instanceof Error ? e : undefined,
+    );
     return { ok: false, formError: "An unexpected error occurred. Please try again." };
   }
 }

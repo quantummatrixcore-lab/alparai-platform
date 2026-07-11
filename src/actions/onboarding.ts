@@ -79,8 +79,7 @@ export async function saveOnboardingData(
     }
 
     // Update user profile
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { error: updateError } = await (supabase as any)
+    const { error: updateError } = await supabase
       .from("users")
       .update({
         community_role: role,

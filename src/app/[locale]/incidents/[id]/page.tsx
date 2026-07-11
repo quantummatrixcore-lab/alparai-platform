@@ -114,8 +114,7 @@ export default async function IncidentDetailPage({
       .eq("is_published", true)
       .maybeSingle(),
     getCurrentUser(),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (supabase as any)
+    supabase
       .from("incident_comments")
       .select(
         "id, comment_text, created_at, user_id, users(id, full_name, username, avatar_url, role)",
@@ -212,8 +211,7 @@ export default async function IncidentDetailPage({
 
   let userAffected = false;
   if (user) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: affected } = await (supabase as any)
+    const { data: affected } = await supabase
       .from("incident_affected_users")
       .select("incident_id")
       .eq("incident_id", id)

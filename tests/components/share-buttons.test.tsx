@@ -5,6 +5,8 @@ import { expect, test, describe, beforeEach, vi } from "vitest";
 import { ShareButtons } from "@/components/incidents/share-buttons";
 import { toast } from "sonner";
 
+const mockLoggerError = vi.hoisted(() => vi.fn());
+
 // Mock next-intl
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
@@ -15,6 +17,14 @@ vi.mock("sonner", () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
+  },
+}));
+
+vi.mock("@/lib/utils/logger", () => ({
+  logger: {
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: mockLoggerError,
   },
 }));
 
@@ -63,7 +73,6 @@ describe("ShareButtons Component", () => {
   });
 
   test("logs error and triggers error toast when clipboard copy fails", async () => {
-    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const copyError = new Error("Clipboard permission denied");
     writeTextMock.mockRejectedValueOnce(copyError);
 
@@ -73,10 +82,8 @@ describe("ShareButtons Component", () => {
     fireEvent.click(copyBtn);
 
     await waitFor(() => {
-      expect(consoleErrorSpy).toHaveBeenCalledWith("Clipboard copy failed:", copyError);
+      expect(mockLoggerError).toHaveBeenCalledWith("Clipboard copy failed", undefined, copyError);
       expect(toast.error).toHaveBeenCalledWith("Copy failed");
     });
-
-    consoleErrorSpy.mockRestore();
   });
 });

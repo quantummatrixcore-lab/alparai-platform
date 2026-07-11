@@ -26,8 +26,8 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
   const [{ count: myIncidents }, { count: mySuggestions }, { data: dbUser }] = await Promise.all([
     supabase.from("incidents").select("*", { count: "exact", head: true }).eq("user_id", user.id),
     supabase.from("suggestions").select("*", { count: "exact", head: true }).eq("user_id", user.id),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (supabase.from("users") as any)
+    supabase
+      .from("users")
       .select("reputation_score, badges, community_role, interests")
       .eq("id", user.id)
       .single(),

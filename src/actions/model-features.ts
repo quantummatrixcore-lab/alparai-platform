@@ -15,6 +15,7 @@ import {
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
 import type { Database } from "@/types/database";
+import { logger } from "@/lib/utils/logger";
 
 export interface SubmitModelFeatureRequestState {
   ok: boolean;
@@ -125,7 +126,11 @@ export async function submitModelFeatureRequest(
       },
     };
   } catch (e) {
-    console.error("[submitModelFeatureRequest] Unhandled exception:", e);
+    logger.error(
+      "[submitModelFeatureRequest] Unhandled exception",
+      undefined,
+      e instanceof Error ? e : undefined,
+    );
     return { ok: false, error: "An unexpected error occurred. Please try again." };
   }
 }

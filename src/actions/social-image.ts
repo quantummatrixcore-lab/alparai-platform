@@ -28,8 +28,7 @@ export async function generateSocialImageAction(
     const { base64, mimeType } = res;
     const buffer = Buffer.from(base64, "base64");
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const supabase = (await createServerClient()) as any;
+    const supabase = await createServerClient();
     const fileExt = mimeType === "image/png" ? "png" : "jpg";
     const fileName = `${postId}/${Date.now()}.${fileExt}`;
 

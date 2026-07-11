@@ -9,6 +9,7 @@ import { useParams } from "next/navigation";
 import { voteModelFeatureRequest } from "@/actions/model-features";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { logger } from "@/lib/utils/logger";
 import type { ModelFeatureRequest } from "@/types";
 
 interface ModelFeatureCardProps {
@@ -57,7 +58,7 @@ export function ModelFeatureCard({ request }: ModelFeatureCardProps) {
         locale,
       });
     } catch (err) {
-      console.error("Failed to format date:", err);
+      logger.error("Failed to format date", undefined, err instanceof Error ? err : undefined);
       return "";
     }
   }, [request.created_at, locale]);

@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase/client";
 import { watchProvider, unwatchProvider } from "@/actions/watches";
 import { toast } from "sonner";
+import { logger } from "@/lib/utils/logger";
 
 interface FeedContainerProps {
   initialIncidents: IncidentListItem[];
@@ -145,7 +146,11 @@ export function FeedContainer({
         toast.success(locale === "tr" ? "Takip ediliyor" : "Following successfully");
       }
     } catch (err) {
-      console.error("Failed to toggle watch status:", err);
+      logger.error(
+        "Failed to toggle watch status",
+        undefined,
+        err instanceof Error ? err : undefined,
+      );
       toast.error(locale === "tr" ? "İşlem başarısız oldu" : "Action failed");
     }
   };

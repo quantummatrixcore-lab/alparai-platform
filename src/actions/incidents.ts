@@ -401,11 +401,8 @@ export async function submitIncident(
   _prev: SubmitIncidentState,
   formData: FormData,
 ): Promise<SubmitIncidentState> {
-  console.info(
-    "SERVER ACTION: submitIncident called! title =",
-    formData.get("title"),
-    "is_playwright =",
-    process.env.IS_PLAYWRIGHT_TEST,
+  logger.info(
+    `SERVER ACTION: submitIncident called! title = ${formData.get("title")} is_playwright = ${process.env.IS_PLAYWRIGHT_TEST}`,
   );
   if (process.env.IS_PLAYWRIGHT_TEST === "true") {
     return { ok: true, incidentId: "mock-incident-123" };

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import createIntlMiddleware from "next-intl/middleware";
 import { updateSession } from "@/lib/supabase/middleware";
 import { routing } from "@/i18n/routing";
+import { logger } from "@/lib/utils/logger";
 
 const intlMiddleware = createIntlMiddleware(routing);
 
@@ -26,7 +27,7 @@ export async function proxy(request: NextRequest) {
   try {
     intlResponse = intlMiddleware(requestWithId);
   } catch (err) {
-    console.error("[proxy] intlMiddleware threw:", err);
+    logger.error("[proxy] intlMiddleware threw", undefined, err instanceof Error ? err : undefined);
     return NextResponse.next();
   }
 
@@ -34,7 +35,7 @@ export async function proxy(request: NextRequest) {
   try {
     response = await updateSession(requestWithId, intlResponse);
   } catch (err) {
-    console.error("[proxy] updateSession threw:", err);
+    logger.error("[proxy] updateSession threw", undefined, err instanceof Error ? err : undefined);
     response = intlResponse;
   }
 

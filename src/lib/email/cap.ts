@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logger } from "@/lib/utils/logger";
 
 /**
  * Check if the email recipient has received fewer than 3 notifications in the last 24 hours.
@@ -24,13 +25,17 @@ export async function checkEmailCapAndLog(email: string, emailType: string): Pro
       .gte("sent_at", oneDayAgo);
 
     if (error) {
-      console.error("[EmailCap] Failed to query email sent logs:", error);
+      logger.error(
+        "[EmailCap] Failed to query email sent logs",
+        undefined,
+        error instanceof Error ? error : undefined,
+      );
       // Fail-open: if DB query fails, we allow sending but log it, to avoid blocking critical emails
       return true;
     }
 
     if (count !== null && count >= 3) {
-      console.warn(
+      logger.warn(
         `[EmailCap] Daily email cap of 3 reached for recipient. Skipping send. type=${emailType}`,
       );
       return false;
@@ -44,12 +49,20 @@ export async function checkEmailCapAndLog(email: string, emailType: string): Pro
     });
 
     if (insertErr) {
-      console.error("[EmailCap] Failed to insert email sent log:", insertErr);
+      logger.error(
+        "[EmailCap] Failed to insert email sent log",
+        undefined,
+        insertErr instanceof Error ? insertErr : undefined,
+      );
     }
 
     return true;
   } catch (err) {
-    console.error("[EmailCap] Unexpected exception during check:", err);
+    logger.error(
+      "[EmailCap] Unexpected exception during check",
+      undefined,
+      err instanceof Error ? err : undefined,
+    );
     return true; // Fail-open
   }
 }

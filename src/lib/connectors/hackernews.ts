@@ -1,3 +1,5 @@
+import { logger } from "@/lib/utils/logger";
+
 interface HNHit {
   points: number;
   title: string;
@@ -19,7 +21,7 @@ export async function fetchHNStories(keyword: string): Promise<
     const url = `https://hn.algolia.com/api/v1/search?query=${encodeURIComponent(keyword)}&tags=story`;
     const res = await fetch(url);
     if (!res.ok) {
-      console.error(`HN fetch failed: ${res.statusText}`);
+      logger.error(`HN fetch failed: ${res.statusText}`);
       return [];
     }
 
@@ -36,7 +38,11 @@ export async function fetchHNStories(keyword: string): Promise<
         source_score: hit.points || 0,
       }));
   } catch (error) {
-    console.error(`Error fetching HN stories for keyword ${keyword}:`, error);
+    logger.error(
+      `Error fetching HN stories for keyword ${keyword}`,
+      undefined,
+      error instanceof Error ? error : undefined,
+    );
     return [];
   }
 }

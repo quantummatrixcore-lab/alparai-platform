@@ -11,6 +11,7 @@ import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
 import { hashIp } from "@/lib/utils/hash";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import type { Database } from "@/types/database";
+import { logger } from "@/lib/utils/logger";
 
 export interface TakedownResult {
   ok: boolean;
@@ -118,7 +119,11 @@ export async function submitTakedownRequest(
     }
     return { ok: false, error: "Unexpected error" };
   } catch (e) {
-    console.error("[submitTakedownRequest] Unhandled exception:", e);
+    logger.error(
+      "[submitTakedownRequest] Unhandled exception",
+      undefined,
+      e instanceof Error ? e : undefined,
+    );
     return { ok: false, error: "An unexpected error occurred. Please try again." };
   }
 }
@@ -213,7 +218,11 @@ export async function submitTakedown(input: z.infer<typeof inlineSchema>): Promi
       },
     };
   } catch (e) {
-    console.error("[submitTakedown] Unhandled exception:", e);
+    logger.error(
+      "[submitTakedown] Unhandled exception",
+      undefined,
+      e instanceof Error ? e : undefined,
+    );
     return { ok: false, error: "An unexpected error occurred. Please try again." };
   }
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/server";
+import { logger } from "@/lib/utils/logger";
 
 export async function GET(request: Request) {
   try {
@@ -30,7 +31,7 @@ export async function GET(request: Request) {
           .eq("status", "published"),
       ]);
 
-    console.info(
+    logger.info(
       `[Day-30 Pivot-Check] Users: ${userCount}, Incidents: ${incidentCount}, Verified: ${verifiedIncidents}`,
     );
 
@@ -41,7 +42,7 @@ export async function GET(request: Request) {
       verified: verifiedIncidents,
     });
   } catch (err: unknown) {
-    console.error("Pivot-check failed:", err);
+    logger.error("Pivot-check failed", undefined, err instanceof Error ? err : undefined);
     return NextResponse.json(
       { ok: false, error: err instanceof Error ? err.message : "Unknown error" },
       { status: 500 },

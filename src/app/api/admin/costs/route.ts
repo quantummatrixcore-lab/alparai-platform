@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireCEO } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logger } from "@/lib/utils/logger";
 
 interface DBMonthlyCost {
   month: string;
@@ -76,7 +77,11 @@ export async function GET() {
           }
         }
       } catch (e) {
-        console.error("Vercel Billing API failed, using DB fallback", e);
+        logger.error(
+          "Vercel Billing API failed, using DB fallback",
+          undefined,
+          e instanceof Error ? e : undefined,
+        );
       }
     }
 
@@ -189,7 +194,7 @@ export async function GET() {
     });
   } catch (error: unknown) {
     const err = error as Error;
-    console.error("Costs API error:", err);
+    logger.error("Costs API error", undefined, err);
     return NextResponse.json(
       { error: err.message || "Failed to fetch costs data" },
       { status: err.message === "FORBIDDEN" || err.message === "UNAUTHORIZED" ? 403 : 500 },

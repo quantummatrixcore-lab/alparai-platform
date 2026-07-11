@@ -5,6 +5,7 @@ import { requireAdmin } from "@/lib/auth/session";
 import { revalidatePath } from "next/cache";
 import type { ExternalIncidentQueueItem, StrategyInnovation } from "@/types";
 import type { Database } from "@/types/database";
+import { logger } from "@/lib/utils/logger";
 
 export async function getExternalQueue(): Promise<ExternalIncidentQueueItem[]> {
   await requireAdmin();
@@ -87,7 +88,11 @@ export async function acceptExternalIncident(
     .eq("id", queueItemId);
 
   if (updateError) {
-    console.error("Failed to update queue item status:", updateError);
+    logger.error(
+      "Failed to update queue item status",
+      undefined,
+      updateError instanceof Error ? updateError : undefined,
+    );
   }
 
   revalidatePath("/[locale]/admin", "layout");

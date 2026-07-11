@@ -21,6 +21,7 @@ import { GoogleSignInButton } from "@/components/auth/auth-buttons";
 import { Link, useRouter } from "@/i18n/routing";
 import type { AIProvider, AIModel, IncidentCategory, IncidentSeverity } from "@/types";
 import { trackEvent } from "@/lib/analytics";
+import { logger } from "@/lib/utils/logger";
 
 const initialState: SubmitIncidentState = { ok: false };
 
@@ -234,7 +235,7 @@ export function IncidentForm({
               setProcessingStage(stage);
             }
           } catch (err) {
-            console.error("SSE parse error", err);
+            logger.error("SSE parse error", undefined, err instanceof Error ? err : undefined);
           }
         };
 

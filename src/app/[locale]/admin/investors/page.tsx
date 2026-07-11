@@ -6,6 +6,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { TrendingUp } from "lucide-react";
 import { InvestorApplicationsList } from "@/components/admin/investor-applications-list";
 import type { InvestorApplicationItem } from "@/components/admin/investor-applications-list";
+import { logger } from "@/lib/utils/logger";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -39,7 +40,11 @@ export default async function AdminInvestorsPage({
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.error("[AdminInvestorsPage] Failed to fetch investor applications:", error);
+    logger.error(
+      "[AdminInvestorsPage] Failed to fetch investor applications",
+      undefined,
+      error instanceof Error ? error : undefined,
+    );
   }
 
   const applications = (data as unknown as InvestorApplicationItem[]) ?? [];

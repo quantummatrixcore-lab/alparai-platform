@@ -24,13 +24,19 @@ import {
 import { cn } from "@/lib/utils";
 import { createSocialPost, updateSocialPost } from "@/actions/social";
 import { toast } from "sonner";
+import { logger } from "@/lib/utils/logger";
 
 export interface SocialPost {
   id: string;
   platform: "linkedin" | "x" | "instagram" | "facebook" | "whatsapp";
   status: "draft" | "scheduled" | "published" | "archived";
   content_type:
-    "manifesto" | "case_study" | "weekly_report" | "incident_spotlight" | "thread" | "poll";
+    | "manifesto"
+    | "case_study"
+    | "weekly_report"
+    | "incident_spotlight"
+    | "thread"
+    | "poll";
   title: string;
   body_text: string;
   image_prompt: string | null;
@@ -55,11 +61,22 @@ export interface SocialTemplate {
   name: string;
   platform: "linkedin" | "x" | "instagram" | "all";
   content_type:
-    "manifesto" | "case_study" | "weekly_report" | "incident_spotlight" | "thread" | "poll";
+    | "manifesto"
+    | "case_study"
+    | "weekly_report"
+    | "incident_spotlight"
+    | "thread"
+    | "poll";
   template_body: string;
   example_output: string | null;
   psychology_hook:
-    "fear" | "authority" | "social_proof" | "urgency" | "scarcity" | "reciprocity" | "unity";
+    | "fear"
+    | "authority"
+    | "social_proof"
+    | "urgency"
+    | "scarcity"
+    | "reciprocity"
+    | "unity";
   created_at: string;
 }
 
@@ -150,7 +167,7 @@ export function SocialDashboardClient({
           toast.error(res.error || "Failed to generate image.");
         }
       } catch (err) {
-        console.error("Failed to generate image:", err);
+        logger.error("Failed to generate image", undefined, err instanceof Error ? err : undefined);
         toast.error("An error occurred during image generation.");
       } finally {
         setIsGeneratingImage(false);
@@ -239,7 +256,7 @@ export function SocialDashboardClient({
         }
         setShowFormModal(false);
       } catch (err) {
-        console.error("Failed to save post", err);
+        logger.error("Failed to save post", undefined, err instanceof Error ? err : undefined);
         alert("Error saving social post");
       }
     });
@@ -264,7 +281,7 @@ export function SocialDashboardClient({
           ),
         );
       } catch (err) {
-        console.error("Failed to publish", err);
+        logger.error("Failed to publish", undefined, err instanceof Error ? err : undefined);
       }
     });
   };
@@ -285,7 +302,11 @@ export function SocialDashboardClient({
           prev.map((p) => (p.id === post.id ? ({ ...p, ...fields } as SocialPost) : p)),
         );
       } catch (err) {
-        console.error("Failed to update analytics", err);
+        logger.error(
+          "Failed to update analytics",
+          undefined,
+          err instanceof Error ? err : undefined,
+        );
       }
     });
   };

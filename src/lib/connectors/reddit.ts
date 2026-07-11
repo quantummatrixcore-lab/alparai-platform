@@ -1,3 +1,5 @@
+import { logger } from "@/lib/utils/logger";
+
 interface RedditPost {
   title: string;
   selftext: string;
@@ -28,7 +30,7 @@ export async function fetchRedditPosts(
     });
 
     if (!res.ok) {
-      console.error(`Reddit fetch failed for r/${subreddit}: ${res.statusText}`);
+      logger.error(`Reddit fetch failed for r/${subreddit}: ${res.statusText}`);
       return [];
     }
 
@@ -45,7 +47,11 @@ export async function fetchRedditPosts(
       };
     });
   } catch (error) {
-    console.error(`Error fetching Reddit posts for r/${subreddit}:`, error);
+    logger.error(
+      `Error fetching Reddit posts for r/${subreddit}`,
+      undefined,
+      error instanceof Error ? error : undefined,
+    );
     return [];
   }
 }

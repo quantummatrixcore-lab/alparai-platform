@@ -76,8 +76,7 @@ export async function submitVote(
     }
 
     // 4. Atomic increment via RPC — no read-modify-write race condition
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { error: rpcError } = await (supabaseAdmin as any).rpc("increment_poll_count", {
+    const { error: rpcError } = await supabaseAdmin.rpc("increment_poll_count", {
       p_poll_id: pollId,
       p_choice: choice,
     });

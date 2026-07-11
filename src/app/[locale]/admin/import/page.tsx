@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { ImportQueueClient, type ImportedIncident } from "@/components/admin/import-queue-client";
 import { CsvUploadForm } from "@/components/admin/csv-upload-form";
 import { Container } from "@/components/ui/layout";
+import { logger } from "@/lib/utils/logger";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -34,7 +35,11 @@ export default async function AdminImportPage({ params }: PageProps) {
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.error("Failed to load imported incidents:", error.message);
+    logger.error(
+      "Failed to load imported incidents",
+      undefined,
+      error instanceof Error ? error : undefined,
+    );
   }
 
   return (

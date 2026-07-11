@@ -2,6 +2,7 @@
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
+import { logger } from "@/lib/utils/logger";
 
 export interface EmailPreferencesState {
   ok: boolean;
@@ -19,7 +20,11 @@ export async function getEmailPreferences(userId: string) {
   let data = fetchedData;
 
   if (error) {
-    console.error("Failed to fetch email preferences:", error);
+    logger.error(
+      "Failed to fetch email preferences",
+      undefined,
+      error instanceof Error ? error : undefined,
+    );
   }
 
   if (!data) {

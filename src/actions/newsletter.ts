@@ -7,6 +7,7 @@ import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { hashIp } from "@/lib/utils/hash";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logger } from "@/lib/utils/logger";
 
 export interface NewsletterState {
   ok: boolean;
@@ -124,7 +125,11 @@ export async function subscribeNewsletter(
     }
     return { ok: false, formError: "Unexpected error." };
   } catch (e) {
-    console.error("[subscribeNewsletter] Unhandled exception:", e);
+    logger.error(
+      "[subscribeNewsletter] Unhandled exception",
+      undefined,
+      e instanceof Error ? e : undefined,
+    );
     return { ok: false, formError: "An unexpected error occurred. Please try again." };
   }
 }

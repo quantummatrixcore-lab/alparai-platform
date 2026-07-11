@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Copy, Megaphone, CheckCircle2, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { logger } from "@/lib/utils/logger";
 
 const MEDIA_PITCH = `Subject: Embargoed Aug 2: The EU just delayed AI incident reporting to 2027 — this registry isn't waiting
 
@@ -44,7 +45,7 @@ export default function OutreachPage() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy", err);
+      logger.error("Failed to copy", undefined, err instanceof Error ? err : undefined);
     }
   };
 

@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyUnsubscribeToken } from "@/lib/utils/unsubscribe";
 import Link from "next/link";
 import { CheckCircle2, AlertTriangle } from "lucide-react";
+import { logger } from "@/lib/utils/logger";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -169,7 +170,11 @@ export default async function UnsubscribePage({ params, searchParams }: Unsubscr
     .eq("user_id", userId);
 
   if (error) {
-    console.error("[Unsubscribe] Database update failed:", error);
+    logger.error(
+      "[Unsubscribe] Database update failed",
+      undefined,
+      error instanceof Error ? error : undefined,
+    );
     return (
       <Container size="narrow" className="py-20">
         <Card className="border-red-500/20 bg-red-500/5">

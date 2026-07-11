@@ -8,6 +8,7 @@ import { enUS, tr } from "date-fns/locale";
 import { useParams } from "next/navigation";
 import { voteModelReview } from "@/actions/model-reviews";
 import { toast } from "sonner";
+import { logger } from "@/lib/utils/logger";
 import type { ModelReview } from "@/types";
 
 interface ModelReviewCardProps {
@@ -48,7 +49,7 @@ export function ModelReviewCard({ review }: ModelReviewCardProps) {
         locale,
       });
     } catch (err) {
-      console.error("Failed to format date:", err);
+      logger.error("Failed to format date", undefined, err instanceof Error ? err : undefined);
       return "";
     }
   }, [review.created_at, locale]);

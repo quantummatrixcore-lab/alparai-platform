@@ -1,5 +1,7 @@
 "use client";
 
+import { logger } from "@/lib/utils/logger";
+
 declare global {
   interface Window {
     plausible?: (
@@ -23,11 +25,15 @@ export function trackEvent(
       } else {
         // Fallback or development logging
         if (process.env.NODE_ENV === "development") {
-          console.info(`[Plausible Event] ${eventName}`, props);
+          logger.info(`[Plausible Event] ${eventName}`, props as Record<string, unknown>);
         }
       }
     } catch (err) {
-      console.error("Failed to track Plausible event:", err);
+      logger.error(
+        "Failed to track Plausible event",
+        undefined,
+        err instanceof Error ? err : undefined,
+      );
     }
   }
 }

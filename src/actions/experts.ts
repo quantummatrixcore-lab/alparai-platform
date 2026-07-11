@@ -7,6 +7,7 @@ import { headers } from "next/headers";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { hashIp } from "@/lib/utils/hash";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logger } from "@/lib/utils/logger";
 
 const expertApplicationSchema = z.object({
   name: z
@@ -66,11 +67,19 @@ const runExpertWork = async (data: ExpertWorkInput): Promise<ExpertWorkResult> =
       status: "pending",
     });
     if (dbError) {
-      console.error("[submitExpert] Database insert failed:", dbError);
+      logger.error(
+        "[submitExpert] Database insert failed",
+        undefined,
+        dbError instanceof Error ? dbError : undefined,
+      );
       return { ok: false, error: dbError.message };
     }
   } catch (dbEx) {
-    console.error("[submitExpert] Database exception:", dbEx);
+    logger.error(
+      "[submitExpert] Database exception",
+      undefined,
+      dbEx instanceof Error ? dbEx : undefined,
+    );
     return { ok: false, error: dbEx instanceof Error ? dbEx.message : "db_error" };
   }
 
@@ -149,7 +158,11 @@ export async function submitExpert(_prev: ExpertState, formData: FormData): Prom
     }
     return { ok: false, error: outcome.error, formError: outcome.error };
   } catch (e) {
-    console.error("[submitExpert] Unhandled exception:", e);
+    logger.error(
+      "[submitExpert] Unhandled exception",
+      undefined,
+      e instanceof Error ? e : undefined,
+    );
     return { ok: false, formError: "An unexpected error occurred. Please try again." };
   }
 }

@@ -4,6 +4,7 @@ import { z } from "zod";
 import { headers } from "next/headers";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logger } from "@/lib/utils/logger";
 
 export interface WaitlistState {
   ok: boolean;
@@ -66,13 +67,21 @@ export async function joinWaitlist(
     });
 
     if (error) {
-      console.error("[joinWaitlist] Database error:", error);
+      logger.error(
+        "[joinWaitlist] Database error",
+        undefined,
+        error instanceof Error ? error : undefined,
+      );
       return { ok: false, formError: "Failed to join the waitlist. Please try again." };
     }
 
     return { ok: true };
   } catch (e) {
-    console.error("[joinWaitlist] Unhandled exception:", e);
+    logger.error(
+      "[joinWaitlist] Unhandled exception",
+      undefined,
+      e instanceof Error ? e : undefined,
+    );
     return { ok: false, formError: "An unexpected error occurred. Please try again." };
   }
 }

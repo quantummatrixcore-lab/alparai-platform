@@ -13,6 +13,7 @@ import { requireAdmin } from "@/lib/auth/session";
 import { revalidatePath } from "next/cache";
 import crypto from "crypto";
 import { investorApplicationSchema } from "@/lib/validation/schemas";
+import { logger } from "@/lib/utils/logger";
 
 export interface InvestorState {
   ok: boolean;
@@ -53,20 +54,28 @@ const runInvestorWork = async (
       status: "pending",
     });
     if (dbError) {
-      console.error("[submitInvestor] Database insert failed:", dbError);
+      logger.error(
+        "[submitInvestor] Database insert failed",
+        undefined,
+        dbError instanceof Error ? dbError : undefined,
+      );
       return { kind: "retryable", error: dbError.message };
     }
   } catch (dbEx) {
-    console.error("[submitInvestor] Database exception:", dbEx);
+    logger.error(
+      "[submitInvestor] Database exception",
+      undefined,
+      dbEx instanceof Error ? dbEx : undefined,
+    );
     return { kind: "retryable", error: dbEx instanceof Error ? dbEx.message : "db_error" };
   }
 
   const resend = getResendClient();
   if (!resend) {
-    console.info(
+    logger.info(
       `[Resend Sandbox Log] Admin notification:\nNew Investor Application: ${data.fullName} from ${data.company}\nCheck size: ${data.checkSize}\nLinkedIn: ${data.linkedinUrl}\nEmail: ${data.email}`,
     );
-    console.info(`[Resend Sandbox Log] Applicant confirmation sent to: ${data.email}`);
+    logger.info(`[Resend Sandbox Log] Applicant confirmation sent to: ${data.email}`);
     return { kind: "success", value: { sent: true, channel: "log" } };
   }
 
@@ -107,7 +116,11 @@ const runInvestorWork = async (
 
     return { kind: "success", value: { sent: true, channel: "email" } };
   } catch (e) {
-    console.error("[submitInvestor] Resend API error:", e);
+    logger.error(
+      "[submitInvestor] Resend API error",
+      undefined,
+      e instanceof Error ? e : undefined,
+    );
     return {
       kind: "retryable",
       error: e instanceof Error ? e.message : "resend_failed",
@@ -204,7 +217,11 @@ export async function submitInvestor(
     }
     return { ok: false, formError: "Unexpected error occurred." };
   } catch (e) {
-    console.error("[submitInvestor] Unhandled exception:", e);
+    logger.error(
+      "[submitInvestor] Unhandled exception",
+      undefined,
+      e instanceof Error ? e : undefined,
+    );
     return { ok: false, formError: "An unexpected error occurred. Please try again." };
   }
 }
@@ -252,7 +269,7 @@ export async function approveInvestor(id: string): Promise<{ ok: boolean; error?
   const link = `${APP_URL}/investor-portal?token=${rawToken}`;
 
   if (!resend) {
-    console.info(
+    logger.info(
       `[Resend Sandbox Log] Gated portal link for ${appData.full_name} (${appData.email}):\n${link}`,
     );
   } else {
@@ -274,7 +291,11 @@ export async function approveInvestor(id: string): Promise<{ ok: boolean; error?
         `,
       });
     } catch (e) {
-      console.error("[approveInvestor] Email sending failed:", e);
+      logger.error(
+        "[approveInvestor] Email sending failed",
+        undefined,
+        e instanceof Error ? e : undefined,
+      );
       return { ok: true, error: "Approved successfully but failed to send email" };
     }
   }

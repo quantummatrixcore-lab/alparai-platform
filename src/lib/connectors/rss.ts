@@ -1,3 +1,5 @@
+import { logger } from "@/lib/utils/logger";
+
 function cleanCdata(str: string): string {
   if (!str) return "";
   return str.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1").trim();
@@ -33,7 +35,7 @@ export async function fetchRSSFeed(
     });
 
     if (!res.ok) {
-      console.error(`RSS fetch failed for ${sourceName}: ${res.statusText}`);
+      logger.error(`RSS fetch failed for ${sourceName}: ${res.statusText}`);
       return [];
     }
 
@@ -84,7 +86,11 @@ export async function fetchRSSFeed(
 
     return results;
   } catch (error) {
-    console.error(`Error fetching RSS feed for ${sourceName}:`, error);
+    logger.error(
+      `Error fetching RSS feed for ${sourceName}`,
+      undefined,
+      error instanceof Error ? error : undefined,
+    );
     return [];
   }
 }

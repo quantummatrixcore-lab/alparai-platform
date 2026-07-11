@@ -67,8 +67,7 @@ export default async function BrandPage({
   const t = await getTranslations({ locale, namespace: "brand" });
   const supabase = await createServerClient();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: provider } = await (supabase as any)
+  const { data: provider } = await supabase
     .from("ai_providers")
     .select(
       "id, name, slug, description, website_url, contact_email, logo_url, is_verified, is_verified_respondent",

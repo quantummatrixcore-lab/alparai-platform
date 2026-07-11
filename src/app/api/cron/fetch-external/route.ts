@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { fetchRedditPosts } from "@/lib/connectors/reddit";
 import { fetchHNStories } from "@/lib/connectors/hackernews";
 import { fetchRSSFeed } from "@/lib/connectors/rss";
+import { logger } from "@/lib/utils/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -53,7 +54,7 @@ export async function GET(request: Request) {
     allFetched.push(...items.map((i) => ({ ...i, source: "rss" })));
   }
 
-  console.info(`Fetched total of ${allFetched.length} potential incidents.`);
+  logger.info(`Fetched total of ${allFetched.length} potential incidents.`);
 
   let insertedCount = 0;
   // Ingest in DB with deduplication

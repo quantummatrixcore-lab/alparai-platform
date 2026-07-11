@@ -10,6 +10,7 @@ import { toIncidentListItems } from "@/lib/mappers";
 import { checkAndTriggerNewsSyncPassive } from "@/actions/autopilot-sync";
 import dynamic from "next/dynamic";
 import { WaitlistForm } from "@/components/marketing/waitlist-form";
+import { logger } from "@/lib/utils/logger";
 
 const LiveStats = dynamic(() =>
   import("@/components/marketing/live-stats").then((mod) => mod.LiveStats),
@@ -107,19 +108,39 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     ]);
 
   if (incidentsCountResult.error) {
-    console.error("Supabase error for incidents count:", incidentsCountResult.error);
+    logger.error(
+      "Supabase error for incidents count",
+      undefined,
+      incidentsCountResult.error instanceof Error ? incidentsCountResult.error : undefined,
+    );
   }
   if (countriesResult.error) {
-    console.error("Supabase error for countries count:", countriesResult.error);
+    logger.error(
+      "Supabase error for countries count",
+      undefined,
+      countriesResult.error instanceof Error ? countriesResult.error : undefined,
+    );
   }
   if (incidentsResult.error) {
-    console.error("Supabase error for incidents list:", incidentsResult.error);
+    logger.error(
+      "Supabase error for incidents list",
+      undefined,
+      incidentsResult.error instanceof Error ? incidentsResult.error : undefined,
+    );
   }
   if (providersResult.error) {
-    console.error("Supabase error for provider leaderboard:", providersResult.error);
+    logger.error(
+      "Supabase error for provider leaderboard",
+      undefined,
+      providersResult.error instanceof Error ? providersResult.error : undefined,
+    );
   }
   if (sourcesResult.error) {
-    console.error("Supabase error for incident sources:", sourcesResult.error);
+    logger.error(
+      "Supabase error for incident sources",
+      undefined,
+      sourcesResult.error instanceof Error ? sourcesResult.error : undefined,
+    );
   }
 
   const countsBySource = {

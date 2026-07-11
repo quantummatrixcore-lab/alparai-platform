@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/server";
+import { logger } from "@/lib/utils/logger";
 
 export async function GET(request: Request) {
   try {
@@ -25,11 +26,11 @@ export async function GET(request: Request) {
     ]);
 
     // Send this metric to Slack / Email or DB
-    console.info(`[Day-7 Kill-Metric] Users: ${userCount}, Incidents: ${incidentCount}`);
+    logger.info(`[Day-7 Kill-Metric] Users: ${userCount}, Incidents: ${incidentCount}`);
 
     return NextResponse.json({ ok: true, users: userCount, incidents: incidentCount });
   } catch (err: unknown) {
-    console.error("Kill-metric failed:", err);
+    logger.error("Kill-metric failed", undefined, err instanceof Error ? err : undefined);
     return NextResponse.json(
       { ok: false, error: err instanceof Error ? err.message : "Unknown error" },
       { status: 500 },

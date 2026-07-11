@@ -10,6 +10,7 @@ import { withAutopilot, submitSuggestionPolicy, attemptsOf, durationOf } from "@
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
 import type { Database } from "@/types/database";
+import { logger } from "@/lib/utils/logger";
 
 export interface SubmitSuggestionState {
   ok: boolean;
@@ -113,7 +114,11 @@ export async function submitSuggestion(
       },
     };
   } catch (e) {
-    console.error("[submitSuggestion] Unhandled exception:", e);
+    logger.error(
+      "[submitSuggestion] Unhandled exception",
+      undefined,
+      e instanceof Error ? e : undefined,
+    );
     return { ok: false, error: "An unexpected error occurred. Please try again." };
   }
 }
@@ -186,7 +191,11 @@ export async function upvoteSuggestion(suggestionId: string) {
     }
     return { ok: false, error: "vote_failed" };
   } catch (e) {
-    console.error("[upvoteSuggestion] Unhandled exception:", e);
+    logger.error(
+      "[upvoteSuggestion] Unhandled exception",
+      undefined,
+      e instanceof Error ? e : undefined,
+    );
     return { ok: false, error: "An unexpected error occurred." };
   }
 }

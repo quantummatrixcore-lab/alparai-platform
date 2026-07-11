@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { incrementIncidentViews } from "@/actions/incidents";
+import { logger } from "@/lib/utils/logger";
 
 export function ViewTracker({ incidentId }: { incidentId: string }) {
   useEffect(() => {
@@ -13,7 +14,11 @@ export function ViewTracker({ incidentId }: { incidentId: string }) {
         }
       } catch (err) {
         if (active) {
-          console.error("Failed to increment views:", err);
+          logger.error(
+            "Failed to increment views",
+            undefined,
+            err instanceof Error ? err : undefined,
+          );
         }
       }
     };

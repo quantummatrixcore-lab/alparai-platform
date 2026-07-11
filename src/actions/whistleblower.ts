@@ -89,7 +89,11 @@ export async function submitWhistleblowerAction(
 
     return { ok: false, error: "Submission failed" };
   } catch (e) {
-    console.error("[submitWhistleblowerAction] Unhandled exception:", e);
+    logger.error(
+      "[submitWhistleblowerAction] Unhandled exception",
+      undefined,
+      e instanceof Error ? e : undefined,
+    );
     return { ok: false, error: "An unexpected error occurred. Please try again." };
   }
 }

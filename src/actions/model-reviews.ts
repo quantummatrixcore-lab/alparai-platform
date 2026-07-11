@@ -10,6 +10,7 @@ import { withAutopilot, submitModelReviewPolicy, attemptsOf, durationOf } from "
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
 import type { Database } from "@/types/database";
+import { logger } from "@/lib/utils/logger";
 
 export interface SubmitModelReviewState {
   ok: boolean;
@@ -142,7 +143,11 @@ export async function submitModelReview(
       },
     };
   } catch (e) {
-    console.error("[submitModelReview] Unhandled exception:", e);
+    logger.error(
+      "[submitModelReview] Unhandled exception",
+      undefined,
+      e instanceof Error ? e : undefined,
+    );
     return { ok: false, error: "An unexpected error occurred. Please try again." };
   }
 }

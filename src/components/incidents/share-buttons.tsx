@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { motion, type Variants } from "framer-motion";
 import { trackEvent } from "@/lib/analytics";
+import { logger } from "@/lib/utils/logger";
 
 // High-fidelity brand SVG icons
 const XIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -76,7 +77,7 @@ export function ShareButtons({
       toast.success(t("share_copy") + " ✓");
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Clipboard copy failed:", err);
+      logger.error("Clipboard copy failed", undefined, err instanceof Error ? err : undefined);
       toast.error("Copy failed");
     }
   };
@@ -89,7 +90,7 @@ export function ShareButtons({
       toast.success(t("share_instagram") + " ✓");
       setTimeout(() => setInstaCopied(false), 2000);
     } catch (err) {
-      console.error("Instagram copy failed:", err);
+      logger.error("Instagram copy failed", undefined, err instanceof Error ? err : undefined);
       toast.error("Copy failed");
     }
   };

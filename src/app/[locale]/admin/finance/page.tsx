@@ -8,6 +8,7 @@ import { CostTrendChart } from "@/components/admin/finance/cost-trend-chart";
 import { ApiUsageTable } from "@/components/admin/finance/api-usage-table";
 import { AlertBanner } from "@/components/admin/finance/alert-banner";
 import { CurrencyDollar } from "@phosphor-icons/react/dist/ssr";
+import { logger } from "@/lib/utils/logger";
 
 interface DBMonthlyCost {
   month: string;
@@ -75,7 +76,11 @@ export default async function FinancePage({ params }: { params: Promise<{ locale
         }
       }
     } catch (e) {
-      console.error("Vercel Live Cost API Fetch Failed", e);
+      logger.error(
+        "Vercel Live Cost API Fetch Failed",
+        undefined,
+        e instanceof Error ? e : undefined,
+      );
     }
   }
 

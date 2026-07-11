@@ -10,6 +10,7 @@ import { getResendClient } from "@/lib/email/resend";
 import { getProviderResponseNotificationEmail } from "@/emails/templates";
 import { generateEmailUnsubscribeToken } from "@/lib/utils/unsubscribe";
 import { checkEmailCapAndLog } from "@/lib/email/cap";
+import { logger } from "@/lib/utils/logger";
 
 const responseInputSchema = z.object({
   incidentId: z.string().uuid(),
@@ -191,14 +192,22 @@ export async function submitProviderResponse(
           }
         }
       } catch (emailErr) {
-        console.error("[submitProviderResponse] Failed to send email to reporter:", emailErr);
+        logger.error(
+          "[submitProviderResponse] Failed to send email to reporter",
+          undefined,
+          emailErr instanceof Error ? emailErr : undefined,
+        );
       }
     }
 
     revalidatePath(`/incidents/${incidentId}`);
     return { ok: true };
   } catch (e) {
-    console.error("[submitProviderResponse] Unhandled exception:", e);
+    logger.error(
+      "[submitProviderResponse] Unhandled exception",
+      undefined,
+      e instanceof Error ? e : undefined,
+    );
     return { ok: false, error: "An unexpected error occurred. Please try again." };
   }
 }

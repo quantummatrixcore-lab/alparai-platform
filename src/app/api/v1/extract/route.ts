@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/utils/logger";
 
 export const runtime = "edge";
 
@@ -79,7 +80,7 @@ export async function POST(req: Request) {
       }
     } catch (e) {
       // Ignore fetch errors, just use fallback
-      console.error("Fetch error for extract:", e);
+      logger.error("Fetch error for extract", undefined, e instanceof Error ? e : undefined);
     }
 
     return NextResponse.json({
@@ -91,7 +92,7 @@ export async function POST(req: Request) {
       extractedAt: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("Extract API Error:", error);
+    logger.error("Extract API Error", undefined, error instanceof Error ? error : undefined);
     return NextResponse.json({ error: "Failed to extract data" }, { status: 500 });
   }
 }
