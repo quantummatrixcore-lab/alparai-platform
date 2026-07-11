@@ -1,8 +1,10 @@
-# ALPAR AI — Antigravity Full Execution Plan v7.12 (H2 2026 → 2027)
+# ALPAR AI — Antigravity Full Execution Plan v7.13 (H2 2026 → 2027)
 
-> **Revised by Architect (Claude Opus 4.7) on 2026-07-11.** v7.12 adds the **L-series**: strategic 360° on human capital & academic network. Rakipler veri + yöntem yapabilir ama **isim listesi** yapamaz — L-series ALPAR'ın Moody's konumunun üçüncü bacağı (Veri + Yöntem + İnsanlar). L1 danışma kurulu recruitment PRE-LAUNCH (Jul 12–30, launch bu bağımlılığa kilitlenmez — risk-azaltmalı); L2–L10 post-launch → 2027. F1/F2 Stage F artık L-series'in doldurduğu platform katmanı olarak çerçevelenmiş.
+> **Revised by Architect (Claude Sonnet 4.6) on 2026-07-11.** v7.13 = **ekosistem hız uyumlaması + tarih-tabanlı planlamanın terk edilmesi**. Founder iki hatayı düzeltti: (1) L-series'in kritik parçalarını "Q2 2027" gibi uzak dilimlere koymak = 9 ay rakiplere hediye; AI ekosistem her 6 ayda katlanıyor. (2) Post-launch işlerde **takvim tarihi = yalan**. Kaydırma olur, tarih düşer, güven biter. v7.13 iki değişiklik yapar: **(a) Post-launch tüm kuyruk tarih-tabanlı değil, P0/P1/P2 bağımlılık-tabanlı sıralanır** — "X biter → Y başlar" formatı; kaldırılamayacak tek zaman noktaları Aug 2 launch (kamu taahhüdü) ve Dec 2 2027 (EU AI Act Art. 73 yasal zorunluluk). **(b) N-series eklendi** — National & Regulatory Ecosystem: OECD Incidents Monitor entegrasyonu, UK/US AISI diyaloğu, ISO/IEC standards katkısı, TR AI Safety Institute white paper. Standing Rule #23 eklendi: post-launch iş kuyruğunda tarih kullanılmaz.
 >
-> **v7.11 additions (still valid):** K-BENCHMARK multi-category AI rating platform (8 kategori; K-MVP Aug 26–Sep 15, K-Full Sep 16–Dec 15, K-Product Q1 2027).
+> **v7.12 (still valid):** L-series 10 items introduced. L1 Advisory Board recruitment PRE-LAUNCH — sadece bu L-series item'ı bir tarih penceresi kullanır (Jul 12–30) çünkü Aug 2 launch'a bağlıdır.
+>
+> **v7.11 (still valid):** K-BENCHMARK multi-category AI rating platform (8 kategori; K-MVP Aug 26–Sep 15, K-Full Sep 16–Dec 15, K-Product Q1 2027).
 >
 > **v7.10 additions (still valid):** K1–K4 core infrastructure (provider audit, free-tier scheduler, seed-only safety boundary, audit_tier provenance). Now framed as "K-CORE" — the substrate that K5–K13 categories all run on top of.
 >
@@ -521,6 +523,7 @@ Same layout as Y2 but with the 30-day denominator, plus:
     Rationale: launch traffic 10× organic could 10× spend overnight. A budget alarm is cheaper than a bankrupt Series A pitch.
 21. 🆕 **v7.12 — L1 published name = written consent on file.** L1 Advisory Board üyelerinin isim/biyografi/fotoğrafı `/about/advisory-board` sayfasında yayımlanmadan önce üyenin **yazılı onayı** (email veya imzalı form) `docs/L1_APPROVALS/{name-slug}.md` altında arşivlenir. Onayı belgelenmemiş isim yayımlanmaz. Founder + Executor ortak yükümlülüğü.
 22. 🆕 **v7.12 — "expert_verified" ve "uzman" yalnızca L3 için.** `expert_verified = true` yalnızca L3 uzman doğrulama ağının resmi bir üyesi tarafından işaretlenebilir. UI'da "uzman"/"expert" sözcüğü yalnızca L3 tanımı bulunmuş kişiler için kullanılır (danışma kurulu = "advisor" ayrı kavram). Standing Rule #19 numeric honesty bu ayrımı genişletir.
+23. 🆕 **v7.13 — Post-launch iş kuyruğunda takvim tarihi kullanılmaz.** Kalendar-tabanlı deadline yalnızca (a) Aug 2 2026 launch (kamu taahhüdü) ve (b) Dec 2 2027 EU AI Act Art. 73 (yasal zorunluluk) için tanınır. Diğer tüm post-launch iş satırları **bağımlılık-tabanlı** öncelik kullanır: **P0** = bağımlılığı biter bitmez başlanır (idle Executor = review finding); **P1** = P0 kuyruğu boşaldığında; **P2** = üründe kilometre taşı ile eşleşir. Yeni tarih koymak yalan üretir; öncelik değiştirmez ve dürüst kalır. Herhangi bir plan revizyonunda tarih yazan bir Architect yanlış yapmıştır — düzelt, tarihi çıkar, bağımlılığı yaz.
 
 ---
 
@@ -976,7 +979,7 @@ Founder recruits 5-7 named experts by **Jul 30** (Aug 2 launch'ta duyurulur):
 
 **Risk azaltma:** Jul 30'da 3'ten az kabul → launch iptal edilmez; "Danışma Kurulu Duyurusu Sep 1" olarak yeniden çerçevelenir. Launch bu bağımlılığa **kilitlenmez**.
 
-### L2 — Üniversite İşbirlikleri (MOU) — post-launch, Q4 2026
+### L2 — Üniversite İşbirlikleri (MOU) — **P0 post-launch**
 
 Formal Memoranda of Understanding.
 - **TR öncelik:** Boğaziçi CmpE, ODTÜ CENG (Bilkent, Sabancı, Koç yedek)
@@ -984,7 +987,7 @@ Formal Memoranda of Understanding.
 
 MOU iskeleti: (a) PII-maskeli veri seti araştırmacılara ücretsiz erişim (I7 Research Sandbox uzantısı), (b) yılda 1 ortak yayın hedefi, (c) öğrenci staj/tez pipeline'ı, (d) karşılıklı adres/hesap. Executor MOU şablonu + `outreach_logs` içinde `university_mous` kanalı hazırlar; founder yürütür.
 
-*Kill/pivot:* Q4 2026 sonunda hiç MOU yoksa → Q1 2027'de L6 (faculty fellowship) tetikleyici olarak strateji değişir: üniversitelere para → onlar bize adres.
+*Kill/pivot:* L2 kickoff'undan 12 hafta sonra hiç MOU yoksa → L6 (faculty fellowship) tetikleyici olarak strateji değişir: üniversitelere para → onlar bize adres.
 
 ### L3 — Genişletilmiş Uzman Doğrulama Ağı (F1++)
 
@@ -1042,7 +1045,7 @@ Her katman `role_view` tercihi + varsayılan dashboard.
 
 ### L9 — Yöntem Danışma Komitesi (Methodology Advisory Committee)
 
-L1 kurulundan farklı: 3–5 kişilik **teknik** komite. Yılda 1 kez TruthScore + K-BENCHMARK rubric'lerini bağımsız gözden geçirir, kamu raporu yayınlar. Bu, Q2 2027 "methodology audit" satırının somut hali. Üyeler L1'den ayrı olmalı (çakışma riski).
+L1 kurulundan farklı: 3–5 kişilik **teknik** komite. Yılda 1 kez TruthScore + K-BENCHMARK rubric'lerini bağımsız gözden geçirir, kamu raporu yayınlar. Bu, 2027 Horizon'daki "methodology audit" satırının somut hali. Üyeler L1'den ayrı olmalı (çakışma riski). **P0** — K-MVP çıktıktan sonra en erken saldırı yüzeyi metodoloji olduğu için önemi bu noktada zirve yapar.
 
 *Rapor değişiklik gerektirirse:* Executor migration yapar; komite raporu `docs/METHODOLOGY_AUDITS/YYYY.md` altına kalıcı yayınlanır.
 
@@ -1061,15 +1064,81 @@ Founder + Architect (Claude eş-yazar) tarafından hedeflenmiş konferanslar:
 | # | İş | Faz | Öncelik |
 |---|----|-----|---------|
 | 44 | **L1** — Advisory board recruitment (Playwright aday tarama + davet template + `advisory_board_members` tablo + `/about/advisory-board` sayfa) | **PRE-LAUNCH MUST**, Jul 12–30 | HIGH |
-| 45 | L2 — University MOU template + outreach list | Q4 2026 | MEDIUM |
-| 46 | L3 — F1 Expert Portal + email-invite ağ genişletmesi + rep leaderboard | Nov 15 (F1 deadline) | HIGH |
-| 47 | L4 — Professional association outreach list + partnership template | Q1 2027 | MEDIUM |
-| 48 | L5 — Instructor tier + course pack CMS + assignment templates | Q1 2027 | MEDIUM |
-| 49 | L6 — Faculty fellowship program page + application form + admin review | Q2 2027 | MEDIUM |
-| 50 | L7 — Student ambassador program + `student_ambassadors` tablo + admin CRUD | Q1 2027 | LOW |
-| 51 | L8 — Role-based dashboard views (compliance/journalist/legal/safety) | Q1 2027 (CRD ile) | HIGH (revenue) |
-| 52 | L9 — Methodology Advisory Committee formation + annual audit doc | Q2 2027 | HIGH |
-| 53 | L10 — Peer-review pipeline (paper draft → conference submissions) | Q2/Q3 2027 continuous | HIGH |
+| 45 | L2 — University MOU template + outreach list | **P0** — L1 kabul isimleri elde olur olmaz (isimler kapı açar) | HIGH |
+| 46 | L3 — F1 Expert Portal + email-invite ağ + rep leaderboard | **P0** — launch akabinde ilk iş; L1 kabul isimlerinden L3 uzmanları çekilebilir | HIGH |
+| 47 | L4 — Professional association outreach list + partnership template | **P1** — L1 duyurusundan sonra (isimler dernek erişimini kolaylaştırır) | MEDIUM |
+| 48 | L5 — Instructor tier + course pack CMS + assignment templates | **P1** — akademik dönem başlangıcı fırsat penceresi; L2 first MOU sonrası öncelik yükselir | MEDIUM |
+| 49 | L6 — Faculty fellowship program page + application form + admin review | **P1** — L2 MOU'lardan sonra (fellow adayları MOU üniversitelerinden gelir) | MEDIUM |
+| 50 | L7 — Student ambassador program + `student_ambassadors` tablo + admin CRUD | **P2** — L2 MOU'lardan sonra (elçiler MOU üniversitelerinden) | LOW |
+| 51 | L8 — Role-based dashboard views (compliance/journalist/legal/safety) | **P0** — CRD ürünleşmesi ile aynı sprint (revenue path) | HIGH (revenue) |
+| 52 | L9 — Methodology Advisory Committee formation + annual audit doc | **P0** — K-BENCHMARK MVP tamamlanır tamamlanmaz (metodoloji saldırısı en erken burada gelir) | HIGH |
+| 53 | L10 — Peer-review pipeline (paper draft → conference submissions) | **P0** — K-BENCHMARK MVP verisi eldeyken taslak başlar; ilk hedef FAccT (deadline yıllık Ocak) | HIGH |
+
+---
+
+## 🌍 v7.13 EKOSİSTEM HIZ DEĞERLENDİRMESİ (360°)
+
+> **Kural değişimi:** "2027'de yaparız" AI dünyasında "yapmayız" demek. Her kritik hattı 2026 H2'ye sıkıştırdık — sebebi aşağıda.
+
+**AI ekosistemi Temmuz 2026 durumu:**
+| Boyut | Gerçeklik | ALPAR sonucu |
+|-------|-----------|--------------|
+| Frontier model çıkışı | Her 3-4 ayda bir major model (GPT-5, Claude Opus 4.8, Gemini 2.5) | K-BENCHMARK haftalık re-audit zorunlu (Q4 daha güncel model roster'ı) |
+| EU AI Act Art. 73 | 17 ay uzakta (Dec 2, 2027) | Metodoloji **11 ay önce** kanıtlanmış olmalı ki Art. 73 anına referans olarak girsin |
+| Ulusal AI Safety Institute'ler | UK AISI, US AISI, Japan AISI operasyonel; TR'de YOK | ALPAR **fiili TR AISI** rolünü kapabilir — N4 white paper acil |
+| OECD AI Incidents Monitor | Operasyonel (oecd.ai) — 400+ kayıt | Rekabet DEĞİL, ortak — N2 entegrasyon fırsatı |
+| Standards bodies | ISO/IEC JTC 1/SC 42, CEN-CENELEC JTC 21, NIST AI RMF aktif | Katkı = kalıcı meşruiyet — N3 |
+| Rakip olay kayıtları | AIID (MIT, güçlü akademik), Stanford AI Index (yıllık), IncidentsDB startupları | TR + Art. 73 dikey konumla yarışma dışı, ama global mainstream girme penceremiz **6 ay** |
+| Rakip rating platformları | Chatbot Arena (LMSYS, 2M+ oy), Artificial Analysis, Vellum evals | K-BENCHMARK çok-model çapraz sorgu ile yöntemsel fark; ama arayüz 6 ayda kopyalanır |
+| Compute maliyet trendi | Frontier inference maliyeti yıllık %10× düşüyor | Free-tier K-BENCHMARK varsayımı Q4 2027'de zayıflar (paid tier daha erken devreye gerek) |
+| Türkiye AI ekosistemi | Neredeyse rakip yok, ancak akademik ilgi hızla artıyor | 12 ay **erken hareket eden avantajı** var; 18 ayda kapanır |
+
+**Büyüme hızı sonucu:** ALPAR'ın 2027 Aralık'ta değil, 2026 Aralık'ta akademik/uzman meşruiyetini kanıtlamış olması gerekir. 12 ay compounding = 4× büyüme farkı.
+
+---
+
+## 🏛️ N-SERIES — National & Regulatory Ecosystem Integration (v7.13, YENİ)
+
+> **Boşluk:** L-series akademiyi ve uzmanları kapsar ama **düzenleyici + standardizasyon + ulusal AI güvenlik** katmanı yoktu. Bunlar 3 aylık pencere fırsatları, 3 yıllık moat üretir.
+
+### N1 — OECD AI Incidents Monitor Entegrasyonu
+
+OECD'nin resmi olay izleme projesi (oecd.ai). Halihazırda 400+ kayıtla. **ALPAR bir kaynak beslemesi olarak eklenirse**: her onaylı ALPAR olayı OECD monitörüne otomatik gider (JSON feed, WebSub veya periyodik CSV). Karşılık: OECD sayfasında ALPAR atıfı = uluslararası akademik/regülatör görünürlük.
+
+**Antigravity iş:** `/api/v1/oecd/feed` endpoint (OECD şemasına uyumlu), taksonomi haritası (`docs/OECD_TAXONOMY_MAP.md`), OECD sekreterlik iletişim (founder yürütür).
+**Öncelik:** **P0** — H-serisi honesty pass biter bitmez (`incident_source` alanı OECD feed'inin ön koşulu).
+
+### N2 — UK AISI + US AISI Diyaloğu
+
+Her ikisi de operasyonel resmi AI güvenlik enstitüleri. Ne satarız? **K-BENCHMARK ham çıktı verisi** (kendi test setlerinin doğrulaması için), **incident registry** (kendi risk sınıflaması için referans veri).
+
+**Founder iş:** LinkedIn + resmi email kanallarıyla iletişim başlangıcı; ilk toplantıda "bize entegre etmenizi teklif etmiyoruz, sadece TR bakış açısını görmek ister misiniz?" konumlaması.
+**Öncelik:** **P1** — L1 danışma kurulu duyurusundan sonra (kurul isimleri kapı açar).
+
+### N3 — Standards Body Katkısı (ISO/IEC JTC 1/SC 42, CEN-CENELEC JTC 21)
+
+EU AI Act uyumluluğu için CEN-CENELEC JTC 21 harmonize standartlar yazıyor (2027 Aralık'ta zorunlu olacak). ISO/IEC SC 42 uluslararası taban. **Katkı fırsatı:** ALPAR taksonomisi + methodology'sini working draft'lara feed olarak sun.
+
+**Founder iş:** TSE (Türk Standartları Enstitüsü) üzerinden JTC 21'e katılım başvurusu — TSE Türkiye'nin ulusal komitesi. TÜBA aracıyla giriş kanalı olabilir (L4 çakışması).
+**Antigravity iş:** `docs/STANDARDS_SUBMISSIONS/` dizini + submission templates.
+**Öncelik:** **P0** — TSE başvurusu iletişim süreci uzun olduğu için ilk hareketleri hemen başlat; ilk submission K-BENCHMARK MVP verisi hazır olduğunda yapılabilir.
+
+### N4 — TR AI Safety Institute White Paper
+
+**Fırsat:** Türkiye'nin **yapay zeka güvenlik enstitüsü YOK**. UK, US, Japonya, Fransa var. Cumhurbaşkanlığı Dijital Dönüşüm Ofisi (CBDDO) + Sanayi ve Teknoloji Bakanlığı bir enstitü kuracaksa, ALPAR **fiili referans uygulama** olabilir.
+
+**Founder iş:** 20-30 sayfa profesyonel white paper: (a) TR AISI ihtiyacı, (b) uluslararası model karşılaştırması, (c) ALPAR'ın mevcut altyapısının nasıl temel oluşturabileceği, (d) 12 aylık kuruluş yol haritası önerisi. Yayın: CBDDO + TÜBİTAK + TÜBA + Sanayi Bakanlığı'na formal dosyalama + kamu yayını (SSRN, resmî ALPAR yayın sayfası).
+**Antigravity iş:** taslak iskelet, veri grafik üretimi (K-BENCHMARK istatistikleri, olay dağılımları), atıf yönetimi.
+**Öncelik:** **P0 — kritik pencere.** Launch akabinde ilk 8 haftada tamamlanır; TR AISI kurumsallaşma haberi çıkmadan önce ALPAR raf üzerinde olmalı (pazarlanacak fikir olmadan gelen kurum, ALPAR'ı görmezden gelir). Bağımlılık: L1 kurul isimleri paperın imza kısmında görünmeli.
+
+### N-Series → Work Queue
+
+| # | İş | Faz | Öncelik |
+|---|----|-----|---------|
+| 54 | **N1** — OECD AI Incidents Monitor feed endpoint + taksonomi haritası | **P0** — H-serisi bittikten sonra | HIGH |
+| 55 | **N2** — UK/US AISI iletişim + tracker + MoU template | **P1** — L1 kurul duyurusundan sonra | MEDIUM |
+| 56 | **N3** — Standards body katkısı (ISO/IEC + CEN-CENELEC) — TSE başvurusu | **P0 (uzun süreç)** — TSE bürokrasisi ay alır, hemen başlar | HIGH |
+| 57 | **N4** — TR AI Safety Institute white paper | **P0 — pencere kısa** — launch akabinde 8 hafta içinde yayın | HIGH |
 
 ---
 
@@ -1090,8 +1159,8 @@ Items graduating from J-series into the work queue (all **post-freeze Aug 10** u
 | 39 | **K6** — Hallucination/factuality MVP (TruthfulQA + 200 TR claims) | K-MVP window | HIGH |
 | 40 | **K7** — Turkish competence MVP (MMLU-TR + bespoke TR set) | K-MVP window | HIGH |
 | 41 | **K8** — EU AI Act reasoning MVP (120 Art. 73 scenarios) | K-MVP window | HIGH |
-| 42 | **K9–K12** — 4 industry-standard categories (math, IFEval, adversarial, long-context) | K-Full (Sep 16 – Dec 15) | MEDIUM |
-| 43 | **K-Product** — Ratings integrated into Compliance Readiness Dashboard, paid tier | 2027 Q1 | HIGH (revenue) |
+| 42 | **K9–K12** — 4 industry-standard categories (math, IFEval, adversarial, long-context) | **P0** — K-MVP biter bitmez, kesintisiz | MEDIUM |
+| 43 | **K-Product** — Ratings integrated into Compliance Readiness Dashboard, paid tier | **P0 (revenue)** — K-Full biter bitmez, CRD ile birlikte | HIGH (revenue) |
 
 ---
 
@@ -1209,10 +1278,10 @@ The following require founder input before or during the sequence above. Executo
 9. **🆕 v7.4 — Cost-budget ceiling values.** Standing Rule #20 uses $50/day warn, $100/day auto-tighten, $500/month ceiling. Founder confirms or adjusts before Rule #20 cron ships.
 10. **🆕 v7.4 — X3 media-response reach threshold.** Public defense triggered at "outlet >10k TR or >100k global". Founder confirms these thresholds or supplies preferred numbers.
 11. **🆕 v7.4 — Day-2 amplification budget.** If Day-1 numbers are strong, does the founder authorize a paid amplification budget (X ads, LinkedIn boost) and if yes, cap it. If numbers are weak, does the founder want an emergency Day-2 outreach list (contacts to warm up)?
-12. **🆕 v7.12 — L1 aday listesi onayı.** Executor Jul 12'de LinkedIn/Scholar taramasıyla 7 koltuk için 15 aday çıkarır. Founder Jul 15'e kadar seçim yapar. *Deadline: Jul 15.*
-13. **🆕 v7.12 — L3 uzman ücreti modeli.** (a) Rep-only leaderboard, ücret yok; (b) €20/doğrulama, yılda maks €500/uzman. Öneri: (a) — nakit koru + vergi karmaşasını atla. *Deadline: Aug 15.*
-14. **🆕 v7.12 — L6 faculty fellowship bütçe onayı.** Yılda 5 profesör × $2000 = $10k. Öneri: onayla — akademik atıf ROI'si en yüksek harcama. *Deadline: Sep 30.*
-15. **🆕 v7.12 — L4 dernek listesi öncelik sıralaması.** 5 kurumdan hangileri Q1 2027 öncesi hedeflenecek. Öneri: TÜBA + İstanbul Barosu AI Komitesi (TR ilk), sonra IEEE Turkey. *Deadline: Aug 30.*
+12. **🆕 v7.12 — L1 aday listesi onayı.** Executor L1 kickoff'un ilk günü LinkedIn/Scholar taramasıyla 7 koltuk için 15 aday çıkarır. *Karar bağımlılığı: L1 recruitment penceresi (Jul 12–30 launch anchor)* — Aug 2 launch anchor'ının parçası olduğu için tek istisna, tarih meşru.
+13. **🆕 v7.12 — L3 uzman ücreti modeli.** (a) Rep-only leaderboard, ücret yok; (b) €20/doğrulama, yılda maks €500/uzman. Öneri: (a) — nakit koru + vergi karmaşasını atla. *Karar bağımlılığı: L3 kickoff'undan önce (L1 duyurusundan sonraki ilk P0 iş).*
+14. **🆕 v7.12 — L6 faculty fellowship bütçe onayı.** Yılda 5 profesör × $2000 = $10k. Öneri: onayla — akademik atıf ROI'si en yüksek harcama. *Karar bağımlılığı: L2 first MOU imzalanmadan önce (fellow adayları MOU'lardan gelir).*
+15. **🆕 v7.12 — L4 dernek listesi öncelik sıralaması.** 5 kurumdan hangileri ilk hedeflenecek. Öneri: TÜBA + İstanbul Barosu AI Komitesi (TR ilk), sonra IEEE Turkey. *Karar bağımlılığı: L4 kickoff'undan önce.*
 
 Every decision resolves in `docs/PROPOSALS/NNN-title.md` first — Executor never assumes.
 
@@ -1262,6 +1331,18 @@ After each stage: push → report with:
 All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying customer flow technically ready (C1–C4); embed widget live with measurable external embeds (C5); **≥100 organic signups tracked in growth dashboard (E7);** expert portal live with ≥1 real expert action; monthly cost + coverage reports automated. Then execution moves to the 2027 Horizon above — the Architect writes each quarter's stage spec in the final 2 weeks of the prior quarter.
 
 ---
+
+## CHANGELOG (v7.12 → v7.13) — Ecosystem Velocity + Date-Free Prioritization
+
+- Founder pushback: "Q2 2027 saçmalık — AI ekosistemi 6 ayda katlanıyor" + "tarihleri kaldır, öncelik sırası olacak"
+- **Two structural changes:**
+  1. **Post-launch tüm work queue tarih-tabanlı değil bağımlılık-tabanlı** — P0/P1/P2 sistemi. Tek istisna: Aug 2 launch anchor (kamu taahhüdü) + Dec 2 2027 Art. 73 (yasal). Diğer tüm tarihler kaldırıldı.
+  2. **N-series eklendi (National & Regulatory Ecosystem)** — 4 item: N1 OECD Incidents Monitor feed, N2 UK/US AISI diyaloğu, N3 ISO/IEC + CEN-CENELEC standards katkısı, N4 TR AI Safety Institute white paper (3 aylık kritik pencere)
+- **Ekosistem 360° reality check tablosu eklendi** — frontier model çıkış hızı, EU AI Act 17 ay uzakta, TR AISI yok (fırsat), OECD/UK/US AISI operasyonel, standardization bodies aktif
+- **L-series sıkıştırıldı:** L2/L3/L4/L5/L6/L9/L10 tümü P0 veya P1 bağımlılık-tabanlı sıralamada — hiçbiri 2027'ye ertelenmiyor
+- **Standing Rule #23 eklendi** — post-launch iş kuyruğunda takvim tarihi yasak; tarih yazan Architect hata yapmıştır
+- **Founder Decision Points 12–15** tarih yerine bağımlılık ile bağlandı
+- **Work queue extended 53 → 57 items** (N1–N4 eklendi)
 
 ## CHANGELOG (v7.11 → v7.12) — L-Series: Human Capital & Academic Network
 
