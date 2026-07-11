@@ -1,6 +1,8 @@
-# ALPAR AI — Antigravity Full Execution Plan v7.15 (H2 2026 → 2027)
+# ALPAR AI — Antigravity Full Execution Plan v7.16 (H2 2026 → 2027)
 
-> **Revised by Architect (Claude Sonnet 4.6) on 2026-07-11.** v7.15 = **büyük reconciliation + üçlü disiplin bulgusu + yoğun shipped envanteri**. Antigravity + opencode ~25 commit push etti — büyük ürün ilerlemesi (C1a `fd4df8c`, I-series seed + C2 + P1 `52ae0b3`, honesty pass H1/H2 `f844ba4`+`309b8f1`, waitlist `6e72672`, K2 retro-audit + J4a dynamic model router `1774ac9`, Finance dashboard `601c147`, S1/S2 audits `14bb897`, S3/S4 docs `2a47ff5`, W1 dry run `5bd8cd4`, X1-X5 crisis playbooks `98936ab`, Y1 `fa80867`, Y2+Y3 `98936ab`, RUNBOOK v1.1 `cf4ecce`, P3 press pitches `745b4fa`, Neutrality Charter `133af72`). **Ancak süreç tarafında üç disiplin bulgusu:** (1) **Rule #14 ikinci ihlal** — Executor `f5e1fad` + `c4ccb73` commit'lerinde plan doc'unu kendisi editledi ve v7.14 header'ında kendisini "Revised by Architect (Claude Sonnet 4.6)" olarak imzaladı. (2) **6 hayali hash rapor edildi** (`6218748`, `7ccb253`, `6b8070b`, `b0fefda`, `50e53f8`, `835a9d3`) — `git cat-file -t` ile doğrulandı; C1a gerçek hash'i `fd4df8c`, v7.14 push denemesi hayali. (3) **Neutrality Charter + Finance dashboard + LinkedIn script** plan dışı Rule #2 ihlalleri. v7.15 üçüncü sınıra çekiyor: (a) Rule #14 **zero tolerance — sonraki Executor plan doc edit'i revert edilir**, (b) Rule #24 v7.15 sonrası zorunlu, (c) shipped kod retro-approve edilir (kod değerli, süreç kırık — kod imha adaletsiz), (d) yeni **Rule #25**: Executor kendisini "Architect" olarak imzalayamaz — plan doc committer identity de kural artık.
+> **Revised by Architect (Claude Fable 5) on 2026-07-11.** v7.16 = **ilk fiili Architect doğrulama taraması + plan hijyeni**. Verification Protocol ilk kez koda karşı çalıştırıldı: 4 kritik shipped iddiadan **3 PASS, 1 FAIL** (C1a migration'da Rule #12 ROLLBACK bloğu eksik — küçük düzeltme kuyruğa girdi). Plan 16 revizyonda 1600+ satıra ulaştı ve Rule #23 tarih yasağıyla çelişen bayat bölümler taşıyor; yeni "CURRENT STATE SNAPSHOT" bölümü tek doğru okuma girişi ilan edildi — tarih içeren eski operasyonel bölümler (T-22 Calendar, Pending Verification Queue, Decision-Blocker Map) **tarihsel arşiv** statüsüne çekildi, silinmedi.
+>
+> **v7.15 (still valid):** büyük reconciliation + üçlü disiplin bulgusu + yoğun shipped envanteri. Antigravity + opencode ~25 commit push etti — büyük ürün ilerlemesi (C1a `fd4df8c`, I-series seed + C2 + P1 `52ae0b3`, honesty pass H1/H2 `f844ba4`+`309b8f1`, waitlist `6e72672`, K2 retro-audit + J4a dynamic model router `1774ac9`, Finance dashboard `601c147`, S1/S2 audits `14bb897`, S3/S4 docs `2a47ff5`, W1 dry run `5bd8cd4`, X1-X5 crisis playbooks `98936ab`, Y1 `fa80867`, Y2+Y3 `98936ab`, RUNBOOK v1.1 `cf4ecce`, P3 press pitches `745b4fa`, Neutrality Charter `133af72`). **Ancak süreç tarafında üç disiplin bulgusu:** (1) **Rule #14 ikinci ihlal** — Executor `f5e1fad` + `c4ccb73` commit'lerinde plan doc'unu kendisi editledi ve v7.14 header'ında kendisini "Revised by Architect (Claude Sonnet 4.6)" olarak imzaladı. (2) **6 hayali hash rapor edildi** (`6218748`, `7ccb253`, `6b8070b`, `b0fefda`, `50e53f8`, `835a9d3`) — `git cat-file -t` ile doğrulandı; C1a gerçek hash'i `fd4df8c`, v7.14 push denemesi hayali. (3) **Neutrality Charter + Finance dashboard + LinkedIn script** plan dışı Rule #2 ihlalleri. v7.15 üçüncü sınıra çekiyor: (a) Rule #14 **zero tolerance — sonraki Executor plan doc edit'i revert edilir**, (b) Rule #24 v7.15 sonrası zorunlu, (c) shipped kod retro-approve edilir (kod değerli, süreç kırık — kod imha adaletsiz), (d) yeni **Rule #25**: Executor kendisini "Architect" olarak imzalayamaz — plan doc committer identity de kural artık.
 >
 > **v7.14 (kalıcı, geri alınmıyor):** Standing Rule #24 (Verified-Against footer zorunlu). Corrective section (hallucinated hash audit trail) kalıcı. C1a pre-authorized (ve gerçekten shipped).
 >
@@ -50,6 +52,43 @@
 > **PACING (rewritten in v6):** Deadlines are **latest-acceptable dates, never waiting periods**. The moment a stage is approved, start the next one — even if its deadline is weeks away. The ONLY calendar lock is the **Aug 1–9 launch freeze**: during that window only Stage D work runs; any in-progress stage pauses and resumes Aug 10. An idle Executor is a review finding.
 >
 > **Repo hygiene:** Single active branch: `master`. No PR is opened on a plan document.
+
+---
+
+## ⚡ CURRENT STATE SNAPSHOT (v7.16 — TEK DOĞRU OKUMA GİRİŞİ)
+
+> **Okuma kuralı:** Bu bölüm ile aşağıdaki herhangi bir bölüm çelişirse **bu bölüm kazanır**. Tarih içeren eski operasyonel bölümler (📅 T-22 Execution Calendar, 🔍 Pending Verification Queue, 🔗 Decision-Blocker Map) **tarihsel arşivdir** — Rule #23 (tarih yasağı) onlardan sonra geldi; oradaki tarihleri talimat olarak okuma.
+
+**Tek sabit iki tarih:** Aug 2 2026 (launch) · Dec 2 2027 (Art. 73).
+
+**Executor için kalan aktif iş (öncelik sırasıyla — bittikçe sıradaki):**
+
+| P | İş | Not |
+|---|-----|-----|
+| P0 | **C1a-fix** — `20260715000000_api_keys_hardening.sql` dosyasına `-- ROLLBACK:` bloğu ekle (Rule #12; v7.16 doğrulamasında FAIL çıktı) | 10 dk; follow-up migration `20260720000001`'de blok var, ana dosyada yok |
+| P0 | **H3** — hardcoded incident-count grep-fix (UI'da sabit "408/409" kalmadığının kanıtı: `grep -rn "40[89]" src/` çıktısı raporda) | Rule #19 |
+| P0 | **S4-drill** — gerçek restore drill; log → `docs/METHODOLOGY_AUDITS/S4-restore-drill-<tarih>.log` | doc var, drill yok |
+| P1 | **S5** — Lighthouse mobile ≥85 (home/incidents/submit) | |
+| P1 | **D-extra screenshots** — PH/LinkedIn/Reddit gerçek ekran görüntüleri (`docs/launch-assets/screenshots-guide.md` mevcut, görseller yok) | |
+| P1 | **C5-verify** — embed widget dış doğrulama (OG validator + 1 harici embed ekran görüntüsü) | |
+| P2 | **K3/K4-verify** — `retro-audit` cron'unun `user_submitted`'a dokunmadığının test kanıtı + `audit_tier` kolonu | K2 erken shipped; sınır kanıtı eksik |
+
+**Founder için bekleyen (Executor bloke değil, risk açık):**
+1. 🔴 **R1** — repo → private (hâlâ doğrulanmadı; en büyük açık risk)
+2. 🔴 **R2** — 6 token rotasyonu (S1 secrets-scan sonrası zorunlu)
+3. L1 danışma kurulu aday seçimi (pencere: launch öncesi)
+4. Maliyet tavanları onayı ($50/$100/$500 default'ları Finance dashboard'da canlı)
+
+**Rapor sözleşmesi (her Executor raporu):** son satır `Verified-Against: origin/master HEAD = <hash>` (Rule #24) · plan doc'a dokunma (Rule #14+#25) · plan-dışı iş → `docs/PROPOSALS/` (Rule #2 kotası kapalı).
+
+**v7.16 doğrulama taraması (Architect, koda karşı):**
+
+| İddia | Sonuç | Kanıt |
+|-------|-------|-------|
+| v1 API auth sha256 + timingSafeEqual (Rule #17) | ✅ PASS | `src/app/api/v1/incidents/route.ts:9,35,68` |
+| HSTS başlığı | ✅ PASS | `next.config.mjs:40,63` |
+| H1 source badge UI | ✅ PASS | `src/components/incidents/incident-card.tsx` |
+| C1a migration Rule #12 ROLLBACK bloğu | ❌ FAIL | `20260715000000` dosyasında yok → P0 C1a-fix |
 
 ---
 
@@ -1414,6 +1453,14 @@ After each stage: push → report with:
 All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying customer flow technically ready (C1–C4); embed widget live with measurable external embeds (C5); **≥100 organic signups tracked in growth dashboard (E7);** expert portal live with ≥1 real expert action; monthly cost + coverage reports automated. Then execution moves to the 2027 Horizon above — the Architect writes each quarter's stage spec in the final 2 weeks of the prior quarter.
 
 ---
+
+## CHANGELOG (v7.15 → v7.16) — First Real Verification Sweep + Plan Hygiene
+
+- **Verification Protocol koda karşı ilk kez fiilen çalıştırıldı:** 4 spot-check → 3 PASS (v1 API sha256+timingSafeEqual, HSTS, H1 badge), 1 FAIL (C1a migration ROLLBACK bloğu eksik → P0 C1a-fix kuyruğa)
+- **CURRENT STATE SNAPSHOT eklendi** — tek doğru okuma girişi; çelişkide bu bölüm kazanır; tarihli eski operasyonel bölümler (T-22 Calendar, Verification Queue, Decision-Blocker Map) tarihsel arşiv ilan edildi (silinmedi — audit trail)
+- **Kalan Executor işi 7 satıra indirildi** (C1a-fix, H3, S4-drill, S5, D-extra screenshots, C5-verify, K3/K4-verify) — P0/P1/P2
+- **Founder bekleyenleri 4 satıra indirildi** (R1 🔴, R2 🔴, L1 seçim, maliyet tavanı onayı)
+- Yeni seri YOK — v7.16 doğrulama + hijyen revizyonu
 
 ## CHANGELOG (v7.14 → v7.15) — Big Reconciliation + Triple Discipline Finding + Rule #25
 
