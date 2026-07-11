@@ -1,6 +1,8 @@
-# ALPAR AI — Antigravity Full Execution Plan v7.5 (H2 2026 → 2027)
+# ALPAR AI — Antigravity Full Execution Plan v7.6 (H2 2026 → 2027)
 
-> **Revised by Architect (Claude Fable 5) on 2026-07-09.** v7.5 closes the three gaps that make plans fail in the last mile: (1) **capacity-vs-scope feasibility math + an explicit de-scope ladder** — the MUST list grew four versions in a row and nobody computed whether it fits in 24 calendar days; now it's computed, and what drops first is pre-decided instead of panic-decided; (2) **S-series pre-launch security & data-integrity gate** — secrets scan, dependency audit, security headers, and a backup **restore drill** (an untested backup is not a backup); (3) **Architect Verification Protocol** — per-item spot-check commands so approvals are fast, uniform, and evidence-based rather than trust-based. Also: work queue declared the **single source of truth** for execution order (stage prose is spec, the queue is sequence).
+> **Revised by Architect (Claude Fable 5) on 2026-07-11.** v7.6 adds the J-series: 4 strategic questions from the founder, each answered with root-cause diagnosis and actionable proposals. New work-queue items 31–36 (all post-freeze). Key additions: J4a Dynamic Model Router (60–70% cross-audit cost reduction), J1a Retrospective Batch Auditor (turns seed data into audited incidents), J2a Outreach Queue Agent (automates journalist/grant outreach within Standing Rule #6), J3a Grant Radar (TÜBİTAK/KOSGEB/İSTKA/EU Horizon weekly scan), J2b Gmail Read Integration (founder OAuth pre-req). Total work queue now 36 items.
+>
+> **v7.5 additions (still valid):** v7.5 closes the three gaps that make plans fail in the last mile: (1) **capacity-vs-scope feasibility math + an explicit de-scope ladder** — the MUST list grew four versions in a row and nobody computed whether it fits in 24 calendar days; now it's computed, and what drops first is pre-decided instead of panic-decided; (2) **S-series pre-launch security & data-integrity gate** — secrets scan, dependency audit, security headers, and a backup **restore drill** (an untested backup is not a backup); (3) **Architect Verification Protocol** — per-item spot-check commands so approvals are fast, uniform, and evidence-based rather than trust-based. Also: work queue declared the **single source of truth** for execution order (stage prose is spec, the queue is sequence).
 >
 > **v7.4 additions (still valid):** X-series legal/crisis playbook, W-series Aug 2 hour-by-hour launch-day timeline, Y-series T+0 → T+30 growth-signal & pivot-check kit, Standing Rule #20 daily cost-budget alarm. M1 audit processed — home page is the only HIGH-severity mobile finding; M2 split into M2-home (MUST) and M2-touch (SHOULD, post-launch).
 >
@@ -685,6 +687,106 @@ Her satır ayrı `INSERT … WHERE NOT EXISTS` ile idempotent eklenir (title ba�
 
 ---
 
+## 🧠 J-SERIES — Founder Strategic Questions (v7.6 — answered 2026-07-11)
+
+> Founder asked 4 root-cause questions. Each gets an honest diagnosis + a concrete proposal. Proposals marked **QUEUE** become work-queue items; proposals marked **I-SERIES** enter the innovation pool for future staging.
+
+---
+
+### J1 — "Neden elimizdeki 409 olayı, datayı işlemiyoruz?"
+
+**Root cause (3 blockers, in order):**
+
+1. **`generate-marketing` cron unregistered in `vercel.json`** → the content-generation pipeline that would turn incident data into newsletter/digest/social copy runs zero times in production. V2 fix (Jul 9) unblocks this. **This is the #1 blocker.**
+2. **409 incidents ≈ 405 seed + 4 organic** (H-series honesty pass reveals this). Most seeds lack `cross_audit_score`, `source`, or provider linkage — they were batch-inserted without running the cross-audit engine. Displaying them as "processed" is misleading.
+3. **No retrospective re-audit pipeline** — the cross-audit engine is wired for new submissions only. Seeded incidents never ran through AI scoring, TruthScore calculation, or source validation.
+
+**What to do:**
+- **V2** (QUEUE — Jul 9, already in queue): register cron → content pipeline unlocks immediately.
+- **H1–H3** (QUEUE — already in queue): badge + copy fix → set honest expectations.
+- **J1a** (I-SERIES PROPOSAL — post-launch, Aug 10+): **Retrospective Batch Auditor** — background cron that re-audits seeded incidents through the cross-audit engine in order of `created_at` DESC, 10/day, at off-peak hours. Uses cheapest-available model tier (Gemini Flash or GPT-4o-mini). Cost ceiling: $5/day; stops if cost threshold hit. Each audited row gets `incident_source = 'aiaaic_import' | 'aiid_import'` confirmed + `processing_stage = 'complete'`. First run target: 50 seed incidents audited by Sep 1. *This turns 409 "seed records" into 409 "audited incidents" — the real product value.*
+
+---
+
+### J2 — "Neden bütün mailleri otomatik tarayıcı ajan ile veya gmail entegrasyonu ile yapmıyoruz?"
+
+**Root cause (honest):** Resend handles transactional email (confirmation, alerts) but there's no outbound campaign agent or inbound-tracking integration. All journalist/grant/partner outreach is manual.
+
+**Two distinct use cases with different solutions:**
+
+**A) Outbound campaign email** (journalist pitches, grant follow-ups, partner outreach):
+- **J2a** (I-SERIES PROPOSAL): **Outreach Queue Agent** — admin panel outreach hub (B-extra.2, already shipped as `f4cd43b`) gets a Playwright/browser-agent layer. Founder writes a template once; agent personalizes + sends via Resend with HMAC-signed unsubscribe footer (reuses U1/U2). Standing Rule #6 preserved: every send still needs an approved queue item — agent executes, not decides. Rate cap: 50/day.
+- **Pre-condition:** U1 (unsubscribe endpoint) MUST ship first — illegal to send campaign mail without one-click unsub.
+
+**B) Inbound tracking** (replies from journalists, grant agencies, partners):
+- **J2b** (I-SERIES PROPOSAL): **Gmail Read Integration** — OAuth2 Gmail read-only scope (no send), watches a dedicated `outreach@alparai.com` inbox, extracts reply sentiment + entity → logs into the outreach hub's `outreach_logs` table. No PII stored beyond sender domain + reply status. Triggers admin notification on positive reply. *Note: Gmail MCP server exists in this environment but requires OAuth flow — requires founder authorization first.*
+- **Blocking factor:** Gmail MCP OAuth not yet authorized for this session. Founder authorizes via claude.ai connector settings → agent can then read inbox programmatically.
+
+**Priority verdict:** J2a is higher priority (zero new auth needed, builds on shipped infrastructure). J2b is powerful but requires founder OAuth step first.
+
+---
+
+### J3 — "Neden bütün devlet desteklerine tarayıcı üzerinden yapmıyoruz?"
+
+**Root cause:** Zero coverage in any plan version. Government grant applications were never planned.
+
+**Opportunity map (TR + EU):**
+
+| Program | Relevance | Deadline pattern | Fit |
+|---------|-----------|-----------------|-----|
+| TÜBİTAK 1512 (Teknogirişim) | Pre-seed up to ₺3M | Rolling / 2× yr | Strong — AI safety + public data |
+| KOSGEB Dijital Dönüşüm | SME digital | Rolling | Medium |
+| İSTKA Yenilikçi Girişim | Istanbul-based | Annual | Strong — EU AI Act alignment |
+| EU Horizon Europe (ICT-50) | AI governance research | Annual Mar/Sep | Very strong — Art. 73 angle |
+| EU Digital Europe Trustworthy AI | AI safety infrastructure | Biannual | Very strong |
+
+**J3a** (I-SERIES PROPOSAL — medium priority, post-launch): **Grant Radar + Application Agent**
+- Phase 1 (research, 1 day): Playwright browser agent scans TÜBİTAK, KOSGEB, İSTKA, EU Funding Portal weekly; extracts deadline, eligibility, required docs → stores in `grant_opportunities` table (admin-only).
+- Phase 2 (application, founder-driven): Admin panel shows ranked opportunities with ALPAR's fit score. Founder selects → agent pre-fills PDF/online forms using the platform's existing ARCHITECTURE.md, API.md, metrics data. Human submits — agent never submits autonomously.
+- **Critical rule:** Agent pre-fills, founder submits. No autonomous form submission. Government portals have CAPTCHAs and legal attestations that require human sign-off.
+- **Start after Aug 10** — pre-launch the team is zero-bandwidth for grant ops.
+
+---
+
+### J4 — "Neden sistemdeki AI API keylerini verimli şekilde kullanmıyoruz?"
+
+**Root cause (5 gaps, in severity order):**
+
+| Gap | Current state | Risk/Cost |
+|-----|--------------|-----------|
+| **Plain-text storage** | `api_keys` table: `api_key TEXT` | Leak = all provider accounts compromised |
+| **No usage metering** | Cross-audit fires 6–8 API calls/incident; no per-model cost log | Cost spike invisible until bill arrives |
+| **Flat model selection** | Same model tier for every incident regardless of complexity | 10× overspend on simple/short incidents |
+| **No per-provider budget ceiling** | One provider rate-limit doesn't trigger failover | Single-point cost explosion |
+| **No batch processing** | Each incident processed individually; OpenAI/Anthropic support batches at 50% discount | Seed re-audit at full price |
+
+**Fixes (ordered by ROI):**
+
+- **C1a** (QUEUE — Jul 15, already queued): sha256 migration + tier + client_type columns → **plain-text gap closed.**
+- **J4a** (QUEUE — add to work queue, post-freeze Aug 10): **Dynamic Model Router** — replace hardcoded model selection in the cross-audit engine with a router that picks model by incident complexity: short description (<50 words) → Gemini Flash / GPT-4o-mini ($0.15/M); medium → Claude Haiku 4.5; long/high-risk → Claude Sonnet 5 / GPT-4o. Estimated 60–70% cost reduction on typical submission volume. *Implementation:* single function `selectModelTier(incident: Incident): ModelConfig` in `src/lib/audit/model-router.ts`; cross-audit engine calls it instead of hardcoded config.
+- **J4b** (QUEUE — add to work queue, post-freeze Aug 10): **Batch Re-audit** for J1a seed backlog — uses OpenAI Batch API (50% discount) or Vertex batch prediction. Processes 100 seeds/batch at off-peak. Requires J1a approved first.
+- **C3** (already in queue, post-freeze): usage metering → per-call cost logging.
+- **C4** (already in queue, post-freeze): tier rate limiting → per-key daily budget caps.
+
+**Standing Rule #20** (cost alarm at $50/$100/day) already provides the safety net. J4a model router is the highest-ROI new item: reduces spend before the alarm threshold is needed.
+
+---
+
+### J-Series → Work Queue Additions
+
+Items graduating from J-series into the work queue (all **post-freeze Aug 10** unless noted):
+
+| Queue # | Item | Phase | Priority |
+|---------|------|-------|----------|
+| 31 | **J4a** — Dynamic Model Router (`src/lib/audit/model-router.ts`) | Post-freeze | HIGH |
+| 32 | **J1a** — Retrospective Batch Auditor (cron, 10 seeds/day) | Post-freeze | HIGH |
+| 33 | **J2a** — Outreach Queue Agent (Playwright layer on B-extra.2) | Post-freeze (U1 pre-req) | MEDIUM |
+| 34 | **J4b** — Batch Re-audit (OpenAI Batch API for seed backlog) | Post-freeze (J1a pre-req) | MEDIUM |
+| 35 | **J3a** — Grant Radar (weekly scan → `grant_opportunities` table) | Post-freeze | LOW |
+| 36 | **J2b** — Gmail Read Integration (founder OAuth pre-req) | Post-freeze | LOW |
+
+---
+
 ## 🗓️ 2027 HORIZON (long-term roadmap — Architect refines each quarter into stages)
 
 > **The strategic anchor: 2 Dec 2027.** On that day, Art. 73 serious-incident reporting becomes mandatory for high-risk AI systems in the EU. Providers will need incident data, taxonomy mapping, and reporting workflows — overnight. ALPAR's entire 2027 is a countdown to owning that moment: the platform that spent two years cataloguing AI incidents becomes the obvious reference when reporting them becomes law.
@@ -843,6 +945,15 @@ After each stage: push → report with:
 All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying customer flow technically ready (C1–C4); embed widget live with measurable external embeds (C5); **≥100 organic signups tracked in growth dashboard (E7);** expert portal live with ≥1 real expert action; monthly cost + coverage reports automated. Then execution moves to the 2027 Horizon above — the Architect writes each quarter's stage spec in the final 2 weeks of the prior quarter.
 
 ---
+
+## CHANGELOG (v7.5 → v7.6) — Strategic Questions: Data, Email, Grants, API Efficiency
+
+- **J-series added** (6 new work-queue items, all post-freeze Aug 10+)
+- J1 diagnosis: `generate-marketing` cron (V2, already queued) is blocker #1 for 409-incident pipeline; J1a Retrospective Batch Auditor proposed (seed re-audit, 10/day, cost-capped)
+- J2 split: J2a Outreach Queue Agent (Playwright on existing B-extra.2, U1 pre-req) + J2b Gmail Read Integration (founder OAuth needed first)
+- J3: Grant Radar proposed (TÜBİTAK/KOSGEB/İSTKA/EU Horizon weekly scan → `grant_opportunities` table; human submits, never agent)
+- J4: 5 API-efficiency gaps diagnosed; J4a Dynamic Model Router (60–70% cost reduction) and J4b Batch Re-audit added to queue; C1a/C3/C4 confirmed sufficient for remaining gaps
+- Work queue extended from 30 → 36 items; queue items 31–36 all post-freeze (no impact on Aug 2 launch path)
 
 ## CHANGELOG (v7.4 → v7.5) — Feasibility, Security Gate, Verification Discipline
 
