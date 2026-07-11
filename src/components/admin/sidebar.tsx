@@ -60,6 +60,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     operations: true,
     community: true,
     strategy: true,
+    finance: true,
     settings: true,
   });
 
@@ -178,6 +179,15 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
           },
         ]
       : []),
+  ];
+
+  const financeItems = [
+    {
+      href: "/admin/finance",
+      label: t("finance_dashboard") || "Finance & FinOps",
+      icon: Bank,
+      active: pathname.startsWith("/admin/finance"),
+    },
   ];
 
   const settingsItems = [
@@ -399,6 +409,13 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
           )}
           {hasStrategyAccess &&
             renderNavGroup("strategy", t("strategy_header") || "Strategy", Compass, strategyItems)}
+          {(user.role === "ceo" || user.role === "admin") &&
+            renderNavGroup(
+              "finance",
+              t("nav_group_finance") || "Finance & FinOps",
+              Bank,
+              financeItems,
+            )}
           {renderNavGroup("settings", t("nav_group_settings") || "Settings", Gear, settingsItems)}
         </nav>
 
