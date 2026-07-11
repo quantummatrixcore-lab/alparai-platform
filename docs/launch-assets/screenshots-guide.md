@@ -25,7 +25,7 @@ This guide details the screenshots and visual assets required for Product Hunt, 
 
 - **URL:** `/` (English & Turkish)
 - **Viewport:** Desktop (1440x900)
-- **Focus:** Highlight the modern, sleek dark mode glassmorphism design, the animated stats banner showing **408 incidents** and **59 providers** (split by sources like AIAAIC/AIID/Verified), and the waitlist CTA button.
+- **Focus:** Highlight the modern, sleek dark mode glassmorphism design, the animated stats banner showing **408 curated and user-reported cases** and **59 providers** (split by sources like AIAAIC/AIID/Verified), and the waitlist CTA button.
 
 ### 2. Admin Dashboard & Strategic War Room
 

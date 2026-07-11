@@ -15,7 +15,7 @@ ALPAR AI, yazılım mimarisi olarak tamamen modern standartları takip etmektedi
 
 ### 408 Küratörlü Vaka ile Lansman
 
-Platform, lansman gününde **408 doğrulanmış yapay zeka hatasını** (halüsinasyon, prompt enjeksiyonu, veri sızıntısı) ve **59 yapay zeka şirketini** indeksleyerek canlıya çıkıyor. Proje, EU AI Act standartlarına göre risk sınıflandırması yaparak yapay zeka modellerinin yasal uyumluluk durumunu da takip ediyor.
+Platform, lansman gününde **408 küratörlü + kullanıcı raporu** (halüsinasyon, prompt enjeksiyonu, veri sızıntısı) ve **59 yapay zeka şirketini** indeksleyerek canlıya çıkıyor. Proje, EU AI Act standartlarına göre risk sınıflandırması yaparak yapay zeka modellerinin yasal uyumluluk durumunu da takip ediyor.
 
 **Teknik İnceleme & GitHub:**
 
