@@ -1,5 +1,5 @@
 import * as React from "react";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { requireCEO } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { CostOverviewCard } from "@/components/admin/finance/cost-overview-card";
@@ -25,12 +25,16 @@ interface DBApiUsage {
   recorded_at: string;
 }
 
-export default async function FinancePage() {
+export default async function FinancePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
   // 1. Auth Gate
   await requireCEO();
 
   // 2. Translations
   const t = await getTranslations("finance");
+  const tAdmin = await getTranslations({ locale, namespace: "admin" });
 
   // 3. Database Fetch
   const supabase = createAdminClient();
@@ -139,7 +143,9 @@ export default async function FinancePage() {
   // Recharts Trends Grouping
   const months = Array.from(new Set(costs.map((c) => c.month)));
   const trends = months.map((m) => {
-    const monthLabel = new Date(m).toLocaleDateString("tr-TR", { month: "long" });
+    const monthLabel = new Date(m).toLocaleDateString(locale === "tr" ? "tr-TR" : "en-US", {
+      month: "long",
+    });
     const monthCosts = costs.filter((c) => c.month === m);
     const dataPoint: Record<string, string | number> = { name: monthLabel };
     let sum = 0;
@@ -157,11 +163,17 @@ export default async function FinancePage() {
   services.forEach((s) => {
     if (s.percentUsed >= 90 && s.budgetLimit > 0) {
       alerts.push(
-        `${s.name.toUpperCase()} bütçesi limitine ulaştı (${s.percentUsed}% kullanıldı).`,
+        tAdmin("finance_alert_limit", {
+          service: s.name.toUpperCase(),
+          percent: s.percentUsed,
+        }),
       );
     } else if (s.percentUsed >= 80 && s.budgetLimit > 0) {
       alerts.push(
-        `${s.name.toUpperCase()} bütçesi kritik sınıra yaklaşıyor (${s.percentUsed}% kullanıldı).`,
+        tAdmin("finance_alert_warning", {
+          service: s.name.toUpperCase(),
+          percent: s.percentUsed,
+        }),
       );
     }
   });

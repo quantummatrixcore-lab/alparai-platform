@@ -2,7 +2,6 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { Container } from "@/components/ui/layout";
 import { StatsCards, type AdminStats } from "@/components/admin/stats-cards";
-import { HeroMetrics } from "@/components/admin/hero-metrics";
 import { ActivityFeed } from "@/components/admin/activity-feed";
 import { ModerationQueue } from "@/components/admin/moderation-queue";
 import { StrategicWarRoom } from "@/components/admin/strategic-war-room";
@@ -12,7 +11,6 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { Warning, ShieldCheck, Pulse } from "@phosphor-icons/react/dist/ssr";
 import type { IncidentListItem } from "@/types";
 import { toIncidentListItems } from "@/lib/mappers";
-import { DEFAULT_RESPONSE_RATE, DEFAULT_TRUST_SCORE } from "@/lib/constants";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -104,7 +102,7 @@ export default async function AdminDashboardPage({
         id: audit.id,
         type: "audit" as const,
         title: audit.action,
-        description: `Target entity: ${audit.entity_type}`,
+        description: t("activity_target_entity", { entity: audit.entity_type }),
         timestamp: new Date(audit.created_at).getTime(),
         time: new Date(audit.created_at).toLocaleTimeString(),
       }),
@@ -119,8 +117,11 @@ export default async function AdminDashboardPage({
       }) => ({
         id: inc.id,
         type: "incident" as const,
-        title: inc.title_masked || "New Incident Submitted",
-        description: `Category: ${inc.category} | Severity: ${inc.severity}`,
+        title: inc.title_masked || t("activity_new_incident"),
+        description: t("activity_incident_desc", {
+          category: inc.category,
+          severity: inc.severity,
+        }),
         timestamp: new Date(inc.created_at).getTime(),
         time: new Date(inc.created_at).toLocaleTimeString(),
       }),
@@ -134,31 +135,17 @@ export default async function AdminDashboardPage({
       <header className="flex flex-col gap-4 border-b border-white/10 pb-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="inline-flex items-center gap-2.5 text-2xl font-bold tracking-tight text-white">
-            <ShieldCheck
-              weight="duotone"
-              className="text-brand-400 h-6 w-6 drop-shadow-[0_0_8px_rgba(168,85,247,0.4)]"
-            />
-            {t("dashboardTitle")}
+            <ShieldCheck weight="duotone" className="text-brand-400 h-7 w-7" />
+            {t("dashboardTitle") || "Admin Dashboard"}
           </h1>
-          <p className="text-fg-secondary mt-1 font-mono text-sm">{user.email}</p>
-        </div>
-        <div className="flex items-center">
-          <span className="flex animate-pulse items-center gap-1.5 rounded-full border border-cyan-500/30 bg-neutral-950/80 px-3 py-1 font-mono text-xs text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.25)]">
-            <span className="h-2 w-2 rounded-full bg-cyan-400"></span>
-            {t("system_online")}
-          </span>
+          <p className="text-fg-secondary text-sm">
+            {t("war_room_desc") ||
+              "Real-time production infrastructure links and edge rate-limiting parameters."}
+          </p>
         </div>
       </header>
 
-      {/* Upgraded Hero Metrics */}
-      <HeroMetrics
-        totalIncidents={stats.total}
-        responseRate={DEFAULT_RESPONSE_RATE}
-        trustScore={DEFAULT_TRUST_SCORE}
-        activeProviders={stats.providers}
-      />
-
-      {/* 360 Degree Advanced Visualizations */}
+      {/* Strategic monitoring section */}
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <StrategicWarRoom liveProviders={activeProviders || []} />
@@ -192,7 +179,7 @@ export default async function AdminDashboardPage({
             <div className="mb-4 border-b border-white/5 pb-3">
               <h2 className="text-md inline-flex items-center gap-2 font-semibold text-white">
                 <Pulse weight="duotone" className="text-brand-400 h-4 w-4" />
-                {locale === "tr" ? "Son Aktiviteler" : "Recent Activities"}
+                {t("recent_activities") || "Recent Activities"}
               </h2>
             </div>
             <ActivityFeed activities={activities} />

@@ -151,6 +151,8 @@ function MetricCard({
   );
 }
 
+import { useTranslations } from "next-intl";
+
 export function HeroMetrics({
   totalIncidents,
   responseRate,
@@ -162,6 +164,8 @@ export function HeroMetrics({
   trustScore: number;
   activeProviders: number;
 }) {
+  const t = useTranslations("admin");
+
   return (
     <motion.div
       initial="hidden"
@@ -172,36 +176,36 @@ export function HeroMetrics({
       className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
     >
       <MetricCard
-        title="Total Incidents"
+        title={t("hero_total_incidents")}
         value={totalIncidents}
-        change="+12.4% vs last week"
+        change={t("hero_total_incidents_change", { defaultValue: "+12.4% vs last week" })}
         isPositive={true}
         icon={<FileText className="h-5 w-5" />}
         sparklineData={[30, 40, 35, 50, 49, 60, 70, 91, 125]}
         color="brand"
       />
       <MetricCard
-        title="Response Rate"
+        title={t("hero_response_rate")}
         value={`${responseRate}%`}
-        change="+2.1% this month"
+        change={t("hero_response_rate_change", { defaultValue: "+2.1% this month" })}
         isPositive={true}
         icon={<ShieldCheck className="h-5 w-5" />}
         sparklineData={[70, 72, 75, 74, 76, 78, 80, 81, 82.5]}
         color="cyan"
       />
       <MetricCard
-        title="Avg Trust Score"
+        title={t("hero_avg_trust")}
         value={`${trustScore}/100`}
-        change="-0.5% fluctuation"
+        change={t("hero_avg_trust_change", { defaultValue: "-0.5% fluctuation" })}
         isPositive={false}
         icon={<Zap className="h-5 w-5" />}
         sparklineData={[80, 81, 79, 78, 77, 78, 79, 78.5, 78]}
         color="amber"
       />
       <MetricCard
-        title="Active Providers"
+        title={t("hero_active_providers")}
         value={activeProviders}
-        change="+1 new this week"
+        change={t("hero_new_this_week")}
         isPositive={true}
         icon={<Cpu className="h-5 w-5" />}
         sparklineData={[30, 32, 35, 36, 38, 39, 40, 41, 42]}

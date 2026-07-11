@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Check, X, Eye, MessageSquare } from "lucide-react";
+import { Check, X, Eye, MessageSquare, Code } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { moderateIncident } from "@/actions/admin";
 import { toast } from "sonner";
@@ -139,6 +139,16 @@ function ModerationRow({ incident }: { incident: IncidentListItem }) {
                 className="w-full"
               >
                 {t("view", { defaultValue: "View" })}
+              </Button>
+            </Link>
+            <Link href={`/incidents/${incident.id}/embed`} target="_blank">
+              <Button
+                size="sm"
+                variant="ghost"
+                leftIcon={<Code className="h-3.5 w-3.5" />}
+                className="text-fg-muted w-full text-xs hover:text-white"
+              >
+                {t("view_embed") || "Embed View"}
               </Button>
             </Link>
           </div>

@@ -324,9 +324,6 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
             <List weight="duotone" className="h-6 w-6" />
           </button>
           <Link href="/admin" className="flex items-center gap-3">
-            <div className="relative h-8 w-8">
-              <Image src="/logo.png" alt="ALPAR" fill className="animate-pulse object-contain" />
-            </div>
             <Wordmark className="text-xl" />
           </Link>
         </div>
@@ -369,9 +366,6 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       >
         <div className="flex h-16 shrink-0 items-center justify-between border-b border-white/5 px-6">
           <Link href="/admin" className="flex items-center gap-3" onClick={() => setIsOpen(false)}>
-            <div className="relative h-8 w-8">
-              <Image src="/logo.png" alt="ALPAR" fill className="object-contain" />
-            </div>
             <Wordmark className="text-xl" />
           </Link>
           <button

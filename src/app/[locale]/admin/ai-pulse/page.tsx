@@ -1,20 +1,71 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Radio, Cpu, Pulse } from "@phosphor-icons/react/dist/ssr";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function AiPulsePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "admin" });
+
+  const models = [
+    {
+      name: "GPT-4o",
+      provider: "OpenAI",
+      status: locale === "tr" ? "Çalışıyor" : "Operational",
+      latency: "340ms",
+    },
+    {
+      name: "Claude 3.5 Sonnet",
+      provider: "Anthropic",
+      status: locale === "tr" ? "Çalışıyor" : "Operational",
+      latency: "210ms",
+    },
+    {
+      name: "Gemini 1.5 Flash",
+      provider: "Google",
+      status: locale === "tr" ? "Çalışıyor" : "Operational",
+      latency: "180ms",
+    },
+  ];
+
+  const newsFeed = [
+    {
+      title:
+        locale === "tr"
+          ? "OpenAI, o1 modelleri için yeni akıl yürütme yeteneklerini duyurdu."
+          : "OpenAI announces new reasoning capabilities for o1 models.",
+      date: locale === "tr" ? "2 saat önce" : "2 hours ago",
+    },
+    {
+      title:
+        locale === "tr"
+          ? "Anthropic, Claude 3.5 API bağlam penceresini genişletiyor."
+          : "Anthropic expands Claude 3.5 API context window.",
+      date: locale === "tr" ? "5 saat önce" : "5 hours ago",
+    },
+    {
+      title:
+        locale === "tr"
+          ? "Google DeepMind, yeni protein katlama çerçevesini açık kaynak yaptı."
+          : "Google DeepMind open-sources new protein folding framework.",
+      date: locale === "tr" ? "1 gün önce" : "1 day ago",
+    },
+    {
+      title:
+        locale === "tr"
+          ? "AB Yapay Zeka Yasası uygulama aşaması başlıyor."
+          : "EU AI Act implementation phase begins.",
+      date: locale === "tr" ? "2 gün önce" : "2 days ago",
+    },
+  ];
 
   return (
     <div className="animate-in fade-in space-y-8 duration-500">
       <div>
         <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">
-          AI Pulse & Ecosystem
+          {t("ai_pulse_title")}
         </h1>
-        <p className="text-fg-secondary mt-2">
-          Real-time tracking of global AI developments and integrated model statuses.
-        </p>
+        <p className="text-fg-secondary mt-2">{t("ai_pulse_subtitle")}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -22,33 +73,19 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
         <Card className="bg-bg-secondary/40 overflow-hidden border-white/5 backdrop-blur-xl lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between border-b border-white/5">
             <CardTitle className="text-fg-muted flex items-center gap-2 text-sm font-bold tracking-wider uppercase">
-              <Pulse weight="duotone" className="h-4 w-4" /> Integrated Models Health
+              <Pulse weight="duotone" className="h-4 w-4" /> {t("integrated_models_health")}
             </CardTitle>
             <div className="flex items-center gap-2">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
               </span>
-              <span className="font-mono text-xs text-emerald-400">ALL SYSTEMS OPERATIONAL</span>
+              <span className="font-mono text-xs text-emerald-400">{t("all_operational")}</span>
             </div>
           </CardHeader>
           <CardContent className="p-0">
             <div className="divide-y divide-white/5">
-              {[
-                { name: "GPT-4o", provider: "OpenAI", status: "Operational", latency: "340ms" },
-                {
-                  name: "Claude 3.5 Sonnet",
-                  provider: "Anthropic",
-                  status: "Operational",
-                  latency: "210ms",
-                },
-                {
-                  name: "Gemini 1.5 Flash",
-                  provider: "Google",
-                  status: "Operational",
-                  latency: "180ms",
-                },
-              ].map((model, i) => (
+              {models.map((model, i) => (
                 <div
                   key={i}
                   className="flex items-center justify-between p-4 transition-colors hover:bg-white/[0.02]"
@@ -78,23 +115,12 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
         <Card className="bg-bg-secondary/40 overflow-hidden border-white/5 backdrop-blur-xl">
           <CardHeader className="border-b border-white/5">
             <CardTitle className="text-fg-muted flex items-center gap-2 text-sm font-bold tracking-wider uppercase">
-              <Radio weight="duotone" className="h-4 w-4" /> Global Intelligence
+              <Radio weight="duotone" className="h-4 w-4" /> {t("global_intelligence")}
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4">
             <div className="space-y-4">
-              {[
-                {
-                  title: "OpenAI announces new reasoning capabilities for o1 models.",
-                  date: "2 hours ago",
-                },
-                { title: "Anthropic expands Claude 3.5 API context window.", date: "5 hours ago" },
-                {
-                  title: "Google DeepMind open-sources new protein folding framework.",
-                  date: "1 day ago",
-                },
-                { title: "EU AI Act implementation phase begins.", date: "2 days ago" },
-              ].map((news, i) => (
+              {newsFeed.map((news, i) => (
                 <div key={i} className="group cursor-pointer">
                   <h4 className="text-fg-primary group-hover:text-brand-300 line-clamp-2 text-sm transition-colors">
                     {news.title}

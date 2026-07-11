@@ -14,6 +14,8 @@ import {
   Legend,
 } from "recharts";
 
+import { useTranslations } from "next-intl";
+
 const MOCK_DATA = [
   { name: "Mon", incidents: 12, resolutions: 10, apiHits: 4000 },
   { name: "Tue", incidents: 19, resolutions: 15, apiHits: 5200 },
@@ -25,13 +27,19 @@ const MOCK_DATA = [
 ];
 
 export function SystemHealthChart() {
+  const t = useTranslations("admin");
+
   return (
     <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
       {/* Area Chart: Incidents vs Resolutions */}
       <div className="bg-bg-secondary/40 rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl">
         <div className="mb-6">
-          <h3 className="font-bold tracking-tight text-white">Incidents vs Resolutions</h3>
-          <p className="text-fg-muted mt-1 font-mono text-xs">7-Day Trajectory</p>
+          <h3 className="font-bold tracking-tight text-white">
+            {t("health_chart_title_incidents", { defaultValue: "Incidents vs Resolutions" })}
+          </h3>
+          <p className="text-fg-muted mt-1 font-mono text-xs">
+            {t("health_chart_trajectory", { defaultValue: "7-Day Trajectory" })}
+          </p>
         </div>
         <div className="h-64 w-full">
           <ResponsiveContainer width="100%" height="100%">
@@ -69,7 +77,7 @@ export function SystemHealthChart() {
                 strokeWidth={2}
                 fillOpacity={1}
                 fill="url(#colorIncidents)"
-                name="Incidents Filed"
+                name={t("health_chart_incidents")}
               />
               <Area
                 type="monotone"
@@ -78,7 +86,7 @@ export function SystemHealthChart() {
                 strokeWidth={2}
                 fillOpacity={1}
                 fill="url(#colorResolutions)"
-                name="Issues Resolved"
+                name={t("health_chart_resolved")}
               />
             </AreaChart>
           </ResponsiveContainer>
@@ -88,8 +96,12 @@ export function SystemHealthChart() {
       {/* Bar Chart: API Traffic */}
       <div className="bg-bg-secondary/40 rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl">
         <div className="mb-6">
-          <h3 className="font-bold tracking-tight text-white">API Gateway Traffic</h3>
-          <p className="text-fg-muted mt-1 font-mono text-xs">Daily Requests Volume</p>
+          <h3 className="font-bold tracking-tight text-white">
+            {t("health_chart_title_api", { defaultValue: "API Gateway Traffic" })}
+          </h3>
+          <p className="text-fg-muted mt-1 font-mono text-xs">
+            {t("health_chart_volume", { defaultValue: "Daily Requests Volume" })}
+          </p>
         </div>
         <div className="h-64 w-full">
           <ResponsiveContainer width="100%" height="100%">
@@ -119,7 +131,7 @@ export function SystemHealthChart() {
                 dataKey="apiHits"
                 fill="url(#colorApi)"
                 radius={[4, 4, 0, 0]}
-                name="API Hits"
+                name={t("health_chart_api_hits")}
                 barSize={30}
               />
             </BarChart>
