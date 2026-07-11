@@ -1,6 +1,8 @@
-# ALPAR AI — Antigravity Full Execution Plan v7.11 (H2 2026 → 2027)
+# ALPAR AI — Antigravity Full Execution Plan v7.12 (H2 2026 → 2027)
 
-> **Revised by Architect (Claude Opus 4.7) on 2026-07-11.** v7.11 expands K-series from single-category (ethics) into a **multi-dimensional AI benchmark platform**: 4 industry-standard categories (hallucination, math/reasoning, instruction-following, robustness) + 4 ALPAR-differentiated categories (ethics, Turkish, EU AI Act, real-world incidents). Same underlying free-tier infrastructure — different question banks and evaluation rubrics per category. **Strategic pivot:** ALPAR is no longer just "AI incident registry" — it becomes "the independent public rater of AI systems" (Moody's-for-AI positioning materializes). Launch discipline preserved: **no K work before Aug 10.** MVP (4 categories) by Sep 15; full 8-category platform in 2027 Q1 as the Compliance Readiness Dashboard companion.
+> **Revised by Architect (Claude Opus 4.7) on 2026-07-11.** v7.12 adds the **L-series**: strategic 360° on human capital & academic network. Rakipler veri + yöntem yapabilir ama **isim listesi** yapamaz — L-series ALPAR'ın Moody's konumunun üçüncü bacağı (Veri + Yöntem + İnsanlar). L1 danışma kurulu recruitment PRE-LAUNCH (Jul 12–30, launch bu bağımlılığa kilitlenmez — risk-azaltmalı); L2–L10 post-launch → 2027. F1/F2 Stage F artık L-series'in doldurduğu platform katmanı olarak çerçevelenmiş.
+>
+> **v7.11 additions (still valid):** K-BENCHMARK multi-category AI rating platform (8 kategori; K-MVP Aug 26–Sep 15, K-Full Sep 16–Dec 15, K-Product Q1 2027).
 >
 > **v7.10 additions (still valid):** K1–K4 core infrastructure (provider audit, free-tier scheduler, seed-only safety boundary, audit_tier provenance). Now framed as "K-CORE" — the substrate that K5–K13 categories all run on top of.
 >
@@ -517,6 +519,8 @@ Same layout as Y2 but with the 30-day denominator, plus:
     - **Monthly ceiling $500 USD** — when reached, cross-audit throttles to expert-review queue only until month roll-over; founder email + admin banner
     - Kill switch `COST_KILL_SWITCH=true` env flag halts new cross-audit calls immediately
     Rationale: launch traffic 10× organic could 10× spend overnight. A budget alarm is cheaper than a bankrupt Series A pitch.
+21. 🆕 **v7.12 — L1 published name = written consent on file.** L1 Advisory Board üyelerinin isim/biyografi/fotoğrafı `/about/advisory-board` sayfasında yayımlanmadan önce üyenin **yazılı onayı** (email veya imzalı form) `docs/L1_APPROVALS/{name-slug}.md` altında arşivlenir. Onayı belgelenmemiş isim yayımlanmaz. Founder + Executor ortak yükümlülüğü.
+22. 🆕 **v7.12 — "expert_verified" ve "uzman" yalnızca L3 için.** `expert_verified = true` yalnızca L3 uzman doğrulama ağının resmi bir üyesi tarafından işaretlenebilir. UI'da "uzman"/"expert" sözcüğü yalnızca L3 tanımı bulunmuş kişiler için kullanılır (danışma kurulu = "advisor" ayrı kavram). Standing Rule #19 numeric honesty bu ayrımı genişletir.
 
 ---
 
@@ -948,6 +952,127 @@ Her satır ayrı `INSERT … WHERE NOT EXISTS` ile idempotent eklenir (title ba�
 
 ---
 
+## 👥 L-SERIES — Human Capital & Academic Network (v7.12)
+
+> **Stratejik konum:** ALPAR'ın Moody's konumu üç bacaklı — **(a) Veri** (incidents) → **(b) Yöntem** (K-BENCHMARK, TruthScore) → **(c) İnsanlar** (L-series). İlk ikisi kod; üçüncüsü ilişki. Rakipler (OneTrust, Prediction Guard) veri + yöntem yapabilir; **isim listesi** yapamaz — bunun için 6 ay + 100 telefon lazım. L-series bu ilişki katmanını sistemli inşa eder.
+
+### L1 — Danışma Kurulu (Advisory Board) — 🔴 PRE-LAUNCH KRITIK YOL
+
+Founder recruits 5-7 named experts by **Jul 30** (Aug 2 launch'ta duyurulur):
+
+| Koltuk | Profil | Neden |
+|--------|--------|-------|
+| 1 | Hukuk (TR) — KVKK + EU AI Act uzmanı avukat / hukuk profesörü | Türkiye pazar hendeği |
+| 2 | Hukuk (EU) — AI Act şerh yazarı Avrupalı hukukçu | 2027 Aralık konumu |
+| 3 | CS / AI Safety — yayınlı Türk veya EU profesör | K-BENCHMARK rubric onayı |
+| 4 | Etik / STS — AI etiği veya STS akademisyeni | K5 etik kategorisi güvenilirliği |
+| 5 | Sektör pratisyeni — büyük tech'te AI risk / güvenlik lideri (kişisel kapasite) | Provider dünyasında güven |
+| 6 | Gazeteci — tech ethics beat'inde kıdemli | Basın erişimi + hikaye çerçeveleme |
+| 7 | KVKK / regülatör — KVKK Kurumu eski çalışanı veya benzeri | Compliance konumu |
+
+**Yapı:** kişisel kapasite (kurumları bağlamaz), 1 yıl dönme, yılda 2 sanal toplantı, ücret **yok** (equity yok — nötr konum için önemli), sadece yıllık $500 "araştırma bursu" (nominal). İsim + kısa biyografi + fotoğraf `/about/advisory-board` sayfasında. Yeni migration `advisory_board_members` tablosu (RLS: herkes okur; sadece admin düzenler).
+
+**Süreç:** Executor Jul 12'de aday listesi taslar (LinkedIn + Google Scholar + üniversite sayfaları taraması — J2a-benzeri Playwright agent). Founder Jul 15'e kadar 15 aday seçer, Jul 20'ye kadar davetler gider, Jul 30'a kadar 5+ kabul gelir.
+
+**Risk azaltma:** Jul 30'da 3'ten az kabul → launch iptal edilmez; "Danışma Kurulu Duyurusu Sep 1" olarak yeniden çerçevelenir. Launch bu bağımlılığa **kilitlenmez**.
+
+### L2 — Üniversite İşbirlikleri (MOU) — post-launch, Q4 2026
+
+Formal Memoranda of Understanding.
+- **TR öncelik:** Boğaziçi CmpE, ODTÜ CENG (Bilkent, Sabancı, Koç yedek)
+- **EU öncelik:** TU Delft AI Ethics, ETH Zürich AI Center, TU Munich, KU Leuven CiTiP, LMU Munich
+
+MOU iskeleti: (a) PII-maskeli veri seti araştırmacılara ücretsiz erişim (I7 Research Sandbox uzantısı), (b) yılda 1 ortak yayın hedefi, (c) öğrenci staj/tez pipeline'ı, (d) karşılıklı adres/hesap. Executor MOU şablonu + `outreach_logs` içinde `university_mous` kanalı hazırlar; founder yürütür.
+
+*Kill/pivot:* Q4 2026 sonunda hiç MOU yoksa → Q1 2027'de L6 (faculty fellowship) tetikleyici olarak strateji değişir: üniversitelere para → onlar bize adres.
+
+### L3 — Genişletilmiş Uzman Doğrulama Ağı (F1++)
+
+F1 Expert Portal zaten planlı — L3 onu **dağıtık uzman ağı**na dönüştürür. Platformda oturan uzmanlar + **~30 alan uzmanı** email ile davet edilir. Her uzman haftada 3–5 olay doğrular (kategori: sağlık AI, otonom araç, işe alım yanlılığı, TR yasal, EU regülasyon).
+
+**Motivasyon modeli:**
+- **Rep-tabanlı** (varsayılan): açık leaderboard — "En çok doğrulama yapan uzmanlar 2026". Ücret yok.
+- **Sembolik ücret** (opsiyonel — founder kararı): €20/doğrulama, yılda maks. €500/uzman. TR: freelance faturası; EU: cross-border vergi.
+
+**Standing Rule tetikleyici:** `expert_verified = true` yalnızca L3 ağının bir üyesi tarafından işaretlenebilir — Standing Rule #19 buna genişletilir (aşağıda #22 olarak).
+
+### L4 — Profesyonel Dernek Ortaklıkları
+
+Speaking + email duyurusu + karşılıklı içerik alışverişi:
+
+| Kurum | Değer |
+|-------|-------|
+| TÜBA (Türkiye Bilimler Akademisi) | Akademik meşruiyet |
+| İstanbul Barosu AI Komitesi | Hukuki topluluk erişimi |
+| IEEE Turkey / ACM Turkey Chapter | Mühendis kitle |
+| Alternatif Bilişim, Yeşil Ekonomi Derneği (dijital haklar STK'ları) | Sivil toplum güveni |
+| EU AI Alliance | AB kurumlarına erişim |
+
+Executor iletişim listesi + davet mektubu şablonu hazırlar; founder telefonları açar.
+
+### L5 — Üniversite Ders Entegrasyonu
+
+"AI Ethics / AI Safety / Data Ethics" derslerini hedefle:
+- Ücretsiz **eğitmen hesabı** (`role = 'instructor'` yeni tier)
+- **Küratörlü olay paketi** — kategoriye göre 20–30 olay + tartışma soruları PDF
+- **Ödev şablonları** — "Bu olayı Art. 73 taksonomisine haritala"
+- **Dönem başı email** — akademik takvim (Eylül, Ocak, Şubat) ile senkronize
+
+Bir ders → 30–100 öğrenci markaya maruz kalır → mezuniyet sonrası iş yerlerinde ALPAR'ı tekrar getirir. Uzun kuyruk.
+
+### L6 — Öğretim Üyesi Bursu (Faculty Fellowship)
+
+Yılda 5 profesör × $2000 = **$10k/yıl** bütçe. Kriter: ALPAR verisi kullanarak peer-reviewed makale, konferans bildirisi veya alan raporu yayınlamak. Denetim: dış editör kabul kanıtı.
+
+**ROI:** 1 makale = 5–20 atıf/yıl; 5 makale × 3 yıl = 75–300 akademik atıf. Bu, K-BENCHMARK'ın "methodology attack" risk kaleminin en kalıcı savunma hattı.
+
+### L7 — Öğrenci Elçi Programı
+
+Her büyük üniversitede 2–5 lisans/yüksek lisans öğrencisi. Ücretsiz + rep-tabanlı (yıllık en iyi elçi: LinkedIn öneri + $500 ödül). Görev: kampüs etkinliği, olay katkısı, sosyal medya organik büyüme. `student_ambassadors` tablosu + admin CRUD (post-launch Sep+).
+
+### L8 — Profesyonel Kullanıcı Katmanları
+
+Farklı iş rolleri farklı UI ister. Q1 2027 CRD (Compliance Readiness Dashboard) genişletmesi:
+- **AI Compliance Officer** görünümü: uyum takvimi, provider profil takibi
+- **Gazeteci** görünümü: yeni olay uyarıları (konu filtresi), doğrudan uzman iletişimi
+- **Hukuk pratisyeni** görünümü: dava-benzeri olay arama, taksonomi filtresi, PDF ihracı
+- **AI Güvenlik Ekipleri** görünümü: benchmark alerts (K-Product), kendi model karşılaştırması
+
+Her katman `role_view` tercihi + varsayılan dashboard.
+
+### L9 — Yöntem Danışma Komitesi (Methodology Advisory Committee)
+
+L1 kurulundan farklı: 3–5 kişilik **teknik** komite. Yılda 1 kez TruthScore + K-BENCHMARK rubric'lerini bağımsız gözden geçirir, kamu raporu yayınlar. Bu, Q2 2027 "methodology audit" satırının somut hali. Üyeler L1'den ayrı olmalı (çakışma riski).
+
+*Rapor değişiklik gerektirirse:* Executor migration yapar; komite raporu `docs/METHODOLOGY_AUDITS/YYYY.md` altına kalıcı yayınlanır.
+
+### L10 — Peer-Reviewed Yayınlar
+
+Founder + Architect (Claude eş-yazar) tarafından hedeflenmiş konferanslar:
+- **ACM FAccT** — deadline Ocak
+- **AIES** (AAAI/ACM AI Ethics and Society) — deadline Şubat
+- **NeurIPS Datasets & Benchmarks track** — deadline Haziran (K-BENCHMARK için ideal)
+- **ICML AI Safety Workshops** — yıllık
+
+*İlk hedef:* **NeurIPS 2027 D&B — K-BENCHMARK metodoloji makalesi.** Kabul edilirse dataset citation'ı ile kalıcı akademik kabuk.
+
+### L-Series → Work Queue Additions
+
+| # | İş | Faz | Öncelik |
+|---|----|-----|---------|
+| 44 | **L1** — Advisory board recruitment (Playwright aday tarama + davet template + `advisory_board_members` tablo + `/about/advisory-board` sayfa) | **PRE-LAUNCH MUST**, Jul 12–30 | HIGH |
+| 45 | L2 — University MOU template + outreach list | Q4 2026 | MEDIUM |
+| 46 | L3 — F1 Expert Portal + email-invite ağ genişletmesi + rep leaderboard | Nov 15 (F1 deadline) | HIGH |
+| 47 | L4 — Professional association outreach list + partnership template | Q1 2027 | MEDIUM |
+| 48 | L5 — Instructor tier + course pack CMS + assignment templates | Q1 2027 | MEDIUM |
+| 49 | L6 — Faculty fellowship program page + application form + admin review | Q2 2027 | MEDIUM |
+| 50 | L7 — Student ambassador program + `student_ambassadors` tablo + admin CRUD | Q1 2027 | LOW |
+| 51 | L8 — Role-based dashboard views (compliance/journalist/legal/safety) | Q1 2027 (CRD ile) | HIGH (revenue) |
+| 52 | L9 — Methodology Advisory Committee formation + annual audit doc | Q2 2027 | HIGH |
+| 53 | L10 — Peer-review pipeline (paper draft → conference submissions) | Q2/Q3 2027 continuous | HIGH |
+
+---
+
 ### J-Series → Work Queue Additions
 
 Items graduating from J-series into the work queue (all **post-freeze Aug 10** unless noted):
@@ -986,6 +1111,8 @@ Items graduating from J-series into the work queue (all **post-freeze Aug 10** u
 ### Q1 2027 — Revenue Engine (Jan–Mar)
 - **Compliance Readiness Dashboard** (new product surface): providers see their incident exposure mapped to Art. 73 classes, gap analysis, response-rate benchmark vs. peers. Free tier read-only; paid tier = alerts + API + white-label reports.
 - **🆕 K-Product ships alongside CRD:** private benchmarks (customer runs categories against their own model + comparators; results stay private), per-model rating alerts (score change > X → email), white-label rating reports for enterprise; integrates into CRD as "your models rated against peers"
+- **🆕 L2 first university MOU signed** (kill/pivot check: no MOU → trigger L6 fellowship strategy Q1)
+- **🆕 L8 role-based dashboard views ship with CRD** (compliance/journalist/legal/safety UI variants — the professional-user product surface)
 - **API v2:** webhook subscriptions (new incident matching filters + rating change events), bulk export, SLA tiers
 - **Pricing goes live** (founder sets amounts; Executor builds Stripe integration + billing portal) — pricing spans **both** CRD and K-Product; the benchmark is the higher-usage / lower-commitment upsell
 - **TR + EU regulatory content engine:** weekly "readiness gap" analyses auto-drafted into approval queue
@@ -993,7 +1120,8 @@ Items graduating from J-series into the work queue (all **post-freeze Aug 10** u
 
 ### Q2 2027 — The Authority Position (Apr–Jun)
 - **Academic partnership formalized:** ≥1 university MOU (founder-led; Executor builds the research portal capacity F2 needs)
-- **Methodology audit:** external academic review of TruthScore published — closes the "methodology attack" risk permanently
+- **Methodology audit:** external academic review of TruthScore published — closes the "methodology attack" risk permanently. **🆕 v7.12: this IS L9** — Methodology Advisory Committee (3–5 technical members, separate from L1) formalized; first annual audit published to `docs/METHODOLOGY_AUDITS/2027.md`.
+- **🆕 L6 first faculty fellows announced** (5 recipients × $2000; ROI: 5–20 citations/paper × 3 yrs → 75–300 academic citations, the durable defense against methodology attacks)
 - **"180 days to Art. 73" campaign** (Jun 5): repeat of the Aug 2026 countdown playbook, aimed at compliance officers, not tech twitter
 - **SOC 2 Type I readiness** (if enterprise pipeline demands it — founder decision gate)
 - *North-star:* 3 enterprise pilots; ALPAR cited in ≥2 external publications (press or academic).
@@ -1081,6 +1209,10 @@ The following require founder input before or during the sequence above. Executo
 9. **🆕 v7.4 — Cost-budget ceiling values.** Standing Rule #20 uses $50/day warn, $100/day auto-tighten, $500/month ceiling. Founder confirms or adjusts before Rule #20 cron ships.
 10. **🆕 v7.4 — X3 media-response reach threshold.** Public defense triggered at "outlet >10k TR or >100k global". Founder confirms these thresholds or supplies preferred numbers.
 11. **🆕 v7.4 — Day-2 amplification budget.** If Day-1 numbers are strong, does the founder authorize a paid amplification budget (X ads, LinkedIn boost) and if yes, cap it. If numbers are weak, does the founder want an emergency Day-2 outreach list (contacts to warm up)?
+12. **🆕 v7.12 — L1 aday listesi onayı.** Executor Jul 12'de LinkedIn/Scholar taramasıyla 7 koltuk için 15 aday çıkarır. Founder Jul 15'e kadar seçim yapar. *Deadline: Jul 15.*
+13. **🆕 v7.12 — L3 uzman ücreti modeli.** (a) Rep-only leaderboard, ücret yok; (b) €20/doğrulama, yılda maks €500/uzman. Öneri: (a) — nakit koru + vergi karmaşasını atla. *Deadline: Aug 15.*
+14. **🆕 v7.12 — L6 faculty fellowship bütçe onayı.** Yılda 5 profesör × $2000 = $10k. Öneri: onayla — akademik atıf ROI'si en yüksek harcama. *Deadline: Sep 30.*
+15. **🆕 v7.12 — L4 dernek listesi öncelik sıralaması.** 5 kurumdan hangileri Q1 2027 öncesi hedeflenecek. Öneri: TÜBA + İstanbul Barosu AI Komitesi (TR ilk), sonra IEEE Turkey. *Deadline: Aug 30.*
 
 Every decision resolves in `docs/PROPOSALS/NNN-title.md` first — Executor never assumes.
 
@@ -1130,6 +1262,17 @@ After each stage: push → report with:
 All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying customer flow technically ready (C1–C4); embed widget live with measurable external embeds (C5); **≥100 organic signups tracked in growth dashboard (E7);** expert portal live with ≥1 real expert action; monthly cost + coverage reports automated. Then execution moves to the 2027 Horizon above — the Architect writes each quarter's stage spec in the final 2 weeks of the prior quarter.
 
 ---
+
+## CHANGELOG (v7.11 → v7.12) — L-Series: Human Capital & Academic Network
+
+- Founder request: strategic 360° on universities, faculty, experts, professionals — "bunlarıda 360 derece düşün. stratejik olarak."
+- **L-series introduced (10 items):** L1 Advisory Board (PRE-LAUNCH), L2 University MOUs, L3 Expert Verification Network (F1++), L4 Professional Association Partnerships, L5 Course Integration, L6 Faculty Fellowship, L7 Student Ambassadors, L8 Role-Based Dashboard Views, L9 Methodology Advisory Committee, L10 Peer-Reviewed Publications
+- **Strategic frame:** ALPAR = Veri + Yöntem + İnsanlar (3-legged Moody's positioning). Rakipler ilk ikisini yapabilir, üçüncüsünü yapamaz.
+- **L1 added to launch-critical PRE-LAUNCH path** — Jul 12–30 recruitment window; risk-mitigated (Aug 2 launch not gated on kurul completion; fallback "Sep 1 announcement")
+- **Standing Rules #21 (yayın öncesi yazılı onay) + #22 (expert_verified L3-only)** added
+- **Founder Decision Points extended 11 → 15** (L1 candidate list, L3 pay model, L6 budget, L4 priority)
+- **Work queue extended 43 → 53 items** (44–53 all L-series)
+- **2027 Horizon updated:** Q1 gets L2 first MOU + L8 role-based views; Q2 gets L9 committee + L6 first fellows (methodology audit line = L9 concrete form)
 
 ## CHANGELOG (v7.10 → v7.11) — K-BENCHMARK: Multi-Category AI Rating Platform
 
