@@ -33,3 +33,35 @@ Bilingual (EN + TR). Each tweet is strictly under 280 characters.
 5/ **Geliştirici API:** SHA-256 ile güçlendirilmiş güvenli REST API'miz ile olay verilerimiz üzerinde uygulamalar geliştirin. Geliştirici ve kurumsal seviyeye uygun hız limitleri.
 
 6/ 2 Ağustos'ta yayındayız. Lansman coşkusunu kaçırmamak için bekleme listesindeki yerinizi hemen ayırtın: https://alparai.com
+
+# T-7 Countdown Thread: 1 Week to Go! / Son 1 Hafta!
+
+Bilingual (EN + TR). Each tweet is strictly under 280 characters.
+
+---
+
+## English Version
+
+1/ T-7 to ALPAR AI launch! One week until we open the doors to the world's first open-source, community-driven AI incident registry. ????
+
+2/ Why open-source? Because AI accountability shouldn't be locked behind corporate doors. Transparency requires public visibility.
+
+3/ Over the last few months, we've built a robust infrastructure to catalog, verify, and report AI failures and hallucinations.
+
+4/ Our platform is ready. We currently track 408 curated and user-reported cases across 59 AI providers.
+
+5/ The countdown is almost over. Join the community and get early access on launch day. Sign up for the waitlist now: https://alparai.com
+
+---
+
+## Turkish Version
+
+1/ ALPAR AI lansman�na T-7! D�nyan�n ilk a��k kaynakl�, topluluk odakl� yapay zeka olay sicilinin kap�lar�n� a�mam�za tam 1 hafta kald�. ????
+
+2/ Neden a��k kaynak? ��nk� yapay zeka hesap verebilirli�i �irketlerin kapal� kap�lar� ard�nda kalmamal�. �effafl�k, kamuoyunun g�zetimini gerektirir.
+
+3/ Ge�ti�imiz aylarda, YZ hatalar�n� ve hal�sinasyonlar�n� kataloglamak, do�rulamak ve raporlamak i�in sa�lam bir altyap� in�a ettik.
+
+4/ Platformumuz haz�r. �u anda 59 YZ sa�lay�c�s� genelinde 408 k�rat�rl� ve kullan�c� taraf�ndan bildirilen vakay� izliyoruz.
+
+5/ Geri say�m bitmek �zere. Toplulu�a kat�l�n ve lansman g�n�nde erken eri�im elde edin. Bekleme listesine hemen kaydolun: https://alparai.com
