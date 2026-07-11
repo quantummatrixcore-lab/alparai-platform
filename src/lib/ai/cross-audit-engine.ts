@@ -363,6 +363,7 @@ Respond to these critiques and questions, and output your final refined/adjusted
 }
 
 async function runSupremeCourtAdjudication(
+  chain: readonly GatewayModel[],
   maskedTitle: string,
   maskedDescription: string,
   category: string,
@@ -420,7 +421,7 @@ Act as the referee, synthesize the debate, and output your final TruthScore, Con
       temperature: 0.1,
       responseFormat: "json",
     },
-    SUPREME_COURT_CHAIN,
+    chain,
   );
 
   if (!result.ok) return null;
@@ -572,17 +573,64 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
     estimatedOutputTokens: costEst.outputTokens,
   });
 
+  // Dynamic Model Router (J4a)
+  const isShort = safeTitle.length + safeDescription.length < 1200;
+  const isHighRisk = incident.severity === "critical" || incident.severity === "high";
+
+  let slot1Chain = TRIAGE_SLOT_1_CHAIN;
+  let slot2Chain = TRIAGE_SLOT_2_CHAIN;
+  let supremeChain = SUPREME_COURT_CHAIN;
+
+  if (isShort && !isHighRisk) {
+    logger.info("[CrossAudit] J4a: Routing to LIGHTWEIGHT models (Gemini Flash / GPT-4o-mini)");
+    slot1Chain = [{ id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 2048 }];
+    slot2Chain = [{ id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 2048 }];
+    supremeChain = [
+      { id: "openai/gpt-4o-mini", provider: "openrouter", tier: "free", maxTokens: 2048 },
+      { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 2048 },
+    ];
+  } else {
+    logger.info("[CrossAudit] J4a: Routing to HEAVYWEIGHT models (Claude 3.5 Sonnet / Gemini Pro)");
+    slot1Chain = [
+      {
+        id: "anthropic/claude-3.5-sonnet",
+        provider: "openrouter",
+        tier: "premium",
+        maxTokens: 4096,
+      },
+      { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
+    ];
+    slot2Chain = [
+      {
+        id: "anthropic/claude-3.5-sonnet",
+        provider: "openrouter",
+        tier: "premium",
+        maxTokens: 4096,
+      },
+      { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
+    ];
+    supremeChain = [
+      {
+        id: "anthropic/claude-3.5-sonnet",
+        provider: "openrouter",
+        tier: "premium",
+        maxTokens: 4096,
+      },
+      { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
+    ];
+  }
+
   // Turn 1: Parallel Initial Evaluation
   const [initA, initB] = await Promise.all([
     runInitialEvaluation(
-      TRIAGE_SLOT_1_CHAIN,
+      slot1Chain,
       safeTitle,
       safeDescription,
       incident.category,
       incident.severity,
     ),
     runInitialEvaluation(
-      TRIAGE_SLOT_2_CHAIN,
+      slot2Chain,
       safeTitle,
       safeDescription,
       incident.category,
@@ -602,7 +650,7 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
   // Turn 2: Parallel Challenges (Cross-Examination questions)
   const [challengeA, challengeB] = await Promise.all([
     runChallenge(
-      TRIAGE_SLOT_1_CHAIN,
+      slot1Chain,
       safeTitle,
       safeDescription,
       incident.category,
@@ -610,7 +658,7 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
       initB,
     ),
     runChallenge(
-      TRIAGE_SLOT_2_CHAIN,
+      slot2Chain,
       safeTitle,
       safeDescription,
       incident.category,
@@ -628,7 +676,7 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
   // Turn 3: Parallel Rebuttals (Defense & Score Refinement)
   const [rebuttalA, rebuttalB] = await Promise.all([
     runRebuttal(
-      TRIAGE_SLOT_1_CHAIN,
+      slot1Chain,
       safeTitle,
       safeDescription,
       incident.category,
@@ -637,7 +685,7 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
       challengeB,
     ),
     runRebuttal(
-      TRIAGE_SLOT_2_CHAIN,
+      slot2Chain,
       safeTitle,
       safeDescription,
       incident.category,
@@ -670,6 +718,7 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
 
   // Turn 4: Supreme Court Adjudication
   const supremeResult = await runSupremeCourtAdjudication(
+    supremeChain,
     safeTitle,
     safeDescription,
     incident.category,

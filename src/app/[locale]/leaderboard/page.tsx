@@ -284,7 +284,7 @@ export default async function LeaderboardPage({
             <span>{t("trust_score_info")}</span>
             <Link
               href="/transparency"
-              className="text-brand-400 hover:text-brand-300 inline-flex items-center font-bold whitespace-nowrap underline"
+              className="text-brand-400 hover:text-brand-300 inline-flex items-center font-bold underline"
             >
               {t("read_methodology_link")}
             </Link>

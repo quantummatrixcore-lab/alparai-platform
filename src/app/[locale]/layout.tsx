@@ -49,7 +49,7 @@ export default async function LocaleLayout({
       className={`${sans.variable} ${display.variable} ${mono.variable}`}
       suppressHydrationWarning
     >
-      <body className="bg-bg-primary text-fg-primary min-h-screen font-sans antialiased">
+      <body className="bg-bg-primary text-fg-primary relative min-h-screen w-full overflow-x-hidden font-sans antialiased">
         <a
           href="#main-content"
           className="focus:bg-brand-500 sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-md focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:outline-none"
@@ -60,7 +60,7 @@ export default async function LocaleLayout({
           {isEmbed ? (
             <main className="m-0 min-h-screen bg-transparent p-0">{children}</main>
           ) : (
-            <div className="flex min-h-screen flex-col pb-16 lg:pb-0 overflow-x-hidden relative w-full">
+            <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden pb-16 lg:pb-0">
               <Header user={headerUser} />
               <MainContent>{children}</MainContent>
               <Footer />

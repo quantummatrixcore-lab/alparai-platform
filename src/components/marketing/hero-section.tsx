@@ -115,8 +115,8 @@ export function HeroSection({
 
           {/* RIGHT: Live Data Panel */}
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="flex flex-col gap-4"
           >
@@ -305,13 +305,13 @@ function LiveStatCard({
 }) {
   return (
     <div
-      className="rounded-xl p-2 sm:p-3 text-center"
+      className="rounded-xl p-2 text-center sm:p-3"
       style={{ boxShadow: `inset 0 0 20px ${glowColor}` }}
     >
-      <p className={`font-mono text-2xl sm:text-3xl font-black tracking-tight ${accentClass}`}>
+      <p className={`font-mono text-2xl font-black tracking-tight sm:text-3xl ${accentClass}`}>
         <AnimatedValue value={value} />
       </p>
-      <p className="text-fg-muted mt-1 text-[9px] sm:text-[10px] leading-tight font-bold tracking-[0.15em] uppercase break-words">
+      <p className="text-fg-muted mt-1 text-[9px] leading-tight font-bold tracking-[0.15em] break-words uppercase sm:text-[10px]">
         {label}
       </p>
     </div>

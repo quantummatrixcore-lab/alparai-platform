@@ -9,16 +9,26 @@ const PAGES = [
   "/en/leaderboard",
   "/en/academy",
   "/en/blog",
-  "/en/unsubscribe"
+  "/en/unsubscribe",
 ];
 
 test.describe("Mobile Layout Responsiveness", () => {
   test.beforeEach(async ({ page }) => {
+    // Block all external network requests to avoid SSL hang issues in WebKit
+    await page.route("**/*", (route) => {
+      const url = route.request().url();
+      if (url.startsWith("http://localhost:3000") || url.startsWith("http://127.0.0.1:3000")) {
+        route.continue();
+      } else {
+        route.abort("failed");
+      }
+    });
+
     // Pre-inject cookie consent to avoid banner cluttering layout
     await page.addInitScript(() => {
       window.localStorage.setItem(
         "alpar_cookie_consent",
-        JSON.stringify({ level: "all", at: Date.now() })
+        JSON.stringify({ level: "all", at: Date.now() }),
       );
     });
   });
@@ -30,8 +40,25 @@ test.describe("Mobile Layout Responsiveness", () => {
         return;
       }
 
-      await page.goto(path);
-      await page.waitForLoadState("networkidle");
+      page.on("console", (msg) => console.log(`[PAGE LOG ${path}]:`, msg.text()));
+      page.on("pageerror", (err) => console.log(`[PAGE ERROR ${path}]:`, err.message));
+
+      await page.goto(path, { waitUntil: "domcontentloaded" });
+      // Ensure Tailwind CSS is applied before measuring by checking background color
+      await page
+        .waitForFunction(
+          () => {
+            const bg = window.getComputedStyle(document.body).backgroundColor;
+            return (
+              bg !== "rgba(0, 0, 0, 0)" &&
+              bg !== "rgb(255, 255, 255)" &&
+              bg !== "rgb(0, 0, 0)" &&
+              bg !== ""
+            );
+          },
+          { timeout: 8000 },
+        )
+        .catch(() => {});
 
       // Verify no horizontal overflow
       const overflow = await page.evaluate(() => {
@@ -46,13 +73,13 @@ test.describe("Mobile Layout Responsiveness", () => {
         return {
           scrollWidth: maxScrollWidth,
           innerWidth: maxInnerWidth,
-          hasOverflow: maxScrollWidth > maxInnerWidth + 1
+          hasOverflow: maxScrollWidth > maxInnerWidth + 1,
         };
       });
 
       expect(
         overflow.hasOverflow,
-        `Page ${path} has horizontal overflow: scrollWidth is ${overflow.scrollWidth}px but innerWidth is ${overflow.innerWidth}px`
+        `Page ${path} has horizontal overflow: scrollWidth is ${overflow.scrollWidth}px but innerWidth is ${overflow.innerWidth}px`,
       ).toBe(false);
     });
   }
