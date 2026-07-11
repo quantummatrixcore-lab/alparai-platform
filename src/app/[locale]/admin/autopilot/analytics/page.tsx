@@ -55,7 +55,7 @@ export default async function AdminAutopilotAnalyticsPage({
       <header className="mb-6 flex items-center justify-between">
         <nav className="flex flex-wrap items-center gap-2 text-sm">
           <Link
-            href={"/admin" as never}
+            href={"/admin"}
             className="text-fg-muted hover:text-brand-400 flex items-center gap-1 transition-colors"
           >
             <ShieldCheck className="h-4 w-4" />
@@ -63,7 +63,7 @@ export default async function AdminAutopilotAnalyticsPage({
           </Link>
           <span className="text-fg-muted">/</span>
           <Link
-            href={"/admin/autopilot" as never}
+            href={"/admin/autopilot"}
             className="text-fg-muted hover:text-brand-400 transition-colors"
           >
             {t("autopilot") || "Autopilot"}

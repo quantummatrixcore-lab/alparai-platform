@@ -319,3 +319,26 @@ export interface StrategyInnovation {
   created_at: string;
   updated_at: string;
 }
+
+export interface StateSupport {
+  id: string;
+  code: string;
+  name: string;
+  country: string;
+  region: string | null;
+  grantor: string;
+  category: "rd" | "market_entry" | "regulatory" | "grant" | "tax_incentive" | "equity" | "loan";
+  max_amount_eur: number | null;
+  currency: string;
+  deadline: string | null;
+  status: "open" | "applied" | "awarded" | "closed" | "rejected";
+  priority: 1 | 2 | 3 | 4;
+  fit_score: number;
+  notes: string | null;
+  url: string | null;
+  applied_at: string | null;
+  awarded_at: string | null;
+  awarded_amount_eur: number | null;
+  created_at: string;
+  updated_at: string;
+}

@@ -64,12 +64,12 @@ export default async function AdminAutopilotPage({
           <p className="text-fg-muted mt-1 text-sm">{t("admin_subtitle")}</p>
         </div>
         <nav className="flex flex-wrap items-center gap-2 text-sm">
-          <Link href={"/admin" as never} className="text-fg-muted hover:text-brand-400">
+          <Link href={"/admin"} className="text-fg-muted hover:text-brand-400">
             <ShieldCheck className="mr-1 inline h-4 w-4" />
             {t("dashboard")}
           </Link>
           <span className="text-fg-muted">·</span>
-          <Link href={"/admin/moderation" as never} className="text-fg-muted hover:text-brand-400">
+          <Link href={"/admin/moderation"} className="text-fg-muted hover:text-brand-400">
             {t("moderation")}
           </Link>
         </nav>

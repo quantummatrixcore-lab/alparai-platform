@@ -34,6 +34,7 @@ import {
   Brain,
   Folder,
   Gear,
+  Bank,
 } from "@phosphor-icons/react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
@@ -215,6 +216,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       icon: ShieldCheck,
       active: pathname === "/admin/strategy/risks",
     },
+    {
+      href: "/admin/strategy/state-support",
+      label: t("strategy_state_support") || "Devlet Destekleri",
+      icon: Bank,
+      active: pathname.startsWith("/admin/strategy/state-support"),
+    },
   ];
 
   const renderNavGroup = (
@@ -262,7 +269,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
               return (
                 <Link
                   key={item.href}
-                  href={item.href as never}
+                  href={item.href}
                   onClick={() => setIsOpen(false)}
                   className={cn(
                     "group relative flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-300",

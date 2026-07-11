@@ -69,7 +69,7 @@ export function TakedownButton({ incidentId }: { incidentId: string }) {
             label={tForms("selectReason")}
             required
             placeholder={tForms("selectReason")}
-            options={REASONS.map((r) => ({ value: r.value, label: tr(r.value as never) }))}
+            options={REASONS.map((r) => ({ value: r.value, label: tr(r.value) }))}
           />
           <Textarea
             name="details"

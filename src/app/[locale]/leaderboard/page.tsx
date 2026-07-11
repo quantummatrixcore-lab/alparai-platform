@@ -341,7 +341,7 @@ export default async function LeaderboardPage({
               </Link>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="w-full max-w-full overflow-x-auto">
               <table className="w-full text-sm">
                 <caption className="sr-only">{t("caption")}</caption>
                 <thead>

@@ -84,7 +84,7 @@ function ModerationRow({ incident }: { incident: IncidentListItem }) {
                 {formatRelativeTime(new Date(incident.created_at), locale)}
               </span>
             </div>
-            <Link href={`/incidents/${incident.id}` as never} className="mt-2 block">
+            <Link href={`/incidents/${incident.id}`} className="mt-2 block">
               <h3 className="text-fg-primary hover:text-brand-400 line-clamp-2 font-semibold">
                 {incident.title_masked}
               </h3>
@@ -131,7 +131,7 @@ function ModerationRow({ incident }: { incident: IncidentListItem }) {
             >
               {showNote ? t("hideNote") : t("addNote")}
             </Button>
-            <Link href={`/incidents/${incident.id}` as never}>
+            <Link href={`/incidents/${incident.id}`}>
               <Button
                 size="sm"
                 variant="outline"

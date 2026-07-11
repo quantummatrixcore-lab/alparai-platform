@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
   page.on("console", (msg) => {
-    console.log(`[BROWSER CONSOLE] ${msg.type()}: ${msg.text()}`);
+    console.info(`[BROWSER CONSOLE] ${msg.type()}: ${msg.text()}`);
   });
   page.on("pageerror", (err) => {
     console.error(`[BROWSER ERROR] ${err.message}\nStack: ${err.stack}`);

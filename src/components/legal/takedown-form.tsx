@@ -94,7 +94,7 @@ export function TakedownForm() {
         label={t("takedownReason", { defaultValue: "Reason" })}
         required
         placeholder="Select"
-        options={REASONS.map((r) => ({ value: r.value, label: tr(r.value as never) }))}
+        options={REASONS.map((r) => ({ value: r.value, label: tr(r.value) }))}
       />
       <Textarea
         name="details"

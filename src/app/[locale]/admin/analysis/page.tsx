@@ -72,13 +72,13 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
         </div>
         <nav className="flex items-center gap-1 text-sm">
           <Link
-            href={"/admin" as never}
+            href={"/admin"}
             className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
           >
             {t("dashboard")}
           </Link>
           <Link
-            href={"/admin/moderation" as never}
+            href={"/admin/moderation"}
             className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-md px-3 py-1.5 transition-colors"
           >
             {t("moderation")}

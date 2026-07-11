@@ -41,6 +41,7 @@ const eslintConfig = defineConfig([
     "scripts/**",
     ".browser_profile/**",
     "scratch/**",
+    "src/types/database.ts",
   ]),
 ]);
 

@@ -118,7 +118,7 @@ export function IncidentFilters({
           ))}
         </div>
         <Link
-          href={submitHref as never}
+          href={submitHref}
           className="bg-brand-500 hover:bg-brand-600 inline-flex h-10 w-full items-center justify-center rounded-md px-4 text-sm font-semibold text-white"
         >
           {tCommon("search")}

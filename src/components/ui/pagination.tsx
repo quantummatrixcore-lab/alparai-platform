@@ -84,7 +84,7 @@ export function Pagination({
       <div className="-mt-px flex w-0 flex-1">
         {currentPage > 1 ? (
           <Link
-            href={getPageHref(currentPage - 1) as never}
+            href={getPageHref(currentPage - 1)}
             className="text-fg-muted hover:border-border-strong hover:text-fg-primary inline-flex items-center border-t-2 border-transparent pt-4 pr-1 text-sm font-medium transition-colors"
           >
             <ChevronLeft className="text-fg-muted mr-2 h-4 w-4" aria-hidden="true" />
@@ -115,7 +115,7 @@ export function Pagination({
           return (
             <Link
               key={`page-${page}`}
-              href={getPageHref(page as number) as never}
+              href={getPageHref(page as number)}
               className={cn(
                 "inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium transition-colors",
                 isCurrent
@@ -133,7 +133,7 @@ export function Pagination({
       <div className="-mt-px flex w-0 flex-1 justify-end">
         {currentPage < totalPages ? (
           <Link
-            href={getPageHref(currentPage + 1) as never}
+            href={getPageHref(currentPage + 1)}
             className="text-fg-muted hover:border-border-strong hover:text-fg-primary inline-flex items-center border-t-2 border-transparent pt-4 pl-1 text-sm font-medium transition-colors"
           >
             {t("next")}

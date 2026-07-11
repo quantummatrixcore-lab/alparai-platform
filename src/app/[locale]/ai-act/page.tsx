@@ -110,7 +110,8 @@ export default async function AIActTrackerPage({
 
   const mappedIncidents: IncidentListItem[] = toIncidentListItems(rawIncidents).map((item) => {
     const rawRow = rawIncidents.find((r: Record<string, unknown>) => r.id === item.id) as
-      Record<string, unknown> | undefined;
+      | Record<string, unknown>
+      | undefined;
     const providerId = rawRow?.ai_provider_id as string | null;
     const provider = providerId ? providerMap.get(providerId) : null;
     return {
@@ -214,7 +215,7 @@ export default async function AIActTrackerPage({
                     <div className="-mt-px flex w-0 flex-1">
                       {pageNum > 1 ? (
                         <Link
-                          href={getPageHref(pageNum - 1) as never}
+                          href={getPageHref(pageNum - 1)}
                           className="text-fg-muted hover:border-border-strong hover:text-fg-primary inline-flex items-center border-t-2 border-transparent pt-4 pr-1 text-sm font-medium transition-colors"
                         >
                           <ChevronLeft className="text-fg-muted mr-2 h-4 w-4" aria-hidden="true" />
@@ -237,7 +238,7 @@ export default async function AIActTrackerPage({
                         return (
                           <Link
                             key={`page-${p}`}
-                            href={getPageHref(p) as never}
+                            href={getPageHref(p)}
                             className={`inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium transition-colors ${
                               isCurrent
                                 ? "border-emerald-500 text-emerald-400"
@@ -252,7 +253,7 @@ export default async function AIActTrackerPage({
                     <div className="-mt-px flex w-0 flex-1 justify-end">
                       {pageNum < totalPages ? (
                         <Link
-                          href={getPageHref(pageNum + 1) as never}
+                          href={getPageHref(pageNum + 1)}
                           className="text-fg-muted hover:border-border-strong hover:text-fg-primary inline-flex items-center border-t-2 border-transparent pt-4 pl-1 text-sm font-medium transition-colors"
                         >
                           {tCommon("next")}
