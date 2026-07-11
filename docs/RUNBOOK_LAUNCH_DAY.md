@@ -60,10 +60,13 @@ These environment variables are pre-configured in Vercel to allow immediate reme
 
 ---
 
-## 🗓️ T-22h to T-0 Hour-by-Hour Launch Timeline Checklist
+## 🗓️ T-25 to T-0 Launch Timeline Checklist
 
 To be executed by the founder leading up to launch on **August 2, 2026**:
 
+- [ ] **T-25 (July 8, 2026): Launch Content Finalization**
+  - Verify all countdown threads (T-25 to T-3) are drafted and ready.
+  - Finalize TR media embargo pitches.
 - [ ] **T-22h (Aug 1, 10:00): Schema Lock & Backup**
   - Verify database migrations are fully applied on production.
   - Create manual snapshot backup of the Supabase database.
@@ -115,3 +118,19 @@ If a critical bug is introduced or the server experiences a complete outage due 
   - Portal: https://console.cloud.google.com/apis/credentials
 - **Lead Architect / Emergency Escalation:**
   - AI Team: `antigravity@quantummatrixcore-lab.users.noreply.github.com`
+- **Legal Counsel (Attorney Contact):**
+  - [PLACEHOLDER - INSERT LEGAL CONTACT]
+- **Public Relations (PR Contact):**
+  - [PLACEHOLDER - INSERT PR CONTACT]
+
+---
+
+## 🔗 Copy-Ready CTA Links
+
+Use these direct links when posting on social channels or community forums:
+
+- **Hacker News (Show HN):** `https://news.ycombinator.com/submitlink?u=https://alparai.com&t=Show%20HN:%20ALPAR%20AI%20-%20Open-Source%20AI%20Incident%20Registry`
+- **Product Hunt:** `https://www.producthunt.com/products/alpar-ai`
+- **Twitter/X:** `https://twitter.com/intent/tweet?text=ALPAR%20AI%20is%20live!%20The%20world's%20first%20open-source%20AI%20incident%20registry.&url=https://alparai.com`
+- **LinkedIn:** `https://www.linkedin.com/sharing/share-offsite/?url=https://alparai.com`
+- **Reddit (r/selfhosted):** `https://www.reddit.com/r/selfhosted/submit?url=https://alparai.com&title=ALPAR%20AI%20-%20Open-Source%20AI%20Incident%20Registry`
