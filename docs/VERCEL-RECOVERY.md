@@ -32,7 +32,7 @@ Thanks to the active Vercel session on your machine, you can run all operations 
 The authenticated token on your system that allows running CLI commands is:
 
 - **Token Location**: `%APPDATA%\Roaming\com.vercel.cli\Data\auth.json`
-- **Token Value**: `vca_4TPrx9FbZ642xrciplfbtfkpyGU3wo48uIfhcJ0GOoT99kS9571qB1o9`
+- **Token Value**: `[REDACTED]`
 
 ### Essential CLI Commands Guide
 
