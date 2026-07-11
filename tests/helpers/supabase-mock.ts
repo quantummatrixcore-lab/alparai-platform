@@ -10,10 +10,17 @@ export function createMockSupabaseClient() {
     single: mockSingle,
   }));
 
+  const mockGte = vi.fn().mockImplementation(() => ({
+    limit: mockLimit,
+    maybeSingle: mockMaybeSingle,
+    single: mockSingle,
+  }));
+
   const mockGt = vi.fn().mockImplementation(() => ({
     limit: mockLimit,
     maybeSingle: mockMaybeSingle,
     single: mockSingle,
+    gte: mockGte,
   }));
 
   const innerEq = vi.fn().mockReturnValue({
@@ -28,6 +35,7 @@ export function createMockSupabaseClient() {
     maybeSingle: mockMaybeSingle,
     eq: innerEq,
     gt: mockGt,
+    gte: mockGte,
     limit: mockLimit,
   });
 

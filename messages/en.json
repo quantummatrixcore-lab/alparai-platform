@@ -701,7 +701,19 @@
     "swot_save": "Save",
     "swot_item_deleted": "SWOT item deleted.",
     "swot_item_updated": "SWOT item updated.",
-    "swot_item_added": "New SWOT item added."
+    "swot_item_added": "New SWOT item added.",
+    "ai_pulse_title": "AI Pulse",
+    "ai_pulse_subtitle": "Real-time monitoring of AI model health, cross-audit status, and global incident trends.",
+    "integrated_models_health": "Integrated Models Health",
+    "global_intelligence": "Global Intelligence Feed",
+    "api_metrics_title": "API Gateway Metrics",
+    "api_metrics_subtitle": "Real-time API request metrics, error rates, and rate limit tracking.",
+    "metrics_total_requests": "Total Requests",
+    "metrics_error_rate": "Error Rate",
+    "metrics_avg_latency": "Avg Latency",
+    "metrics_active_limits": "Active Limits",
+    "traffic_visualization": "Traffic Visualization",
+    "traffic_chart_placeholder": "Traffic chart will render once API gateway data is available."
   },
   "footer": {
     "tagline": "Where the world holds AI accountable.",

@@ -113,7 +113,10 @@ describe("submitProviderResponse", () => {
       }
       return {
         select: () => ({
-          eq: () => ({ maybeSingle: () => Promise.resolve({ data: null, error: null }) }),
+          eq: () => ({
+            maybeSingle: () => Promise.resolve({ data: null, error: null }),
+            gte: () => Promise.resolve({ count: 0, error: null }),
+          }),
         }),
       };
     });
@@ -155,7 +158,10 @@ describe("submitProviderResponse", () => {
       }
       return {
         select: () => ({
-          eq: () => ({ maybeSingle: () => Promise.resolve({ data: null, error: null }) }),
+          eq: () => ({
+            maybeSingle: () => Promise.resolve({ data: null, error: null }),
+            gte: () => Promise.resolve({ count: 0, error: null }),
+          }),
         }),
       };
     });
@@ -241,7 +247,10 @@ describe("submitProviderResponse", () => {
       }
       return {
         select: () => ({
-          eq: () => ({ maybeSingle: () => Promise.resolve({ data: null, error: null }) }),
+          eq: () => ({
+            maybeSingle: () => Promise.resolve({ data: null, error: null }),
+            gte: () => Promise.resolve({ count: 0, error: null }),
+          }),
         }),
       };
     });
@@ -333,7 +342,10 @@ describe("submitProviderResponse", () => {
       }
       return {
         select: () => ({
-          eq: () => ({ maybeSingle: () => Promise.resolve({ data: null, error: null }) }),
+          eq: () => ({
+            maybeSingle: () => Promise.resolve({ data: null, error: null }),
+            gte: () => Promise.resolve({ count: 0, error: null }),
+          }),
         }),
       };
     });

@@ -84,7 +84,19 @@ describe("submitInvestor", () => {
           }),
         } as never;
       }
-      return {} as never;
+      return {
+        select: () => ({
+          eq: () => ({
+            maybeSingle: () => Promise.resolve({ data: null, error: null }),
+            gte: () => Promise.resolve({ count: 0, error: null }),
+          }),
+        }),
+        upsert: () => ({
+          select: () => ({
+            single: () => Promise.resolve({ data: { id: "ap-1" }, error: null }),
+          }),
+        }),
+      } as never;
     });
 
     const result = await submitInvestor({ ok: false }, validData);
@@ -128,7 +140,19 @@ describe("approveInvestor", () => {
           }),
         } as never;
       }
-      return {} as never;
+      return {
+        select: () => ({
+          eq: () => ({
+            maybeSingle: () => Promise.resolve({ data: null, error: null }),
+            gte: () => Promise.resolve({ count: 0, error: null }),
+          }),
+        }),
+        upsert: () => ({
+          select: () => ({
+            single: () => Promise.resolve({ data: { id: "ap-1" }, error: null }),
+          }),
+        }),
+      } as never;
     });
 
     const result = await approveInvestor("inv-1");

@@ -701,7 +701,19 @@
     "swot_save": "Kaydet",
     "swot_item_deleted": "Madde silindi.",
     "swot_item_updated": "Madde güncellendi.",
-    "swot_item_added": "Yeni madde eklendi."
+    "swot_item_added": "Yeni madde eklendi.",
+    "ai_pulse_title": "AI Nabız",
+    "ai_pulse_subtitle": "AI model sağlığı, çapraz denetim durumu ve küresel olay trendlerinin gerçek zamanlı izlenmesi.",
+    "integrated_models_health": "Entegre Model Sağlığı",
+    "global_intelligence": "Küresel İstihbarat Akışı",
+    "api_metrics_title": "API Ağ Geçidi Metrikleri",
+    "api_metrics_subtitle": "Gerçek zamanlı API istek metrikleri, hata oranları ve hız sınırı takibi.",
+    "metrics_total_requests": "Toplam İstek",
+    "metrics_error_rate": "Hata Oranı",
+    "metrics_avg_latency": "Ort. Gecikme",
+    "metrics_active_limits": "Aktif Limitler",
+    "traffic_visualization": "Trafik Görselleştirme",
+    "traffic_chart_placeholder": "API ağ geçidi verisi geldiğinde trafik grafiği oluşturulacak."
   },
   "footer": {
     "tagline": "Dünyanın AI'ı hesap verilebilir kıldığı yer.",

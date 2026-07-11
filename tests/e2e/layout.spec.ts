@@ -40,8 +40,8 @@ test.describe("Mobile Layout Responsiveness", () => {
         return;
       }
 
-      page.on("console", (msg) => console.log(`[PAGE LOG ${path}]:`, msg.text()));
-      page.on("pageerror", (err) => console.log(`[PAGE ERROR ${path}]:`, err.message));
+      page.on("console", (msg) => console.info(`[PAGE LOG ${path}]:`, msg.text()));
+      page.on("pageerror", (err) => console.info(`[PAGE ERROR ${path}]:`, err.message));
 
       await page.goto(path, { waitUntil: "domcontentloaded" });
       // Ensure Tailwind CSS is applied before measuring by checking background color

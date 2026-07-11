@@ -42,6 +42,8 @@ const eslintConfig = defineConfig([
     ".browser_profile/**",
     "scratch/**",
     "src/types/database.ts",
+    "chrome-profile/**",
+    "tmp/**",
   ]),
 ]);
 

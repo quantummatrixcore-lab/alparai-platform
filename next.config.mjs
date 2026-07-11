@@ -2,7 +2,6 @@
  * Security headers applied to all routes.
  */
 const isTest = process.env.IS_PLAYWRIGHT_TEST === "true";
-console.log("--- next.config.mjs: IS_PLAYWRIGHT_TEST =", process.env.IS_PLAYWRIGHT_TEST, "isTest =", isTest);
 
 const cspRules = [
   "default-src 'self'",
@@ -67,7 +66,6 @@ const embedHeaders = [
       ]),
   { key: "X-DNS-Prefetch-Control", value: "on" },
 ];
-
 
 import path from "path";
 import { fileURLToPath } from "url";
