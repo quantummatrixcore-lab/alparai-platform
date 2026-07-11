@@ -351,6 +351,7 @@
     "nav_group_settings": "Sistem Ayarları",
     "api_metrics": "API Yönetim Merkezi",
     "ai_pulse": "Yapay Zeka Radarı",
+    "nav_aiPulse": "Yapay Zeka Radarı",
     "strategy_header": "Stratejik Yönetim",
     "strategy_overview": "Genel Görünüm",
     "strategy_swot": "SWOT Analizi",
@@ -954,7 +955,9 @@
     "watches_desc": "Takip ettiğiniz olaylara yeni yanıtlar veya güncellemeler geldiğinde e-posta alın.",
     "reporter_notifications_label": "Muhabir Durum Bildirimleri",
     "reporter_notifications_desc": "Bildirdiğiniz olaylara sağlayıcılardan yanıt geldiğinde veya uzmanlar doğruladığında e-posta alın.",
-    "save_preferences": "Tercihleri Kaydet"
+    "save_preferences": "Tercihleri Kaydet",
+    "delete_account": "Hesabı Sil",
+    "delete_account_btn": "Hesabı Sil"
   },
   "blog": {
     "eyebrow": "İçgörüler ve Araştırma",

@@ -351,6 +351,7 @@
     "nav_group_settings": "System Settings",
     "api_metrics": "API Gateway Hub",
     "ai_pulse": "AI Pulse",
+    "nav_aiPulse": "AI Pulse",
     "strategy_header": "Strategic Board",
     "strategy_overview": "Overview",
     "strategy_swot": "SWOT Analysis",
@@ -954,7 +955,9 @@
     "watches_desc": "Receive emails when incidents you watch receive new updates.",
     "reporter_notifications_label": "Reporter Status Alerts",
     "reporter_notifications_desc": "Receive emails when AI providers respond or domain experts verify incidents you reported.",
-    "save_preferences": "Save Preferences"
+    "save_preferences": "Save Preferences",
+    "delete_account": "Delete Account",
+    "delete_account_btn": "Delete Account"
   },
   "blog": {
     "eyebrow": "Insights & Research",
