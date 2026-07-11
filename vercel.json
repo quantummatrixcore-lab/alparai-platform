@@ -30,7 +30,7 @@
     },
     {
       "path": "/api/cron/generate-marketing",
-      "schedule": "0 9,15 * * *"
+      "schedule": "0 9 * * *"
     }
   ]
 }
