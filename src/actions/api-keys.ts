@@ -3,10 +3,13 @@
 import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
+import { createHash } from "crypto";
 
 interface DbApiKeyRow {
   provider: string;
   api_key: string;
+  tier: string;
+  client_type: string;
   created_at: string;
   updated_at: string;
 }
@@ -29,7 +32,7 @@ export async function getApiKeys() {
       }
     )
       .from("api_keys")
-      .select("provider, api_key, created_at, updated_at")
+      .select("provider, api_key, tier, client_type, created_at, updated_at")
       .order("provider");
 
     if (error) throw error;
@@ -38,12 +41,22 @@ export async function getApiKeys() {
     const masked = (data ?? []).map((row) => {
       const key = row.api_key;
       let maskedKey = "••••";
-      if (key && key.length > 8) {
-        maskedKey = `${key.slice(0, 4)}••••${key.slice(-4)}`;
+
+      if (row.client_type === "internal") {
+        if (key && key.length > 8) {
+          maskedKey = `${key.slice(0, 4)}••••${key.slice(-4)}`;
+        }
+      } else {
+        if (key && key.length > 8) {
+          maskedKey = `sha256:${key.slice(0, 6)}••••${key.slice(-6)}`;
+        }
       }
+
       return {
         provider: row.provider,
         api_key: maskedKey,
+        tier: row.tier,
+        client_type: row.client_type,
         created_at: row.created_at,
         updated_at: row.updated_at,
       };
@@ -56,7 +69,12 @@ export async function getApiKeys() {
   }
 }
 
-export async function saveApiKey(provider: string, apiKey: string) {
+export async function saveApiKey(
+  provider: string,
+  apiKey: string,
+  tier: "free" | "developer" | "enterprise" = "developer",
+  clientType: "internal" | "external" = "external",
+) {
   const user = await getCurrentUser();
   if (!user || (user.role !== "admin" && user.role !== "ceo")) {
     return { ok: false, error: "UNAUTHORIZED" };
@@ -68,6 +86,13 @@ export async function saveApiKey(provider: string, apiKey: string) {
 
   try {
     const admin = createAdminClient();
+
+    // If it's an external client key, hash it using SHA-256
+    let keyToSave = apiKey;
+    if (clientType === "external") {
+      keyToSave = createHash("sha256").update(apiKey).digest("hex");
+    }
+
     const { error } = await (
       admin as unknown as {
         from: (name: string) => {
@@ -78,7 +103,9 @@ export async function saveApiKey(provider: string, apiKey: string) {
       .from("api_keys")
       .upsert({
         provider: provider.toLowerCase(),
-        api_key: apiKey,
+        api_key: keyToSave,
+        tier,
+        client_type: clientType,
         updated_at: new Date().toISOString(),
       });
 

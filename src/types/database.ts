@@ -285,18 +285,24 @@ export type Database = {
           created_at: string
           provider: string
           updated_at: string
+          tier: string | null
+          client_type: string | null
         }
         Insert: {
           api_key: string
           created_at?: string
           provider: string
           updated_at?: string
+          tier?: string | null
+          client_type?: string | null
         }
         Update: {
           api_key?: string
           created_at?: string
           provider?: string
           updated_at?: string
+          tier?: string | null
+          client_type?: string | null
         }
         Relationships: []
       }

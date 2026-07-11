@@ -16,10 +16,19 @@ const mockOrder = vi.fn().mockResolvedValue({
     {
       provider: "google",
       api_key: "google-secret-key-123456",
+      tier: "enterprise",
+      client_type: "internal",
       created_at: "now",
       updated_at: "now",
     },
-    { provider: "cohere", api_key: "short", created_at: "now", updated_at: "now" },
+    {
+      provider: "cohere",
+      api_key: "short",
+      tier: "developer",
+      client_type: "internal",
+      created_at: "now",
+      updated_at: "now",
+    },
   ],
   error: null,
 });
@@ -50,10 +59,19 @@ describe("api-keys actions", () => {
         {
           provider: "google",
           api_key: "google-secret-key-123456",
+          tier: "enterprise",
+          client_type: "internal",
           created_at: "now",
           updated_at: "now",
         },
-        { provider: "cohere", api_key: "short", created_at: "now", updated_at: "now" },
+        {
+          provider: "cohere",
+          api_key: "short",
+          tier: "developer",
+          client_type: "internal",
+          created_at: "now",
+          updated_at: "now",
+        },
       ],
       error: null,
     });
@@ -83,12 +101,16 @@ describe("api-keys actions", () => {
       expect(res.data?.[0]).toEqual({
         provider: "google",
         api_key: "goog••••3456",
+        tier: "enterprise",
+        client_type: "internal",
         created_at: "now",
         updated_at: "now",
       });
       expect(res.data?.[1]).toEqual({
         provider: "cohere",
         api_key: "••••",
+        tier: "developer",
+        client_type: "internal",
         created_at: "now",
         updated_at: "now",
       });
@@ -129,7 +151,9 @@ describe("api-keys actions", () => {
       expect(res.ok).toBe(true);
       expect(mockUpsert).toHaveBeenCalledWith({
         provider: "google",
-        api_key: "new-key-12345",
+        api_key: "73c6c457c952bfb096c25d09e693437631a977f13f4cd1c44268932216d3c30d", // hashed using sha256
+        tier: "developer",
+        client_type: "external",
         updated_at: expect.any(String),
       });
     });

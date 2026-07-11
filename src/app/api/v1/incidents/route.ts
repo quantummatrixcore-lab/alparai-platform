@@ -6,7 +6,7 @@ import { headers } from "next/headers";
 import { logger } from "@/lib/utils/logger";
 
 import { createAdminClient } from "@/lib/supabase/admin";
-import { timingSafeEqual } from "crypto";
+import { timingSafeEqual, createHash } from "crypto";
 import type { Database } from "@/types/database";
 
 const ALLOWED_ORIGINS = [
@@ -65,13 +65,19 @@ export async function GET(request: Request) {
     );
   }
 
+  const hashedKey = createHash("sha256").update(apiKey).digest("hex");
   const adminClient = createAdminClient();
-  const { data: dbKeys, error: dbKeysErr } = await adminClient
-    .from("api_keys")
-    .select("provider, api_key");
 
-  if (dbKeysErr) {
-    logger.error("Failed to retrieve api_keys from database", undefined, dbKeysErr);
+  // Query only the matched hashed key with client_type = 'external'
+  const { data: dbKey, error: dbKeyErr } = await adminClient
+    .from("api_keys")
+    .select("tier")
+    .eq("api_key", hashedKey)
+    .eq("client_type", "external")
+    .maybeSingle();
+
+  if (dbKeyErr) {
+    logger.error("Failed to retrieve api_key from database", undefined, dbKeyErr);
     return NextResponse.json(
       { error: "internal_error" },
       { status: 500, headers: corsHeaders(origin) },
@@ -86,23 +92,14 @@ export async function GET(request: Request) {
   if (entEnvKey && safeCompare(apiKey, entEnvKey)) {
     tier = "enterprise";
     rlKey = RATE_LIMIT_KEYS.api_enterprise;
-  } else if (dbKeys) {
-    for (const row of dbKeys) {
-      if (safeCompare(apiKey, row.api_key)) {
-        if (row.provider === "client_enterprise") {
-          tier = "enterprise";
-          rlKey = RATE_LIMIT_KEYS.api_enterprise;
-          break;
-        } else if (row.provider === "client_developer") {
-          tier = "developer";
-          rlKey = RATE_LIMIT_KEYS.api_developer;
-          break;
-        } else if (row.provider === "client_free") {
-          tier = "free";
-          rlKey = RATE_LIMIT_KEYS.api_free;
-          break;
-        }
-      }
+  } else if (dbKey && dbKey.tier) {
+    tier = dbKey.tier as "free" | "developer" | "enterprise";
+    if (tier === "enterprise") {
+      rlKey = RATE_LIMIT_KEYS.api_enterprise;
+    } else if (tier === "developer") {
+      rlKey = RATE_LIMIT_KEYS.api_developer;
+    } else {
+      rlKey = RATE_LIMIT_KEYS.api_free;
     }
   }
 
