@@ -173,6 +173,24 @@ export function IncidentCard({
                   {t("expert_verified", { defaultValue: "Expert Verified" })}
                 </Badge>
               )}
+              {incident.source_badge === "seed" && (
+                <Badge
+                  variant="muted"
+                  className="border-amber-500/20 bg-amber-500/10 text-amber-400"
+                  title={t("seed_badge_tooltip", { defaultValue: "This incident was imported from curated research data to seed the platform at launch." })}
+                >
+                  {t("seed_badge", { defaultValue: "Imported — Research Data" })}
+                </Badge>
+              )}
+              {incident.source_badge === "imported" && (
+                <Badge
+                  variant="muted"
+                  className="border-sky-500/20 bg-sky-500/10 text-sky-400"
+                  title={t("imported_badge_tooltip", { defaultValue: "Imported from an external source. Original language preserved." })}
+                >
+                  {t("imported_badge", { defaultValue: "Imported" })}
+                </Badge>
+              )}
               <Badge variant="outline">{tCat(incident.category)}</Badge>
               {incident.cross_audit_truth_score !== null && (
                 <Badge

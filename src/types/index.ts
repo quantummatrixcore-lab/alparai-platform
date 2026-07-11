@@ -50,6 +50,8 @@ export interface IncidentListItem {
   import_attribution?: string | null;
   is_expert?: boolean;
   expert_fix?: string | null;
+  is_seed?: boolean;
+  source_badge?: 'community' | 'imported' | 'seed' | 'expert-verified' | null;
 }
 
 export interface IncidentDetail {
@@ -86,6 +88,8 @@ export interface IncidentDetail {
   eu_act_reporting_deadline_days?: number | null;
   is_expert?: boolean;
   expert_fix?: string | null;
+  is_seed?: boolean;
+  source_badge?: 'community' | 'imported' | 'seed' | 'expert-verified' | null;
 }
 
 export interface EvidenceItem {
