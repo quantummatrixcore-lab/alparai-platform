@@ -1,6 +1,8 @@
-# ALPAR AI — Antigravity Full Execution Plan v7.9 (H2 2026 → 2027)
+# ALPAR AI — Antigravity Full Execution Plan v7.10 (H2 2026 → 2027)
 
-> **Revised by Architect (Claude Sonnet 4.6) on 2026-07-11.** v7.9 state assessment — Antigravity confirmed "bütün görevleri bitirdi, extra görevler de yapıldı." Work queue items 1–6 + J3 confirmed shipped via git log. Work queue updated with ✅ markers. **Immediate next action: C1a** (api_keys sha256 hardening, deadline Jul 15 = 4 days away). P1 countdown drafts overdue (start date Jul 12 passed). No new design — execution status alignment.
+> **Revised by Architect (Claude Sonnet 5) on 2026-07-11.** v7.10 adds the **K-series**: founder asked why we don't use free-tier API quotas with models cross-questioning each other for ethics testing, using the 409-incident backlog as source material. Code audit found **this infrastructure already exists** — `src/lib/ai/openrouter-gateway.ts` wires 5 free-tier providers (OpenRouter, Cohere, HuggingFace, Google Gemini, Blackbox) with circuit-breaker failover into `cross-audit-engine.ts`'s 4-stage debate pipeline (initial evaluation → challenge → rebuttal → Supreme Court adjudication) — it just never runs against the seed backlog. K-series wires it up correctly, replaces J1a's generic framing with the real architecture, and adds a non-negotiable safety boundary (free-tier interrogation on imported/public incidents only — never on organic whistleblower submissions).
+>
+> **v7.9 additions (still valid):** state assessment — Antigravity confirmed all queued items done via git log. **Immediate next action still: C1a** (api_keys sha256 hardening, deadline Jul 15). P1 countdown drafts overdue.
 >
 > **v7.8 additions (still valid):** T-22 Execution Calendar, Pending Verification Queue, Decision-Blocker Map, R1/R2 OVERDUE flags.
 >
@@ -791,7 +793,7 @@ Her satır ayrı `INSERT … WHERE NOT EXISTS` ile idempotent eklenir (title ba�
 **What to do:**
 - **V2** (QUEUE — Jul 9, already in queue): register cron → content pipeline unlocks immediately.
 - **H1–H3** (QUEUE — already in queue): badge + copy fix → set honest expectations.
-- **J1a** (I-SERIES PROPOSAL — post-launch, Aug 10+): **Retrospective Batch Auditor** — background cron that re-audits seeded incidents through the cross-audit engine in order of `created_at` DESC, 10/day, at off-peak hours. Uses cheapest-available model tier (Gemini Flash or GPT-4o-mini). Cost ceiling: $5/day; stops if cost threshold hit. Each audited row gets `incident_source = 'aiaaic_import' | 'aiid_import'` confirmed + `processing_stage = 'complete'`. First run target: 50 seed incidents audited by Sep 1. *This turns 409 "seed records" into 409 "audited incidents" — the real product value.*
+- **J1a** (I-SERIES PROPOSAL — post-launch, Aug 10+): **Retrospective Batch Auditor** — background cron that re-audits seeded incidents in order of `created_at` DESC, 10/day, at off-peak hours. **Superseded by K-series below (v7.10):** the "cross-audit engine" J1a refers to already exists (`src/lib/ai/cross-audit-engine.ts` + `openrouter-gateway.ts`) with 5 wired free-tier providers — J1a is not new infrastructure, it's a scheduling problem. See K-SERIES for the concrete wiring, cost model ($0, not $5/day — free tier, not paid), and the mandatory seed-only safety boundary.
 
 ---
 
@@ -859,6 +861,29 @@ Her satır ayrı `INSERT … WHERE NOT EXISTS` ile idempotent eklenir (title ba�
 
 ---
 
+## 🤖 K-SERIES — Free-Tier Cross-Model Ethics Interrogation (v7.10)
+
+> Founder's request: use the free-tier quotas of the API keys already in the system, have models cross-question each other for ethics testing, and use the 409-incident backlog as the source material. **Code audit confirms the mechanism already exists** — it's a wiring gap, not a build gap.
+
+**What's already built (`src/lib/ai/openrouter-gateway.ts` + `cross-audit-engine.ts`):**
+- **5 free-tier providers wired with circuit-breaker failover:** OpenRouter (`deepseek/deepseek-chat`, `meta-llama/llama-3.3-70b:free`, `qwen/qwen-2.5-72b:free`), Google Gemini (`gemini-1.5-flash`), Cohere (`command-r`), HuggingFace (`Llama-3.3-70B-Instruct`), Blackbox — organized into `TRIAGE_SLOT_1/2/3_CHAIN` (each slot fails over across all 5 providers if one is rate-limited).
+- **A 4-stage cross-questioning debate already runs per-incident:** `runInitialEvaluation` → `runChallenge` (one model interrogates another's evaluation) → `runRebuttal` → `runSupremeCourtAdjudication` (premium tier: `gemini-1.5-pro` / `claude-3.5-sonnet` / `gpt-4o` as final judge). This **is** the founder's "models ask each other questions to ethics-test" mechanism.
+- **The gap:** this pipeline (`runCrossAudit`) only fires on new submissions. It has never been pointed at the 405 seed incidents.
+
+**K1 — Provider Coverage Audit (do first, ~1h):** Confirm all 5 provider keys are actually present in `api_keys` (via `resolveApiKey`, post-C1a sha256). `ENABLE_BLACKBOX_PROVIDER` flag state must be a deliberate choice, not an accident. A missing key silently shrinks a triage slot's failover chain from 4 options to 3 — verify via `isConfigured()` per adapter; surface as a status row in the existing admin panel (no new page).
+
+**K2 — Free-Tier-Only Batch Scheduler (this IS J1a, correctly specified):** Cron processes 10 seed incidents/day through `TRIAGE_SLOT_1/2/3_CHAIN` **only** — the premium Supreme Court stage is skipped for seed re-audit (cost stays **$0**, not $5/day-capped, because free tier has no marginal cost). Stagger calls across the day to respect each provider's free RPM/RPD ceiling (OpenRouter free ≈20/min, Google AI Studio free ≈15/min·1500/day, Cohere trial ≈20/min) — round-robin across the 3 slots rather than hammering one chain.
+
+**K3 — Seed-Only Boundary (non-negotiable, reporter safety):** Free-tier cross-interrogation runs **only** on `incident_source IN ('aiaaic_import','aiid_import')` — already-public imported incidents. **Never** on `user_submitted` (organic whistleblower reports): several free tiers' ToS permit prompt-retention/training on free traffic, and a whistleblower's raw account is not the seed-import's already-public dataset. This boundary is stricter than PII Guardian alone — it's a source-type gate enforced before the request ever reaches the gateway.
+
+**K4 — Audit-Tier Provenance:** add `audit_tier: 'free' | 'paid'` to the incident's audit metadata so a seed incident audited only by free-tier models is never displayed with the same confidence as an organic incident that went through the paid Supreme Court stage. Extends Standing Rule #19 (numeric-claim honesty): "free-tier audited" ≠ `expert_verified`.
+
+**K5 (2027 Horizon only, not approved):** if K1–K4 mature, the same infrastructure could become a public benchmark ("which models handle known AI-incident scenarios responsibly") — a genuine product differentiator. Proposal-only; no build authorization here.
+
+**Accept criteria:** 50 seed incidents carry `audit_tier='free'` + a populated `cross_audit_score` by Sep 1; zero `user_submitted` rows touched by the free-tier scheduler (verify via query); provider coverage status visible in admin; $0 spend attributable to K2 in the weekly cost summary (Standing Rule #20).
+
+---
+
 ### J-Series → Work Queue Additions
 
 Items graduating from J-series into the work queue (all **post-freeze Aug 10** unless noted):
@@ -866,11 +891,12 @@ Items graduating from J-series into the work queue (all **post-freeze Aug 10** u
 | Queue # | Item | Phase | Priority |
 |---------|------|-------|----------|
 | 31 | **J4a** — Dynamic Model Router (`src/lib/audit/model-router.ts`) | Post-freeze | HIGH |
-| 32 | **J1a** — Retrospective Batch Auditor (cron, 10 seeds/day) | Post-freeze | HIGH |
+| 32 | **K1+K2** — Provider coverage audit + free-tier seed batch scheduler (supersedes J1a) | Post-freeze | HIGH |
 | 33 | **J2a** — Outreach Queue Agent (Playwright layer on B-extra.2) | Post-freeze (U1 pre-req) | MEDIUM |
-| 34 | **J4b** — Batch Re-audit (OpenAI Batch API for seed backlog) | Post-freeze (J1a pre-req) | MEDIUM |
+| 34 | **J4b** — Batch Re-audit (OpenAI Batch API for seed backlog) | Post-freeze (K2 pre-req) | MEDIUM |
 | 35 | **J3a** — Grant Radar (weekly scan → `grant_opportunities` table) | Post-freeze | LOW |
 | 36 | **J2b** — Gmail Read Integration (founder OAuth pre-req) | Post-freeze | LOW |
+| 37 | **K3+K4** — seed-only safety gate + `audit_tier` provenance column | Post-freeze (ships with K2, same commit) | HIGH |
 
 ---
 
@@ -1032,6 +1058,13 @@ After each stage: push → report with:
 All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying customer flow technically ready (C1–C4); embed widget live with measurable external embeds (C5); **≥100 organic signups tracked in growth dashboard (E7);** expert portal live with ≥1 real expert action; monthly cost + coverage reports automated. Then execution moves to the 2027 Horizon above — the Architect writes each quarter's stage spec in the final 2 weeks of the prior quarter.
 
 ---
+
+## CHANGELOG (v7.9 → v7.10) — K-Series: Free-Tier Cross-Model Ethics Interrogation
+
+- **Code audit discovery:** the "models cross-question each other for ethics testing" mechanism the founder asked for already exists in `src/lib/ai/cross-audit-engine.ts` + `openrouter-gateway.ts` — 5 free-tier providers (OpenRouter, Cohere, HuggingFace, Google, Blackbox), circuit-breaker failover, 4-stage debate (evaluate → challenge → rebut → Supreme Court). It has just never run against the 409-incident seed backlog.
+- **K1** provider coverage audit, **K2** free-tier-only batch scheduler (this is J1a, correctly specified — $0 cost, not $5/day-capped), **K3** seed-only safety boundary (never touches organic whistleblower submissions — reporter safety over cost savings), **K4** `audit_tier` provenance column (free-tier audit ≠ paid Supreme Court confidence)
+- J1a's original text superseded/pointed to K-series; work queue #32 updated, #37 added for K3+K4
+- K5 (public benchmark productization) flagged for 2027 Horizon only — not approved for build now
 
 ## CHANGELOG (v7.8 → v7.9) — State Assessment + Next Queue
 
