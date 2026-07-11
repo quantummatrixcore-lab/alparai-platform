@@ -1,6 +1,6 @@
-# ALPAR AI — Server Actions API Reference
+# ALPAR AI — API Reference
 
-All mutations go through Next.js Server Actions. No REST endpoints are exposed to external consumers.
+All mutations go through Next.js Server Actions. REST API v1 is exposed for external developers and enterprise consumers under `/api/v1/...`.
 
 ## Authentication
 
@@ -198,3 +198,83 @@ All endpoints are rate-limited via Upstash Redis (sliding window).
 
 **Auth:** Admin only
 **Returns:** `{ ok: boolean; csv?: string; error?: string }`
+
+---
+
+## REST API v1 Reference
+
+External developers and partners can query published incidents programmatically via the REST API endpoints.
+
+### Authentication
+
+REST API requests must include the API key in the `Authorization` header as a Bearer token.
+
+```http
+Authorization: Bearer <your_api_key>
+```
+
+API keys can be managed inside the **Admin Panel > API Keys** dashboard. External keys are cryptographically hardened and validated using SHA-256 hashes.
+
+---
+
+### `GET /api/v1/incidents`
+
+Fetch a list of published incidents.
+
+**Rate Limits (Sliding Window):**
+
+- **Free Tier:** 100 requests / minute
+- **Developer Tier:** 1,000 requests / minute
+- **Enterprise Tier:** 10,000 requests / minute
+
+#### Query Parameters
+
+| Parameter  | Type    | Required | Description                                                                   |
+| :--------- | :------ | :------- | :---------------------------------------------------------------------------- |
+| `limit`    | integer | No       | Maximum number of records to return (1-100). Default is `20`.                 |
+| `category` | string  | No       | Filter by incident category (e.g. `hallucination`, `bias`, `security`, etc.). |
+| `severity` | string  | No       | Filter by severity level (`low`, `medium`, `high`, `critical`).               |
+| `eu_risk`  | string  | No       | Filter by EU AI Act risk category (e.g. `unacceptable`, `high-risk`, etc.).   |
+| `provider` | string  | No       | Filter by provider slug (e.g. `openai`, `anthropic`).                         |
+| `model`    | string  | No       | Filter by model name (case-insensitive partial match).                        |
+
+#### Response Format
+
+Returns a JSON object containing the data array and query metadata.
+
+**Response Example (200 OK):**
+
+```json
+{
+  "data": [
+    {
+      "id": "c7a82dfc-a49e-4e45-98db-fa16cd18a999",
+      "title": "Model hallucinated incorrect medical advice",
+      "description": "The AI provided an invalid dosage recommendation for acetaminophen...",
+      "severity": "high",
+      "category": "hallucination",
+      "eu_act_risk_category": "high-risk",
+      "is_anonymous": false,
+      "incident_date": "2026-07-10",
+      "views": 42,
+      "upvotes": 12,
+      "provider": {
+        "name": "OpenAI",
+        "slug": "openai"
+      },
+      "model": "GPT-4o",
+      "truth_score": 0.85,
+      "confidence": 0.92,
+      "verification_level": "expert",
+      "expert_fix": "System prompt was adjusted to restrict medical dosage recommendations.",
+      "created_at": "2026-07-10T14:22:15Z"
+    }
+  ],
+  "meta": {
+    "count": 1,
+    "limit": 20,
+    "tier": "developer",
+    "generated_at": "2026-07-11T16:30:00Z"
+  }
+}
+```
