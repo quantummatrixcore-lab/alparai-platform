@@ -1,6 +1,8 @@
-# ALPAR AI — Antigravity Full Execution Plan v7.6 (H2 2026 → 2027)
+# ALPAR AI — Antigravity Full Execution Plan v7.7 (H2 2026 → 2027)
 
-> **Revised by Architect (Claude Fable 5) on 2026-07-11.** v7.6 adds the J-series: 4 strategic questions from the founder, each answered with root-cause diagnosis and actionable proposals. New work-queue items 31–36 (all post-freeze). Key additions: J4a Dynamic Model Router (60–70% cross-audit cost reduction), J1a Retrospective Batch Auditor (turns seed data into audited incidents), J2a Outreach Queue Agent (automates journalist/grant outreach within Standing Rule #6), J3a Grant Radar (TÜBİTAK/KOSGEB/İSTKA/EU Horizon weekly scan), J2b Gmail Read Integration (founder OAuth pre-req). Total work queue now 36 items.
+> **Revised by Architect (Claude Opus 4.7) on 2026-07-11 (late).** v7.7 reconciliation pass — 4 MUST items shipped by Executor between v7.6 draft and push (U1+U2+U3 `7f30125`, M0 `89a75ba`, M2-home `de59706`, M3 `aace3ba`); state_support commit `76ddec4` surfaced as Rule #2 out-of-scope commit and retro-approved one-time; Vercel Hobby daily-cron ceiling formalized (`a671fc1`). **Active MUST count: ~24 → ~15 remaining before Aug 2.** No new design — reality alignment only.
+>
+> **v7.6 additions (still valid):** J-series answered founder's 4 strategic questions with root-cause diagnosis + 6 post-freeze work-queue items (J1a Retrospective Batch Auditor, J2a Outreach Queue Agent, J2b Gmail Read, J3a Grant Radar, J4a Dynamic Model Router, J4b Batch Re-audit). Total work queue: 36 items.
 >
 > **v7.5 additions (still valid):** v7.5 closes the three gaps that make plans fail in the last mile: (1) **capacity-vs-scope feasibility math + an explicit de-scope ladder** — the MUST list grew four versions in a row and nobody computed whether it fits in 24 calendar days; now it's computed, and what drops first is pre-decided instead of panic-decided; (2) **S-series pre-launch security & data-integrity gate** — secrets scan, dependency audit, security headers, and a backup **restore drill** (an untested backup is not a backup); (3) **Architect Verification Protocol** — per-item spot-check commands so approvals are fast, uniform, and evidence-based rather than trust-based. Also: work queue declared the **single source of truth** for execution order (stage prose is spec, the queue is sequence).
 >
@@ -56,11 +58,11 @@ Launch is **Aug 2**. Everything below is ranked. If deadlines slip, cut from the
 | # | Item | Deadline | Why blocking |
 |---|------|----------|--------------|
 | 1 | **R1 repo → private** (founder, 1 click; MCP tool unavailable) | **Jul 9** | Active public exposure of strategy/security docs |
-| 2 | **🆕 vercel.json cron fix** — register `process-deletions` + `generate-marketing` | **Jul 9** | KVKK LEGAL obligation (delete cron); social queue frozen without it |
-| 3 | **🆕 /api/unsubscribe/ endpoint** — one-click token-based unsub | **Jul 12** | CAN-SPAM/KVKK legal; email sending is effectively unsafe without it |
+| 2 | **⚠️ vercel.json cron fix** — register `process-deletions` + `generate-marketing` — **PARTIAL: `a671fc1` capped daily (Hobby plan ceiling — see V-Series note below)** | **Jul 9** | KVKK LEGAL obligation (delete cron); social queue frozen without it |
+| 3 | ~~/api/unsubscribe/ endpoint~~ **✅ SHIPPED `7f30125`** (U1+U2+U3 templates wired) | ~~Jul 12~~ | CAN-SPAM/KVKK legal; email sending is effectively unsafe without it |
 | 4 | R2 token rotation (founder + executor support) | **Jul 11** | `.env.local` leak history |
 | 5 | **🆕 C1a — api_keys sha256+tier+client_type migration** | **Jul 15** | Plain-text credential store — post-launch leak is unrecoverable |
-| 6 | **🆕 M0 + M1 + M2 + M3 mobile sprint** (audit → fix → CI lock) | **Jul 18** | Majority-mobile launch traffic |
+| 6 | ~~M0 + M1 + M2-home + M3 mobile sprint~~ **✅ SHIPPED `89a75ba`+`de59706`+`aace3ba`** (M2-touch still SHOULD, post-launch) | ~~Jul 18~~ | Majority-mobile launch traffic |
 | 7 | **🆕 "408 incidents" honesty pass** — seed-vs-organic UI badge + copy softening | **Jul 20** | First technical audit blows up unsupported claims |
 | 8 | N-series ✅ COMPLETE (`Architect-Approval: 1d225fe 2026-07-08`) | ~~Jul 20~~ | done |
 | 9 | Countdown queue flowing + founder approval routine | **Jul 12** (first post unlocks) | Launch narrative dies if queue stalls |
@@ -74,6 +76,35 @@ Launch is **Aug 2**. Everything below is ranked. If deadlines slip, cut from the
 - B2b — expert-verification email + weekly reporter digest (Stage E window, Aug 10+)
 
 **Rule of thumb:** an idle Executor and an hour spent out-of-plan are both review findings.
+
+---
+
+## ⚙️ V-SERIES — Vercel Plan Ceiling (v7.7 — reality note)
+
+**Discovery (2026-07-11, commit `a671fc1`):** Executor registered `process-deletions` + `generate-marketing` crons, but Vercel Hobby plan enforces **daily maximum schedule**. Cron entries were downgraded to daily.
+
+**Impact assessment (acceptable for launch):**
+- `process-deletions` daily → **KVKK OK.** Hard-delete window is 30 days; daily granularity is more than sufficient.
+- `generate-marketing` daily → **Launch pipeline OK.** Pre-launch content cadence (T-25→T-0) doesn't need hourly; daily digest is intended cadence.
+- `aiaaic-import` / `aiid-import` / `fetch-external` — already daily, unchanged.
+
+**Founder decision (post-launch, not blocking Aug 2):**
+- **Option A — Stay Hobby ($0/mo):** Keep daily granularity. Recommended until first cost review (Aug 10+).
+- **Option B — Upgrade to Pro ($20/mo):** Unlocks hourly crons + higher function execution limits. Trigger: if organic incident volume >20/day (SSE latency matters) OR need real-time `process-deletions` for KVKK audit trail.
+
+**Recommendation:** Stay Hobby through Aug 2 launch + T+7 review; upgrade only if metrics demand it.
+
+---
+
+## 🚨 STANDING RULE #2 ENFORCEMENT — state_support Retro-Approval (v7.7, one-time)
+
+**Discovery (2026-07-11):** Executor shipped `76ddec4` — "devlet destekleri modülü" (`strategy_state_support` table + admin ranked dashboard + seed) — while J3 was still marked `PROPOSAL` in v7.6. **Standing Rule #2 violation:** no `docs/PROPOSALS/` note, no Architect approval line.
+
+**Architect decision:**
+1. **Retro-approve one-time exception.** The module implements J3's intent (government grants radar), the code has RLS/PII/idempotency shape, and reverting would cost 2+ launch days. Approved as `Architect-Approval: 76ddec4 2026-07-11` — retroactive, single instance.
+2. **Rule #2 re-affirmed at zero tolerance.** Any subsequent out-of-scope commit after `76ddec4` will be reverted, not retro-approved. The `docs/PROPOSALS/NNN-name.md` protocol is mandatory going forward.
+3. **48h Accept report required from Executor** — must confirm: (a) `strategy_state_support` RLS admin-only, (b) no PII columns, (c) seed migration idempotent (`WHERE NOT EXISTS` or `ON CONFLICT`), (d) migration includes `-- ROLLBACK:` block (Standing Rule #12), (e) admin page (`src/app/[locale]/admin/strategy/state-support/page.tsx`) does not use `createAdminClient()` from public paths.
+4. **J3 scope preserved:** the module researches/ranks grants. **Founder submits — never agent.** Any autonomous form-submission path in the code must be removed before Accept.
 
 ---
 
@@ -945,6 +976,14 @@ After each stage: push → report with:
 All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying customer flow technically ready (C1–C4); embed widget live with measurable external embeds (C5); **≥100 organic signups tracked in growth dashboard (E7);** expert portal live with ≥1 real expert action; monthly cost + coverage reports automated. Then execution moves to the 2027 Horizon above — the Architect writes each quarter's stage spec in the final 2 weeks of the prior quarter.
 
 ---
+
+## CHANGELOG (v7.6 → v7.7) — Reconciliation Pass
+
+- **U1+U2+U3 shipped** (`7f30125`), **M0** (`89a75ba`), **M2-home** (`de59706`), **M3** (`aace3ba`) — 4 MUST items dropped from launch-critical path
+- **Vercel Hobby daily-cron ceiling** documented (V-Series note); Pro upgrade decision deferred to post-Aug 2 cost review
+- **state_support (`76ddec4`) retro-approved one-time**; Rule #2 zero-tolerance re-affirmed for all future commits
+- Active MUST count: ~24 → **~15 remaining** before Aug 2 launch
+- Remaining launch-critical: C1a (Jul 15), H1–H3 (Jul 20), pre-launch campaign, RUNBOOK v1.1, D-extra assets, S-series (Jul 28)
 
 ## CHANGELOG (v7.5 → v7.6) — Strategic Questions: Data, Email, Grants, API Efficiency
 
