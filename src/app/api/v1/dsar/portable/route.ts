@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logger } from "@/lib/utils/logger";
-import JSZip from "jszip";
+import { buildZip } from "@/lib/utils/zip";
 
 export const dynamic = "force-dynamic";
 
@@ -32,26 +32,46 @@ export async function GET() {
       adminClient.from("expert_applications").select("*").eq("id", userId),
     ]);
 
-    const zip = new JSZip();
+    const encoder = new TextEncoder();
 
-    const meta = {
-      export_meta: {
-        platform: "ALPAR AI",
-        legal_basis: "GDPR Article 20 / KVKK Article 11 Data Portability",
-        generated_at: new Date().toISOString(),
-        user_id: userId,
+    const zipBuffer = buildZip([
+      {
+        name: "profile.json",
+        data: encoder.encode(
+          JSON.stringify(
+            {
+              export_meta: {
+                platform: "ALPAR AI",
+                legal_basis: "GDPR Article 20 / KVKK Article 11 Data Portability",
+                generated_at: new Date().toISOString(),
+                user_id: userId,
+              },
+              profile: profileRes.data || null,
+            },
+            null,
+            2,
+          ),
+        ),
       },
-      profile: profileRes.data || null,
-    };
-    zip.file("profile.json", JSON.stringify(meta, null, 2));
-    zip.file("incidents.json", JSON.stringify(incidentsRes.data || [], null, 2));
-    zip.file("comments.json", JSON.stringify(commentsRes.data || [], null, 2));
-    zip.file("votes.json", JSON.stringify(votesRes.data || [], null, 2));
-    zip.file("expert_applications.json", JSON.stringify(appsRes.data || [], null, 2));
+      {
+        name: "incidents.json",
+        data: encoder.encode(JSON.stringify(incidentsRes.data || [], null, 2)),
+      },
+      {
+        name: "comments.json",
+        data: encoder.encode(JSON.stringify(commentsRes.data || [], null, 2)),
+      },
+      {
+        name: "votes.json",
+        data: encoder.encode(JSON.stringify(votesRes.data || [], null, 2)),
+      },
+      {
+        name: "expert_applications.json",
+        data: encoder.encode(JSON.stringify(appsRes.data || [], null, 2)),
+      },
+    ]);
 
-    const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
-
-    return new NextResponse(new Uint8Array(zipBuffer), {
+    return new NextResponse(Buffer.from(zipBuffer), {
       status: 200,
       headers: {
         "Content-Type": "application/zip",
