@@ -56,9 +56,25 @@ export async function GET(request: Request) {
 
   logger.info(`Fetched total of ${allFetched.length} potential incidents.`);
 
+  const TRUSTED_ALLOWLIST = [
+    "technologyreview.mit.edu",
+    "404media.co",
+    "lastweekinai.substack.com",
+    "theregister.com",
+  ];
+
+  function getDomain(url: string) {
+    try {
+      return new URL(url).hostname.replace(/^www\./, "");
+    } catch {
+      return "";
+    }
+  }
+
   let insertedCount = 0;
   // Ingest in DB with deduplication
   for (const item of allFetched) {
+    const isTrusted = TRUSTED_ALLOWLIST.includes(getDomain(item.external_url));
     const { error } = await supabase.from("external_incidents_queue").upsert(
       {
         source: item.source,
@@ -66,7 +82,7 @@ export async function GET(request: Request) {
         title: item.title,
         body: item.body,
         source_score: item.source_score,
-        status: "pending",
+        status: isTrusted ? "published" : "pending",
         fetched_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       },
