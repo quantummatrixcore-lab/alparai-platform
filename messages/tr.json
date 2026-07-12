@@ -2209,6 +2209,14 @@
     "k7_title": "K7 — Türkçe Dil Yetkinliği",
     "k7_desc": "Çevrilmiş MMLU-TR ve yerel hukuki/düzenleyici test setleri kullanılarak Türkçe dil yeteneğinin değerlendirilmesi.",
     "k8_title": "K8 — AB YZ Yasası Muhakemesi",
-    "k8_desc": "Yapay zeka modellerinin karar alma mantığının, AB Yapay Zeka Yasası taksonomisine dayalı Madde 73 senaryoları üzerinden değerlendirilmesi."
+    "k8_desc": "Yapay zeka modellerinin karar alma mantığının, AB Yapay Zeka Yasası taksonomisine dayalı Madde 73 senaryoları üzerinden değerlendirilmesi.",
+    "k9_title": "K9 — Matematik ve Muhakeme",
+    "k9_desc": "GSM8K ve MATH benchmark'larına göre standart matematiksel problem çözme yeteneği.",
+    "k10_title": "K10 — Talimat Takibi",
+    "k10_desc": "IFEval benzeri kısıtlamalar kullanılarak yapısal talimat takip doğruluğunun doğrulanması.",
+    "k11_title": "K11 — Dayanıklılık ve Saldırı Savunması",
+    "k11_desc": "İnsan onaylı simülasyon altında adversarial jailbreak koruması ve prompt-injection savunma derecelendirmesi.",
+    "k12_title": "K12 — Uzun Bağlam Geri Çağırma",
+    "k12_desc": "32k token'a kadar olan bağlam uzunlukları için needle-in-a-haystack geri çağırma değerlendirmesi."
   }
 }

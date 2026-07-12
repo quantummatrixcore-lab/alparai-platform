@@ -54,6 +54,26 @@ export default async function MethodologyPage({ params }: { params: Promise<{ lo
               <h3 className="mb-2 text-lg font-bold text-white">{t("k8_title")}</h3>
               <p className="text-sm leading-relaxed text-slate-400">{t("k8_desc")}</p>
             </div>
+
+            <div className="rounded-xl border border-slate-800 bg-slate-950 p-6 transition-all hover:border-slate-700">
+              <h3 className="mb-2 text-lg font-bold text-white">{t("k9_title")}</h3>
+              <p className="text-sm leading-relaxed text-slate-400">{t("k9_desc")}</p>
+            </div>
+
+            <div className="rounded-xl border border-slate-800 bg-slate-950 p-6 transition-all hover:border-slate-700">
+              <h3 className="mb-2 text-lg font-bold text-white">{t("k10_title")}</h3>
+              <p className="text-sm leading-relaxed text-slate-400">{t("k10_desc")}</p>
+            </div>
+
+            <div className="rounded-xl border border-slate-800 bg-slate-950 p-6 transition-all hover:border-slate-700">
+              <h3 className="mb-2 text-lg font-bold text-white">{t("k11_title")}</h3>
+              <p className="text-sm leading-relaxed text-slate-400">{t("k11_desc")}</p>
+            </div>
+
+            <div className="rounded-xl border border-slate-800 bg-slate-950 p-6 transition-all hover:border-slate-700">
+              <h3 className="mb-2 text-lg font-bold text-white">{t("k12_title")}</h3>
+              <p className="text-sm leading-relaxed text-slate-400">{t("k12_desc")}</p>
+            </div>
           </div>
         </section>
 

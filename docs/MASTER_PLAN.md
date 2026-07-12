@@ -106,9 +106,9 @@ Başka takvim tarihi YOK (Rule #23). Tüm işler bağımlılık-tabanlı P0/P1/P
 | 16  | P1  | **L2 MOU Şablonu** — Üniversite işbirlikleri için taslak belge                                                                                                                | `docs/L2_MOU_TEMPLATE.md` oluşturulur, L1 isimleri boş                                                     | ⬜                  |
 | 17  | P1  | **J2a Outreach Agent** — Playwright-tabanlı b-extra.2 otomasyonu                                                                                                              | `outreach-agent.ts` + günlük limit kontrolü test edilir                                                    | ⬜                  |
 | 18  | P1  | **L3 Expert Network & K-Product** — Uzman ağı tablosu ve paid tier hazırlığı                                                                                                  | `expert_network` tablosu migration'ı geçer                                                                 | ⬜                  |
-| 19+ | ⏸   | K9-K12, K-Full                                                                                                                                                                | Arşiv doc ilgili bölümleri spec'tir; sıra Architect onayıyla açılır                                        | ⏸                   |
+| 19  | P1  | **K-Full (K9-K12)** — K-BENCHMARK 8 kategoriye genişletildi                                                                                                                   | `k_categories` ve `k_model_scores` tabloları K9-K12 ile güncellendi                                        | ✅                  |
 
-**Architect-Approval: 4fced12 2026-07-12** (Founder's manual override command executed; post-launch items unlocked early.)
+**Architect-Approval: 4aca97f 2026-07-12** (Founder's manual override command executed; post-launch items and K-Full unlocked and completed early.)
 
 ## §6 Launch Freeze
 

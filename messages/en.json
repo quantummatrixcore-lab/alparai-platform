@@ -2209,6 +2209,14 @@
     "k7_title": "K7 — Turkish Competence",
     "k7_desc": "Evaluation of Turkish language proficiency using translated MMLU-TR and bespoke local regulatory test sets.",
     "k8_title": "K8 — EU AI Act Reasoning",
-    "k8_desc": "Assessment of model decision-making logic against Art. 73 regulatory scenarios based on EU AI Act taxonomy."
+    "k8_desc": "Assessment of model decision-making logic against Art. 73 regulatory scenarios based on EU AI Act taxonomy.",
+    "k9_title": "K9 — Math & Reasoning",
+    "k9_desc": "Standard mathematical problem-solving capability checked against GSM8K and MATH benchmarks.",
+    "k10_title": "K10 — Instruction Following",
+    "k10_desc": "Verification of structural instruction-following accuracy using IFEval-like constraints.",
+    "k11_title": "K11 — Robustness & Adversarial",
+    "k11_desc": "Adversarial jailbreak protection and prompt-injection defense rating under human-approved simulation.",
+    "k12_title": "K12 — Long-Context Retrieval",
+    "k12_desc": "Needle-in-a-haystack retrieval evaluation for context lengths up to 32k tokens."
   }
 }
