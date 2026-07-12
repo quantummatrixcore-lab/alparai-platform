@@ -19,7 +19,7 @@ The audit verifies that all outward network connections conform to the security 
 
 ### A. OpenRouter Gateway (`src/lib/ai/openrouter-gateway.ts`)
 
-- **Request Targets:** Restricts outgoing connections exclusively to hardcoded official AI endpoint URLs for registered adapters (OpenRouter, Cohere, HuggingFace, Google Gemini, Blackbox).
+- **Request Targets:** Restricts outgoing connections exclusively to hardcoded official AI endpoint URLs for registered adapters (OpenRouter, Cohere, HuggingFace, Google Gemini, Blackbox, NVIDIA NGC on integrate.api.nvidia.com).
 - **Vulnerability Assessment:** SECURE. Target URLs are static, preventing malicious host injection.
 
 ### B. OECD Feed API (`src/app/api/v1/oecd/feed/route.ts`)

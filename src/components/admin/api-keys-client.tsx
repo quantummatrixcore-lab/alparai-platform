@@ -56,6 +56,11 @@ export function ApiKeysClient({ initialKeys }: Props) {
       name: "Blackbox AI",
       description: t("blackbox_desc", { defaultValue: "Blackbox keys" }),
     },
+    {
+      value: "nvidia",
+      name: "NVIDIA NGC",
+      description: t("nvidia_desc", { defaultValue: "NVIDIA NGC keys" }),
+    },
   ];
 
   const handleGenerateKey = () => {

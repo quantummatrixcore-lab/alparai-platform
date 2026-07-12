@@ -28,6 +28,7 @@ import { CohereAdapter } from "./adapters/cohere";
 import { HuggingFaceAdapter } from "./adapters/huggingface";
 import { GoogleAdapter } from "./adapters/google";
 import { BlackboxAdapter } from "./adapters/blackbox";
+import { NvidiaNgcAdapter } from "./adapters/nvidia-ngc";
 import { isCostKillSwitchActive } from "./cost-guard";
 
 // Export the type interfaces from the common types file to keep backward compatibility
@@ -93,6 +94,7 @@ const adapters: Record<string, ProviderAdapter> = {
   huggingface: new HuggingFaceAdapter(),
   google: new GoogleAdapter(),
   blackbox: new BlackboxAdapter(),
+  nvidia: new NvidiaNgcAdapter(),
 };
 
 /**
