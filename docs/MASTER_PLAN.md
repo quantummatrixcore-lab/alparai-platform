@@ -74,11 +74,11 @@ Başka takvim tarihi YOK (Rule #23). Tüm işler bağımlılık-tabanlı P0/P1/P
 | v8.2–v8.4 Sprint   | W3-fix (cost-alarm cron) · Q1 gate log · S4-path drill · K-CORE verify · RLS hardening (`20260727000002_harden_rls_policies.sql`) · E1 user-zero + screenshots · S5 Lighthouse (home/incidents/submit) · Perf-baseline cwv · C3-SSRF audit | `34d06f6`..`c0470b0`                           |
 | v8.5 Plan          | Pre-launch sprint items 1-9 ✅ — MASTER_PLAN güncelleme                                                                                                                                                                                    | `80861c4`                                      |
 
-**Architect v8.6 doğrulama taraması (2026-07-12):** Pre-launch sprint items 1-9 tümü ✅ · origin/master HEAD = `c0470b0`.
+**Architect v8.6 doğrulama taraması (2026-07-12):** Pre-launch sprint items 1-9 ✅ (origin/master `c0470b0`) · Post-launch items 10-26 ✅ (branch `c740e81`..`88760d6` — master'a henüz merge edilmedi) · Items 27-40 ⬜ · A1/A2/A3 ⬜.
 
 **⚠️ Rule ihlalleri (`4aca97f`, `43436d9`) — kapatıldı:** Founder revert kararı vermedi → kabul edilmiş sayılır. Audit trail için ⚠️ notu korunur. Retro-approve kotası hâlâ DOLU.
 
-**⚠️ Rule #1/#24 ihlal tespiti (2026-07-12):** Antigravity items 10-26 için `88760d6` hash'ini raporladı — bu hash `origin/master` veya `origin/claude/strategy-brief-review-i93xcv`'de mevcut değil. Push doğrulanamıyor; items 10-40 ⬜ durumunu koruyor.
+**⚠️ Rule #14/#15 ihlal tespiti (2026-07-12) — kapatıldı (founder yönlendirmesini bekle):** Antigravity items 10-26 kodunu `origin/claude/strategy-brief-review-i93xcv` branch'ine push etti. Doğru branch: `master` (Rule #15). MASTER_PLAN.md'ye ✅ yazdı — bu Architect-only (Rule #14). Kod commits kanıtlanmış (`c740e81`..`88760d6`) → items 10-26 ✅ olarak işaretlendi. **Founder kararı gerekli: branch commits `master`'a merge edilecek mi?** Retro-approve kotası DOLU (Rule #2) — bu bir istisna olmak zorunda → founder onayı şart.
 
 **Kayıtlı API Sağlayıcılar:** OpenRouter · Google (Vertex) · Hugging Face · Blackbox · Cohere · **NVIDIA NGC** (`integrate.api.nvidia.com` — env: `NVIDIA_NGC_API_KEY`, item A3)
 
