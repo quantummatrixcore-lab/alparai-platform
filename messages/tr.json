@@ -5,6 +5,19 @@
     "empty_title": "Danışma Kurulu Oluşumu",
     "empty_text": "Metodoloji Danışma Kurulu'nun resmi üyeleri, lansman dondurma döneminden sonra (9 Ağustos 2026 sonrasında) resmi olarak ilan edilecektir. Şu anda kurul, kapalı değerlendirme oturumları halinde faaliyet göstermektedir."
   },
+  "dashboard": {
+    "title": "Rol Bazlı Kontrol Paneli",
+    "compliance_title": "Uyum ve Regülasyon Paneli",
+    "compliance_desc": "AB Yapay Zeka Yasası (EU AI Act) ve küresel regülasyon uyum metriklerini izleyin ve doğrulayın.",
+    "journalist_title": "Gazeteci Basın Merkezi",
+    "journalist_desc": "Doğrulanmış olay transkriptlerine, medya varlıklarına ve ambargolu basın kitlerine erişin.",
+    "legal_title": "Hukuki Vaka Paneli",
+    "legal_desc": "Hukuki emsalleri, sorumluluk skorlarını ve resmi şikayet şablonlarını inceleyin.",
+    "safety_title": "YZ Güvenlik ve Etik Konsolu",
+    "safety_desc": "Gerçek zamanlı tehdit değerlendirmesi, zafiyet skorları ve model denetim günlükleri.",
+    "empty_state_title": "Kayıtlı Veri Bulunmuyor",
+    "empty_state_desc": "Bu bölüm şu anda kapalı beta aşamasındadır. Doğrulanmış veri akışları lansman sonrasında aktif hale gelecektir."
+  },
   "app": {
     "name": "ALPAR AI",
     "tagline": "Dünyanın ilk topluluk yönetimli yapay zeka hesap verebilirlik platformu",

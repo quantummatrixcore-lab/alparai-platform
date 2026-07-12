@@ -5,6 +5,19 @@
     "empty_title": "Advisory Board Formulation",
     "empty_text": "The official members of the Methodology Advisory Committee will be announced after the launch freeze period (post August 9, 2026). Currently, the committee is operating under closed review sessions."
   },
+  "dashboard": {
+    "title": "Role-Based Dashboard",
+    "compliance_title": "Compliance Dashboard",
+    "compliance_desc": "Monitor and verify compliance metrics under the EU AI Act and global regulatory frameworks.",
+    "journalist_title": "Journalist Press Center",
+    "journalist_desc": "Access verified incident transcripts, media assets, and early embargoed press kits.",
+    "legal_title": "Legal Case Panel",
+    "legal_desc": "Review legal precedents, liability scores, and formal complaint templates.",
+    "safety_title": "AI Safety & Ethics Console",
+    "safety_desc": "Real-time threat evaluation, vulnerability scores, and model audit logs.",
+    "empty_state_title": "No Data Available",
+    "empty_state_desc": "This segment is currently operating under closed beta. Verified data feeds will populate post launch."
+  },
   "app": {
     "name": "ALPAR AI",
     "tagline": "The world's first community-governed AI accountability platform",
