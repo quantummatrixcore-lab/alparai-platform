@@ -131,9 +131,9 @@ const runSubmitWork = async (
 
   const incidentInsert: Database["public"]["Tables"]["incidents"]["Insert"] = {
     user_id: user?.id ?? null,
-    title: raw.title,
+    title: maskedTitle.masked,
     title_masked: maskedTitle.masked,
-    description: raw.description,
+    description: maskedDescription.masked,
     description_masked: maskedDescription.masked,
     category: raw.category as Database["public"]["Enums"]["incident_category"],
     severity: raw.severity as Database["public"]["Enums"]["incident_severity"],
