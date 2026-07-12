@@ -14,7 +14,7 @@ VALUES
   'European Innovation Council',
   'equity',
   2500000, 'EUR',
-  '2025-10-01',
+  '2027-10-01',
   'open', 1, 95,
   'Blended finance: up to €2.5M grant + equity. Deep-tech & AI safety alignment is explicit eligibility criteria. ALPAR''s independent accountability infrastructure is a strong fit.',
   'https://eic.ec.europa.eu/eic-funding-opportunities/eic-accelerator_en'
@@ -26,7 +26,7 @@ VALUES
   'TÜBİTAK',
   'rd',
   NULL, 'TRY',
-  '2025-12-31',
+  '2027-12-31',
   'open', 1, 92,
   'AI-specific R&D grant. ALPAR''s cross-audit engine and AI incident database directly qualifies. Max support up to ₺5M. Rolling deadline.',
   'https://tubitak.gov.tr/tr/destekler/sanayi/ulusal-destek-programlari/2239'
@@ -38,7 +38,7 @@ VALUES
   'UK AISI / DSIT',
   'regulatory',
   550000, 'GBP',
-  '2025-09-30',
+  '2027-09-30',
   'open', 1, 90,
   'Direct government funding for AI safety infrastructure. ALPAR is definitionally aligned — independent accountability platform. Priority target.',
   'https://www.gov.uk/government/organisations/ai-safety-institute'
@@ -64,7 +64,7 @@ VALUES
   'Future of Life Institute',
   'grant',
   200000, 'USD',
-  '2025-11-15',
+  '2027-11-15',
   'open', 2, 86,
   'FLI funds projects reducing catastrophic AI risks. ALPAR''s incident database & scoring methodology aligns with FLI''s documentation and accountability mandate.',
   'https://futureoflife.org/grants/'
@@ -102,7 +102,7 @@ VALUES
   'European Commission / MSCA',
   'rd',
   190000, 'EUR',
-  '2025-09-11',
+  '2027-09-11',
   'open', 3, 75,
   'Research fellowship to hire postdocs. Applicable for building ALPAR''s research arm. Complex application; good for credibility + researcher onboarding.',
   'https://marie-sklodowska-curie-actions.ec.europa.eu/actions/postdoctoral-fellowships_en'
@@ -126,7 +126,7 @@ VALUES
   'Bundesministerium für Wirtschaft und Klimaschutz',
   'grant',
   200000, 'EUR',
-  '2025-12-01',
+  '2027-12-01',
   'open', 3, 68,
   'German federal grant for AI startups. Requires German market presence or partnership. Medium-term target once EU expansion begins.',
   'https://www.bmwk.de/Redaktion/EN/Artikel/Technology/artificial-intelligence.html'

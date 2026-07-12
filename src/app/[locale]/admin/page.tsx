@@ -6,6 +6,7 @@ import { ActivityFeed } from "@/components/admin/activity-feed";
 import { ModerationQueue } from "@/components/admin/moderation-queue";
 import { StrategicWarRoom } from "@/components/admin/strategic-war-room";
 import { AIPulseVisualizer } from "@/components/admin/ai-pulse-visualizer";
+import { System360Overview } from "@/components/admin/system-360-overview";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Warning, ShieldCheck, Pulse } from "@phosphor-icons/react/dist/ssr";
@@ -144,6 +145,9 @@ export default async function AdminDashboardPage({
           </p>
         </div>
       </header>
+
+      {/* 360 Degree Command Center */}
+      <System360Overview />
 
       {/* Strategic monitoring section */}
       <div className="grid gap-6 lg:grid-cols-3">
