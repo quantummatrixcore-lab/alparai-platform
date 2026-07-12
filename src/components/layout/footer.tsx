@@ -15,6 +15,7 @@ const platformLinks = [
   { href: "/submit", key: "submit_report" },
   { href: "/transparency", key: "transparency" },
   { href: "/ai-act", key: "ai_act" },
+  { href: "/challenges", key: "challenges" },
 ] as const;
 
 const companyLinks = [

@@ -134,7 +134,8 @@
     "academy": "Academy",
     "dilemmas": "Dilemmas",
     "presskit": "Press Kit",
-    "ratings": "Model Ratings"
+    "ratings": "Model Ratings",
+    "challenges": "Challenges"
   },
   "hero": {
     "eyebrow": "COMMUNITY-GOVERNED AI ACCOUNTABILITY",
@@ -2447,5 +2448,25 @@
     "corrections_subtitle": "A public log of methodology updates, retractions, and version changes.",
     "corrections_retraction": "Retraction",
     "corrections_no_data": "No methodology changes published yet."
+  },
+  "challenges": {
+    "pageTitle": "Community Challenges",
+    "subtitle": "Participate in monthly challenges to earn badges, recognition, and rewards. Submit your best AI safety reports, audits, and analysis.",
+    "empty": "No active challenges right now. Check back soon!",
+    "active": "Active",
+    "ended": "Ended",
+    "viewSubmissions": "View Submissions",
+    "hide": "Hide",
+    "submissions": "Submissions",
+    "noSubmissions": "No submissions yet. Be the first!",
+    "loading": "Loading...",
+    "vote": "Vote",
+    "voted": "Voted",
+    "submitYourWork": "Submit Your Work",
+    "titlePlaceholder": "Submission title...",
+    "descriptionPlaceholder": "Describe your submission...",
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "submitted": "Your submission has been received! It will appear once approved."
   }
 }

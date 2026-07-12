@@ -134,7 +134,8 @@
     "academy": "Akademi",
     "dilemmas": "İkilemler",
     "presskit": "Basın Kiti",
-    "ratings": "Model Derecelendirmeleri"
+    "ratings": "Model Derecelendirmeleri",
+    "challenges": "Meydan Okumalar"
   },
   "hero": {
     "eyebrow": "TOPLULUK YÖNETİMLİ YAPAY ZEKA HESAP VEREBİLİRLİĞİ",
@@ -2447,5 +2448,25 @@
     "corrections_subtitle": "Metodoloji güncellemeleri, geri çekmeler ve sürüm değişikliklerinin herkese açık kaydı.",
     "corrections_retraction": "Geri Çekme",
     "corrections_no_data": "Henüz yayınlanmış metodoloji değişikliği bulunmuyor."
+  },
+  "challenges": {
+    "pageTitle": "Topluluk Meydan Okumaları",
+    "subtitle": "Rozet, tanınma ve ödüller kazanmak için aylık meydan okumalara katılın. En iyi yapay zeka güvenlik raporlarınızı, denetimlerinizi ve analizlerinizi gönderin.",
+    "empty": "Şu an aktif meydan okuma bulunmuyor. Daha sonra tekrar kontrol edin!",
+    "active": "Aktif",
+    "ended": "Sona Erdi",
+    "viewSubmissions": "Gönderileri Gör",
+    "hide": "Gizle",
+    "submissions": "Gönderiler",
+    "noSubmissions": "Henüz gönderi yok. İlk sen ol!",
+    "loading": "Yükleniyor...",
+    "vote": "Oy Ver",
+    "voted": "Oy Verildi",
+    "submitYourWork": "Çalışmanı Gönder",
+    "titlePlaceholder": "Gönderi başlığı...",
+    "descriptionPlaceholder": "Gönderini açıkla...",
+    "submit": "Gönder",
+    "submitting": "Gönderiliyor...",
+    "submitted": "Gönderin alındı! Onaylandıktan sonra görünecektir."
   }
 }

@@ -32,6 +32,7 @@ const mainNavItems: NavItem[] = [
   { href: "/ai-act", labelKey: "ai_act", icon: Shield },
   { href: "/transparency", labelKey: "transparency", icon: Eye },
   { href: "/academy", labelKey: "academy", icon: GraduationCap },
+  { href: "/challenges", labelKey: "challenges", icon: Award },
 ];
 
 const resourcesItems: NavItem[] = [
