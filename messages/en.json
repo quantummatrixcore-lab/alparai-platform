@@ -2335,5 +2335,17 @@
     "k11_desc": "Adversarial jailbreak protection and prompt-injection defense rating under human-approved simulation.",
     "k12_title": "K12 — Long-Context Retrieval",
     "k12_desc": "Needle-in-a-haystack retrieval evaluation for context lengths up to 32k tokens."
+  },
+  "system-status": {
+    "title": "System Status",
+    "desc": "Real-time status of ALPAR AI platform services.",
+    "heading": "System Status",
+    "subheading": "Current operational status of ALPAR AI platform services.",
+    "operational": "Operational",
+    "degraded": "Degraded Performance",
+    "down": "Service Disruption",
+    "uptimeTitle": "90-Day Uptime",
+    "uptimeText": "Uptime over the last 90 days per service.",
+    "uptime90d": "last 90 days"
   }
 }

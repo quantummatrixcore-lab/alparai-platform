@@ -2335,5 +2335,17 @@
     "k11_desc": "İnsan onaylı simülasyon altında adversarial jailbreak koruması ve prompt-injection savunma derecelendirmesi.",
     "k12_title": "K12 — Uzun Bağlam Geri Çağırma",
     "k12_desc": "32k token'a kadar olan bağlam uzunlukları için needle-in-a-haystack geri çağırma değerlendirmesi."
+  },
+  "system-status": {
+    "title": "Sistem Durumu",
+    "desc": "ALPAR AI platform hizmetlerinin gerçek zamanlı durumu.",
+    "heading": "Sistem Durumu",
+    "subheading": "ALPAR AI platform hizmetlerinin güncel çalışma durumu.",
+    "operational": "Çalışıyor",
+    "degraded": "Performans Düşüklüğü",
+    "down": "Hizmet Kesintisi",
+    "uptimeTitle": "90 Günlük Çalışma Süresi",
+    "uptimeText": "Son 90 günde her hizmet için çalışma süresi.",
+    "uptime90d": "son 90 gün"
   }
 }
