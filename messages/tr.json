@@ -23,7 +23,17 @@
     "fellowship_success": "Akademik üyelik başvurusu değerlendirilmek üzere başarıyla gönderildi.",
     "fellowship_status_pending": "Akademik Denetim Bekliyor",
     "fellowship_status_approved": "Akademik Üyelik Aktif",
-    "fellowship_status_rejected": "Başvuru Reddedildi"
+    "fellowship_status_rejected": "Başvuru Reddedildi",
+    "ambassador_title": "Öğrenci Temsilciliği Programı (Student Ambassador)",
+    "ambassador_subtitle": "ALPAR AI'ı üniversitenizde temsil edin, yapay zeka güvenliği atölyeleri düzenleyin ve deneysel model denetim gruplarına liderlik edin.",
+    "ambassador_form_title": "Temsilci Başvuru Formu",
+    "ambassador_univ": "Üniversite Adı",
+    "ambassador_grad": "Beklenen Mezuniyet Yılı",
+    "ambassador_submit": "Temsilci Başvurusunu Gönder",
+    "ambassador_success": "Öğrenci temsilcisi başvurusu başarıyla gönderildi!",
+    "ambassador_status_pending": "Başvuru Alındı",
+    "ambassador_status_active": "Temsilci Aktif",
+    "ambassador_status_inactive": "Üyelik Sonlandırıldı"
   },
   "pricing": {
     "title": "Kurumsal Üyelik ve Denetim",

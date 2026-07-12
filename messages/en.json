@@ -23,7 +23,17 @@
     "fellowship_success": "Fellowship application submitted successfully for review.",
     "fellowship_status_pending": "Pending Academic Audit",
     "fellowship_status_approved": "Fellowship Active",
-    "fellowship_status_rejected": "Review Declined"
+    "fellowship_status_rejected": "Review Declined",
+    "ambassador_title": "Student Ambassador Program",
+    "ambassador_subtitle": "Represent ALPAR AI at your university, organize AI safety workshops, and lead empirical model auditing chapters.",
+    "ambassador_form_title": "Ambassador Application Form",
+    "ambassador_univ": "University Name",
+    "ambassador_grad": "Expected Graduation Year",
+    "ambassador_submit": "Submit Ambassador Application",
+    "ambassador_success": "Student ambassador application submitted successfully!",
+    "ambassador_status_pending": "Application Received",
+    "ambassador_status_active": "Ambassador Active",
+    "ambassador_status_inactive": "Membership Terminated"
   },
   "pricing": {
     "title": "Enterprise Pricing & Audits",
