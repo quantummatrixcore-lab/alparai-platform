@@ -15,6 +15,10 @@ vi.mock("@/i18n/routing", () => ({
   ),
 }));
 
+vi.mock("@/actions/cookie-consent", () => ({
+  logCookieConsent: vi.fn().mockResolvedValue({ ok: true }),
+}));
+
 describe("CookieBanner Component", () => {
   beforeEach(() => {
     localStorage.clear();
@@ -27,37 +31,59 @@ describe("CookieBanner Component", () => {
   });
 
   test("does not show banner when consent is set", () => {
-    localStorage.setItem("alpar_cookie_consent", JSON.stringify({ level: "all", at: Date.now() }));
+    localStorage.setItem(
+      "alpar_cookie_consent",
+      JSON.stringify({
+        consent: { necessary: true, analytics: false, marketing: false },
+        at: Date.now(),
+      }),
+    );
     render(<CookieBanner />);
     expect(screen.queryByRole("dialog")).toBeNull();
   });
 
-  test("saves 'all' consent when accept button clicked", () => {
+  test("saves full consent when accept button clicked", () => {
     render(<CookieBanner />);
     const acceptBtn = screen.getByText("cookieAccept");
     fireEvent.click(acceptBtn);
 
-    const consent = JSON.parse(localStorage.getItem("alpar_cookie_consent") || "{}");
-    expect(consent.level).toBe("all");
+    const raw = localStorage.getItem("alpar_cookie_consent") || "{}";
+    const parsed = JSON.parse(raw);
+    expect(parsed.consent.necessary).toBe(true);
+    expect(parsed.consent.analytics).toBe(true);
+    expect(parsed.consent.marketing).toBe(true);
     expect(screen.queryByRole("dialog")).toBeNull();
   });
 
-  test("saves 'essential' consent when decline button clicked", () => {
+  test("saves essential-only consent when essential button clicked", () => {
     render(<CookieBanner />);
     const essentialBtn = screen.getByText("cookieEssential");
     fireEvent.click(essentialBtn);
 
-    const consent = JSON.parse(localStorage.getItem("alpar_cookie_consent") || "{}");
-    expect(consent.level).toBe("essential");
+    const raw = localStorage.getItem("alpar_cookie_consent") || "{}";
+    const parsed = JSON.parse(raw);
+    expect(parsed.consent.necessary).toBe(true);
+    expect(parsed.consent.analytics).toBe(false);
+    expect(parsed.consent.marketing).toBe(false);
     expect(screen.queryByRole("dialog")).toBeNull();
   });
 
-  test("saves 'essential' consent when escape key pressed", () => {
+  test("saves essential-only consent when escape key pressed", () => {
     render(<CookieBanner />);
     fireEvent.keyDown(window, { key: "Escape", code: "Escape" });
 
-    const consent = JSON.parse(localStorage.getItem("alpar_cookie_consent") || "{}");
-    expect(consent.level).toBe("essential");
+    const raw = localStorage.getItem("alpar_cookie_consent") || "{}";
+    const parsed = JSON.parse(raw);
+    expect(parsed.consent.necessary).toBe(true);
+    expect(parsed.consent.analytics).toBe(false);
+    expect(parsed.consent.marketing).toBe(false);
     expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  test("shows granular consent checkboxes", () => {
+    render(<CookieBanner />);
+    expect(screen.getByText("cookieAnalytics")).toBeDefined();
+    expect(screen.getByText("cookieMarketing")).toBeDefined();
+    expect(screen.getByText("cookieNecessary")).toBeDefined();
   });
 });

@@ -10,7 +10,7 @@ import { MainContent } from "@/components/layout/main-content";
 import { ClientProviders } from "@/components/client-providers";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { OrganizationJsonLd } from "@/components/seo/json-ld";
-import Script from "next/script";
+import { PlausibleWithConsent } from "@/components/plausible-consent";
 
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -70,12 +70,7 @@ export default async function LocaleLayout({
           <ClientProviders />
           {!isEmbed && <ScrollToTop />}
           <OrganizationJsonLd />
-          <Script
-            defer
-            data-domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || "alparai.com"}
-            src="https://plausible.io/js/script.js"
-            strategy="lazyOnload"
-          />
+          <PlausibleWithConsent />
           <Analytics />
 
           <SpeedInsights />

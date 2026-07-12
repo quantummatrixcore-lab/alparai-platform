@@ -813,6 +813,44 @@ export type Database = {
           },
         ]
       }
+      cookie_consent_log: {
+        Row: {
+          consent_level: string
+          created_at: string
+          id: string
+          ip_hash: string | null
+          session_id: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          consent_level: string
+          created_at?: string
+          id?: string
+          ip_hash?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          consent_level?: string
+          created_at?: string
+          id?: string
+          ip_hash?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cookie_consent_log_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ecosystem_news: {
         Row: {
           category: string
