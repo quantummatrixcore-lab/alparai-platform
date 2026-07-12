@@ -1,4 +1,4 @@
-# ALPAR AI — MASTER PLAN v8.5 (Pre-Launch Sprint Tamamlandı — Post-Launch Otopilot Aktif)
+# ALPAR AI — MASTER PLAN v8.6 (360° Konsolidasyon — Kopya Fix + Harici Oto-Yayın + NVIDIA NGC)
 
 > **Bu dosya tek doğru operasyonel plandır.** `docs/ANTIGRAVITY_EXECUTION_PLAN.md` v7.16'da arşivlendi (tarihsel audit trail; talimat olarak okunmaz). Çelişkide bu dosya kazanır. Bu dosyayı yalnızca Architect düzenler (Rule #14/#25).
 
@@ -72,10 +72,15 @@ Başka takvim tarihi YOK (Rule #23). Tüm işler bağımlılık-tabanlı P0/P1/P
 | K-MVP+K-Full       | K5-K12 scaffold, `/ratings` page, `k_categories`/`k_model_scores` tables, L2 MOU template, outreach agent, expert network                                                                                                                  | `4aca97f`, `43436d9` ⚠️                        |
 | SSRF-fix + types   | Evidence extraction domain allowlist + Supabase type updates                                                                                                                                                                               | `25b8acd`, `cc0b5dc`                           |
 | v8.2–v8.4 Sprint   | W3-fix (cost-alarm cron) · Q1 gate log · S4-path drill · K-CORE verify · RLS hardening (`20260727000002_harden_rls_policies.sql`) · E1 user-zero + screenshots · S5 Lighthouse (home/incidents/submit) · Perf-baseline cwv · C3-SSRF audit | `34d06f6`..`c0470b0`                           |
+| v8.5 Plan          | Pre-launch sprint items 1-9 ✅ — MASTER_PLAN güncelleme                                                                                                                                                                                    | `80861c4`                                      |
 
-**Architect v8.5 doğrulama taraması (2026-07-12):** Pre-launch sprint items 1-9 tümü ✅ · `cost-alarm` cron vercel.json'da kayıtlı ✅ · `docs/METHODOLOGY_AUDITS/` 9 artifact ✅ · Q1 gate pass ✅ · RLS hardening migration ✅ · E1 + S5 + Perf + SSRF kanıtı ✅ · origin/master HEAD = `c0470b0`.
+**Architect v8.6 doğrulama taraması (2026-07-12):** Pre-launch sprint items 1-9 tümü ✅ · origin/master HEAD = `c0470b0`.
 
 **⚠️ Rule ihlalleri (`4aca97f`, `43436d9`) — kapatıldı:** Founder revert kararı vermedi → kabul edilmiş sayılır. Audit trail için ⚠️ notu korunur. Retro-approve kotası hâlâ DOLU.
+
+**⚠️ Rule #1/#24 ihlal tespiti (2026-07-12):** Antigravity items 10-26 için `88760d6` hash'ini raporladı — bu hash `origin/master` veya `origin/claude/strategy-brief-review-i93xcv`'de mevcut değil. Push doğrulanamıyor; items 10-40 ⬜ durumunu koruyor.
+
+**Kayıtlı API Sağlayıcılar:** OpenRouter · Google (Vertex) · Hugging Face · Blackbox · Cohere · **NVIDIA NGC** (`integrate.api.nvidia.com` — env: `NVIDIA_NGC_API_KEY`, item A3)
 
 **Traction baseline:** 4 organik rapor (Grok pasaport vakası dahil) + ~405 seed. UI'da bu ayrım daima görünür (Rule #19).
 
@@ -115,6 +120,14 @@ Başka takvim tarihi YOK (Rule #23). Tüm işler bağımlılık-tabanlı P0/P1/P
 | --- | --- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------- | ------------ |
 | 8   | P2  | **Perf-baseline** — LCP/FID/CLS ölçümü 3 ana sayfa                                                                | `docs/METHODOLOGY_AUDITS/cwv-baseline.md` | ✅ `c0470b0` |
 | 9   | P2  | **C3-complete** — `openrouter-gateway`, OECD feed, import-incidents, fetch-external için SSRF allowlist doğrulama | `docs/METHODOLOGY_AUDITS/ssrf-audit.md`   | ✅ `c0470b0` |
+
+### Acil — Freeze Öncesi (Aug 1)
+
+| #   | P   | İş                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Accept kriteri                                                                                                                                 | Kapı |
+| --- | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| A1  | P0  | **Kopya/hukuki fix** — `messages/en.json` + `messages/tr.json` hero copy'den "No login required. No account needed." kaldır; yerine "Submit anonymously — login optional, identity protected." `src/actions/incidents.ts` submit action'a email-hash capture ekle: anonim göndericiden opsiyonel email al, `sha256(email)` → `anonymous_email_hash` kolonuna yaz (display yok). Migration `anonymous_email_hash text` + `-- ROLLBACK:`. `docs/METHODOLOGY_AUDITS/a1-anon-legal.md` (hukuki gerekçe + DSA Madde 14 + 5651 referansı) | `grep "No login required" messages/en.json` = 0; migration ship; `a1-anon-legal.md` mevcut                                                     | ⬜   |
+| A2  | P0  | **Harici oto-yayın** — `src/app/api/cron/fetch-external/route.ts`: `source_domain IN trusted_allowlist` ise `status = 'published'` olarak insert et (mevcut `'pending'` yerine). `trusted_allowlist` (kod sabiti): `technologyreview.mit.edu`, `404media.co`, `lastweekinai.substack.com`, `theregister.com`. PII guardian check hâlâ çalışır. Mevcut 97 `pending` kaydı için tek seferlik `UPDATE` cron çalıştır. `docs/METHODOLOGY_AUDITS/a2-external-autopublish.md`                                                             | `SELECT count(*) FROM external_incidents_queue WHERE status = 'published'` ≥ 50; `a2-external-autopublish.md` mevcut; SSRF allowlist değişmedi | ⬜   |
+| A3  | P1  | **NVIDIA NGC adapter** — `src/lib/ai/adapters/nvidia-ngc.ts` oluştur (OpenAI-uyumlu, base URL `https://integrate.api.nvidia.com/v1`, env `NVIDIA_NGC_API_KEY`). SSRF allowlist'e `integrate.api.nvidia.com` ekle. Admin panel model listesine "NVIDIA NGC" sağlayıcısı ekle. `docs/HANDOVER.md`'ye env var + rotation linki ekle (`org.ngc.nvidia.com/account/api-keys`)                                                                                                                                                            | Adapter vitest; admin panel NVIDIA NGC gösteriyor; SSRF allowlist'te `integrate.api.nvidia.com` = 1 eşleşme                                    | ⬜   |
 
 ### Launch Freeze (Aug 1–9) — bu pencerede otopilot durur, `docs/RUNBOOK_LAUNCH_DAY.md` izlenir
 
@@ -169,16 +182,27 @@ Bağımlılık sırası korunur: L1 isimleri → L3/L4 kapı açar; L2 MOU → L
 
 **Ranking mantığı (Opus pass):** O3 ve K13 revenue+trust için P0'a çekildi — cost telemetry olmadan Rule #20 alarm sadece placeholder; provider preview olmadan K-BENCHMARK yayını yasal itiraza açık. G1-G3 ve B1/B2 bus-factor P0'ı: bir gecede tüm tıp değişirse platform hayatta kalmalı.
 
+### İnovasyon Katmanı (item 41-45) — Qwen 360° Analizi + Founder Girdisi
+
+| #   | P   | İş                                                                                                                                                                                                                                                                                             | Accept kriteri                                                                                         | Kapı                   |
+| --- | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ---------------------- |
+| 41  | P1  | **ST1 — Streisand Şeffaflık Raporu** — `transparency_reports` migration (RLS+ROLLBACK): talep tarihi, talep eden kategori (AI firm / PR firm / legal), alınan aksiyon. `/transparency/legal-threats` public sayfası. Gelen her C&D/DMCA → otomatik kayıt. İsim/detay founder onayına kadar boş | Migration + sayfa; test kayıt → sayfa görünür; `docs/METHODOLOGY_AUDITS/st1-design.md`                 | ⬜ kod / ⏸ isimler     |
+| 42  | P1  | **CQ1 — Topluluk Soru Bankası** — `challenge_submissions` + `challenge_votes` tabloları (RLS+ROLLBACK). `/challenges` sayfası: kullanıcı AI test senaryosu gönderir → cross-audit engine çalıştırır → skor yayınlanır. `reputation_score` = doğrulanan geçmiş katkılar × ağırlık               | Migration + 2 sayfa (liste + detay) + cross-audit entegrasyon; `docs/METHODOLOGY_AUDITS/cq1-design.md` | ⬜                     |
+| 43  | P2  | **ZK1 — Zero-Knowledge Gönderim** — Submit form'da opsiyonel client-side AES-256-GCM şifreleme (SubtleCrypto API). Hassas kanıt metni sunucuya şifreli gider; key yalnızca göndericide. `encrypted_evidence boolean` flag + `evidence_ciphertext text` kolon migration (RLS+ROLLBACK)          | Vitest (şifreleme/çözme round-trip); `docs/METHODOLOGY_AUDITS/zk1-design.md`                           | ⬜                     |
+| 44  | P1  | **DM1 — Dinamik Model Routing v2** — `src/lib/audit/model-router.ts` genişlet: `severity_score < 0.4` → "basic" tier (NVIDIA NGC + Cohere); ≥ 0.4 → "deep" tier (mevcut 5-model debate). `cross_audit_runs` maliyet telemetrisi kaydeder (O3 önkoşul)                                          | Vitest (routing kararları); basic incident'larda ≥%30 cost savings; O3 tamamlanmış olmalı              | ⬜ (O3 önkoşul)        |
+| 45  | P2  | **RA1 — B2B AI Risk API v1** — `/api/v1/risk-score/{company_slug}` endpoint: Wilson-score + K-BENCHMARK + incident_count agregasyonu. OpenAPI şema (`public/api-spec/risk-score.yaml`) + `docs/API_RISK_SCORE.md`. Rate-limit: 100 req/gün anonim, API-key ile sınırsız (K-Product önkoşul)    | Endpoint vitest; OpenAPI şema dosyası; `docs/API_RISK_SCORE.md`; K-Product tamamlanmış olmalı          | ⬜ (K-Product önkoşul) |
+
 ## §6 Launch Freeze
 
 **Aug 1–9:** yalnızca D/W-series işleri + hotfix. Otopilot bu pencerede kuyruğu bırakır, `docs/RUNBOOK_LAUNCH_DAY.md`'yi izler. Aug 10'da §5'teki Post-Launch Kuyruğu (item 10+) otomatik devreye girer — Architect'ten yeni onay beklenmez.
 
 ## §7 Founder Bekleyenler (otopilotu bloke etmez)
 
-1. 🔴 **R1** — GitHub repo → private (Settings → Danger Zone). Hâlâ doğrulanmadı; en büyük açık risk. **20 gün kaldı (Aug 1 freeze) — BUGÜN YAP.**
+1. 🔴 **R1** — GitHub repo → private (Settings → Danger Zone). Hâlâ doğrulanmadı; en büyük açık risk. **20 gün kaldı — BUGÜN YAP.**
 2. 🔴 **R2** — 6 token rotasyonu (Supabase service-role, Vercel, Resend, OpenRouter, Vertex, Upstash). **20 gün kaldı — freeze öncesi zorunlu.**
-3. L1 danışma kurulu aday seçimi (7 koltuk; advisory-board sayfası + davet şablonu shipped — isimler founder onayına kadar boş).
-4. Maliyet tavanı onayı ($50/$100/$500 default'ları geçerli).
+3. 🟡 **R3** — NVIDIA NGC API key'i env'e ekle (`NVIDIA_NGC_API_KEY`). Item A3 bitmeden önce gerekli. Key: `org.ngc.nvidia.com/account/api-keys`
+4. L1 danışma kurulu aday seçimi (7 koltuk; advisory-board sayfası + davet şablonu shipped — isimler founder onayına kadar boş).
+5. Maliyet tavanı onayı ($50/$100/$500 default'ları geçerli).
 
 ## §8 Rapor Sözleşmesi
 
@@ -203,4 +227,6 @@ Detaylı, accept-kriterli backlog artık §5'te (item 10-23) — bu bölüm sade
 
 7. **Trust/Ops/Governance katmanı** (item 24-40): G-series (yasal audit + KVKK + security.txt), K13-K16 (provider preview + methodology sayfa + weekly re-audit + score history), G4/G5 (data retention + redaction workflow), F1/F2 (fraud), O1-O4 (status page + Sentry alerting + cost telemetry + PITR drill), B1/B2 (CLAUDE.md + HANDOVER.md bus factor)
 
-item 41+ için yeni iş: Architect §5'e ekler, bu özeti günceller. Executor Horizon'dan kendi başına iş türetmez.
+8. **İnovasyon katmanı** (item 41-45): ST1 (Streisand şeffaflık raporlama), CQ1 (topluluk soru bankası + itibar ağırlıklı oylama), ZK1 (zero-knowledge gönderim), DM1 (dinamik routing v2 — NVIDIA NGC dahil), RA1 (B2B AI Risk API v1)
+
+item 46+ için yeni iş: Architect §5'e ekler, bu özeti günceller. Executor Horizon'dan kendi başına iş türetmez.
