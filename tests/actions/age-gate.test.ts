@@ -73,6 +73,8 @@ function buildFormData(overrides: Record<string, string> = {}): FormData {
   fd.set("consent_anonymous", "on");
   fd.set("consent_age", "on");
   fd.set("consent_terms", "on");
+  fd.set("consent_coppa", "on");
+  fd.set("consent_uk_osa", "on");
   for (const [key, value] of Object.entries(overrides)) {
     fd.set(key, value);
   }
@@ -122,18 +124,16 @@ describe("submitIncident Age Gate Integration", () => {
         return {
           upsert: vi.fn().mockReturnThis(),
           select: vi.fn().mockReturnThis(),
-          single: vi
-            .fn()
-            .mockResolvedValue({
-              data: {
-                id: "run-123",
-                status: "completed",
-                attempts: 1,
-                result_id: "inc-1",
-                idempotency_key: "key-1",
-              },
-              error: null,
-            }),
+          single: vi.fn().mockResolvedValue({
+            data: {
+              id: "run-123",
+              status: "completed",
+              attempts: 1,
+              result_id: "inc-1",
+              idempotency_key: "key-1",
+            },
+            error: null,
+          }),
         };
       }
       return {

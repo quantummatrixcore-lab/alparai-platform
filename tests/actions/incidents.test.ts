@@ -82,6 +82,8 @@ function buildFormData(overrides: Record<string, string> = {}): FormData {
   fd.set("consent_anonymous", "on");
   fd.set("consent_age", "on");
   fd.set("consent_terms", "on");
+  fd.set("consent_coppa", "on");
+  fd.set("consent_uk_osa", "on");
   for (const [key, value] of Object.entries(overrides)) {
     fd.set(key, value);
   }
