@@ -3,12 +3,29 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { fetchRedditPosts } from "@/lib/connectors/reddit";
 import { fetchHNStories } from "@/lib/connectors/hackernews";
 import { fetchRSSFeed } from "@/lib/connectors/rss";
+import { isGatewayConfigured } from "@/lib/ai/openrouter-gateway";
+import { verifyExternalItem, publishVerifiedItem } from "@/lib/ai/external-verifier";
 import { logger } from "@/lib/utils/logger";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 120;
+
+const TRUSTED_ALLOWLIST = [
+  "technologyreview.mit.edu",
+  "404media.co",
+  "lastweekinai.substack.com",
+  "theregister.com",
+];
+
+function getDomain(url: string) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return "";
+  }
+}
 
 export async function GET(request: Request) {
-  // Simple bearer auth if needed, or check secret key
   const authHeader = request.headers.get("authorization");
   const isAuthorized = authHeader === `Bearer ${process.env.CRON_SECRET}`;
   if (!isAuthorized) return new NextResponse("Unauthorized", { status: 401 });
@@ -54,27 +71,33 @@ export async function GET(request: Request) {
     allFetched.push(...items.map((i) => ({ ...i, source: "rss" })));
   }
 
-  logger.info(`Fetched total of ${allFetched.length} potential incidents.`);
+  logger.info(`[FetchExternal] Fetched total of ${allFetched.length} potential incidents.`);
 
-  const TRUSTED_ALLOWLIST = [
-    "technologyreview.mit.edu",
-    "404media.co",
-    "lastweekinai.substack.com",
-    "theregister.com",
-  ];
-
-  function getDomain(url: string) {
-    try {
-      return new URL(url).hostname.replace(/^www\./, "");
-    } catch {
-      return "";
-    }
-  }
-
+  const aiAvailable = isGatewayConfigured();
   let insertedCount = 0;
-  // Ingest in DB with deduplication
+  let aiPublishedCount = 0;
+
   for (const item of allFetched) {
     const isTrusted = TRUSTED_ALLOWLIST.includes(getDomain(item.external_url));
+    let status = "pending";
+    let verdict = null;
+
+    if (isTrusted) {
+      status = "published";
+    } else if (aiAvailable) {
+      try {
+        verdict = await verifyExternalItem(item.title, item.body);
+        if (verdict.approved) {
+          status = "accepted";
+        }
+      } catch (err) {
+        logger.error("[FetchExternal] AI verification failed", {
+          url: item.external_url,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      }
+    }
+
     const { error } = await supabase.from("external_incidents_queue").upsert(
       {
         source: item.source,
@@ -82,7 +105,7 @@ export async function GET(request: Request) {
         title: item.title,
         body: item.body,
         source_score: item.source_score,
-        status: isTrusted ? "published" : "pending",
+        status,
         fetched_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       },
@@ -91,8 +114,29 @@ export async function GET(request: Request) {
       },
     );
 
-    if (!error) {
-      insertedCount++;
+    if (error) {
+      logger.error("[FetchExternal] Upsert failed", {
+        url: item.external_url,
+        error: error.message,
+      });
+      continue;
+    }
+
+    insertedCount++;
+
+    if (verdict?.approved) {
+      const published = await publishVerifiedItem({
+        title: item.title,
+        body: item.body,
+        externalUrl: item.external_url,
+        source: item.source,
+        category: verdict.category,
+        severity: verdict.severity,
+        plausibilityScore: verdict.plausibilityScore,
+      });
+      if (published.success) {
+        aiPublishedCount++;
+      }
     }
   }
 
@@ -100,5 +144,6 @@ export async function GET(request: Request) {
     success: true,
     total_fetched: allFetched.length,
     inserted_or_updated: insertedCount,
+    ai_verified_published: aiPublishedCount,
   });
 }
