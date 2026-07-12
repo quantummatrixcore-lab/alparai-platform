@@ -30,7 +30,8 @@
     "language_switcher": "Language",
     "academy": "Academy",
     "dilemmas": "Dilemmas",
-    "presskit": "Press Kit"
+    "presskit": "Press Kit",
+    "ratings": "Model Ratings"
   },
   "hero": {
     "eyebrow": "COMMUNITY-GOVERNED AI ACCOUNTABILITY",
@@ -2178,5 +2179,36 @@
     "success": "Welcome to the waitlist!",
     "success_desc": "We will email you with your early access credentials on August 2. Thank you for building trust with us.",
     "privacy": "By signing up, you agree to receive early access updates and marketing communications. Opt-out at any time."
+  },
+  "ratings": {
+    "title": "ALPAR AI — K-BENCHMARK Model Ratings",
+    "subtitle": "Objective, cross-model safety and capability evaluations. Grounded in real incident data and multi-model debate adjudication.",
+    "model": "Model",
+    "provider": "Provider",
+    "overall": "Overall Rating",
+    "last_audited": "Last Audited",
+    "sample_size": "Sample Size",
+    "methodology": "Methodology",
+    "view_details": "View Details",
+    "no_data": "No rating data available yet.",
+    "search_placeholder": "Search models or providers...",
+    "category": "Category",
+    "score": "Score",
+    "confidence_interval": "Wilson Confidence Interval",
+    "methodology_link": "View evaluation rubric & methodology",
+    "overall_score": "Composite Score"
+  },
+  "methodology": {
+    "title": "K-BENCHMARK Methodology",
+    "subtitle": "How ALPAR AI evaluates and rates AI model safety, factuality, and competence.",
+    "intro": "ALPAR AI uses a multi-model debate adjudication framework to evaluate models objectively across several categories.",
+    "k5_title": "K5 — Ethics & Safety",
+    "k5_desc": "Real-world AI incident evaluation grounded in the ALPAR incident registry, combined with adversarial jailbreaks.",
+    "k6_title": "K6 — Hallucination & Factuality",
+    "k6_desc": "TruthfulQA-based factuality analysis paired with curated Turkish-context factual claims.",
+    "k7_title": "K7 — Turkish Competence",
+    "k7_desc": "Evaluation of Turkish language proficiency using translated MMLU-TR and bespoke local regulatory test sets.",
+    "k8_title": "K8 — EU AI Act Reasoning",
+    "k8_desc": "Assessment of model decision-making logic against Art. 73 regulatory scenarios based on EU AI Act taxonomy."
   }
 }

@@ -30,7 +30,8 @@
     "language_switcher": "Dil",
     "academy": "Akademi",
     "dilemmas": "İkilemler",
-    "presskit": "Basın Kiti"
+    "presskit": "Basın Kiti",
+    "ratings": "Model Derecelendirmeleri"
   },
   "hero": {
     "eyebrow": "TOPLULUK YÖNETİMLİ YAPAY ZEKA HESAP VEREBİLİRLİĞİ",
@@ -2178,5 +2179,36 @@
     "success": "Bekleme listesine katıldınız!",
     "success_desc": "2 Ağustos'ta erken erişim kimlik bilgilerinizi içeren bir e-posta göndereceğiz. Güven inşa ettiğiniz için teşekkür ederiz.",
     "privacy": "Kaydolarak, erken erişim güncellemeleri ve bilgilendirici e-postalar almayı kabul edersiniz. Dilediğiniz zaman ayrılabilirsiniz."
+  },
+  "ratings": {
+    "title": "ALPAR AI — K-BENCHMARK Model Derecelendirmeleri",
+    "subtitle": "Objektif, modeller arası güvenlik ve yetkinlik değerlendirmeleri. Gerçek olay verileri ve çoklu model tartışma hakemliğine dayanır.",
+    "model": "Model",
+    "provider": "Sağlayıcı",
+    "overall": "Genel Derecelendirme",
+    "last_audited": "Son Denetim",
+    "sample_size": "Örneklem Boyutu",
+    "methodology": "Metodoloji",
+    "view_details": "Detayları Görüntüle",
+    "no_data": "Henüz derecelendirme verisi bulunmuyor.",
+    "search_placeholder": "Modelleri veya sağlayıcıları ara...",
+    "category": "Kategori",
+    "score": "Skor",
+    "confidence_interval": "Wilson Güven Aralığı",
+    "methodology_link": "Değerlendirme kriterleri ve metodolojiyi inceleyin",
+    "overall_score": "Bileşik Skor"
+  },
+  "methodology": {
+    "title": "K-BENCHMARK Metodolojisi",
+    "subtitle": "ALPAR AI'ın yapay zeka modellerinin güvenliğini, gerçekliğini ve yetkinliğini nasıl değerlendirdiği ve derecelendirdiği.",
+    "intro": "ALPAR AI, modelleri çeşitli kategorilerde objektif olarak değerlendirmek için çoklu model tartışma hakemliği çerçevesini kullanır.",
+    "k5_title": "K5 — Etik ve Güvenlik",
+    "k5_desc": "ALPAR olay veri tabanına dayanan gerçek dünya AI olay değerlendirmesi ve adversarial jailbreak testleri.",
+    "k6_title": "K6 — Halüsinasyon ve Gerçeklik",
+    "k6_desc": "TruthfulQA tabanlı gerçeklik analizi ve Türkçe bağlamdaki olgusal iddialarla zenginleştirilmiş testler.",
+    "k7_title": "K7 — Türkçe Dil Yetkinliği",
+    "k7_desc": "Çevrilmiş MMLU-TR ve yerel hukuki/düzenleyici test setleri kullanılarak Türkçe dil yeteneğinin değerlendirilmesi.",
+    "k8_title": "K8 — AB YZ Yasası Muhakemesi",
+    "k8_desc": "Yapay zeka modellerinin karar alma mantığının, AB Yapay Zeka Yasası taksonomisine dayalı Madde 73 senaryoları üzerinden değerlendirilmesi."
   }
 }
