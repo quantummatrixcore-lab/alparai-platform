@@ -135,10 +135,16 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       active: pathname.startsWith("/admin/moderation"),
     },
     {
-      href: "/admin/takedown",
-      label: t("stats_takedown_requests"),
+      href: "/admin/import",
+      label: t("import_queue"),
       icon: FileArrowDown,
-      active: pathname.startsWith("/admin/takedown"),
+      active: pathname.startsWith("/admin/import"),
+    },
+    {
+      href: "/admin/redaction-queue",
+      label: t("redaction_queue_title") || "Redaction",
+      icon: ShieldWarning,
+      active: pathname.startsWith("/admin/redaction-queue"),
     },
     ...(user.role === "admin" || user.role === "ceo"
       ? [
