@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getLocale } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import { logger } from "@/lib/utils/logger";

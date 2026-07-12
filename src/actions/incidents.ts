@@ -191,11 +191,17 @@ const runSubmitWork = async (
 
   try {
     const admin = createAdminClient();
-    await admin
-      .from("submission_attempts")
-      .insert({ ip_hash: hashIp(data.ip || "127.0.0.1") || "" });
+    const ipHash = hashIp(data.ip || "127.0.0.1") || "";
+    await admin.from("submission_attempts").insert({ ip_hash: ipHash });
+
+    await admin.from("age_declarations").insert({
+      user_id: user?.id ?? null,
+      incident_id: incidentId,
+      declared_over_18: raw.consents.age,
+      ip_hash: ipHash,
+    });
   } catch (e) {
-    logger.warn("Failed to log submission attempt", {
+    logger.warn("Failed to log submission attempt or age declaration", {
       error: e instanceof Error ? e.message : String(e),
     });
   }
