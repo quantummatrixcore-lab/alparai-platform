@@ -292,6 +292,8 @@
     "consent_anonymous": "Bu içeriğin herkese açık yayınlanabileceğini anlıyorum",
     "consent_age": "18 yaşından büyük olduğumu onaylıyorum",
     "consent_terms": "Kullanıcı Sözleşmesi ve Gizlilik Politikasını kabul ediyorum",
+    "consent_coppa": "13 yaş veya üzerinde olduğumu onaylıyorum (COPPA uyumu)",
+    "consent_uk_osa": "18 yaş veya üzerinde olduğumu onaylıyorum (Birleşik Krallık Çevrimiçi Güvenlik Yasası)",
     "consent_required": "Göndermek için tüm onayları kabul etmelisiniz",
     "view_details": "Detayları gör",
     "by": "tarafından",

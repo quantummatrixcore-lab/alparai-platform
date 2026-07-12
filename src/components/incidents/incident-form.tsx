@@ -58,8 +58,11 @@ export function IncidentForm({
     truth: false,
     age: false,
     terms: false,
+    coppa: false,
+    ukOsa: false,
   });
-  const allConsents = consents.truth && consents.age && consents.terms;
+  const allConsents =
+    consents.truth && consents.age && consents.terms && consents.coppa && consents.ukOsa;
 
   const [importUrl, setImportUrl] = useState("");
   const [isImporting, setIsImporting] = useState(false);
@@ -822,6 +825,20 @@ export function IncidentForm({
           required
           checked={consents.terms}
           onChange={(e) => setConsents((c) => ({ ...c, terms: e.target.checked }))}
+        />
+        <Checkbox
+          name="consent_coppa"
+          label={t("consent_coppa")}
+          required
+          checked={consents.coppa}
+          onChange={(e) => setConsents((c) => ({ ...c, coppa: e.target.checked }))}
+        />
+        <Checkbox
+          name="consent_uk_osa"
+          label={t("consent_uk_osa")}
+          required
+          checked={consents.ukOsa}
+          onChange={(e) => setConsents((c) => ({ ...c, ukOsa: e.target.checked }))}
         />
         <div>
           <Checkbox

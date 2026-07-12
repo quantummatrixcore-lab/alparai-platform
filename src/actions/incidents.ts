@@ -47,6 +47,8 @@ const CONSENT_LABELS: Record<string, string> = {
   consent_truth: "submission_truthfulness",
   consent_age: "age_18_plus",
   consent_terms: "terms_of_service",
+  consent_coppa: "coppa_thirteen_plus",
+  consent_uk_osa: "uk_osa_eighteen_plus",
 };
 
 async function resolveLocale(): Promise<"en" | "tr"> {
@@ -77,7 +79,7 @@ interface SubmitWorkInput {
     is_expert: boolean;
     expert_fix: string;
     anonymous_email: string;
-    consents: { truth: boolean; age: boolean; terms: boolean };
+    consents: { truth: boolean; age: boolean; terms: boolean; coppa: boolean; ukOsa: boolean };
   };
 }
 
@@ -198,6 +200,8 @@ const runSubmitWork = async (
       user_id: user?.id ?? null,
       incident_id: incidentId,
       declared_over_18: raw.consents.age,
+      coppa_thirteen_plus: raw.consents.coppa,
+      uk_osa_eighteen_plus: raw.consents.ukOsa,
       ip_hash: ipHash,
     });
   } catch (e) {
@@ -487,6 +491,8 @@ export async function submitIncident(
       anonymous: formData.get("consent_anonymous") === "on",
       age: formData.get("consent_age") === "on",
       terms: formData.get("consent_terms") === "on",
+      coppa: formData.get("consent_coppa") === "on",
+      ukOsa: formData.get("consent_uk_osa") === "on",
     },
   };
 
@@ -508,7 +514,12 @@ export async function submitIncident(
     };
   }
 
-  const requiredConsents = raw.consents.truth && raw.consents.age && raw.consents.terms;
+  const requiredConsents =
+    raw.consents.truth &&
+    raw.consents.age &&
+    raw.consents.terms &&
+    raw.consents.coppa &&
+    raw.consents.ukOsa;
   if (!requiredConsents) {
     const t = await getTranslations("errors");
     return { ok: false, formError: t("consent_required") };

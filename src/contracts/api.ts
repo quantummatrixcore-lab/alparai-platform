@@ -215,3 +215,43 @@ export const dsarDownloadResponseSchema = z.union([
   }),
   z.string(), // CSV format is plain string
 ]);
+
+// 12. GET /api/v1/auditor/k-benchmark
+export const auditorBenchmarkResponseSchema = z.object({
+  data: z.array(
+    z.object({
+      category_id: z.string(),
+      model_id: z.string(),
+      score: z.number(),
+      status: z.string(),
+      sample_size: z.number(),
+      created_at: z.string().nullable().optional(),
+    }),
+  ),
+});
+
+// 13. GET /api/v1/auditor/methodology
+export const auditorMethodologyResponseSchema = z.object({
+  data: z.array(
+    z.object({
+      version: z.string(),
+      description: z.string(),
+      created_at: z.string(),
+    }),
+  ),
+});
+
+// 14. GET /api/v1/auditor/audit-logs
+export const auditorAuditLogsResponseSchema = z.object({
+  data: z.array(
+    z.object({
+      id: z.string().uuid(),
+      actor_id: z.string().uuid().nullable().optional(),
+      action: z.string(),
+      entity_type: z.string(),
+      entity_id: z.string().uuid().nullable().optional(),
+      created_at: z.string(),
+    }),
+  ),
+});
+

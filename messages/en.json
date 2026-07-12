@@ -292,6 +292,8 @@
     "consent_anonymous": "I understand this content may be published publicly and indexed",
     "consent_age": "I confirm I am 18 years of age or older",
     "consent_terms": "I accept the Terms of Service and Privacy Policy",
+    "consent_coppa": "I confirm I am 13 years of age or older (COPPA compliance)",
+    "consent_uk_osa": "I confirm I am 18 years of age or older (UK Online Safety Act)",
     "consent_required": "You must accept all consents to submit",
     "view_details": "View details",
     "by": "by",
