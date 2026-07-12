@@ -272,6 +272,8 @@
     "anonymous": "Anonim olarak yayınla",
     "anonymous_hint": "Adınız herkese açık gösterilmeyecek",
     "whistleblower_encryption_notice": "Muhbir gönderimleri uçtan uca şifrelenir. Kaynağı ALPAR AI dahil hiç kimse tespit edemez.",
+    "anonymous_email_label": "İletişim e-postası (isteğe bağlı)",
+    "anonymous_email_hint": "Yalnızca güvenli bir karmasını saklarız. Adresiniz asla paylaşılmaz veya ifşa edilmez.",
     "processing_title": "Raporunuz Analiz Ediliyor",
     "processing_queued": "🔍 Rapor sıraya alındı, analiz başlatılıyor...",
     "processing_analyzing": "🛡️ Güvenlik, uyumluluk ve içerik moderasyonu denetleniyor...",

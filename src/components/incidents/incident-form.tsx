@@ -50,6 +50,7 @@ export function IncidentForm({
   const [selectedModel, setSelectedModel] = useState("");
   const [customModelName, setCustomModelName] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
+  const [anonymousEmail, setAnonymousEmail] = useState("");
   const [severity, setSeverity] = useState<IncidentSeverity>("medium");
   const [isExpert, setIsExpert] = useState(false);
   const [expertFix, setExpertFix] = useState("");
@@ -140,6 +141,7 @@ export function IncidentForm({
     severity: IncidentSeverity;
     isExpert: boolean;
     expertFix: string;
+    anonymousEmail: string;
   };
 
   const draftValues = useMemo<IncidentDraft>(
@@ -151,6 +153,7 @@ export function IncidentForm({
       selectedModel,
       customModelName,
       isAnonymous,
+      anonymousEmail,
       severity,
       isExpert,
       expertFix,
@@ -163,6 +166,7 @@ export function IncidentForm({
       selectedModel,
       customModelName,
       isAnonymous,
+      anonymousEmail,
       severity,
       isExpert,
       expertFix,
@@ -177,6 +181,7 @@ export function IncidentForm({
     setSelectedModel(saved.selectedModel);
     setCustomModelName(saved.customModelName);
     setIsAnonymous(saved.isAnonymous);
+    setAnonymousEmail(saved.anonymousEmail ?? "");
     setSeverity(saved.severity ?? "medium");
     setIsExpert(saved.isExpert ?? false);
     setExpertFix(saved.expertFix ?? "");
@@ -827,9 +832,22 @@ export function IncidentForm({
             onChange={(e) => setIsAnonymous(e.target.checked)}
           />
           {isAnonymous && (
-            <p className="text-warning-400 mt-1.5 ml-7 text-xs leading-relaxed font-medium">
-              {t("whistleblower_encryption_notice")}
-            </p>
+            <>
+              <p className="text-warning-400 mt-1.5 ml-7 text-xs leading-relaxed font-medium">
+                {t("whistleblower_encryption_notice")}
+              </p>
+              <div className="mt-2 ml-7">
+                <Input
+                  name="anonymous_email"
+                  type="email"
+                  label={t("anonymous_email_label")}
+                  placeholder="anon@example.com"
+                  hint={t("anonymous_email_hint")}
+                  value={anonymousEmail}
+                  onChange={(e) => setAnonymousEmail(e.target.value)}
+                />
+              </div>
+            </>
           )}
         </div>
       </fieldset>

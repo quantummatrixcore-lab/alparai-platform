@@ -1243,12 +1243,13 @@ export type Database = {
         ]
       }
       incidents: {
-        Row: {
+          Row: {
           affected_users_count: number
           ai_model_id: string | null
           ai_moderation_reason: string | null
           ai_moderation_score: number | null
           ai_provider_id: string | null
+          anonymous_email_hash: string | null
           audit_tier: string | null
           category: Database["public"]["Enums"]["incident_category"]
           comments_count: number
@@ -1315,6 +1316,7 @@ export type Database = {
           ai_moderation_reason?: string | null
           ai_moderation_score?: number | null
           ai_provider_id?: string | null
+          anonymous_email_hash?: string | null
           audit_tier?: string | null
           category?: Database["public"]["Enums"]["incident_category"]
           comments_count?: number
@@ -1380,6 +1382,7 @@ export type Database = {
           ai_moderation_reason?: string | null
           ai_moderation_score?: number | null
           ai_provider_id?: string | null
+          anonymous_email_hash?: string | null
           audit_tier?: string | null
           category?: Database["public"]["Enums"]["incident_category"]
           comments_count?: number

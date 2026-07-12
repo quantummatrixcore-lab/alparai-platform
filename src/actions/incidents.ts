@@ -76,6 +76,7 @@ interface SubmitWorkInput {
     is_anonymous: boolean;
     is_expert: boolean;
     expert_fix: string;
+    anonymous_email: string;
     consents: { truth: boolean; age: boolean; terms: boolean };
   };
 }
@@ -156,6 +157,9 @@ const runSubmitWork = async (
       ...maskedDescription.detections.map((d) => d.type),
     ].filter((v, i, a) => a.indexOf(v) === i),
     status: "pending_review",
+    anonymous_email_hash: raw.anonymous_email
+      ? createHash("sha256").update(raw.anonymous_email.toLowerCase()).digest("hex")
+      : null,
   };
   const { data: incident, error } = await supabase
     .from("incidents")
@@ -444,6 +448,7 @@ export async function submitIncident(
     is_anonymous: formData.get("is_anonymous") === "on",
     is_expert: formData.get("is_expert") === "on",
     expert_fix: String(formData.get("expert_fix") ?? ""),
+    anonymous_email: String(formData.get("anonymous_email") ?? "").trim(),
     consents: {
       truth: formData.get("consent_truth") === "on",
       anonymous: formData.get("consent_anonymous") === "on",

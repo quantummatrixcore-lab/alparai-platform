@@ -272,6 +272,8 @@
     "anonymous": "Publish anonymously",
     "anonymous_hint": "Your name will not be shown publicly",
     "whistleblower_encryption_notice": "Whistleblower submissions are encrypted end-to-end. Not even ALPAR AI can identify the source.",
+    "anonymous_email_label": "Contact email (optional)",
+    "anonymous_email_hint": "We only store a secure hash. Your address is never shared or exposed.",
     "processing_title": "Analyzing Your Report",
     "processing_queued": "🔍 Report queued, starting analysis...",
     "processing_analyzing": "🛡️ Checking safety, compliance and content moderation...",
