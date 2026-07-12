@@ -1,4 +1,4 @@
-# ALPAR AI — MASTER PLAN v8.2 (Antigravity Otopilot Sürümü)
+# ALPAR AI — MASTER PLAN v8.3 (Antigravity Otopilot Sürümü — Uzun Kuyruk)
 
 > **Bu dosya tek doğru operasyonel plandır.** `docs/ANTIGRAVITY_EXECUTION_PLAN.md` v7.16'da arşivlendi (tarihsel audit trail; talimat olarak okunmaz). Çelişkide bu dosya kazanır. Bu dosyayı yalnızca Architect düzenler (Rule #14/#25).
 
@@ -115,17 +115,34 @@ Başka takvim tarihi YOK (Rule #23). Tüm işler bağımlılık-tabanlı P0/P1/P
 | 8   | P2  | **Perf-baseline** — LCP/FID/CLS ölçümü 3 ana sayfa                                                                | `docs/METHODOLOGY_AUDITS/cwv-baseline.md` | ⬜   |
 | 9   | P2  | **C3-complete** — `openrouter-gateway`, OECD feed, import-incidents, fetch-external için SSRF allowlist doğrulama | `docs/METHODOLOGY_AUDITS/ssrf-audit.md`   | ⬜   |
 
-### Launch Freeze (Aug 1–9, ⏸) — RUNBOOK_LAUNCH_DAY.md izle
+### Launch Freeze (Aug 1–9) — bu pencerede otopilot durur, `docs/RUNBOOK_LAUNCH_DAY.md` izlenir
 
-### Post-Launch (Aug 10+, ⏸)
+### Post-Launch Kuyruğu (Aug 10 sonrası aktif — önceden onaylı, tekrar Architect izni gerekmez)
 
-| #   | İş                                                       | Kapı        |
-| --- | -------------------------------------------------------- | ----------- |
-| 10+ | K-Product (paid tier), L3-L10 uzman ağı, N2/N3 regülatör | ⏸ Architect |
+Bağımlılık sırası korunur: L1 isimleri → L3/L4 kapı açar; L2 MOU → L5/L6/L7 kapı açar; K-Full veri → L9/L10 tetiklenir; revenue path (K-Product+L8) her zaman en yüksek öncelik.
+
+| #   | P   | İş                                                                                                                                                                                         | Accept kriteri                                                                            | Kapı                   |
+| --- | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- | ---------------------- |
+| 10  | P0  | **L9** — Methodology Advisory Committee sayfası (`/about/methodology-committee`, EN+TR) + `methodology_committee_members` migration (RLS+ROLLBACK) + davet şablonu. L1 üyeleriyle çakışmaz | Sayfa canlı, isimler boş; Rule #21 benzeri — yazılı onay olmadan isim yayınlanmaz         | ⬜ kod / ⏸ isimler     |
+| 11  | P0  | **L10** — Peer-review pipeline taslağı: `docs/PAPERS/faact-draft.md` (ACM FAccT hedefi) — K-BENCHMARK metodolojisini özetleyen veri tablosu + taslak metin                                 | Taslak dosya + K-BENCHMARK sample-size/Wilson-score tablosu gömülü                        | ⬜ taslak / ⏸ gönderim |
+| 12  | P0  | **L3-verify** — `expert_network` tablosu + `/experts` rep leaderboard uçtan uca çalışıyor mu? ≥1 test-uzman doğrulama akışı simüle edilir                                                  | Vitest + `docs/METHODOLOGY_AUDITS/l3-verify.md`                                           | ⬜                     |
+| 13  | P0  | **N1-verify** — `/api/v1/oecd/feed` cron gerçekten published incident döndürüyor mu?                                                                                                       | `docs/METHODOLOGY_AUDITS/n1-oecd-verify.md`; ≥1 kayıt kanıtı                              | ⬜                     |
+| 14  | P0  | **L2 outreach list** — TR+EU üniversite MOU hedef listesi (15-20 kurum) — şablon zaten shipped (`docs/L2_MOU_TEMPLATE.md`)                                                                 | `docs/L2_OUTREACH_LIST.md`                                                                | ⬜ liste / ⏸ gönderim  |
+| 15  | P0  | **L8** — Role-based dashboard scaffold: `role_view` kolonu (`profiles` tablosu) + 4 boş görünüm (compliance/journalist/legal/safety), veri yok, UI iskelet                                 | Migration (RLS+ROLLBACK) + 4 route; mevcut RLS zayıflatılmaz                              | ⬜                     |
+| 16  | P0  | **K-Product scaffold** — `private_benchmarks` + `rating_alerts` tabloları (RLS+ROLLBACK) + billing sayfası iskeleti (Stripe key YOK, placeholder ENV)                                      | Migration + `/pricing/enterprise` sayfası; gerçek ödeme akışı founder onayına kadar pasif | ⬜ kod / ⏸ stripe-keys |
+| 17  | P1  | **N2 outreach** — UK AISI + US AISI iletişim taslağı (LinkedIn + email metni)                                                                                                              | `docs/N2_OUTREACH_DRAFT.md`                                                               | ⬜ taslak / ⏸ gönderim |
+| 18  | P1  | **L4** — Profesyonel dernek listesi (TÜBA, İstanbul Barosu AI Komitesi, IEEE/ACM TR, EU AI Alliance) + davet şablonu                                                                       | `docs/L4_PARTNERSHIPS.md`                                                                 | ⬜ liste / ⏸ gönderim  |
+| 19  | P1  | **L5** — Instructor tier: `role = 'instructor'` + küratörlü olay paketi (20-30 olay + PDF export)                                                                                          | Migration (RLS+ROLLBACK) + `/academy/instructor` sayfası                                  | ⬜                     |
+| 20  | P1  | **L6** — Faculty fellowship sayfası + başvuru formu + admin review kuyruğu                                                                                                                 | `/academy/fellowship` sayfası + `fellowship_applications` tablo (RLS+ROLLBACK)            | ⬜                     |
+| 21  | P2  | **L7** — Student ambassador programı sayfası + `student_ambassadors` tablo + admin CRUD                                                                                                    | Sayfa + migration (RLS+ROLLBACK)                                                          | ⬜                     |
+| 22  | P2  | **N3** — ISO/IEC + CEN-CENELEC katkı taslağı: ALPAR taksonomisi working-draft formatında                                                                                                   | `docs/N3_STANDARDS_CONTRIBUTION.md`                                                       | ⬜ taslak / ⏸ gönderim |
+| 23  | P2  | **Art.73 tracker scaffold** — `art73_obligation_status` tablosu (provider bazlı) + `/transparency/art-73-tracker` sayfası, veri boş, UI hazır                                              | Migration (RLS+ROLLBACK) + sayfa                                                          | ⬜                     |
+
+**Kural:** Bu kuyruk önceden onaylıdır (Rule #2 kapsamında plan-dışı değil) — Antigravity Aug 10'dan itibaren üstten alta işler, ⏸ item'a gelince atlar. Yeni istisna/genişleme yine Architect onayı gerektirir.
 
 ## §6 Launch Freeze
 
-**Aug 1–9:** yalnızca D/W-series işleri + hotfix. Otopilot bu pencerede kuyruğu bırakır, `docs/RUNBOOK_LAUNCH_DAY.md`'yi izler. Aug 10'da kuyruk kaldığı yerden devam eder.
+**Aug 1–9:** yalnızca D/W-series işleri + hotfix. Otopilot bu pencerede kuyruğu bırakır, `docs/RUNBOOK_LAUNCH_DAY.md`'yi izler. Aug 10'da §5'teki Post-Launch Kuyruğu (item 10+) otomatik devreye girer — Architect'ten yeni onay beklenmez.
 
 ## §7 Founder Bekleyenler (otopilotu bloke etmez)
 
@@ -146,10 +163,13 @@ Her Executor raporu:
 
 ## §9 Post-Launch Ufuk (tarihsiz, sıralı)
 
-1. ~~**K-Full** (K9-K12 kategorileri)~~ → shipped `43436d9` (onaysız — §4 notu)
-2. **K-Product + CRD** — paid tier (ilk gelir yüzeyi)
-3. ~~**L2 MOU**~~ template shipped `4aca97f` (onaysız) · **L3-L10** — uzman ağı, fellowship, methodology committee, FAccT/NeurIPS yayınları
-4. **N2/N3** — UK/US AISI diyaloğu, ISO/IEC + CEN-CENELEC standards katkısı
-5. **Art. 73 anı (Dec 2 2027)** — live obligation tracker; ALPAR skor tablosu olur
+Detaylı, accept-kriterli backlog artık §5'te (item 10-23) — bu bölüm sadece üst-seviye özet. Executor iş için §5'i kullanır, bu listeyi değil.
 
-Detaylı spec'ler arşiv doc'ta (`ANTIGRAVITY_EXECUTION_PLAN.md`); her çeyrek Architect bu ufku aktif kuyruk item'larına çevirir. Executor Horizon'dan kendi başına iş türetmez.
+1. ~~**K-Full** (K9-K12)~~ shipped `43436d9` (onaysız — §4 notu) · ~~**L2 MOU template**~~ shipped `4aca97f`
+2. **L9 + L10** — methodology committee + peer-review pipeline (item 10-11) — K-Full verisi eldeyken en erken başlar
+3. **K-Product + CRD + L8** — paid tier + role-based dashboards (item 15-16) — ilk gelir yüzeyi, en yüksek öncelik
+4. **L4-L7** — dernek ortaklıkları, instructor tier, faculty fellowship, student ambassador (item 18-21) — L1/L2 isimleri kapı açtıkça sırayla
+5. **N2/N3** — UK/US AISI diyaloğu, ISO/IEC + CEN-CENELEC standards katkısı (item 17, 22)
+6. **Art. 73 anı (Dec 2 2027)** — tracker scaffold item 23'te başlar; canlı veri Aug 10 sonrası akış eder
+
+item 24+ için yeni iş: Architect §5'e ekler, bu özeti günceller. Executor Horizon'dan kendi başına iş türetmez.
