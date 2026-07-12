@@ -21,6 +21,8 @@ import { Shield, Activity, Cpu, AlertTriangle, FileText, Lock, Eye, Bot, Play } 
 import type { CrossAuditDashboardData } from "@/actions/admin/cross-audit-metrics";
 import { runLiveCrossAuditTest } from "@/actions/admin/live-cross-audit";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface CrossAuditDashboardClientProps {
   data: CrossAuditDashboardData;
@@ -120,17 +122,27 @@ export function CrossAuditDashboardClient({ data }: CrossAuditDashboardClientPro
           {testResult && (
             <div className="animate-in fade-in slide-in-from-bottom-4 mt-6 border-t border-white/10 pt-6 duration-500">
               <div className="mb-6 flex items-center justify-between">
-                <h3 className="font-bold tracking-wide text-white">Değerlendirme Sonucu</h3>
+                <h3 className="font-bold tracking-wide text-white">
+                  Değerlendirme Sonucu (Audit Verdict)
+                </h3>
                 <div className="flex gap-4">
-                  <div className="bg-bg-tertiary rounded border border-white/5 px-3 py-1">
-                    <span className="text-fg-muted mr-2 text-xs">TRUTH SCORE:</span>
-                    <span className="text-success-400 font-mono font-bold">
+                  <div className="bg-bg-tertiary/60 flex items-center gap-3 rounded-xl border border-white/5 px-4 py-2">
+                    <span className="text-fg-muted text-xs font-bold uppercase">TRUTH SCORE</span>
+                    <span className="font-mono text-lg font-black text-emerald-400">
                       {testResult.truth_score}/100
                     </span>
                   </div>
-                  <div className="bg-bg-tertiary rounded border border-white/5 px-3 py-1">
-                    <span className="text-fg-muted mr-2 text-xs">RİSK:</span>
-                    <span className="text-danger-400 font-mono font-bold">
+                  <div className="bg-bg-tertiary/60 flex items-center gap-3 rounded-xl border border-white/5 px-4 py-2">
+                    <span className="text-fg-muted text-xs font-bold uppercase">RISK LEVEL</span>
+                    <span
+                      className={cn(
+                        "rounded-lg border px-2.5 py-0.5 font-mono text-sm font-black uppercase",
+                        testResult.risk_level.toLowerCase().includes("high") ||
+                          testResult.risk_level.toLowerCase().includes("unacceptable")
+                          ? "border-red-500/20 bg-red-500/10 text-red-400 shadow-[0_0_12px_rgba(239,68,68,0.15)]"
+                          : "border-emerald-500/20 bg-emerald-500/10 text-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.15)]",
+                      )}
+                    >
                       {testResult.risk_level}
                     </span>
                   </div>
@@ -138,25 +150,57 @@ export function CrossAuditDashboardClient({ data }: CrossAuditDashboardClientPro
               </div>
 
               <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-                {testResult.models?.map((m, idx: number) => (
-                  <div
-                    key={idx}
-                    className="relative rounded-xl border border-white/5 bg-neutral-900/50 p-4"
-                  >
-                    <div className="text-brand-400 mb-1 text-xs font-bold tracking-wider uppercase">
-                      {m.name}
+                {testResult.models?.map((m, idx: number) => {
+                  const getStanceVariant = (stance: string) => {
+                    const s = stance.toLowerCase();
+                    if (
+                      s.includes("critical") ||
+                      s.includes("unacceptable") ||
+                      s.includes("high") ||
+                      s.includes("danger") ||
+                      s.includes("violation") ||
+                      s.includes("severe")
+                    ) {
+                      return "danger" as const;
+                    }
+                    if (s.includes("warn") || s.includes("medium") || s.includes("specific")) {
+                      return "warning" as const;
+                    }
+                    return "success" as const;
+                  };
+
+                  return (
+                    <div
+                      key={idx}
+                      className="border-border-subtle bg-bg-secondary/40 hover:border-brand-500/30 group relative rounded-xl border p-4 transition-all duration-300"
+                    >
+                      <div className="absolute top-0 right-0 left-0 h-[1.5px] bg-gradient-to-r from-purple-500 to-cyan-500 opacity-10 transition-opacity duration-300 group-hover:opacity-100" />
+                      <div className="mb-3 flex items-center justify-between gap-2 border-b border-white/5 pb-2">
+                        <div className="text-brand-400 flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase">
+                          <Cpu className="h-3.5 w-3.5 text-cyan-400" />
+                          {m.name}
+                        </div>
+                        <Badge
+                          variant={getStanceVariant(m.stance)}
+                          className="px-2 py-0.5 text-[9px] font-black tracking-wider uppercase"
+                        >
+                          {m.stance}
+                        </Badge>
+                      </div>
+                      <p className="mb-1 text-xs leading-relaxed font-semibold text-white/90">
+                        {m.stance}
+                      </p>
+                      <p className="text-fg-muted text-xs leading-relaxed">{m.reason}</p>
                     </div>
-                    <div className="mb-2 text-sm font-semibold text-white">{m.stance}</div>
-                    <p className="text-fg-secondary text-xs leading-relaxed">{m.reason}</p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
-              <div className="bg-brand-500/10 border-brand-500/20 rounded-xl border p-4">
-                <h4 className="text-brand-400 mb-2 flex items-center gap-2 text-xs font-bold uppercase">
-                  <Shield className="h-4 w-4" /> Nihai Karar (Judge Verdict)
+              <div className="bg-brand-500/10 border-brand-500/20 rounded-xl border p-4 shadow-[inset_0_0_12px_rgba(168,85,247,0.05)]">
+                <h4 className="text-brand-400 mb-2 flex items-center gap-2 text-xs font-bold tracking-wider uppercase">
+                  <Shield className="h-4 w-4 text-purple-400" /> Nihai Karar (Judge Verdict)
                 </h4>
-                <p className="text-sm text-white">{testResult.judge_verdict}</p>
+                <p className="text-sm leading-relaxed text-white/90">{testResult.judge_verdict}</p>
               </div>
             </div>
           )}

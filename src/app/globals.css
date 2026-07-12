@@ -369,3 +369,17 @@ body {
   overflow-x: hidden;
   max-width: 100%;
 }
+
+@keyframes flow-line {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

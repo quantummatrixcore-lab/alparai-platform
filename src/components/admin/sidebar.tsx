@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, usePathname } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
@@ -23,23 +23,24 @@ import {
   GridFour,
   TrendUp,
   Compass,
-  DownloadSimple,
-  Medal,
-  Lightbulb,
   Megaphone,
+  Lightbulb,
   Pulse,
   X,
   CaretDown,
   CaretRight,
+  CaretLeft,
   Brain,
   Folder,
   Gear,
   Bank,
+  Medal,
 } from "@phosphor-icons/react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
 import { Wordmark } from "../layout/wordmark";
 import { LanguageSwitcher } from "../layout/language-switcher";
+import { Logo } from "../layout/logo";
 
 interface SidebarUserShape {
   email: string;
@@ -54,85 +55,63 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
   const tNav = useTranslations("nav");
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
-    oversight: true,
-    ecosystem: true,
-    operations: true,
-    community: true,
-    strategy: true,
-    finance: true,
-    settings: true,
+
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("admin-sidebar-collapsed") === "true";
+    }
+    return false;
   });
+
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
+    command: true,
+    cases: true,
+    ecosystem: true,
+    growth: true,
+    system: true,
+  });
+
+  const toggleCollapse = () => {
+    setIsCollapsed((prev) => {
+      const next = !prev;
+      localStorage.setItem("admin-sidebar-collapsed", String(next));
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "b") {
+        e.preventDefault();
+        toggleCollapse();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const toggleGroup = (group: string) => {
     setExpandedGroups((prev) => ({ ...prev, [group]: !prev[group] }));
   };
 
-  const oversightItems = [
+  // 1. COMMAND GROUP
+  const commandItems = [
     { href: "/admin", label: t("dashboard"), icon: SquaresFour, active: pathname === "/admin" },
-    {
-      href: "/admin/analysis",
-      label: t("analytics"),
-      icon: ChartBar,
-      active: pathname.startsWith("/admin/analysis"),
-    },
-    {
-      href: "/admin/cross-audit-dashboard",
-      label: t("cross_audit_dashboard") || "Cross-Audit",
-      icon: ShieldCheck,
-      active: pathname.startsWith("/admin/cross-audit-dashboard"),
-    },
-    {
-      href: "/admin/api-metrics",
-      label: t("api_metrics") || "API Hub",
-      icon: Pulse,
-      active: pathname.startsWith("/admin/api-metrics"),
-    },
-    {
-      href: "/admin/slo-dashboard",
-      label: t("slo_nav") || "SLI/SLO",
-      icon: Clock,
-      active: pathname.startsWith("/admin/slo-dashboard"),
-    },
-    {
-      href: "/admin/signals",
-      label: t("signals_nav") || "Golden Signals",
-      icon: ChartBar,
-      active: pathname.startsWith("/admin/signals"),
-    },
   ];
 
-  const ecosystemItems = [
-    {
-      label: t("nav_aiPulse"),
-      href: "/admin/ai-pulse",
-      icon: Pulse,
-      active: pathname.startsWith("/admin/ai-pulse"),
-    },
-    {
-      href: "/admin/autopilot",
-      label: t("autopilot"),
-      icon: Lightning,
-      active: pathname.startsWith("/admin/autopilot"),
-    },
-    ...(user.role === "admin" || user.role === "ceo"
-      ? [
-          {
-            href: "/admin/innovations",
-            label: t("innovations", { defaultValue: "Innovations" }),
-            icon: Lightbulb,
-            active: pathname.startsWith("/admin/innovations"),
-          },
-        ]
-      : []),
-  ];
-
-  const operationsItems = [
+  // 2. CASES GROUP (ceo, admin, moderator)
+  const casesItems = [
     {
       href: "/admin/moderation",
       label: t("moderation_queue"),
       icon: ShieldWarning,
       active: pathname.startsWith("/admin/moderation"),
+    },
+    {
+      href: "/admin/redaction-queue",
+      label: t("redaction_queue_title") || "Redaction",
+      icon: ShieldWarning,
+      active: pathname.startsWith("/admin/redaction-queue"),
     },
     {
       href: "/admin/import",
@@ -141,24 +120,27 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       active: pathname.startsWith("/admin/import"),
     },
     {
-      href: "/admin/redaction-queue",
-      label: t("redaction_queue_title") || "Redaction",
-      icon: ShieldWarning,
-      active: pathname.startsWith("/admin/redaction-queue"),
+      href: "/admin/cross-audit-dashboard",
+      label: t("cross_audit_dashboard") || "Cross-Audit",
+      icon: ShieldCheck,
+      active: pathname.startsWith("/admin/cross-audit-dashboard"),
     },
-    ...(user.role === "admin" || user.role === "ceo"
-      ? [
-          {
-            href: "/admin/import",
-            label: t("import_queue") || "Import Queue",
-            icon: DownloadSimple,
-            active: pathname.startsWith("/admin/import"),
-          },
-        ]
-      : []),
   ];
 
-  const communityItems = [
+  // 3. ECOSYSTEM GROUP (ceo, admin)
+  const ecosystemItems = [
+    {
+      href: "/admin/ai-pulse",
+      label: t("nav_aiPulse"),
+      icon: Pulse,
+      active: pathname.startsWith("/admin/ai-pulse"),
+    },
+    {
+      href: "/admin/providers",
+      label: t("providers"),
+      icon: Cpu,
+      active: pathname.startsWith("/admin/providers"),
+    },
     {
       href: "/admin/users",
       label: t("users"),
@@ -167,71 +149,14 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
     {
       href: "/admin/experts",
-      label: t("expertApplications", { defaultValue: "Experts" }),
+      label: t("expertApplications"),
       icon: Medal,
       active: pathname.startsWith("/admin/experts"),
     },
-    {
-      href: "/admin/providers",
-      label: t("providers"),
-      icon: Cpu,
-      active: pathname.startsWith("/admin/providers"),
-    },
-    ...(user.role === "admin" || user.role === "ceo"
-      ? [
-          {
-            href: "/admin/investors",
-            label: t("investors_title") || "Investor Applications",
-            icon: TrendUp,
-            active: pathname.startsWith("/admin/investors"),
-          },
-        ]
-      : []),
-    {
-      href: "/admin/social",
-      label: t("social_media_hub") || "Social Media Hub",
-      icon: ShareNetwork,
-      active: pathname.startsWith("/admin/social"),
-    },
-    ...(user.role === "admin" || user.role === "ceo"
-      ? [
-          {
-            href: "/admin/outreach",
-            label: t("outreach_hub") || "Outreach Hub",
-            icon: Megaphone,
-            active: pathname.startsWith("/admin/outreach"),
-          },
-        ]
-      : []),
   ];
 
-  const financeItems = [
-    {
-      href: "/admin/finance",
-      label: t("finance_dashboard") || "Finance & FinOps",
-      icon: Bank,
-      active: pathname.startsWith("/admin/finance"),
-    },
-  ];
-
-  const settingsItems = [
-    {
-      href: "/admin/audit",
-      label: t("audit_log"),
-      icon: Clock,
-      active: pathname.startsWith("/admin/audit"),
-    },
-    {
-      href: "/admin/api-keys",
-      label: t("api_keys"),
-      icon: Key,
-      active: pathname.startsWith("/admin/api-keys"),
-    },
-  ];
-
-  const hasStrategyAccess = user.role === "ceo" || user.role === "admin" || user.role === "advisor";
-
-  const strategyItems = [
+  // 4. GROWTH & STRATEGY GROUP (ceo, admin, advisor)
+  const growthItems = [
     {
       href: "/admin/strategy",
       label: t("strategy_overview") || "Overview",
@@ -256,7 +181,81 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       icon: Bank,
       active: pathname.startsWith("/admin/strategy/state-support"),
     },
+    ...(user.role === "admin" || user.role === "ceo"
+      ? [
+          {
+            href: "/admin/finance",
+            label: t("finance_dashboard") || "Finance & FinOps",
+            icon: Bank,
+            active: pathname.startsWith("/admin/finance"),
+          },
+          {
+            href: "/admin/outreach",
+            label: t("outreach_hub") || "Outreach Hub",
+            icon: Megaphone,
+            active: pathname.startsWith("/admin/outreach"),
+          },
+          {
+            href: "/admin/innovations",
+            label: t("innovations") || "Innovations",
+            icon: Lightbulb,
+            active: pathname.startsWith("/admin/innovations"),
+          },
+          {
+            href: "/admin/investors",
+            label: t("investors_title") || "Investor Applications",
+            icon: TrendUp,
+            active: pathname.startsWith("/admin/investors"),
+          },
+        ]
+      : []),
+    {
+      href: "/admin/social",
+      label: t("social_media_hub") || "Social Media Hub",
+      icon: ShareNetwork,
+      active: pathname.startsWith("/admin/social"),
+    },
   ];
+
+  // 5. SYSTEM GROUP (ceo, admin)
+  const systemItems = [
+    {
+      href: "/admin/api-keys",
+      label: t("api_keys"),
+      icon: Key,
+      active: pathname.startsWith("/admin/api-keys"),
+    },
+    {
+      href: "/admin/audit",
+      label: t("audit_log"),
+      icon: Clock,
+      active: pathname.startsWith("/admin/audit"),
+    },
+    {
+      href: "/admin/autopilot",
+      label: t("autopilot"),
+      icon: Lightning,
+      active: pathname.startsWith("/admin/autopilot"),
+    },
+    {
+      href: "/admin/slo-dashboard",
+      label: t("slo_nav") || "SLI/SLO",
+      icon: Clock,
+      active: pathname.startsWith("/admin/slo-dashboard"),
+    },
+    {
+      href: "/admin/signals",
+      label: t("signals_nav") || "Golden Signals",
+      icon: ChartBar,
+      active: pathname.startsWith("/admin/signals"),
+    },
+  ];
+
+  // Visibility Flags
+  const showCases = user.role === "ceo" || user.role === "admin" || user.role === "moderator";
+  const showEcosystem = user.role === "ceo" || user.role === "admin";
+  const showGrowth = user.role === "ceo" || user.role === "admin" || user.role === "advisor";
+  const showSystem = user.role === "ceo" || user.role === "admin";
 
   const renderNavGroup = (
     id: string,
@@ -265,9 +264,55 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       weight?: "thin" | "light" | "regular" | "bold" | "fill" | "duotone";
       className?: string;
     }>,
-    groupItems: typeof oversightItems,
+    groupItems: typeof commandItems,
   ) => {
+    if (groupItems.length === 0) return null;
     const isExpanded = expandedGroups[id];
+
+    if (isCollapsed) {
+      return (
+        <div className="mt-4 flex flex-col items-center space-y-2 border-b border-white/5 px-2 pb-4 last:border-0 last:pb-0">
+          {groupItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setIsOpen(false)}
+                className={cn(
+                  "group relative flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-300",
+                  item.active
+                    ? "text-brand-300 bg-brand-500/15 border-brand-500/30 border"
+                    : "text-fg-secondary hover:text-fg-primary hover:bg-white/5",
+                )}
+              >
+                {item.active && (
+                  <motion.div
+                    layoutId={`sidebar-active-pill-${id}`}
+                    className="bg-brand-500/15 border-brand-500 pointer-events-none absolute inset-0 rounded-xl border-l-2 shadow-[inset_0_0_12px_rgba(168,85,247,0.15)]"
+                    transition={{ type: "spring" as const, stiffness: 350, damping: 30 }}
+                  />
+                )}
+                <Icon
+                  weight="duotone"
+                  className={cn(
+                    "relative z-10 h-5 w-5 transition-colors duration-300",
+                    item.active
+                      ? "text-brand-400 drop-shadow-[0_0_5px_rgba(168,85,247,0.5)]"
+                      : "text-fg-muted group-hover:text-fg-primary drop-shadow-[0_0_3px_rgba(255,255,255,0.1)]",
+                  )}
+                />
+                {/* Tooltip */}
+                <span className="bg-bg-secondary border-border-subtle pointer-events-none absolute left-14 z-50 hidden rounded-lg border px-3 py-1.5 text-xs font-bold whitespace-nowrap text-white shadow-xl group-hover:block">
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      );
+    }
+
     return (
       <div className="mt-4 border-b border-white/5 pb-4 last:border-0 last:pb-0">
         <button
@@ -338,8 +383,8 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
 
   return (
     <>
-      {/* Top Header Bar */}
-      <header className="bg-bg-secondary/40 fixed inset-x-0 top-0 z-30 flex h-16 items-center justify-between border-b border-white/5 px-6 backdrop-blur-xl">
+      {/* Top Header Bar - Visible only on mobile/tablet */}
+      <header className="bg-bg-secondary/40 fixed inset-x-0 top-0 z-30 flex h-16 items-center justify-between border-b border-white/5 px-6 backdrop-blur-xl lg:hidden">
         <div className="flex items-center gap-3">
           <button
             onClick={() => setIsOpen(true)}
@@ -354,7 +399,6 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
 
         <div className="flex items-center gap-4">
           <LanguageSwitcher className="h-8" />
-          {/* User Profile Avatar */}
           <div className="border-brand-500/20 relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border shadow-[0_0_8px_rgba(168,85,247,0.15)]">
             {user.avatarUrl ? (
               <Image
@@ -376,7 +420,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       {/* Backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
@@ -384,80 +428,148 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       {/* Sidebar Drawer */}
       <aside
         className={cn(
-          "bg-bg-secondary/95 fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-white/5 shadow-[4px_0_24px_rgba(0,0,0,0.5)] backdrop-blur-2xl transition-transform duration-500",
-          isOpen ? "translate-x-0" : "-translate-x-full",
+          "bg-bg-secondary/95 fixed inset-y-0 left-0 z-50 flex flex-col border-r border-white/5 shadow-[4px_0_24px_rgba(0,0,0,0.5)] backdrop-blur-2xl transition-all duration-300 ease-in-out",
+          isOpen ? "w-72 translate-x-0" : "w-72 -translate-x-full",
+          "lg:bg-bg-secondary/40 lg:static lg:flex lg:h-screen lg:translate-x-0 lg:shadow-none",
+          isCollapsed ? "lg:w-16" : "lg:w-64",
         )}
       >
         <div className="flex h-16 shrink-0 items-center justify-between border-b border-white/5 px-6">
           <Link href="/admin" className="flex items-center gap-3" onClick={() => setIsOpen(false)}>
-            <Wordmark className="text-xl" />
+            {isCollapsed ? <Logo size="sm" /> : <Wordmark className="text-xl" />}
           </Link>
           <button
             onClick={() => setIsOpen(false)}
-            className="text-fg-muted rounded-xl p-1.5 transition hover:bg-white/5 hover:text-white"
+            className="text-fg-muted rounded-xl p-1.5 transition hover:bg-white/5 hover:text-white lg:hidden"
           >
             <X className="h-5 w-5" />
+          </button>
+          <button
+            onClick={toggleCollapse}
+            className="text-fg-muted hidden rounded-xl p-1.5 transition hover:bg-white/5 hover:text-white lg:block"
+            title="Toggle Sidebar (Ctrl+B)"
+          >
+            {isCollapsed ? (
+              <CaretRight weight="bold" className="h-4 w-4" />
+            ) : (
+              <CaretLeft weight="bold" className="h-4 w-4" />
+            )}
           </button>
         </div>
 
         <nav className="scrollbar-hide flex-1 overflow-y-auto py-4">
           {renderNavGroup(
-            "oversight",
-            t("nav_group_oversight") || "360° Oversight",
-            ChartBar,
-            oversightItems,
+            "command",
+            t("nav_group_command") || "Command Center",
+            SquaresFour,
+            commandItems,
           )}
-          {renderNavGroup(
-            "ecosystem",
-            t("nav_group_ecosystem") || "AI Ecosystem",
-            Brain,
-            ecosystemItems,
-          )}
-          {renderNavGroup(
-            "operations",
-            t("nav_group_operations") || "Operations",
-            Folder,
-            operationsItems,
-          )}
-          {renderNavGroup(
-            "community",
-            t("nav_group_community") || "Community",
-            Users,
-            communityItems,
-          )}
-          {hasStrategyAccess &&
-            renderNavGroup("strategy", t("strategy_header") || "Strategy", Compass, strategyItems)}
-          {(user.role === "ceo" || user.role === "admin") &&
+          {showCases &&
+            renderNavGroup("cases", t("nav_group_cases") || "Case Management", Folder, casesItems)}
+          {showEcosystem &&
             renderNavGroup(
-              "finance",
-              t("nav_group_finance") || "Finance & FinOps",
-              Bank,
-              financeItems,
+              "ecosystem",
+              t("nav_group_ecosystem") || "AI Ecosystem",
+              Brain,
+              ecosystemItems,
             )}
-          {renderNavGroup("settings", t("nav_group_settings") || "Settings", Gear, settingsItems)}
+          {showGrowth &&
+            renderNavGroup(
+              "growth",
+              t("nav_group_growth") || "Growth & Strategy",
+              Compass,
+              growthItems,
+            )}
+          {showSystem &&
+            renderNavGroup(
+              "system",
+              t("nav_group_system") || "System & Security",
+              Gear,
+              systemItems,
+            )}
         </nav>
 
         {/* User Profile Footer */}
         <div className="border-border-subtle bg-bg-secondary/60 border-t p-4 backdrop-blur-md">
-          <div className="flex items-center justify-between gap-2">
-            <Link
-              href="/"
-              onClick={() => setIsOpen(false)}
-              className="text-fg-muted hover:bg-bg-tertiary/60 hover:text-fg-primary flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition"
-            >
-              <Globe weight="duotone" className="h-3.5 w-3.5" />
-              {tNav("home")}
-            </Link>
-            <form action="/api/auth/signout" method="post">
-              <button
-                type="submit"
-                className="text-danger-400 hover:bg-danger-500/10 flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition"
-              >
-                <SignOut weight="duotone" className="h-3.5 w-3.5" />
-                {tAuth("signOut") ?? "Çıkış Yap"}
-              </button>
-            </form>
-          </div>
+          {isCollapsed ? (
+            <div className="flex flex-col items-center gap-4">
+              <div className="border-brand-500/20 group relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border shadow-[0_0_8px_rgba(168,85,247,0.15)]">
+                {user.avatarUrl ? (
+                  <Image
+                    src={user.avatarUrl}
+                    alt=""
+                    width={36}
+                    height={36}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <span className="text-brand-300 text-xs font-bold">
+                    {getInitials(user.fullName ?? user.email)}
+                  </span>
+                )}
+                <span className="bg-bg-secondary border-border-subtle pointer-events-none absolute left-14 z-50 hidden rounded-lg border px-3 py-1.5 text-xs whitespace-nowrap text-white shadow-xl group-hover:block">
+                  {user.fullName || user.email} ({user.role})
+                </span>
+              </div>
+              <form action="/api/auth/signout" method="post">
+                <button
+                  type="submit"
+                  className="text-danger-400 hover:bg-danger-500/10 group relative rounded-xl p-2 transition"
+                >
+                  <SignOut weight="duotone" className="h-5 w-5" />
+                  <span className="bg-bg-secondary border-border-subtle pointer-events-none absolute left-14 z-50 hidden rounded-lg border px-3 py-1.5 text-xs whitespace-nowrap text-white shadow-xl group-hover:block">
+                    {tAuth("signOut") ?? "Sign Out"}
+                  </span>
+                </button>
+              </form>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="border-brand-500/20 relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border shadow-[0_0_8px_rgba(168,85,247,0.15)]">
+                  {user.avatarUrl ? (
+                    <Image
+                      src={user.avatarUrl}
+                      alt=""
+                      width={40}
+                      height={40}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-brand-300 text-sm font-bold">
+                      {getInitials(user.fullName ?? user.email)}
+                    </span>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-bold text-white">
+                    {user.fullName || user.email.split("@")[0]}
+                  </p>
+                  <p className="text-fg-muted truncate text-xs capitalize">{user.role}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between gap-2">
+                <Link
+                  href="/"
+                  className="text-fg-muted hover:bg-bg-tertiary/60 hover:text-fg-primary flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition"
+                >
+                  <Globe weight="duotone" className="h-3.5 w-3.5" />
+                  {tNav("home")}
+                </Link>
+                <LanguageSwitcher className="h-7 text-xs" />
+                <form action="/api/auth/signout" method="post">
+                  <button
+                    type="submit"
+                    className="text-danger-400 hover:bg-danger-500/10 flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition"
+                    title={tAuth("signOut") ?? "Sign Out"}
+                  >
+                    <SignOut weight="duotone" className="h-3.5 w-3.5" />
+                  </button>
+                </form>
+              </div>
+            </div>
+          )}
         </div>
       </aside>
     </>
