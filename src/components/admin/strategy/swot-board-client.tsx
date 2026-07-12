@@ -280,8 +280,8 @@ export function SwotBoardClient({
                   onChange={(e) => setActiveItem({ ...activeItem, title: e.target.value })}
                   placeholder={
                     activeItem.category === "strength"
-                      ? "e.g. S8: Advanced security engine"
-                      : "e.g. W9: High latency spikes"
+                      ? t("swot_placeholder_strength")
+                      : t("swot_placeholder_weakness")
                   }
                   className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-4 py-2.5 text-sm text-white focus:ring-1 focus:outline-none"
                 />
@@ -314,9 +314,9 @@ export function SwotBoardClient({
                     }
                     className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-4 py-2.5 text-sm text-white focus:ring-1 focus:outline-none"
                   >
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
+                    <option value="low">{t("swot_weight_low")}</option>
+                    <option value="medium">{t("swot_weight_medium")}</option>
+                    <option value="high">{t("swot_weight_high")}</option>
                   </select>
                 </div>
 
@@ -334,9 +334,9 @@ export function SwotBoardClient({
                     }
                     className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-4 py-2.5 text-sm text-white focus:ring-1 focus:outline-none"
                   >
-                    <option value="active">Active</option>
-                    <option value="done">Done</option>
-                    <option value="archived">Archived</option>
+                    <option value="active">{t("swot_status_active")}</option>
+                    <option value="done">{t("swot_status_done")}</option>
+                    <option value="archived">{t("swot_status_archived")}</option>
                   </select>
                 </div>
               </div>

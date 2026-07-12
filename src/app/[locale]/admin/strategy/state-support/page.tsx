@@ -1,5 +1,5 @@
 import React from "react";
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
 import { requireAdvisor } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
@@ -19,8 +19,9 @@ import {
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "admin" });
   return {
-    title: `${locale === "tr" ? "Devlet Destekleri" : "State Support Programs"} | ALPAR AI Admin`,
+    title: `${t("state_support_title")} | ALPAR AI Admin`,
   };
 }
 
@@ -117,8 +118,13 @@ function formatAmount(amount: number | null, currency: string, locale: string): 
   return `${sym}${num}`;
 }
 
-function formatDeadline(deadline: string | null, locale: string): string {
-  if (!deadline) return locale === "tr" ? "Sürekli" : "Rolling";
+function formatDeadline(
+  deadline: string | null,
+  locale: string,
+  continuousText: string,
+  rollingText: string,
+): string {
+  if (!deadline) return locale === "tr" ? continuousText : rollingText;
   const d = new Date(deadline);
   const now = new Date();
   const daysLeft = Math.ceil((d.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
@@ -161,6 +167,7 @@ export default async function StateSupportPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "admin" });
 
   await requireAdvisor();
   const supabase = await createServerClient();
@@ -233,22 +240,16 @@ export default async function StateSupportPage({
                   <Banknote className="text-brand-400 h-5 w-5" />
                 </div>
                 <h1 className="text-2xl font-extrabold tracking-tight text-white md:text-3xl">
-                  {locale === "tr"
-                    ? "Devlet ve Hibe Destek Programları"
-                    : "State & Grant Support Programs"}
+                  {t("state_support_title")}
                 </h1>
               </div>
-              <p className="text-fg-muted ml-12 text-sm">
-                {locale === "tr"
-                  ? "Öncelik ve uygunluk skoruna göre sıralanmış — kritik fırsatlar en üstte."
-                  : "Ranked by priority and eligibility fit score — critical opportunities first."}
-              </p>
+              <p className="text-fg-muted ml-12 text-sm">{t("state_support_subtitle")}</p>
             </div>
             {criticalCount > 0 && (
               <div className="bg-danger-500/10 border-danger-500/30 flex shrink-0 items-center gap-2 rounded-lg border px-3 py-2">
                 <AlertTriangle className="text-danger-400 h-4 w-4" />
                 <span className="text-danger-400 text-sm font-bold">
-                  {criticalCount} {locale === "tr" ? "kritik açık fırsat" : "critical open"}
+                  {t("critical_open_opportunities", { count: criticalCount })}
                 </span>
               </div>
             )}
@@ -295,11 +296,7 @@ export default async function StateSupportPage({
         {!error && programs.length === 0 && (
           <div className="border-border-subtle bg-bg-secondary/30 rounded-2xl border py-20 text-center">
             <Building className="text-fg-muted mx-auto mb-4 h-12 w-12 opacity-30" />
-            <p className="text-fg-secondary text-sm font-semibold">
-              {locale === "tr"
-                ? "Henüz program eklenmemiş. Migration'ı çalıştırın."
-                : "No programs found. Run the seed migration first."}
-            </p>
+            <p className="text-fg-secondary text-sm font-semibold">{t("state_support_empty")}</p>
           </div>
         )}
 
@@ -310,9 +307,7 @@ export default async function StateSupportPage({
             <div className="border-border-subtle flex items-center gap-2 border-b px-6 py-4">
               <Filter className="text-fg-muted h-4 w-4" />
               <span className="text-fg-secondary text-xs font-bold tracking-wider uppercase">
-                {locale === "tr"
-                  ? `${programs.length} program — Öncelik · Uygunluk Skoru · Son Tarih sıralaması`
-                  : `${programs.length} programs — sorted by Priority · Fit Score · Deadline`}
+                {programs.length} programs — sorted by Priority · Fit Score · Deadline
               </span>
             </div>
 
@@ -321,28 +316,28 @@ export default async function StateSupportPage({
                 <thead>
                   <tr className="border-border-subtle border-b">
                     <th className="text-fg-muted px-4 py-3 text-left text-[10px] font-bold tracking-wider uppercase">
-                      {locale === "tr" ? "Öncelik" : "Priority"}
+                      {t("state_support_col_priority")}
                     </th>
                     <th className="text-fg-muted px-4 py-3 text-left text-[10px] font-bold tracking-wider uppercase">
-                      {locale === "tr" ? "Program" : "Program"}
+                      {t("state_support_col_program")}
                     </th>
                     <th className="text-fg-muted px-4 py-3 text-left text-[10px] font-bold tracking-wider uppercase">
-                      {locale === "tr" ? "Kurum" : "Grantor"}
+                      Kurum / Grantor
                     </th>
                     <th className="text-fg-muted px-4 py-3 text-left text-[10px] font-bold tracking-wider uppercase">
-                      {locale === "tr" ? "Kategori" : "Category"}
+                      Kategori / Category
                     </th>
                     <th className="text-fg-muted px-4 py-3 text-right text-[10px] font-bold tracking-wider uppercase">
-                      {locale === "tr" ? "Maks Tutar" : "Max Amount"}
+                      {t("state_support_col_amount")}
                     </th>
                     <th className="text-fg-muted px-4 py-3 text-left text-[10px] font-bold tracking-wider uppercase">
-                      {locale === "tr" ? "Durum" : "Status"}
+                      {t("state_support_col_status")}
                     </th>
                     <th className="text-fg-muted px-4 py-3 text-left text-[10px] font-bold tracking-wider uppercase">
-                      {locale === "tr" ? "Uygunluk" : "Fit Score"}
+                      Fit Score
                     </th>
                     <th className="text-fg-muted px-4 py-3 text-left text-[10px] font-bold tracking-wider uppercase">
-                      {locale === "tr" ? "Son Tarih" : "Deadline"}
+                      {t("state_support_col_timeline")}
                     </th>
                     <th className="text-fg-muted w-10 px-4 py-3 text-center text-[10px] font-bold tracking-wider uppercase">
                       URL
@@ -447,7 +442,7 @@ export default async function StateSupportPage({
                           <span
                             className={`text-xs font-semibold ${isUrgent ? "text-amber-400" : "text-fg-secondary"}`}
                           >
-                            {formatDeadline(program.deadline, locale)}
+                            {formatDeadline(program.deadline, locale, "Sürekli", "Rolling")}
                           </span>
                         </td>
 

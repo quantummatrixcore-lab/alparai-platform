@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/layout";
 import { requireAdvisor } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { HealthGauge } from "@/components/admin/strategy/health-gauge";
+import { LiveStrategyClient } from "@/components/admin/strategy/live-strategy-client";
 import { Link } from "@/i18n/routing";
 import { STRATEGY_METRICS_DEFAULTS, DEFAULT_VALUATION_PRE_MONEY } from "@/lib/constants";
 import {
@@ -373,6 +374,21 @@ export default async function StrategyOverviewPage({
               </Link>
             </div>
           </div>
+        </div>
+        {/* Live AI Strategy Analysis */}
+        <div className="mt-8">
+          <LiveStrategyClient
+            context={{
+              strengths: strengthsCount,
+              weaknesses: weaknessesCount,
+              opportunities: opportunitiesCount,
+              threats: threatsCount,
+              highRisks: highRisksCount,
+              activeRisks: activeRisksCount,
+              doneMilestones,
+              totalMilestones,
+            }}
+          />
         </div>
       </Container>
     </div>
