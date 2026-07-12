@@ -39,7 +39,13 @@ describe("Cost-Alarm Cron Job", () => {
       error: null,
     });
 
-    // Mock daily usage: empty
+    // Mock monthly LLM cost (empty)
+    mockGte.mockResolvedValueOnce({
+      data: [],
+      error: null,
+    });
+
+    // Mock daily LLM cost (empty)
     mockGte.mockResolvedValueOnce({
       data: [],
       error: null,
@@ -79,7 +85,13 @@ describe("Cost-Alarm Cron Job", () => {
       error: null,
     });
 
-    // Mock daily usage: empty
+    // Mock monthly LLM cost (empty)
+    mockGte.mockResolvedValueOnce({
+      data: [],
+      error: null,
+    });
+
+    // Mock daily LLM cost (empty)
     mockGte.mockResolvedValueOnce({
       data: [],
       error: null,

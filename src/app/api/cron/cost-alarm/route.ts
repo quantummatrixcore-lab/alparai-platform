@@ -37,40 +37,43 @@ export async function GET(request: NextRequest) {
       amount_usd?: number | string;
       service?: string;
     }[];
-    const totalMonthly = typedMonthlyCosts.reduce(
+    const totalInfrastructureMonthly = typedMonthlyCosts.reduce(
       (acc: number, curr) => acc + Number(curr.amount_usd || 0),
       0,
     );
 
-    // 2. Fetch API usage in the last 24 hours to estimate daily cost
-    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-    const { data: dailyUsage, error: usageError } = await admin
-      .from("finance_api_usage" as never)
-      .select("*")
-      .gte("recorded_at", oneDayAgo);
+    // Fetch total monthly LLM cost from cross_audit_runs (O3)
+    let totalLlmMonthly = 0;
+    try {
+      const monthStart = new Date().toISOString().slice(0, 7) + "-01T00:00:00.000Z";
+      const { data: llmRuns } = await admin
+        .from("cross_audit_runs")
+        .select("cost_usd")
+        .gte("created_at", monthStart);
 
-    if (usageError) {
-      throw new Error(`Failed to fetch daily API usage: ${usageError.message}`);
+      if (llmRuns) {
+        totalLlmMonthly = llmRuns.reduce((acc, curr) => acc + Number(curr.cost_usd || 0), 0);
+      }
+    } catch (e) {
+      logger.error("Failed to query monthly LLM costs", {}, e instanceof Error ? e : undefined);
     }
 
-    // Estimate daily cost based on token usage
-    // Gemini 1.5 Pro: $1.25/M input, $5.00/M output
-    // Claude 3.5 Sonnet: $3.00/M input, $15.00/M output
+    const totalMonthly = totalInfrastructureMonthly + totalLlmMonthly;
+
+    // Fetch daily LLM cost from cross_audit_runs (O3)
     let estimatedDailyCost = 0;
-    const typedDailyUsage = (dailyUsage || []) as {
-      value?: number | string;
-      service?: string;
-      metric_name?: string;
-    }[];
-    for (const item of typedDailyUsage) {
-      const val = Number(item.value || 0);
-      if (item.service === "gemini") {
-        if (item.metric_name === "tokens_in") estimatedDailyCost += (val / 1000000) * 1.25;
-        if (item.metric_name === "tokens_out") estimatedDailyCost += (val / 1000000) * 5.0;
-      } else if (item.service === "anthropic") {
-        if (item.metric_name === "tokens_in") estimatedDailyCost += (val / 1000000) * 3.0;
-        if (item.metric_name === "tokens_out") estimatedDailyCost += (val / 1000000) * 15.0;
+    try {
+      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+      const { data: llmDaily } = await admin
+        .from("cross_audit_runs")
+        .select("cost_usd")
+        .gte("created_at", oneDayAgo);
+
+      if (llmDaily) {
+        estimatedDailyCost = llmDaily.reduce((acc, curr) => acc + Number(curr.cost_usd || 0), 0);
       }
+    } catch (e) {
+      logger.error("Failed to query daily LLM costs", {}, e instanceof Error ? e : undefined);
     }
 
     // Default defaults for cost thresholds

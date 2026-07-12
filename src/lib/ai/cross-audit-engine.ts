@@ -762,6 +762,24 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
     throw new Error(`Failed to persist results: ${updateError.message}`);
   }
 
+  // Save telemetry details to cross_audit_runs table (O3)
+  try {
+    await admin.from("cross_audit_runs").insert({
+      incident_id: incidentId,
+      model: supremeResult.model,
+      tokens_in: costEst.inputTokens,
+      tokens_out: costEst.outputTokens,
+      cost_usd: costEst.costUsd,
+      latency_ms: totalLatencyMs,
+    });
+  } catch (err) {
+    logger.error(
+      "[CrossAudit] Failed to log telemetry to cross_audit_runs",
+      {},
+      err instanceof Error ? err : undefined,
+    );
+  }
+
   const result: TruthScoreResult = {
     truthScore: supremeResult.truthScore,
     confidence: supremeResult.confidence,
