@@ -2098,7 +2098,7 @@
     "time_q1_desc": "Formal accreditation of our Information Security Management system.",
     "disclosure_title": "Responsible Disclosure Policy",
     "disclosure_subtitle": "We welcome reports from security researchers to help keep our platform safe. If you believe you have discovered a vulnerability, please contact our security team at",
-    "disclosure_note": "Please do not expose vulnerability details publicly until we have resolved the issue. We review all reports within 24 hours."
+    "disclosure_note": "Please do not expose vulnerability details publicly until we have resolved the issue. We review all reports within 24 hours. Our security contacts and policies are verified in accordance with RFC 9116 via our official security.txt."
   },
   "dmca": {
     "title": "DMCA Copyright Policy — ALPAR AI",

@@ -2098,7 +2098,7 @@
     "time_q1_desc": "Bilgi Güvenliği Yönetim Sistemimizin resmi akreditasyon sürecini tamamlamak.",
     "disclosure_title": "Sorumlu Açıklama Politikası",
     "disclosure_subtitle": "Platformumuzun güvenliğini sağlamak için güvenlik araştırmacılarının raporlarını memnuniyetle karşılıyoruz. Bir güvenlik açığı bulduğunuzu düşünüyorsanız, lütfen güvenlik ekibimizle iletişime geçin:",
-    "disclosure_note": "Lütfen açığı kapatana kadar detayları kamuya açık bir şekilde paylaşmayın. Tüm raporları 24 saat içinde inceliyoruz."
+    "disclosure_note": "Lütfen açığı kapatana kadar detayları kamuya açık bir şekilde paylaşmayın. Tüm raporları 24 saat içinde inceliyoruz. Güvenlik iletişim bilgilerimiz ve politikalarımız, resmi security.txt dosyamız aracılığıyla RFC 9116 standartlarına uygun olarak doğrulanmıştır."
   },
   "dmca": {
     "title": "DMCA Telif Hakkı Politikası — ALPAR AI",
