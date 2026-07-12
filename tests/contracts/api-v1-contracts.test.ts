@@ -25,6 +25,7 @@ function getRoutePaths(dir: string, baseDir: string = dir): string[] {
 
 // Map of route paths to Zod schemas
 const routeSchemaMap: Record<string, z.ZodTypeAny> = {
+  "dsar/export": schemas.dsarExportResponseSchema,
   extract: schemas.extractResponseSchema,
   incidents: schemas.incidentsResponseSchema,
   "incidents/[id]": schemas.incidentDetailResponseSchema,
@@ -32,6 +33,7 @@ const routeSchemaMap: Record<string, z.ZodTypeAny> = {
   "oecd/feed": schemas.oecdFeedResponseSchema,
   providers: schemas.providersResponseSchema,
   "ratings/[modelSlug]": schemas.ratingsResponseSchema,
+  "risk/audit": schemas.riskAuditResponseSchema,
   stats: schemas.statsResponseSchema,
 };
 

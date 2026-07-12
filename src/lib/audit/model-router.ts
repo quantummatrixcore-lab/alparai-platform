@@ -60,6 +60,7 @@ export function selectModelTier(params: {
         maxTokens: 4096,
       },
       { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
+      { id: "meta/llama-3.1-70b-instruct", provider: "nvidia", tier: "premium", maxTokens: 4096 },
     ],
     slot2Chain: [
       {
@@ -69,6 +70,7 @@ export function selectModelTier(params: {
         maxTokens: 4096,
       },
       { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
+      { id: "meta/llama-3.1-70b-instruct", provider: "nvidia", tier: "premium", maxTokens: 4096 },
     ],
     supremeChain: [
       {
@@ -78,6 +80,7 @@ export function selectModelTier(params: {
         maxTokens: 4096,
       },
       { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
+      { id: "meta/llama-3.1-70b-instruct", provider: "nvidia", tier: "premium", maxTokens: 4096 },
     ],
   };
 }

@@ -172,3 +172,36 @@ export const statsResponseSchema = z.object({
     generated_at: z.string(),
   }),
 });
+
+// 9. POST /api/v1/risk/audit
+export const riskAuditResponseSchema = z.object({
+  eu_act_risk_category: z.enum(["minimal", "limited", "high", "unacceptable"]),
+  eu_act_serious_incident_class: z.string().nullable(),
+  risk_score: z.number().min(0).max(1),
+  reasoning: z.string(),
+});
+
+// 10. GET /api/v1/dsar/export
+export const dsarExportResponseSchema = z.object({
+  export_meta: z.object({
+    platform: z.string(),
+    legal_basis: z.string(),
+    generated_at: z.string(),
+    request_id: z.string(),
+    sla_due_date: z.string(),
+  }),
+  user_identity: z.object({
+    id: z.string().uuid(),
+    email: z.string().nullable().optional(),
+    phone: z.string().nullable().optional(),
+    created_at: z.string().nullable().optional(),
+    last_sign_in_at: z.string().nullable().optional(),
+  }),
+  profile: z.any().nullable(),
+  incidents: z.array(z.any()),
+  comments: z.array(z.any()),
+  votes: z.array(z.any()),
+  expert_applications: z.array(z.any()),
+});
+
+

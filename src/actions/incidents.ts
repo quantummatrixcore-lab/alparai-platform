@@ -556,6 +556,8 @@ export async function submitIncident(
     // Check submission attempts for this IP in the last 24 hours (F2)
     const admin = createAdminClient();
     let isRateLimitedSuspicious = false;
+    let isSybilSuspicious = false;
+
     try {
       const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
       const ipHash = hashIp(ip || "127.0.0.1") || "";
@@ -574,14 +576,42 @@ export async function submitIncident(
       });
     }
 
-    if (isRateLimitedSuspicious) {
+    // Check client-side fingerprint for Sybil detection (F3)
+    const fingerprint = String(formData.get("fingerprint") ?? "").trim();
+    if (fingerprint) {
+      try {
+        const ipHash = hashIp(ip || "127.0.0.1") || "";
+        await admin.from("submission_fingerprints").insert({
+          incident_id: incidentId,
+          fingerprint,
+          ip_hash: ipHash,
+        });
+
+        const { count: fingerprintCount } = await admin
+          .from("submission_fingerprints")
+          .select("*", { count: "exact", head: true })
+          .eq("fingerprint", fingerprint)
+          .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
+
+        if (fingerprintCount && fingerprintCount > 3) {
+          isSybilSuspicious = true;
+        }
+      } catch (e) {
+        logger.warn("Failed to perform Sybil fingerprint check", {
+          error: e instanceof Error ? e.message : String(e),
+        });
+      }
+    }
+
+    if (isRateLimitedSuspicious || isSybilSuspicious) {
       await admin
         .from("incidents")
         .update({
           status: "pending_review",
           processing_stage: "complete",
-          moderator_notes:
-            "Bypassed AI moderation. Exceeded submission attempts limit (>10 attempts in 24h). Retained for manual admin review.",
+          moderator_notes: isSybilSuspicious
+            ? "Bypassed AI moderation. Flagged by Sybil detection (multiple submissions with same client fingerprint). Retained for manual review."
+            : "Bypassed AI moderation. Exceeded submission attempts limit (>10 attempts in 24h). Retained for manual admin review.",
         })
         .eq("id", incidentId);
     } else {
