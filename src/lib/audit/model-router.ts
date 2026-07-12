@@ -11,6 +11,7 @@ export interface ModelRouterResult {
   tier: ModelTier;
   slot1Chain: ModelChainItem[];
   slot2Chain: ModelChainItem[];
+  slot3Chain: ModelChainItem[];
   supremeChain: ModelChainItem[];
 }
 
@@ -35,7 +36,7 @@ export function selectModelTier(params: {
   const auditTier = params.auditTier || "basic";
 
   if (auditTier === "none") {
-    return { tier: "none", slot1Chain: [], slot2Chain: [], supremeChain: [] };
+    return { tier: "none", slot1Chain: [], slot2Chain: [], slot3Chain: [], supremeChain: [] };
   }
 
   const length = (params.title || "").length + (params.description || "").length;
@@ -49,6 +50,7 @@ export function selectModelTier(params: {
       tier: "basic",
       slot1Chain: BASIC_CHAIN,
       slot2Chain: BASIC_CHAIN,
+      slot3Chain: BASIC_CHAIN,
       supremeChain: BASIC_SUPREME,
     };
   }
@@ -66,6 +68,16 @@ export function selectModelTier(params: {
       { id: "meta/llama-3.1-70b-instruct", provider: "nvidia", tier: "premium", maxTokens: 4096 },
     ],
     slot2Chain: [
+      {
+        id: "anthropic/claude-3.5-sonnet",
+        provider: "openrouter",
+        tier: "premium",
+        maxTokens: 4096,
+      },
+      { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
+      { id: "meta/llama-3.1-70b-instruct", provider: "nvidia", tier: "premium", maxTokens: 4096 },
+    ],
+    slot3Chain: [
       {
         id: "anthropic/claude-3.5-sonnet",
         provider: "openrouter",

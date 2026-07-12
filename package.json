@@ -45,6 +45,7 @@
     "prepare": "husky || true"
   },
   "dependencies": {
+    "@fingerprintjs/fingerprintjs": "^5.2.0",
     "@marsidev/react-turnstile": "^1.5.2",
     "@phosphor-icons/react": "^2.1.10",
     "@sentry/nextjs": "^10.59.0",

@@ -22,6 +22,7 @@ import { Link, useRouter } from "@/i18n/routing";
 import type { AIProvider, AIModel, IncidentCategory, IncidentSeverity } from "@/types";
 import { trackEvent } from "@/lib/analytics";
 import { logger } from "@/lib/utils/logger";
+import { getFingerprint } from "@/lib/utils/fingerprint";
 
 const initialState: SubmitIncidentState = { ok: false };
 
@@ -43,6 +44,7 @@ export function IncidentForm({
   const [state, formAction] = useActionState(submitIncident, initialState);
   const [processingStage, setProcessingStage] = useState<string | null>(null);
   const [piiDetected, setPiiDetected] = useState(false);
+  const [visitorId, setVisitorId] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedProvider, setSelectedProvider] = useState("");
@@ -209,6 +211,9 @@ export function IncidentForm({
       if (val) utm[key] = val;
     });
     trackEvent("submit_start", utm);
+
+    // Load fingerprint
+    getFingerprint().then(setVisitorId).catch(console.error);
   }, []);
 
   useEffect(() => {
@@ -875,6 +880,8 @@ export function IncidentForm({
           {tCommon("allSet", { defaultValue: "All consents accepted" })}
         </p>
       )}
+
+      <input type="hidden" name="fingerprint" value={visitorId} />
 
       <SubmitButton className="w-full" disabled={!canSubmit}>
         {t("submit")}

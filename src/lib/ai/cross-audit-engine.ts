@@ -610,10 +610,13 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
 
   const slot1Chain = routerResult.slot1Chain;
   const slot2Chain = routerResult.slot2Chain;
+  const slot3Chain = routerResult.slot3Chain;
   const supremeChain = routerResult.supremeChain;
 
+  const MIN_QUORUM = 2;
+
   // Turn 1: Parallel Initial Evaluation
-  const [initA, initB] = await Promise.all([
+  const initPromises = [
     runInitialEvaluation(
       slot1Chain,
       safeTitle,
@@ -628,19 +631,37 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
       incident.category,
       incident.severity,
     ),
-  ]);
+    runInitialEvaluation(
+      slot3Chain,
+      safeTitle,
+      safeDescription,
+      incident.category,
+      incident.severity,
+    ),
+  ];
 
-  if (!initA || !initB) {
-    throw new Error("Failed to complete initial evaluations for both slots.");
+  const initSettled = await Promise.allSettled(initPromises);
+  const successfulInits = initSettled
+    .filter(
+      (r): r is PromiseFulfilledResult<InitialEvaluation> =>
+        r.status === "fulfilled" && r.value !== null,
+    )
+    .map((r) => r.value);
+
+  if (successfulInits.length < MIN_QUORUM) {
+    throw new Error(`Failed to reach minimum quorum (${MIN_QUORUM}) for initial evaluations.`);
   }
+
+  const [initA, initB] = successfulInits;
 
   logger.info("[CrossAudit] Turn 1 Complete (Initial Evaluations)", {
     modelA: initA.model,
     modelB: initB.model,
+    successfulCount: successfulInits.length,
   });
 
   // Turn 2: Parallel Challenges (Cross-Examination questions)
-  const [challengeA, challengeB] = await Promise.all([
+  const challengeSettled = await Promise.allSettled([
     runChallenge(
       slot1Chain,
       safeTitle,
@@ -659,14 +680,20 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
     ),
   ]);
 
-  if (!challengeA || !challengeB) {
-    throw new Error("Failed to complete cross-examination challenges.");
-  }
+  const challengeA =
+    challengeSettled[0].status === "fulfilled" && challengeSettled[0].value
+      ? challengeSettled[0].value
+      : { critique: "Model timed out during challenge.", questions: [], model: initA.model };
+
+  const challengeB =
+    challengeSettled[1].status === "fulfilled" && challengeSettled[1].value
+      ? challengeSettled[1].value
+      : { critique: "Model timed out during challenge.", questions: [], model: initB.model };
 
   logger.info("[CrossAudit] Turn 2 Complete (Challenges Generated)");
 
   // Turn 3: Parallel Rebuttals (Defense & Score Refinement)
-  const [rebuttalA, rebuttalB] = await Promise.all([
+  const rebuttalSettled = await Promise.allSettled([
     runRebuttal(
       slot1Chain,
       safeTitle,
@@ -687,9 +714,29 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
     ),
   ]);
 
-  if (!rebuttalA || !rebuttalB) {
-    throw new Error("Failed to complete rebuttals.");
-  }
+  const rebuttalA =
+    rebuttalSettled[0].status === "fulfilled" && rebuttalSettled[0].value
+      ? rebuttalSettled[0].value
+      : {
+          answers: "Model timed out during rebuttal.",
+          finalPlausibilityScore: initA.plausibilityScore,
+          finalCategoryAccuracy: initA.categoryAccuracy,
+          finalAdversarialRisk: initA.adversarialRisk,
+          finalReasoning: initA.reasoning,
+          model: initA.model,
+        };
+
+  const rebuttalB =
+    rebuttalSettled[1].status === "fulfilled" && rebuttalSettled[1].value
+      ? rebuttalSettled[1].value
+      : {
+          answers: "Model timed out during rebuttal.",
+          finalPlausibilityScore: initB.plausibilityScore,
+          finalCategoryAccuracy: initB.categoryAccuracy,
+          finalAdversarialRisk: initB.adversarialRisk,
+          finalReasoning: initB.reasoning,
+          model: initB.model,
+        };
 
   logger.info("[CrossAudit] Turn 3 Complete (Rebuttals & Defenses Finalized)");
 

@@ -33,6 +33,10 @@
       "schedule": "0 3 * * *"
     },
     {
+      "path": "/api/cron/hard-delete",
+      "schedule": "30 3 * * *"
+    },
+    {
       "path": "/api/cron/generate-marketing",
       "schedule": "0 9 * * *"
     },

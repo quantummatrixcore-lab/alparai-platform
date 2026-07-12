@@ -471,6 +471,19 @@ export async function submitIncident(
     return { ok: false, formError: `Too many submissions. Try again in ${rl.retryAfter}s.` };
   }
 
+  // 2.5. Fingerprint Rate Limit
+  const fingerprint = String(formData.get("fingerprint") ?? "").trim();
+  if (fingerprint) {
+    const fpRl = await checkRateLimit(`${RATE_LIMIT_KEYS.incident_submission_fp}:${fingerprint}`);
+    if (!fpRl.ok) {
+      logger.warn("[BurstGuard] Fingerprint rate limit exceeded", { ip, fingerprint });
+      return {
+        ok: false,
+        formError: `Too many submissions from this device. Try again in ${fpRl.retryAfter}s.`,
+      };
+    }
+  }
+
   const raw = {
     title: String(formData.get("title") ?? ""),
     description: String(formData.get("description") ?? ""),
