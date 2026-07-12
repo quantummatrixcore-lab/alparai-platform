@@ -1,4 +1,4 @@
-# ALPAR AI — MASTER PLAN v8.6 (360° Konsolidasyon — Kopya Fix + Harici Oto-Yayın + NVIDIA NGC)
+# ALPAR AI — MASTER PLAN v8.7 (DORA Elite++ Katmanı + Uzun Vadeli Kuyruk — Otopilot Tam Devir)
 
 > **Bu dosya tek doğru operasyonel plandır.** `docs/ANTIGRAVITY_EXECUTION_PLAN.md` v7.16'da arşivlendi (tarihsel audit trail; talimat olarak okunmaz). Çelişkide bu dosya kazanır. Bu dosyayı yalnızca Architect düzenler (Rule #14/#25).
 
@@ -19,7 +19,7 @@ Bottleneck sırası: **users (2026) → revenue (2027 H1) → regulatory moment 
 
 Başka takvim tarihi YOK (Rule #23). Tüm işler bağımlılık-tabanlı P0/P1/P2 sıralanır.
 
-## §3 Standing Rules (25 — ihlal = otomatik review fail)
+## §3 Standing Rules (28 — ihlal = otomatik review fail)
 
 1. **Push before report.** Rapor `origin/master` commit hash'i ile biter. Push edilmemiş iş yoktur.
 2. **Plan-dışı commit YASAK.** Fikir → `docs/PROPOSALS/NNN-name.md` + DUR. **Retro-approve kotası DOLU** (state_support `76ddec4` + Neutrality Charter `133af72`) — üçüncü istisna yok; plan-dışı commit revert edilir.
@@ -46,6 +46,11 @@ Başka takvim tarihi YOK (Rule #23). Tüm işler bağımlılık-tabanlı P0/P1/P
 23. **Post-launch işlerde takvim tarihi kullanılmaz** — yalnızca §2'deki iki tarih. P0/P1/P2 bağımlılık sıralaması.
 24. **Rapor son satırı:** `Verified-Against: origin/master HEAD = <hash>` (komut: `git fetch origin && git log origin/master -1 --format=%H`). Push başarısızsa "unpushed — retry pending" yazılır; hayali hash = bir uyarı sonrası devre dışı bırakma.
 25. **Executor "Architect" imzası atamaz.** Plan doc'larına Architect-Approval satırı yalnızca Architect yazar.
+26. **DORA Elite++ hedefleri (ölçülür, ihlal = review fail):** deploy frequency ≥ günlük · lead time (commit → prod) ≤ 60 dk · MTTR ≤ 30 dk · change-failure-rate ≤ %10. Her PR'da `docs/OPS_DORA.md` güncellenmeli; regresyon → Architect bilgilendirilir. Progressive delivery: yeni feature'lar env-driven flag (`FEATURE_*`) arkasında ship edilir, doğrulama sonrası flag kaldırılır.
+27. **Test piramidi zorunlu:** unit ≥ %70 line-coverage (vitest), integration ≥ %20 (DB-mocked), E2E ≥ %5 (Playwright critical paths). Her yeni `/api/v1/*` route için contract test. Business-logic modüllerinde (guardian, cross-audit-engine, model-router, cost-guard) mutation-testing skoru ≥ %60. CI: `pnpm test:unit` + `pnpm test:integration` + `pnpm test:e2e` + `pnpm test:mutation` + `semgrep` + `npm audit --production` sıfır hata.
+28. **Observability zorunlu:** her yeni route/cron structured log (JSON, `correlationId`) + Sentry span + Plausible event üretir. SLI/SLO `docs/OPS_SLO.md`'de tanımlı: availability ≥ %99.9, p95 latency ≤ 300ms, error rate ≤ %0.5. Error budget < %0 → shipping donar (Rule #26 dahil), Architect'e alarm.
+
+**Otopilot no-wait protokolü (Rule üstü):** Executor bir item'ı bitirir bitirmez rapor yazmadan sıradaki `⬜`'a geçer. Rapor yalnızca (a) 5 item batch'i tamamlandığında, (b) kuyruk boşaldığında, veya (c) blocker/founder-kapısı geldiğinde yazılır. Bekleme = review finding. Aynı dosyaya dokunan iki bağımsız item paralelde açılmaz; sıralı işlenir.
 
 **Güvenlik sabitleri (kural üstü):** PII/ham kanıt `src/lib/pii/guardian.ts`'ten geçmeden DB/storage'a yazılmaz · RLS asla zayıflatılmaz · prod'a destructive DB op yok · `docs/EU_AI_ACT_TAXONOMY.md` dışında hukuki iddia yok.
 
@@ -89,11 +94,13 @@ Başka takvim tarihi YOK (Rule #23). Tüm işler bağımlılık-tabanlı P0/P1/P
 **Otopilot protokolü:**
 
 1. Kuyruğun en üstündeki ⬜ item'ı al.
-2. Uygula → Rule #10 gate → commit → push → rapor (`Verified-Against:` son satır).
-3. ⏸ item'ı ATLA (founder/Architect kapısı), sıradakine geç. Onay beklerken bağımsız sıradaki item'a başla — bekleme = review finding.
-4. Kuyruk boşaldıysa: tüm repo'ya Rule #10 gate çalıştır, bulguları `docs/PROPOSALS/` altına yaz, DUR.
-5. Plan-dışı fikir → `docs/PROPOSALS/NNN-name.md`, kod YOK (Rule #2 kotası dolu).
-6. Aynı dosyalara dokunan iki onaysız item üst üste bindirilmez.
+2. Uygula → Rule #10/#27 test gate → commit → push (branch `master` — Rule #15).
+3. **Rapor yazmadan sıradaki ⬜'a geç.** Rapor yalnızca (a) 5 tamamlanmış item birikince, (b) kuyruk tamamen boşalınca, (c) blocker/founder-kapısı (⏸) çıkınca, (d) Rule #26 DORA regresyonu tetiklenince yazılır. Bekleme = review finding.
+4. ⏸ item'a gelince atla, sıradaki bağımsız ⬜'a geç. Founder onayı bekleyen item Architect'in tekrar dokunması gerektirmez — kuyrukta kalır.
+5. Kuyruk boşaldıysa: tüm repo'ya Rule #10/#27 gate + `docs/OPS_DORA.md` metrik snapshot al, bulguları `docs/PROPOSALS/` altına yaz. Kuyruk yeni item almadan yeniden çalışılmaz.
+6. Plan-dışı fikir → `docs/PROPOSALS/NNN-name.md`, kod YOK (Rule #2 kotası dolu).
+7. Aynı dosyalara dokunan iki onaysız item üst üste bindirilmez; ikinci item bekletilir, üçüncü bağımsız item alınır.
+8. Progressive delivery (Rule #26): user-facing yeni davranış env-flag arkasında ship edilir; flag açma commit'i ayrı, doğrulama sonrası flag kaldırma commit'i ayrı.
 
 **Kuyruk (üstten alta):**
 
@@ -192,6 +199,50 @@ Bağımlılık sırası korunur: L1 isimleri → L3/L4 kapı açar; L2 MOU → L
 | 44  | P1  | **DM1 — Dinamik Model Routing v2** — `src/lib/audit/model-router.ts` genişlet: `severity_score < 0.4` → "basic" tier (NVIDIA NGC + Cohere); ≥ 0.4 → "deep" tier (mevcut 5-model debate). `cross_audit_runs` maliyet telemetrisi kaydeder (O3 önkoşul)                                          | Vitest (routing kararları); basic incident'larda ≥%30 cost savings; O3 tamamlanmış olmalı              | ⬜ (O3 önkoşul)        |
 | 45  | P2  | **RA1 — B2B AI Risk API v1** — `/api/v1/risk-score/{company_slug}` endpoint: Wilson-score + K-BENCHMARK + incident_count agregasyonu. OpenAPI şema (`public/api-spec/risk-score.yaml`) + `docs/API_RISK_SCORE.md`. Rate-limit: 100 req/gün anonim, API-key ile sınırsız (K-Product önkoşul)    | Endpoint vitest; OpenAPI şema dosyası; `docs/API_RISK_SCORE.md`; K-Product tamamlanmış olmalı          | ⬜ (K-Product önkoşul) |
 
+### DORA Elite++ Katmanı (item 46-57) — Testing / Reliability / Observability
+
+**Amaç:** Rule #26/#27/#28 uygulaması. Deploy freq günlük, MTTR ≤ 30dk, change-failure-rate ≤ %10, error budget disiplini. Test piramidi + SLI/SLO + progressive delivery + otomatik rollback. Sıra: E-series (test) → SL-series (reliability/obs) → DR-series (disaster recovery). Bağımsız item'lar paralel değil, sıralı.
+
+| #   | P   | İş                                                                                                                                                                                                             | Accept kriteri                                                                   | Kapı |
+| --- | --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ---- |
+| 46  | P0  | **E1 — E2E test suite expansion** — Playwright critical paths: submit-flow (anonim + auth), ratings görüntüleme, incident detay + share, admin queue triage. `test:e2e` ≥ 12 senaryo. CI'da gate.              | `pnpm test:e2e` yeşil; her senaryo `docs/METHODOLOGY_AUDITS/e1-e2e-report.md`'de | ⬜   |
+| 47  | P0  | **E2 — Contract testler** — Her `/api/v1/*` route için Pact veya Zod-schema-based contract test. Response schema değişikliği CI'da kırar. Şemalar `src/contracts/*.ts` altında.                                | Tüm v1 route'lar kapsanmış; yeni route eklendiğinde CI contract yokluğunu kırar  | ⬜   |
+| 48  | P1  | **E3 — Load testing baseline** — k6 script (`ops/load/`) `/`, `/incidents`, `/ratings` için 100 rps 5dk sustained. p95 < 300ms hedefi. `docs/METHODOLOGY_AUDITS/e3-load-baseline.md`                           | Rapor mevcut; p95 < 300ms; regresyon eşiği doc'ta                                | ⬜   |
+| 49  | P1  | **E4 — Mutation testing** — Stryker.js `src/lib/pii/guardian.ts`, `src/lib/ai/cross-audit-engine.ts`, `src/lib/audit/model-router.ts`, `src/lib/ai/cost-guard.ts` üzerinde. Skor ≥ %60.                        | Rapor `docs/METHODOLOGY_AUDITS/e4-mutation.md`; skor tabloda                     | ⬜   |
+| 50  | P1  | **E5 — Accessibility CI gate** — `@axe-core/playwright` entegrasyonu; kritik sayfalar WCAG 2.2 AA (0 kritik, 0 ciddi bulgu). CI'da gate.                                                                       | `docs/METHODOLOGY_AUDITS/e5-a11y.md`; violations = 0                             | ⬜   |
+| 51  | P2  | **E6 — Visual regression** — Playwright screenshot diff, 8 anahtar sayfa. `test:visual` script. Baseline `ops/visual-baseline/`.                                                                               | Diff tolerance ≤ %0.1; CI gate                                                   | ⬜   |
+| 52  | P0  | **E7 — Security scanning CI** — GitHub Actions: `semgrep --config auto` + `trivy fs .` + `npm audit --production --audit-level=high` + `gitleaks`. Kritik bulgu → CI kırar.                                    | `.github/workflows/security.yml` mevcut; 4 tool yeşil                            | ⬜   |
+| 53  | P1  | **E8 — SBOM + supply chain** — CycloneDX SBOM (`ops/sbom/latest.json`) + Sigstore (cosign) commit imzalama policy. `docs/OPS_SUPPLY_CHAIN.md`.                                                                 | SBOM üretim CI'da; her release imzalı                                            | ⬜   |
+| 54  | P0  | **SL1 — SLI/SLO tanımı + dashboard** — `docs/OPS_SLO.md`: availability, latency p50/p95/p99, error rate, cross-audit success rate. Plausible + Sentry query'leri. `/admin/slo-dashboard` sayfası.              | Doc + sayfa; her SLI için 30 günlük veri okuyor                                  | ⬜   |
+| 55  | P0  | **SL2 — Otomatik rollback wire** — Vercel deployment 5xx spike > %2 5dk → önceki deployment'a revert (`api/webhooks/sentry-alert` route). Runbook `docs/OPS_ROLLBACK.md`.                                      | Simüle test: fake 5xx spike → rollback tetiklendi kanıtı; runbook mevcut         | ⬜   |
+| 56  | P1  | **SL3 — Chaos day playbook** — Fault injection senaryoları: Supabase 500, Upstash timeout, Vertex 429, OpenRouter down. Her senaryo için beklenen graceful degradation. `docs/OPS_CHAOS.md` + quarterly drill. | 4 senaryo doc'ta; 1 drill logged                                                 | ⬜   |
+| 57  | P1  | **SL4 — Golden signals dashboard** — `/admin/signals`: latency, traffic (RPS), errors, saturation (DB conn, memory). Her 60s refresh. Sentry + Vercel Analytics data.                                          | Sayfa canlı; 4 kart görünür                                                      | ⬜   |
+
+### Governance / Regulator / Recovery (item 58-70)
+
+| #   | P   | İş                                                                                                                                                                                                                      | Accept kriteri                                                            | Kapı                     |
+| --- | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------ |
+| 58  | P1  | **G6 — Cookie consent banner** — ePrivacy + KVKK uyumlu granular consent (necessary / analytics / marketing). Plausible cookie-free zaten, ancak kullanıcı seçimi kaydı. `cookie_consent_log` migration (RLS+ROLLBACK). | Banner canlı; consent kaydı; opt-out %100 çalışıyor                       | ⬜                       |
+| 59  | P0  | **G7 — DSAR automation** — GDPR Art. 15 + KVKK madde 11: kullanıcı verilerini machine-readable export. `/api/v1/dsar/export` (auth zorunlu) + admin queue. 30 gün SLA counter.                                          | Endpoint + admin sayfa + vitest; test export JSON valid                   | ⬜                       |
+| 60  | P1  | **G8 — Yaş kapısı (age gate)** — COPPA (US <13) + UK Online Safety Act (<18 için ek koruma). Submit path'te self-declaration checkbox + audit log.                                                                      | Checkbox + `age_declarations` migration; submit path patch                | ⬜                       |
+| 61  | P1  | **L11 — Advisory rotation cadence** — 2 yıl term limit, %50 rotasyon her yıl. `advisory_board_terms` migration; `docs/L11_ROTATION_POLICY.md`.                                                                          | Migration + doc                                                           | ⬜                       |
+| 62  | P1  | **L12 — Peer-review journal** — `/methodology/corrections` public sayfa: metodoloji güncellemeleri, retraction'lar, versiyon geçmişi. `methodology_versions` migration.                                                 | Sayfa + migration; test kayıt görünür                                     | ⬜                       |
+| 63  | P1  | **K17 — Model retirement policy** — Cron: OpenRouter/NVIDIA/HF listesinde 60 gün deprecated model → `k_model_scores.status = 'retired'` + UI etiketi.                                                                   | Cron + vitest; retired badge UI'da                                        | ⬜                       |
+| 64  | P1  | **K18 — External auditor API** — Read-only `auditor_role` (Supabase role), `/api/v1/auditor/*` endpoint'ler (K-BENCHMARK raw + methodology + audit_logs). API key gate.                                                 | Migration + endpoint + doc `docs/API_AUDITOR.md`; regülatör-uyumlu erişim | ⬜ kod / ⏸ regülatör-key |
+| 65  | P1  | **F3 — Sybil detection** — Submit path'te FingerprintJS + graph analysis (aynı fingerprint N gönderim → review queue). `submission_fingerprints` migration.                                                             | Migration + vitest; false-positive < %5 (10 örnek)                        | ⬜                       |
+| 66  | P1  | **F4 — Moderation SLA** — Review queue: p95 triage < 4h. Cron alarm eşik aşımında. `moderation_sla` view.                                                                                                               | Alarm çalışıyor; dashboard'da SLA metrik                                  | ⬜                       |
+| 67  | P2  | **N5 — TR AISI dialogue channel** — Sanayi Bakanlığı + TÜBİTAK ile iletişim taslağı; `docs/N5_TR_AISI_DRAFT.md`.                                                                                                        | Doc mevcut                                                                | ⬜ taslak / ⏸ gönderim   |
+| 68  | P2  | **N6 — KVKK Kurulu engagement** — Kurul'la resmi iletişim taslağı + veri işleme envanteri (VERBIS).                                                                                                                     | `docs/N6_KVKK_ENGAGEMENT.md` + VERBIS envanter taslağı                    | ⬜ taslak / ⏸ gönderim   |
+| 69  | P0  | **DR1 — Multi-region DR drill** — Vercel fra1 → iad1 failover senaryosu; Supabase read-replica; RTO ≤ 15dk, RPO ≤ 5dk. Log `docs/METHODOLOGY_AUDITS/dr1-drill.log`.                                                     | Drill log; RTO/RPO ölçüm                                                  | ⬜                       |
+| 70  | P1  | **DR2 — Data portability** — GDPR Art. 20: kullanıcının tüm verisini `.zip` (JSON + evidence PDF'ler) olarak `/api/v1/dsar/portable` üzerinden indir. G7'nin genişlemesi.                                               | Endpoint + vitest + test download                                         | ⬜                       |
+
+**DORA metrikleri şu an (v8.7 baseline):**
+
+- Deploy frequency: günlük (v8.2-v8.4 sprint günde 3+ commit) ✅
+- Lead time: ölçülmüyor — item 54 (SL1) sonrası ölçülür
+- MTTR: ölçülmüyor — item 55 (SL2) sonrası otomatik
+- Change failure rate: ölçülmüyor — item 54 sonrası
+
 ## §6 Launch Freeze
 
 **Aug 1–9:** yalnızca D/W-series işleri + hotfix. Otopilot bu pencerede kuyruğu bırakır, `docs/RUNBOOK_LAUNCH_DAY.md`'yi izler. Aug 10'da §5'teki Post-Launch Kuyruğu (item 10+) otomatik devreye girer — Architect'ten yeni onay beklenmez.
@@ -229,4 +280,8 @@ Detaylı, accept-kriterli backlog artık §5'te (item 10-23) — bu bölüm sade
 
 8. **İnovasyon katmanı** (item 41-45): ST1 (Streisand şeffaflık raporlama), CQ1 (topluluk soru bankası + itibar ağırlıklı oylama), ZK1 (zero-knowledge gönderim), DM1 (dinamik routing v2 — NVIDIA NGC dahil), RA1 (B2B AI Risk API v1)
 
-item 46+ için yeni iş: Architect §5'e ekler, bu özeti günceller. Executor Horizon'dan kendi başına iş türetmez.
+9. **DORA Elite++ katmanı** (item 46-57): E1-E8 (E2E + contract + load + mutation + a11y + visual + security + SBOM), SL1-SL4 (SLI/SLO + otomatik rollback + chaos + golden signals) — Rule #26/#27/#28'in kod karşılığı
+
+10. **Governance / Regulator / Recovery** (item 58-70): G6-G8 (cookie/DSAR/age gate), L11-L12 (advisory rotation + peer-review journal), K17-K18 (model retirement + auditor API), F3-F4 (Sybil + moderation SLA), N5-N6 (TR AISI + KVKK Kurulu), DR1-DR2 (multi-region failover + data portability)
+
+item 71+ için yeni iş: Architect §5'e ekler, bu özeti günceller. Executor Horizon'dan kendi başına iş türetmez.
