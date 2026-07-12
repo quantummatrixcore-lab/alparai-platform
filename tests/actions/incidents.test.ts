@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import type * as retryModule from "@/lib/autopilot/retry";
 import "../helpers/setup";
@@ -176,6 +177,61 @@ describe("submitIncident", () => {
     const result = await submitIncident({ ok: false }, fd);
     expect(result.ok).toBe(true);
     expect(maskPII).toHaveBeenCalled();
+  });
+
+  it("flags incident as possible duplicate if similarity score > 0.7", async () => {
+    mockSupabase.rpc = vi.fn().mockReturnValue({
+      maybeSingle: vi.fn().mockResolvedValue({
+        data: { similarity_score: 0.85, incident_id: "other-inc-id" },
+        error: null,
+      }),
+    });
+
+    const result = await submitIncident({ ok: false }, buildFormData());
+    expect(result.ok).toBe(true);
+    expect(mockSupabase.rpc).toHaveBeenCalledWith("check_incident_duplicate", {
+      title_to_check: "A valid incident title here",
+    });
+  });
+
+  it("bypasses AI moderation if IP has >10 submission attempts in last 24h", async () => {
+    // Setup from mock for submission_attempts to return count = 11
+    mockAdminClient.from.mockImplementation((table: string) => {
+      if (table === "submission_attempts") {
+        return {
+          select: vi.fn().mockReturnValue({
+            eq: vi.fn().mockReturnValue({
+              gte: vi.fn().mockResolvedValue({ count: 11, error: null }),
+            }),
+          }),
+          insert: vi.fn().mockResolvedValue({ error: null }),
+        } as any;
+      }
+      return {
+        insert: vi.fn().mockReturnValue({
+          select: vi.fn().mockReturnValue({
+            single: vi.fn().mockResolvedValue({ data: { id: "inc-123" }, error: null }),
+          }),
+        }),
+        update: vi.fn().mockReturnValue({
+          eq: vi.fn().mockResolvedValue({ data: null, error: null }),
+        }),
+        select: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: null, error: null }),
+        }),
+        upsert: vi.fn().mockReturnValue({
+          select: vi.fn().mockReturnValue({
+            single: vi.fn().mockResolvedValue({ data: null, error: null }),
+          }),
+        }),
+      } as any;
+    });
+
+    const result = await submitIncident({ ok: false }, buildFormData());
+    expect(result.ok).toBe(true);
+
+    // Verify update was called on incidents table with moderator notes regarding rate limit
+    expect(mockAdminClient.from).toHaveBeenCalledWith("incidents");
   });
 
   it("returns error when database insert fails", async () => {

@@ -130,6 +130,23 @@ const runSubmitWork = async (
   const hdrs = await headers();
   const userAgent = hdrs.get("user-agent") ?? null;
 
+  let isPossibleDuplicate = false;
+  try {
+    const { data: dupData } = await supabase
+      .rpc("check_incident_duplicate", { title_to_check: maskedTitle.masked })
+      .maybeSingle();
+
+    if (dupData && (dupData as unknown as { similarity_score: number }).similarity_score > 0.7) {
+      isPossibleDuplicate = true;
+    }
+  } catch (e) {
+    logger.warn(
+      "Failed to check duplicate incident similarity",
+      {},
+      e instanceof Error ? e : undefined,
+    );
+  }
+
   const incidentInsert: Database["public"]["Tables"]["incidents"]["Insert"] = {
     user_id: user?.id ?? null,
     title: maskedTitle.masked,
@@ -149,6 +166,7 @@ const runSubmitWork = async (
     expert_fix: raw.expert_fix || null,
     location_country: null,
     source_url: raw.source_url,
+    is_possible_duplicate: isPossibleDuplicate,
     ip_hash: hashIp(data.ip),
     user_agent: userAgent,
     contains_pii: containsPii,
@@ -172,6 +190,13 @@ const runSubmitWork = async (
   }
 
   const incidentId = incident.id;
+
+  try {
+    const admin = createAdminClient();
+    await admin.from("submission_attempts").insert({ ip_hash: hashIp(data.ip) });
+  } catch (e) {
+    logger.warn("Failed to log submission attempt", {}, e instanceof Error ? e : undefined);
+  }
 
   if (providerIsCustom && providerCustom) {
     const admin = createAdminClient();
@@ -526,34 +551,68 @@ export async function submitIncident(
   if (result.kind === "ok") {
     const incidentId = result.value.id;
 
-    // Run rule-based pre-triage COGS check BEFORE invoking LLM moderation and cross-audit
-    const triage = await preTriageCheck(raw.title, raw.description);
-    if (!triage.ok) {
-      // Failed pre-triage: status set/kept as pending_review, bypassed AI, never auto-published
-      const admin = createAdminClient();
+    // Check submission attempts for this IP in the last 24 hours (F2)
+    const admin = createAdminClient();
+    let isRateLimitedSuspicious = false;
+    try {
+      const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+      const ipHash = hashIp(ip);
+      const { count } = await admin
+        .from("submission_attempts")
+        .select("*", { count: "exact", head: true })
+        .eq("ip_hash", ipHash)
+        .gte("created_at", twentyFourHoursAgo);
+
+      if (count && count > 10) {
+        isRateLimitedSuspicious = true;
+      }
+    } catch (e) {
+      logger.warn(
+        "Failed to check submission attempts count",
+        {},
+        e instanceof Error ? e : undefined,
+      );
+    }
+
+    if (isRateLimitedSuspicious) {
       await admin
         .from("incidents")
         .update({
           status: "pending_review",
           processing_stage: "complete",
-          moderator_notes: `Failed pre-triage COGS gate: ${triage.reason}. Retained in queue for manual review. LLM moderation bypassed.`,
+          moderator_notes:
+            "Bypassed AI moderation. Exceeded submission attempts limit (>10 attempts in 24h). Retained for manual admin review.",
         })
         .eq("id", incidentId);
     } else {
-      import("@/actions/autopilot-moderate").then(({ autoModerateIncidentAction }) => {
-        autoModerateIncidentAction(incidentId).catch((err) => {
-          logger.error("Async auto-moderation failed", err);
+      // Run rule-based pre-triage COGS check BEFORE invoking LLM moderation and cross-audit
+      const triage = await preTriageCheck(raw.title, raw.description);
+      if (!triage.ok) {
+        // Failed pre-triage: status set/kept as pending_review, bypassed AI, never auto-published
+        await admin
+          .from("incidents")
+          .update({
+            status: "pending_review",
+            processing_stage: "complete",
+            moderator_notes: `Failed pre-triage COGS gate: ${triage.reason}. Retained in queue for manual review. LLM moderation bypassed.`,
+          })
+          .eq("id", incidentId);
+      } else {
+        import("@/actions/autopilot-moderate").then(({ autoModerateIncidentAction }) => {
+          autoModerateIncidentAction(incidentId).catch((err) => {
+            logger.error("Async auto-moderation failed", err);
+          });
         });
-      });
-      import("@/lib/ai/cross-audit-engine").then(({ runCrossAudit }) => {
-        runCrossAudit(incidentId).catch((err) => {
-          logger.error(
-            "[CrossAudit] Async cross-audit pipeline failed",
-            { incidentId },
-            err instanceof Error ? err : undefined,
-          );
+        import("@/lib/ai/cross-audit-engine").then(({ runCrossAudit }) => {
+          runCrossAudit(incidentId).catch((err) => {
+            logger.error(
+              "[CrossAudit] Async cross-audit pipeline failed",
+              { incidentId },
+              err instanceof Error ? err : undefined,
+            );
+          });
         });
-      });
+      }
     }
 
     revalidatePath("/incidents");

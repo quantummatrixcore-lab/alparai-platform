@@ -88,6 +88,10 @@ export function createMockSupabaseClient() {
       delete: mockDelete,
       upsert: mockUpsert,
     }),
+    rpc: vi.fn().mockReturnValue({
+      maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+      single: vi.fn().mockResolvedValue({ data: null, error: null }),
+    }),
     auth: {
       getUser: vi.fn().mockResolvedValue({ data: { user: null }, error: null }),
       signInWithOAuth: vi.fn().mockResolvedValue({
