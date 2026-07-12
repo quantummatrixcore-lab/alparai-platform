@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import "../../helpers/setup";
 import type { NextRequest } from "next/server";
@@ -43,13 +44,13 @@ describe("K-Provider-Preview Cron Job", () => {
     const req = new Request("http://localhost/api/cron/k-provider-preview", {
       headers: { authorization: "Bearer invalid-token" },
     });
-    
+
     const originalEnv = process.env.NODE_ENV;
     process.env.NODE_ENV = "production";
-    
+
     const res = await GET(req as unknown as NextRequest);
     expect(res.status).toBe(401);
-    
+
     process.env.NODE_ENV = originalEnv;
   });
 
@@ -85,10 +86,12 @@ describe("K-Provider-Preview Cron Job", () => {
     expect(body.sent_count).toBe(1);
 
     // Verify email was sent
-    expect(mockSend).toHaveBeenCalledWith(expect.objectContaining({
-      to: "contact@testai.com",
-      subject: expect.stringContaining("K-BENCHMARK Draft Scores Preview Available"),
-    }));
+    expect(mockSend).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: "contact@testai.com",
+        subject: expect.stringContaining("K-BENCHMARK Draft Scores Preview Available"),
+      }),
+    );
   });
 
   it("should process expired previews and send public announcement emails", async () => {
@@ -122,9 +125,11 @@ describe("K-Provider-Preview Cron Job", () => {
     expect(body.expired_count).toBe(1);
 
     // Verify email was sent
-    expect(mockSend).toHaveBeenCalledWith(expect.objectContaining({
-      to: "contact@oldai.com",
-      subject: expect.stringContaining("K-BENCHMARK Scores Published"),
-    }));
+    expect(mockSend).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: "contact@oldai.com",
+        subject: expect.stringContaining("K-BENCHMARK Scores Published"),
+      }),
+    );
   });
 });

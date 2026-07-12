@@ -88,6 +88,7 @@ check-*.mjs
 chrome-profile/
 chrome_err.txt
 chrome_out.txt
+ops/launch-chrome.mjs
 
 # scratch and lighthouse artifacts
 scratch/
