@@ -3033,6 +3033,42 @@ export type Database = {
         }
         Relationships: []
       }
+      methodology_versions: {
+        Row: {
+          id: string
+          version: string
+          published_at: string
+          summary_en: string
+          summary_tr: string
+          changes_en: string[]
+          changes_tr: string[]
+          is_retraction: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          version: string
+          published_at?: string
+          summary_en: string
+          summary_tr: string
+          changes_en?: string[]
+          changes_tr?: string[]
+          is_retraction?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          version?: string
+          published_at?: string
+          summary_en?: string
+          summary_tr?: string
+          changes_en?: string[]
+          changes_tr?: string[]
+          is_retraction?: boolean
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       feed_incidents: {

@@ -2423,6 +2423,10 @@
     "step_review": "Expert Review",
     "dataSourcesTitle": "Data Sources",
     "dataSourcesText": "Scores are derived from: (1) verified incident reports submitted via the ALPAR platform, (2) automated cross-audit engine evaluations using established benchmarks (MMLU, GSM8K, IFEval, BBH), (3) domain expert assessments from the L3 advisor network, and (4) publicly available model documentation and technical reports.",
-    "disclaimer": "K-BENCHMARK scores are informational and provided 'as-is'. They do not constitute a compliance certification or legal opinion. ALPAR AI is 'AI Act ready/aligned', not compliant. See Terms of Service for full disclaimer."
+    "disclaimer": "K-BENCHMARK scores are informational and provided 'as-is'. They do not constitute a compliance certification or legal opinion. ALPAR AI is 'AI Act ready/aligned', not compliant. See Terms of Service for full disclaimer.",
+    "corrections_title": "Methodology Corrections & Version History",
+    "corrections_subtitle": "A public log of methodology updates, retractions, and version changes.",
+    "corrections_retraction": "Retraction",
+    "corrections_no_data": "No methodology changes published yet."
   }
 }
