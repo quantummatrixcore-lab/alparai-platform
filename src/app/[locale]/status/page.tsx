@@ -25,8 +25,8 @@ export default async function StatusPage({ params }: { params: Promise<{ locale:
         </CardHeader>
         <CardContent>
           <p className="text-fg-muted text-sm">{t("uptimeText")}</p>
-          <div className="mt-4 grid grid-cols-3 gap-4">
-            {["supabase", "upstash", "vercel"].map((svc) => (
+          <div className="mt-4 grid grid-cols-4 gap-4">
+            {["supabase", "upstash", "vercel", "sentry"].map((svc) => (
               <div key={svc} className="border-border-subtle rounded-lg border p-4 text-center">
                 <p className="text-fg-primary text-lg font-semibold capitalize">{svc}</p>
                 <p className="text-success-500 text-2xl font-bold">99.9%</p>

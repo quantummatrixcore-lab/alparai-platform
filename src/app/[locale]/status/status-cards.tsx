@@ -25,6 +25,7 @@ export function StatusCards() {
           { key: "supabase", status: overall },
           { key: "upstash", status: overall },
           { key: "vercel", status: "operational" },
+          { key: "sentry", status: "operational" },
         ]);
       })
       .catch(() => {
@@ -32,6 +33,7 @@ export function StatusCards() {
           { key: "supabase", status: "down" },
           { key: "upstash", status: "down" },
           { key: "vercel", status: "degraded" },
+          { key: "sentry", status: "degraded" },
         ]);
       });
   }, []);
@@ -48,7 +50,7 @@ export function StatusCards() {
   };
 
   return (
-    <div className="grid gap-4 md:grid-cols-3">
+    <div className="grid gap-4 md:grid-cols-4">
       {services.map((svc) => (
         <Card key={svc.key}>
           <CardHeader>
