@@ -5,6 +5,15 @@
     "empty_title": "Advisory Board Formulation",
     "empty_text": "The official members of the Methodology Advisory Committee will be announced after the launch freeze period (post August 9, 2026). Currently, the committee is operating under closed review sessions."
   },
+  "academy": {
+    "title": "Academy & Instructor Console",
+    "subtitle": "Empower the next generation of AI auditors and safety engineers with curated incident curricula.",
+    "curriculum_title": "Curated Incident Curriculum Pack",
+    "curriculum_desc": "Explore 20+ verified model failures, prompt injection templates, and safety mitigation exercises.",
+    "export_pdf": "Export Curriculum as PDF",
+    "empty_state_title": "Academy Offline Mode",
+    "empty_state_desc": "Curriculum packs and interactive classroom modules will synchronize post launch. Verified instructors will gain full control panels."
+  },
   "pricing": {
     "title": "Enterprise Pricing & Audits",
     "subtitle": "Decentralized AI trust infrastructure, custom benchmarks, and automated safety alerting for enterprise systems.",

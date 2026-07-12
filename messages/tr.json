@@ -5,6 +5,15 @@
     "empty_title": "Danışma Kurulu Oluşumu",
     "empty_text": "Metodoloji Danışma Kurulu'nun resmi üyeleri, lansman dondurma döneminden sonra (9 Ağustos 2026 sonrasında) resmi olarak ilan edilecektir. Şu anda kurul, kapalı değerlendirme oturumları halinde faaliyet göstermektedir."
   },
+  "academy": {
+    "title": "Akademi ve Eğitmen Paneli",
+    "subtitle": "Küratörlü olay müfredatlarıyla yeni nesil yapay zeka denetçilerini ve güvenlik mühendislerini güçlendirin.",
+    "curriculum_title": "Küratörlü Yapay Zeka Hataları Müfredatı",
+    "curriculum_desc": "20'den fazla doğrulanmış model hatasını, prompt enjeksiyon şablonunu ve güvenlik azaltma egzersizlerini keşfedin.",
+    "export_pdf": "Müfredatı PDF Olarak Dışa Aktar",
+    "empty_state_title": "Akademi Çevrimdışı Modu",
+    "empty_state_desc": "Müfredat paketleri ve etkileşimli sınıf modülleri lansman sonrasında senkronize edilecektir. Doğrulanmış eğitmenler tam kontrol panellerine erişebilecektir."
+  },
   "pricing": {
     "title": "Kurumsal Üyelik ve Denetim",
     "subtitle": "Merkeziyetsiz yapay zeka güven altyapısı, özel kıyaslama testleri ve kurumsal sistemler için otomatik güvenlik uyarıları.",
