@@ -5,6 +5,18 @@
     "empty_title": "Danışma Kurulu Oluşumu",
     "empty_text": "Metodoloji Danışma Kurulu'nun resmi üyeleri, lansman dondurma döneminden sonra (9 Ağustos 2026 sonrasında) resmi olarak ilan edilecektir. Şu anda kurul, kapalı değerlendirme oturumları halinde faaliyet göstermektedir."
   },
+  "transparency": {
+    "title": "Madde 73 Şeffaflık Takipçisi",
+    "subtitle": "AB Yapay Zeka Yasası Madde 73 kapsamındaki sağlayıcı yükümlülük denetimlerini, teknik dokümantasyonu ve model şeffaflık standartlarını izleyin.",
+    "obligation_header": "Yükümlülük Başlığı",
+    "status_header": "Uyum Durumu",
+    "verified_header": "Son Denetim",
+    "status_compliant": "Uyumlu",
+    "status_non_compliant": "Uyumsuz",
+    "status_pending": "Denetim Bekliyor",
+    "empty_state_title": "Kayıtlı Denetim Bulunmuyor",
+    "empty_state_desc": "Denetim süreçleri ilk model sürüm taramaları için hazırlanmaktadır. Standart Madde 73 uyum matrisleri lansman sonrasında aktif hale gelecektir."
+  },
   "academy": {
     "title": "Akademi ve Eğitmen Paneli",
     "subtitle": "Küratörlü olay müfredatlarıyla yeni nesil yapay zeka denetçilerini ve güvenlik mühendislerini güçlendirin.",

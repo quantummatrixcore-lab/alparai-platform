@@ -26,6 +26,7 @@ const MIGRATIONS = [
   "20260727000006_instructor_tier.sql",
   "20260727000007_fellowship_applications.sql",
   "20260727000008_student_ambassadors.sql",
+  "20260727000009_art73_tracker.sql",
 ];
 
 async function apply(name) {

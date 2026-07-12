@@ -5,6 +5,18 @@
     "empty_title": "Advisory Board Formulation",
     "empty_text": "The official members of the Methodology Advisory Committee will be announced after the launch freeze period (post August 9, 2026). Currently, the committee is operating under closed review sessions."
   },
+  "transparency": {
+    "title": "Article 73 Transparency Tracker",
+    "subtitle": "Monitor AI provider compliance with European AI Act Article 73 obligation audits, including technical documentation and model transparency standards.",
+    "obligation_header": "Obligation Title",
+    "status_header": "Compliance Status",
+    "verified_header": "Last Verified",
+    "status_compliant": "Compliant",
+    "status_non_compliant": "Non-Compliant",
+    "status_pending": "Pending Audit Review",
+    "empty_state_title": "No Audits Registered",
+    "empty_state_desc": "Audit pipelines are preparing for initial model release sweeps. Standardized Article 73 compliant matrices will populate post launch."
+  },
   "academy": {
     "title": "Academy & Instructor Console",
     "subtitle": "Empower the next generation of AI auditors and safety engineers with curated incident curricula.",
