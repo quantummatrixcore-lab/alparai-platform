@@ -97,14 +97,7 @@ export function IncidentCard({
   const borderClass = severityBorders[severity] || "border-l-4 border-l-brand-500";
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-20px" }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
-      whileHover={{ y: -3, scale: 1.005 }}
-      className="w-full"
-    >
+    <div className="w-full transition-all duration-300 hover:-translate-y-1 hover:scale-[1.005]">
       <Card
         interactive
         padding="md"
@@ -177,7 +170,10 @@ export function IncidentCard({
                 <Badge
                   variant="muted"
                   className="border-amber-500/20 bg-amber-500/10 text-amber-400"
-                  title={t("seed_badge_tooltip", { defaultValue: "This incident was imported from curated research data to seed the platform at launch." })}
+                  title={t("seed_badge_tooltip", {
+                    defaultValue:
+                      "This incident was imported from curated research data to seed the platform at launch.",
+                  })}
                 >
                   {t("seed_badge", { defaultValue: "Imported — Research Data" })}
                 </Badge>
@@ -186,7 +182,9 @@ export function IncidentCard({
                 <Badge
                   variant="muted"
                   className="border-sky-500/20 bg-sky-500/10 text-sky-400"
-                  title={t("imported_badge_tooltip", { defaultValue: "Imported from an external source. Original language preserved." })}
+                  title={t("imported_badge_tooltip", {
+                    defaultValue: "Imported from an external source. Original language preserved.",
+                  })}
                 >
                   {t("imported_badge", { defaultValue: "Imported" })}
                 </Badge>
@@ -322,7 +320,7 @@ export function IncidentCard({
           </div>
         </div>
       </Card>
-    </motion.div>
+    </div>
   );
 }
 

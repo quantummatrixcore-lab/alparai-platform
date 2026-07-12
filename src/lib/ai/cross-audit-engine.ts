@@ -30,13 +30,11 @@ import "server-only";
 import {
   callWithFailover,
   isGatewayConfigured,
-  TRIAGE_SLOT_1_CHAIN,
-  TRIAGE_SLOT_2_CHAIN,
-  SUPREME_COURT_CHAIN,
   type GatewayModel,
 } from "@/lib/ai/openrouter-gateway";
 import { maskPII } from "@/lib/pii/guardian";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { selectModelTier, type ModelTier } from "@/lib/audit/model-router";
 import { logger } from "@/lib/utils/logger";
 import type { Database } from "@/types/database";
 
@@ -516,7 +514,9 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
 
   const { data: incident, error: fetchError } = await admin
     .from("incidents")
-    .select("id, title, description, title_masked, description_masked, category, severity")
+    .select(
+      "id, title, description, title_masked, description_masked, category, severity, audit_tier",
+    )
     .eq("id", incidentId)
     .single();
 
@@ -574,51 +574,43 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
   });
 
   // Dynamic Model Router (J4a)
-  const isShort = safeTitle.length + safeDescription.length < 1200;
-  const isHighRisk = incident.severity === "critical" || incident.severity === "high";
+  const routerResult = selectModelTier({
+    title: safeTitle,
+    description: safeDescription,
+    severity: incident.severity,
+    auditTier: incident.audit_tier as ModelTier | undefined,
+  });
 
-  let slot1Chain = TRIAGE_SLOT_1_CHAIN;
-  let slot2Chain = TRIAGE_SLOT_2_CHAIN;
-  let supremeChain = SUPREME_COURT_CHAIN;
+  if (routerResult.tier === "none") {
+    logger.info("[CrossAudit] J4a: Routing bypassed due to audit_tier = 'none'", { incidentId });
+    await admin
+      .from("incidents")
+      .update({
+        cross_audit_truth_score: 0,
+        cross_audit_confidence: 1.0,
+        cross_audit_reasoning: "Filtered by audit_tier setting: none",
+        cross_audit_completed_at: new Date().toISOString(),
+        cross_audit_model: "model-router-v1",
+      })
+      .eq("id", incidentId);
 
-  if (isShort && !isHighRisk) {
-    logger.info("[CrossAudit] J4a: Routing to LIGHTWEIGHT models (Gemini Flash / GPT-4o-mini)");
-    slot1Chain = [{ id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 2048 }];
-    slot2Chain = [{ id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 2048 }];
-    supremeChain = [
-      { id: "openai/gpt-4o-mini", provider: "openrouter", tier: "free", maxTokens: 2048 },
-      { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 2048 },
-    ];
-  } else {
-    logger.info("[CrossAudit] J4a: Routing to HEAVYWEIGHT models (Claude 3.5 Sonnet / Gemini Pro)");
-    slot1Chain = [
-      {
-        id: "anthropic/claude-3.5-sonnet",
-        provider: "openrouter",
-        tier: "premium",
-        maxTokens: 4096,
-      },
-      { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
-    ];
-    slot2Chain = [
-      {
-        id: "anthropic/claude-3.5-sonnet",
-        provider: "openrouter",
-        tier: "premium",
-        maxTokens: 4096,
-      },
-      { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
-    ];
-    supremeChain = [
-      {
-        id: "anthropic/claude-3.5-sonnet",
-        provider: "openrouter",
-        tier: "premium",
-        maxTokens: 4096,
-      },
-      { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
-    ];
+    return {
+      truthScore: 0,
+      confidence: 1.0,
+      reasoning: "Filtered by audit_tier setting: none",
+      supremeCourtModel: "model-router-v1",
+      triageModels: [],
+      totalLatencyMs: 0,
+    };
   }
+
+  logger.info(`[CrossAudit] J4a: Routing to ${routerResult.tier.toUpperCase()} models`, {
+    tier: routerResult.tier,
+  });
+
+  const slot1Chain = routerResult.slot1Chain;
+  const slot2Chain = routerResult.slot2Chain;
+  const supremeChain = routerResult.supremeChain;
 
   // Turn 1: Parallel Initial Evaluation
   const [initA, initB] = await Promise.all([

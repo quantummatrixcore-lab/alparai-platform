@@ -45,7 +45,7 @@ export function HeroSection({
     <section className="bg-bg-primary relative overflow-hidden pt-24 pb-16">
       {/* Background Effects */}
       <div aria-hidden="true" className="absolute inset-0 z-0 overflow-hidden">
-        <div className="bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')] absolute inset-0 opacity-20 mix-blend-overlay" />
+        <div className="bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%221%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')] absolute inset-0 opacity-20 mix-blend-overlay" />
         <motion.div
           style={{ y: y1, opacity }}
           className="bg-brand-600/8 absolute -top-[30%] left-1/4 h-[800px] w-[800px] -translate-x-1/2 rounded-full mix-blend-screen blur-[140px]"

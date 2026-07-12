@@ -757,6 +757,7 @@
       "transparency": "Transparency",
       "ai_act": "AI Act Tracker",
       "about": "About",
+      "advisory_board": "Advisory Board",
       "pricing": "Pricing",
       "security": "Security",
       "academy": "Academy",
@@ -1172,7 +1173,11 @@
     "contact_security": "Security & Compliance",
     "statsVerified": "Verified AI Failures",
     "statsProviders": "AI Providers Tracked",
-    "statsCountries": "Countries Impacted"
+    "statsCountries": "Countries Impacted",
+    "advisoryBoardTitle": "Advisory Board",
+    "advisoryBoardSubtitle": "Meet the experts shaping AI accountability standards worldwide.",
+    "advisoryBoardEmpty": "Our Advisory Board is currently being formed. If you are an AI ethics researcher, legal expert, or policy advisor interested in joining, please reach out to us.",
+    "advisoryBoardJoinCTA": "Express Interest / Join Board"
   },
   "legal": {
     "termsTitle": "Terms of Service",

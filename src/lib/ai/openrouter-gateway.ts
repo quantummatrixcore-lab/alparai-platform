@@ -28,6 +28,7 @@ import { CohereAdapter } from "./adapters/cohere";
 import { HuggingFaceAdapter } from "./adapters/huggingface";
 import { GoogleAdapter } from "./adapters/google";
 import { BlackboxAdapter } from "./adapters/blackbox";
+import { isCostKillSwitchActive } from "./cost-guard";
 
 // Export the type interfaces from the common types file to keep backward compatibility
 export type {
@@ -98,6 +99,19 @@ const adapters: Record<string, ProviderAdapter> = {
  * Route request to the appropriate adapter based on model.provider.
  */
 export async function callModel(request: GatewayRequest): Promise<GatewayResult> {
+  if (await isCostKillSwitchActive()) {
+    logger.warn(`[Gateway] Call blocked — COST_KILL_SWITCH is active.`);
+    return {
+      ok: false,
+      error: {
+        code: "cost_kill_switch_active",
+        message:
+          "API calls are temporarily suspended because the project cost ceiling was exceeded.",
+        model: request.model.id,
+      },
+    };
+  }
+
   const provider = request.model.provider || "openrouter";
   if (provider === "blackbox" && process.env.ENABLE_BLACKBOX_PROVIDER !== "true") {
     return {

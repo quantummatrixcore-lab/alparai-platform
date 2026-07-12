@@ -757,6 +757,7 @@
       "transparency": "Şeffaflık",
       "ai_act": "Yapay Zeka Yasası",
       "about": "Hakkında",
+      "advisory_board": "Danışma Kurulu",
       "pricing": "Fiyatlandırma",
       "security": "Güvenlik",
       "academy": "Akademi",
@@ -1172,7 +1173,11 @@
     "contact_security": "Güvenlik & Uyumluluk",
     "statsVerified": "Doğrulanan Vaka",
     "statsProviders": "İzlenen Sağlayıcı",
-    "statsCountries": "Ülke"
+    "statsCountries": "Ülke",
+    "advisoryBoardTitle": "Danışma Kurulu",
+    "advisoryBoardSubtitle": "Yapay zeka hesap verebilirlik standartlarını şekillendiren küresel uzmanlarımızla tanışın.",
+    "advisoryBoardEmpty": "Danışma Kurulumuz şu anda oluşturulma aşamasındadır. Katılmak isteyen yapay zeka etiği araştırmacıları, hukuk uzmanları veya politika danışmanları lütfen bizimle iletişime geçsin.",
+    "advisoryBoardJoinCTA": "Başvuru Yap / Kurula Katıl"
   },
   "legal": {
     "termsTitle": "Kullanım Koşulları",

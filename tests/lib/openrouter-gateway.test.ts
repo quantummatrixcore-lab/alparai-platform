@@ -51,6 +51,10 @@ vi.mock("@/lib/utils/logger", () => ({
 }));
 
 import OpenAI from "openai";
+vi.mock("@/lib/ai/cost-guard", () => ({
+  isCostKillSwitchActive: vi.fn().mockResolvedValue(false),
+}));
+import { isCostKillSwitchActive } from "@/lib/ai/cost-guard";
 import { callModel, callWithFailover } from "@/lib/ai/openrouter-gateway";
 import type { GatewayModel } from "@/lib/ai/types";
 
@@ -129,6 +133,22 @@ describe("OpenRouter API Gateway", () => {
       expect(res.ok).toBe(false);
       if (!res.ok) {
         expect(res.error.code).toBe("timeout");
+      }
+    });
+
+    it("blocks calls when cost kill switch is active", async () => {
+      vi.mocked(isCostKillSwitchActive).mockResolvedValueOnce(true);
+
+      const res = await callModel({
+        systemPrompt: "system",
+        userMessage: "user",
+        model: MOCK_FREE_TRIAGE_MODELS[0]!,
+      });
+
+      expect(res.ok).toBe(false);
+      if (!res.ok) {
+        expect(res.error.code).toBe("cost_kill_switch_active");
+        expect(res.error.message).toContain("cost ceiling");
       }
     });
   });

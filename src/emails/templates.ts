@@ -865,3 +865,156 @@ export function getExpertVerificationEmail({
     </html>
   `;
 }
+
+export interface AdvisoryBoardInvitationParams {
+  recipientName: string;
+  inviteLink: string;
+  locale: "en" | "tr";
+  unsubscribeUrl?: string;
+}
+
+export function getAdvisoryBoardInvitationEmail({
+  recipientName,
+  inviteLink,
+  locale,
+  unsubscribeUrl = "https://alparai.com/unsubscribe",
+}: AdvisoryBoardInvitationParams): string {
+  const isTr = locale === "tr";
+  const subject = isTr
+    ? "[ALPAR AI] Danışma Kurulu Katılım Daveti"
+    : "[ALPAR AI] Advisory Board Invitation";
+  const greeting = isTr ? `Sayın ${recipientName},` : `Dear ${recipientName},`;
+  const bodyText = isTr
+    ? "Yapay zeka sistemlerinin hesap verebilirliğini, şeffaflığını ve güvenliğini artırma misyonumuza katkı sağlamak üzere sizi ALPAR AI Danışma Kurulu'na (Advisory Board) davet etmekten onur duyarız. Alanınızdaki birikiminizin, bağımsız denetim metodolojilerimizi şekillendirmede son derece değerli olacağına inanıyoruz."
+    : "We are honored to invite you to join the ALPAR AI Advisory Board to contribute to our mission of advancing accountability, transparency, and safety in AI systems. We believe your expertise will be invaluable in shaping our independent auditing methodologies.";
+  const ctaText = isTr ? "Daveti Kabul Et & Başvur" : "Accept Invitation & Apply";
+  const detailsTitle = isTr ? "ALPAR AI Hakkında" : "About ALPAR AI";
+  const detailsBody = isTr
+    ? "ALPAR AI, yapay zeka hatalarının bağımsız olarak raporlandığı ve tarafsız Cross-Audit mekanizmalarıyla değerlendirildiği küresel bir güven altyapısıdır. Danışma Kurulu üyelerimiz, denetim standartlarımızın akademik ve sektörel bağımsızlığını korumasını güvence altına alır."
+    : "ALPAR AI is a global trust infrastructure where AI incidents are independently reported and audited using neutral Cross-Audit mechanisms. Our Advisory Board members ensure that our auditing standards remain academically and industrially independent.";
+  const footerText = isTr
+    ? "Bu e-posta daveti şahsınıza özel gönderilmiştir. Bildirim ayarlarını yönetmek için:"
+    : "This email invitation is intended solely for the recipient. To manage notifications:";
+  const unsubText = isTr ? "Abonelikten Çık" : "Unsubscribe";
+
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <title>${subject}</title>
+        <style>
+          body {
+            background-color: #09090b;
+            color: #f4f4f5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+          }
+          .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #18181b;
+            border: 1px solid #27272a;
+            border-radius: 16px;
+            overflow: hidden;
+          }
+          .header {
+            background: linear-gradient(135deg, #00ff88, #0A1622);
+            padding: 30px 40px;
+            text-align: center;
+          }
+          .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+          }
+          .content {
+            padding: 40px;
+          }
+          .greeting {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #ffffff;
+          }
+          .body-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #d4d4d8;
+            margin-bottom: 24px;
+          }
+          .card {
+            background-color: #09090b;
+            border: 1px solid #27272a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+          }
+          .card h2 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #a1a1aa;
+            margin: 0 0 8px 0;
+          }
+          .details-text {
+            font-size: 14px;
+            color: #a1a1aa;
+            line-height: 1.5;
+          }
+          .btn-container {
+            text-align: center;
+            margin-top: 24px;
+          }
+          .btn {
+            display: inline-block;
+            background-color: #00ff88;
+            color: #0A1622;
+            font-weight: 700;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: background-color 0.2s;
+          }
+          .footer {
+            background-color: #18181b;
+            border-top: 1px solid #27272a;
+            padding: 20px 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #71717a;
+          }
+          .footer a {
+            color: #00ff88;
+            text-decoration: underline;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>ALPAR AI</h1>
+          </div>
+          <div class="content">
+            <div class="greeting">${greeting}</div>
+            <p class="body-text">${bodyText}</p>
+            <div class="card">
+              <h2>${detailsTitle}</h2>
+              <div class="details-text">${detailsBody}</div>
+            </div>
+            <div class="btn-container">
+              <a href="${inviteLink}" class="btn">${ctaText}</a>
+            </div>
+          </div>
+          <div class="footer">
+            <p>${footerText} <a href="${unsubscribeUrl}">${unsubText}</a></p>
+            <p style="margin-top: 4px; font-weight: bold; color: #71717a;">ALPAR AI — Trust Infrastructure for AI Accountability</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+}

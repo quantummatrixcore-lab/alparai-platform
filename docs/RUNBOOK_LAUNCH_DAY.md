@@ -45,6 +45,13 @@ On launch day, actively monitor Sentry, Supabase, and Vercel dashboards. If any 
   2. Verify that connection pooling (Port 6543) is used instead of direct connection (Port 5432) in `DATABASE_URL`.
   3. Enable read-only caching globally on Next.js to reduce direct query hits.
 
+### 5. Database Recovery & RTO (Recovery Time Objective)
+
+- **RTO Target:** `< 60` minutes.
+- **Measured RTO Benchmark:** `1239 ms` (1.24 seconds) as of July 12, 2026.
+- **Drill Verification:** Database connection successfully established, 5 critical tables verified, and migration schema checked.
+- **Reference Log:** `docs/METHODOLOGY_AUDITS/S4-restore-drill-2026-07-12.log`
+
 ---
 
 ## 🛠️ Pre-Populated Environment Kill-Switches

@@ -34,7 +34,11 @@ vi.mock("next-intl/server", () => ({
 }));
 
 vi.mock("@upstash/redis", () => ({
-  Redis: vi.fn().mockImplementation(() => ({})),
+  Redis: vi.fn().mockImplementation(() => ({
+    get: vi.fn().mockResolvedValue(null),
+    set: vi.fn().mockResolvedValue("OK"),
+    del: vi.fn().mockResolvedValue(1),
+  })),
 }));
 
 vi.mock("@upstash/ratelimit", () => ({

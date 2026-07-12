@@ -89,3 +89,7 @@ chrome-profile/
 chrome_err.txt
 chrome_out.txt
 
+# scratch and lighthouse artifacts
+scratch/
+lighthouse-*.json
+
