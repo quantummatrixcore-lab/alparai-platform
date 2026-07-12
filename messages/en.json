@@ -2306,7 +2306,8 @@
     "score": "Score",
     "confidence_interval": "Wilson Confidence Interval",
     "methodology_link": "View evaluation rubric & methodology",
-    "overall_score": "Composite Score"
+    "overall_score": "Composite Score",
+    "retired": "Retired"
   },
   "methodology": {
     "title": "K-BENCHMARK Methodology",

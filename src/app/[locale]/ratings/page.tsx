@@ -13,6 +13,7 @@ interface ScoreRecord {
   wilson_upper: number;
   sample_size: number;
   last_audited_at: string;
+  status: string;
   k_categories: {
     id: string;
     name: string;
@@ -64,6 +65,7 @@ export default async function RatingsPage({
       wilson_upper,
       sample_size,
       last_audited_at,
+      status,
       k_categories (
         id,
         name,
@@ -93,6 +95,7 @@ export default async function RatingsPage({
       overallScore: number;
       lastAudited: string;
       sampleSize: number;
+      isRetired: boolean;
     }
   > = {};
 
@@ -111,6 +114,7 @@ export default async function RatingsPage({
         overallScore: 0,
         lastAudited: rec.last_audited_at,
         sampleSize: 0,
+        isRetired: rec.status === "retired",
       };
     }
 
@@ -254,6 +258,11 @@ export default async function RatingsPage({
                       >
                         <Cpu className="h-4 w-4 text-slate-500 transition-colors group-hover:text-[#00FF88]" />
                         <span>{item.modelName}</span>
+                        {item.isRetired && (
+                          <span className="ml-2 rounded-full border border-rose-900/30 bg-rose-950/20 px-2 py-0.5 text-[10px] font-bold text-rose-400">
+                            {t("retired", { defaultValue: "Retired" })}
+                          </span>
+                        )}
                       </Link>
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-300">{item.providerName}</td>

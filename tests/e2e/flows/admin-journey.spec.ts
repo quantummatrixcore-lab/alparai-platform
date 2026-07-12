@@ -26,4 +26,16 @@ test.describe("Admin Panel Journey - Security Gates", () => {
     await page.waitForURL(/\/auth\/signin/);
     await expect(page).toHaveURL(/.*signin\?next=.*/);
   });
+
+  test("admin triage queue page redirects unauthenticated users", async ({ page }) => {
+    await page.goto("/en/admin/incidents");
+    await page.waitForURL(/\/auth\/signin/);
+    await expect(page).toHaveURL(/.*signin\?next=.*/);
+  });
+
+  test("admin moderation page redirects unauthenticated users", async ({ page }) => {
+    await page.goto("/en/admin/moderation");
+    await page.waitForURL(/\/auth\/signin/);
+    await expect(page).toHaveURL(/.*signin\?next=.*/);
+  });
 });

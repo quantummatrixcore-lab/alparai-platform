@@ -2306,7 +2306,8 @@
     "score": "Skor",
     "confidence_interval": "Wilson Güven Aralığı",
     "methodology_link": "Değerlendirme kriterleri ve metodolojiyi inceleyin",
-    "overall_score": "Bileşik Skor"
+    "overall_score": "Bileşik Skor",
+    "retired": "Emekli"
   },
   "methodology": {
     "title": "K-BENCHMARK Metodolojisi",
