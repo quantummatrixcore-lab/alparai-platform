@@ -202,6 +202,16 @@ export const dsarExportResponseSchema = z.object({
   comments: z.array(z.any()),
   votes: z.array(z.any()),
   expert_applications: z.array(z.any()),
-});
-
-
+}); // 11. GET /api/v1/dsar/download
+export const dsarDownloadResponseSchema = z.union([
+  z.object({
+    user_id: z.string().uuid(),
+    email: z.string().nullable().optional(),
+    generated_at: z.string(),
+    profile: z.any().nullable(),
+    incidents: z.array(z.any()),
+    comments: z.array(z.any()),
+    votes: z.array(z.any()),
+  }),
+  z.string(), // CSV format is plain string
+]);
