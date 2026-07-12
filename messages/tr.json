@@ -1,4 +1,10 @@
 {
+  "about_methodology_committee": {
+    "title": "Metodoloji Danışma Kurulu",
+    "description": "ALPAR AI'ın model derecelendirme metodolojilerini, Wilson güven aralıklarını ve modeller arası münazara hakemlik standartlarını denetleyen bağımsız akademik ve bilimsel heyet.",
+    "empty_title": "Danışma Kurulu Oluşumu",
+    "empty_text": "Metodoloji Danışma Kurulu'nun resmi üyeleri, lansman dondurma döneminden sonra (9 Ağustos 2026 sonrasında) resmi olarak ilan edilecektir. Şu anda kurul, kapalı değerlendirme oturumları halinde faaliyet göstermektedir."
+  },
   "app": {
     "name": "ALPAR AI",
     "tagline": "Dünyanın ilk topluluk yönetimli yapay zeka hesap verebilirlik platformu",

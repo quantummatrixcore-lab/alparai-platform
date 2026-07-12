@@ -1,4 +1,10 @@
 {
+  "about_methodology_committee": {
+    "title": "Methodology Advisory Committee",
+    "description": "The independent academic and scientific body supervising ALPAR AI's benchmark methodologies, Wilson score intervals, and cross-model debate arbitration standards.",
+    "empty_title": "Advisory Board Formulation",
+    "empty_text": "The official members of the Methodology Advisory Committee will be announced after the launch freeze period (post August 9, 2026). Currently, the committee is operating under closed review sessions."
+  },
   "app": {
     "name": "ALPAR AI",
     "tagline": "The world's first community-governed AI accountability platform",

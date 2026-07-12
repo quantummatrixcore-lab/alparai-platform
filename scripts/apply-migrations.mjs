@@ -20,6 +20,7 @@ const MIGRATIONS = [
   "20260607000001_autopilot_runs.sql",
   "20260608000001_incident_votes.sql",
   "20260608000002_incidents_pii_columns.sql",
+  "20260727000003_methodology_committee.sql",
 ];
 
 async function apply(name) {
