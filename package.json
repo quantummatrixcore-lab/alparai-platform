@@ -38,6 +38,8 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "test:a11y": "playwright test tests/e2e/a11y/",
+    "test:visual": "playwright test tests/e2e/visual/",
     "knip": "knip",
     "validate": "pnpm typecheck && pnpm lint && pnpm test",
     "prepare": "husky || true"
