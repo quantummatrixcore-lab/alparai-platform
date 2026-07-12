@@ -114,34 +114,50 @@ docs/                    # Architecture, KVKK, ADRs, handover
 | Item | Description                                               | Commit    |
 | ---- | --------------------------------------------------------- | --------- |
 | G6   | Granular cookie consent + Plausible consent-aware loading | `8ac4d29` |
-| K14  | K-BENCHMARK methodology page (/methodology/k-benchmark)   | `cfc65ae` |
-| A1   | Anonymous email hash + migration + form field             | `d9181dc` |
-| E1   | E2E suite expansion (55 scenarios, 16 spec files)         | `d9181dc` |
-| O1   | System status page (/status)                              | `d9181dc` |
-| K16  | Model score history page with SVG chart                   | `83d1de5` |
+| K14  | K-BENCHMARK methodology page                              | `cfc65ae` |
+| A1   | Anonymous email hash + migration                          | `d9181dc` |
+| E1   | E2E suite expansion (55 scenarios)                        | `d9181dc` |
+| O1   | System status page                                        | `d9181dc` |
+| K16  | Model score history page + SVG chart                      | `83d1de5` |
 | C1a  | API keys hardening rollback fix                           | `83d1de5` |
 | B1   | CLAUDE.md init                                            | `3b5b54b` |
+| B2   | HANDOVER.md                                               | `217e1b7` |
+| E3   | k6 load testing baseline                                  | `930801f` |
+| E5   | Accessibility CI gate                                     | `930801f` |
+| E6   | Visual regression (screenshot diff)                       | `930801f` |
+| SL1  | SLI/SLO dashboard + OPS doc                               | `b68596e` |
+| SL4  | Golden signals dashboard                                  | `b68596e` |
+| L11  | Advisory rotation policy + migration                      | `db7e5bd` |
+| L12  | Peer-review journal page + migration                      | `db7e5bd` |
+| N5   | TR AISI dialogue draft                                    | `5c3e586` |
+| N6   | KVKK engagement draft                                     | `5c3e586` |
 
 **Post-2026-06-06 rebuild**: All prior data was unrecoverable (Supabase FREE plan paused >90 days). Fresh seed data applied.
 
 ---
 
-## 9. Remaining Work (MASTER_PLAN v8.8)
+## 9. Completed Work (MASTER_PLAN v8.8 — OpenCode batch)
 
-| ID  | Item                      | Priority |
-| --- | ------------------------- | -------- |
-| B2  | HANDOVER.md (this doc)    | High     |
-| ST1 | Transparency reports page | Medium   |
-| CQ1 | Community challenges UI   | Medium   |
-| E3  | Load testing baseline     | Medium   |
-| E5  | Accessibility CI gate     | Medium   |
-| E6  | Visual regression         | Medium   |
-| SL1 | SLI/SLO dashboard         | Medium   |
-| SL4 | Golden signals dashboard  | Medium   |
-| L11 | Advisory rotation doc     | Low      |
-| L12 | Peer-review journal page  | Low      |
-| N5  | TR AISI draft doc         | Low      |
-| N6  | KVKK Kurulu draft doc     | Low      |
+All 15 OpenCode items completed in a single session (2026-07-12):
+
+| ID  | Item                                 | Commit    |
+| --- | ------------------------------------ | --------- |
+| K14 | K-BENCHMARK methodology page         | `cfc65ae` |
+| K16 | Model score history page + chart     | `83d1de5` |
+| B1  | CLAUDE.md init                       | `3b5b54b` |
+| B2  | HANDOVER.md                          | `217e1b7` |
+| ST1 | Transparency page (pre-existing)     | —         |
+| CQ1 | Bounties page (pre-existing)         | —         |
+| E3  | k6 load testing baseline             | `930801f` |
+| E5  | Accessibility CI gate                | `930801f` |
+| E6  | Visual regression                    | `930801f` |
+| SL1 | SLI/SLO dashboard + OPS doc          | `b68596e` |
+| SL4 | Golden signals dashboard             | `b68596e` |
+| L11 | Advisory rotation migration + doc    | `db7e5bd` |
+| L12 | Peer-review journal page + migration | `db7e5bd` |
+| N5  | TR AISI draft doc                    | `5c3e586` |
+| N6  | KVKK engagement draft                | `5c3e586` |
+| G8  | Age gate migration (Antigravity)     | `8ac4d29` |
 
 ---
 
