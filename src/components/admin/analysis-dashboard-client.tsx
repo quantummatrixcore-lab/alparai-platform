@@ -14,9 +14,12 @@ import {
   Clock,
   Lock,
   ExternalLink,
+  Bot,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
+import { runLiveSystemAnalysis } from "@/actions/admin/live-analysis";
+import { toast } from "sonner";
 
 interface ScoreSet {
   vision_mission: number;
@@ -102,6 +105,13 @@ interface Props {
   };
 }
 
+interface LiveAnalysisResult {
+  overall_score: number;
+  executive_summary: string;
+  security_flaws: string[] | string;
+  recommendations: string[] | string;
+}
+
 export function AnalysisDashboardClient({
   registryData,
   promptSection,
@@ -113,6 +123,8 @@ export function AnalysisDashboardClient({
   const [p0Filter, setP0Filter] = React.useState<"all" | "open" | "resolved">("all");
   const [p0Search, setP0Search] = React.useState("");
   const [carouselIndex, setCarouselIndex] = React.useState(0);
+  const [isLiveAnalyzing, setIsLiveAnalyzing] = React.useState(false);
+  const [liveResult, setLiveResult] = React.useState<LiveAnalysisResult | null>(null);
 
   const [logs, setLogs] = React.useState<string[]>([
     "log_sys_init",
@@ -174,6 +186,21 @@ export function AnalysisDashboardClient({
     setCarouselIndex(
       (prev) => (prev - 1 + registryData.audits.length) % registryData.audits.length,
     );
+  };
+
+  const handleRunLiveAnalysis = async () => {
+    setIsLiveAnalyzing(true);
+    setLiveResult(null);
+    toast.loading("Yapay zeka analiz yapıyor (gpt-4o-mini)...", { id: "live-analysis" });
+    const result = await runLiveSystemAnalysis();
+    setIsLiveAnalyzing(false);
+
+    if (result.success && result.data) {
+      toast.success("Analiz tamamlandı!", { id: "live-analysis" });
+      setLiveResult(result.data);
+    } else {
+      toast.error(result.error || "Analiz sırasında bir hata oluştu.", { id: "live-analysis" });
+    }
   };
 
   const filteredP0Blockers = p0Tracker.filter((item) => {
@@ -248,17 +275,98 @@ export function AnalysisDashboardClient({
             )}
           >
             <FileText className="h-4 w-4" />
-            {t("raw_markdown")}
+            {t("raw_analysis")}
           </button>
         </div>
 
-        <div className="flex items-center">
-          <span className="flex animate-pulse items-center gap-1.5 rounded-full border border-cyan-500/30 bg-neutral-950/80 px-3 py-1 font-mono text-xs text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.25)]">
-            <span className="h-2 w-2 rounded-full bg-cyan-400"></span>
-            {t("system_online")}
-          </span>
+        <div>
+          <button
+            onClick={handleRunLiveAnalysis}
+            disabled={isLiveAnalyzing}
+            className="bg-brand-500 hover:bg-brand-400 flex items-center gap-2 rounded-md px-4 py-2 text-sm font-bold text-white shadow-[0_0_15px_rgba(168,85,247,0.4)] transition-all disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Bot className={cn("h-4 w-4", isLiveAnalyzing && "animate-spin")} />
+            {isLiveAnalyzing ? "Analiz Ediliyor..." : "Yapay Zeka Analizini Başlat (Canlı)"}
+          </button>
         </div>
       </div>
+
+      {liveResult && (
+        <div className="bg-bg-secondary/80 border-brand-500/40 relative overflow-hidden rounded-2xl border p-6 shadow-xl backdrop-blur-xl">
+          <div className="bg-brand-500/20 absolute -top-10 -right-10 rounded-full p-20 blur-3xl"></div>
+          <div className="relative z-10">
+            <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-4">
+              <h2 className="flex items-center gap-2 text-xl font-bold text-white">
+                <Bot className="text-brand-400 h-6 w-6" />
+                Canlı QA Sistem Raporu
+              </h2>
+              <div className="flex items-center gap-2">
+                <span className="text-fg-muted font-mono text-sm">SKOR:</span>
+                <span
+                  className={cn(
+                    "text-2xl font-black",
+                    getScoreColor(liveResult.overall_score || 0),
+                  )}
+                >
+                  {liveResult.overall_score || "?"}
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-fg-secondary mb-2 text-xs font-semibold tracking-wider uppercase">
+                  Yönetici Özeti
+                </h3>
+                <p className="text-sm leading-relaxed text-white/80">
+                  {liveResult.executive_summary}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-4">
+                  <h3 className="mb-3 flex items-center gap-2 font-semibold text-rose-400">
+                    <AlertTriangle className="h-4 w-4" /> Güvenlik Açıkları
+                  </h3>
+                  <ul className="text-fg-primary list-inside list-disc space-y-2 text-sm">
+                    {Array.isArray(liveResult.security_flaws) ? (
+                      liveResult.security_flaws.map((flaw: string, i: number) => (
+                        <li key={i}>{flaw}</li>
+                      ))
+                    ) : (
+                      <li>{liveResult.security_flaws as string}</li>
+                    )}
+                  </ul>
+                </div>
+
+                <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4">
+                  <h3 className="mb-3 flex items-center gap-2 font-semibold text-emerald-400">
+                    <CheckCircle2 className="h-4 w-4" /> Tavsiyeler
+                  </h3>
+                  <ul className="text-fg-primary list-inside list-disc space-y-2 text-sm">
+                    {Array.isArray(liveResult.recommendations) ? (
+                      liveResult.recommendations.map((rec: string, i: number) => (
+                        <li key={i}>{rec}</li>
+                      ))
+                    ) : (
+                      <li>{liveResult.recommendations as string}</li>
+                    )}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-end">
+              <button
+                onClick={() => setLiveResult(null)}
+                className="text-fg-muted text-xs transition-colors hover:text-white"
+              >
+                Kapat
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {activeTab === "dashboard" && (
         <div className="grid gap-6">

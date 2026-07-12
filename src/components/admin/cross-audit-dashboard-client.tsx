@@ -17,8 +17,10 @@ import {
   Cell,
 } from "recharts";
 import { useTranslations } from "next-intl";
-import { Shield, Activity, Cpu, AlertTriangle, FileText, Lock, Eye } from "lucide-react";
+import { Shield, Activity, Cpu, AlertTriangle, FileText, Lock, Eye, Bot, Play } from "lucide-react";
 import type { CrossAuditDashboardData } from "@/actions/admin/cross-audit-metrics";
+import { runLiveCrossAuditTest } from "@/actions/admin/live-cross-audit";
+import { toast } from "sonner";
 
 interface CrossAuditDashboardClientProps {
   data: CrossAuditDashboardData;
@@ -41,12 +43,126 @@ const RISK_COLORS: Record<string, string> = {
   "Unacceptable Risk": "#ef4444",
 };
 
+interface LiveCrossAuditResult {
+  truth_score: number;
+  risk_level: string;
+  judge_verdict: string;
+  models: { name: string; stance: string; reason: string }[];
+}
+
 export function CrossAuditDashboardClient({ data }: CrossAuditDashboardClientProps) {
   const t = useTranslations("admin");
   const { overview, categoryDistribution, modelComparison, riskDistribution, trendData } = data;
 
+  const [testInput, setTestInput] = React.useState("");
+  const [isTesting, setIsTesting] = React.useState(false);
+  const [testResult, setTestResult] = React.useState<LiveCrossAuditResult | null>(null);
+
+  const handleTest = async () => {
+    if (!testInput.trim()) {
+      toast.error("Lütfen test için bir metin girin.");
+      return;
+    }
+    setIsTesting(true);
+    setTestResult(null);
+    toast.loading("Çapraz Sorgu Simülasyonu çalışıyor...", { id: "cross-audit" });
+
+    const res = await runLiveCrossAuditTest(testInput);
+    setIsTesting(false);
+
+    if (res.success && res.data) {
+      toast.success("Çapraz Sorgu tamamlandı!", { id: "cross-audit" });
+      setTestResult(res.data);
+    } else {
+      toast.error(res.error || "Bir hata oluştu", { id: "cross-audit" });
+    }
+  };
+
   return (
     <div className="space-y-8">
+      {/* 0. Live Test Section */}
+      <div className="bg-bg-secondary/40 border-brand-500/30 relative overflow-hidden rounded-2xl border p-6 shadow-[0_0_20px_rgba(168,85,247,0.15)] backdrop-blur-xl">
+        <div className="bg-brand-500/10 absolute top-0 right-0 h-64 w-64 rounded-full blur-3xl"></div>
+        <div className="relative z-10">
+          <div className="mb-4 flex items-center gap-2">
+            <Bot className="text-brand-400 h-5 w-5" />
+            <h2 className="text-lg font-bold text-white">
+              Canlı Çapraz Sorgu (Live Cross-Audit Engine)
+            </h2>
+          </div>
+          <p className="text-fg-muted mb-4 text-sm">
+            Gerçek zamanlı olarak "Debate & Verdict" modelini test edin. Bir olay metni girin,
+            farklı AI modellerinin tartışıp nasıl karar verdiğini izleyin.
+          </p>
+          <div className="flex flex-col gap-4 sm:flex-row">
+            <textarea
+              className="bg-bg-tertiary focus:border-brand-500/50 flex-1 resize-none rounded-lg border border-white/10 p-3 text-sm text-white focus:outline-none"
+              rows={3}
+              placeholder="Örn: Kullanıcı hesabından izinsiz 5000 TL çekilmiş ve sistem uyarı vermemiş..."
+              value={testInput}
+              onChange={(e) => setTestInput(e.target.value)}
+              disabled={isTesting}
+            />
+            <button
+              onClick={handleTest}
+              disabled={isTesting}
+              className="bg-brand-500 hover:bg-brand-400 flex min-w-[140px] items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-bold text-white shadow-lg transition-all disabled:opacity-50 sm:self-end"
+            >
+              {isTesting ? (
+                <Activity className="h-4 w-4 animate-spin" />
+              ) : (
+                <Play className="h-4 w-4" />
+              )}
+              {isTesting ? "Test Ediliyor..." : "Sorgula"}
+            </button>
+          </div>
+
+          {testResult && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 mt-6 border-t border-white/10 pt-6 duration-500">
+              <div className="mb-6 flex items-center justify-between">
+                <h3 className="font-bold tracking-wide text-white">Değerlendirme Sonucu</h3>
+                <div className="flex gap-4">
+                  <div className="bg-bg-tertiary rounded border border-white/5 px-3 py-1">
+                    <span className="text-fg-muted mr-2 text-xs">TRUTH SCORE:</span>
+                    <span className="text-success-400 font-mono font-bold">
+                      {testResult.truth_score}/100
+                    </span>
+                  </div>
+                  <div className="bg-bg-tertiary rounded border border-white/5 px-3 py-1">
+                    <span className="text-fg-muted mr-2 text-xs">RİSK:</span>
+                    <span className="text-danger-400 font-mono font-bold">
+                      {testResult.risk_level}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+                {testResult.models?.map((m, idx: number) => (
+                  <div
+                    key={idx}
+                    className="relative rounded-xl border border-white/5 bg-neutral-900/50 p-4"
+                  >
+                    <div className="text-brand-400 mb-1 text-xs font-bold tracking-wider uppercase">
+                      {m.name}
+                    </div>
+                    <div className="mb-2 text-sm font-semibold text-white">{m.stance}</div>
+                    <p className="text-fg-secondary text-xs leading-relaxed">{m.reason}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="bg-brand-500/10 border-brand-500/20 rounded-xl border p-4">
+                <h4 className="text-brand-400 mb-2 flex items-center gap-2 text-xs font-bold uppercase">
+                  <Shield className="h-4 w-4" /> Nihai Karar (Judge Verdict)
+                </h4>
+                <p className="text-sm text-white">{testResult.judge_verdict}</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* 1. Overview Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
         <StatCard
