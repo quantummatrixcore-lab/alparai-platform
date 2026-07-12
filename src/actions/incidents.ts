@@ -140,11 +140,9 @@ const runSubmitWork = async (
       isPossibleDuplicate = true;
     }
   } catch (e) {
-    logger.warn(
-      "Failed to check duplicate incident similarity",
-      {},
-      e instanceof Error ? e : undefined,
-    );
+    logger.warn("Failed to check duplicate incident similarity", {
+      error: e instanceof Error ? e.message : String(e),
+    });
   }
 
   const incidentInsert: Database["public"]["Tables"]["incidents"]["Insert"] = {
@@ -193,9 +191,13 @@ const runSubmitWork = async (
 
   try {
     const admin = createAdminClient();
-    await admin.from("submission_attempts").insert({ ip_hash: hashIp(data.ip) });
+    await admin
+      .from("submission_attempts")
+      .insert({ ip_hash: hashIp(data.ip || "127.0.0.1") || "" });
   } catch (e) {
-    logger.warn("Failed to log submission attempt", {}, e instanceof Error ? e : undefined);
+    logger.warn("Failed to log submission attempt", {
+      error: e instanceof Error ? e.message : String(e),
+    });
   }
 
   if (providerIsCustom && providerCustom) {
@@ -556,7 +558,7 @@ export async function submitIncident(
     let isRateLimitedSuspicious = false;
     try {
       const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-      const ipHash = hashIp(ip);
+      const ipHash = hashIp(ip || "127.0.0.1") || "";
       const { count } = await admin
         .from("submission_attempts")
         .select("*", { count: "exact", head: true })
@@ -567,11 +569,9 @@ export async function submitIncident(
         isRateLimitedSuspicious = true;
       }
     } catch (e) {
-      logger.warn(
-        "Failed to check submission attempts count",
-        {},
-        e instanceof Error ? e : undefined,
-      );
+      logger.warn("Failed to check submission attempts count", {
+        error: e instanceof Error ? e.message : String(e),
+      });
     }
 
     if (isRateLimitedSuspicious) {

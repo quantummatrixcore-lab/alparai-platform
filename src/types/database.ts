@@ -14,6 +14,183 @@ export type Database = {
   }
   public: {
     Tables: {
+
+      k_provider_previews: {
+        Row: {
+          id: string
+          provider_id: string
+          preview_token: string
+          sent_at: string | null
+          expires_at: string
+          status: "pending" | "sent" | "accessed" | "expired"
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          provider_id: string
+          preview_token: string
+          sent_at?: string | null
+          expires_at: string
+          status?: "pending" | "sent" | "accessed" | "expired"
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          provider_id?: string
+          preview_token?: string
+          sent_at?: string | null
+          expires_at?: string
+          status?: "pending" | "sent" | "accessed" | "expired"
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "k_provider_previews_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "ai_providers"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      data_retention_policies: {
+        Row: {
+          id: string
+          table_name: string
+          retention_period_months: number
+          description: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          table_name: string
+          retention_period_months: number
+          description?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          table_name?: string
+          retention_period_months?: number
+          description?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      redaction_requests: {
+        Row: {
+          id: string
+          incident_id: string
+          provider_id: string
+          status: "pending" | "approved" | "rejected"
+          reason: string | null
+          created_at: string
+          processed_at: string | null
+          processed_by: string | null
+        }
+        Insert: {
+          id?: string
+          incident_id: string
+          provider_id: string
+          status?: "pending" | "approved" | "rejected"
+          reason?: string | null
+          created_at?: string
+          processed_at?: string | null
+          processed_by?: string | null
+        }
+        Update: {
+          id?: string
+          incident_id?: string
+          provider_id?: string
+          status?: "pending" | "approved" | "rejected"
+          reason?: string | null
+          created_at?: string
+          processed_at?: string | null
+          processed_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "redaction_requests_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "redaction_requests_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "ai_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "redaction_requests_processed_by_fkey"
+            columns: ["processed_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      submission_attempts: {
+        Row: {
+          id: string
+          ip_hash: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          ip_hash: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          ip_hash?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
+      cross_audit_runs: {
+        Row: {
+          id: string
+          incident_id: string
+          model: string
+          tokens_in: number
+          tokens_out: number
+          cost_usd: number
+          latency_ms: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          incident_id: string
+          model: string
+          tokens_in?: number
+          tokens_out?: number
+          cost_usd?: number
+          latency_ms?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          incident_id?: string
+          model?: string
+          tokens_in?: number
+          tokens_out?: number
+          cost_usd?: number
+          latency_ms?: number
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cross_audit_runs_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       k_categories: {
         Row: {
           created_at: string
@@ -44,6 +221,7 @@ export type Database = {
           model_id: string
           sample_size: number
           score: number
+          status: "active" | "retired"
           wilson_lower: number | null
           wilson_upper: number | null
         }
@@ -55,6 +233,7 @@ export type Database = {
           model_id: string
           sample_size?: number
           score: number
+          status?: "active" | "retired"
           wilson_lower?: number | null
           wilson_upper?: number | null
         }
@@ -66,6 +245,7 @@ export type Database = {
           model_id?: string
           sample_size?: number
           score?: number
+          status?: "active" | "retired"
           wilson_lower?: number | null
           wilson_upper?: number | null
         }
@@ -166,6 +346,7 @@ export type Database = {
       ai_models: {
         Row: {
           created_at: string
+          deprecated_at: string | null
           id: string
           name: string
           provider_id: string
@@ -175,6 +356,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          deprecated_at?: string | null
           id?: string
           name: string
           provider_id: string
@@ -184,6 +366,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          deprecated_at?: string | null
           id?: string
           name?: string
           provider_id?: string
@@ -584,6 +767,48 @@ export type Database = {
           {
             foreignKeyName: "autopilot_worker_config_updated_by_fkey"
             columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      age_declarations: {
+        Row: {
+          created_at: string
+          declared_over_18: boolean
+          id: string
+          incident_id: string | null
+          ip_hash: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          declared_over_18?: boolean
+          id?: string
+          incident_id?: string | null
+          ip_hash?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          declared_over_18?: boolean
+          id?: string
+          incident_id?: string | null
+          ip_hash?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "age_declarations_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "age_declarations_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
@@ -1320,6 +1545,7 @@ export type Database = {
           ip_hash: string | null
           is_anonymous: boolean
           is_expert: boolean
+          is_possible_duplicate: boolean
           is_seed: boolean
           language: string
           location_country: string | null
@@ -1387,6 +1613,7 @@ export type Database = {
           ip_hash?: string | null
           is_anonymous?: boolean
           is_expert?: boolean
+          is_possible_duplicate?: boolean
           is_seed?: boolean
           language?: string
           location_country?: string | null
@@ -1453,6 +1680,7 @@ export type Database = {
           ip_hash?: string | null
           is_anonymous?: boolean
           is_expert?: boolean
+          is_possible_duplicate?: boolean
           is_seed?: boolean
           language?: string
           location_country?: string | null
@@ -3290,6 +3518,10 @@ export type Database = {
       }
     }
     Functions: {
+      check_incident_duplicate: {
+        Args: { title_to_check: string }
+        Returns: { similarity_score: number; incident_id: string }
+      }
       increment_incident_views: {
         Args: { p_incident_id: string }
         Returns: undefined

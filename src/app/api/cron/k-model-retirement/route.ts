@@ -48,11 +48,9 @@ export async function GET(request: NextRequest) {
         }
       }
     } catch (err) {
-      logger.warn(
-        "[K-ModelRetirement] Failed to fetch live OpenRouter models list",
-        {},
-        err instanceof Error ? err : undefined,
-      );
+      logger.warn("[K-ModelRetirement] Failed to fetch live OpenRouter models list", {
+        error: err instanceof Error ? err.message : String(err),
+      });
     }
 
     const nowStr = new Date().toISOString();
