@@ -22,6 +22,7 @@ const MIGRATIONS = [
   "20260608000002_incidents_pii_columns.sql",
   "20260727000003_methodology_committee.sql",
   "20260727000004_role_view.sql",
+  "20260727000005_k_product_scaffold.sql",
 ];
 
 async function apply(name) {

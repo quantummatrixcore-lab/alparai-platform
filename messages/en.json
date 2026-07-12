@@ -5,6 +5,26 @@
     "empty_title": "Advisory Board Formulation",
     "empty_text": "The official members of the Methodology Advisory Committee will be announced after the launch freeze period (post August 9, 2026). Currently, the committee is operating under closed review sessions."
   },
+  "pricing": {
+    "title": "Enterprise Pricing & Audits",
+    "subtitle": "Decentralized AI trust infrastructure, custom benchmarks, and automated safety alerting for enterprise systems.",
+    "plan_free": "Ethics Advocate",
+    "plan_free_desc": "For researchers, journalists, and open-source advocates documenting public AI incidents.",
+    "plan_enterprise": "K-Enterprise / SafeGuard",
+    "plan_enterprise_desc": "Continuous security monitoring, private benchmarks, and real-time threshold alert hooks.",
+    "price_free": "$0",
+    "price_free_period": "forever",
+    "price_enterprise": "$499",
+    "price_enterprise_period": "per month",
+    "features_title": "Enterprise Features Included:",
+    "feat_private_bench": "Private Model Benchmarking (K-Product)",
+    "feat_alerts": "Real-time Rating & Incident Alerts",
+    "feat_audit_history": "Zaman-serisi Model Puan Geçmişi",
+    "feat_api_access": "Full Academic & Research API Access",
+    "cta_free": "Start Reporting",
+    "cta_enterprise": "Subscribe to Enterprise (Beta)",
+    "checkout_disabled": "Payment integration is currently operating in test mode. Founder approval is pending for live Stripe checkout."
+  },
   "dashboard": {
     "title": "Role-Based Dashboard",
     "compliance_title": "Compliance Dashboard",

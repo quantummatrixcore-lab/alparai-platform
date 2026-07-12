@@ -5,6 +5,26 @@
     "empty_title": "Danışma Kurulu Oluşumu",
     "empty_text": "Metodoloji Danışma Kurulu'nun resmi üyeleri, lansman dondurma döneminden sonra (9 Ağustos 2026 sonrasında) resmi olarak ilan edilecektir. Şu anda kurul, kapalı değerlendirme oturumları halinde faaliyet göstermektedir."
   },
+  "pricing": {
+    "title": "Kurumsal Üyelik ve Denetim",
+    "subtitle": "Merkeziyetsiz yapay zeka güven altyapısı, özel kıyaslama testleri ve kurumsal sistemler için otomatik güvenlik uyarıları.",
+    "plan_free": "Ahlaki Savunucu",
+    "plan_free_desc": "Kamuya açık yapay zeka hatalarını belgeleyen araştırmacılar, gazeteciler ve açık kaynak savunucuları için.",
+    "plan_enterprise": "K-Enterprise / SafeGuard",
+    "plan_enterprise_desc": "Sürekli güvenlik izleme, özel kıyaslama testleri (Private Benchmarks) ve gerçek zamanlı eşik uyarı kancaları.",
+    "price_free": "$0",
+    "price_free_period": "ömür boyu",
+    "price_enterprise": "$499",
+    "price_enterprise_period": "aylık",
+    "features_title": "Kurumsal Özellikler:",
+    "feat_private_bench": "Özel Model Kıyaslama Testleri (K-Product)",
+    "feat_alerts": "Gerçek Zamanlı Derecelendirme ve Olay Uyarıları",
+    "feat_audit_history": "Zaman-serisi Model Puan Geçmişi",
+    "feat_api_access": "Tam Akademik ve Araştırma API Erişimi",
+    "cta_free": "Bildirim Yapmaya Başla",
+    "cta_enterprise": "Kurumsal Üyeliğe Abone Ol (Beta)",
+    "checkout_disabled": "Ödeme entegrasyonu şu anda test modunda çalışmaktadır. Canlı Stripe ödeme akışı için kurucu onayı beklenmektedir."
+  },
   "dashboard": {
     "title": "Rol Bazlı Kontrol Paneli",
     "compliance_title": "Uyum ve Regülasyon Paneli",
