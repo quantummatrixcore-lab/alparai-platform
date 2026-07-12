@@ -88,6 +88,18 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       icon: Pulse,
       active: pathname.startsWith("/admin/api-metrics"),
     },
+    {
+      href: "/admin/slo-dashboard",
+      label: t("slo_nav") || "SLI/SLO",
+      icon: Clock,
+      active: pathname.startsWith("/admin/slo-dashboard"),
+    },
+    {
+      href: "/admin/signals",
+      label: t("signals_nav") || "Golden Signals",
+      icon: ChartBar,
+      active: pathname.startsWith("/admin/signals"),
+    },
   ];
 
   const ecosystemItems = [
