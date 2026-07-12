@@ -67,6 +67,15 @@ describe("Process Deletions Cron", () => {
           update: mockUpdate,
         } as any;
       }
+      if (table === "redaction_requests") {
+        return {
+          select: vi.fn().mockReturnValue({
+            eq: vi.fn().mockReturnValue({
+              is: vi.fn().mockResolvedValue({ data: [], error: null }),
+            }),
+          }),
+        } as any;
+      }
       return {} as any;
     });
 
