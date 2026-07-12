@@ -25,6 +25,9 @@ export async function GET(request: Request, context: { params: Promise<{ modelSl
     }
 
     const model = models[0];
+    if (!model) {
+      return NextResponse.json({ error: "Model not found" }, { status: 404 });
+    }
 
     const { data: scores, error: scoresError } = await supabase
       .from("k_model_scores")

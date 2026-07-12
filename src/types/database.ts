@@ -14,6 +14,155 @@ export type Database = {
   }
   public: {
     Tables: {
+      k_categories: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      k_model_scores: {
+        Row: {
+          category_id: string
+          created_at: string
+          id: string
+          last_audited_at: string
+          model_id: string
+          sample_size: number
+          score: number
+          wilson_lower: number | null
+          wilson_upper: number | null
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          id?: string
+          last_audited_at?: string
+          model_id: string
+          sample_size?: number
+          score: number
+          wilson_lower?: number | null
+          wilson_upper?: number | null
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          id?: string
+          last_audited_at?: string
+          model_id?: string
+          sample_size?: number
+          score?: number
+          wilson_lower?: number | null
+          wilson_upper?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "k_model_scores_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "k_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "k_model_scores_model_id_fkey"
+            columns: ["model_id"]
+            isOneToOne: false
+            referencedRelation: "ai_models"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      outreach_queue: {
+        Row: {
+          body_template: string
+          created_at: string
+          id: string
+          recipient_email: string
+          recipient_name: string | null
+          sent_at: string | null
+          status: string
+          subject: string
+          template_type: string
+        }
+        Insert: {
+          body_template: string
+          created_at?: string
+          id?: string
+          recipient_email: string
+          recipient_name?: string | null
+          sent_at?: string | null
+          status?: string
+          subject: string
+          template_type: string
+        }
+        Update: {
+          body_template?: string
+          created_at?: string
+          id?: string
+          recipient_email?: string
+          recipient_name?: string | null
+          sent_at?: string | null
+          status?: string
+          subject?: string
+          template_type?: string
+        }
+        Relationships: []
+      }
+      expert_network: {
+        Row: {
+          created_at: string
+          id: string
+          institution: string | null
+          is_active: boolean
+          name: string
+          specialties: string[] | null
+          title: string | null
+          verified_at: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          institution?: string | null
+          is_active?: boolean
+          name: string
+          specialties?: string[] | null
+          title?: string | null
+          verified_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          institution?: string | null
+          is_active?: boolean
+          name?: string
+          specialties?: string[] | null
+          title?: string | null
+          verified_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expert_network_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       ai_models: {
         Row: {
           created_at: string
@@ -1122,6 +1271,8 @@ export type Database = {
           eu_act_serious_incident_class: string | null
           eu_act_transparency_score: number | null
           expert_fix: string | null
+          expert_verified: boolean
+          expert_verifier_id: string | null
           id: string
           import_attribution: string | null
           import_external_id: string | null
@@ -1186,6 +1337,8 @@ export type Database = {
           eu_act_serious_incident_class?: string | null
           eu_act_transparency_score?: number | null
           expert_fix?: string | null
+          expert_verified?: boolean
+          expert_verifier_id?: string | null
           id?: string
           import_attribution?: string | null
           import_external_id?: string | null
@@ -1249,6 +1402,8 @@ export type Database = {
           eu_act_serious_incident_class?: string | null
           eu_act_transparency_score?: number | null
           expert_fix?: string | null
+          expert_verified?: boolean
+          expert_verifier_id?: string | null
           id?: string
           import_attribution?: string | null
           import_external_id?: string | null
@@ -2529,6 +2684,8 @@ export type Database = {
           reputation_score: number
           role: Database["public"]["Enums"]["user_role"]
           soft_deleted_at: string | null
+          stripe_customer_id: string | null
+          subscription_tier: string | null
           updated_at: string
           username: string | null
         }
@@ -2550,6 +2707,8 @@ export type Database = {
           reputation_score?: number
           role?: Database["public"]["Enums"]["user_role"]
           soft_deleted_at?: string | null
+          stripe_customer_id?: string | null
+          subscription_tier?: string | null
           updated_at?: string
           username?: string | null
         }
@@ -2571,6 +2730,8 @@ export type Database = {
           reputation_score?: number
           role?: Database["public"]["Enums"]["user_role"]
           soft_deleted_at?: string | null
+          stripe_customer_id?: string | null
+          subscription_tier?: string | null
           updated_at?: string
           username?: string | null
         }
