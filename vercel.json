@@ -13,6 +13,10 @@
   },
   "crons": [
     {
+      "path": "/api/cron/cost-alarm",
+      "schedule": "0 6 * * *"
+    },
+    {
       "path": "/api/cron/import-incidents?source=aiaaic",
       "schedule": "0 2 * * *"
     },
