@@ -1,0 +1,174 @@
+import { z } from "zod";
+
+// 1. GET /api/v1/incidents
+export const incidentsResponseSchema = z.object({
+  data: z.array(
+    z.object({
+      id: z.string().uuid(),
+      title: z.string(),
+      description: z.string(),
+      severity: z.enum(["low", "medium", "high", "critical"]),
+      category: z.string(),
+      eu_act_risk_category: z.string().nullable(),
+      eu_act_serious_incident_class: z.string().nullable(),
+      eu_act_high_risk_system_category: z.string().nullable(),
+      eu_act_reporting_deadline_days: z.number().nullable(),
+      is_anonymous: z.boolean(),
+      incident_date: z.string(),
+      views: z.number(),
+      upvotes: z.number(),
+      provider: z
+        .object({
+          name: z.string(),
+          slug: z.string(),
+        })
+        .nullable(),
+      model: z.string().nullable(),
+      truth_score: z.number().nullable(),
+      confidence: z.number().nullable(),
+      verification_level: z.enum(["expert", "community"]),
+      expert_fix: z.string().nullable(),
+      created_at: z.string(),
+    }),
+  ),
+  meta: z.object({
+    count: z.number(),
+    limit: z.number(),
+    tier: z.enum(["free", "developer", "enterprise"]),
+    generated_at: z.string(),
+  }),
+});
+
+// 2. GET /api/v1/incidents/[id]
+export const incidentDetailResponseSchema = z.object({
+  data: z.object({
+    id: z.string().uuid(),
+    title: z.string(),
+    description: z.string(),
+    severity: z.enum(["low", "medium", "high", "critical"]),
+    category: z.string(),
+    is_anonymous: z.boolean(),
+    incident_date: z.string(),
+    views: z.number(),
+    upvotes: z.number(),
+    model: z.string().nullable(),
+    truth_score: z.number().nullable(),
+    confidence: z.number().nullable(),
+    verification_level: z.enum(["expert", "community"]),
+    expert_fix: z.string().nullable(),
+    created_at: z.string(),
+  }),
+});
+
+// 3. GET /api/v1/leaderboard
+export const leaderboardResponseSchema = z.object({
+  data: z.array(
+    z.object({
+      rank: z.number(),
+      id: z.string().uuid(),
+      slug: z.string(),
+      name: z.string(),
+      logo_url: z.string().nullable(),
+      is_verified: z.boolean(),
+      website_url: z.string().nullable(),
+      trust_score: z.number(),
+      incident_count: z.number(),
+      response_count: z.number(),
+      response_rate: z.number().nullable(),
+    }),
+  ),
+  meta: z.object({
+    count: z.number(),
+    generated_at: z.string(),
+  }),
+});
+
+// 4. GET /api/v1/ratings/[modelSlug]
+export const ratingsResponseSchema = z.object({
+  model_id: z.string().uuid(),
+  model_name: z.string(),
+  status: z.enum(["active", "retired"]),
+  composite_score: z.number(),
+  ratings: z.array(
+    z.object({
+      category_id: z.string().uuid().optional(),
+      category_name: z.string().optional(),
+      score: z.number(),
+      wilson_interval: z.object({
+        lower: z.number().nullable(),
+        upper: z.number().nullable(),
+      }),
+      sample_size: z.number(),
+      last_audited_at: z.string(),
+    }),
+  ),
+});
+
+// 5. POST /api/v1/extract
+export const extractResponseSchema = z.object({
+  url: z.string().url(),
+  providerId: z.string(),
+  providerName: z.string(),
+  title: z.string(),
+  description: z.string(),
+  extractedAt: z.string(),
+});
+
+// 6. GET /api/v1/oecd/feed
+export const oecdFeedResponseSchema = z.object({
+  feed_format: z.string(),
+  generated_at: z.string(),
+  count: z.number(),
+  incidents: z.array(
+    z.object({
+      incident_id: z.string().uuid(),
+      title: z.string(),
+      description: z.string(),
+      severity: z.enum(["low", "medium", "high", "critical"]),
+      category: z.string(),
+      location_country: z.string(),
+      incident_date: z.string(),
+      created_at: z.string(),
+      oecd_classification: z.object({
+        people_planet: z.string(),
+        business_model: z.string(),
+        ai_system: z.string(),
+        data_input: z.string(),
+        action_output: z.string(),
+      }),
+    }),
+  ),
+});
+
+// 7. GET /api/v1/providers
+export const providersResponseSchema = z.object({
+  data: z.array(
+    z.object({
+      id: z.string().uuid(),
+      name: z.string(),
+      slug: z.string(),
+      description: z.string().nullable(),
+      website_url: z.string().nullable(),
+      logo_url: z.string().nullable(),
+      is_verified: z.boolean(),
+      trust_score: z.number(),
+    }),
+  ),
+  meta: z.object({
+    count: z.number(),
+    generated_at: z.string(),
+  }),
+});
+
+// 8. GET /api/v1/stats
+export const statsResponseSchema = z.object({
+  data: z.object({
+    total_incidents: z.number(),
+    total_providers: z.number(),
+    average_trust_score: z.number(),
+    by_category: z.record(z.string(), z.number()),
+  }),
+  meta: z.object({
+    generated_at: z.string(),
+  }),
+});
