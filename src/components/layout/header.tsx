@@ -46,7 +46,7 @@ export function Header({
             <div className="from-brand-500/0 via-brand-500/10 to-brand-500/0 absolute -inset-2 rounded-full bg-gradient-to-r opacity-0 blur transition-opacity duration-500 group-hover:opacity-100"></div>
             <Wordmark size="md" />
           </Link>
-          <div className="hidden xl:block">
+          <div className="hidden min-[1400px]:block">
             <Nav user={user} />
           </div>
         </div>
@@ -63,7 +63,7 @@ export function Header({
           <div className="pl-1">
             <UserMenu initialUser={user} />
           </div>
-          <div className="xl:hidden">
+          <div className="min-[1400px]:hidden">
             <MobileNav user={user} />
           </div>
         </div>
