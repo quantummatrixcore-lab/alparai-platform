@@ -14,39 +14,42 @@ export interface ModelRouterResult {
   supremeChain: ModelChainItem[];
 }
 
+const BASIC_CHAIN: ModelChainItem[] = [
+  { id: "command-r", provider: "cohere", tier: "free", maxTokens: 2048 },
+  { id: "google/gemma-2-27b-it", provider: "nvidia", tier: "free", maxTokens: 2048 },
+];
+
+const BASIC_SUPREME: ModelChainItem[] = [
+  { id: "command-r", provider: "cohere", tier: "free", maxTokens: 2048 },
+  { id: "google/gemma-2-27b-it", provider: "nvidia", tier: "free", maxTokens: 2048 },
+  { id: "openai/gpt-4o-mini", provider: "openrouter", tier: "free", maxTokens: 2048 },
+];
+
 export function selectModelTier(params: {
   title: string;
   description: string;
   severity: string;
+  severityScore?: number;
   auditTier?: ModelTier;
 }): ModelRouterResult {
   const auditTier = params.auditTier || "basic";
+
+  if (auditTier === "none") {
+    return { tier: "none", slot1Chain: [], slot2Chain: [], supremeChain: [] };
+  }
+
   const length = (params.title || "").length + (params.description || "").length;
   const isShort = length < 1200;
   const isHighRisk = params.severity === "critical" || params.severity === "high";
 
-  // If none, return empty chains
-  if (auditTier === "none") {
-    return {
-      tier: "none",
-      slot1Chain: [],
-      slot2Chain: [],
-      supremeChain: [],
-    };
-  }
-
-  // Force deep or dynamically determine based on length and severity
   const useDeep = auditTier === "deep" || !isShort || isHighRisk;
 
   if (!useDeep) {
     return {
       tier: "basic",
-      slot1Chain: [{ id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 2048 }],
-      slot2Chain: [{ id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 2048 }],
-      supremeChain: [
-        { id: "openai/gpt-4o-mini", provider: "openrouter", tier: "free", maxTokens: 2048 },
-        { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 2048 },
-      ],
+      slot1Chain: BASIC_CHAIN,
+      slot2Chain: BASIC_CHAIN,
+      supremeChain: BASIC_SUPREME,
     };
   }
 

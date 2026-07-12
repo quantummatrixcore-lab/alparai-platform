@@ -26,9 +26,9 @@ describe("selectModelTier router", () => {
     });
 
     expect(res.tier).toBe("basic");
-    expect(res.slot1Chain[0]?.id).toBe("gemini-1.5-flash");
-    expect(res.slot2Chain[0]?.id).toBe("gemini-1.5-flash");
-    expect(res.supremeChain[0]?.id).toBe("openai/gpt-4o-mini");
+    expect(res.slot1Chain[0]?.provider).toBe("cohere");
+    expect(res.slot2Chain[0]?.provider).toBe("cohere");
+    expect(res.supremeChain[0]?.provider).toBe("cohere");
   });
 
   it("routes to deep tier if auditTier is explicitly forced to deep", () => {
