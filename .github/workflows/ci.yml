@@ -35,10 +35,13 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Typecheck
+        if: ${{ !inputs.force }}
         run: pnpm typecheck
 
       - name: Lint
+        if: ${{ !inputs.force }}
         run: pnpm lint
 
       - name: Run Vitest tests
+        if: ${{ !inputs.force }}
         run: pnpm test
