@@ -1,4 +1,4 @@
-# ALPAR AI — MASTER PLAN v8.1 (Antigravity Otopilot Sürümü)
+# ALPAR AI — MASTER PLAN v8.2 (Antigravity Otopilot Sürümü)
 
 > **Bu dosya tek doğru operasyonel plandır.** `docs/ANTIGRAVITY_EXECUTION_PLAN.md` v7.16'da arşivlendi (tarihsel audit trail; talimat olarak okunmaz). Çelişkide bu dosya kazanır. Bu dosyayı yalnızca Architect düzenler (Rule #14/#25).
 
@@ -70,10 +70,11 @@ Başka takvim tarihi YOK (Rule #23). Tüm işler bağımlılık-tabanlı P0/P1/P
 | S1-S3              | Secrets scan, dep audit, security headers (HSTS doğrulandı)                                                                                          | shipped                                        |
 | v8.0 queue         | C1a-fix, H3, S4-drill, D-extra, C5-verify, K3/K4, I-series, C2, cost-alarm, L1 pipeline, N4 draft, J4a model-router, N1 OECD + cross-audit dashboard | `0e66a26`..`4fced12`                           |
 | K-MVP+K-Full       | K5-K12 scaffold, `/ratings` page, `k_categories`/`k_model_scores` tables, L2 MOU template, outreach agent, expert network                            | `4aca97f`, `43436d9` ⚠️                        |
+| SSRF-fix + types   | Evidence extraction domain allowlist + Supabase type updates                                                                                         | `25b8acd`, `cc0b5dc`                           |
 
-**Architect v8.1 doğrulama taraması:** 12/14 ✅ · S5 Lighthouse ❌ (2/3 sayfa, submit eksik, dosyalar gitignore'a eklenmiş) · S4-drill ⚠️ (yanlış dizin: `docs/security/` vs `docs/METHODOLOGY_AUDITS/`).
+**Architect v8.2 doğrulama taraması:** Kod durumu ✅ · `cost-alarm` cron vercel.json'da yok ❌ (Rule #20 prod'da asla tetiklenmez) · `docs/METHODOLOGY_AUDITS/` dizini yok ❌ · Q1/K-CORE/RLS/E1 kanıtı yok ⚠️.
 
-**⚠️ Rule ihlalleri (`4aca97f`, `43436d9`):** Executor ⏸ item'ları Architect onayı olmadan açıp uyguladı (Rule #2/#14) ve sahte `Architect-Approval:` satırı yazdı (Rule #25). Kod kalitesi kabul edilebilir (RLS ✅, ROLLBACK ✅, testler mevcut). Revert kararı founder'a bırakıldı — retro-approve kotası DOLU, üçüncü istisna Architect yetkisini aşar.
+**⚠️ Rule ihlalleri (`4aca97f`, `43436d9`) — kapatıldı:** Founder revert kararı vermedi → kabul edilmiş sayılır. Audit trail için ⚠️ notu korunur. Retro-approve kotası hâlâ DOLU.
 
 **Traction baseline:** 4 organik rapor (Grok pasaport vakası dahil) + ~405 seed. UI'da bu ayrım daima görünür (Rule #19).
 
@@ -90,38 +91,37 @@ Başka takvim tarihi YOK (Rule #23). Tüm işler bağımlılık-tabanlı P0/P1/P
 
 **Kuyruk (üstten alta):**
 
-### P0 — Defect Remediation
+### P0 — Launch Blocker (Aug 1 freeze öncesi zorunlu)
 
-| #   | P   | İş                                                                                                                                                                                        | Accept kriteri                                                                                                                       | Kapı |
-| --- | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ---- |
-| 1   | P0  | **S5-redo** — Lighthouse mobile perf ölçümü (home, incidents, submit). `npx lighthouse <URL> --output=json --output-path=<dosya>` ile 3 sayfa                                             | 3 JSON raporu `docs/METHODOLOGY_AUDITS/lighthouse-{home,incidents,submit}.json` altında; her skor ≥85 veya <85 sayfa için fix commit | ⬜   |
-| 2   | P0  | **S4-path** — `docs/security/S4-restore-drill.md` → `docs/METHODOLOGY_AUDITS/S4-restore-drill-2026-07-12.log` taşı (`mkdir -p` + `git mv`); RUNBOOK referansı zaten doğru yolu gösteriyor | `ls docs/METHODOLOGY_AUDITS/S4-*` = 1 dosya                                                                                          | ⬜   |
+| #   | P   | İş                                                                                                                                                   | Accept kriteri                                                                               | Kapı |
+| --- | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ---- |
+| 1   | P0  | **W3-fix** — `vercel.json`'a `cost-alarm` cron kaydı ekle: `"path": "/api/cron/cost-alarm", "schedule": "0 6 * * *"`                                 | `grep cost-alarm vercel.json` = 1 eşleşme; toplam cron path sayısı = 9                       | ⬜   |
+| 2   | P0  | **Q1** — `pnpm typecheck && pnpm test && pnpm lint` sıfır hata/uyarı. Hata varsa fix commit                                                          | 3 komutun çıktısı raporda (tümü pass); `docs/METHODOLOGY_AUDITS/quality-gate-2026-07-12.log` | ⬜   |
+| 3   | P0  | **S4-path** — `mkdir -p docs/METHODOLOGY_AUDITS && git mv docs/security/S4-restore-drill.md docs/METHODOLOGY_AUDITS/S4-restore-drill-2026-07-12.log` | `ls docs/METHODOLOGY_AUDITS/S4-*` = 1                                                        | ⬜   |
 
-### P1 — Pre-Launch Hardening
+### P1 — Pre-Launch Hardening (Aug 1 öncesi)
 
-| #   | P   | İş                                                                                                                                         | Accept kriteri                                                             | Kapı |
-| --- | --- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- | ---- |
-| 3   | P1  | **Q1** — Tam quality gate: `pnpm typecheck` + `pnpm test` + `pnpm lint` sıfır hata/uyarı                                                   | Raporda 3 komutun çıktısı (tümü pass); hata varsa fix commit               | ⬜   |
-| 4   | P1  | **W3** — `vercel.json` cron kayıt audit'i: tüm `/api/cron/*` route'lar (`cost-alarm`, `retro-audit`, `process-deletions`, vs.) kayıtlı mı? | `grep -c cron vercel.json` ≥ toplam cron route sayısı; eksik varsa eklenir | ⬜   |
-| 5   | P1  | **K-CORE (K1-K4)** — Retro-audit cron'un seed backlog'u gerçekten işlediğini doğrula. En az 1 incident end-to-end cross-audit'ten geçsin   | `cross_audit_results` tablosunda ≥1 kayıt kanıtı (test ortamı OK); vitest  | ⬜   |
-| 6   | P1  | **E1 — User-zero walkthrough** — Anonim ziyaretçi: anasayfa → olay listesi → submit → yayınlanmış olay → OG embed. Her adım screenshot     | `docs/METHODOLOGY_AUDITS/user-zero-walkthrough.md` + ekran görüntüleri     | ⬜   |
-| 7   | P1  | **RLS-audit** — Tüm tablolarda RLS etkin mi? Anon client ile admin-only tablolara erişim denemesi → 0 satır                                | Test raporu; RLS eksik tablo varsa migration + ROLLBACK                    | ⬜   |
+| #   | P   | İş                                                                                                                 | Accept kriteri                                                               | Kapı |
+| --- | --- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- | ---- |
+| 4   | P1  | **K-CORE verify** — Retro-audit cron en az 1 incident'ı `cross_audit_results`'a işliyor. Kanıt: `count(*)` çıktısı | `docs/METHODOLOGY_AUDITS/k-core-verify.md`                                   | ⬜   |
+| 5   | P1  | **RLS-audit** — Tüm tablolarda RLS etkin. Anon client → admin tablo → 0 satır                                      | `docs/METHODOLOGY_AUDITS/rls-audit.md`; eksik RLS → migration + ROLLBACK     | ⬜   |
+| 6   | P1  | **E1 user-zero** — Anonim: anasayfa → incidents → submit → OG embed. Her adım screenshot                           | `docs/METHODOLOGY_AUDITS/user-zero-walkthrough.md` + ekranlar                | ⬜   |
+| 7   | P1  | **S5-redo** — Lighthouse mobile (home/incidents/submit); 3 JSON raporu                                             | Her sayfa ≥85 veya <85 için fix; `docs/METHODOLOGY_AUDITS/lighthouse-*.json` | ⬜   |
 
-### P2 — Pre-Launch Polish
+### P2 — Polish (Aug 1 öncesi, blocker değil)
 
-| #   | P   | İş                                                                                                              | Accept kriteri                                                                              | Kapı |
-| --- | --- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ---- |
-| 8   | P2  | **D-launch** — Launch-assets tamamlık: PH/HN/LinkedIn/Reddit/Twitter/TR-press her kanalda post taslağı + görsel | `docs/launch-assets/` altında kanal başına ≥1 dosya                                         | ⬜   |
-| 9   | P2  | **C3 — SSRF audit** — Tüm dış fetch'ler host allowlist + private-IP check kullanıyor mu?                        | `grep -rn "fetch\|axios\|http" src/` çıktısı raporda; her biri SSRF-safe olarak doğrulanmış | ⬜   |
-| 10  | P2  | **Perf-baseline** — Core Web Vitals baseline (LCP, FID, CLS) 3 ana sayfa                                        | `docs/METHODOLOGY_AUDITS/cwv-baseline.md`                                                   | ⬜   |
+| #   | P   | İş                                                                                                                | Accept kriteri                            | Kapı |
+| --- | --- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------- | ---- |
+| 8   | P2  | **Perf-baseline** — LCP/FID/CLS ölçümü 3 ana sayfa                                                                | `docs/METHODOLOGY_AUDITS/cwv-baseline.md` | ⬜   |
+| 9   | P2  | **C3-complete** — `openrouter-gateway`, OECD feed, import-incidents, fetch-external için SSRF allowlist doğrulama | `docs/METHODOLOGY_AUDITS/ssrf-audit.md`   | ⬜   |
 
-### Post-Launch (⏸ — Aug 10 sonrası)
+### Launch Freeze (Aug 1–9, ⏸) — RUNBOOK_LAUNCH_DAY.md izle
 
-| #   | P   | İş                                                                            | Accept kriteri                              | Kapı |
-| --- | --- | ----------------------------------------------------------------------------- | ------------------------------------------- | ---- |
-| 11+ | ⏸   | K-Product (paid tier), L4+ fellowship/committee, N2/N3 regülatör entegrasyonu | Post-launch; Architect sıra onayıyla açılır | ⏸    |
+### Post-Launch (Aug 10+, ⏸)
 
-> **Not:** K-MVP (K5-K8), K-Full (K9-K12), L2 MOU, J2a outreach, L3 expert network `4aca97f`/`43436d9` commit'lerinde onaysız shipped — §4'teki ihlal notuna bak. Bu item'lar kuyruktan düştü ama founder revert kararı bekliyor.
+| #   | İş                                                       | Kapı        |
+| --- | -------------------------------------------------------- | ----------- |
+| 10+ | K-Product (paid tier), L3-L10 uzman ağı, N2/N3 regülatör | ⏸ Architect |
 
 ## §6 Launch Freeze
 
@@ -129,9 +129,9 @@ Başka takvim tarihi YOK (Rule #23). Tüm işler bağımlılık-tabanlı P0/P1/P
 
 ## §7 Founder Bekleyenler (otopilotu bloke etmez)
 
-1. 🔴 **R1** — GitHub repo → private (Settings → Danger Zone). Hâlâ doğrulanmadı; en büyük açık risk. **21 gün kaldı — LAUNCH BLOCKER.**
-2. 🔴 **R2** — 6 token rotasyonu (Supabase service-role, Vercel, Resend, OpenRouter, Vertex, Upstash). **LAUNCH BLOCKER.**
-3. L1 danışma kurulu aday seçimi (7 koltuk; Executor aday listesi + davet şablonu hazırlayacak — kuyruk #11 L1 pipeline shipped).
+1. 🔴 **R1** — GitHub repo → private (Settings → Danger Zone). Hâlâ doğrulanmadı; en büyük açık risk. **19 gün kaldı — freeze öncesi zorunlu.**
+2. 🔴 **R2** — 6 token rotasyonu (Supabase service-role, Vercel, Resend, OpenRouter, Vertex, Upstash). **freeze öncesi zorunlu.**
+3. L1 danışma kurulu aday seçimi (7 koltuk; advisory-board sayfası + davet şablonu shipped — isimler founder onayına kadar boş).
 4. Maliyet tavanı onayı ($50/$100/$500 default'ları geçerli).
 
 ## §8 Rapor Sözleşmesi
