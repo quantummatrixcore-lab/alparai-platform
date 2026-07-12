@@ -12,6 +12,7 @@ import {
   CheckCircle,
   Flame,
   Info,
+  Bot,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -21,6 +22,7 @@ import {
   triggerManualFetch,
   updateInnovationStatus,
   createInnovation,
+  autoReviewAllPending,
 } from "@/actions/innovations";
 import type { ExternalIncidentQueueItem, StrategyInnovation } from "@/types";
 
@@ -49,7 +51,25 @@ export function InnovationsClient({
   const connectors = initialConnectors;
 
   const [isFetching, setIsFetching] = useState(false);
+  const [isAutoReviewing, setIsAutoReviewing] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+
+  const handleAutoReview = async () => {
+    setIsAutoReviewing(true);
+    try {
+      const res = await autoReviewAllPending();
+      if (res.success) {
+        toast.success(res.message);
+        window.location.reload();
+      } else {
+        toast.error(res.message);
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to auto-review");
+    } finally {
+      setIsAutoReviewing(false);
+    }
+  };
 
   // Create Innovation Form State
   const [newTitle, setNewTitle] = useState("");
@@ -203,6 +223,18 @@ export function InnovationsClient({
           </p>
         </div>
         <div className="flex gap-2">
+          <button
+            onClick={handleAutoReview}
+            disabled={isAutoReviewing}
+            className="flex items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-bold text-white shadow-lg transition hover:bg-indigo-500 hover:shadow-indigo-500/10"
+          >
+            {isAutoReviewing ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Bot className="h-4 w-4" />
+            )}
+            {locale === "tr" ? "AI ile İncele" : "AI Review"}
+          </button>
           <button
             onClick={handleManualFetch}
             disabled={isFetching}

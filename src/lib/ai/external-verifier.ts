@@ -1,13 +1,10 @@
 import "server-only";
 import { maskPII } from "@/lib/pii/guardian";
 import { selectModelTier } from "@/lib/audit/model-router";
-import {
-  callWithFailover,
-  isGatewayConfigured,
-  type GatewayModel,
-} from "@/lib/ai/openrouter-gateway";
+import { callWithFailover } from "@/lib/ai/openrouter-gateway";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logger } from "@/lib/utils/logger";
+import type { Database } from "@/types/database";
 
 const VERIFIER_PROMPT = `You are an AI incident screening analyst for ALPAR AI. Your job is to evaluate a potential AI incident report fetched from external sources (Reddit, HackerNews, RSS) and determine if it is a credible real-world AI failure.
 
@@ -149,8 +146,8 @@ export async function publishVerifiedItem(params: {
       title_masked: params.title,
       description: params.body,
       description_masked: params.body,
-      category: params.category as any,
-      severity: params.severity as any,
+      category: params.category as Database["public"]["Enums"]["incident_category"],
+      severity: params.severity as Database["public"]["Enums"]["incident_severity"],
       source_url: params.externalUrl,
       incident_source: params.source,
       import_attribution: "external-queue-ai-v1",

@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import type { ExternalIncidentQueueItem, StrategyInnovation } from "@/types";
 import type { Database } from "@/types/database";
 import { logger } from "@/lib/utils/logger";
+import OpenAI from "openai";
 
 export async function getExternalQueue(): Promise<ExternalIncidentQueueItem[]> {
   await requireAdmin();
@@ -220,4 +221,79 @@ export async function updateInnovationStatus(
   if (error) throw new Error(error.message);
   revalidatePath("/[locale]/admin", "layout");
   return { success: true };
+}
+
+export async function autoReviewAllPending(): Promise<{
+  success: boolean;
+  message: string;
+  processed: number;
+}> {
+  await requireAdmin();
+  const supabase = await createServerClient();
+
+  const { data: pendingItems, error } = await supabase
+    .from("external_incidents_queue")
+    .select("*")
+    .eq("status", "pending")
+    .limit(10); // Process 10 at a time to prevent timeout/rate limit issues
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!pendingItems || pendingItems.length === 0) {
+    return { success: true, message: "Kuyrukta bekleyen olay yok.", processed: 0 };
+  }
+
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  let processed = 0;
+
+  for (const item of pendingItems) {
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content: `You are an AI Incident Reviewer for ALPAR AI. Analyze the following incident report and decide whether it should be accepted, rejected, or marked as a duplicate.
+Output strictly in JSON format:
+{
+  "action": "accept" | "reject" | "duplicate",
+  "category": "hallucination" | "data_leak" | "bias" | "security_flaw" | "other",
+  "severity": "low" | "medium" | "high" | "critical",
+  "reason": "short explanation"
+}
+Criteria: If the text describes a genuine AI incident (hallucination, data leak, bias, etc.), "accept" it. If it is spam, unrelated news, or just random chatter, "reject" it.`,
+          },
+          {
+            role: "user",
+            content: `Title: ${item.title}\n\nBody:\n${item.body}`,
+          },
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.1,
+      });
+
+      const content = response.choices[0]?.message?.content;
+      if (!content) continue;
+
+      const result = JSON.parse(content) as { action: string; category: string; severity: string };
+
+      if (result.action === "accept") {
+        await acceptExternalIncident(item.id, result.category, result.severity);
+      } else if (result.action === "reject" || result.action === "duplicate") {
+        await updateExternalQueueStatus(item.id, result.action as "rejected" | "duplicate");
+      }
+      processed++;
+    } catch (err) {
+      logger.error(
+        "Failed to auto-review queue item",
+        { id: item.id },
+        err instanceof Error ? err : undefined,
+      );
+    }
+  }
+
+  revalidatePath("/[locale]/admin", "layout");
+  return { success: true, message: `${processed} olay başarıyla incelendi.`, processed };
 }
