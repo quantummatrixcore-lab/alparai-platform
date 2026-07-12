@@ -38,8 +38,8 @@ export async function GET(request: NextRequest) {
       const { error: updateError } = await admin
         .from("incidents")
         .update({
-          title: incident.title_masked,
-          description: incident.description_masked,
+          title: incident.title_masked || undefined,
+          description: incident.description_masked || undefined,
           contains_pii: false,
           pii_categories: [],
         })

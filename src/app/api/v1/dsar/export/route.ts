@@ -9,10 +9,16 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const supabase = await createServerClient();
-    const { data: { user }, error: authErr } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authErr,
+    } = await supabase.auth.getUser();
 
     if (authErr || !user) {
-      return NextResponse.json({ error: "unauthorized", message: "Authentication required" }, { status: 401 });
+      return NextResponse.json(
+        { error: "unauthorized", message: "Authentication required" },
+        { status: 401 },
+      );
     }
 
     const userId = user.id;
@@ -61,7 +67,7 @@ export async function GET() {
     const { data: expertApplications } = await adminClient
       .from("expert_applications")
       .select("*")
-      .eq("user_id", userId);
+      .eq("id", userId);
 
     // Combine everything into GDPR / KVKK machine-readable export format
     const exportData = {
@@ -70,7 +76,8 @@ export async function GET() {
         legal_basis: "GDPR Article 15 / KVKK Article 11 DSAR Export",
         generated_at: new Date().toISOString(),
         request_id: dsarRequest?.id || "local-bypass",
-        sla_due_date: dsarRequest?.due_date || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        sla_due_date:
+          dsarRequest?.due_date || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       },
       user_identity: {
         id: userId,

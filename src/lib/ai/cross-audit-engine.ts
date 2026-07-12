@@ -652,7 +652,7 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
     throw new Error(`Failed to reach minimum quorum (${MIN_QUORUM}) for initial evaluations.`);
   }
 
-  const [initA, initB] = successfulInits;
+  const [initA, initB] = successfulInits as [InitialEvaluation, InitialEvaluation];
 
   logger.info("[CrossAudit] Turn 1 Complete (Initial Evaluations)", {
     modelA: initA.model,

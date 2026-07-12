@@ -20,6 +20,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+        check_incident_duplicate: {
+          Args: { title_to_check: string }
+          Returns: boolean
+        }
       graphql: {
         Args: {
           extensions?: Json
@@ -39,6 +43,132 @@ export type Database = {
   }
   public: {
     Tables: {
+        cookie_consent_log: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        submission_attempts: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        challenges: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        k_provider_previews: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        k_categories: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        redaction_requests: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        profiles: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        k_model_scores: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        cross_audit_runs: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        data_retention_policies: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        submission_fingerprints: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        challenge_votes: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        challenge_submissions: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        transparency_reports: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        moderation_sla: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        dsar_requests: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        age_declarations: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        advisory_terms: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        methodology_versions: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        zero_knowledge: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
+        external_auditor: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
       advisory_board_members: {
         Row: {
           avatar_url: string | null
@@ -93,7 +223,8 @@ export type Database = {
           released_at: string | null
           status: string
           version: string | null
-        }
+          deprecated_at: string | null
+          }
         Insert: {
           created_at?: string
           id?: string
@@ -102,7 +233,8 @@ export type Database = {
           released_at?: string | null
           status?: string
           version?: string | null
-        }
+          deprecated_at?: string | null
+          }
         Update: {
           created_at?: string
           id?: string
@@ -111,7 +243,8 @@ export type Database = {
           released_at?: string | null
           status?: string
           version?: string | null
-        }
+          deprecated_at?: string | null
+          }
         Relationships: [
           {
             foreignKeyName: "ai_models_provider_id_fkey"
@@ -1296,7 +1429,9 @@ export type Database = {
           user_agent: string | null
           user_id: string | null
           views_count: number
-        }
+          is_possible_duplicate: boolean | null
+            anonymous_email_hash: string | null
+          }
         Insert: {
           affected_users_count?: number
           ai_model_id?: string | null
@@ -1360,7 +1495,9 @@ export type Database = {
           user_agent?: string | null
           user_id?: string | null
           views_count?: number
-        }
+          is_possible_duplicate?: boolean | null
+            anonymous_email_hash?: string | null
+          }
         Update: {
           affected_users_count?: number
           ai_model_id?: string | null
@@ -1424,7 +1561,9 @@ export type Database = {
           user_agent?: string | null
           user_id?: string | null
           views_count?: number
-        }
+          is_possible_duplicate?: boolean | null
+            anonymous_email_hash?: string | null
+          }
         Relationships: [
           {
             foreignKeyName: "incidents_ai_model_id_fkey"
@@ -2794,7 +2933,9 @@ export type Database = {
           user_agent: string | null
           user_id: string | null
           views_count: number | null
-        }
+          is_possible_duplicate: boolean | null
+            anonymous_email_hash: string | null
+          }
         Insert: {
           affected_users_count?: number | null
           ai_model_id?: string | null
@@ -2843,7 +2984,9 @@ export type Database = {
           user_agent?: string | null
           user_id?: string | null
           views_count?: number | null
-        }
+          is_possible_duplicate?: boolean | null
+            anonymous_email_hash?: string | null
+          }
         Update: {
           affected_users_count?: number | null
           ai_model_id?: string | null
@@ -2892,7 +3035,9 @@ export type Database = {
           user_agent?: string | null
           user_id?: string | null
           views_count?: number | null
-        }
+          is_possible_duplicate?: boolean | null
+            anonymous_email_hash?: string | null
+          }
         Relationships: [
           {
             foreignKeyName: "incidents_ai_model_id_fkey"
@@ -3228,6 +3373,10 @@ export type Database = {
       }
     }
     Functions: {
+        check_incident_duplicate: {
+          Args: { title_to_check: string }
+          Returns: boolean
+        }
       increment_incident_views: {
         Args: { p_incident_id: string }
         Returns: undefined
