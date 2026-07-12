@@ -12,7 +12,18 @@
     "curriculum_desc": "Explore 20+ verified model failures, prompt injection templates, and safety mitigation exercises.",
     "export_pdf": "Export Curriculum as PDF",
     "empty_state_title": "Academy Offline Mode",
-    "empty_state_desc": "Curriculum packs and interactive classroom modules will synchronize post launch. Verified instructors will gain full control panels."
+    "empty_state_desc": "Curriculum packs and interactive classroom modules will synchronize post launch. Verified instructors will gain full control panels.",
+    "fellowship_title": "Faculty Fellowship Program",
+    "fellowship_subtitle": "Apply for academic research grants, computing credits, and direct integration into the K-BENCHMARK peer-review pipeline.",
+    "fellowship_form_title": "Fellowship Application Form",
+    "fellowship_inst": "Academic Institution",
+    "fellowship_dept": "Department / Field of Study",
+    "fellowship_prop": "Research Proposal Summary",
+    "fellowship_submit": "Submit Fellowship Application",
+    "fellowship_success": "Fellowship application submitted successfully for review.",
+    "fellowship_status_pending": "Pending Academic Audit",
+    "fellowship_status_approved": "Fellowship Active",
+    "fellowship_status_rejected": "Review Declined"
   },
   "pricing": {
     "title": "Enterprise Pricing & Audits",

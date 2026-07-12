@@ -24,6 +24,7 @@ const MIGRATIONS = [
   "20260727000004_role_view.sql",
   "20260727000005_k_product_scaffold.sql",
   "20260727000006_instructor_tier.sql",
+  "20260727000007_fellowship_applications.sql",
 ];
 
 async function apply(name) {

@@ -12,7 +12,18 @@
     "curriculum_desc": "20'den fazla doğrulanmış model hatasını, prompt enjeksiyon şablonunu ve güvenlik azaltma egzersizlerini keşfedin.",
     "export_pdf": "Müfredatı PDF Olarak Dışa Aktar",
     "empty_state_title": "Akademi Çevrimdışı Modu",
-    "empty_state_desc": "Müfredat paketleri ve etkileşimli sınıf modülleri lansman sonrasında senkronize edilecektir. Doğrulanmış eğitmenler tam kontrol panellerine erişebilecektir."
+    "empty_state_desc": "Müfredat paketleri ve etkileşimli sınıf modülleri lansman sonrasında senkronize edilecektir. Doğrulanmış eğitmenler tam kontrol panellerine erişebilecektir.",
+    "fellowship_title": "Akademik Üyelik Programı (Faculty Fellowship)",
+    "fellowship_subtitle": "Akademik araştırma hibeleri, hesaplama kredileri ve K-BENCHMARK hakem denetim hattına doğrudan entegrasyon için başvurun.",
+    "fellowship_form_title": "Akademik Üyelik Başvuru Formu",
+    "fellowship_inst": "Akademik Kurum / Üniversite",
+    "fellowship_dept": "Bölüm / Çalışma Alanı",
+    "fellowship_prop": "Araştırma Önerisi Özeti",
+    "fellowship_submit": "Başvuruyu Gönder",
+    "fellowship_success": "Akademik üyelik başvurusu değerlendirilmek üzere başarıyla gönderildi.",
+    "fellowship_status_pending": "Akademik Denetim Bekliyor",
+    "fellowship_status_approved": "Akademik Üyelik Aktif",
+    "fellowship_status_rejected": "Başvuru Reddedildi"
   },
   "pricing": {
     "title": "Kurumsal Üyelik ve Denetim",
