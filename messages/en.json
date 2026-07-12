@@ -411,8 +411,6 @@
     "caption": "AI Models Leaderboard Table",
     "trust_score_info": "What this score means: A Trust Score of 85+ means the provider responds to >80% of incidents, resolves >40%, and averages <3 days response time. A score below 50 means the provider has not responded to any reported incidents.",
     "read_methodology_link": "Read the detailed Trust Score Methodology →",
-    "non_responsive_notice": "{provider} has not responded to {count} incidents. Silence is data.",
-    "read_all_incidents": "Read all incidents",
     "verified_respondent": "Verified Respondent"
   },
   "auth": {

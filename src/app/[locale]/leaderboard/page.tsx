@@ -292,37 +292,6 @@ export default async function LeaderboardPage({
         </CardContent>
       </Card>
 
-      {(() => {
-        const nonResponsive = sorted.filter((p) => p.incident_count > 0 && p.response_count === 0);
-        if (nonResponsive.length === 0) return null;
-        return (
-          <div className="mb-6 space-y-3">
-            {nonResponsive.map((p) => (
-              <div
-                key={p.id}
-                className="bg-danger-500/5 border-danger-500/20 text-danger-300 flex flex-col justify-between gap-3 rounded-2xl border p-4 text-xs font-bold sm:flex-row sm:items-center"
-              >
-                <div className="flex items-center gap-2">
-                  <AlertCircle className="text-danger-400 h-4.5 w-4.5 shrink-0" />
-                  <span>
-                    {t("non_responsive_notice", {
-                      provider: p.name,
-                      count: p.incident_count,
-                    })}
-                  </span>
-                </div>
-                <Link
-                  href={`/press-kit/${p.slug}`}
-                  className="text-brand-400 hover:text-brand-300 flex items-center gap-1 self-start underline sm:self-auto"
-                >
-                  {t("read_all_incidents")} &rarr;
-                </Link>
-              </div>
-            ))}
-          </div>
-        );
-      })()}
-
       <Card>
         <CardContent className="p-0">
           {sorted.length === 0 ? (

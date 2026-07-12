@@ -411,8 +411,6 @@
     "caption": "AI Modelleri Liderlik Tablosu",
     "trust_score_info": "Bu skor ne anlama geliyor: 85+ Güven Skoru, sağlayıcının olayların >%80'ine yanıt verdiği, >%40'ını çözdüğü ve ortalama <3 gün yanıt süresine sahip olduğu anlamına gelir. 50'nin altındaki bir skor ise sağlayıcının bildirilen hiçbir olaya yanıt vermediğini gösterir.",
     "read_methodology_link": "Detaylı Güven Skoru Metodolojisini inceleyin →",
-    "non_responsive_notice": "{provider} bildirilen {count} olaya yanıt vermedi. Sessizlik de bir veridir.",
-    "read_all_incidents": "Tüm olayları oku",
     "verified_respondent": "Doğrulanmış Yanıtlayıcı"
   },
   "auth": {
