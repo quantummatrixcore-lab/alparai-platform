@@ -12,341 +12,81 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
-
-      k_provider_previews: {
+      advisory_board_members: {
         Row: {
-          id: string
-          provider_id: string
-          preview_token: string
-          sent_at: string | null
-          expires_at: string
-          status: "pending" | "sent" | "accessed" | "expired"
+          avatar_url: string | null
+          bio_en: string | null
+          bio_tr: string | null
           created_at: string
-        }
-        Insert: {
-          id?: string
-          provider_id: string
-          preview_token: string
-          sent_at?: string | null
-          expires_at: string
-          status?: "pending" | "sent" | "accessed" | "expired"
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          provider_id?: string
-          preview_token?: string
-          sent_at?: string | null
-          expires_at?: string
-          status?: "pending" | "sent" | "accessed" | "expired"
-          created_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "k_provider_previews_provider_id_fkey"
-            columns: ["provider_id"]
-            isOneToOne: false
-            referencedRelation: "ai_providers"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      data_retention_policies: {
-        Row: {
+          display_order: number
           id: string
-          table_name: string
-          retention_period_months: number
-          description: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          table_name: string
-          retention_period_months: number
-          description?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          table_name?: string
-          retention_period_months?: number
-          description?: string | null
-          created_at?: string
-        }
-        Relationships: []
-      }
-      redaction_requests: {
-        Row: {
-          id: string
-          incident_id: string
-          provider_id: string
-          status: "pending" | "approved" | "rejected"
-          reason: string | null
-          created_at: string
-          processed_at: string | null
-          processed_by: string | null
-        }
-        Insert: {
-          id?: string
-          incident_id: string
-          provider_id: string
-          status?: "pending" | "approved" | "rejected"
-          reason?: string | null
-          created_at?: string
-          processed_at?: string | null
-          processed_by?: string | null
-        }
-        Update: {
-          id?: string
-          incident_id?: string
-          provider_id?: string
-          status?: "pending" | "approved" | "rejected"
-          reason?: string | null
-          created_at?: string
-          processed_at?: string | null
-          processed_by?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "redaction_requests_incident_id_fkey"
-            columns: ["incident_id"]
-            isOneToOne: false
-            referencedRelation: "incidents"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "redaction_requests_provider_id_fkey"
-            columns: ["provider_id"]
-            isOneToOne: false
-            referencedRelation: "ai_providers"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "redaction_requests_processed_by_fkey"
-            columns: ["processed_by"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      submission_attempts: {
-        Row: {
-          id: string
-          ip_hash: string
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          ip_hash: string
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          ip_hash?: string
-          created_at?: string
-        }
-        Relationships: []
-      }
-      cross_audit_runs: {
-        Row: {
-          id: string
-          incident_id: string
-          model: string
-          tokens_in: number
-          tokens_out: number
-          cost_usd: number
-          latency_ms: number
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          incident_id: string
-          model: string
-          tokens_in?: number
-          tokens_out?: number
-          cost_usd?: number
-          latency_ms?: number
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          incident_id?: string
-          model?: string
-          tokens_in?: number
-          tokens_out?: number
-          cost_usd?: number
-          latency_ms?: number
-          created_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "cross_audit_runs_incident_id_fkey"
-            columns: ["incident_id"]
-            isOneToOne: false
-            referencedRelation: "incidents"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      k_categories: {
-        Row: {
-          created_at: string
-          description: string
-          id: string
+          institution_en: string | null
+          institution_tr: string | null
           name: string
+          title_en: string
+          title_tr: string
+          updated_at: string
         }
         Insert: {
+          avatar_url?: string | null
+          bio_en?: string | null
+          bio_tr?: string | null
           created_at?: string
-          description: string
-          id: string
+          display_order?: number
+          id?: string
+          institution_en?: string | null
+          institution_tr?: string | null
           name: string
+          title_en: string
+          title_tr: string
+          updated_at?: string
         }
         Update: {
+          avatar_url?: string | null
+          bio_en?: string | null
+          bio_tr?: string | null
           created_at?: string
-          description?: string
+          display_order?: number
           id?: string
+          institution_en?: string | null
+          institution_tr?: string | null
           name?: string
+          title_en?: string
+          title_tr?: string
+          updated_at?: string
         }
         Relationships: []
-      }
-      k_model_scores: {
-        Row: {
-          category_id: string
-          created_at: string
-          id: string
-          last_audited_at: string
-          model_id: string
-          sample_size: number
-          score: number
-          status: "active" | "retired"
-          wilson_lower: number | null
-          wilson_upper: number | null
-        }
-        Insert: {
-          category_id: string
-          created_at?: string
-          id?: string
-          last_audited_at?: string
-          model_id: string
-          sample_size?: number
-          score: number
-          status?: "active" | "retired"
-          wilson_lower?: number | null
-          wilson_upper?: number | null
-        }
-        Update: {
-          category_id?: string
-          created_at?: string
-          id?: string
-          last_audited_at?: string
-          model_id?: string
-          sample_size?: number
-          score?: number
-          status?: "active" | "retired"
-          wilson_lower?: number | null
-          wilson_upper?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "k_model_scores_category_id_fkey"
-            columns: ["category_id"]
-            isOneToOne: false
-            referencedRelation: "k_categories"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "k_model_scores_model_id_fkey"
-            columns: ["model_id"]
-            isOneToOne: false
-            referencedRelation: "ai_models"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      outreach_queue: {
-        Row: {
-          body_template: string
-          created_at: string
-          id: string
-          recipient_email: string
-          recipient_name: string | null
-          sent_at: string | null
-          status: string
-          subject: string
-          template_type: string
-        }
-        Insert: {
-          body_template: string
-          created_at?: string
-          id?: string
-          recipient_email: string
-          recipient_name?: string | null
-          sent_at?: string | null
-          status?: string
-          subject: string
-          template_type: string
-        }
-        Update: {
-          body_template?: string
-          created_at?: string
-          id?: string
-          recipient_email?: string
-          recipient_name?: string | null
-          sent_at?: string | null
-          status?: string
-          subject?: string
-          template_type?: string
-        }
-        Relationships: []
-      }
-      expert_network: {
-        Row: {
-          created_at: string
-          id: string
-          institution: string | null
-          is_active: boolean
-          name: string
-          specialties: string[] | null
-          title: string | null
-          verified_at: string
-        }
-        Insert: {
-          created_at?: string
-          id: string
-          institution?: string | null
-          is_active?: boolean
-          name: string
-          specialties?: string[] | null
-          title?: string | null
-          verified_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          institution?: string | null
-          is_active?: boolean
-          name?: string
-          specialties?: string[] | null
-          title?: string | null
-          verified_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "expert_network_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
       }
       ai_models: {
         Row: {
           created_at: string
-          deprecated_at: string | null
           id: string
           name: string
           provider_id: string
@@ -356,7 +96,6 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          deprecated_at?: string | null
           id?: string
           name: string
           provider_id: string
@@ -366,7 +105,6 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          deprecated_at?: string | null
           id?: string
           name?: string
           provider_id?: string
@@ -614,27 +352,30 @@ export type Database = {
       api_keys: {
         Row: {
           api_key: string
-          created_at: string
-          provider: string
-          updated_at: string
-          tier: string | null
           client_type: string | null
+          created_at: string
+          id: string
+          provider: string
+          tier: string | null
+          updated_at: string
         }
         Insert: {
           api_key: string
-          created_at?: string
-          provider: string
-          updated_at?: string
-          tier?: string | null
           client_type?: string | null
+          created_at?: string
+          id?: string
+          provider: string
+          tier?: string | null
+          updated_at?: string
         }
         Update: {
           api_key?: string
-          created_at?: string
-          provider?: string
-          updated_at?: string
-          tier?: string | null
           client_type?: string | null
+          created_at?: string
+          id?: string
+          provider?: string
+          tier?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -767,48 +508,6 @@ export type Database = {
           {
             foreignKeyName: "autopilot_worker_config_updated_by_fkey"
             columns: ["updated_by"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      age_declarations: {
-        Row: {
-          created_at: string
-          declared_over_18: boolean
-          id: string
-          incident_id: string | null
-          ip_hash: string | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          declared_over_18?: boolean
-          id?: string
-          incident_id?: string | null
-          ip_hash?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          declared_over_18?: boolean
-          id?: string
-          incident_id?: string | null
-          ip_hash?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "age_declarations_incident_id_fkey"
-            columns: ["incident_id"]
-            isOneToOne: false
-            referencedRelation: "incidents"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "age_declarations_user_id_fkey"
-            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
@@ -1038,44 +737,6 @@ export type Database = {
           },
         ]
       }
-      cookie_consent_log: {
-        Row: {
-          consent_level: string
-          created_at: string
-          id: string
-          ip_hash: string | null
-          session_id: string | null
-          user_agent: string | null
-          user_id: string | null
-        }
-        Insert: {
-          consent_level: string
-          created_at?: string
-          id?: string
-          ip_hash?: string | null
-          session_id?: string | null
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          consent_level?: string
-          created_at?: string
-          id?: string
-          ip_hash?: string | null
-          session_id?: string | null
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "cookie_consent_log_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       ecosystem_news: {
         Row: {
           category: string
@@ -1129,37 +790,37 @@ export type Database = {
       }
       email_preferences: {
         Row: {
+          email: string | null
           id: string
+          marketing_opt_in: boolean
           reporter_notifications: boolean
+          source: string | null
           updated_at: string
           user_id: string | null
           watches: boolean
           weekly_digest: boolean
-          email: string | null
-          marketing_opt_in: boolean
-          source: string | null
         }
         Insert: {
+          email?: string | null
           id?: string
+          marketing_opt_in?: boolean
           reporter_notifications?: boolean
+          source?: string | null
           updated_at?: string
           user_id?: string | null
           watches?: boolean
           weekly_digest?: boolean
-          email?: string | null
-          marketing_opt_in?: boolean
-          source?: string | null
         }
         Update: {
+          email?: string | null
           id?: string
+          marketing_opt_in?: boolean
           reporter_notifications?: boolean
+          source?: string | null
           updated_at?: string
           user_id?: string | null
           watches?: boolean
           weekly_digest?: boolean
-          email?: string | null
-          marketing_opt_in?: boolean
-          source?: string | null
         }
         Relationships: [
           {
@@ -1343,6 +1004,72 @@ export type Database = {
         }
         Relationships: []
       }
+      finance_api_usage: {
+        Row: {
+          created_at: string
+          id: string
+          metric_name: string
+          recorded_at: string
+          service: string
+          unit: string | null
+          value: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metric_name: string
+          recorded_at?: string
+          service: string
+          unit?: string | null
+          value: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metric_name?: string
+          recorded_at?: string
+          service?: string
+          unit?: string | null
+          value?: number
+        }
+        Relationships: []
+      }
+      finance_monthly_costs: {
+        Row: {
+          amount_usd: number
+          budget_usd: number
+          created_at: string
+          currency: string
+          id: string
+          metadata: Json | null
+          month: string
+          service: string
+          updated_at: string
+        }
+        Insert: {
+          amount_usd?: number
+          budget_usd?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          metadata?: Json | null
+          month: string
+          service: string
+          updated_at?: string
+        }
+        Update: {
+          amount_usd?: number
+          budget_usd?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          metadata?: Json | null
+          month?: string
+          service?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       incident_affected_users: {
         Row: {
           created_at: string
@@ -1506,13 +1233,12 @@ export type Database = {
         ]
       }
       incidents: {
-          Row: {
+        Row: {
           affected_users_count: number
           ai_model_id: string | null
           ai_moderation_reason: string | null
           ai_moderation_score: number | null
           ai_provider_id: string | null
-          anonymous_email_hash: string | null
           audit_tier: string | null
           category: Database["public"]["Enums"]["incident_category"]
           comments_count: number
@@ -1535,8 +1261,6 @@ export type Database = {
           eu_act_serious_incident_class: string | null
           eu_act_transparency_score: number | null
           expert_fix: string | null
-          expert_verified: boolean
-          expert_verifier_id: string | null
           id: string
           import_attribution: string | null
           import_external_id: string | null
@@ -1545,7 +1269,6 @@ export type Database = {
           ip_hash: string | null
           is_anonymous: boolean
           is_expert: boolean
-          is_possible_duplicate: boolean
           is_seed: boolean
           language: string
           location_country: string | null
@@ -1562,8 +1285,8 @@ export type Database = {
           search_vector: unknown
           severity: Database["public"]["Enums"]["incident_severity"]
           shares_count: number
-          source_url: string | null
           source_badge: string | null
+          source_url: string | null
           status: Database["public"]["Enums"]["incident_status"]
           title: string
           title_masked: string | null
@@ -1580,7 +1303,6 @@ export type Database = {
           ai_moderation_reason?: string | null
           ai_moderation_score?: number | null
           ai_provider_id?: string | null
-          anonymous_email_hash?: string | null
           audit_tier?: string | null
           category?: Database["public"]["Enums"]["incident_category"]
           comments_count?: number
@@ -1603,8 +1325,6 @@ export type Database = {
           eu_act_serious_incident_class?: string | null
           eu_act_transparency_score?: number | null
           expert_fix?: string | null
-          expert_verified?: boolean
-          expert_verifier_id?: string | null
           id?: string
           import_attribution?: string | null
           import_external_id?: string | null
@@ -1613,7 +1333,6 @@ export type Database = {
           ip_hash?: string | null
           is_anonymous?: boolean
           is_expert?: boolean
-          is_possible_duplicate?: boolean
           is_seed?: boolean
           language?: string
           location_country?: string | null
@@ -1630,6 +1349,7 @@ export type Database = {
           search_vector?: unknown
           severity?: Database["public"]["Enums"]["incident_severity"]
           shares_count?: number
+          source_badge?: string | null
           source_url?: string | null
           status?: Database["public"]["Enums"]["incident_status"]
           title: string
@@ -1647,7 +1367,6 @@ export type Database = {
           ai_moderation_reason?: string | null
           ai_moderation_score?: number | null
           ai_provider_id?: string | null
-          anonymous_email_hash?: string | null
           audit_tier?: string | null
           category?: Database["public"]["Enums"]["incident_category"]
           comments_count?: number
@@ -1670,8 +1389,6 @@ export type Database = {
           eu_act_serious_incident_class?: string | null
           eu_act_transparency_score?: number | null
           expert_fix?: string | null
-          expert_verified?: boolean
-          expert_verifier_id?: string | null
           id?: string
           import_attribution?: string | null
           import_external_id?: string | null
@@ -1680,7 +1397,6 @@ export type Database = {
           ip_hash?: string | null
           is_anonymous?: boolean
           is_expert?: boolean
-          is_possible_duplicate?: boolean
           is_seed?: boolean
           language?: string
           location_country?: string | null
@@ -1697,8 +1413,8 @@ export type Database = {
           search_vector?: unknown
           severity?: Database["public"]["Enums"]["incident_severity"]
           shares_count?: number
-          source_url?: string | null
           source_badge?: string | null
+          source_url?: string | null
           status?: Database["public"]["Enums"]["incident_status"]
           title?: string
           title_masked?: string | null
@@ -2953,8 +2669,6 @@ export type Database = {
           reputation_score: number
           role: Database["public"]["Enums"]["user_role"]
           soft_deleted_at: string | null
-          stripe_customer_id: string | null
-          subscription_tier: string | null
           updated_at: string
           username: string | null
         }
@@ -2976,8 +2690,6 @@ export type Database = {
           reputation_score?: number
           role?: Database["public"]["Enums"]["user_role"]
           soft_deleted_at?: string | null
-          stripe_customer_id?: string | null
-          subscription_tier?: string | null
           updated_at?: string
           username?: string | null
         }
@@ -2999,8 +2711,6 @@ export type Database = {
           reputation_score?: number
           role?: Database["public"]["Enums"]["user_role"]
           soft_deleted_at?: string | null
-          stripe_customer_id?: string | null
-          subscription_tier?: string | null
           updated_at?: string
           username?: string | null
         }
@@ -3030,42 +2740,6 @@ export type Database = {
           provider_hint?: string | null
           status?: string
           submitted_at?: string
-        }
-        Relationships: []
-      }
-      methodology_versions: {
-        Row: {
-          id: string
-          version: string
-          published_at: string
-          summary_en: string
-          summary_tr: string
-          changes_en: string[]
-          changes_tr: string[]
-          is_retraction: boolean
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          version: string
-          published_at?: string
-          summary_en: string
-          summary_tr: string
-          changes_en?: string[]
-          changes_tr?: string[]
-          is_retraction?: boolean
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          version?: string
-          published_at?: string
-          summary_en?: string
-          summary_tr?: string
-          changes_en?: string[]
-          changes_tr?: string[]
-          is_retraction?: boolean
-          created_at?: string
         }
         Relationships: []
       }
@@ -3554,10 +3228,6 @@ export type Database = {
       }
     }
     Functions: {
-      check_incident_duplicate: {
-        Args: { title_to_check: string }
-        Returns: { similarity_score: number; incident_id: string }
-      }
       increment_incident_views: {
         Args: { p_incident_id: string }
         Returns: undefined
@@ -3742,6 +3412,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       evidence_kind: [
