@@ -26,8 +26,8 @@ describe("proxy middleware", () => {
       .fn()
       .mockImplementation(() => (global as any).__mockIntlResponse);
 
-    const mod = await import("@/proxy");
-    proxy = mod.proxy;
+    const mod = await import("@/middleware");
+    proxy = mod.middleware;
   });
 
   beforeEach(() => {
