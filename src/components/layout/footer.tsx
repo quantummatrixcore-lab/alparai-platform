@@ -28,6 +28,7 @@ const companyLinks = [
 
 const resourcesLinks = [
   { href: "/blog", key: "blog", label: "Blog", external: false },
+  { href: "/methodology/k-benchmark", key: "methodology", label: "K-BENCHMARK", external: false },
   {
     href: "https://github.com/quantummatrixcore-lab/Alparai.com",
     key: "github",
