@@ -124,6 +124,79 @@ export async function GET(request: NextRequest) {
       hardDeletedIds.push(user.id);
     }
 
+    // 3. Process Approved Provider Redaction Requests (G5)
+    const { data: approvedRedactions, error: redactError } = await admin
+      .from("redaction_requests")
+      .select("id, incident_id, provider_id, ai_providers(name)")
+      .eq("status", "approved")
+      .is("processed_at", null);
+
+    if (redactError) {
+      logger.error(
+        `[ProcessDeletionsCron] Failed to fetch approved redaction requests: ${redactError.message}`,
+      );
+    } else if (approvedRedactions && approvedRedactions.length > 0) {
+      for (const req of approvedRedactions) {
+        const provider = req.ai_providers as unknown as { name: string } | null;
+        if (!provider || !provider.name) {
+          logger.warn(`[ProcessDeletionsCron] Missing provider name for request: ${req.id}`);
+          continue;
+        }
+
+        const { data: incident, error: incError } = await admin
+          .from("incidents")
+          .select("id, title, description, title_masked, description_masked")
+          .eq("id", req.incident_id)
+          .single();
+
+        if (incError || !incident) {
+          logger.error(
+            `[ProcessDeletionsCron] Failed to fetch incident ${req.incident_id}: ${incError?.message}`,
+          );
+          continue;
+        }
+
+        const escapeRegExp = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const redactText = (text: string | null, term: string) => {
+          if (!text) return "";
+          return text.replace(new RegExp(escapeRegExp(term), "gi"), "***");
+        };
+
+        const updatedTitle = redactText(incident.title, provider.name);
+        const updatedDesc = redactText(incident.description, provider.name);
+        const updatedTitleMasked = redactText(incident.title_masked, provider.name);
+        const updatedDescMasked = redactText(incident.description_masked, provider.name);
+
+        const { error: updateIncErr } = await admin
+          .from("incidents")
+          .update({
+            title: updatedTitle,
+            description: updatedDesc,
+            title_masked: updatedTitleMasked,
+            description_masked: updatedDescMasked,
+          })
+          .eq("id", incident.id);
+
+        if (updateIncErr) {
+          logger.error(
+            `[ProcessDeletionsCron] Failed to update incident ${incident.id}: ${updateIncErr.message}`,
+          );
+          continue;
+        }
+
+        await admin
+          .from("redaction_requests")
+          .update({
+            processed_at: now,
+          })
+          .eq("id", req.id);
+
+        logger.info(
+          `[ProcessDeletionsCron] Redacted provider ${provider.name} in incident ${incident.id}`,
+        );
+      }
+    }
+
     return NextResponse.json({
       success: true,
       softDeleted: {
@@ -134,6 +207,7 @@ export async function GET(request: NextRequest) {
         count: hardDeletedIds.length,
         ids: hardDeletedIds,
       },
+      redactions_processed: approvedRedactions ? approvedRedactions.length : 0,
     });
   } catch (error) {
     const message =
