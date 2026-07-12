@@ -2,13 +2,6 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Clock, WarningCircle } from "@phosphor-icons/react/dist/ssr";
 
-interface SliRowProps {
-  label: string;
-  slo: string;
-  actual: string;
-  status: "ok" | "warning" | "breach";
-}
-
 const MOCK_SLI = [
   { label: "sli_availability", slo: "99.9%", actual: "99.95%", status: "ok" as const },
   { label: "sli_latency_p50", slo: "< 200ms", actual: "87ms", status: "ok" as const },

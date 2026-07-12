@@ -20,7 +20,7 @@ export const options = {
 const BASE_URL = __ENV.BASE_URL || "http://localhost:3000";
 const ENDPOINTS = ["/en", "/en/incidents", "/en/ratings"];
 
-export default function () {
+export default function loadTest() {
   const url = `${BASE_URL}${ENDPOINTS[__ITER % ENDPOINTS.length]}`;
   const res = http.get(url, { tags: { endpoint: ENDPOINTS[__ITER % ENDPOINTS.length] } });
 
