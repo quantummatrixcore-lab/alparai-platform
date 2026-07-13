@@ -72,11 +72,18 @@ export class GoogleAdapter implements ProviderAdapter {
       }
 
       if (!response.ok) {
+        const errorBody = await response.text().catch(() => "");
+        logger.error("[GoogleAdapter] API error", {
+          model: request.model.id,
+          status: response.status,
+          statusText: response.statusText,
+          body: errorBody,
+        });
         return {
           ok: false,
           error: {
             code: "api_error",
-            message: `Google Gemini API error: ${response.status} ${response.statusText}`,
+            message: `Google Gemini API error: ${response.status} ${response.statusText}${errorBody ? ` — ${errorBody.slice(0, 200)}` : ""}`,
             model: request.model.id,
             statusCode: response.status,
           },

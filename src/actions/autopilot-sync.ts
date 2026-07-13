@@ -69,9 +69,7 @@ async function classifyAndTranslateNewsWithGemini(
   summary_en: string;
   summary_tr: string;
 } | null> {
-  const apiKey =
-    (await resolveApiKey("google", "GOOGLE_API_KEY")) ||
-    (await resolveApiKey("google_vertex", "VERTEX_API_KEY"));
+  const apiKey = await resolveApiKey("google", "GOOGLE_API_KEY");
   if (!apiKey) {
     logger.error("No Google API Key found for news sync Gemini call");
     return null;
@@ -102,7 +100,7 @@ Return ONLY a valid JSON object matching this schema (do not output markdown tic
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

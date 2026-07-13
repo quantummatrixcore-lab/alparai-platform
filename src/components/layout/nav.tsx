@@ -76,7 +76,7 @@ export function Nav({
   const isDropdownActive = resourcesItems.some((item) => pathname.startsWith(item.href));
 
   return (
-    <nav className={cn("hidden items-center gap-1 min-[1400px]:flex", className)}>
+    <nav className={cn("hidden items-center gap-1 2xl:flex", className)}>
       {activeItems.map((item) => {
         const Icon = item.icon;
         const isActive = pathname.startsWith(item.href);
