@@ -255,3 +255,5 @@ export const auditorAuditLogsResponseSchema = z.object({
   ),
 });
 
+// 15. GET /api/v1/dsar/portable
+export const dsarPortableResponseSchema = z.any(); // Returns ZIP binary stream

@@ -25,11 +25,29 @@ export async function GET() {
     const adminClient = createAdminClient();
 
     const [profileRes, incidentsRes, commentsRes, votesRes, appsRes] = await Promise.all([
-      adminClient.from("profiles").select("*").eq("id", userId).maybeSingle(),
-      adminClient.from("incidents").select("*").eq("user_id", userId),
-      adminClient.from("incident_comments").select("*").eq("user_id", userId),
-      adminClient.from("incident_votes").select("*").eq("user_id", userId),
-      adminClient.from("expert_applications").select("*").eq("id", userId),
+      adminClient
+        .from("profiles")
+        .select("id, email, username, full_name, avatar_url, bio, role, created_at, updated_at")
+        .eq("id", userId)
+        .maybeSingle(),
+      adminClient
+        .from("incidents")
+        .select(
+          "id, user_id, is_anonymous, title_masked, description_masked, ai_provider_id, ai_model_id, category, severity, incident_date, location_country, language, status, views_count, upvotes_count, shares_count, comments_count, source_url, created_at, updated_at",
+        )
+        .eq("user_id", userId),
+      adminClient
+        .from("incident_comments")
+        .select("id, incident_id, user_id, comment_text, created_at, updated_at")
+        .eq("user_id", userId),
+      adminClient
+        .from("incident_votes")
+        .select("id, incident_id, user_id, value, created_at, updated_at")
+        .eq("user_id", userId),
+      adminClient
+        .from("expert_applications")
+        .select("id, name, title_institution, expertise, linkedin_url, status, created_at")
+        .eq("id", userId),
     ]);
 
     const encoder = new TextEncoder();

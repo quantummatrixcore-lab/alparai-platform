@@ -111,7 +111,24 @@ describe("Cross-Audit Engine (Debate Protocol)", () => {
         },
         attemptedModels: ["meta-llama/llama-3.3-70b:free"],
       })
-      // Call 3: Model A Challenge
+      // Call 3: Model C Initial
+      .mockResolvedValueOnce({
+        ok: true,
+        data: {
+          content: JSON.stringify({
+            plausibilityScore: 88,
+            categoryAccuracy: 92,
+            adversarialRisk: 6,
+            reasoning: "Third model agreement on medical advice failure.",
+            summary: "Agreement on plausibility.",
+          }),
+          model: "google/gemma-2-27b-it",
+          usage: { promptTokens: 105, completionTokens: 52, totalTokens: 157 },
+          latencyMs: 130,
+        },
+        attemptedModels: ["google/gemma-2-27b-it"],
+      })
+      // Call 4: Model A Challenge
       .mockResolvedValueOnce({
         ok: true,
         data: {
@@ -125,7 +142,7 @@ describe("Cross-Audit Engine (Debate Protocol)", () => {
         },
         attemptedModels: ["deepseek/deepseek-chat"],
       })
-      // Call 4: Model B Challenge
+      // Call 5: Model B Challenge
       .mockResolvedValueOnce({
         ok: true,
         data: {
@@ -139,7 +156,7 @@ describe("Cross-Audit Engine (Debate Protocol)", () => {
         },
         attemptedModels: ["meta-llama/llama-3.3-70b:free"],
       })
-      // Call 5: Model A Rebuttal
+      // Call 6: Model A Rebuttal
       .mockResolvedValueOnce({
         ok: true,
         data: {
@@ -156,7 +173,7 @@ describe("Cross-Audit Engine (Debate Protocol)", () => {
         },
         attemptedModels: ["deepseek/deepseek-chat"],
       })
-      // Call 6: Model B Rebuttal
+      // Call 7: Model B Rebuttal
       .mockResolvedValueOnce({
         ok: true,
         data: {
@@ -173,7 +190,7 @@ describe("Cross-Audit Engine (Debate Protocol)", () => {
         },
         attemptedModels: ["meta-llama/llama-3.3-70b:free"],
       })
-      // Call 7: Supreme Court Adjudication
+      // Call 8: Supreme Court Adjudication
       .mockResolvedValueOnce({
         ok: true,
         data: {

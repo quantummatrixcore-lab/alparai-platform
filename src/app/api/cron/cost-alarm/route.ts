@@ -76,10 +76,10 @@ export async function GET(request: NextRequest) {
       logger.error("Failed to query daily LLM costs", {}, e instanceof Error ? e : undefined);
     }
 
-    // Default defaults for cost thresholds
-    const dailyWarningThreshold = 50; // >$50 warning
-    const dailyLimitThreshold = 100; // >$100 auto-throttle / kill-switch
-    const monthlyLimitThreshold = 500; // >$500 monthly limit / kill-switch
+    // Default defaults for cost thresholds (configurable via env)
+    const dailyWarningThreshold = Number(process.env.COST_WARNING_DAILY ?? 50); // >$50 warning
+    const dailyLimitThreshold = Number(process.env.COST_LIMIT_DAILY ?? 100); // >$100 auto-throttle / kill-switch
+    const monthlyLimitThreshold = Number(process.env.COST_LIMIT_MONTHLY ?? 500); // >$500 monthly limit / kill-switch
 
     let killSwitchActive = false;
     let alarmReason = "";

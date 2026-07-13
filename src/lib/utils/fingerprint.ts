@@ -8,6 +8,11 @@ export async function getFingerprint(): Promise<string> {
   } catch (error) {
     console.error("Failed to load FingerprintJS", error);
     // Return a fallback anonymous ID or throw depending on strictness
-    return "anonymous-" + Math.random().toString(36).substring(2, 15);
+    return (
+      "anonymous-" +
+      (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID()
+        : Math.random().toString(36).substring(2, 15))
+    );
   }
 }

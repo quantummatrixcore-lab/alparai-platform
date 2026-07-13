@@ -30,6 +30,7 @@ const routeSchemaMap: Record<string, z.ZodTypeAny> = {
   "auditor/methodology": schemas.auditorMethodologyResponseSchema,
   "dsar/download": schemas.dsarDownloadResponseSchema,
   "dsar/export": schemas.dsarExportResponseSchema,
+  "dsar/portable": schemas.dsarPortableResponseSchema,
   extract: schemas.extractResponseSchema,
   incidents: schemas.incidentsResponseSchema,
   "incidents/[id]": schemas.incidentDetailResponseSchema,

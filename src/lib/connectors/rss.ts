@@ -15,6 +15,39 @@ function decodeHtmlEntities(str: string): string {
     .replace(/&#39;/g, "'");
 }
 
+async function fetchWithRetry(
+  url: string,
+  options: RequestInit,
+  retries = 3,
+  delayMs = 2000,
+): Promise<Response> {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+    const res = await fetch(url, { ...options, signal: controller.signal });
+    clearTimeout(timeoutId);
+    if (res.ok) {
+      return res;
+    }
+    if (retries === 0) {
+      return res;
+    }
+    logger.warn(
+      `RSS fetch non-ok status ${res.status} for ${url}, retrying in ${delayMs}ms. Retries left: ${retries}`,
+    );
+  } catch (error) {
+    if (retries === 0) {
+      throw error;
+    }
+    logger.warn(
+      `RSS fetch error for ${url}, retrying in ${delayMs}ms. Retries left: ${retries}`,
+      error instanceof Error ? { error: error.message } : undefined,
+    );
+  }
+  await new Promise((resolve) => setTimeout(resolve, delayMs));
+  return fetchWithRetry(url, options, retries - 1, delayMs * 2);
+}
+
 export async function fetchRSSFeed(
   feedUrl: string,
   sourceName: string,
@@ -27,7 +60,7 @@ export async function fetchRSSFeed(
   }>
 > {
   try {
-    const res = await fetch(feedUrl, {
+    const res = await fetchWithRetry(feedUrl, {
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) ALPARAI/1.0.0 (contact@alparai.com)",

@@ -107,4 +107,53 @@ describe("Cost-Alarm Cron Job", () => {
     expect(body.success).toBe(true);
     expect(body.killSwitchActive).toBe(false);
   });
+
+  it("should use env configured cost limits when specified", async () => {
+    const req = new Request("http://localhost/api/cron/cost-alarm", {
+      headers: { authorization: "Bearer test-secret" },
+    });
+
+    // Mock monthly costs: total = 30 USD (under default limit 500, but over custom env limit 20)
+    mockEq.mockResolvedValueOnce({
+      data: [
+        { service: "vercel", amount_usd: 15 },
+        { service: "gemini", amount_usd: 15 },
+      ],
+      error: null,
+    });
+
+    // Mock monthly LLM cost (empty)
+    mockGte.mockResolvedValueOnce({
+      data: [],
+      error: null,
+    });
+
+    // Mock daily LLM cost (empty)
+    mockGte.mockResolvedValueOnce({
+      data: [],
+      error: null,
+    });
+
+    const redisInstance = new Redis({ url: "x", token: "y" });
+    const setSpy = vi.spyOn(redisInstance, "set").mockResolvedValue("OK");
+    vi.mocked(Redis).mockImplementation(() => redisInstance);
+
+    process.env.COST_LIMIT_MONTHLY = "20";
+    process.env.UPSTASH_REDIS_REST_URL = "https://mock-redis.upstash.io";
+    process.env.UPSTASH_REDIS_REST_TOKEN = "mock-token";
+
+    try {
+      const res = await GET(req as unknown as NextRequest);
+      expect(res.status).toBe(200);
+
+      const body = await res.json();
+      expect(body.success).toBe(true);
+      expect(body.killSwitchActive).toBe(true);
+      expect(setSpy).toHaveBeenCalledWith("cost_kill_switch", "true");
+    } finally {
+      delete process.env.COST_LIMIT_MONTHLY;
+      delete process.env.UPSTASH_REDIS_REST_URL;
+      delete process.env.UPSTASH_REDIS_REST_TOKEN;
+    }
+  });
 });
