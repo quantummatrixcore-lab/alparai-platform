@@ -72,6 +72,39 @@ const runModerationWork = async (
         .eq("id", data.incidentId)
         .maybeSingle();
 
+      if (incident && incident.user_id) {
+        const userId = incident.user_id;
+        const { data: existingBadges } = await admin
+          .from("user_badges")
+          .select("id")
+          .eq("user_id", userId)
+          .eq("badge_name", "Founding Reporter")
+          .maybeSingle();
+
+        if (!existingBadges) {
+          await admin.from("user_badges").insert({
+            user_id: userId,
+            badge_name: "Founding Reporter",
+            badge_icon: "🏅",
+            description: "Awarded for submitting an early verified incident.",
+          });
+
+          const { data: userRecord } = await admin
+            .from("users")
+            .select("badges")
+            .eq("id", userId)
+            .maybeSingle();
+
+          if (userRecord) {
+            const currentBadges: string[] = userRecord.badges ?? [];
+            if (!currentBadges.includes("Founding Reporter")) {
+              currentBadges.push("Founding Reporter");
+              await admin.from("users").update({ badges: currentBadges }).eq("id", userId);
+            }
+          }
+        }
+      }
+
       if (incident && incident.ai_provider_id) {
         const { data: provider } = await admin
           .from("ai_providers")

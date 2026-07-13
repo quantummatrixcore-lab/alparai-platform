@@ -12,17 +12,35 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  { name: "Jan", mrr: 12000 },
-  { name: "Feb", mrr: 15000 },
-  { name: "Mar", mrr: 18000 },
-  { name: "Apr", mrr: 22000 },
-  { name: "May", mrr: 26000 },
-  { name: "Jun", mrr: 34000 },
-];
+interface RevenueMetric {
+  month: string;
+  mrr_usd: number;
+  arr_usd: number;
+  active_subs: number;
+}
 
-export function RevenueDashboard() {
+export function RevenueDashboard({ data }: { data: RevenueMetric[] }) {
   const t = useTranslations("admin");
+
+  const latest = data[data.length - 1];
+  const previous = data[data.length - 2];
+
+  const currentMrr = latest ? Number(latest.mrr_usd) : 0;
+  const currentArr = latest ? Number(latest.arr_usd) : 0;
+  const currentSubs = latest ? Number(latest.active_subs) : 0;
+
+  const previousMrr = previous ? Number(previous.mrr_usd) : 0;
+  const mrrChangePercent =
+    previousMrr > 0 ? Math.round(((currentMrr - previousMrr) / previousMrr) * 100) : 0;
+
+  const chartData = data.map((d) => {
+    const date = new Date(d.month);
+    const name = date.toLocaleString("en-US", { month: "short" });
+    return {
+      name,
+      mrr: Number(d.mrr_usd),
+    };
+  });
 
   return (
     <div className="border-t-brand-500/30 mb-8 rounded-lg border border-white/10 bg-neutral-900/60 p-6 shadow-md backdrop-blur-xl">
@@ -41,29 +59,43 @@ export function RevenueDashboard() {
           <div className="rounded-lg border border-white/5 bg-neutral-800/40 p-4">
             <p className="mb-1 text-sm font-medium text-neutral-400">Monthly Recurring Revenue</p>
             <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-white">$34,000</span>
-              <span className="flex items-center text-xs text-emerald-400">
-                <TrendUp weight="bold" className="mr-1" />
-                +18%
-              </span>
+              <span className="text-3xl font-bold text-white">${currentMrr.toLocaleString()}</span>
+              {mrrChangePercent !== 0 && (
+                <span
+                  className={`flex items-center text-xs ${mrrChangePercent > 0 ? "text-emerald-400" : "text-rose-400"}`}
+                >
+                  <TrendUp
+                    weight="bold"
+                    className={`mr-1 ${mrrChangePercent < 0 ? "rotate-180" : ""}`}
+                  />
+                  {mrrChangePercent > 0 ? `+${mrrChangePercent}%` : `${mrrChangePercent}%`}
+                </span>
+              )}
             </div>
           </div>
 
           <div className="rounded-lg border border-white/5 bg-neutral-800/40 p-4">
             <p className="mb-1 text-sm font-medium text-neutral-400">Annual Run Rate (ARR)</p>
             <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-white">$408,000</span>
-              <span className="flex items-center text-xs text-emerald-400">
-                <TrendUp weight="bold" className="mr-1" />
-                +18%
-              </span>
+              <span className="text-3xl font-bold text-white">${currentArr.toLocaleString()}</span>
+              {mrrChangePercent !== 0 && (
+                <span
+                  className={`flex items-center text-xs ${mrrChangePercent > 0 ? "text-emerald-400" : "text-rose-400"}`}
+                >
+                  <TrendUp
+                    weight="bold"
+                    className={`mr-1 ${mrrChangePercent < 0 ? "rotate-180" : ""}`}
+                  />
+                  {mrrChangePercent > 0 ? `+${mrrChangePercent}%` : `${mrrChangePercent}%`}
+                </span>
+              )}
             </div>
           </div>
 
           <div className="rounded-lg border border-white/5 bg-neutral-800/40 p-4">
             <p className="mb-1 text-sm font-medium text-neutral-400">Active Pro/Enterprise Subs</p>
             <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-white">142</span>
+              <span className="text-3xl font-bold text-white">{currentSubs.toLocaleString()}</span>
               <span className="ml-1 text-xs text-neutral-500">
                 <Users weight="duotone" className="inline" />
               </span>
@@ -74,7 +106,7 @@ export function RevenueDashboard() {
         <div className="rounded-lg border border-white/5 bg-neutral-800/20 p-4 lg:col-span-3">
           <div className="h-48 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+              <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorMrr" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
@@ -103,7 +135,7 @@ export function RevenueDashboard() {
                     borderRadius: "8px",
                   }}
                   itemStyle={{ color: "#10b981" }}
-                  formatter={(value: number) => [`$${value.toLocaleString()}`, "MRR"]}
+                  formatter={(value: unknown) => [`$${Number(value || 0).toLocaleString()}`, "MRR"]}
                 />
                 <Area
                   type="monotone"

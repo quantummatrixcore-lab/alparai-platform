@@ -60,6 +60,7 @@ export default async function AdminDashboardPage({
     { data: pendingData },
     { data: auditData },
     { data: activeProviders },
+    { data: revenueData },
   ] = await Promise.all([
     admin.from("incidents").select("*", { count: "exact", head: true }),
     admin
@@ -92,6 +93,10 @@ export default async function AdminDashboardPage({
       .order("created_at", { ascending: false })
       .limit(5),
     admin.from("ai_providers").select("id, name, trust_score").limit(10),
+    admin
+      .from("finance_revenue_metrics" as never)
+      .select("month, mrr_usd, arr_usd, active_subs")
+      .order("month", { ascending: true }),
   ]);
 
   const stats: AdminStats = {
@@ -147,7 +152,7 @@ export default async function AdminDashboardPage({
       <LiveStatusBar />
 
       <Container className="flex-1 space-y-8 py-10">
-        <RevenueDashboard />
+        <RevenueDashboard data={revenueData || []} />
 
         {/* 360 Degree Command Center */}
         <System360Overview />
