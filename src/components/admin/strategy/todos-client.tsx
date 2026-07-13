@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Plus, Trash2, Check, X, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toggleTodoAction, deleteTodoAction, createTodoAction } from "@/actions/todos";
@@ -14,6 +15,8 @@ interface TodosClientProps {
 }
 
 export function RoadmapTodosClient({ initialTodos, isReadOnly, locale }: TodosClientProps) {
+  const t = useTranslations("admin");
+
   const [todos, setTodos] = useState<StrategyTodo[]>(initialTodos);
   const [isAdding, setIsAdding] = useState(false);
   const [newTitle, setNewTitle] = useState("");
@@ -38,9 +41,7 @@ export function RoadmapTodosClient({ initialTodos, isReadOnly, locale }: TodosCl
     if (isReadOnly) return;
     if (
       !confirm(
-        locale === "tr"
-          ? "Bu görevi silmek istediğinize emin misiniz?"
-          : "Are you sure you want to delete this task?",
+        t("are_you_sure_you_want_to_delete_this_tas"),
       )
     ) {
       return;
@@ -49,7 +50,7 @@ export function RoadmapTodosClient({ initialTodos, isReadOnly, locale }: TodosCl
       const res = await deleteTodoAction(id);
       if (res.success) {
         setTodos((prev) => prev.filter((t) => t.id !== id));
-        toast.success(locale === "tr" ? "Görev silindi." : "Task deleted.");
+        toast.success(t("task_deleted"));
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Failed to delete task.");
@@ -77,7 +78,7 @@ export function RoadmapTodosClient({ initialTodos, isReadOnly, locale }: TodosCl
         ]);
         setNewTitle("");
         setIsAdding(false);
-        toast.success(locale === "tr" ? "Yeni görev eklendi." : "New task added.");
+        toast.success(t("new_task_added"));
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Failed to add task.");
@@ -89,18 +90,18 @@ export function RoadmapTodosClient({ initialTodos, isReadOnly, locale }: TodosCl
   // Group by priority
   const priorities = [1, 2, 3, 4, 5];
   const priorityLabels: Record<number, string> = {
-    1: locale === "tr" ? "Öncelik 1 - Acil" : "Priority 1 - Urgent",
-    2: locale === "tr" ? "Öncelik 2 - Kritik" : "Priority 2 - Critical",
-    3: locale === "tr" ? "Öncelik 3 - Önemli" : "Priority 3 - Important",
-    4: locale === "tr" ? "Öncelik 4 - Orta Vade" : "Priority 4 - Medium Term",
-    5: locale === "tr" ? "Öncelik 5 - Uzun Vade" : "Priority 5 - Long Term",
+    1: t("priority_1_urgent"),
+    2: t("priority_2_critical"),
+    3: t("priority_3_important"),
+    4: t("priority_4_medium_term"),
+    5: t("priority_5_long_term"),
   };
 
   return (
     <div className="mt-12 space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold text-white">
-          {locale === "tr" ? "Yol Haritası Görevleri" : "Roadmap Tasks"}
+          {t("roadmap_tasks")}
         </h2>
         {!isReadOnly && !isAdding && (
           <button
@@ -108,7 +109,7 @@ export function RoadmapTodosClient({ initialTodos, isReadOnly, locale }: TodosCl
             className="bg-brand-600 hover:bg-brand-500 hover:shadow-brand-500/10 flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-white shadow-lg transition"
           >
             <Plus className="h-4 w-4" />
-            {locale === "tr" ? "Yeni Görev" : "Add Task"}
+            {t("add_task")}
           </button>
         )}
       </div>
@@ -124,7 +125,7 @@ export function RoadmapTodosClient({ initialTodos, isReadOnly, locale }: TodosCl
               required
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
-              placeholder={locale === "tr" ? "Görev başlığı..." : "Task title..."}
+              placeholder={t("task_title")}
               className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 flex-1 rounded-lg border px-3 py-2 text-sm text-white focus:ring-1 focus:outline-none"
             />
             <select
@@ -221,7 +222,7 @@ export function RoadmapTodosClient({ initialTodos, isReadOnly, locale }: TodosCl
         })}
         {todos.length === 0 && (
           <p className="text-fg-muted py-8 text-center text-sm italic">
-            {locale === "tr" ? "Henüz görev eklenmemiş." : "No tasks added yet."}
+            {t("no_tasks_added_yet")}
           </p>
         )}
       </div>

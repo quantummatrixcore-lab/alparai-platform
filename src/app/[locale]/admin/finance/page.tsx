@@ -148,7 +148,7 @@ export default async function FinancePage({ params }: { params: Promise<{ locale
   // Recharts Trends Grouping
   const months = Array.from(new Set(costs.map((c) => c.month)));
   const trends = months.map((m) => {
-    const monthLabel = new Date(m).toLocaleDateString(locale === "tr" ? "tr-TR" : "en-US", {
+    const monthLabel = new Date(m).toLocaleDateString(t("en_us"), {
       month: "long",
     });
     const monthCosts = costs.filter((c) => c.month === m);

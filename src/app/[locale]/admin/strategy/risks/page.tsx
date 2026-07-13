@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import React from "react";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
@@ -35,18 +36,16 @@ export default async function RisksPage({ params }: { params: Promise<{ locale: 
             <div className="flex items-center gap-2">
               <ShieldAlert className="h-6 w-6 text-red-400" />
               <h1 className="text-2xl font-extrabold tracking-tight text-white md:text-3xl">
-                {locale === "tr" ? "Stratejik Risk Matrisi (5x5)" : "Risk Prioritization Heatmap"}
+                {t("risk_prioritization_heatmap")}
               </h1>
             </div>
             <p className="text-fg-muted mt-1 text-sm">
-              {locale === "tr"
-                ? "Operasyonel, teknik, yasal ve finansal risk profillerini önceliklendirir."
-                : "Map probability vs impact score cards to prioritize operational, compliance, and product risks."}
+              {t("map_probability_vs_impact_score_cards_to")}
             </p>
           </div>
           {isReadOnly && (
             <span className="bg-brand-500/10 text-brand-300 border-brand-500/20 rounded-full border px-3 py-1 text-xs font-semibold tracking-wider uppercase">
-              {locale === "tr" ? "Salt Okunur" : "Read-Only"}
+              {t("read_only")}
             </span>
           )}
         </div>

@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import React from "react";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
@@ -92,7 +93,7 @@ export default async function StrategyOverviewPage({
 
   // Formatting helper for currency
   const formatCurrency = (cents: number) => {
-    return new Intl.NumberFormat(locale === "tr" ? "tr-TR" : "en-US", {
+    return new Intl.NumberFormat(t("en_us"), {
       style: "currency",
       currency: "USD",
       maximumFractionDigits: 0,
@@ -108,18 +109,16 @@ export default async function StrategyOverviewPage({
             <div className="flex items-center gap-2">
               <Compass className="text-brand-400 animate-spin-slow h-6 w-6" />
               <h1 className="text-2xl font-extrabold tracking-tight text-white md:text-3xl">
-                {locale === "tr" ? "Stratejik Yönetim Paneli" : "Strategic Advisory Board"}
+                {t("strategic_advisory_board")}
               </h1>
             </div>
             <p className="text-fg-muted mt-1 text-sm">
-              {locale === "tr"
-                ? "Şirket sağlığı, SWOT analizi, risk matrisi ve değerleme göstergeleri."
-                : "Real-time company health metrics, SWOT, risks, and financial projections."}
+              {t("real_time_company_health_metrics_swot_ri")}
             </p>
           </div>
           {isReadOnly && (
             <span className="bg-brand-500/10 text-brand-300 border-brand-500/20 rounded-full border px-3 py-1 text-xs font-semibold tracking-wider uppercase">
-              {locale === "tr" ? "Salt Okunur (Danışman)" : "Read-Only (Advisor)"}
+              {t("read_only_advisor")}
             </span>
           )}
         </div>
@@ -133,13 +132,13 @@ export default async function StrategyOverviewPage({
             {/* Core Metrics Card */}
             <div className="border-border-subtle bg-bg-secondary/40 rounded-2xl border p-6 backdrop-blur-md">
               <h3 className="mb-4 text-xs font-bold tracking-wider text-white uppercase">
-                {locale === "tr" ? "Temel Büyüme Göstergeleri" : "Core Metrics Snapshot"}
+                {t("core_metrics_snapshot")}
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-bg-tertiary/20 rounded-xl border border-white/5 p-4">
                   <div className="text-fg-muted flex items-center justify-between">
                     <span className="text-[10px] font-bold tracking-wider uppercase">
-                      {locale === "tr" ? "Kullanıcılar" : "Total Users"}
+                      {t("total_users")}
                     </span>
                     <Users className="h-4 w-4 text-blue-400" />
                   </div>
@@ -151,7 +150,7 @@ export default async function StrategyOverviewPage({
                 <div className="bg-bg-tertiary/20 rounded-xl border border-white/5 p-4">
                   <div className="text-fg-muted flex items-center justify-between">
                     <span className="text-[10px] font-bold tracking-wider uppercase">
-                      {locale === "tr" ? "Olaylar" : "Incidents"}
+                      {t("incidents")}
                     </span>
                     <AlertCircle className="h-4 w-4 text-red-400" />
                   </div>
@@ -163,7 +162,7 @@ export default async function StrategyOverviewPage({
                 <div className="bg-bg-tertiary/20 rounded-xl border border-white/5 p-4">
                   <div className="text-fg-muted flex items-center justify-between">
                     <span className="text-[10px] font-bold tracking-wider uppercase">
-                      {locale === "tr" ? "Sağlayıcılar" : "Providers"}
+                      {t("providers_1")}
                     </span>
                     <Activity className="h-4 w-4 text-emerald-400" />
                   </div>
@@ -175,22 +174,20 @@ export default async function StrategyOverviewPage({
                 <div className="bg-bg-tertiary/20 rounded-xl border border-white/5 p-4">
                   <div className="text-fg-muted flex items-center justify-between">
                     <span className="text-[10px] font-bold tracking-wider uppercase">
-                      {locale === "tr" ? "Pist (Runway)" : "Runway"}
+                      {t("runway")}
                     </span>
                     <DollarSign className="h-4 w-4 text-amber-400" />
                   </div>
                   <p className="mt-2 text-xl font-extrabold text-white">
                     {latestSnapshot.runway_months
-                      ? `${latestSnapshot.runway_months} ${locale === "tr" ? "Ay" : "Mo."}`
-                      : locale === "tr"
-                        ? "Belirsiz"
-                        : "Unknown"}
+                      ? `${latestSnapshot.runway_months} ${t("mo")}`
+                      : t("unknown")}
                   </p>
                 </div>
               </div>
               <div className="mt-4 border-t border-white/5 pt-4 text-center">
                 <div className="text-fg-muted flex justify-between text-xs">
-                  <span>{locale === "tr" ? "Aylık Gelir (MRR):" : "Monthly Revenue (MRR):"}</span>
+                  <span>{t("monthly_revenue_mrr")}</span>
                   <span className="font-mono font-bold text-white">
                     {formatCurrency(latestSnapshot.mrr_cents)}
                   </span>
@@ -213,12 +210,10 @@ export default async function StrategyOverviewPage({
                   </span>
                 </div>
                 <h2 className="text-lg font-bold text-white">
-                  {locale === "tr" ? "SWOT Analizi" : "SWOT Matrix"}
+                  {t("swot_matrix")}
                 </h2>
                 <p className="text-fg-muted mt-2 text-xs">
-                  {locale === "tr"
-                    ? "Şirketin güçlü, zayıf yanları, dış pazar fırsatları ve tehdit tahtası."
-                    : "Track internal strengths/weaknesses and external opportunities/threats."}
+                  {t("track_internal_strengths_weaknesses_and_")}
                 </p>
                 <div className="mt-4 grid grid-cols-2 gap-2 text-center text-xs">
                   <div className="rounded-lg border border-emerald-500/10 bg-emerald-500/5 p-1.5 font-bold text-emerald-400">
@@ -239,7 +234,7 @@ export default async function StrategyOverviewPage({
                 href="/admin/strategy/swot"
                 className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
               >
-                {locale === "tr" ? "SWOT Paneline Git" : "Manage SWOT"}
+                {t("manage_swot")}
                 <ChevronRight className="h-3 w-3" />
               </Link>
             </div>
@@ -256,12 +251,10 @@ export default async function StrategyOverviewPage({
                   </span>
                 </div>
                 <h2 className="text-lg font-bold text-white">
-                  {locale === "tr" ? "Risk Matrisi ve Yönetimi" : "Risk Analysis Matrix"}
+                  {t("risk_analysis_matrix")}
                 </h2>
                 <p className="text-fg-muted mt-2 text-xs">
-                  {locale === "tr"
-                    ? "Kritik operasyonel, yasal ve pazar risklerinin tespiti ve önleme planları."
-                    : "Prioritize, monitor, and mitigate legal, product, and financial risk profiles."}
+                  {t("prioritize_monitor_and_mitigate_legal_pr")}
                 </p>
                 <div className="mt-4 flex items-center gap-4 text-xs">
                   <div className="flex-1 rounded-lg border border-white/10 bg-white/5 p-2 text-center">
@@ -282,7 +275,7 @@ export default async function StrategyOverviewPage({
                 href="/admin/strategy/risks"
                 className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
               >
-                {locale === "tr" ? "Risk Matrisine Git" : "Manage Risks"}
+                {t("manage_risks")}
                 <ChevronRight className="h-3 w-3" />
               </Link>
             </div>
@@ -299,18 +292,14 @@ export default async function StrategyOverviewPage({
                   </span>
                 </div>
                 <h2 className="text-lg font-bold text-white">
-                  {locale === "tr" ? "Değerleme Modeli" : "Company Valuation"}
+                  {t("company_valuation")}
                 </h2>
                 <p className="text-fg-muted mt-2 text-xs">
-                  {locale === "tr"
-                    ? "Berkus, Scorecard ve VC exit metodolojilerine göre pre-launch değerleme tahmini."
-                    : "Simulate valuation cap metrics across Berkus, Scorecard, and VC exit methods."}
+                  {t("simulate_valuation_cap_metrics_across_be")}
                 </p>
                 <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-2 text-center">
                   <span className="text-fg-muted block text-[9px] font-bold tracking-wider uppercase">
-                    {locale === "tr"
-                      ? "Son Hesaplanan Değerleme (Ortalama)"
-                      : "Last Calculated Valuation"}
+                    {t("last_calculated_valuation")}
                   </span>
                   <span className="text-lg font-extrabold text-emerald-400">
                     {valuations.length > 0
@@ -323,7 +312,7 @@ export default async function StrategyOverviewPage({
                 href="/admin/strategy/valuation"
                 className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
               >
-                {locale === "tr" ? "Değerleme Modülüne Git" : "Calculate Valuation"}
+                {t("calculate_valuation")}
                 <ChevronRight className="h-3 w-3" />
               </Link>
             </div>
@@ -340,16 +329,14 @@ export default async function StrategyOverviewPage({
                   </span>
                 </div>
                 <h2 className="text-lg font-bold text-white">
-                  {locale === "tr" ? "Milestone Yol Haritası" : "Strategic Roadmap"}
+                  {t("strategic_roadmap")}
                 </h2>
                 <p className="text-fg-muted mt-2 text-xs">
-                  {locale === "tr"
-                    ? "Büyüme hedefleri, lansman milestones ve çeyrek bazlı OKR planlamaları."
-                    : "Map quarterly OKRs and milestone completions for launch phase."}
+                  {t("map_quarterly_okrs_and_milestone_complet")}
                 </p>
                 <div className="mt-4">
                   <div className="text-fg-muted mb-1 flex justify-between text-[10px] font-bold tracking-wider uppercase">
-                    <span>{locale === "tr" ? "OKR İlerlemesi" : "Roadmap Progress"}</span>
+                    <span>{t("roadmap_progress")}</span>
                     <span>{avgOkrProgress}%</span>
                   </div>
                   <div className="h-2 w-full overflow-hidden rounded-full bg-white/5">
@@ -359,9 +346,7 @@ export default async function StrategyOverviewPage({
                     />
                   </div>
                   <span className="text-fg-muted mt-1.5 block text-[10px]">
-                    {locale === "tr"
-                      ? `${totalMilestones} hedeften ${doneMilestones} adedi tamamlandı`
-                      : `${doneMilestones} of ${totalMilestones} milestones completed`}
+                    {t("donemilestones_of_totalmilestones_milest")}
                   </span>
                 </div>
               </div>
@@ -369,7 +354,7 @@ export default async function StrategyOverviewPage({
                 href="/admin/strategy/roadmap"
                 className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
               >
-                {locale === "tr" ? "OKR Yol Haritasına Git" : "Manage Milestones"}
+                {t("manage_milestones")}
                 <ChevronRight className="h-3 w-3" />
               </Link>
             </div>

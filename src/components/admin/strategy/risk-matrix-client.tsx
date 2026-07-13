@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Plus, Edit2, Trash2, Calendar, Shield, X, HelpCircle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { upsertRiskAction, deleteRiskAction } from "@/actions/strategy";
@@ -14,6 +15,8 @@ interface RiskMatrixClientProps {
 }
 
 export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatrixClientProps) {
+  const t = useTranslations("admin");
+
   const [risks, setRisks] = useState<StrategyRisk[]>(initialRisks);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -74,9 +77,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
     if (isReadOnly) return;
     if (
       !confirm(
-        locale === "tr"
-          ? "Bu riski silmek istediğinize emin misiniz?"
-          : "Are you sure you want to delete this risk?",
+        t("are_you_sure_you_want_to_delete_this_ris"),
       )
     ) {
       return;
@@ -86,7 +87,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
       const res = await deleteRiskAction(id);
       if (res.success) {
         setRisks((prev) => prev.filter((r) => r.id !== id));
-        toast.success(locale === "tr" ? "Risk silindi." : "Risk deleted successfully.");
+        toast.success(t("risk_deleted_successfully"));
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Failed to delete risk.");
@@ -129,10 +130,10 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
 
         if (activeRisk.id) {
           setRisks((prev) => prev.map((r) => (r.id === activeRisk.id ? newRisk : r)));
-          toast.success(locale === "tr" ? "Risk güncellendi." : "Risk updated successfully.");
+          toast.success(t("risk_updated_successfully"));
         } else {
           setRisks((prev) => [...prev, newRisk]);
-          toast.success(locale === "tr" ? "Yeni risk eklendi." : "New risk registered.");
+          toast.success(t("new_risk_registered"));
         }
         setIsModalOpen(false);
       }
@@ -159,14 +160,14 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
         <div className="border-border-subtle bg-bg-secondary/40 rounded-2xl border p-5 backdrop-blur-md">
           <h3 className="mb-4 flex items-center justify-between text-xs font-bold tracking-wider text-white uppercase">
             <span>
-              {locale === "tr" ? "5x5 Risk Matrisi Isı Haritası" : "5x5 Risk Heatmap Matrix"}
+              {t("5x5_risk_heatmap_matrix")}
             </span>
             {selectedCell && (
               <button
                 onClick={() => setSelectedCell(null)}
                 className="text-brand-400 hover:text-brand-300 text-[10px] font-bold tracking-wider uppercase transition"
               >
-                {locale === "tr" ? "Filtreyi Kaldır" : "Reset Filter"}
+                {t("reset_filter")}
               </button>
             )}
           </h3>
@@ -226,15 +227,15 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
           <div className="text-fg-muted mt-5 flex justify-between gap-4 border-t border-white/5 pt-4 text-[10px] font-bold tracking-wider uppercase">
             <div className="flex items-center gap-1.5">
               <span className="h-2.5 w-2.5 rounded border border-emerald-500/40 bg-emerald-500/25" />
-              <span>{locale === "tr" ? "Düşük (1-6)" : "Low (1-6)"}</span>
+              <span>{t("low_1_6")}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="h-2.5 w-2.5 rounded border border-amber-500/40 bg-amber-500/25" />
-              <span>{locale === "tr" ? "Orta (8-12)" : "Medium (8-12)"}</span>
+              <span>{t("medium_8_12")}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="h-2.5 w-2.5 rounded border border-red-500/40 bg-red-500/25" />
-              <span>{locale === "tr" ? "Yüksek (15-25)" : "High (15-25)"}</span>
+              <span>{t("high_15_25")}</span>
             </div>
           </div>
         </div>
@@ -246,7 +247,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
           <div>
             <div className="mb-4 flex items-center justify-between gap-2">
               <h3 className="text-xs font-bold tracking-wider text-white uppercase">
-                {locale === "tr" ? "Risk Tanımlamaları ve Eylem Planları" : "Risk Matrix Logs"}
+                {t("risk_matrix_logs")}
                 {selectedCell && (
                   <span className="text-brand-400 ml-2 font-mono lowercase">
                     (filtered by P{selectedCell.p} × I{selectedCell.i})
@@ -259,7 +260,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
                   className="bg-brand-600 hover:bg-brand-500 hover:shadow-brand-500/10 flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-white shadow-lg transition"
                 >
                   <Plus className="h-3.5 w-3.5" />
-                  {locale === "tr" ? "Yeni Risk Kaydı" : "Register Risk"}
+                  {t("register_risk")}
                 </button>
               )}
             </div>
@@ -267,9 +268,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
             <div className="max-h-[460px] scrollbar-thin space-y-4 overflow-y-auto pr-1">
               {filteredRisks.length === 0 ? (
                 <p className="text-fg-muted py-8 text-center text-xs italic">
-                  {locale === "tr"
-                    ? "Seçilen filtreye uygun risk bulunamadı."
-                    : "No risks found in this category."}
+                  {t("no_risks_found_in_this_category")}
                 </p>
               ) : (
                 filteredRisks.map((risk) => {
@@ -323,9 +322,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
                         <div className="mt-3 border-t border-white/5 pt-2.5">
                           <span className="text-fg-muted block flex items-center gap-1.5 text-[10px] font-bold tracking-wider uppercase">
                             <Shield className="h-3 w-3 text-emerald-400" />
-                            {locale === "tr"
-                              ? "Önleme/Azaltma Planı (Mitigation Plan):"
-                              : "Mitigation Plan:"}
+                            {t("mitigation_plan")}
                           </span>
                           <p className="text-fg-muted/80 mt-1 text-xs leading-relaxed italic">
                             {risk.mitigation_plan}
@@ -395,12 +392,8 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-bold text-white uppercase">
                 {activeRisk.id
-                  ? locale === "tr"
-                    ? "Risk Kaydını Düzenle"
-                    : "Edit Risk Log"
-                  : locale === "tr"
-                    ? "Yeni Risk Ekle"
-                    : "Register Strategic Risk"}
+                  ? t("edit_risk_log")
+                  : t("register_strategic_risk")}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -427,7 +420,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
                 </div>
                 <div className="col-span-2">
                   <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                    {locale === "tr" ? "Risk Başlığı" : "Risk Title"}
+                    {t("risk_title")}
                   </label>
                   <input
                     type="text"
@@ -442,7 +435,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
 
               <div>
                 <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                  {locale === "tr" ? "Risk Detayı / Açıklama" : "Description"}
+                  {t("description_1")}
                 </label>
                 <textarea
                   value={activeRisk.description || ""}
@@ -455,7 +448,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                    {locale === "tr" ? "Olasılık (Probability)" : "Probability (1-5)"}
+                    {t("probability_1_5")}
                   </label>
                   <select
                     value={activeRisk.probability}
@@ -474,7 +467,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
 
                 <div>
                   <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                    {locale === "tr" ? "Etki (Impact)" : "Impact (1-5)"}
+                    {t("impact_1_5")}
                   </label>
                   <select
                     value={activeRisk.impact}
@@ -494,7 +487,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
 
               <div>
                 <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                  {locale === "tr" ? "Önleme Planı / Aksiyon" : "Mitigation Plan"}
+                  {t("mitigation_plan_1")}
                 </label>
                 <textarea
                   value={activeRisk.mitigation_plan || ""}
@@ -509,7 +502,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                    {locale === "tr" ? "Risk Durumu" : "Status"}
+                    {t("status_1")}
                   </label>
                   <select
                     value={activeRisk.status}
@@ -530,7 +523,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
 
                 <div>
                   <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                    {locale === "tr" ? "Hedef Tarih" : "Target Date"}
+                    {t("target_date")}
                   </label>
                   <input
                     type="date"
@@ -547,7 +540,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
                   onClick={() => setIsModalOpen(false)}
                   className="border-border-subtle rounded-xl border px-5 py-2.5 text-sm font-semibold text-white/80 transition hover:bg-white/5 hover:text-white"
                 >
-                  {locale === "tr" ? "İptal" : "Cancel"}
+                  {t("cancel")}
                 </button>
                 <button
                   type="submit"
@@ -557,7 +550,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
                   {isSaving ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      {locale === "tr" ? "Kaydediliyor..." : "Saving..."}
+                      {t("saving")}
                     </>
                   ) : locale === "tr" ? (
                     "Kaydet"

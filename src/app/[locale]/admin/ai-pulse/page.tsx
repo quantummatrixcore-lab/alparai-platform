@@ -11,19 +11,19 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
     {
       name: "GPT-4o",
       provider: "OpenAI",
-      status: locale === "tr" ? "Çalışıyor" : "Operational",
+      status: t("operational"),
       latency: "340ms",
     },
     {
       name: "Claude 3.5 Sonnet",
       provider: "Anthropic",
-      status: locale === "tr" ? "Çalışıyor" : "Operational",
+      status: t("operational"),
       latency: "210ms",
     },
     {
       name: "Gemini 1.5 Flash",
       provider: "Google",
-      status: locale === "tr" ? "Çalışıyor" : "Operational",
+      status: t("operational"),
       latency: "180ms",
     },
   ];
@@ -31,31 +31,23 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
   const newsFeed = [
     {
       title:
-        locale === "tr"
-          ? "OpenAI, o1 modelleri için yeni akıl yürütme yeteneklerini duyurdu."
-          : "OpenAI announces new reasoning capabilities for o1 models.",
-      date: locale === "tr" ? "2 saat önce" : "2 hours ago",
+        t("openai_announces_new_reasoning_capabilit"),
+      date: t("2_hours_ago"),
     },
     {
       title:
-        locale === "tr"
-          ? "Anthropic, Claude 3.5 API bağlam penceresini genişletiyor."
-          : "Anthropic expands Claude 3.5 API context window.",
-      date: locale === "tr" ? "5 saat önce" : "5 hours ago",
+        t("anthropic_expands_claude_3_5_api_context"),
+      date: t("5_hours_ago"),
     },
     {
       title:
-        locale === "tr"
-          ? "Google DeepMind, yeni protein katlama çerçevesini açık kaynak yaptı."
-          : "Google DeepMind open-sources new protein folding framework.",
-      date: locale === "tr" ? "1 gün önce" : "1 day ago",
+        t("google_deepmind_open_sources_new_protein"),
+      date: t("1_day_ago"),
     },
     {
       title:
-        locale === "tr"
-          ? "AB Yapay Zeka Yasası uygulama aşaması başlıyor."
-          : "EU AI Act implementation phase begins.",
-      date: locale === "tr" ? "2 gün önce" : "2 days ago",
+        t("eu_ai_act_implementation_phase_begins"),
+      date: t("2_days_ago"),
     },
   ];
 

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Plus, Edit2, Trash2, X, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { upsertMilestoneAction, deleteMilestoneAction } from "@/actions/strategy";
@@ -14,6 +15,8 @@ interface RoadmapClientProps {
 }
 
 export function RoadmapClient({ initialMilestones, isReadOnly, locale }: RoadmapClientProps) {
+  const t = useTranslations("admin");
+
   const [milestones, setMilestones] = useState<StrategyMilestone[]>(initialMilestones);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -51,9 +54,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
     if (isReadOnly) return;
     if (
       !confirm(
-        locale === "tr"
-          ? "Bu hedefi silmek istediğinize emin misiniz?"
-          : "Are you sure you want to delete this OKR milestone?",
+        t("are_you_sure_you_want_to_delete_this_okr"),
       )
     ) {
       return;
@@ -63,7 +64,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
       const res = await deleteMilestoneAction(id);
       if (res.success) {
         setMilestones((prev) => prev.filter((m) => m.id !== id));
-        toast.success(locale === "tr" ? "Milestone silindi." : "Milestone deleted.");
+        toast.success(t("milestone_deleted"));
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Failed to delete milestone.");
@@ -107,10 +108,10 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
           setMilestones((prev) =>
             prev.map((m) => (m.id === activeMilestone.id ? newMilestone : m)),
           );
-          toast.success(locale === "tr" ? "Hedef güncellendi." : "Milestone updated.");
+          toast.success(t("milestone_updated"));
         } else {
           setMilestones((prev) => [...prev, newMilestone]);
-          toast.success(locale === "tr" ? "Yeni hedef eklendi." : "New milestone registered.");
+          toast.success(t("new_milestone_registered"));
         }
         setIsModalOpen(false);
       }
@@ -131,7 +132,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
             className="bg-brand-600 hover:bg-brand-500 hover:shadow-brand-500/10 flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-bold text-white shadow-lg transition"
           >
             <Plus className="h-4 w-4" />
-            {locale === "tr" ? "Yeni Milestone / OKR Ekle" : "Add OKR Milestone"}
+            {t("add_okr_milestone")}
           </button>
         </div>
       )}
@@ -161,9 +162,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
               <div className="flex-1 space-y-4">
                 {qMilestones.length === 0 ? (
                   <p className="text-fg-muted py-8 text-center text-xs italic">
-                    {locale === "tr"
-                      ? "Bu çeyrek için planlanan hedef yok."
-                      : "No targets planned for this quarter."}
+                    {t("no_targets_planned_for_this_quarter")}
                   </p>
                 ) : (
                   qMilestones.map((m) => (
@@ -185,7 +184,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
                       {/* Progress bar */}
                       <div className="mt-3.5">
                         <div className="text-fg-muted mb-1 flex justify-between text-[9px] font-bold tracking-wider uppercase">
-                          <span>{locale === "tr" ? "İlerleme" : "Progress"}</span>
+                          <span>{t("progress")}</span>
                           <span>{m.progress}%</span>
                         </div>
                         <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/5">
@@ -262,12 +261,8 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-bold text-white uppercase">
                 {activeMilestone.id
-                  ? locale === "tr"
-                    ? "Milestone / Hedefi Düzenle"
-                    : "Edit OKR Milestone"
-                  : locale === "tr"
-                    ? "Yeni Milestone / Hedef Ekle"
-                    : "Add OKR Milestone"}
+                  ? t("edit_okr_milestone")
+                  : t("add_okr_milestone_1")}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -281,7 +276,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                    {locale === "tr" ? "Çeyrek" : "Quarter"}
+                    {t("quarter")}
                   </label>
                   <input
                     type="text"
@@ -296,7 +291,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
                 </div>
                 <div className="col-span-2">
                   <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                    {locale === "tr" ? "Hedef Başlığı" : "Milestone Title"}
+                    {t("milestone_title")}
                   </label>
                   <input
                     type="text"
@@ -313,7 +308,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
 
               <div>
                 <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                  {locale === "tr" ? "OKR Detay / Kriter" : "OKR Targets"}
+                  {t("okr_targets")}
                 </label>
                 <textarea
                   value={activeMilestone.okr_text || ""}
@@ -328,7 +323,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                    {locale === "tr" ? "Durum" : "Status"}
+                    {t("status")}
                   </label>
                   <select
                     value={activeMilestone.status}
@@ -349,7 +344,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
 
                 <div>
                   <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                    {locale === "tr" ? "İlişkili Metrik" : "Linked Metric"}
+                    {t("linked_metric")}
                   </label>
                   <input
                     type="text"
@@ -365,7 +360,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
 
               <div>
                 <label className="text-fg-secondary mb-1.5 block flex justify-between text-xs font-bold tracking-wider uppercase">
-                  <span>{locale === "tr" ? "İlerleme Yüzdesi" : "OKR Progress"}</span>
+                  <span>{t("okr_progress")}</span>
                   <span className="font-mono">{activeMilestone.progress || 0}%</span>
                 </label>
                 <div className="flex items-center gap-4">
@@ -401,7 +396,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
                   onClick={() => setIsModalOpen(false)}
                   className="border-border-subtle rounded-xl border px-5 py-2.5 text-sm font-semibold text-white/80 transition hover:bg-white/5 hover:text-white"
                 >
-                  {locale === "tr" ? "İptal" : "Cancel"}
+                  {t("cancel")}
                 </button>
                 <button
                   type="submit"
@@ -411,7 +406,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
                   {isSaving ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      {locale === "tr" ? "Kaydediliyor..." : "Saving..."}
+                      {t("saving")}
                     </>
                   ) : locale === "tr" ? (
                     "Kaydet"
