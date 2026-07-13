@@ -76,7 +76,7 @@ export function Nav({
   const isDropdownActive = resourcesItems.some((item) => pathname.startsWith(item.href));
 
   return (
-    <nav className={cn("hidden items-center gap-1 2xl:flex", className)}>
+    <nav className={cn("hidden items-center gap-1 xl:flex", className)}>
       {activeItems.map((item) => {
         const Icon = item.icon;
         const isActive = pathname.startsWith(item.href);
@@ -85,7 +85,7 @@ export function Nav({
             key={item.href}
             href={item.href}
             className={cn(
-              "focus-visible:ring-brand-500 relative inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold whitespace-nowrap transition-colors duration-300 outline-none focus-visible:ring-2 xl:gap-1.5 xl:px-2 xl:text-xs 2xl:gap-2 2xl:px-3 2xl:text-sm",
+              "focus-visible:ring-brand-500 relative inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold whitespace-nowrap transition-colors duration-300 outline-none focus-visible:ring-2 xl:gap-1 xl:px-2 xl:text-[11px] 2xl:gap-2 2xl:px-3 2xl:text-xs",
               isActive ? "text-brand-400" : "text-fg-secondary hover:text-fg-primary",
             )}
             aria-current={isActive ? "page" : undefined}
@@ -97,8 +97,8 @@ export function Nav({
                 transition={{ type: "spring", stiffness: 380, damping: 30 }}
               />
             )}
-            <span className="relative z-10 flex items-center gap-1 xl:gap-1.5 2xl:gap-2">
-              <Icon className="hidden h-4 w-4 2xl:block" aria-hidden="true" />
+            <span className="relative z-10 flex items-center gap-1">
+              <Icon className="hidden h-3.5 w-3.5 xl:block" aria-hidden="true" />
               <span>{t(item.labelKey)}</span>
             </span>
           </Link>

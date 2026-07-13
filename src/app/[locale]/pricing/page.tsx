@@ -36,6 +36,16 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
       popular: false,
     },
     {
+      key: "pro",
+      price: t("pro_price"),
+      period: t("pro_period"),
+      features: [t("pro_feature_1"), t("pro_feature_2"), t("pro_feature_3"), t("pro_feature_4")],
+      cta: t("pro_cta"),
+      href: "/contact?subject=pro-upgrade",
+      variant: "outline" as const,
+      popular: true,
+    },
+    {
       key: "portal",
       price: t("portal_price"),
       period: t("portal_period"),
@@ -48,7 +58,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
       cta: t("portal_cta"),
       href: "/contact?subject=portal-inquiry",
       variant: "primary" as const,
-      popular: true,
+      popular: false,
     },
     {
       key: "enterprise",
@@ -79,7 +89,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
         <p className="text-fg-secondary mt-4 text-lg leading-relaxed">{t("subtitle")}</p>
       </div>
 
-      <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
+      <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
         {tiers.map((tier) => (
           <Card
             key={tier.key}
