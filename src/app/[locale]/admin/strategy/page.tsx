@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import React from "react";
-import { setRequestLocale, getTranslations } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
 import { requireAdvisor } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
@@ -40,6 +40,7 @@ export default async function StrategyOverviewPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "admin" });
 
   // Authenticate user & check advisor access
   const user = await requireAdvisor();
@@ -209,9 +210,7 @@ export default async function StrategyOverviewPage({
                     Module 01
                   </span>
                 </div>
-                <h2 className="text-lg font-bold text-white">
-                  {t("swot_matrix")}
-                </h2>
+                <h2 className="text-lg font-bold text-white">{t("swot_matrix")}</h2>
                 <p className="text-fg-muted mt-2 text-xs">
                   {t("track_internal_strengths_weaknesses_and_")}
                 </p>
@@ -250,9 +249,7 @@ export default async function StrategyOverviewPage({
                     Module 02
                   </span>
                 </div>
-                <h2 className="text-lg font-bold text-white">
-                  {t("risk_analysis_matrix")}
-                </h2>
+                <h2 className="text-lg font-bold text-white">{t("risk_analysis_matrix")}</h2>
                 <p className="text-fg-muted mt-2 text-xs">
                   {t("prioritize_monitor_and_mitigate_legal_pr")}
                 </p>
@@ -291,9 +288,7 @@ export default async function StrategyOverviewPage({
                     Module 03
                   </span>
                 </div>
-                <h2 className="text-lg font-bold text-white">
-                  {t("company_valuation")}
-                </h2>
+                <h2 className="text-lg font-bold text-white">{t("company_valuation")}</h2>
                 <p className="text-fg-muted mt-2 text-xs">
                   {t("simulate_valuation_cap_metrics_across_be")}
                 </p>
@@ -328,9 +323,7 @@ export default async function StrategyOverviewPage({
                     Module 04
                   </span>
                 </div>
-                <h2 className="text-lg font-bold text-white">
-                  {t("strategic_roadmap")}
-                </h2>
+                <h2 className="text-lg font-bold text-white">{t("strategic_roadmap")}</h2>
                 <p className="text-fg-muted mt-2 text-xs">
                   {t("map_quarterly_okrs_and_milestone_complet")}
                 </p>

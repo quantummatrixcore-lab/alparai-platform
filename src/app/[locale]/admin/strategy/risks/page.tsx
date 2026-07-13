@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import React from "react";
-import { setRequestLocale, getTranslations } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
 import { requireAdvisor } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
@@ -17,6 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function RisksPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "admin" });
 
   // Authenticate user & check advisor access
   const user = await requireAdvisor();

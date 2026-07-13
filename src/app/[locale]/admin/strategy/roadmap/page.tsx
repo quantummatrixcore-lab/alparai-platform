@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import React from "react";
-import { setRequestLocale, getTranslations } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
 import { requireAdvisor } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
@@ -18,6 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function RoadmapPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "admin" });
 
   // Authenticate user & check advisor access
   const user = await requireAdvisor();
@@ -62,9 +63,7 @@ export default async function RoadmapPage({ params }: { params: Promise<{ locale
 
         {/* Strategic Scenarios Section */}
         <div className="mb-10">
-          <h2 className="mb-4 text-lg font-bold text-white">
-            {t("strategic_roadmap_scenarios")}
-          </h2>
+          <h2 className="mb-4 text-lg font-bold text-white">{t("strategic_roadmap_scenarios")}</h2>
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {/* Scenario A */}
             <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-purple-500/5 p-5 backdrop-blur-md">
@@ -122,9 +121,7 @@ export default async function RoadmapPage({ params }: { params: Promise<{ locale
               <span className="text-[10px] font-extrabold tracking-widest text-emerald-400 uppercase">
                 {t("mediation_transparency")}
               </span>
-              <h3 className="mt-1 text-base font-black text-white">
-                {t("public_ai_agoras")}
-              </h3>
+              <h3 className="mt-1 text-base font-black text-white">{t("public_ai_agoras")}</h3>
               <p className="text-fg-secondary mt-3 text-xs leading-relaxed">
                 {t("independent_arbitration_panel_providing_")}
               </p>
