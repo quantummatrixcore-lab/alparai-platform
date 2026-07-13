@@ -115,19 +115,36 @@ export function HeroSection({
               </Link>
             </motion.div>
 
-            {/* Tertiary Founding Reporter CTA */}
+            {/* Founder Story / Trust Infrastructure */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="mt-4 px-1"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.5 }}
+              className="border-brand-500/50 mt-12 flex flex-col gap-4 border-l-2 pl-6"
             >
-              <Link
-                href="/submit"
-                className="text-brand-400 hover:text-brand-300 decoration-brand-500/30 text-sm font-bold underline decoration-2 underline-offset-4 transition-colors"
-              >
-                {t("cta_tertiary")}
-              </Link>
+              <div className="text-brand-400 flex items-center gap-2">
+                <Quote className="h-5 w-5" />
+                <span className="text-xs font-bold tracking-wider uppercase">
+                  The Founder&apos;s Vision
+                </span>
+              </div>
+              <p className="text-fg-secondary text-sm leading-relaxed italic">
+                &quot;
+                {t("founder_quote", {
+                  fallback:
+                    "We are building the trust infrastructure for AI accountability. Because humanity deserves to know how algorithms shape our world. This is a public trust platform.",
+                })}
+                &quot;
+              </p>
+              <div className="mt-1 flex items-center gap-3">
+                <div className="from-brand-500 to-brand-700 h-8 w-8 rounded-full bg-gradient-to-br p-0.5">
+                  <div className="border-brand-400/20 h-full w-full rounded-full border bg-neutral-900" />
+                </div>
+                <div>
+                  <p className="text-fg-primary text-xs font-bold">Ercüm</p>
+                  <p className="text-brand-400 text-[10px] font-medium">Founder, ALPAR AI</p>
+                </div>
+              </div>
             </motion.div>
           </div>
 

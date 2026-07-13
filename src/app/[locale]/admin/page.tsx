@@ -10,6 +10,7 @@ import { System360Overview } from "@/components/admin/system-360-overview";
 import { LiveStatusBar } from "@/components/admin/live-status-bar";
 import { AuditFlowDiagram } from "@/components/admin/audit-flow-diagram";
 import { IncidentHeatmap } from "@/components/admin/incident-heatmap";
+import { RevenueDashboard } from "@/components/admin/revenue-dashboard";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Warning, Pulse } from "@phosphor-icons/react/dist/ssr";
@@ -146,6 +147,8 @@ export default async function AdminDashboardPage({
       <LiveStatusBar />
 
       <Container className="flex-1 space-y-8 py-10">
+        <RevenueDashboard />
+
         {/* 360 Degree Command Center */}
         <System360Overview />
 
