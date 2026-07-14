@@ -51,6 +51,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       {/* Premium Header */}
       <div className="bg-bg-secondary/20 border-border-subtle border-b py-20 text-center">
         <Container>
+          <h1 className="sr-only">About ALPAR AI - The Trust Infrastructure for AI</h1>
           <Wordmark size="lg" showTagline />
           <p className="text-fg-secondary mx-auto mt-4 max-w-xl text-lg">{tApp("tagline")}</p>
         </Container>

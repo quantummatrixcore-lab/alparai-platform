@@ -3,7 +3,8 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Invest in ALPAR AI | The Trust Infrastructure for AI",
-  description: "Join us in building the accountability layer for the artificial intelligence era.",
+  description:
+    "Join ALPAR AI in building the accountability layer and public trust infrastructure for the artificial intelligence era. Invest in the Stripe for AI Safety.",
 };
 
 export default function InvestPage() {
