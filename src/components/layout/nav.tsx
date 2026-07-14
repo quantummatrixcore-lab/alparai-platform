@@ -26,15 +26,15 @@ interface NavItem {
 }
 
 const mainNavItems: NavItem[] = [
-  { href: "/incidents", labelKey: "incidents", icon: FileText },
   { href: "/leaderboard", labelKey: "leaderboard", icon: BarChart3 },
-  { href: "/dilemmas", labelKey: "dilemmas", icon: Scale },
+  { href: "/incidents", labelKey: "incidents", icon: FileText },
   { href: "/ai-act", labelKey: "ai_act", icon: Shield },
-  { href: "/transparency", labelKey: "transparency", icon: Eye },
+  { href: "/academy", labelKey: "academy", icon: GraduationCap },
+  { href: "/dilemmas", labelKey: "dilemmas", icon: Scale },
 ];
 
 const resourcesItems: NavItem[] = [
-  { href: "/academy", labelKey: "academy", icon: GraduationCap },
+  { href: "/transparency", labelKey: "transparency", icon: Eye },
   { href: "/challenges", labelKey: "challenges", icon: Award },
   { href: "/blog", labelKey: "blog", icon: BookOpen },
   { href: "/press-kit", labelKey: "presskit", icon: Award },
