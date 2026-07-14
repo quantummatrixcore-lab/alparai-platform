@@ -173,7 +173,10 @@
     "expertise_research": "Akademik Araştırma",
     "expertise_ethics": "Etik & Felsefe",
     "expertise_policy": "Politika & Yönetişim",
-    "expertise_other": "Diğer"
+    "expertise_other": "Diğer",
+    "ambassador_title": "Öğrenci Elçileri",
+    "ambassador_subtitle": "ALPAR AI Öğrenci Elçisi Programına katılın ve üniversitenizde Yapay Zeka Güvenliği tartışmalarına öncülük edin.",
+    "ambassador_form_title": "Hemen Başvur"
   },
   "pricing": {
     "title": "Ücretlendirme — ALPAR AI",

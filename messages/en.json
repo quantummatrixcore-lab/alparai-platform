@@ -173,7 +173,10 @@
     "expertise_research": "Academic Research",
     "expertise_ethics": "Ethics & Philosophy",
     "expertise_policy": "Policy & Governance",
-    "expertise_other": "Other"
+    "expertise_other": "Other",
+    "ambassador_title": "Student Ambassadors",
+    "ambassador_subtitle": "Join the ALPAR AI Student Ambassador Program and lead the discussion on AI Safety at your university.",
+    "ambassador_form_title": "Apply Now"
   },
   "pricing": {
     "title": "Pricing — ALPAR AI",
