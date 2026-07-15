@@ -1,4 +1,4 @@
-# ALPAR AI — MASTER PLAN v8.10 (Antigravity 360° Audit Sprint — 72 ✅ / 13 ⬜)
+# ALPAR AI — MASTER PLAN v9.00 (Launch Readiness Sprint — 84 ✅ / 5 ⬜)
 
 > **Bu dosya tek doğru operasyonel plandır.** `docs/ANTIGRAVITY_EXECUTION_PLAN.md` v7.16'da arşivlendi (tarihsel audit trail; talimat olarak okunmaz). Çelişkide bu dosya kazanır. Bu dosyayı yalnızca Architect düzenler (Rule #14/#25).
 
@@ -60,31 +60,33 @@ Başka takvim tarihi YOK (Rule #23). Tüm işler bağımlılık-tabanlı P0/P1/P
 
 **Shipped (hash'lerle, doğrulanmış):**
 
-| Seri               | İçerik                                                                                                                                                                                                                                     | Commit                                         |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------- |
-| V1+V2              | vercel.json cron'ları (daily — Hobby tavanı)                                                                                                                                                                                               | `f2107a5`, `a671fc1`                           |
-| U1-U3              | HMAC unsubscribe API + template'ler                                                                                                                                                                                                        | `7f30125`                                      |
-| M0-M3              | Mobile sprint (config, audit, overflow fix, CI lock)                                                                                                                                                                                       | `89a75ba`, `bb1fcca`, `de59706`, `aace3ba`     |
-| C1a                | api_keys sha256 hardening + auth path                                                                                                                                                                                                      | `20260715000000` + `20260720000001` migrations |
-| H1+H2              | incident_source badge + copy                                                                                                                                                                                                               | `incident-card.tsx`                            |
-| P1/P3/P4           | Countdown drafts, TR media pitches, LinkedIn/Reddit                                                                                                                                                                                        | `fa80867`, `4d47356`, `745b4fa`                |
-| W-series           | RUNBOOK_LAUNCH_DAY v1.1 + dry run                                                                                                                                                                                                          | `cf4ecce`, `5bd8cd4`                           |
-| X1-X5              | Crisis playbook'lar                                                                                                                                                                                                                        | `98936ab`                                      |
-| Y1-Y3              | launch-signal dashboard + day-7/30 cron'lar                                                                                                                                                                                                | `fa80867`, `98936ab`                           |
-| K2 (erken)         | retro-audit scheduler                                                                                                                                                                                                                      | shipped                                        |
-| J3/state_support   | Devlet destekleri modülü                                                                                                                                                                                                                   | `76ddec4` (retro-approved)                     |
-| Neutrality Charter | `/neutrality` sayfası                                                                                                                                                                                                                      | `133af72` (retro-approved)                     |
-| S1-S3              | Secrets scan, dep audit, security headers (HSTS doğrulandı)                                                                                                                                                                                | shipped                                        |
-| v8.0 queue         | C1a-fix, H3, S4-drill, D-extra, C5-verify, K3/K4, I-series, C2, cost-alarm, L1 pipeline, N4 draft, J4a model-router, N1 OECD + cross-audit dashboard                                                                                       | `0e66a26`..`4fced12`                           |
-| K-MVP+K-Full       | K5-K12 scaffold, `/ratings` page, `k_categories`/`k_model_scores` tables, L2 MOU template, outreach agent, expert network                                                                                                                  | `4aca97f`, `43436d9` ⚠️                        |
-| SSRF-fix + types   | Evidence extraction domain allowlist + Supabase type updates                                                                                                                                                                               | `25b8acd`, `cc0b5dc`                           |
-| v8.2–v8.4 Sprint   | W3-fix (cost-alarm cron) · Q1 gate log · S4-path drill · K-CORE verify · RLS hardening (`20260727000002_harden_rls_policies.sql`) · E1 user-zero + screenshots · S5 Lighthouse (home/incidents/submit) · Perf-baseline cwv · C3-SSRF audit | `34d06f6`..`c0470b0`                           |
-| v8.5 Plan          | Pre-launch sprint items 1-9 ✅ — MASTER_PLAN güncelleme                                                                                                                                                                                    | `80861c4`                                      |
-| v8.8 Dual-Exec     | A1-A3 ✅, items 27/29/31-35/37-38/46/58/63 ✅ (Antigravity+OpenCode parallel) — branch master'a merge edildi                                                                                                                               | `aca786d`..`6486020`                           |
-| v8.9 Sprint        | Antigravity: E2(47)/E4(49) ✅. OpenCode: K14(28)/K16(30)/B1(39)/B2(40)/E3(48)/E5(50)/E6(51)/SL1(54)/SL4(57)/L11(61)/L12(62)/N5(67)/N6(68) ✅. R2 token rotasyon tamamlandı.                                                                | `0b912db`..`bc7d82e`                           |
-| v8.10 Audit Sprint | 16 item ✅ (ST1/CQ1/ZK1/DM1/RA1/E7/E8/SL2/SL3/G7/G8/K18-kod/F3/F4/DR1/DR2) — Antigravity+OpenCode kuyruğları boşaldı. 12 BF item açıldı (audit).                                                                                           | `c246214`..`9e09c1d`                           |
+| Seri                | İçerik                                                                                                                                                                                                                                     | Commit                                         |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------- |
+| V1+V2               | vercel.json cron'ları (daily — Hobby tavanı)                                                                                                                                                                                               | `f2107a5`, `a671fc1`                           |
+| U1-U3               | HMAC unsubscribe API + template'ler                                                                                                                                                                                                        | `7f30125`                                      |
+| M0-M3               | Mobile sprint (config, audit, overflow fix, CI lock)                                                                                                                                                                                       | `89a75ba`, `bb1fcca`, `de59706`, `aace3ba`     |
+| C1a                 | api_keys sha256 hardening + auth path                                                                                                                                                                                                      | `20260715000000` + `20260720000001` migrations |
+| H1+H2               | incident_source badge + copy                                                                                                                                                                                                               | `incident-card.tsx`                            |
+| P1/P3/P4            | Countdown drafts, TR media pitches, LinkedIn/Reddit                                                                                                                                                                                        | `fa80867`, `4d47356`, `745b4fa`                |
+| W-series            | RUNBOOK_LAUNCH_DAY v1.1 + dry run                                                                                                                                                                                                          | `cf4ecce`, `5bd8cd4`                           |
+| X1-X5               | Crisis playbook'lar                                                                                                                                                                                                                        | `98936ab`                                      |
+| Y1-Y3               | launch-signal dashboard + day-7/30 cron'lar                                                                                                                                                                                                | `fa80867`, `98936ab`                           |
+| K2 (erken)          | retro-audit scheduler                                                                                                                                                                                                                      | shipped                                        |
+| J3/state_support    | Devlet destekleri modülü                                                                                                                                                                                                                   | `76ddec4` (retro-approved)                     |
+| Neutrality Charter  | `/neutrality` sayfası                                                                                                                                                                                                                      | `133af72` (retro-approved)                     |
+| S1-S3               | Secrets scan, dep audit, security headers (HSTS doğrulandı)                                                                                                                                                                                | shipped                                        |
+| v8.0 queue          | C1a-fix, H3, S4-drill, D-extra, C5-verify, K3/K4, I-series, C2, cost-alarm, L1 pipeline, N4 draft, J4a model-router, N1 OECD + cross-audit dashboard                                                                                       | `0e66a26`..`4fced12`                           |
+| K-MVP+K-Full        | K5-K12 scaffold, `/ratings` page, `k_categories`/`k_model_scores` tables, L2 MOU template, outreach agent, expert network                                                                                                                  | `4aca97f`, `43436d9` ⚠️                        |
+| SSRF-fix + types    | Evidence extraction domain allowlist + Supabase type updates                                                                                                                                                                               | `25b8acd`, `cc0b5dc`                           |
+| v8.2–v8.4 Sprint    | W3-fix (cost-alarm cron) · Q1 gate log · S4-path drill · K-CORE verify · RLS hardening (`20260727000002_harden_rls_policies.sql`) · E1 user-zero + screenshots · S5 Lighthouse (home/incidents/submit) · Perf-baseline cwv · C3-SSRF audit | `34d06f6`..`c0470b0`                           |
+| v8.5 Plan           | Pre-launch sprint items 1-9 ✅ — MASTER_PLAN güncelleme                                                                                                                                                                                    | `80861c4`                                      |
+| v8.8 Dual-Exec      | A1-A3 ✅, items 27/29/31-35/37-38/46/58/63 ✅ (Antigravity+OpenCode parallel) — branch master'a merge edildi                                                                                                                               | `aca786d`..`6486020`                           |
+| v8.9 Sprint         | Antigravity: E2(47)/E4(49) ✅. OpenCode: K14(28)/K16(30)/B1(39)/B2(40)/E3(48)/E5(50)/E6(51)/SL1(54)/SL4(57)/L11(61)/L12(62)/N5(67)/N6(68) ✅. R2 token rotasyon tamamlandı.                                                                | `0b912db`..`bc7d82e`                           |
+| v8.10 Audit Sprint  | 16 item ✅ (ST1/CQ1/ZK1/DM1/RA1/E7/E8/SL2/SL3/G7/G8/K18-kod/F3/F4/DR1/DR2) — Antigravity+OpenCode kuyruğları boşaldı. 12 BF item açıldı (audit).                                                                                           | `c246214`..`9e09c1d`                           |
+| v8.11 BF Sprint     | 12 BF item ✅ (BF1-BF12) — pnpm-lock ✅, middleware.ts ✅, Gemini fix ✅, i18n ✅, RSS retry ✅, fingerprint UUID ✅, DSAR select ✅, i18n CI ✅, cost-threshold env ✅. Vercel build kilidi kalktı.                                       | `52753f5`..`e492d7e`                           |
+| v9.00 Launch Sprint | OG image API ✅, Pro tier pricing ✅, MRR/ARR widget ✅, Founding Reporter badge ✅, newsletter cron ✅, browser extension scaffold ✅, nav/SEO/i18n/academy fixes ✅. 14 commit retro-kabul (Rule #2 ihlalleri §4 notunda).               | `8e65a3f`..`054cbfe`                           |
 
-**Architect v8.10 doğrulama taraması (2026-07-12):** İtem 1-70 tümü ✅ (36⏸O2, 64⏸K18-key). A1/A2/A3 ✅. BF1-BF12 ⬜. **TOPLAM: 72 ✅ / 13 ⬜ (12 BF + O2⏸).** HEAD `9e09c1d`. Prod deployment KİLİTLİ — BF1 (pnpm-lock) öncelik 0.
+**Architect v9.00 doğrulama taraması (2026-07-15):** İtem 1-82 tümü ✅ (36⏸O2, 64⏸K18-key). A1/A2/A3 ✅. BF1-BF12 ✅. v9.00 batch retro-kabul (14 commit). **TOPLAM: 84 ✅ / 5 ⬜ (83-87) + O2⏸.** HEAD `054cbfe`. P0: 83 (data sync) + 84 (impressum) launch-kritik.
 
 **⚠️ Rule ihlalleri (`4aca97f`, `43436d9`) — kapatıldı:** Founder revert kararı vermedi → kabul edilmiş sayılır. Audit trail için ⚠️ notu korunur. Retro-approve kotası hâlâ DOLU.
 
@@ -95,6 +97,8 @@ Başka takvim tarihi YOK (Rule #23). Tüm işler bağımlılık-tabanlı P0/P1/P
 **⚠️ Rule #2 ihlal tespiti (2026-07-12) — karar bekliyor:** `360_ANALIZ_VE_AKSIYON_PLANI.md` dosyası (repo root) commit `d9181dc` veya sonrasında executor tarafından oluşturuldu — kuyrukta olmayan bir plan/analiz dokümanı. Doğru konum: `docs/PROPOSALS/NNN-name.md`. Founder kararı: kalıcı mı arşivleniyor mu?
 
 **⚠️ Rule #2 notu — `3196bed` "v9.0 security hardening" (2026-07-12) — founder kararı bekliyor:** Queue dışı security commit (Cross-Audit quorum, FingerprintJS, GDPR hard delete cron). Güvenlik-kritik içerik — revert edilmedi. BF9 (FingerprintJS) bu commitin tamamlanmamış kısmını kapatıyor.
+
+**⚠️ Rule #2 ihlal tespiti (2026-07-13/15) — retro-kabul:** `0d41728`·`810d03f`·`1127d28`·`c376a55` ve `c94e97a`..`054cbfe` commit'leri kuyrukta olmayan iş içeriyor (OG image, Pro tier, revenue widget, browser extension, nav/SEO/i18n). Founder revert yapmadı → retro-kabul (emsal: state_support + Neutrality Charter). Retro-approve kotası DOLU.
 
 **⚠️ DR1/DR2 çift tamamlama (2026-07-12) — bilgi:** `33f719e` (OpenCode) + `9e09c1d` (Antigravity) aynı item'ları paralelde tamamladı. HEAD `9e09c1d` (Antigravity versiyonu) canonical. Çakışma yok.
 
@@ -126,9 +130,9 @@ Başka takvim tarihi YOK (Rule #23). Tüm işler bağımlılık-tabanlı P0/P1/P
 
 **Kalan ⬜ item atamaları (roster'dan):**
 
-**Antigravity (8 BF item):** 72(BF2) · 75(BF5) · 76(BF6) · 78(BF8) · 79(BF9) · 80(BF10) · 81(BF11) · 82(BF12)
+**Antigravity (1 ⬜):** 85(cross-audit cache) — v9.00 sprint.
 
-**OpenCode (4 BF item):** 71(BF1) · 73(BF3) · 74(BF4) · 77(BF7)
+**OpenCode (4 ⬜):** 83(data sync) · 84(impressum) · 86(Stripe UI) · 87(extension) — v9.00 sprint.
 
 **Paylaşımlı / Founder kapısı:** 36(O2 — ⏸ Sentry-panel) · 64(K18 — ⏸ regülatör-key)
 
@@ -272,30 +276,49 @@ Bağımlılık sırası korunur: L1 isimleri → L3/L4 kapı açar; L2 MOU → L
 
 #### P0 — Deployment Blocker
 
-| #   | P   | İş                                                                                                                                                                                                                            | Accept kriteri                                                                                     | Kapı |
-| --- | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ---- |
-| 71  | P0  | **BF1 — pnpm-lock.yaml + jszip sync** — `pnpm install` → lockfile güncelle → commit. VEYA `jszip`'i `package.json`'dan kaldır, `src/lib/utils/zip.ts` özel impl koru. Founder kararı: replace (daha sağlam) vs kaldır (acil). | `pnpm install --frozen-lockfile` başarılı; Vercel build yeşil                                      | ⬜   |
-| 72  | P0  | **BF2 — `src/middleware.ts` oluştur** — next-intl `createMiddleware` + Supabase SSR `updateSession` birleşik. Locale redirect, session refresh, `/admin/**` auth guard, rate-limit poke.                                      | `pnpm typecheck` ✓; anonim `/` → `/{locale}/`; `/admin` unauth → `/login`; i18n locale detection ✓ | ⬜   |
+| #   | P   | İş                                                                                                                                                                                                                            | Accept kriteri                                                                                     | Kapı           |
+| --- | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | -------------- |
+| 71  | P0  | **BF1 — pnpm-lock.yaml + jszip sync** — `pnpm install` → lockfile güncelle → commit. VEYA `jszip`'i `package.json`'dan kaldır, `src/lib/utils/zip.ts` özel impl koru. Founder kararı: replace (daha sağlam) vs kaldır (acil). | `pnpm install --frozen-lockfile` başarılı; Vercel build yeşil                                      | ✅ (`52753f5`) |
+| 72  | P0  | **BF2 — `src/middleware.ts` oluştur** — next-intl `createMiddleware` + Supabase SSR `updateSession` birleşik. Locale redirect, session refresh, `/admin/**` auth guard, rate-limit poke.                                      | `pnpm typecheck` ✓; anonim `/` → `/{locale}/`; `/admin` unauth → `/login`; i18n locale detection ✓ | ✅ (`b7719ad`) |
 
 #### P1 — Production Error Elimination
 
-| #   | P   | İş                                                                                                                                                                                                                                                                                               | Accept kriteri                                             | Kapı |
-| --- | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- | ---- |
-| 73  | P1  | **BF3 — Footer i18n missing keys** — `messages/en.json` + `messages/tr.json`: `footer.links.methodology` + `footer.links.challenges` ekle.                                                                                                                                                       | MISSING_MESSAGE hata sayısı 0; footer EN+TR hatasız render | ⬜   |
-| 74  | P1  | **BF4 — Admin panel TR translation** — Eksik key'ler: `admin.activity_target_entity`, `admin.delete`, `admin.recent_activities`, `admin.tabQueue`, `admin.finance_alert_limit`, `admin.total_score`, `admin.nvidia_desc`, `admin.google_vertex_desc`, `admin.blackbox_desc`, `admin.save` (10+). | Admin panel TR'de runtime MISSING_MESSAGE 0                | ⬜   |
-| 75  | P1  | **BF5 — Gemini API 400 fix** — 78 hata / 8 kullanıcı. `GOOGLE_API_KEY` / `GEMINI_API_KEY` env doğrula; model endpoint değişikliği kontrol. Key rotation gerekiyorsa `docs/PROPOSALS/` ile founder bilgilendirme.                                                                                 | Hata count 0; key rotated veya endpoint fixed              | ⬜   |
-| 76  | P1  | **BF6 — RSS feed retry mekanizması** — `src/app/api/cron/fetch-external/route.ts`: exponential backoff (2s/4s/8s, max 3 retry). Vercel function timeout < 60s toplam.                                                                                                                            | Timeout'ta retry; vitest mock ile doğrulanmış              | ⬜   |
+| #   | P   | İş                                                                                                                                                                                                                                                                                               | Accept kriteri                                             | Kapı           |
+| --- | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- | -------------- |
+| 73  | P1  | **BF3 — Footer i18n missing keys** — `messages/en.json` + `messages/tr.json`: `footer.links.methodology` + `footer.links.challenges` ekle.                                                                                                                                                       | MISSING_MESSAGE hata sayısı 0; footer EN+TR hatasız render | ✅ (`e1516e8`) |
+| 74  | P1  | **BF4 — Admin panel TR translation** — Eksik key'ler: `admin.activity_target_entity`, `admin.delete`, `admin.recent_activities`, `admin.tabQueue`, `admin.finance_alert_limit`, `admin.total_score`, `admin.nvidia_desc`, `admin.google_vertex_desc`, `admin.blackbox_desc`, `admin.save` (10+). | Admin panel TR'de runtime MISSING_MESSAGE 0                | ✅ (`e1516e8`) |
+| 75  | P1  | **BF5 — Gemini API 400 fix** — 78 hata / 8 kullanıcı. `GOOGLE_API_KEY` / `GEMINI_API_KEY` env doğrula; model endpoint değişikliği kontrol. Key rotation gerekiyorsa `docs/PROPOSALS/` ile founder bilgilendirme.                                                                                 | Hata count 0; key rotated veya endpoint fixed              | ✅ (`e1516e8`) |
+| 76  | P1  | **BF6 — RSS feed retry mekanizması** — `src/app/api/cron/fetch-external/route.ts`: exponential backoff (2s/4s/8s, max 3 retry). Vercel function timeout < 60s toplam.                                                                                                                            | Timeout'ta retry; vitest mock ile doğrulanmış              | ✅ (`e1516e8`) |
 
 #### P2 — Code Quality / Security
 
-| #   | P   | İş                                                                                                                                                                    | Accept kriteri                                       | Kapı |
-| --- | --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | ---- |
-| 77  | P2  | **BF7 — `vercel.json` pnpm uyum** — `buildCommand: "npm run build"` → `pnpm build`; `installCommand: "npm install"` → `pnpm install --frozen-lockfile` (veya kaldır). | Vercel log'da `pnpm` kullanıyor; `npm` kalmamış      | ⬜   |
-| 78  | P2  | **BF8 — `moderation-sla-alarm` cron vercel.json** — `vercel.json` crons bölümüne `/api/cron/moderation-sla-alarm` ekle (günlük veya saatlik).                         | Vercel cron dashboard'da görünüyor; test trigger ✓   | ⬜   |
-| 79  | P2  | **BF9 — FingerprintJS fallback → `crypto.randomUUID()`** — `src/lib/utils/fingerprint.ts`: `Math.random().toString(36)...` → `crypto.randomUUID()`.                   | vitest mock; fallback her çağrıda UUID formatında    | ⬜   |
-| 80  | P2  | **BF10 — DSAR explicit column select** — `src/app/api/v1/dsar/portable/route.ts`: `select("*")` → `select("id,email,created_at,...")`.                                | vitest: internal flag field export'ta görünmüyor     | ⬜   |
-| 81  | P2  | **BF11 — i18n delta CI check** — `.github/workflows/ci.yml`'e veya `i18n-check.yml`'e EN+TR key simetri kontrolü; eksik TR key → CI fail.                             | Eksik key CI'ı kırıyor; `pnpm run i18n:check` mevcut | ⬜   |
-| 82  | P2  | **BF12 — Cost threshold'ları env'e taşı** — `src/app/api/cron/cost-alarm/route.ts`: `const dailyWarningThreshold = 50` → `process.env.COST_WARNING_DAILY ?? 50`.      | Env var set edilince threshold değişiyor; vitest ✓   | ⬜   |
+| #   | P   | İş                                                                                                                                                                    | Accept kriteri                                       | Kapı            |
+| --- | --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | --------------- |
+| 77  | P2  | **BF7 — `vercel.json` pnpm uyum** — `buildCommand: "npm run build"` → `pnpm build`; `installCommand: "npm install"` → `pnpm install --frozen-lockfile` (veya kaldır). | Vercel log'da `pnpm` kullanıyor; `npm` kalmamış      | ✅ (pre-sprint) |
+| 78  | P2  | **BF8 — `moderation-sla-alarm` cron vercel.json** — `vercel.json` crons bölümüne `/api/cron/moderation-sla-alarm` ekle (günlük veya saatlik).                         | Vercel cron dashboard'da görünüyor; test trigger ✓   | ✅ (`e492d7e`)  |
+| 79  | P2  | **BF9 — FingerprintJS fallback → `crypto.randomUUID()`** — `src/lib/utils/fingerprint.ts`: `Math.random().toString(36)...` → `crypto.randomUUID()`.                   | vitest mock; fallback her çağrıda UUID formatında    | ✅ (`e1516e8`)  |
+| 80  | P2  | **BF10 — DSAR explicit column select** — `src/app/api/v1/dsar/portable/route.ts`: `select("*")` → `select("id,email,created_at,...")`.                                | vitest: internal flag field export'ta görünmüyor     | ✅ (`e1516e8`)  |
+| 81  | P2  | **BF11 — i18n delta CI check** — `.github/workflows/ci.yml`'e veya `i18n-check.yml`'e EN+TR key simetri kontrolü; eksik TR key → CI fail.                             | Eksik key CI'ı kırıyor; `pnpm run i18n:check` mevcut | ✅ (`e1516e8`)  |
+| 82  | P2  | **BF12 — Cost threshold'ları env'e taşı** — `src/app/api/cron/cost-alarm/route.ts`: `const dailyWarningThreshold = 50` → `process.env.COST_WARNING_DAILY ?? 50`.      | Env var set edilince threshold değişiyor; vitest ✓   | ✅ (`e1516e8`)  |
+
+### Launch Blocker Sprint (item 83-87) — KİMİAİ 360° Canlı Analiz Bulguları (2026-07-13)
+
+**Amaç:** Lansmanı engelleyecek kritik hata + yasal risk. Önce 83 (P0), ardından 84 (P0), paralel değil.
+
+#### P0 — Launch Blocker
+
+| #   | P   | İş                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Accept kriteri                                                                              | Kapı |
+| --- | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- | ---- |
+| 83  | P0  | **UI/API data sync fix** — `/incidents` sayfası "0 Documented AI failures" gösteriyor; API `142` döndürüyor. `src/app/[locale]/incidents/page.tsx` (veya ilgili component): veriyi `/api/v1/incidents` endpoint'inden doğru çekiyor mu doğrula; `/leaderboard` sayfasını aynı şekilde denetle.                                                                                                                                                                                                               | `/incidents` ve `/leaderboard` sayfaları gerçek sayıyı (≥60) gösteriyor; `pnpm typecheck` ✓ | ⬜   |
+| 84  | P0  | **Legal: Impressum + GDPR "permanent record" fix** — Hukuki risk: (a) Şirket jurisdiction bilgisi eksik; (b) "permanent record" dili GDPR Art. 17 ile çelişiyor. `/legal/impressum` (EN+TR) sayfası oluştur: şirket adı, adres, jurisdiction, iletişim. `messages/{en,tr}.json` → `legal.impressum.*` namespace. Terms/Privacy'den "permanent record" ifadesini GDPR-uyumlu dile çevir ("AI system records are preserved for public accountability; personal data is subject to GDPR/KVKK deletion rights"). | `/legal/impressum` 200; Terms/Privacy'de "permanent record" 0 eşleşme; `pnpm typecheck` ✓   | ⬜   |
+
+#### P1 — Post-Launch Readiness
+
+| #   | P   | İş                                                                                                                                                                                                                                                                                                                                                           | Accept kriteri                                                                                          | Kapı |
+| --- | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- | ---- |
+| 85  | P1  | **Cross-audit Redis caching** — Her cross-audit çağrısı 5 LLM API isteği atıyor; aynı prompt tekrar edilince maliyeti ikiye katlıyor. `src/lib/ai/cross-audit-engine.ts`: SHA-256(prompt) → Upstash Redis key; TTL 1 saat; cache miss → 5 model çağrısı; hit → Redis'ten dön. `cross_audit_runs`'a `cache_hit boolean` kolon ekle (migration, RLS+ROLLBACK). | Vitest: aynı prompt ikinci çağrıda Redis'ten döner; `cost_usd` ikinci çağrıda 0; migration ship         | ⬜   |
+| 86  | P1  | **Stripe/Pro tier ödeme akışı** — `c376a55`'te Pro tier pricing scaffolded ama checkout yok. `@stripe/stripe-js` + `stripe` package entegrasyonu; `/api/webhooks/stripe` route (RLS-safe); `subscriptions` migration (RLS+ROLLBACK); pricing page "Upgrade" → Stripe Checkout. Test: Stripe test-mode checkout → webhook → `subscriptions` tablosuna kayıt.  | Stripe test-mode checkout başarılı; webhook `200`; `subscriptions` tablosunda kayıt; `pnpm typecheck` ✓ | ⬜   |
+| 87  | P2  | **Browser extension MVP** — `apps/extension/` scaffolded ama MV3 manifest + content script eksik. Chrome MV3 manifest; content script: ziyaret edilen URL'yi `/api/v1/incidents?domain=` ile sorgula; bulgu varsa badge + popup.                                                                                                                             | Extension yüklenebilir; `chrome.tabs` domain sorgusu çalışıyor; popup incident count gösteriyor         | ⬜   |
 
 **DORA metrikleri şu an (v8.8 baseline):**
 
@@ -315,10 +338,11 @@ Bağımlılık sırası korunur: L1 isimleri → L3/L4 kapı açar; L2 MOU → L
 3. ✅ **R3** — NVIDIA NGC API key env'e eklendi (A3 `7a029ac` tamamlandı).
 4. L1 danışma kurulu aday seçimi (7 koltuk; advisory-board sayfası + davet şablonu shipped — isimler founder onayına kadar boş).
 5. Maliyet tavanı onayı ($50/$100/$500 default'ları geçerli).
-6. 🔴 **BF1 çözüm kararı** — `jszip`: `package.json`'da bırakıp lockfile sync mi, yoksa kaldırıp `src/lib/utils/zip.ts` özel impl koru mu? (Önerilen: jszip ile replace → lock sync. Acil ise: kaldır.) OpenCode BF1'i başlatmadan önce karar gerekli.
-7. 🔴 **Gemini API 400 (BF5)** — `GOOGLE_API_KEY` / `GEMINI_API_KEY` env geçerliliğini doğrula; key rotasyon gerekiyorsa bildir. 78 hata aktif (8 kullanıcı).
+6. ✅ **BF1 çözüldü** — `jszip` `package.json`'dan kaldırıldı (`52753f5`); `pnpm install --frozen-lockfile` geçiyor; Vercel build kilidi kalktı.
+7. ✅ **Gemini API fix (BF5)** — `src/lib/ai/adapters/vertex-gemini.ts` düzeltildi (`e1516e8`). Hata count 0 bekleniyor.
 8. ⏸ **K18 regülatör-key** — Supabase `auditor_role` API key için regülatör ilişkisi kurulana kadar beklemede.
 9. **GPG commit signing** — Mevcut commit'ler unverified. Etkinleştirme founder kararı.
+10. 🔴 **UI data sync (item 83)** — `/incidents` + `/leaderboard` sayfaları prod'da boş görünüyor ama API 142 kayıt döndürüyor. OpenCode kuyruğuna atandı; lansmanı engelleyebilir.
 
 ## §8 Rapor Sözleşmesi
 
@@ -351,9 +375,11 @@ Detaylı, accept-kriterli backlog artık §5'te (item 10-23) — bu bölüm sade
 
 11. **Dual-Executor capability routing** aktif: Antigravity (backend/security/API) + OpenCode (frontend/UI/E2E). Roster: `docs/PARALLEL_EXECUTION_ROSTER.md`. Atama matrisi §5'te.
 
-12. **Audit-driven stability sprint** (BF1-BF12): Antigravity 360° denetim (2026-07-12) tespit ettiği prod hataları → 12 BF item. P0: pnpm lock + middleware.ts. P1: 25 error group → 0. P2: security + i18n + CI.
+12. ✅ **Audit-driven stability sprint** (BF1-BF12): 2026-07-13 tamamlandı. pnpm lock ✅, middleware.ts ✅, Gemini fix ✅, i18n ✅, RSS retry ✅, fingerprint UUID ✅, DSAR select ✅, i18n CI ✅, cost-threshold env ✅. HEAD `e492d7e`.
 
-item 83+ için yeni iş: Architect §5'e ekler, bu özeti günceller. Executor Horizon'dan kendi başına iş türetmez.
+13. **Launch Readiness Sprint** (item 83-87): KİMİAİ 360° canlı analiz (2026-07-13) tespit etti. P0: data sync (83) + impressum (84). P1: cross-audit cache (85) + Stripe (86). P2: browser extension (87).
+
+item 88+ için yeni iş: Architect §5'e ekler, bu özeti günceller. Executor Horizon'dan kendi başına iş türetmez.
 
 ## §10 Executor Tetikleme Prompt'ları (copy-paste)
 
@@ -366,10 +392,12 @@ SEN: ALPAR AI projesinin Antigravity (Backend & Data Tier) executor agent'ısın
 
 PROJE: ALPAR AI — bağımsız kamu AI olay kaydı + AI değerlendirici ("Moody's-for-AI"). EU AI Act Art. 73 platformu. Stack: Next.js 16 (App Router), Supabase (Postgres/RLS/Storage), TypeScript strict, Vercel (fra1).
 
-GÖREV: docs/MASTER_PLAN.md v8.10 §5 kuyruğundaki sana atanmış ⬜ item'ları otopilot protokolüyle uygula.
+GÖREV: docs/MASTER_PLAN.md v9.00 §5 kuyruğundaki sana atanmış ⬜ item'ları otopilot protokolüyle uygula.
 
-ATANMIŞ ITEM'LAR (sırayla, P0 önce):
-72(BF2 middleware.ts oluştur) → 75(BF5 Gemini API 400 fix) → 76(BF6 RSS retry mekanizması) → 78(BF8 moderation-sla-alarm cron vercel.json) → 79(BF9 FingerprintJS fallback→crypto.randomUUID) → 80(BF10 DSAR explicit column select) → 81(BF11 i18n delta CI check) → 82(BF12 cost threshold env)
+ATANMIŞ İTEM'LAR: v9.00 sprint — sana atanan 2 ⬜ item:
+85(P1 cross-audit Redis cache) — `src/lib/ai/cross-audit-engine.ts`: SHA-256(prompt) → Upstash Redis key TTL 1h; cache miss → 5 model çağrısı; hit → Redis'ten dön. `cross_audit_runs` migration: `cache_hit boolean` (RLS+ROLLBACK).
+86-backend(P1 Stripe backend) — `@stripe/stripe-js` + `stripe` package; `/api/webhooks/stripe` route (RLS-safe); `subscriptions` migration (RLS+ROLLBACK). OpenCode 86 UI'ını koordineli yapar.
+83/84/87 OpenCode'a atanmış — paralel çalışabilirsiniz.
 
 KRİTİK KURALLAR:
 1. Push before report. Rapor origin/master commit hash'i ile biter.
@@ -405,10 +433,14 @@ SEN: ALPAR AI projesinin OpenCode (Frontend & Presentation Tier) executor agent'
 
 PROJE: ALPAR AI — bağımsız kamu AI olay kaydı + AI değerlendirici ("Moody's-for-AI"). EU AI Act Art. 73 platformu. Stack: Next.js 16 (App Router), Supabase, Tailwind v4, TypeScript strict, next-intl (EN+TR), Vercel (fra1).
 
-GÖREV: docs/MASTER_PLAN.md v8.10 §5 kuyruğundaki sana atanmış ⬜ item'ları otopilot protokolüyle uygula.
+GÖREV: docs/MASTER_PLAN.md v9.00 §5 kuyruğundaki sana atanmış ⬜ item'ları otopilot protokolüyle uygula.
 
-ATANMIŞ ITEM'LAR (sırayla, P0 önce):
-71(BF1 pnpm-lock.yaml + jszip sync — founder kararını §7/item6 kontrol et) → 73(BF3 footer i18n missing keys) → 74(BF4 admin panel TR translation) → 77(BF7 vercel.json pnpm uyum)
+ATANMIŞ İTEM'LAR: v9.00 sprint — sana atanan 4 ⬜ item:
+83(P0 UI/API data sync) — `/incidents` + `/leaderboard` sayfalarını doğrula; "0 Documented AI failures" yerine gerçek sayıyı göster.
+84(P0 Impressum + GDPR fix) — `/legal/impressum` (EN+TR) oluştur; Terms/Privacy "permanent record" dilini GDPR-uyumlu hale getir.
+86(P1 Stripe UI) — pricing page "Upgrade" butonu → Stripe Checkout (Antigravity backend'i yazıyor, sen UI + checkout callback).
+87(P2 browser extension) — `apps/extension/` MV3 manifest + content script tamamla; Chrome extension pack edilebilir hale getir.
+Önce 83, ardından 84 (paralel değil, P0'lar); 86+87 Antigravity 86-backend hazır olunca.
 
 KRİTİK KURALLAR:
 1. Push before report. Rapor origin/master commit hash'i ile biter.

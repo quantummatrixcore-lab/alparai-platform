@@ -28,6 +28,9 @@ export default async function ImprintPage({ params }: { params: Promise<{ locale
 
       <h2>{t("imprintDisclaimer")}</h2>
       <p>{t("imprintDisclaimerText")}</p>
+
+      <h2>{t("imprintJurisdiction")}</h2>
+      <p>{t("imprintJurisdictionText")}</p>
     </LegalLayout>
   );
 }

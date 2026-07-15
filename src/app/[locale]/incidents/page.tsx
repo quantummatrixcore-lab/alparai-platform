@@ -2,6 +2,7 @@ export const revalidate = 300;
 
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { Container } from "@/components/ui/layout";
 import { IncidentList } from "@/components/incidents/incident-list";
 import { IncidentFilters } from "@/components/marketing/incident-filters";
@@ -40,12 +41,13 @@ export default async function IncidentsPage({
   const tCommon = await getTranslations({ locale, namespace: "common" });
   const { q, category, severity, sort, page } = await searchParams;
   const supabase = await createServerClient();
+  const admin = createAdminClient();
 
   const pageNum = Math.max(1, parseInt(page || "1", 10));
   const sortVal = sort || "newest";
   const pageSize = 12;
 
-  let query = supabase
+  let query = admin
     .from("incidents")
     .select(
       "id, title_masked, description_masked, title_tr, description_tr, severity, status, category, is_anonymous, incident_date, views_count, upvotes_count, created_at, ai_provider_id, user_id, cross_audit_truth_score, cross_audit_confidence, incident_source",

@@ -97,6 +97,12 @@ export type Database = {
           Update: any
           Relationships: []
         }
+        subscriptions: {
+          Row: any
+          Insert: any
+          Update: any
+          Relationships: []
+        }
         data_retention_policies: {
           Row: any
           Insert: any

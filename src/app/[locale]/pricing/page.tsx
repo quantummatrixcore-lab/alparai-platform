@@ -4,6 +4,7 @@ import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
+import { StripeCheckoutButton } from "@/components/pricing/stripe-checkout-button";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -41,9 +42,9 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
       period: t("pro_period"),
       features: [t("pro_feature_1"), t("pro_feature_2"), t("pro_feature_3"), t("pro_feature_4")],
       cta: t("pro_cta"),
-      href: "/contact?subject=pro-upgrade",
       variant: "outline" as const,
       popular: true,
+      checkout: true,
     },
     {
       key: "portal",
@@ -128,11 +129,20 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
               </div>
 
               <div className="mt-8">
-                <Link href={tier.href} className="block w-full">
-                  <Button variant={tier.variant} className="w-full">
+                {"checkout" in tier && tier.checkout ? (
+                  <StripeCheckoutButton variant={tier.variant} className="w-full">
                     {tier.cta}
-                  </Button>
-                </Link>
+                  </StripeCheckoutButton>
+                ) : (
+                  <Link
+                    href={"href" in tier && tier.href ? tier.href : "/"}
+                    className="block w-full"
+                  >
+                    <Button variant={tier.variant} className="w-full">
+                      {tier.cta}
+                    </Button>
+                  </Link>
+                )}
               </div>
             </CardContent>
           </Card>

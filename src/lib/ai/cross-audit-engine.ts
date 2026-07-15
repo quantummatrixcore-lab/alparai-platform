@@ -27,6 +27,7 @@
  */
 
 import "server-only";
+import { createHash } from "crypto";
 import {
   callWithFailover,
   isGatewayConfigured,
@@ -37,6 +38,32 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { selectModelTier, type ModelTier } from "@/lib/audit/model-router";
 import { logger } from "@/lib/utils/logger";
 import type { Database } from "@/types/database";
+
+const CACHE_TTL_SECONDS = 3600; // 1 hour
+
+function getRedis() {
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { Redis } = require("@upstash/redis");
+    return new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    });
+  } catch {
+    return null;
+  }
+}
+
+function buildCacheKey(
+  title: string,
+  description: string,
+  category: string,
+  severity: string,
+): string {
+  const payload = JSON.stringify({ t: title, d: description, c: category, s: severity });
+  return `cross_audit:${createHash("sha256").update(payload).digest("hex")}`;
+}
 
 export interface InitialEvaluation {
   plausibilityScore: number;
@@ -533,6 +560,45 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
   const safeTitle = maskPII(incident.title_masked || incident.title).masked;
   const safeDescription = maskPII(incident.description_masked || incident.description).masked;
 
+  // Check Redis cache for identical prompt
+  const redis = getRedis();
+  const cacheKey = buildCacheKey(safeTitle, safeDescription, incident.category, incident.severity);
+
+  if (redis) {
+    try {
+      const cached = await redis.get(cacheKey);
+      if (cached && typeof cached === "object" && "truthScore" in cached) {
+        const totalLatencyMs = Math.round(performance.now() - startTime);
+        logger.info("[CrossAudit] Cache hit — skipping LLM calls", { incidentId, cacheKey });
+
+        // Log telemetry with cache_hit = true and cost_usd = 0
+        try {
+          await admin.from("cross_audit_runs").insert({
+            incident_id: incidentId,
+            model: cached.supremeCourtModel ?? "cache",
+            tokens_in: 0,
+            tokens_out: 0,
+            cost_usd: 0,
+            latency_ms: totalLatencyMs,
+            cache_hit: true,
+          });
+        } catch (err) {
+          logger.error(
+            "[CrossAudit] Failed to log cache-hit telemetry",
+            {},
+            err instanceof Error ? err : undefined,
+          );
+        }
+
+        return { ...cached, totalLatencyMs };
+      }
+    } catch (err) {
+      logger.warn("[CrossAudit] Redis cache read failed, proceeding without cache", {
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+  }
+
   // Run pre-triage COGS gate
   const gate = runPreTriageCogsGate(safeTitle, safeDescription);
   if (!gate.ok) {
@@ -818,6 +884,7 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
       tokens_out: costEst.outputTokens,
       cost_usd: costEst.costUsd,
       latency_ms: totalLatencyMs,
+      cache_hit: false,
     });
   } catch (err) {
     logger.error(
@@ -825,6 +892,34 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
       {},
       err instanceof Error ? err : undefined,
     );
+  }
+
+  // Cache result in Redis for identical prompts (1h TTL)
+  if (redis) {
+    try {
+      const result: TruthScoreResult = {
+        truthScore: supremeResult.truthScore,
+        confidence: supremeResult.confidence,
+        reasoning: supremeResult.reasoning,
+        supremeCourtModel: supremeResult.model,
+        triageModels,
+        totalLatencyMs,
+        euActTransparencyScore: supremeResult.euActTransparencyScore,
+        euActNonDiscriminationScore: supremeResult.euActNonDiscriminationScore,
+        euActDataPrivacyScore: supremeResult.euActDataPrivacyScore,
+        euActRiskCategory: supremeResult.euActRiskCategory,
+      };
+      await redis.set(cacheKey, JSON.stringify(result), { ex: CACHE_TTL_SECONDS });
+      logger.info("[CrossAudit] Cached result in Redis", {
+        incidentId,
+        cacheKey,
+        ttl: CACHE_TTL_SECONDS,
+      });
+    } catch (err) {
+      logger.warn("[CrossAudit] Redis cache write failed", {
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
   }
 
   const result: TruthScoreResult = {

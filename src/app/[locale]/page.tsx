@@ -2,6 +2,7 @@ export const revalidate = 60;
 
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { HeroSection } from "@/components/marketing/hero-section";
 import { WebSiteJsonLd } from "@/components/seo/json-ld";
 import { Container, Section } from "@/components/ui/layout";
@@ -40,11 +41,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const t = await getTranslations({ locale, namespace: "app" });
 
   const supabase = await createServerClient();
+  const admin = createAdminClient();
   const [{ count: incidentCount }, { data: providers }] = await Promise.all([
-    supabase
-      .from("incidents")
-      .select("id", { count: "exact", head: true })
-      .eq("status", "published"),
+    admin.from("incidents").select("id", { count: "exact", head: true }).eq("status", "published"),
     supabase.from("ai_providers").select("id"),
   ]);
 
@@ -77,6 +76,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   void checkAndTriggerNewsSyncPassive();
 
   const supabase = await createServerClient();
+  const admin = createAdminClient();
   const tCommon = await getTranslations({ locale, namespace: "common" });
 
   const [incidentsResult, incidentsCountResult, providersResult, countriesResult, sourcesResult] =
@@ -89,7 +89,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         .eq("status", "published")
         .order("published_at", { ascending: false })
         .limit(5),
-      supabase
+      admin
         .from("incidents")
         .select("id", { count: "exact", head: true })
         .eq("status", "published"),
