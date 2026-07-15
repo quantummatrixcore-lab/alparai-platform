@@ -8,8 +8,28 @@ interface PublishResult {
 }
 
 export class SocialPublisher {
+  private killSwitch: boolean;
+
+  constructor() {
+    this.killSwitch =
+      process.env.MARKETING_KILL_SWITCH === "true" || process.env.MARKETING_KILL_SWITCH === "1";
+    if (this.killSwitch) {
+      logger.warn("[SocialPublisher] KILL SWITCH ACTIVE — no external API calls will be made");
+    }
+  }
+
   async publish(videoUrl: string, caption: string, platforms: string[]): Promise<PublishResult[]> {
     logger.info("[SocialPublisher] Publishing to platforms", { platforms, videoUrl });
+
+    if (this.killSwitch) {
+      logger.warn("[SocialPublisher] Kill switch on — all returns simulated");
+      return platforms.map((p) => ({
+        platform: p,
+        success: true,
+        postUrl: `https://${p}.com/kill-switch/${Date.now()}`,
+      }));
+    }
+
     const results: PublishResult[] = [];
 
     for (const platform of platforms) {

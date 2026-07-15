@@ -2,10 +2,17 @@ import { defineConfig } from "vitest/config";
 import { resolve } from "node:path";
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      "@": resolve(__dirname, "src"),
+      "server-only": resolve(__dirname, "src/lib/__mocks__/server-only.ts"),
+    },
+  },
   test: {
     environment: "node",
     globals: true,
     testTimeout: 15000,
+    setupFiles: ["./vitest.setup.ts"],
     include: ["src/**/*.{test,spec}.{ts,tsx}", "tests/**/*.{test,spec}.{ts,tsx}"],
     exclude: ["tests/e2e/**", "node_modules/**"],
     coverage: {
@@ -27,11 +34,6 @@ export default defineConfig({
         branches: 65,
         statements: 70,
       },
-    },
-  },
-  resolve: {
-    alias: {
-      "@": resolve(__dirname, "src"),
     },
   },
 });

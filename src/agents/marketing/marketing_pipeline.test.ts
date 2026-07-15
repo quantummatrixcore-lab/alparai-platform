@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { ContentStrategist } from "./content_strategist";
 import { FlowGenerator } from "./flow_generator";
 import { SocialPublisher } from "./social_publisher";
@@ -20,12 +20,50 @@ describe("Autonomous Marketing Pipeline", () => {
     expect(url).toContain("https://storage.googleapis.com");
   });
 
-  it("SocialPublisher should handle publishing without errors", async () => {
+  it("SocialPublisher should return PublishResult array", async () => {
     const publisher = new SocialPublisher();
+    const results = await publisher.publish("https://test.com/video.mp4", "Test caption", [
+      "TestPlatform",
+    ]);
 
-    // We expect this not to throw
-    await expect(
-      publisher.publish("https://test.com/video.mp4", "Test caption", ["TestPlatform"]),
-    ).resolves.toBeUndefined();
+    expect(Array.isArray(results)).toBe(true);
+    expect(results[0]).toHaveProperty("platform");
+    expect(results[0]).toHaveProperty("success");
+  });
+});
+
+describe("SocialPublisher — Kill Switch (Madde 90)", () => {
+  const ORIGINAL_KILL_SWITCH = process.env.MARKETING_KILL_SWITCH;
+
+  beforeEach(() => {
+    process.env.MARKETING_KILL_SWITCH = ORIGINAL_KILL_SWITCH;
+  });
+
+  it("should block all external API calls when kill switch is active", async () => {
+    process.env.MARKETING_KILL_SWITCH = "true";
+    const publisher = new SocialPublisher();
+    const results = await publisher.publish("https://test.com/video.mp4", "Test caption", [
+      "linkedin",
+      "x",
+      "tiktok",
+    ]);
+
+    expect(results).toHaveLength(3);
+    for (const r of results) {
+      expect(r.success).toBe(true);
+      expect(r.postUrl).toContain("kill-switch");
+    }
+  });
+
+  it("should allow normal publish when kill switch is off", async () => {
+    delete process.env.MARKETING_KILL_SWITCH;
+    const publisher = new SocialPublisher();
+    const results = await publisher.publish("https://test.com/video.mp4", "Test caption", [
+      "unknown-platform",
+    ]);
+
+    expect(results).toHaveLength(1);
+    expect(results[0].success).toBe(true);
+    expect(results[0].postUrl).toContain("simulated");
   });
 });
