@@ -69,7 +69,7 @@ Invoke-Tmux send-keys -t "${Session}:MAIN.2" "opencode" Enter
 # Pane 3 (sag alt): Git log watch
 Invoke-Tmux split-window -t "${Session}:MAIN.1" -v -c $PROJECT
 Start-Sleep -Milliseconds 100
-Invoke-Tmux send-keys -t "${Session}:MAIN.3" "while (`$true) { Clear; git log --oneline -12 --color; Start-Sleep 15 }" Enter
+Invoke-Tmux send-keys -t "${Session}:MAIN.3" 'while ($true) { Clear; git log --oneline -12 --color; Start-Sleep 15 }' Enter
 
 Invoke-Tmux select-layout -t "${Session}:MAIN" tiled
 
@@ -80,12 +80,12 @@ Invoke-Tmux new-window -t $Session -n "OPS" -c $PROJECT
 Start-Sleep -Milliseconds 200
 
 # Pane 0: Lint watch (30s interval)
-Invoke-Tmux send-keys -t "${Session}:OPS.0" "while (`$true) { pnpm lint 2>&1 | Select-Object -Last 8; Start-Sleep 30 }" Enter
+Invoke-Tmux send-keys -t "${Session}:OPS.0" 'while ($true) { pnpm lint 2>&1 | Select-Object -Last 8; Start-Sleep 30 }' Enter
 
 # Pane 1: TypeCheck watch (60s interval)
 Invoke-Tmux split-window -t "${Session}:OPS.0" -h -c $PROJECT
 Start-Sleep -Milliseconds 100
-Invoke-Tmux send-keys -t "${Session}:OPS.1" "while (`$true) { pnpm typecheck 2>&1 | Select-Object -Last 10; Start-Sleep 60 }" Enter
+Invoke-Tmux send-keys -t "${Session}:OPS.1" 'while ($true) { pnpm typecheck 2>&1 | Select-Object -Last 10; Start-Sleep 60 }' Enter
 
 # Pane 2: Free shell
 Invoke-Tmux split-window -t "${Session}:OPS.0" -v -c $PROJECT
@@ -106,7 +106,7 @@ Invoke-Tmux send-keys -t "${Session}:LOGS.0" "npx vercel logs --follow 2>&1" Ent
 # Pane 1: i18n check watch
 Invoke-Tmux split-window -t "${Session}:LOGS.0" -h -c $PROJECT
 Start-Sleep -Milliseconds 100
-Invoke-Tmux send-keys -t "${Session}:LOGS.1" "while (`$true) { pnpm i18n:check; Start-Sleep 30 }" Enter
+Invoke-Tmux send-keys -t "${Session}:LOGS.1" 'while ($true) { pnpm i18n:check; Start-Sleep 30 }' Enter
 
 Invoke-Tmux select-layout -t "${Session}:LOGS" even-horizontal
 
