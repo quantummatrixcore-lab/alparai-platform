@@ -1,4 +1,5 @@
-import type { BudgetConfig, RetryConfig } from "./types";
+import type { BudgetConfig, ModelTier, RetryConfig, TierConfig } from "./types";
+import { TIERS } from "./types";
 
 export interface BudgetSnapshot {
   costMs: number;
@@ -43,6 +44,28 @@ export const makeBudgetSnapshot = (
     exhaustedTokens: costTokens >= config.maxTokens,
   };
 };
+
+export function resolveTier(task: {
+  type: string;
+  priority?: string;
+  costWeight?: number;
+}): ModelTier {
+  if (task.priority === "critical" || (task.costWeight && task.costWeight > 1.2)) return "T4";
+  if (task.type === "research" || task.type === "audit" || task.type === "debate") return "T3";
+  if (task.priority === "high" || task.type === "analysis" || task.type === "moderation")
+    return "T2";
+  if (task.type === "format" || task.type === "echo" || task.type === "trivial") return "T0";
+  return "T1";
+}
+
+export function getTierConfig(tier: ModelTier): TierConfig {
+  return TIERS[tier];
+}
+
+export function applyTierBudget(config: BudgetConfig, tier: ModelTier): BudgetConfig {
+  const t = TIERS[tier];
+  return { ...config, maxMs: t.maxMs, maxTokens: t.maxTokens, tier };
+}
 
 export const estimateMaxAttempts = (config: BudgetConfig, retry: RetryConfig): number => {
   const totalBackoffBudget = config.maxMs;

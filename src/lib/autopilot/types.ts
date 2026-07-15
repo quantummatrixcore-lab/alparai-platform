@@ -15,7 +15,11 @@ export type BreakerState = "closed" | "open" | "half_open";
 export type BackoffStrategy = "exponential" | "linear" | "fixed";
 
 export type ExhaustionAction =
-  "silent_log" | "toast_warn" | "email_fallback" | "escalate_admin" | "throw";
+  | "silent_log"
+  | "toast_warn"
+  | "email_fallback"
+  | "escalate_admin"
+  | "throw";
 
 export interface RetryConfig {
   attempts: number;
@@ -32,10 +36,65 @@ export interface BreakerConfig {
   halfOpenProbe: boolean;
 }
 
+export type ModelTier = "T0" | "T1" | "T2" | "T3" | "T4";
+
+export interface TierConfig {
+  tier: ModelTier;
+  label: string;
+  maxMs: number;
+  maxTokens: number;
+  recommendedModel: string;
+  costWeight: number;
+}
+
 export interface BudgetConfig {
   maxMs: number;
   maxTokens: number;
+  tier?: ModelTier;
 }
+
+export const TIERS: Record<ModelTier, TierConfig> = {
+  T0: {
+    tier: "T0",
+    label: "Free/Cheap",
+    maxMs: 3000,
+    maxTokens: 500,
+    recommendedModel: "google/gemini-2.5-flash",
+    costWeight: 0.1,
+  },
+  T1: {
+    tier: "T1",
+    label: "Standard",
+    maxMs: 8000,
+    maxTokens: 1000,
+    recommendedModel: "google/gemini-2.5-flash",
+    costWeight: 0.3,
+  },
+  T2: {
+    tier: "T2",
+    label: "Premium",
+    maxMs: 15000,
+    maxTokens: 2000,
+    recommendedModel: "openrouter/anthropic/claude-sonnet",
+    costWeight: 0.6,
+  },
+  T3: {
+    tier: "T3",
+    label: "Research",
+    maxMs: 30000,
+    maxTokens: 4000,
+    recommendedModel: "openrouter/anthropic/claude-opus",
+    costWeight: 1.0,
+  },
+  T4: {
+    tier: "T4",
+    label: "Critical",
+    maxMs: 60000,
+    maxTokens: 8000,
+    recommendedModel: "openrouter/anthropic/claude-opus",
+    costWeight: 1.5,
+  },
+};
 
 export interface IdempotencyConfig {
   enabled: boolean;
