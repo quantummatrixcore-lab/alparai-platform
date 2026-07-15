@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import { logger } from "@/lib/utils/logger";
 
@@ -56,7 +55,7 @@ export async function POST(request: Request) {
 
     // Find the current production deployment (usually the first one that is READY and is currently active)
     // and the target rollback deployment (the first READY deployment before the current one).
-    const readyDeployments = deployments.filter((d: any) => d.state === "READY");
+    const readyDeployments = deployments.filter((d: { state: string }) => d.state === "READY");
 
     if (readyDeployments.length < 2) {
       logger.warn("Not enough ready deployments to perform rollback");
@@ -100,12 +99,18 @@ export async function POST(request: Request) {
       },
       data: rollbackData,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error(
       "Sentry alert webhook exception",
       undefined,
       error instanceof Error ? error : undefined,
     );
-    return NextResponse.json({ error: "internal_error", message: error.message }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "internal_error",
+        message: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
+    );
   }
 }

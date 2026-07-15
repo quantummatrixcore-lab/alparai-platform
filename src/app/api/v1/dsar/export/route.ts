@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -101,8 +100,14 @@ export async function GET() {
         "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error("DSAR Export API Error", undefined, error instanceof Error ? error : undefined);
-    return NextResponse.json({ error: "internal_error", message: error.message }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "internal_error",
+        message: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
+    );
   }
 }

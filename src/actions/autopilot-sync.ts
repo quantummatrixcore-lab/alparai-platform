@@ -215,11 +215,20 @@ async function runNewsSyncWork(
         }
       }
     } catch (err) {
-      logger.error(
-        `Error processing RSS feed: ${feed.url}`,
-        undefined,
-        err instanceof Error ? err : undefined,
-      );
+      const isTimeout =
+        err instanceof Error &&
+        (err.name === "TimeoutError" ||
+          err.name === "AbortError" ||
+          err.message.toLowerCase().includes("timeout"));
+      if (isTimeout) {
+        logger.warn(`RSS feed fetch timeout: ${feed.url}`);
+      } else {
+        logger.error(
+          `Error processing RSS feed: ${feed.url}`,
+          undefined,
+          err instanceof Error ? err : undefined,
+        );
+      }
     }
   }
 

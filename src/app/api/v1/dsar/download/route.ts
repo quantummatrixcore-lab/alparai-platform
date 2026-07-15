@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -69,17 +68,21 @@ export async function GET(request: Request) {
       }
 
       // Incidents
-      (incidents || []).forEach((inc: any) => {
-        csvContent += `Incident,${inc.id},title,"${String(inc.title_masked || "").replace(/"/g, '""')}",${inc.created_at || ""}\n`;
-      });
+      (incidents || []).forEach(
+        (inc: { id: string; title_masked: string | null; created_at: string | null }) => {
+          csvContent += `Incident,${inc.id},title,"${String(inc.title_masked || "").replace(/"/g, '""')}",${inc.created_at || ""}\n`;
+        },
+      );
 
       // Comments
-      (comments || []).forEach((c: any) => {
-        csvContent += `Comment,${c.id},content,"${String(c.comment_masked || "").replace(/"/g, '""')}",${c.created_at || ""}\n`;
-      });
+      (comments || []).forEach(
+        (c: { id: string; comment_text: string; created_at: string | null }) => {
+          csvContent += `Comment,${c.id},content,"${String(c.comment_text || "").replace(/"/g, '""')}",${c.created_at || ""}\n`;
+        },
+      );
 
       // Votes
-      (votes || []).forEach((v: any) => {
+      (votes || []).forEach((v: { id: string; incident_id: string; created_at: string | null }) => {
         csvContent += `Vote,${v.id},incident_id,${v.incident_id || ""},${v.created_at || ""}\n`;
       });
 
@@ -110,8 +113,14 @@ export async function GET(request: Request) {
         "Content-Disposition": `attachment; filename="${filename}"`,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error("DSAR Download API Error", undefined, error instanceof Error ? error : undefined);
-    return NextResponse.json({ error: "internal_error", message: error.message }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "internal_error",
+        message: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
+    );
   }
 }
