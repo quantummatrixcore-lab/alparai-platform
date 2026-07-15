@@ -2713,7 +2713,9 @@
     "k11_title": "K11 Metrik Başlığı",
     "k11_desc": "K11 Metrik Açıklaması",
     "k12_title": "K12 Metrik Başlığı",
-    "k12_desc": "K12 Metrik Açıklaması"
+    "k12_desc": "K12 Metrik Açıklaması",
+    "subtitle": "Güven Skorunu nasıl hesaplıyoruz",
+    "intro": "Özel metodolojimiz tarafsız ve şeffaf sıralamalar sağlar."
   },
   "system-status": {
     "title": "Sistem Durumu",

@@ -2713,7 +2713,9 @@
     "k11_title": "K11 Metric Title",
     "k11_desc": "K11 Metric Description",
     "k12_title": "K12 Metric Title",
-    "k12_desc": "K12 Metric Description"
+    "k12_desc": "K12 Metric Description",
+    "subtitle": "How we calculate the Trust Score",
+    "intro": "Our proprietary methodology ensures unbiased and transparent rankings."
   },
   "system-status": {
     "title": "System Status",
