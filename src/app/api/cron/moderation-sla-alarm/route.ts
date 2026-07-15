@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { type NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logger } from "@/lib/utils/logger";
@@ -47,7 +46,7 @@ export async function GET(request: NextRequest) {
     }
 
     const durations = (recentTriage || [])
-      .map((r: any) => Number(r.triage_duration_hours))
+      .map((r: { triage_duration_hours: number | null }) => Number(r.triage_duration_hours))
       .filter((d) => !isNaN(d))
       .sort((a, b) => a - b);
 
@@ -64,8 +63,8 @@ export async function GET(request: NextRequest) {
     if (isSlaBreached) {
       logger.error(
         `[SlaAlarm] MODERATION SLA BREACHED | p95TriageHours=${p95TriageHours.toFixed(
-          2
-        )}h (threshold 4h) | pendingBreachesCount=${activeBreachCount}`
+          2,
+        )}h (threshold 4h) | pendingBreachesCount=${activeBreachCount}`,
       );
     }
 
@@ -74,10 +73,17 @@ export async function GET(request: NextRequest) {
       p95TriageHours: Number(p95TriageHours.toFixed(2)),
       activeBreachCount,
       isSlaBreached,
-      pendingBreachedIds: (pendingBreaches || []).map((b: any) => b.id),
+      pendingBreachedIds: (pendingBreaches || []).map((b: { id: string }) => b.id),
     });
-  } catch (error: any) {
-    logger.error("Moderation SLA alarm cron failed", {}, error instanceof Error ? error : undefined);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    logger.error(
+      "Moderation SLA alarm cron failed",
+      {},
+      error instanceof Error ? error : undefined,
+    );
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Unknown error" },
+      { status: 500 },
+    );
   }
 }

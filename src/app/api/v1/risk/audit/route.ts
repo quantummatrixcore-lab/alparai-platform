@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import "server-only";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -136,11 +135,17 @@ export async function POST(request: Request) {
     const body = await request.json();
     text = body.text || "";
   } catch {
-    return NextResponse.json({ error: "bad_request", message: "Invalid JSON body" }, { status: 400, headers: rateHeaders });
+    return NextResponse.json(
+      { error: "bad_request", message: "Invalid JSON body" },
+      { status: 400, headers: rateHeaders },
+    );
   }
 
   if (!text || typeof text !== "string") {
-    return NextResponse.json({ error: "bad_request", message: "Missing required string property 'text'" }, { status: 400, headers: rateHeaders });
+    return NextResponse.json(
+      { error: "bad_request", message: "Missing required string property 'text'" },
+      { status: 400, headers: rateHeaders },
+    );
   }
 
   // 4. LLM Risk Evaluation
@@ -155,9 +160,10 @@ Your response MUST be JSON format matching this schema:
 }`;
 
     // Free tier routes to flash, developer/enterprise route to pro
-    const model = tier === "free" 
-      ? { id: "gemini-1.5-flash", provider: "google", tier: "free" as const, maxTokens: 1024 }
-      : { id: "gemini-1.5-pro", provider: "google", tier: "premium" as const, maxTokens: 1024 };
+    const model =
+      tier === "free"
+        ? { id: "gemini-1.5-flash", provider: "google", tier: "free" as const, maxTokens: 1024 }
+        : { id: "gemini-1.5-pro", provider: "google", tier: "premium" as const, maxTokens: 1024 };
 
     const aiRes = await callModel({
       model,
@@ -171,7 +177,11 @@ Your response MUST be JSON format matching this schema:
         const parsed = JSON.parse(aiRes.data.content);
         return NextResponse.json(parsed, { status: 200, headers: rateHeaders });
       } catch (parseErr) {
-        logger.error("Failed to parse AI JSON response", { content: aiRes.data.content }, parseErr instanceof Error ? parseErr : undefined);
+        logger.error(
+          "Failed to parse AI JSON response",
+          { content: aiRes.data.content },
+          parseErr instanceof Error ? parseErr : undefined,
+        );
       }
     }
 
@@ -182,28 +192,47 @@ Your response MUST be JSON format matching this schema:
     let riskScore = 0.1;
     const reasoning = "Rule-based fallback classification due to temporary AI model timeout.";
 
-    if (lowerText.includes("death") || lowerText.includes("suicide") || lowerText.includes("manipulation") || lowerText.includes("harm")) {
+    if (
+      lowerText.includes("death") ||
+      lowerText.includes("suicide") ||
+      lowerText.includes("manipulation") ||
+      lowerText.includes("harm")
+    ) {
       riskCategory = "unacceptable";
       seriousIncidentClass = "Critical Safety Event";
       riskScore = 0.95;
-    } else if (lowerText.includes("hiring") || lowerText.includes("resume") || lowerText.includes("medical") || lowerText.includes("recruitment")) {
+    } else if (
+      lowerText.includes("hiring") ||
+      lowerText.includes("resume") ||
+      lowerText.includes("medical") ||
+      lowerText.includes("recruitment")
+    ) {
       riskCategory = "high";
       seriousIncidentClass = "Biased Decision System";
       riskScore = 0.75;
-    } else if (lowerText.includes("chatbot") || lowerText.includes("conversation") || lowerText.includes("hallucination")) {
+    } else if (
+      lowerText.includes("chatbot") ||
+      lowerText.includes("conversation") ||
+      lowerText.includes("hallucination")
+    ) {
       riskCategory = "limited";
       riskScore = 0.45;
     }
 
-    return NextResponse.json({
-      eu_act_risk_category: riskCategory,
-      eu_act_serious_incident_class: seriousIncidentClass,
-      risk_score: riskScore,
-      reasoning,
-    }, { status: 200, headers: rateHeaders });
-
-  } catch (err: any) {
+    return NextResponse.json(
+      {
+        eu_act_risk_category: riskCategory,
+        eu_act_serious_incident_class: seriousIncidentClass,
+        risk_score: riskScore,
+        reasoning,
+      },
+      { status: 200, headers: rateHeaders },
+    );
+  } catch (err: unknown) {
     logger.error("Risk audit API error", undefined, err instanceof Error ? err : undefined);
-    return NextResponse.json({ error: "internal_error", message: err.message }, { status: 500, headers: rateHeaders });
+    return NextResponse.json(
+      { error: "internal_error", message: err instanceof Error ? err.message : "Unknown error" },
+      { status: 500, headers: rateHeaders },
+    );
   }
 }

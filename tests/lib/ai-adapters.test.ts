@@ -332,6 +332,7 @@ describe("AI Adapters", () => {
         ok: false,
         status: 500,
         statusText: "Internal Server Error",
+        text: async () => "Internal Server Error",
       });
 
       const result = await adapter.call(mockRequest);

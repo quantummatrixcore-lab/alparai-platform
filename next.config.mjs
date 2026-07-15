@@ -75,7 +75,7 @@ const __dirname = path.dirname(__filename);
 
 const nextConfig = {
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   reactStrictMode: true,
   poweredByHeader: false,
