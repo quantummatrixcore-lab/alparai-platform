@@ -1340,7 +1340,10 @@
     "T": "T",
     "health_chart_incidents": "health_chart_incidents",
     "health_chart_resolved": "health_chart_resolved",
-    "health_chart_api_hits": "health_chart_api_hits"
+    "health_chart_api_hits": "health_chart_api_hits",
+    "health_chart_volume": "Daily Requests Volume",
+    "health_chart_trajectory": "7-Day Trajectory",
+    "health_chart_title_api": "API Gateway Traffic"
   },
   "footer": {
     "tagline": "Where the world holds AI accountable.",
@@ -1975,7 +1978,8 @@
     "nModeration": "4. Community-Based Moderation",
     "nModerationText": "Content moderation and verification are conducted by volunteer moderators and independent experts. ALPAR AI administration does not alter or suppress reports to satisfy commercial requests or external pressure.",
     "nArbitration": "5. Resolution & Takedown",
-    "nArbitrationText": "Disputes regarding the accuracy of reports are resolved transparently. Takedown requests are handled strictly in accordance with our legal procedures under Article 14 of the E-Commerce Directive."
+    "nArbitrationText": "Disputes regarding the accuracy of reports are resolved transparently. Takedown requests are handled strictly in accordance with our legal procedures under Article 14 of the E-Commerce Directive.",
+    "takedownDetailsPlaceholder": "Provide a clear explanation with supporting evidence."
   },
   "dilemmas": {
     "pageTitle": "AI Dilemmas",

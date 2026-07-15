@@ -1340,7 +1340,10 @@
     "T": "T",
     "health_chart_incidents": "health_chart_incidents",
     "health_chart_resolved": "health_chart_resolved",
-    "health_chart_api_hits": "health_chart_api_hits"
+    "health_chart_api_hits": "health_chart_api_hits",
+    "health_chart_volume": "Günlük İstek Hacmi",
+    "health_chart_trajectory": "7 Günlük Eğilim",
+    "health_chart_title_api": "API Geçidi Trafiği"
   },
   "footer": {
     "tagline": "Dünyanın AI'ı hesap verilebilir kıldığı yer.",
@@ -1975,7 +1978,8 @@
     "nModeration": "4. Topluluk Odaklı Moderasyon",
     "nModerationText": "İçerik moderasyonu ve doğrulaması gönüllü moderatörler ve bağımsız uzmanlar tarafından yürütülür. ALPAR AI yönetimi ticari talepleri veya dış baskıları karşılamak için raporları değiştirmez veya kaldırmaz.",
     "nArbitration": "5. Çözüm ve Kaldırma",
-    "nArbitrationText": "Raporların doğruluğuyla ilgili ihtilaflar şeffaf bir şekilde çözülür. İçerik kaldırma talepleri E-Ticaret Direktifi Madde 14 kapsamındaki yasal prosedürlerimize göre ele alınır."
+    "nArbitrationText": "Raporların doğruluğuyla ilgili ihtilaflar şeffaf bir şekilde çözülür. İçerik kaldırma talepleri E-Ticaret Direktifi Madde 14 kapsamındaki yasal prosedürlerimize göre ele alınır.",
+    "takedownDetailsPlaceholder": "Destekleyici kanıtlarla birlikte net bir açıklama sağlayın."
   },
   "dilemmas": {
     "pageTitle": "Yapay Zeka Dilemmaları",
