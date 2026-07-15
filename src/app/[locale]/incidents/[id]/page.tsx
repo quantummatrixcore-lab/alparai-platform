@@ -11,6 +11,7 @@ import { IncidentJsonLd } from "@/components/seo/json-ld";
 import { APP_URL } from "@/lib/constants";
 import type { IncidentDetail, ProviderResponse, EvidenceItem } from "@/types";
 import { RelatedIncidents } from "@/components/incidents/related-incidents";
+import { StatusBanner } from "@/components/incidents/status-banner";
 
 export async function generateMetadata({
   params,
@@ -86,16 +87,18 @@ export default async function IncidentDetailPage({
   }
   const tCommon = await getTranslations({ locale, namespace: "common" });
   const supabase = await createServerClient();
+  const user = await getCurrentUser();
+  const isAdminOrModerator =
+    user?.role === "admin" || user?.role === "ceo" || user?.role === "moderator";
 
-  const { data: incidentRow } = await supabase
-    .from("incidents")
-    .select("*")
-    .eq("id", id)
-    .eq("status", "published")
-    .maybeSingle();
+  let query = supabase.from("incidents").select("*").eq("id", id);
+  if (!isAdminOrModerator) {
+    query = query.eq("status", "published");
+  }
+  const { data: incidentRow } = await query.maybeSingle();
   if (!incidentRow) notFound();
 
-  const [providerRes, modelRes, evidenceRes, responseRes, user, commentsRes] = await Promise.all([
+  const [providerRes, modelRes, evidenceRes, responseRes, commentsRes] = await Promise.all([
     supabase
       .from("ai_providers")
       .select("name, slug")
@@ -113,7 +116,6 @@ export default async function IncidentDetailPage({
       .eq("incident_id", id)
       .eq("is_published", true)
       .maybeSingle(),
-    getCurrentUser(),
     supabase
       .from("incident_comments")
       .select(
@@ -232,6 +234,7 @@ export default async function IncidentDetailPage({
         severity={incident.severity}
         provider={incident.provider_name}
       />
+      {isAdminOrModerator && <StatusBanner status={incident.status} />}
       <IncidentDetailView
         incident={incident}
         evidence={evidence}

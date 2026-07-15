@@ -48,7 +48,7 @@ if ($existing -match $Session) {
 }
 
 # ── Window 0: MAIN ──────────────────────────────────────────────────────────
-Write-Host "  Window 0: MAIN (dev + test + opencode + git)" -ForegroundColor Cyan
+Write-Host '  Window 0: MAIN (dev + test + opencode + git)' -ForegroundColor Cyan
 
 Invoke-Tmux new-session -d -s $Session -n "MAIN" -c $PROJECT
 Start-Sleep -Milliseconds 200
@@ -74,7 +74,7 @@ Invoke-Tmux send-keys -t "${Session}:MAIN.3" "while (`$true) { Clear; git log --
 Invoke-Tmux select-layout -t "${Session}:MAIN" tiled
 
 # ── Window 1: OPS ───────────────────────────────────────────────────────────
-Write-Host "  Window 1: OPS (lint + typecheck + shell)" -ForegroundColor Cyan
+Write-Host '  Window 1: OPS (lint + typecheck + shell)' -ForegroundColor Cyan
 
 Invoke-Tmux new-window -t $Session -n "OPS" -c $PROJECT
 Start-Sleep -Milliseconds 200
@@ -95,7 +95,7 @@ Invoke-Tmux send-keys -t "${Session}:OPS.2" "Write-Host 'FREE SHELL - D:\Alparai
 Invoke-Tmux select-layout -t "${Session}:OPS" main-horizontal
 
 # ── Window 2: LOGS ──────────────────────────────────────────────────────────
-Write-Host "  Window 2: LOGS (vercel + i18n watch)" -ForegroundColor Cyan
+Write-Host '  Window 2: LOGS (vercel + i18n watch)' -ForegroundColor Cyan
 
 Invoke-Tmux new-window -t $Session -n "LOGS" -c $PROJECT
 Start-Sleep -Milliseconds 200
@@ -128,4 +128,11 @@ Write-Host "  Yeniden baglanmak:  .\ops\launch.ps1 -Attach" -ForegroundColor Cya
 Write-Host "  Kapatmak:           .\ops\launch.ps1 -Kill" -ForegroundColor Cyan
 Write-Host ""
 
-Invoke-Tmux attach-session -t $Session
+# Attach only when running in an interactive terminal
+if ([Environment]::UserInteractive -and $Host.Name -ne 'Default Host') {
+    Invoke-Tmux attach-session -t $Session
+} else {
+    Write-Host ""
+    Write-Host "  Oturum arka planda calisiyor. Baglanmak icin terminalde calistirin:" -ForegroundColor Yellow
+    Write-Host "  .\ops\launch.ps1 -Attach" -ForegroundColor Cyan
+}
