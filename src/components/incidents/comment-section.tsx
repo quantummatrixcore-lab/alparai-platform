@@ -116,7 +116,7 @@ export function CommentSection({
   };
 
   return (
-    <section className="space-y-6">
+    <section id="comments" className="space-y-6">
       <div className="flex items-center gap-2 border-b border-white/5 pb-3">
         <MessageSquare className="text-brand-400 h-5 w-5" />
         <h3 className="text-fg-primary text-xl font-bold tracking-tight">{textTitle}</h3>

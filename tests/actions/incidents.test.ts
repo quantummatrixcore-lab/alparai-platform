@@ -113,12 +113,12 @@ describe("submitIncident", () => {
     } as ReturnType<typeof mockSupabase.from>);
   });
 
-  it("allows anonymous submission when user is not authenticated", async () => {
+  it("rejects submission when user is not authenticated", async () => {
     vi.mocked(getCurrentUser).mockResolvedValueOnce(null);
     const fd = buildFormData();
-    fd.set("is_anonymous", "on");
     const result = await submitIncident({ ok: false }, fd);
-    expect(result.ok).toBe(true);
+    expect(result.ok).toBe(false);
+    expect(result.error).toBe("UNAUTHENTICATED");
   });
 
   it("returns error when rate limited", async () => {

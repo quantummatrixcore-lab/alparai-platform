@@ -449,7 +449,10 @@ export async function submitIncident(
     return { ok: true, incidentId: "mock-incident-123" };
   }
   const user = await getCurrentUser();
-  // Anonymous submissions allowed
+  if (!user) {
+    const t = await getTranslations("errors");
+    return { ok: false, error: "UNAUTHENTICATED", formError: t("unauthorized") };
+  }
   const hdrs = await headers();
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   const clientIdempotencyKey = hdrs.get("x-idempotency-key");

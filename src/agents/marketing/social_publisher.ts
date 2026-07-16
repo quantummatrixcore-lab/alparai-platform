@@ -19,8 +19,7 @@ export class SocialPublisher {
   }
 
   async publish(videoUrl: string, caption: string, platforms: string[]): Promise<PublishResult[]> {
-    // prettier-ignore
-    if (process.env.MARKETING_AUTOPILOT !== "enabled") { return platforms.map(p => ({ platform: p, success: true, url: `https://simulated/${p}/${Date.now()}` })); }
+    if (process.env.MARKETING_AUTOPILOT !== "enabled") { return platforms.map(p => ({ platform: p, success: true, postUrl: `https://simulated/${p}/dormant-guard` })); }
     logger.info("[SocialPublisher] Publishing to platforms", { platforms, videoUrl });
 
     const results: PublishResult[] = [];
