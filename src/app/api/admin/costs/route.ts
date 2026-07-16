@@ -90,7 +90,7 @@ export async function GET() {
         name: "vercel",
         currentCost:
           vercelLiveCost ??
-          Number(currentCosts.find((c) => c.service === "vercel")?.amount_usd ?? 14.2),
+          Number(currentCosts.find((c) => c.service === "vercel")?.amount_usd ?? 0.0),
         budgetLimit: Number(currentCosts.find((c) => c.service === "vercel")?.budget_usd ?? 20.0),
         percentUsed: 0,
         trend: "up",
@@ -106,7 +106,7 @@ export async function GET() {
       },
       {
         name: "gemini",
-        currentCost: Number(currentCosts.find((c) => c.service === "gemini")?.amount_usd ?? 10.1),
+        currentCost: Number(currentCosts.find((c) => c.service === "gemini")?.amount_usd ?? 0.0),
         budgetLimit: Number(currentCosts.find((c) => c.service === "gemini")?.budget_usd ?? 20.0),
         percentUsed: 0,
         trend: "up",
@@ -114,7 +114,7 @@ export async function GET() {
       },
       {
         name: "anthropic",
-        currentCost: Number(currentCosts.find((c) => c.service === "anthropic")?.amount_usd ?? 4.5),
+        currentCost: Number(currentCosts.find((c) => c.service === "anthropic")?.amount_usd ?? 0.0),
         budgetLimit: Number(
           currentCosts.find((c) => c.service === "anthropic")?.budget_usd ?? 20.0,
         ),
@@ -132,7 +132,7 @@ export async function GET() {
       },
       {
         name: "upstash",
-        currentCost: Number(currentCosts.find((c) => c.service === "upstash")?.amount_usd ?? 1.2),
+        currentCost: Number(currentCosts.find((c) => c.service === "upstash")?.amount_usd ?? 0.0),
         budgetLimit: Number(currentCosts.find((c) => c.service === "upstash")?.budget_usd ?? 5.0),
         percentUsed: 0,
         trend: "up",
@@ -140,7 +140,7 @@ export async function GET() {
       },
       {
         name: "buffer",
-        currentCost: Number(currentCosts.find((c) => c.service === "buffer")?.amount_usd ?? 6.0),
+        currentCost: Number(currentCosts.find((c) => c.service === "buffer")?.amount_usd ?? 0.0),
         budgetLimit: Number(currentCosts.find((c) => c.service === "buffer")?.budget_usd ?? 6.0),
         percentUsed: 0,
         trend: "stable",

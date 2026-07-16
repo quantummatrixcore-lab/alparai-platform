@@ -13,6 +13,10 @@
   },
   "crons": [
     {
+      "path": "/api/cron/translate-backfill",
+      "schedule": "*/10 * * * *"
+    },
+    {
       "path": "/api/cron/cost-alarm",
       "schedule": "0 6 * * *"
     },

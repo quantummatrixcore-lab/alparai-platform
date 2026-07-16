@@ -137,6 +137,15 @@ export function IncidentDetailView({
                 Art. 73: {incident.eu_act_serious_incident_class}
               </UIBadge>
             )}
+            {locale === "tr" && incident.language === "en" && incident.title_tr && (
+              <UIBadge
+                variant="brand"
+                className="border-brand-500/20 bg-brand-500/10 text-brand-400 font-bold"
+                title="This content was automatically translated by AI. (Makine çevirisi)"
+              >
+                {tCommon("machine_translated", { defaultValue: "Makine çevirisi" })}
+              </UIBadge>
+            )}
           </div>
           <h1 className="text-fg-primary text-3xl leading-tight font-bold tracking-tight">
             {displayTitle}

@@ -28,6 +28,7 @@ import {
   getAdminNotificationEmail,
   getProviderAlertEmail,
 } from "@/emails/templates";
+import { translateIncidentToTR } from "@/actions/translations";
 import type { Database } from "@/types/database";
 
 export interface SubmitIncidentState {
@@ -373,6 +374,10 @@ const runSubmitWork = async (
   } else {
     logger.info("Resend email simulation (no RESEND_API_KEY configuration)", { incidentId });
   }
+
+  await translateIncidentToTR(incidentId).catch((err) => {
+    logger.error("Failed to auto-translate incident", { incidentId, err });
+  });
 
   return { kind: "success", value: { id: incidentId } };
 };

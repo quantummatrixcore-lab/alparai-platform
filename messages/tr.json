@@ -1509,7 +1509,8 @@
     "alparAi": "ALPAR AI",
     "dismiss": "Kapat",
     "cookiePreferences": "Çerez tercihleri",
-    "select": "Seçiniz"
+    "select": "Seçiniz",
+    "machine_translated": "Makine çevirisi"
   },
   "autopilot": {
     "dashboard": "Kontrol Paneli",

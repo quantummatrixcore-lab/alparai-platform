@@ -1509,7 +1509,8 @@
     "alparAi": "ALPAR AI",
     "dismiss": "Dismiss",
     "cookiePreferences": "Cookie preferences",
-    "select": "Select"
+    "select": "Select",
+    "machine_translated": "Machine translated"
   },
   "autopilot": {
     "dashboard": "Dashboard",
