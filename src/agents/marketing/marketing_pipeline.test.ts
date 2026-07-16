@@ -27,20 +27,20 @@ describe("Autonomous Marketing Pipeline", () => {
     ]);
 
     expect(Array.isArray(results)).toBe(true);
-    expect(results[0]).toHaveProperty("platform");
-    expect(results[0]).toHaveProperty("success");
+    expect(results[0]?.platform).toBeDefined();
+    expect(results[0]?.success).toBeDefined();
   });
 });
 
-describe("SocialPublisher — Kill Switch (Madde 90)", () => {
-  const ORIGINAL_KILL_SWITCH = process.env.MARKETING_KILL_SWITCH;
+describe("SocialPublisher — Dormant Guard (Madde 90)", () => {
+  const ORIGINAL_AUTOPILOT = process.env.MARKETING_AUTOPILOT;
 
   beforeEach(() => {
-    process.env.MARKETING_KILL_SWITCH = ORIGINAL_KILL_SWITCH;
+    process.env.MARKETING_AUTOPILOT = ORIGINAL_AUTOPILOT;
   });
 
-  it("should block all external API calls when kill switch is active", async () => {
-    process.env.MARKETING_KILL_SWITCH = "true";
+  it("should block all external API calls when dormant guard is active", async () => {
+    process.env.MARKETING_AUTOPILOT = "disabled";
     const publisher = new SocialPublisher();
     const results = await publisher.publish("https://test.com/video.mp4", "Test caption", [
       "linkedin",
@@ -51,19 +51,19 @@ describe("SocialPublisher — Kill Switch (Madde 90)", () => {
     expect(results).toHaveLength(3);
     for (const r of results) {
       expect(r.success).toBe(true);
-      expect(r.postUrl).toContain("kill-switch");
+      expect(r.postUrl).toContain("dormant-guard");
     }
   });
 
-  it("should allow normal publish when kill switch is off", async () => {
-    delete process.env.MARKETING_KILL_SWITCH;
+  it("should allow normal publish when dormant guard is bypassed", async () => {
+    process.env.MARKETING_AUTOPILOT = "enabled";
     const publisher = new SocialPublisher();
     const results = await publisher.publish("https://test.com/video.mp4", "Test caption", [
       "unknown-platform",
     ]);
 
     expect(results).toHaveLength(1);
-    expect(results[0].success).toBe(true);
-    expect(results[0].postUrl).toContain("simulated");
+    expect(results[0]?.success).toBe(true);
+    expect(results[0]?.postUrl).toContain("simulated");
   });
 });

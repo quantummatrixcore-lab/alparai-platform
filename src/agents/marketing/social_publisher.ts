@@ -11,10 +11,9 @@ export class SocialPublisher {
   private killSwitch: boolean;
 
   constructor() {
-    this.killSwitch =
-      process.env.MARKETING_KILL_SWITCH === "true" || process.env.MARKETING_KILL_SWITCH === "1";
+    this.killSwitch = process.env.MARKETING_AUTOPILOT !== "enabled";
     if (this.killSwitch) {
-      logger.warn("[SocialPublisher] KILL SWITCH ACTIVE — no external API calls will be made");
+      logger.warn("[SocialPublisher] DORMANT MODE ACTIVE — no external API calls will be made");
     }
   }
 
@@ -22,11 +21,11 @@ export class SocialPublisher {
     logger.info("[SocialPublisher] Publishing to platforms", { platforms, videoUrl });
 
     if (this.killSwitch) {
-      logger.warn("[SocialPublisher] Kill switch on — all returns simulated");
+      logger.warn("[SocialPublisher] Dormant mode active — all returns simulated");
       return platforms.map((p) => ({
         platform: p,
         success: true,
-        postUrl: `https://${p}.com/kill-switch/${Date.now()}`,
+        postUrl: `https://${p}.com/dormant-guard/${Date.now()}`,
       }));
     }
 

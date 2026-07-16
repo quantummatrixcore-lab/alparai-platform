@@ -64,7 +64,9 @@ export function luhnCheck(cardNumber: string): boolean {
   let sum = 0;
   let alternate = false;
   for (let i = digits.length - 1; i >= 0; i--) {
-    let n = parseInt(digits[i], 10);
+    const digitChar = digits[i];
+    if (digitChar === undefined) continue;
+    let n = parseInt(digitChar, 10);
     if (alternate) {
       n *= 2;
       if (n > 9) n -= 9;
@@ -123,7 +125,7 @@ export function detectEncodeBypass(data: string): string[] {
 export function scanLine(line: string, lineNumber: number, _content: string): SentinelThreat[] {
   const threats: SentinelThreat[] = [];
 
-  for (const [type, pattern] of Object.entries(PATTERNS)) {
+  for (const [type, pattern] of Object.entries(PATTERNS) as [ThreatType, RegExp][]) {
     pattern.lastIndex = 0;
     let match: RegExpExecArray | null;
     while ((match = pattern.exec(line)) !== null) {
@@ -163,11 +165,15 @@ export function scanContent(content: string): SentinelResult {
   const allThreats: SentinelThreat[] = [];
 
   for (let i = 0; i < lines.length; i++) {
-    const threats = scanLine(lines[i], i + 1, content);
+    const line = lines[i];
+    if (line === undefined) continue;
+    const threats = scanLine(line, i + 1, content);
     allThreats.push(...threats);
   }
 
-  const bypassDetections = lines.length === 1 ? detectEncodeBypass(lines[0]) : [];
+  const firstLine = lines[0];
+  const bypassDetections =
+    lines.length === 1 && firstLine !== undefined ? detectEncodeBypass(firstLine) : [];
   const criticalCount = allThreats.filter((t) => t.severity === "critical").length;
   const highCount = allThreats.filter((t) => t.severity === "high").length;
 
@@ -318,7 +324,7 @@ export class Sentinel {
     return {
       safe: result.passed && bypasses.length === 0,
       entropy,
-      threats: [...new Set(result.threats.map((t) => t.type))].concat(bypasses),
+      threats: [...new Set(result.threats.map((t) => t.type as string))].concat(bypasses),
     };
   }
 }

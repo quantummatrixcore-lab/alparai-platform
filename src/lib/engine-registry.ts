@@ -287,9 +287,7 @@ export function recordBreakerChange(
   });
 }
 
-export async function listRecentRuns(
-  limit = 20,
-): Promise<
+export async function listRecentRuns(limit = 20): Promise<
   {
     id: string;
     name: string;
@@ -338,7 +336,14 @@ export function getRegistryReport(): RegistryReport {
         uptime: age,
       };
     }
-    return { ...s, status: breaker ? (breaker.state === "open" ? "down" : "degraded") : "unknown" };
+    return {
+      ...s,
+      status: (breaker
+        ? breaker.state === "open"
+          ? "down"
+          : "degraded"
+        : "unknown") as ServiceRecord["status"],
+    };
   });
   const healthyCount = services.filter((s) => s.status === "healthy").length;
   return {
