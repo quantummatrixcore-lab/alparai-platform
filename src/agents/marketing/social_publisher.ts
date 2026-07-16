@@ -19,13 +19,8 @@ export class SocialPublisher {
   }
 
   async publish(videoUrl: string, caption: string, platforms: string[]): Promise<PublishResult[]> {
-    if (process.env.MARKETING_AUTOPILOT !== "enabled") {
-      return platforms.map((p) => ({
-        platform: p,
-        success: true,
-        url: `https://simulated/${p}/${Date.now()}`,
-      }));
-    }
+    // prettier-ignore
+    if (process.env.MARKETING_AUTOPILOT !== "enabled") { return platforms.map(p => ({ platform: p, success: true, url: `https://simulated/${p}/${Date.now()}` })); }
     logger.info("[SocialPublisher] Publishing to platforms", { platforms, videoUrl });
 
     const results: PublishResult[] = [];
