@@ -2,21 +2,25 @@ import { getTranslations } from "next-intl/server";
 import { setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
 import { requireAdmin } from "@/lib/auth/session";
-import { SocialClient } from "@/components/admin/social-client";
-import { ShareNetwork } from "lucide-react";
+import { MasterPlanClient } from "@/components/admin/master-plan-client";
+import { parseMasterPlan } from "@/lib/utils/markdown-parser";
+import { Compass } from "lucide-react";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "admin" });
-  return { title: `${t("social") || "Social Media Automation"} | ALPAR AI` };
+  return { title: `${t("master_plan") || "Master Plan"} | ALPAR AI` };
 }
 
-export default async function SocialPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function MasterPlanPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
 
   // Authenticate user & check admin access
   await requireAdmin();
+
+  // Parse the markdown file
+  const items = parseMasterPlan();
 
   return (
     <div className="min-h-screen py-8">
@@ -24,18 +28,18 @@ export default async function SocialPage({ params }: { params: Promise<{ locale:
         <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
             <div className="flex items-center gap-2">
-              <ShareNetwork className="text-brand-400 h-6 w-6" />
+              <Compass className="text-brand-400 h-6 w-6" />
               <h1 className="text-2xl font-extrabold tracking-tight text-white md:text-3xl">
-                Social Media Automation
+                Master Plan Dashboard
               </h1>
             </div>
             <p className="text-fg-muted mt-1 text-sm">
-              Manage accounts and approve AI-generated drafts before publishing
+              Live progress tracking mapped directly from MASTER_PLAN.md
             </p>
           </div>
         </div>
 
-        <SocialClient />
+        <MasterPlanClient items={items} />
       </Container>
     </div>
   );

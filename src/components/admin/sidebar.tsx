@@ -158,6 +158,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
   // 4. GROWTH & STRATEGY GROUP (ceo, admin, advisor)
   const growthItems = [
     {
+      href: "/admin/master-plan",
+      label: "Master Plan",
+      icon: Compass,
+      active: pathname.startsWith("/admin/master-plan"),
+    },
+    {
       href: "/admin/strategy",
       label: t("strategy_overview") || "Overview",
       icon: Compass,

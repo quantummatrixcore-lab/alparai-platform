@@ -4,7 +4,7 @@ import * as React from "react";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { Wordmark } from "./wordmark";
-import { Github, Twitter, Mail } from "lucide-react";
+import { Github, Twitter, Mail, Linkedin } from "lucide-react";
 import { Container } from "@/components/ui/layout";
 import { usePathname } from "next/navigation";
 
@@ -87,6 +87,15 @@ export function Footer() {
                 aria-label={tCommon("twitter", { defaultValue: "Twitter" })}
               >
                 <Twitter className="h-4 w-4" />
+              </a>
+              <a
+                href="https://linkedin.com/company/alpar-ai"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary inline-flex h-8 w-8 items-center justify-center rounded-md"
+                aria-label={tCommon("linkedin", { defaultValue: "LinkedIn" })}
+              >
+                <Linkedin className="h-4 w-4" />
               </a>
               <a
                 href="mailto:hello@alparai.com"
