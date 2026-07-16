@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/auth/session";
+import { getCurrentUser } from "@/lib/auth/session";
 
 interface EnvVarEntry {
   key: string;
@@ -43,8 +43,13 @@ function maskValue(val: string | undefined): string | null {
 }
 
 export async function GET() {
-  const admin = await requireAdmin();
-  if (!admin) {
+  let admin = null;
+  try {
+    admin = await getCurrentUser();
+  } catch {
+    admin = null;
+  }
+  if (!admin || (admin.role !== "admin" && admin.role !== "ceo")) {
     return NextResponse.json({ ok: false, error: "Forbidden" }, { status: 403 });
   }
 
