@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Check, X, Megaphone, ShareNetwork, Video } from "lucide-react";
+import { Check, X, Megaphone, ShareNetwork, Video } from "@phosphor-icons/react";
 
 export function SocialClient() {
   // Mock drafts for the UI until DB is populated

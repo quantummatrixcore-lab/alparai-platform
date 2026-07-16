@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/actions/auth";
+import { requireAdmin } from "@/lib/auth/session";
 import { setRequestLocale } from "next-intl/server";
 import { ResourcesClient } from "@/components/admin/resources-client";
 

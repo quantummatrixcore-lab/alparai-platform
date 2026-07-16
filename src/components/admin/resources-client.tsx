@@ -11,7 +11,7 @@ import {
   CheckCircle,
   Lightning,
   Brain,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 
 export function ResourcesClient() {
   const [mounted, setMounted] = useState(false);

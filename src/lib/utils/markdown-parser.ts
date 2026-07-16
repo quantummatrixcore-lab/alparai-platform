@@ -7,6 +7,7 @@ export interface PlanItem {
   title: string;
   status: "completed" | "pending";
   commitHash?: string;
+  description?: string;
 }
 
 export function parseMasterPlan(): PlanItem[] {
@@ -18,7 +19,6 @@ export function parseMasterPlan(): PlanItem[] {
 
     // Simple parsing logic for markdown tables in MASTER_PLAN.md
     for (const line of lines) {
-      // Look for table rows: | 93 | P0 | Redirect logic ... | ✅ |
       if (line.trim().startsWith("|") && !line.includes("---") && !line.includes("Item ID")) {
         const parts = line.split("|").map((p) => p.trim());
         if (parts.length >= 5) {
@@ -30,27 +30,31 @@ export function parseMasterPlan(): PlanItem[] {
           if (!id || id === "") continue;
 
           // remove HTML and markdown links from title
-          const cleanTitle = rawTitle.replace(/<[^>]*>?/gm, "").replace(/\[(.*?)\]\(.*?\)/g, "$1");
+          const cleanTitle = rawTitle
+            ? rawTitle.replace(/<[^>]*>?/gm, "").replace(/\[(.*?)\]\(.*?\)/g, "$1")
+            : "";
 
           // Check if it has a checkmark or white square
           let status: "completed" | "pending" = "pending";
-          if (statusRaw.includes("✅") || statusRaw.includes("x")) {
+          if (
+            statusRaw &&
+            (statusRaw.includes("✅") || statusRaw.includes("x") || statusRaw.includes("✓"))
+          ) {
             status = "completed";
           }
 
           items.push({
             id,
             priority,
-            title: cleanTitle,
+            title: cleanTitle || "",
             status,
           });
         }
       }
     }
-
     return items;
-  } catch (e) {
-    console.error("Error parsing MASTER_PLAN.md:", e);
+  } catch (error) {
+    console.error("Error reading MASTER_PLAN.md:", error);
     return [];
   }
 }

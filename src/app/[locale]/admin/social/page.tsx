@@ -3,7 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
 import { requireAdmin } from "@/lib/auth/session";
 import { SocialClient } from "@/components/admin/social-client";
-import { ShareNetwork } from "lucide-react";
+import { ShareNetwork } from "@phosphor-icons/react";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
