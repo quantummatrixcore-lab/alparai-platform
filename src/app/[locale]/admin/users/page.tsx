@@ -8,6 +8,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { formatDate } from "@/lib/utils";
 import { Users } from "lucide-react";
 import { PromoteUserForm } from "@/components/admin/promote-user-form";
+import { RoleSelect } from "@/components/admin/role-select";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -62,13 +63,11 @@ export default async function AdminUsersPage({ params }: { params: Promise<{ loc
                   </td>
                   <td className="text-fg-muted p-4 text-xs">{(u["email"] as string) ?? "—"}</td>
                   <td className="p-4">
-                    {(() => {
-                      const r = (u["role"] as string) ?? "user";
-                      if (r === "ceo") return <Badge variant="danger">{r}</Badge>;
-                      if (r === "admin") return <Badge variant="warning">{r}</Badge>;
-                      if (r === "moderator") return <Badge variant="brand">{r}</Badge>;
-                      return <Badge variant="muted">{r}</Badge>;
-                    })()}
+                    <RoleSelect
+                      userId={u["id"] as string}
+                      currentRole={(u["role"] as string) ?? "user"}
+                      currentUserRole={user.role}
+                    />
                   </td>
                   <td className="p-4">
                     {u["is_verified"] ? (

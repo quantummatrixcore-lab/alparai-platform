@@ -347,7 +347,7 @@ export async function reviewTakedown(
 
 const userRoleSchema = z.object({
   userId: z.string().min(1),
-  role: z.enum(["user", "moderator"]),
+  role: z.enum(["user", "moderator", "admin", "ceo"]),
 });
 
 const ROLE_RANK: Record<"user" | "advisor" | "moderator" | "admin" | "ceo", number> = {

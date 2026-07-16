@@ -2,6 +2,13 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { requireAdmin } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { CheckCircle, WarningCircle } from "@phosphor-icons/react/dist/ssr";
+import { DollarSign } from "lucide-react";
+import {
+  AdminPageHeader,
+  MetricCard,
+  AdminSectionCard,
+  AdminContainer,
+} from "@/components/admin/admin-design-kit";
 
 export default async function BillingPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -24,35 +31,23 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
   const mrr = activeSubs.reduce((acc, s) => acc + (planPrices[s.plan] ?? 0), 0);
 
   return (
-    <div className="animate-in fade-in space-y-8 duration-500">
-      <div>
-        <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">
-          {t("billing_title")}
-        </h1>
-        <p className="text-fg-secondary mt-2">{t("billing_subtitle")}</p>
-      </div>
+    <AdminContainer>
+      <AdminPageHeader
+        icon={<DollarSign className="text-brand-400 h-6 w-6" />}
+        title={t("billing_title")}
+        subtitle={t("billing_subtitle")}
+      />
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-        <div className="bg-bg-secondary/40 rounded-xl border border-white/5 p-6 backdrop-blur">
-          <p className="text-fg-muted text-xs font-bold tracking-wide uppercase">Total MRR</p>
-          <p className="mt-2 font-mono text-3xl font-black text-emerald-400">
-            ${mrr.toLocaleString()}
-          </p>
-        </div>
-        <div className="bg-bg-secondary/40 rounded-xl border border-white/5 p-6 backdrop-blur">
-          <p className="text-fg-muted text-xs font-bold tracking-wide uppercase">Active Subs</p>
-          <p className="mt-2 font-mono text-3xl font-black text-white">{activeSubs.length}</p>
-        </div>
-        <div className="bg-bg-secondary/40 rounded-xl border border-white/5 p-6 backdrop-blur">
-          <p className="text-fg-muted text-xs font-bold tracking-wide uppercase">Total Records</p>
-          <p className="mt-2 font-mono text-3xl font-black text-white">{subs?.length || 0}</p>
-        </div>
+        <MetricCard label="Total MRR" value={`$${mrr.toLocaleString()}`} variant="success" />
+        <MetricCard label="Active Subs" value={activeSubs.length} />
+        <MetricCard label="Total Records" value={subs?.length || 0} />
       </div>
 
-      <div className="bg-bg-secondary/40 overflow-hidden rounded-xl border border-white/5 backdrop-blur-xl">
+      <AdminSectionCard>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-white">
-            <thead className="text-fg-muted bg-white/5 text-xs font-bold uppercase">
+          <table className="w-full text-left text-sm">
+            <thead className="text-fg-muted bg-bg-tertiary text-xs font-bold uppercase">
               <tr>
                 <th className="px-6 py-4">ID / User</th>
                 <th className="px-6 py-4">Plan</th>
@@ -60,15 +55,15 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
                 <th className="px-6 py-4">Created</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-border-subtle divide-y">
               {subs?.map((sub) => (
-                <tr key={sub.id} className="transition-colors hover:bg-white/5">
-                  <td className="px-6 py-4 font-mono text-xs text-white">
+                <tr key={sub.id} className="hover:bg-bg-tertiary/30 transition-colors">
+                  <td className="text-fg-primary px-6 py-4 font-mono text-xs">
                     {sub.id.substring(0, 8)}...
                     <br />
                     <span className="text-fg-muted">{sub.user_id?.substring(0, 8)}...</span>
                   </td>
-                  <td className="px-6 py-4 capitalize">{sub.plan || "Custom"}</td>
+                  <td className="text-fg-primary px-6 py-4 capitalize">{sub.plan || "Custom"}</td>
                   <td className="px-6 py-4">
                     {sub.status === "active" ? (
                       <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-1 text-xs text-emerald-400">
@@ -95,7 +90,7 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
             </tbody>
           </table>
         </div>
-      </div>
-    </div>
+      </AdminSectionCard>
+    </AdminContainer>
   );
 }
