@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { requireAdmin } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { CheckCircle, WarningCircle } from "@phosphor-icons/react/dist/ssr";
@@ -7,6 +7,7 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
   const { locale } = await params;
   setRequestLocale(locale);
   await requireAdmin();
+  const t = await getTranslations({ locale, namespace: "admin" });
 
   const supabase = await createServerClient();
   const { data: subs, error } = await supabase
@@ -26,9 +27,9 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
     <div className="animate-in fade-in space-y-8 duration-500">
       <div>
         <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">
-          Billing & Subscriptions
+          {t("billing_title")}
         </h1>
-        <p className="text-fg-secondary mt-2">Manage customer subscriptions and MRR</p>
+        <p className="text-fg-secondary mt-2">{t("billing_subtitle")}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
@@ -71,11 +72,11 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
                   <td className="px-6 py-4">
                     {sub.status === "active" ? (
                       <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-1 text-xs text-emerald-400">
-                        <CheckCircle weight="fill" /> Active
+                        <CheckCircle weight="fill" /> {t("billing_active")}
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1 rounded-full bg-rose-500/10 px-2 py-1 text-xs text-rose-400">
-                        <WarningCircle weight="fill" /> {sub.status || "Unknown"}
+                        <WarningCircle weight="fill" /> {sub.status || t("billing_unknown")}
                       </span>
                     )}
                   </td>
@@ -87,7 +88,7 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
               {(!subs || subs.length === 0) && (
                 <tr>
                   <td colSpan={4} className="text-fg-muted px-6 py-8 text-center italic">
-                    No subscriptions found
+                    {t("billing_empty")}
                   </td>
                 </tr>
               )}

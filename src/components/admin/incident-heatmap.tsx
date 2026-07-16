@@ -1,8 +1,24 @@
 import * as React from "react";
+import { useTranslations } from "next-intl";
 
 export function IncidentHeatmap() {
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const categories = ["Security", "Privacy", "Bias", "Hallucination", "Other"];
+  const t = useTranslations("admin");
+  const days = [
+    t("heatmap_day_mon", { defaultValue: "Mon" }),
+    t("heatmap_day_tue", { defaultValue: "Tue" }),
+    t("heatmap_day_wed", { defaultValue: "Wed" }),
+    t("heatmap_day_thu", { defaultValue: "Thu" }),
+    t("heatmap_day_fri", { defaultValue: "Fri" }),
+    t("heatmap_day_sat", { defaultValue: "Sat" }),
+    t("heatmap_day_sun", { defaultValue: "Sun" }),
+  ];
+  const categories = [
+    t("heatmap_cat_security", { defaultValue: "Security" }),
+    t("heatmap_cat_privacy", { defaultValue: "Privacy" }),
+    t("heatmap_cat_bias", { defaultValue: "Bias" }),
+    t("heatmap_cat_hallucination", { defaultValue: "Hallucination" }),
+    t("heatmap_cat_other", { defaultValue: "Other" }),
+  ];
 
   // Heat values representing incident frequency/severity on each day of the week
   const data = [
@@ -34,10 +50,13 @@ export function IncidentHeatmap() {
     <div className="border-border-subtle bg-bg-secondary/40 flex h-full flex-col justify-between rounded-2xl border p-6 backdrop-blur-md">
       <div>
         <h3 className="mb-1 text-xs font-bold tracking-wider text-white uppercase">
-          Incident Distribution Heatmap
+          {t("heatmap_title", { defaultValue: "Incident Distribution Heatmap" })}
         </h3>
         <p className="text-fg-muted mb-6 text-[11px]">
-          Visual heat distribution of verified incidents per category over the last week.
+          {t("heatmap_subtitle", {
+            defaultValue:
+              "Visual heat distribution of verified incidents per category over the last week.",
+          })}
         </p>
       </div>
 

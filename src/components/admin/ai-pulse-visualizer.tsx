@@ -16,12 +16,12 @@ import { toast } from "sonner";
 
 const INITIAL_DATA = Array.from({ length: 20 }, (_, i) => ({
   time: `${i}s`,
-  throughput: Math.floor(Math.random() * 50) + 50,
-  latency: Math.floor(Math.random() * 20) + 10,
+  throughput: 0,
+  latency: 0,
 }));
 
 export function AIPulseVisualizer() {
-  const [data, setData] = useState(INITIAL_DATA);
+  const [data, _setData] = useState(INITIAL_DATA);
   const [isPending, startTransition] = useTransition();
 
   const handleScout = () => {
@@ -36,18 +36,8 @@ export function AIPulseVisualizer() {
   };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setData((currentData) => {
-        const newData = [...currentData.slice(1)];
-        newData.push({
-          time: `${new Date().getSeconds()}s`,
-          throughput: Math.floor(Math.random() * 50) + 60,
-          latency: Math.floor(Math.random() * 20) + 15,
-        });
-        return newData;
-      });
-    }, 2000);
-    return () => clearInterval(interval);
+    // Real data would come from a WebSocket or polling endpoint
+    // Currently showing empty state until monitoring backend is connected
   }, []);
 
   return (

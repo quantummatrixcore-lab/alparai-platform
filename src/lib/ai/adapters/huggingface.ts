@@ -12,6 +12,53 @@ export class HuggingFaceAdapter implements ProviderAdapter {
     return true; // Configurable via DB at runtime
   }
 
+  async generateImage(
+    prompt: string,
+    _aspectRatio: string = "1:1",
+  ): Promise<{ ok: boolean; base64?: string; mimeType?: string; error?: string }> {
+    const apiKey = await resolveApiKey("huggingface", "HUGGINGFACE_API_KEY");
+    if (!apiKey) {
+      return { ok: false, error: "HUGGINGFACE_API_KEY is not configured." };
+    }
+
+    try {
+      const response = await fetch(
+        "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ inputs: prompt }),
+        },
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        logger.error("[HuggingFaceAdapter] generateImage failed", {
+          status: response.status,
+          errorText,
+        });
+        return { ok: false, error: `HF Image API error: ${response.status} ${errorText}` };
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      const base64 = Buffer.from(arrayBuffer).toString("base64");
+      // Default to jpeg if huggingface didn't specify exactly, or pass the header
+      const mimeType = response.headers.get("content-type") || "image/jpeg";
+
+      return { ok: true, base64, mimeType };
+    } catch (error) {
+      logger.error(
+        "[HuggingFaceAdapter] generateImage exception",
+        undefined,
+        error instanceof Error ? error : undefined,
+      );
+      return { ok: false, error: error instanceof Error ? error.message : "Unknown error" };
+    }
+  }
+
   async call(request: GatewayRequest): Promise<GatewayResult> {
     const apiKey = await resolveApiKey("huggingface", "HUGGINGFACE_API_KEY");
     if (!apiKey) {

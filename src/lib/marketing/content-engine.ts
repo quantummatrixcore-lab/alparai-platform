@@ -1,7 +1,7 @@
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { callWithFailover, TRIAGE_SLOT_1_CHAIN } from "@/lib/ai/openrouter-gateway";
-import { VertexImagenAdapter } from "@/lib/ai/adapters/vertex-imagen";
+import { HuggingFaceAdapter } from "@/lib/ai/adapters/huggingface";
 import { logger } from "@/lib/utils/logger";
 
 interface GeneratedContent {
@@ -122,11 +122,11 @@ Output your response strictly as a JSON object:
   const startImgTime = performance.now();
 
   try {
-    const adapter = new VertexImagenAdapter();
+    const adapter = new HuggingFaceAdapter();
     const imgRes = await adapter.generateImage(generated.image_prompt, "1:1");
     if (imgRes.ok) {
       const { base64, mimeType } = imgRes;
-      const buffer = Buffer.from(base64, "base64");
+      const buffer = Buffer.from(base64 as string, "base64");
       const fileExt = mimeType === "image/png" ? "png" : "jpg";
       const fileName = `${incidentId}/marketing-${Date.now()}.${fileExt}`;
 
@@ -146,7 +146,7 @@ Output your response strictly as a JSON object:
         });
       }
     } else {
-      logger.warn("[ContentEngine] Vertex Imagen image generation failed", { error: imgRes.error });
+      logger.warn("[ContentEngine] Hugging Face image generation failed", { error: imgRes.error });
     }
   } catch (err) {
     logger.error(

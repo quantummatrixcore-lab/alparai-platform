@@ -126,35 +126,13 @@ export function AnalysisDashboardClient({
   const [isLiveAnalyzing, setIsLiveAnalyzing] = React.useState(false);
   const [liveResult, setLiveResult] = React.useState<LiveAnalysisResult | null>(null);
 
-  const [logs, setLogs] = React.useState<string[]>([
-    "log_sys_init",
-    "log_ok_verified",
-    "log_warn_latency",
-    "log_autopilot_rerouting",
-    "log_ok_rerouted",
-    "log_audit_run",
-    "log_info_active",
-    "log_ok_audit",
-  ]);
+  const [logs, _setLogs] = React.useState<string[]>([]);
 
   const [copiedKey, setCopiedKey] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    const timer = setInterval(() => {
-      const mockLogTemplates = [
-        "log_info_handshake",
-        "log_autopilot_kvkk",
-        "log_ok_passed",
-        "log_warn_drift",
-        "log_sys_monitor",
-        "log_audit_consensus",
-        "log_ok_pii",
-        "log_secure_rls",
-      ];
-      const randomLog = mockLogTemplates[Math.floor(Math.random() * mockLogTemplates.length)];
-      setLogs((prev) => [...prev.slice(-15), randomLog!]);
-    }, 4000);
-    return () => clearInterval(timer);
+    // Real logs would stream from a monitoring endpoint
+    // Currently showing empty state until logging backend is connected
   }, []);
 
   const handleCopyKey = (key: string) => {

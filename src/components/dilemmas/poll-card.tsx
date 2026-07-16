@@ -29,19 +29,19 @@ export function PollCard({ poll }: { poll: Poll }) {
   );
   const [turnstileError, setTurnstileError] = useState(false);
   const [isVoting, setIsVoting] = useState(false);
- 
+
   const localizedTitle =
     locale === "tr" ? poll.title_tr || poll.title : poll.title_en || poll.title;
   const localizedDescription =
     locale === "tr"
       ? poll.description_tr || poll.description
       : poll.description_en || poll.description;
- 
+
   const totalVotes = poll.yes_count + poll.no_count + poll.unsure_count;
   const yesPercent = totalVotes > 0 ? Math.round((poll.yes_count / totalVotes) * 100) : 0;
   const noPercent = totalVotes > 0 ? Math.round((poll.no_count / totalVotes) * 100) : 0;
   const unsurePercent = totalVotes > 0 ? 100 - yesPercent - noPercent : 0;
- 
+
   const handleVote = async (voteType: "yes" | "no" | "unsure") => {
     if (turnstileError) {
       toast.error(t("turnstileError"));
@@ -51,11 +51,11 @@ export function PollCard({ poll }: { poll: Poll }) {
       toast.error(t("turnstileRequired"));
       return;
     }
- 
+
     setIsVoting(true);
     const result = await submitVote(poll.id, voteType, turnstileToken);
     setIsVoting(false);
- 
+
     if (result.error) {
       toast.error(result.error);
     } else {
@@ -71,7 +71,7 @@ export function PollCard({ poll }: { poll: Poll }) {
       }
     }
   };
- 
+
   return (
     <Card
       variant="elevated"
@@ -85,7 +85,7 @@ export function PollCard({ poll }: { poll: Poll }) {
           <h3 className="text-fg-primary mb-4 text-2xl font-extrabold">{localizedTitle}</h3>
           <p className="text-fg-secondary mb-8 text-sm leading-relaxed">{localizedDescription}</p>
         </div>
- 
+
         <div className="space-y-6">
           {/* Professional Graph Bar */}
           <div className="space-y-2">
@@ -98,7 +98,7 @@ export function PollCard({ poll }: { poll: Poll }) {
               </span>
               <span className="text-danger-400 font-bold tracking-wider uppercase">{t("no")}</span>
             </div>
- 
+
             <div className="bg-bg-tertiary/40 relative flex h-8 w-full overflow-hidden rounded-md border border-white/5">
               <div
                 className="bg-success-500/90 group relative flex h-full items-center justify-start px-2 transition-all duration-1000 ease-out"
@@ -137,7 +137,7 @@ export function PollCard({ poll }: { poll: Poll }) {
               {t("totalVotes", { count: totalVotes.toLocaleString() })}
             </div>
           </div>
- 
+
           {/* Turnstile Widget (Invisible) */}
           {process.env.NODE_ENV === "production" && (
             <div className="flex flex-col items-center">
@@ -149,7 +149,7 @@ export function PollCard({ poll }: { poll: Poll }) {
                 }}
                 onError={() => {
                   setTurnstileError(true);
-                  logger.error("[Turnstile] Failed to load or execute Turnstile widget.");
+                  console.error("[Turnstile] Failed to load or execute Turnstile widget.");
                 }}
                 onExpire={() => {
                   setTurnstileToken(null);
@@ -160,7 +160,7 @@ export function PollCard({ poll }: { poll: Poll }) {
                 }}
               />
               {turnstileError && (
-                <p className="text-danger-400 text-center text-xs mt-2 font-medium">
+                <p className="text-danger-400 mt-2 text-center text-xs font-medium">
                   ⚠️ {t("turnstileError")}
                 </p>
               )}

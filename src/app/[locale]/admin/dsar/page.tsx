@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { requireAdmin } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { Clock, ShieldWarning, CheckCircle } from "@phosphor-icons/react/dist/ssr";
@@ -7,6 +7,7 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   setRequestLocale(locale);
   await requireAdmin();
+  const t = await getTranslations({ locale, namespace: "admin" });
 
   const supabase = await createServerClient();
   const { data: requests, error } = await supabase
@@ -30,10 +31,10 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
   return (
     <div className="animate-in fade-in space-y-8 duration-500">
       <div>
-        <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">DSAR Queue</h1>
-        <p className="text-fg-secondary mt-2">
-          Data Subject Access Requests with 30-day SLA countdown
-        </p>
+        <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">
+          {t("dsar_title")}
+        </h1>
+        <p className="text-fg-secondary mt-2">{t("dsar_subtitle")}</p>
       </div>
 
       <div className="bg-bg-secondary/40 overflow-hidden rounded-xl border border-white/5 backdrop-blur-xl">
@@ -67,7 +68,7 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
                     <td className="px-6 py-4 capitalize">
                       {req.status === "completed" ? (
                         <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-1 text-xs text-emerald-400">
-                          <CheckCircle weight="fill" /> Completed
+                          <CheckCircle weight="fill" /> {t("dsar_completed")}
                         </span>
                       ) : req.status === "rejected" ? (
                         <span className="bg-fg-muted/10 text-fg-muted inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs">
@@ -75,7 +76,7 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-1 text-xs text-amber-400">
-                          <Clock weight="fill" /> {req.status || "Pending"}
+                          <Clock weight="fill" /> {req.status || t("dsar_pending")}
                         </span>
                       )}
                     </td>
@@ -106,7 +107,7 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
               {(!requests || requests.length === 0) && (
                 <tr>
                   <td colSpan={4} className="text-fg-muted px-6 py-8 text-center italic">
-                    No active DSAR requests
+                    {t("dsar_empty")}
                   </td>
                 </tr>
               )}

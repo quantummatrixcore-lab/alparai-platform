@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { requireAdmin } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { WarningCircle, CheckCircle } from "@phosphor-icons/react/dist/ssr";
@@ -11,6 +11,7 @@ export default async function AdvisoryBoardPage({
   const { locale } = await params;
   setRequestLocale(locale);
   await requireAdmin();
+  const t = await getTranslations({ locale, namespace: "admin" });
 
   const supabase = await createServerClient();
   const { data: members, error } = await supabase
@@ -26,7 +27,7 @@ export default async function AdvisoryBoardPage({
     <div className="animate-in fade-in space-y-8 duration-500">
       <div>
         <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">
-          Advisory Board
+          {t("advisory_title")}
         </h1>
         <p className="text-fg-secondary mt-2">L1 candidate/consent tracking (Rule #21)</p>
       </div>
@@ -35,7 +36,7 @@ export default async function AdvisoryBoardPage({
         <div className="border-b border-white/5 bg-white/5 p-4">
           <p className="text-fg-muted flex items-center gap-2 text-sm">
             <WarningCircle weight="fill" className="text-amber-400" />
-            <strong>Rule #21:</strong> Names remain unpublished until written consent is archived.
+            <strong>{t("advisory_rule_21")}</strong>
           </p>
         </div>
         <div className="overflow-x-auto">
@@ -59,7 +60,7 @@ export default async function AdvisoryBoardPage({
                   <td className="px-6 py-4 capitalize">
                     {member.is_active ? (
                       <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-1 text-xs text-emerald-400">
-                        <CheckCircle weight="fill" /> Active
+                        <CheckCircle weight="fill" /> {t("advisory_active")}
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-1 text-xs text-amber-400">
@@ -77,7 +78,7 @@ export default async function AdvisoryBoardPage({
               {(!members || members.length === 0) && (
                 <tr>
                   <td colSpan={4} className="text-fg-muted px-6 py-8 text-center italic">
-                    No advisory board members found
+                    {t("advisory_empty")}
                   </td>
                 </tr>
               )}

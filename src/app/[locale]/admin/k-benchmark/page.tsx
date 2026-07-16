@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { requireAdmin } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { Star } from "@phosphor-icons/react/dist/ssr";
@@ -7,6 +7,7 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
   const { locale } = await params;
   setRequestLocale(locale);
   await requireAdmin();
+  const t = await getTranslations({ locale, namespace: "admin" });
 
   const supabase = await createServerClient();
   const { data: scores, error } = await supabase
@@ -22,9 +23,9 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
     <div className="animate-in fade-in space-y-8 duration-500">
       <div>
         <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">
-          K-Benchmark
+          {t("kbench_title")}
         </h1>
-        <p className="text-fg-secondary mt-2">Manage K-Benchmark model scores</p>
+        <p className="text-fg-secondary mt-2">{t("kbench_subtitle")}</p>
       </div>
 
       <div className="bg-bg-secondary/40 overflow-hidden rounded-xl border border-white/5 backdrop-blur-xl">
@@ -61,7 +62,7 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
               {(!scores || scores.length === 0) && (
                 <tr>
                   <td colSpan={4} className="text-fg-muted px-6 py-8 text-center italic">
-                    No K-Benchmark scores found
+                    {t("kbench_empty")}
                   </td>
                 </tr>
               )}
