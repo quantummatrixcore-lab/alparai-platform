@@ -17,6 +17,7 @@ import {
   CheckCircle,
   WarningCircle,
 } from "@phosphor-icons/react/dist/ssr";
+import { motion } from "framer-motion";
 
 interface ServiceHealth {
   name: string;
@@ -49,7 +50,8 @@ function ServiceBadge({ name, status, latencyMs }: ServiceHealth) {
     not_configured: "border-zinc-500/30 bg-zinc-500/10 text-zinc-400",
   };
   return (
-    <div
+    <motion.div
+      whileHover={{ scale: 1.02 }}
       className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium backdrop-blur-sm ${colorMap[status] ?? colorMap.not_configured}`}
     >
       <Icon weight="duotone" className="h-3.5 w-3.5 shrink-0" />
@@ -59,7 +61,7 @@ function ServiceBadge({ name, status, latencyMs }: ServiceHealth) {
       )}
       {status === "healthy" && <CheckCircle weight="fill" className="ml-auto h-3 w-3" />}
       {status === "unhealthy" && <WarningCircle weight="fill" className="ml-auto h-3 w-3" />}
-    </div>
+    </motion.div>
   );
 }
 
@@ -136,7 +138,10 @@ export function System360Overview() {
       {/* KPI Widgets */}
       <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-5">
         {/* Resource Efficiency Widget */}
-        <div className="bg-bg-secondary/40 relative overflow-hidden rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300 hover:border-emerald-500/30">
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="bg-bg-secondary/40 relative overflow-hidden rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300 hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)]"
+        >
           <div className="absolute -top-4 -right-4 rounded-full bg-emerald-500/10 p-6 blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
             <h3 className="text-fg-secondary text-sm font-semibold">Resource Efficiency</h3>
@@ -149,10 +154,13 @@ export function System360Overview() {
           <div className="text-fg-muted relative z-10 mt-2 text-xs">
             <span className="font-medium text-emerald-400">Optimal</span> resource usage
           </div>
-        </div>
+        </motion.div>
 
         {/* Financial Widget */}
-        <div className="bg-bg-secondary/40 relative overflow-hidden rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300 hover:border-emerald-500/30">
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="bg-bg-secondary/40 relative overflow-hidden rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300 hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)]"
+        >
           <div className="absolute -top-4 -right-4 rounded-full bg-emerald-500/10 p-6 blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
             <h3 className="text-fg-secondary font-semibold">B2B Revenue (MRR)</h3>
@@ -167,10 +175,13 @@ export function System360Overview() {
           <div className="text-fg-muted relative z-10 mt-2 text-xs">
             <span className="text-white/60">Active Subscriptions:</span> 48
           </div>
-        </div>
+        </motion.div>
 
         {/* API Cost Widget */}
-        <div className="bg-bg-secondary/40 relative overflow-hidden rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300 hover:border-amber-500/30">
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="bg-bg-secondary/40 relative overflow-hidden rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300 hover:border-amber-500/50 hover:shadow-[0_0_20px_rgba(245,158,11,0.15)]"
+        >
           <div className="absolute -top-4 -right-4 rounded-full bg-amber-500/10 p-6 blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
             <h3 className="text-fg-secondary font-semibold">API Operations Cost</h3>
@@ -186,10 +197,13 @@ export function System360Overview() {
             </div>
             <span className="text-fg-muted text-xs">45%</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Cross-Audit Engine Widget */}
-        <div className="bg-bg-secondary/40 hover:border-brand-500/30 relative overflow-hidden rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300">
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="bg-bg-secondary/40 hover:border-brand-500/50 relative overflow-hidden rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)]"
+        >
           <div className="bg-brand-500/10 absolute -top-4 -right-4 rounded-full p-6 blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
             <h3 className="text-fg-secondary font-semibold">Cross-Audit Engine</h3>
@@ -202,10 +216,13 @@ export function System360Overview() {
           <div className="text-fg-muted relative z-10 mt-2 text-xs">
             <span className="text-white/60">Race Conditions:</span> 0 detected
           </div>
-        </div>
+        </motion.div>
 
         {/* Inference Load Widget */}
-        <div className="bg-bg-secondary/40 relative overflow-hidden rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300 hover:border-cyan-500/30">
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="bg-bg-secondary/40 relative overflow-hidden rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300 hover:border-cyan-500/50 hover:shadow-[0_0_20px_rgba(6,182,212,0.15)]"
+        >
           <div className="absolute -top-4 -right-4 rounded-full bg-cyan-500/10 p-6 blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
             <h3 className="text-fg-secondary font-semibold">Inference Load</h3>
@@ -218,7 +235,7 @@ export function System360Overview() {
           <div className="text-fg-muted relative z-10 mt-2 flex items-center gap-2 text-xs">
             <span className="font-medium text-cyan-400">99.98%</span> uptime
           </div>
-        </div>
+        </motion.div>
       </div>
 
       <SystemHealthChart />
