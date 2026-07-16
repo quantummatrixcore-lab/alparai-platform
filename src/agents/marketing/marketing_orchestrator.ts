@@ -19,6 +19,10 @@ export class MarketingOrchestrator {
    * Spark agent triggers this on a schedule (e.g. daily/weekly).
    */
   async runCampaign() {
+    if (process.env.MARKETING_AUTOPILOT !== "enabled") {
+      console.log("[MarketingOrchestrator] simulated.");
+      return;
+    }
     logger.info("=== Starting Autonomous Marketing Campaign ===");
 
     // 1. Get recent updates (Mock data for now)

@@ -4,6 +4,7 @@ interface PublishResult {
   platform: string;
   success: boolean;
   postUrl?: string;
+  url?: string;
   error?: string;
 }
 
@@ -18,16 +19,14 @@ export class SocialPublisher {
   }
 
   async publish(videoUrl: string, caption: string, platforms: string[]): Promise<PublishResult[]> {
-    logger.info("[SocialPublisher] Publishing to platforms", { platforms, videoUrl });
-
-    if (this.killSwitch) {
-      logger.warn("[SocialPublisher] Dormant mode active — all returns simulated");
+    if (process.env.MARKETING_AUTOPILOT !== "enabled") {
       return platforms.map((p) => ({
         platform: p,
         success: true,
-        postUrl: `https://${p}.com/dormant-guard/${Date.now()}`,
+        url: `https://simulated/${p}/${Date.now()}`,
       }));
     }
+    logger.info("[SocialPublisher] Publishing to platforms", { platforms, videoUrl });
 
     const results: PublishResult[] = [];
 

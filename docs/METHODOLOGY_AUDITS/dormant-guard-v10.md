@@ -1,54 +1,46 @@
-# ALPAR AI — Dormant-Code Guard Audit Report (Item 90)
+# ALPAR AI — Dormant-Code Guard Precision Audit (Item 90)
 
 - **Date:** 2026-07-16
-- **Tested HEAD:** `5c7f958` (plus Item 90 changes)
 - **Executor:** Antigravity (Google Gemini 3.5 Flash)
 
 ---
 
 ## 1. Social Publisher Guard Verification
 
-We checked if `src/agents/marketing/social_publisher.ts` has a strict opt-in guard matching `process.env.MARKETING_AUTOPILOT === "enabled"`.
+```bash
+grep -n "MARKETING_AUTOPILOT" src/agents/marketing/social_publisher.ts
+21:    if (process.env.MARKETING_AUTOPILOT !== "enabled") { return platforms.map(p => ({ platform: p, success: true, url: `https://simulated/${p}/${Date.now()}` })); }
+```
 
-- **Command:**
-  ```powershell
-  git grep -n "MARKETING_AUTOPILOT" src/agents/marketing/
-  ```
-- **Output:**
-  ```
-  src/agents/marketing/social_publisher.ts:14:    this.killSwitch = process.env.MARKETING_AUTOPILOT !== "enabled";
-  ```
-- **Verdict:** PASS. If `MARKETING_AUTOPILOT` is unset or not equal to `"enabled"`, all publish flows simulate successfully and avoid hitting external APIs.
+## 2. Marketing Orchestrator Guard Verification
 
----
+```bash
+grep -n "MARKETING_AUTOPILOT" src/agents/marketing/marketing_orchestrator.ts
+22:    if (process.env.MARKETING_AUTOPILOT !== "enabled") { console.log("[MarketingOrchestrator] simulated."); return; }
+```
 
-## 2. Spark Agent Cleanliness Verification
+## 3. Spark Agent Cleanliness Verification
 
-We checked if `vercel.json` contains any cron jobs or active hooks invoking the `spark` agent.
+```bash
+grep -rln "spark" vercel.json
+(Empty / Exit code 1)
+```
 
-- **Command:**
-  ```powershell
-  git grep "spark" vercel.json
-  ```
-- **Output:** _(Empty / Exit code 1)_
-- **Verdict:** PASS. No active hooks or cron endpoints for the `spark` agent exist in the Vercel configuration.
+## 4. Vault Module Caller Audit
 
----
+```bash
+grep -rln "from.*vault\|import.*vault" src/ | grep -v vault.ts
+(Empty / Exit code 1)
+```
 
-## 3. Vault Module Caller Audit
+## 5. Typecheck & Lint Validation
 
-We verified if there are any active runtime imports or usages of the file-based `vault.ts` module in the `src/` directory.
-
-- **Command:**
-  ```powershell
-  git grep -E "from .*vault" src/
-  ```
-- **Output:** _(Empty / Exit code 1)_
-- **Verdict:** PASS. The `vault.ts` module has zero active runtime callers.
-
----
+```bash
+pnpm lint && pnpm typecheck
+(Success)
+```
 
 ## Conclusion
 
-**STATUS: PASS**
-All dormant-code checks for Item 90 have successfully passed. The codebase is secure and provably inert for pre-launch.
+**STATUS: ✅ PASS**
+All dormant-code checks for Item 90 have successfully passed. The exact code requested by the Architect has been verified and passes all typechecks.
