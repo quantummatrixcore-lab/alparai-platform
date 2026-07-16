@@ -2,8 +2,14 @@ import { getTranslations } from "next-intl/server";
 import { setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
 import { requireAdmin } from "@/lib/auth/session";
-import { SocialClient } from "@/components/admin/social-client";
+import { SocialDashboardClient } from "@/components/admin/social-dashboard-client";
 import { ShareNetwork } from "@phosphor-icons/react/dist/ssr";
+import {
+  getSocialPosts,
+  getSocialTemplates,
+  getSocialAssets,
+  getSocialAccounts,
+} from "@/actions/social";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -17,6 +23,13 @@ export default async function SocialPage({ params }: { params: Promise<{ locale:
 
   // Authenticate user & check admin access
   await requireAdmin();
+
+  const [posts, templates, assets, accounts] = await Promise.all([
+    getSocialPosts(),
+    getSocialTemplates(),
+    getSocialAssets(),
+    getSocialAccounts(),
+  ]);
 
   return (
     <div className="min-h-screen py-8">
@@ -35,7 +48,12 @@ export default async function SocialPage({ params }: { params: Promise<{ locale:
           </div>
         </div>
 
-        <SocialClient />
+        <SocialDashboardClient
+          initialPosts={posts}
+          initialTemplates={templates}
+          initialAssets={assets}
+          initialAccounts={accounts}
+        />
       </Container>
     </div>
   );

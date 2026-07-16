@@ -120,6 +120,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       active: pathname.startsWith("/admin/import"),
     },
     {
+      href: "/admin/dsar",
+      label: "DSAR Queue",
+      icon: ShieldWarning,
+      active: pathname.startsWith("/admin/dsar"),
+    },
+    {
       href: "/admin/cross-audit-dashboard",
       label: t("cross_audit_dashboard") || "Cross-Audit",
       icon: ShieldCheck,
@@ -152,6 +158,18 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       label: t("expertApplications"),
       icon: Medal,
       active: pathname.startsWith("/admin/experts"),
+    },
+    {
+      href: "/admin/advisory-board",
+      label: "Advisory Board",
+      icon: Users,
+      active: pathname.startsWith("/admin/advisory-board"),
+    },
+    {
+      href: "/admin/k-benchmark",
+      label: "K-Benchmark",
+      icon: TrendUp,
+      active: pathname.startsWith("/admin/k-benchmark"),
     },
   ];
 
@@ -212,6 +230,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
             label: t("investors_title") || "Investor Applications",
             icon: TrendUp,
             active: pathname.startsWith("/admin/investors"),
+          },
+          {
+            href: "/admin/billing",
+            label: "Billing",
+            icon: Bank,
+            active: pathname.startsWith("/admin/billing"),
           },
         ]
       : []),

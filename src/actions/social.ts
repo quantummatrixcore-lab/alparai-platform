@@ -7,6 +7,7 @@ import type {
   SocialPost,
   SocialTemplate,
   SocialAsset,
+  SocialAccount,
 } from "@/components/admin/social-dashboard-client";
 
 export async function getSocialPosts(): Promise<SocialPost[]> {
@@ -43,7 +44,12 @@ export async function createSocialPost(post: {
   platform: "linkedin" | "x" | "instagram" | "facebook" | "whatsapp";
   status: "draft" | "scheduled" | "published" | "archived";
   content_type:
-    "manifesto" | "case_study" | "weekly_report" | "incident_spotlight" | "thread" | "poll";
+    | "manifesto"
+    | "case_study"
+    | "weekly_report"
+    | "incident_spotlight"
+    | "thread"
+    | "poll";
   title: string;
   body_text: string;
   image_prompt?: string | null;
@@ -76,7 +82,12 @@ export async function updateSocialPost(
     platform?: "linkedin" | "x" | "instagram" | "facebook" | "whatsapp";
     status?: "draft" | "scheduled" | "published" | "archived";
     content_type?:
-      "manifesto" | "case_study" | "weekly_report" | "incident_spotlight" | "thread" | "poll";
+      | "manifesto"
+      | "case_study"
+      | "weekly_report"
+      | "incident_spotlight"
+      | "thread"
+      | "poll";
     title?: string;
     body_text?: string;
     image_prompt?: string | null;
@@ -140,4 +151,16 @@ export async function updateSocialPost(
 
   revalidatePath("/admin/social", "page");
   return { success: true };
+}
+
+export async function getSocialAccounts(): Promise<SocialAccount[]> {
+  await requireAdmin();
+  const supabase = await createServerClient();
+  const { data, error } = await supabase
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .from("social_accounts" as any)
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) throw new Error(error.message);
+  return (data || []) as unknown as SocialAccount[];
 }

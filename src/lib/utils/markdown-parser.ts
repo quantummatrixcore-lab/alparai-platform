@@ -1,13 +1,15 @@
 import fs from "fs";
 import path from "path";
+import { logger } from "@/lib/utils/logger";
 
 export interface PlanItem {
   id: string;
   priority: string;
   title: string;
-  status: "completed" | "pending";
+  status: "completed" | "pending" | "paused";
   commitHash?: string;
   description?: string;
+  owner?: string;
 }
 
 export function parseMasterPlan(): PlanItem[] {
@@ -17,44 +19,54 @@ export function parseMasterPlan(): PlanItem[] {
     const lines = content.split("\n");
     const items: PlanItem[] = [];
 
-    // Simple parsing logic for markdown tables in MASTER_PLAN.md
     for (const line of lines) {
-      if (line.trim().startsWith("|") && !line.includes("---") && !line.includes("Item ID")) {
-        const parts = line.split("|").map((p) => p.trim());
-        if (parts.length >= 5) {
-          const id = parts[1];
-          const priority = parts[2] || "";
-          const rawTitle = parts[3] || "";
-          const statusRaw = parts[4] || "";
-
-          if (!id || id === "") continue;
-
-          // remove HTML and markdown links from title
-          const cleanTitle = rawTitle
-            ? rawTitle.replace(/<[^>]*>?/gm, "").replace(/\[(.*?)\]\(.*?\)/g, "$1")
-            : "";
-
-          // Check if it has a checkmark or white square
-          let status: "completed" | "pending" = "pending";
-          if (
-            statusRaw &&
-            (statusRaw.includes("✅") || statusRaw.includes("x") || statusRaw.includes("✓"))
-          ) {
-            status = "completed";
-          }
-
-          items.push({
-            id,
-            priority,
-            title: cleanTitle || "",
-            status,
-          });
-        }
+      if (!line.trim().startsWith("|") || line.includes("---") || line.includes("Item ID")) {
+        continue;
       }
+
+      const parts = line.split("|").map((p) => p.trim());
+      if (parts.length < 6) continue;
+
+      const id = parts[1];
+      const priority = parts[2] || "";
+      const rawTitle = parts[3] || "";
+      const statusRaw = parts[5] || "";
+
+      if (!id || !/^\d+$/.test(id)) continue;
+
+      const cleanTitle = rawTitle
+        ? rawTitle.replace(/<[^>]*>?/gm, "").replace(/\[(.*?)\]\(.*?\)/g, "$1")
+        : "";
+
+      let owner: string | undefined;
+      const ownerMatch = rawTitle.match(/^\[(\w+)\]/);
+      if (ownerMatch) {
+        owner = ownerMatch[1];
+      }
+
+      let status: "completed" | "pending" | "paused" = "pending";
+      if (statusRaw.includes("✅") || statusRaw.includes("✓")) {
+        status = "completed";
+      } else if (statusRaw.includes("⏸")) {
+        status = "paused";
+      }
+
+      items.push({
+        id,
+        priority,
+        title: cleanTitle || "",
+        status,
+        owner,
+      });
     }
+
     return items;
   } catch (error) {
-    console.error("Error reading MASTER_PLAN.md:", error);
+    logger.error(
+      "Error reading MASTER_PLAN.md",
+      undefined,
+      error instanceof Error ? error : undefined,
+    );
     return [];
   }
 }

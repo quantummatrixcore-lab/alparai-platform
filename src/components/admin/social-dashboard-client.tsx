@@ -56,6 +56,14 @@ export interface SocialPost {
   updated_at: string;
 }
 
+export interface SocialAccount {
+  id: string;
+  platform: string;
+  account_name: string | null;
+  connection_status: string;
+  created_at: string;
+}
+
 export interface SocialTemplate {
   id: string;
   name: string;
@@ -95,12 +103,14 @@ export interface Props {
   initialPosts: SocialPost[];
   initialTemplates: SocialTemplate[];
   initialAssets: SocialAsset[];
+  initialAccounts: SocialAccount[];
 }
 
 export function SocialDashboardClient({
   initialPosts,
   initialTemplates,
   initialAssets: _initialAssets,
+  initialAccounts,
 }: Props) {
   const tAdmin = useTranslations("admin");
   const [posts, setPosts] = useState<SocialPost[]>(initialPosts);
@@ -363,6 +373,59 @@ export function SocialDashboardClient({
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 p-6">
+      {/* Platform Connections */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        {initialAccounts.map((account) => {
+          const isLinkedin = account.platform === "linkedin";
+          return (
+            <div
+              key={account.id}
+              className="bg-bg-secondary border-border-subtle group hover:border-brand-500/30 relative overflow-hidden rounded-xl border p-6 transition-colors"
+            >
+              <div
+                className={cn(
+                  "absolute inset-0 bg-gradient-to-br to-transparent opacity-0 transition-opacity group-hover:opacity-100",
+                  isLinkedin ? "from-blue-500/5" : "from-sky-500/5",
+                )}
+              />
+              <div className="relative flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div
+                    className={cn(
+                      "rounded-lg border p-3",
+                      isLinkedin
+                        ? "border-blue-500/20 bg-blue-500/10 shadow-[0_0_15px_rgba(59,130,246,0.15)]"
+                        : "border-sky-500/20 bg-sky-500/10 shadow-[0_0_15px_rgba(14,165,233,0.15)]",
+                    )}
+                  >
+                    {getPlatformIcon(account.platform)}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white capitalize">
+                      {account.platform} {account.account_name && `- ${account.account_name}`}
+                    </h3>
+                    <p className="text-fg-muted flex items-center gap-2 text-sm">
+                      <span
+                        className={`flex h-2 w-2 rounded-full ${account.connection_status === "connected" ? "bg-emerald-500" : "bg-red-500"}`}
+                      />
+                      <span className="capitalize">{account.connection_status}</span>
+                    </p>
+                  </div>
+                </div>
+                <button className="border-border-subtle bg-bg-tertiary rounded-md border px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/5">
+                  Manage
+                </button>
+              </div>
+            </div>
+          );
+        })}
+        {initialAccounts.length === 0 && (
+          <div className="text-fg-muted border-border-subtle col-span-full rounded-xl border border-dashed py-4 text-center text-sm">
+            No social accounts connected.
+          </div>
+        )}
+      </div>
+
       {/* Title Header */}
       <div className="border-border-subtle flex flex-col justify-between gap-4 border-b pb-6 md:flex-row md:items-center">
         <div>
