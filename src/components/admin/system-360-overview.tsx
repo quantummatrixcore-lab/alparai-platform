@@ -1,10 +1,87 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SystemHealthChart } from "./system-health-chart";
-import { Wallet, ShieldCheck, Cpu, ChartLineUp } from "@phosphor-icons/react/dist/ssr";
+import {
+  Wallet,
+  ShieldCheck,
+  Cpu,
+  ChartLineUp,
+  Database,
+  Cloud,
+  Bug,
+  Envelope,
+  GoogleLogo,
+  Sparkle,
+  Robot,
+  CheckCircle,
+  WarningCircle,
+} from "@phosphor-icons/react/dist/ssr";
+
+interface ServiceHealth {
+  name: string;
+  status: "healthy" | "unhealthy" | "not_configured";
+  latencyMs: number | null;
+}
+
+interface HealthResponse {
+  status: string;
+  services: ServiceHealth[];
+  timestamp: string;
+}
+
+const SERVICE_ICONS: Record<string, React.ElementType> = {
+  supabase: Database,
+  redis: Cpu,
+  vercel: Cloud,
+  sentry: Bug,
+  resend: Envelope,
+  gemini: Sparkle,
+  anthropic: Robot,
+  google_oauth: GoogleLogo,
+};
+
+function ServiceBadge({ name, status, latencyMs }: ServiceHealth) {
+  const Icon = SERVICE_ICONS[name] ?? ShieldCheck;
+  const colorMap: Record<string, string> = {
+    healthy: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400",
+    unhealthy: "border-rose-500/30 bg-rose-500/10 text-rose-400",
+    not_configured: "border-zinc-500/30 bg-zinc-500/10 text-zinc-400",
+  };
+  return (
+    <div
+      className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium backdrop-blur-sm ${colorMap[status] ?? colorMap.not_configured}`}
+    >
+      <Icon weight="duotone" className="h-3.5 w-3.5 shrink-0" />
+      <span className="capitalize">{name.replace("_", " ")}</span>
+      {status === "healthy" && latencyMs !== null && (
+        <span className="ml-auto font-mono opacity-70">{latencyMs}ms</span>
+      )}
+      {status === "healthy" && <CheckCircle weight="fill" className="ml-auto h-3 w-3" />}
+      {status === "unhealthy" && <WarningCircle weight="fill" className="ml-auto h-3 w-3" />}
+    </div>
+  );
+}
 
 export function System360Overview() {
+  const [health, setHealth] = useState<HealthResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/health")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => setHealth(data))
+      .catch(() => setHealth(null))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const configuredServices = health?.services.filter((s) => s.status !== "not_configured") ?? [];
+  const healthyCount = configuredServices.filter((s) => s.status === "healthy").length;
+  const totalConfigured = configuredServices.length;
+
+  const row1health = health?.services.slice(0, 4) ?? [];
+  const row2health = health?.services.slice(4) ?? [];
+
   return (
     <div className="space-y-6">
       <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-4">
@@ -17,10 +94,48 @@ export function System360Overview() {
             Holistic view of system health, finance, and security.
           </p>
         </div>
+        <div className="flex items-center gap-2 text-xs">
+          <span className="text-fg-muted">Last check:</span>
+          {loading ? (
+            <span className="animate-pulse text-white/50">Loading...</span>
+          ) : (
+            <span className="font-mono text-white/70">
+              {health?.timestamp ? new Date(health.timestamp).toLocaleTimeString() : "offline"}
+            </span>
+          )}
+        </div>
       </div>
 
+      {/* Service Health Grid */}
+      <div className="space-y-2">
+        <h3 className="text-fg-secondary text-xs font-semibold tracking-widest uppercase">
+          Service Health
+          {totalConfigured > 0 && (
+            <span className="ml-2 text-emerald-400">
+              {healthyCount}/{totalConfigured} healthy
+            </span>
+          )}
+        </h3>
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {loading
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="animate-pulse rounded-lg border border-white/5 bg-zinc-800/20 px-3 py-2"
+                >
+                  <div className="h-3 w-20 rounded bg-zinc-700/50"></div>
+                </div>
+              ))
+            : row1health.map((svc) => <ServiceBadge key={svc.name} {...svc} />)}
+        </div>
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {!loading && row2health.map((svc) => <ServiceBadge key={svc.name} {...svc} />)}
+        </div>
+      </div>
+
+      {/* KPI Widgets */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {/* Financial & Revenue Model Widget */}
+        {/* Financial Widget */}
         <div className="bg-bg-secondary/40 hover:border-brand-500/30 relative overflow-hidden rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300">
           <div className="absolute -top-4 -right-4 rounded-full bg-emerald-500/10 p-6 blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
@@ -38,7 +153,7 @@ export function System360Overview() {
           </div>
         </div>
 
-        {/* API Cost & Budget Usage */}
+        {/* API Cost Widget */}
         <div className="bg-bg-secondary/40 relative overflow-hidden rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300 hover:border-amber-500/30">
           <div className="absolute -top-4 -right-4 rounded-full bg-amber-500/10 p-6 blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
@@ -57,7 +172,7 @@ export function System360Overview() {
           </div>
         </div>
 
-        {/* Cross-Audit Engine Status */}
+        {/* Cross-Audit Engine Widget */}
         <div className="bg-bg-secondary/40 hover:border-brand-500/30 relative overflow-hidden rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300">
           <div className="bg-brand-500/10 absolute -top-4 -right-4 rounded-full p-6 blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
@@ -73,7 +188,7 @@ export function System360Overview() {
           </div>
         </div>
 
-        {/* Compute & Inference Load */}
+        {/* Inference Load Widget */}
         <div className="bg-bg-secondary/40 relative overflow-hidden rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300 hover:border-cyan-500/30">
           <div className="absolute -top-4 -right-4 rounded-full bg-cyan-500/10 p-6 blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
