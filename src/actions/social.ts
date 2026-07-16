@@ -157,8 +157,7 @@ export async function getSocialAccounts(): Promise<SocialAccount[]> {
   await requireAdmin();
   const supabase = await createServerClient();
   const { data, error } = await supabase
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .from("social_accounts" as any)
+    .from("social_accounts")
     .select("*")
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
