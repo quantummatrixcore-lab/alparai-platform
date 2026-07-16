@@ -48,3 +48,7 @@ CREATE POLICY "Service role full access marketing drafts"
     FOR ALL
     USING (true)
     WITH CHECK (true);
+
+-- ROLLBACK:
+-- DROP TABLE IF EXISTS public.marketing_drafts;
+-- DROP TABLE IF EXISTS public.social_accounts;
