@@ -1,5 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
-import { requireAdmin } from "@/lib/auth/server-guards";
+import { requireAdmin } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { WarningCircle, CheckCircle } from "@phosphor-icons/react/dist/ssr";
 
@@ -14,9 +14,9 @@ export default async function AdvisoryBoardPage({
 
   const supabase = await createServerClient();
   const { data: members, error } = await supabase
-    .from("advisory_board")
+    .from("advisory_board_members")
     .select("*")
-    .order("created_at", { ascending: false });
+    .order("display_order", { ascending: true });
 
   if (error) {
     console.error("Error fetching advisory board:", error);
@@ -44,43 +44,34 @@ export default async function AdvisoryBoardPage({
               <tr>
                 <th className="px-6 py-4">Name / ID</th>
                 <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Consent Archived</th>
-                <th className="px-6 py-4">Published</th>
+                <th className="px-6 py-4">Term</th>
+                <th className="px-6 py-4">Order</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {members?.map((member) => (
                 <tr key={member.id} className="transition-colors hover:bg-white/5">
                   <td className="px-6 py-4 font-mono text-xs text-white">
-                    {member.name || "Anonymous Candidate"}
+                    {member.name}
                     <br />
                     <span className="text-fg-muted">{member.id.substring(0, 8)}...</span>
                   </td>
                   <td className="px-6 py-4 capitalize">
-                    {member.status === "active" ? (
+                    {member.is_active ? (
                       <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-1 text-xs text-emerald-400">
                         <CheckCircle weight="fill" /> Active
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-1 text-xs text-amber-400">
-                        Candidate
+                        Inactive
                       </span>
                     )}
                   </td>
-                  <td className="px-6 py-4">
-                    {member.consent_archived ? (
-                      <span className="text-emerald-400">Yes</span>
-                    ) : (
-                      <span className="text-rose-400">No</span>
-                    )}
+                  <td className="text-fg-muted px-6 py-4 text-xs">
+                    {member.term_start?.substring(0, 10) ?? "—"} →{" "}
+                    {member.term_end?.substring(0, 10) ?? "∞"}
                   </td>
-                  <td className="px-6 py-4">
-                    {member.is_published ? (
-                      <span className="text-emerald-400">Yes</span>
-                    ) : (
-                      <span className="text-fg-muted">No</span>
-                    )}
-                  </td>
+                  <td className="text-fg-muted px-6 py-4 text-xs">{member.display_order}</td>
                 </tr>
               ))}
               {(!members || members.length === 0) && (

@@ -1,5 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
-import { requireAdmin } from "@/lib/auth/server-guards";
+import { requireAdmin } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { CheckCircle, WarningCircle } from "@phosphor-icons/react/dist/ssr";
 
@@ -19,11 +19,8 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
   }
 
   const activeSubs = subs?.filter((s) => s.status === "active") || [];
-  const mrr = activeSubs.reduce((acc, s) => {
-    // Basic extraction assuming simple integer amounts for MRR in `plan_price` or similar
-    // Will safely fallback if schema is different
-    return acc + (s.monthly_price || 0);
-  }, 0);
+  const planPrices: Record<string, number> = { free: 0, pro: 2500, enterprise: 10000 };
+  const mrr = activeSubs.reduce((acc, s) => acc + (planPrices[s.plan] ?? 0), 0);
 
   return (
     <div className="animate-in fade-in space-y-8 duration-500">
@@ -70,9 +67,7 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
                     <br />
                     <span className="text-fg-muted">{sub.user_id?.substring(0, 8)}...</span>
                   </td>
-                  <td className="px-6 py-4 capitalize">
-                    {sub.plan_id || sub.plan_name || "Custom"}
-                  </td>
+                  <td className="px-6 py-4 capitalize">{sub.plan || "Custom"}</td>
                   <td className="px-6 py-4">
                     {sub.status === "active" ? (
                       <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-1 text-xs text-emerald-400">

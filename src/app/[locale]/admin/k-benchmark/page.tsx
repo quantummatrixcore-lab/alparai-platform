@@ -1,5 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
-import { requireAdmin } from "@/lib/auth/server-guards";
+import { requireAdmin } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { Star } from "@phosphor-icons/react/dist/ssr";
 
@@ -42,7 +42,7 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
               {scores?.map((score) => (
                 <tr key={score.id} className="transition-colors hover:bg-white/5">
                   <td className="px-6 py-4 font-mono text-xs text-white">
-                    {score.model_name || "Unknown Model"}
+                    {score.model_id || "Unknown Model"}
                     <br />
                     <span className="text-fg-muted">{score.id.substring(0, 8)}...</span>
                   </td>

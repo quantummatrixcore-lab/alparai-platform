@@ -157,7 +157,7 @@ export async function getSocialAccounts(): Promise<SocialAccount[]> {
   await requireAdmin();
   const supabase = await createServerClient();
   const { data, error } = await supabase
-    .from("social_accounts")
+    .from("social_accounts" as never)
     .select("*")
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);

@@ -1,5 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
-import { requireAdmin } from "@/lib/auth/server-guards";
+import { requireAdmin } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { Clock, ShieldWarning, CheckCircle } from "@phosphor-icons/react/dist/ssr";
 
@@ -61,7 +61,7 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
                       {req.id.substring(0, 8)}...
                       <br />
                       <span className="text-fg-muted">
-                        {req.target_url || req.target_id || "Unknown target"}
+                        {req.reason || `Incident ${req.incident_id.substring(0, 8)}`}
                       </span>
                     </td>
                     <td className="px-6 py-4 capitalize">
