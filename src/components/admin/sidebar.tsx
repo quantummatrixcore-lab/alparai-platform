@@ -255,6 +255,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       icon: ChartBar,
       active: pathname.startsWith("/admin/signals"),
     },
+    {
+      href: "/admin/resources",
+      label: "Resource Efficiency",
+      icon: Cpu,
+      active: pathname.startsWith("/admin/resources"),
+    },
   ];
 
   // Visibility Flags
