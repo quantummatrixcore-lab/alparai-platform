@@ -601,6 +601,8 @@
     "badgeDesc": "İlk 100 beta katılımcımıza verilen özel erken benimseyen doğrulama rozeti."
   },
   "admin": {
+    "master_plan": "Master Plan",
+    "social": "Sosyal Medya",
     "nav_group_oversight": "360° Gözlem",
     "nav_group_ecosystem": "AI Ekosistemi & Haberler",
     "nav_group_operations": "Operasyon & İçerik",

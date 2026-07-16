@@ -601,6 +601,8 @@
     "badgeDesc": "Exclusive early-adopter verification badge awarded to our first 100 beta participants."
   },
   "admin": {
+    "master_plan": "Master Plan",
+    "social": "Social Media",
     "nav_group_oversight": "360° Oversight",
     "nav_group_ecosystem": "AI Ecosystem & Intel",
     "nav_group_operations": "Operations & Content",

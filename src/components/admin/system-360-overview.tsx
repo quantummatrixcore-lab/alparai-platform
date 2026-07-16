@@ -134,9 +134,25 @@ export function System360Overview() {
       </div>
 
       {/* KPI Widgets */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-5">
+        {/* Resource Efficiency Widget */}
+        <div className="bg-bg-secondary/40 relative overflow-hidden rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300 hover:border-emerald-500/30">
+          <div className="absolute -top-4 -right-4 rounded-full bg-emerald-500/10 p-6 blur-2xl"></div>
+          <div className="relative z-10 flex items-center justify-between">
+            <h3 className="text-fg-secondary text-sm font-semibold">Resource Efficiency</h3>
+            <Cpu weight="duotone" className="h-5 w-5 text-emerald-400" />
+          </div>
+          <div className="relative z-10 mt-4 flex items-end gap-2">
+            <span className="text-3xl font-bold tracking-tight text-white">94.2</span>
+            <span className="text-fg-muted mb-1 font-mono text-xs font-semibold">%</span>
+          </div>
+          <div className="text-fg-muted relative z-10 mt-2 text-xs">
+            <span className="font-medium text-emerald-400">Optimal</span> resource usage
+          </div>
+        </div>
+
         {/* Financial Widget */}
-        <div className="bg-bg-secondary/40 hover:border-brand-500/30 relative overflow-hidden rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300">
+        <div className="bg-bg-secondary/40 relative overflow-hidden rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300 hover:border-emerald-500/30">
           <div className="absolute -top-4 -right-4 rounded-full bg-emerald-500/10 p-6 blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
             <h3 className="text-fg-secondary font-semibold">B2B Revenue (MRR)</h3>
