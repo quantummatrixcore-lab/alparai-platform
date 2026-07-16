@@ -23,9 +23,9 @@ export function parseMasterPlan(): PlanItem[] {
         const parts = line.split("|").map((p) => p.trim());
         if (parts.length >= 5) {
           const id = parts[1];
-          const priority = parts[2];
-          const rawTitle = parts[3];
-          const statusRaw = parts[4];
+          const priority = parts[2] || "";
+          const rawTitle = parts[3] || "";
+          const statusRaw = parts[4] || "";
 
           if (!id || id === "") continue;
 
