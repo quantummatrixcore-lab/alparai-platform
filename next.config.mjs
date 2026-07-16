@@ -151,6 +151,16 @@ const nextConfig = {
         destination: "/press-kit/:slug*",
         permanent: true,
       },
+      {
+        source: "/:locale/legal/impressum",
+        destination: "/:locale/legal/imprint",
+        permanent: true,
+      },
+      {
+        source: "/legal/impressum",
+        destination: "/legal/imprint",
+        permanent: true,
+      },
     ];
   },
 };
