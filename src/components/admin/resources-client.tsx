@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, HelpCircle, ExternalLink } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface Vendor {
   id: string;
@@ -138,6 +139,7 @@ const VENDORS: Vendor[] = [
 ];
 
 export function ResourcesClient() {
+  const t = useTranslations("admin");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -150,11 +152,9 @@ export function ResourcesClient() {
     <div className="space-y-8 p-2 lg:p-6">
       <div>
         <h1 className="mb-2 text-3xl font-black tracking-tight text-white">
-          Resource Efficiency & Vendors
+          {t("resources_title")}
         </h1>
-        <p className="text-fg-secondary text-sm">
-          Monitor status and links for all 15 active ALPAR AI infrastructure vendors.
-        </p>
+        <p className="text-fg-secondary text-sm">{t("resources_subtitle")}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -172,9 +172,9 @@ export function ResourcesClient() {
                   <Badge
                     variant="warning"
                     className="border-yellow-500/20 bg-yellow-500/10 text-yellow-500"
-                    title="Check dashboard manually"
+                    title={t("resources_manual_check")}
                   >
-                    <HelpCircle className="mr-1 h-3 w-3" /> Manual Check
+                    <HelpCircle className="mr-1 h-3 w-3" /> {t("resources_manual_check")}
                   </Badge>
                 )}
                 {v.status === "live" && (
@@ -182,7 +182,7 @@ export function ResourcesClient() {
                     variant="success"
                     className="border-emerald-500/20 bg-emerald-500/10 text-emerald-500"
                   >
-                    <CheckCircle2 className="mr-1 h-3 w-3" /> Live API
+                    <CheckCircle2 className="mr-1 h-3 w-3" /> {t("resources_live_api")}
                   </Badge>
                 )}
                 {v.status === "stub" && (
@@ -190,7 +190,7 @@ export function ResourcesClient() {
                     variant="muted"
                     className="border-neutral-500/20 bg-neutral-500/10 text-neutral-400"
                   >
-                    Stub
+                    {t("resources_stub")}
                   </Badge>
                 )}
               </div>

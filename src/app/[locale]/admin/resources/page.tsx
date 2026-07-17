@@ -1,10 +1,12 @@
 import { requireAdmin } from "@/lib/auth/session";
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { ResourcesClient } from "@/components/admin/resources-client";
 
-export async function generateMetadata() {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "admin" });
   return {
-    title: `Resource Efficiency | ALPAR AI`,
+    title: `${t("resources_title")} | ALPAR AI`,
   };
 }
 
