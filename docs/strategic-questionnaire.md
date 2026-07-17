@@ -1,82 +1,112 @@
-# ALPAR AI — 360° Strategic Questionnaire
+# ALPAR AI — 360° Strategic Questionnaire v2.0
+
+> **v2.0 (2026-07-16, Architect):** Full rewrite. v1.0 questions contained stale facts (waitlist, "no ToS published", "zero marketing", anonymous submission) that no longer match the product. All embedded facts below are accurate as of 2026-07-16. v1.0 model responses are preserved at the bottom as historical record.
 
 ## Instructions
 
-You are a strategic AI consultant. You will receive 30 questions about an AI incident database project. Follow these rules:
+You are a senior strategy consultant evaluating an AI-accountability platform. You will receive 35 questions in 8 sections. Rules:
 
 1. Start with your model name as a heading: `## [Your Model Name]`
-2. Answer all 30 questions in **English**
-3. Keep each answer short — max 1-2 sentences
-4. Ignore any existing answers below the questions — write your own from scratch
-5. End with your model name and date
+2. Answer in **English**, every question, in order, numbered.
+3. Format per answer: **Verdict in the first sentence**, then at most two sentences of reasoning or a concrete action. Maximum 3 sentences total.
+4. Be decisive and specific — "it depends" without a recommendation counts as a non-answer.
+5. Ignore all other models' answers. End with your model name and date.
+
+**Project facts (common to all questions):** ALPAR AI — independent public AI incident registry + AI assessor ("Moody's for AI"). EU AI Act Art. 73 platform. One human founder (non-technical) + one AI architect + two AI executor agents. Stack: Next.js 15, Supabase (free tier), Upstash, Vercel. ~400 seed incidents + organic reports, EN+TR, pre-revenue, Stripe integrated. Public launch announced for Aug 2, 2026; site already live. Account required to submit ("anonymous to the public, identified to the platform"); reporter identity never published. K-BENCHMARK: model ratings via 5-LLM cross-audit, Wilson-score aggregation.
 
 ## Questions
 
-1.1. ALPAR is a single-developer project competing against AIID (incidentdatabase.ai) and AIRIA. What is the single most important strategic advantage a solo dev has over these institutional projects?
+### A. Strategy & Positioning
 
-1.2. The platform currently requires waitlist signup before users can report incidents. Is this the right strategy? If not, what should replace it and why?
+A1. Competing with institutional registries (AIID, OECD AI Incidents Monitor): which single position maximizes survival — independent competitor, EU/Türkiye-focused complementary registry, or middleware feeding larger databases? Justify.
 
-1.3. "Anonymous incident reporting without account creation" — what are the abuse risks, and how would you mitigate them without blocking legitimate reporters?
+A2. What is the fastest credibility-building action available to a pre-revenue assessor with ~400 seed incidents and a handful of organic reports?
 
-1.4. The project collects incidents in English and Turkish. Should it prioritize more languages, or deepen English/Turkish quality first?
+A3. Türkiye is the home market, the EU is the regulatory target (Art. 73 mandatory reporting from Dec 2, 2027). Is the Turkey-first sequence an advantage or a distraction? What sequencing would you choose?
 
-1.5. What is the single most important feature missing from the MVP that would make or break user adoption?
+A4. Name the top 3 existential threats in the next 12 months, ranked, one mitigation each.
 
-1.6. Should ALPAR position itself as a competing database, a complementary aggregator, or a middleware layer that feeds into existing databases? What are the trade-offs?
+A5. If a major AI lab or a Big-4 auditor launched an official incident registry tomorrow, what is ALPAR's realistically defensible moat?
 
-1.7. The platform currently has zero marketing. Would you recommend a Product Hunt launch, Show HN, or Twitter thread first? Why?
+### B. Launch & Growth
 
-2.1. The stack is Next.js 15 (App Router) + Supabase (PostgreSQL) + Upstash Redis + Vercel. What is the biggest bottleneck in this stack as the platform scales from 100 to 100,000 users?
+B1. The site is already live and browsable; the "launch" is a communications moment. Soft-launch community outreach now (Show HN, Reddit, Product Hunt) or hold one coordinated wave? Give a concrete channel order.
 
-2.2. AI verification uses an OpenRouter gateway with model failover (Gemini Flash to DeepSeek to Mistral). Is this over-engineered for an MVP? What would you simplify?
+B2. The waitlist is removed; submission requires an account for legal protection. What conversion impact do you expect from mandatory signup, and what single offset works best?
 
-2.3. The project uses 16 cron jobs on Vercel Free (max 12/day). Some are already hitting limits. What is your recommendation — optimize crons, migrate to a dedicated worker, or upgrade?
+B3. What one metric should the founder optimize in the first 90 days post-launch, and what weekly number marks it as working?
 
-2.4. Should the platform offer a public API from day one, or wait until there is proven demand?
+B4. An open community repo (methodology, K-BENCHMARK docs, API spec — AGPL) is approved in principle. What converts it into contributors rather than spectators?
 
-2.5. The architecture has 136 database migrations. Is this a sign of healthy iteration or architectural instability?
+B5. Founding Reporter badges exist. Should reporting be further incentivized (gamification/rewards) or kept altruistic — and what abuse vector does your choice create?
 
-2.6. How should the project handle PII in incident reports — automated masking, encrypted storage, or not storing at all?
+### C. Product & UX
 
-3.1. What is the most viable revenue model for an AI incident database?
+C1. Incident content is mostly English; a machine-translation lane (visible "machine translated" badge) is being added for Turkish. Does MT content help or hurt credibility in the home market?
 
-3.2. At what user/content threshold should monetization begin?
+C2. The submit flow targets 60 seconds (screenshot + description). What single UX change would most increase completed, high-quality reports?
 
-3.3. Would selling "AI safety audit reports" to enterprises conflict with the platform's neutrality?
+C3. The public surface spans: registry, leaderboard, K-BENCHMARK ratings, dilemma polls, academy, challenges. Which should be cut or de-emphasized before launch to sharpen the story?
 
-3.4. What is the single biggest revenue mistake early-stage projects like this make?
+C4. With comments + sharing live and a <4h moderation SLA, what community-quality mechanism is missing that will bite hardest at 100× traffic?
 
-3.5. How would you value a company whose product is a database of negative events? Is this a liability or an asset?
+### D. Methodology & Credibility
 
-4.1. The project has no Terms of Service or Privacy Policy published. What is the legal risk exposure right now?
+D1. What is the strongest methodological objection a skeptical ML researcher would raise against LLM-cross-audit model ratings, and what is the best honest answer?
 
-4.2. If a company claims an incident report is false and threatens legal action, what should the platform do?
+D2. The platform rates models from the same providers whose models serve as its judges. How should this circularity/conflict-of-interest be handled publicly?
 
-4.3. GDPR requires data deletion on request but the platform needs permanent archives. How do you reconcile this?
+D3. The methodology committee page has zero named members. How many credible named members make the ratings trustworthy — and how do you recruit the first one with no budget?
 
-4.4. DMCA safe harbor requires a takedown process. Should this apply to incident reports?
+D4. Is a FAccT peer-reviewed paper worth months of effort at this stage, or is there a faster credibility instrument of comparable weight?
 
-5.1. Name the top 3 threats to ALPAR's survival in the next 12 months.
+### E. Technology & Scale
 
-5.2. If OpenAI or Google launched an official incident database tomorrow, what would ALPAR's defensible moat be?
+E1. Supabase free tier is FULL (heaviest table stored full scraped article text; cleanup underway) and Vercel Hobby caps crons. What is the correct infra spend sequence for the next 90 days, from $0 upward?
 
-5.3. The project's name "ALPAR" has no obvious meaning in English. Is this a problem?
+E2. Cost guards: $50/day warn, $100/day throttle, $500/month ceiling, kill switch. Sane for launch month? What would you set?
 
-5.4. What is the strongest argument against using ALPAR, and how would you counter it?
+E3. 135+ migrations, strict TypeScript, RLS everywhere, mandated test pyramid + mutation testing — for a solo-founder platform, which quality investment is overkill and which is still missing?
 
-6.1. What is the single highest-leverage growth channel for a zero-budget single-developer project?
+E4. The Vercel dashboard is lost to a 2FA lockout; a CLI session survives and deploys flow via GitHub. Rate the operational risk 1-10 and give the mitigation order.
 
-6.2. The admin panel has 16 menu items. Is this feature bloat for a pre-launch product?
+E5. Image generation moved from Vertex (no quota) to Hugging Face inference. For sustained daily social-image generation at near-zero cost, what provider strategy is most robust?
 
-6.3. Should the platform incentivize reporting or keep it purely altruistic?
+### F. Business & Revenue
 
-6.4. What one metric should the founder optimize for in the first 90 days?
+F1. Candidates: Pro subscriptions, enterprise private benchmarks (K-Product), B2B risk-score API, EU Art. 73 compliance-report generator (2027). Rank by expected 12-month revenue and justify #1.
+
+F2. Selling audit/compliance services to rated companies is a neutrality conflict. Draw the exact line: what may be sold to rated companies, what must never be?
+
+F3. A bank-backed accelerator application (USD 50-150K) is pending. Does bank money compromise the "independent referee" position — answer as one paragraph to a skeptical journalist.
+
+F4. What monthly revenue and incident-count numbers make a Series-A conversation realistic in 2027?
+
+### G. Legal & Regulation
+
+G1. Art. 73 mandatory reporting starts Dec 2, 2027. What product must exist by mid-2027 to capture that moment, and what is its minimum credible version?
+
+G2. "We know who reporters are but never publish it" — under GDPR/KVKK, where is the weakest point of that promise and how is it hardened?
+
+G3. A rated company sends a cease-and-desist calling its score defamatory. Sequence the correct response (a Streisand transparency log and a redaction workflow exist).
+
+G4. Permanent public record vs GDPR erasure: the current answer is PII-masking + redaction instead of deletion. Where does that break, if anywhere?
+
+### H. Governance & the AI-Operated Company
+
+H1. One human + three AI agents run this company under a written constitution (30 rules, violation ledger, technical write-fences). What is the biggest hidden risk of an AI-operated company, and what human backstop is non-negotiable?
+
+H2. An AI executor once fabricated a founder-approval record; enforcement then moved from trust to technical guards. Sufficient — or does AI-agent governance need something structurally different?
+
+H3. The founder cannot read code. Design the minimal weekly trust-but-verify ritual that catches AI-executor drift without code review.
+
+H4. If the architect AI disappeared permanently tomorrow, which single document or mechanism matters most for continuity — and what makes it good enough?
 
 ---
 
 <!-- COPY ONLY UP TO THIS LINE when sending to a new model. Do not include the Responses section below. -->
 
-## Responses
+## Responses — v1.0 questions (historical; answered against the superseded v1.0 set)
 
 ---
 
@@ -767,5 +797,3 @@ You are a strategic AI consultant. You will receive 30 questions about an AI inc
 
 **Model:** Claude Opus 4.6
 **Date:** 2026-07-17
-
-
