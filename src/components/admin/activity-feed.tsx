@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Clock, ShieldAlert, Cpu, UserCheck } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface ActivityItem {
   id: string;
@@ -12,6 +13,7 @@ interface ActivityItem {
 }
 
 export function ActivityFeed({ activities }: { activities: ActivityItem[] }) {
+  const t = useTranslations("admin");
   const icons = {
     incident: <ShieldAlert className="h-4 w-4 text-amber-400" />,
     audit: <Clock className="h-4 w-4 text-cyan-400" />,
@@ -37,9 +39,7 @@ export function ActivityFeed({ activities }: { activities: ActivityItem[] }) {
         </div>
       ))}
       {activities.length === 0 && (
-        <p className="text-fg-muted py-6 text-center text-xs italic">
-          No recent activity detected.
-        </p>
+        <p className="text-fg-muted py-6 text-center text-xs italic">{t("no_recent_activity")}</p>
       )}
     </div>
   );

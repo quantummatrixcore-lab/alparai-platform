@@ -44,6 +44,7 @@
     "test:visual": "playwright test tests/e2e/visual/",
     "knip": "knip",
     "validate": "pnpm i18n:check && pnpm typecheck && pnpm lint && pnpm test",
+    "db:seed": "npx tsx scripts/seed-roadmap.ts",
     "prepare": "husky || true"
   },
   "dependencies": {

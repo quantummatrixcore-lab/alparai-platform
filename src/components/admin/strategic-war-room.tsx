@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { Robot, GlobeHemisphereWest, Scan, Database, Pulse } from "@phosphor-icons/react";
 
 export interface LiveProvider {
@@ -15,13 +16,14 @@ interface StrategicWarRoomProps {
 }
 
 export function StrategicWarRoom({ liveProviders = [] }: StrategicWarRoomProps) {
+  const t = useTranslations("admin");
   const [activeNode, setActiveNode] = useState<string | number | null>(null);
   const [pulse, setPulse] = useState(false);
 
   // Generate nodes dynamically
   const NODES = [
-    { id: "core", label: "Core ALPAR Engine", type: "system", x: 50, y: 50, status: "healthy" },
-    { id: "db", label: "Global Threat DB", type: "data", x: 50, y: 85, status: "healthy" },
+    { id: "core", label: t("core_engine"), type: "system", x: 50, y: 50, status: "healthy" },
+    { id: "db", label: t("global_threat_db"), type: "data", x: 50, y: 85, status: "healthy" },
   ];
 
   const CONNECTIONS = [{ source: "core", target: "db" }];
@@ -58,14 +60,14 @@ export function StrategicWarRoom({ liveProviders = [] }: StrategicWarRoomProps) 
       <div className="mb-6 flex items-center justify-between border-b border-white/5 pb-4">
         <h2 className="inline-flex items-center gap-2 font-mono text-lg font-bold tracking-widest text-white uppercase">
           <GlobeHemisphereWest weight="duotone" className="text-brand-400 h-6 w-6" />
-          Strategic War Room
+          {t("war_room_title")}
         </h2>
         <div className="flex gap-2">
           <span className="inline-flex items-center gap-1.5 rounded border border-cyan-500/20 bg-cyan-950/50 px-2 py-1 font-mono text-xs text-cyan-400">
-            <Scan weight="duotone" className="h-3.5 w-3.5" /> Live Topology
+            <Scan weight="duotone" className="h-3.5 w-3.5" /> {t("live_topology")}
           </span>
           <span className="bg-brand-950/50 text-brand-400 border-brand-500/20 inline-flex items-center gap-1.5 rounded border px-2 py-1 font-mono text-xs">
-            <Pulse weight="duotone" className="h-3.5 w-3.5 animate-pulse" /> Active
+            <Pulse weight="duotone" className="h-3.5 w-3.5 animate-pulse" /> {t("active")}
           </span>
         </div>
       </div>
@@ -145,7 +147,7 @@ export function StrategicWarRoom({ liveProviders = [] }: StrategicWarRoomProps) 
                 <span
                   className={`mt-0.5 font-mono text-[9px] tracking-widest uppercase ${node.status === "critical" ? "text-red-400" : node.status === "warning" ? "text-brand-400" : "text-cyan-400"}`}
                 >
-                  {node.status}
+                  {t("status_" + node.status)}
                 </span>
               </div>
             </motion.button>

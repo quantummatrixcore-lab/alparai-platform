@@ -97,7 +97,8 @@ export function IncidentHeatmap() {
                   >
                     {/* Tooltip on hover */}
                     <span className="bg-bg-secondary border-border-subtle pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 hidden -translate-x-1/2 rounded border px-2 py-1 text-[10px] font-bold whitespace-nowrap text-white shadow-xl group-hover:block">
-                      {val} incident{val !== 1 ? "s" : ""}
+                      {val}{" "}
+                      {val === 1 ? t("heatmap_incident_singular") : t("heatmap_incident_plural")}
                     </span>
                   </div>
                 ))}

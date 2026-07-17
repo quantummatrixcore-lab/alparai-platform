@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { type EmailOtpType } from "@supabase/supabase-js";
+import { type EmailOtpType, type SupabaseClient } from "@supabase/supabase-js";
+import { createHash } from "crypto";
 import { logger } from "@/lib/utils/logger";
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "@/lib/constants";
 import type { Database } from "@/types/database";
@@ -36,6 +37,46 @@ function detectLocale(request: NextRequest): string {
     return preferred;
   }
   return DEFAULT_LOCALE;
+}
+
+async function logAdminLogin(
+  supabase: SupabaseClient<Database>,
+  userId: string,
+  request: NextRequest,
+) {
+  try {
+    const { data: userProfile } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", userId)
+      .single();
+
+    if (userProfile && ["admin", "ceo", "moderator", "advisor"].includes(userProfile.role)) {
+      const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "127.0.0.1";
+      const ipHash = createHash("sha256").update(ip).digest("hex");
+
+      await supabase.from("audit_log").insert({
+        actor_id: userId,
+        action: "auth.login",
+        entity_type: "user",
+        entity_id: userId,
+        ip_hash: ipHash,
+        after_data: { role: userProfile.role },
+      });
+
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await (supabase as any).from("admin_login_events").insert({
+          user_id: userId,
+          ip_hash: ipHash,
+        });
+      } catch {
+        // Fail-safe if migration table not present yet
+      }
+    }
+  } catch (err) {
+    logger.error("Failed to log admin login", undefined, err instanceof Error ? err : undefined);
+  }
 }
 
 export async function GET(request: NextRequest) {
@@ -84,8 +125,11 @@ export async function GET(request: NextRequest) {
 
   try {
     if (code) {
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      const { data, error } = await supabase.auth.exchangeCodeForSession(code);
       if (!error) {
+        if (data?.user) {
+          await logAdminLogin(supabase, data.user.id, request);
+        }
         return response;
       }
       logger.warn("OAuth code exchange failed", {
@@ -98,11 +142,14 @@ export async function GET(request: NextRequest) {
     }
 
     if (tokenHash && type) {
-      const { error } = await supabase.auth.verifyOtp({
+      const { data, error } = await supabase.auth.verifyOtp({
         token_hash: tokenHash,
         type: type as EmailOtpType,
       });
       if (!error) {
+        if (data?.user) {
+          await logAdminLogin(supabase, data.user.id, request);
+        }
         return response;
       }
       logger.warn("OTP verification failed", {

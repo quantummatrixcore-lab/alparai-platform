@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { CheckCircle2, Circle, Clock, LayoutGrid, List } from "lucide-react";
 import type { PlanItem } from "@/lib/utils/markdown-parser";
 
@@ -10,6 +11,7 @@ interface MasterPlanClientProps {
 }
 
 export function MasterPlanClient({ items }: MasterPlanClientProps) {
+  const t = useTranslations("admin");
   const [viewMode, setViewMode] = useState<"list" | "kanban">("kanban");
 
   const pendingItems = items.filter((i) => i.status === "pending");
@@ -27,12 +29,12 @@ export function MasterPlanClient({ items }: MasterPlanClientProps) {
         <div className="bg-bg-secondary border-border-subtle relative overflow-hidden rounded-xl border p-6">
           <div className="bg-brand-500/10 absolute -top-10 -right-10 h-32 w-32 rounded-full blur-3xl"></div>
           <div className="text-fg-muted mb-1 text-sm font-medium tracking-wider uppercase">
-            Total Progress
+            {t("progress_title")}
           </div>
           <div className="flex items-end gap-2">
             <span className="text-4xl font-black text-white">{Math.round(progress)}%</span>
             <span className="text-fg-muted mb-1 text-sm font-medium">
-              {completedCount} / {activeTotal} active
+              {t("progress_active", { completed: completedCount, total: activeTotal })}
             </span>
           </div>
           <div className="bg-bg-tertiary mt-5 h-3 w-full overflow-hidden rounded-full shadow-inner">
@@ -48,21 +50,21 @@ export function MasterPlanClient({ items }: MasterPlanClientProps) {
 
       {/* View Toggle */}
       <div className="border-border-subtle flex items-center justify-between border-b pb-4">
-        <h2 className="text-xl font-bold text-white">Execution Board</h2>
+        <h2 className="text-xl font-bold text-white">{t("execution_board")}</h2>
         <div className="bg-bg-tertiary border-border-subtle flex items-center gap-1 rounded-lg border p-1">
           <button
             onClick={() => setViewMode("list")}
             className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold transition-all ${viewMode === "list" ? "bg-bg-secondary text-white shadow-sm" : "text-fg-muted hover:text-white"}`}
           >
             <List className="h-4 w-4" />
-            List
+            {t("view_list")}
           </button>
           <button
             onClick={() => setViewMode("kanban")}
             className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold transition-all ${viewMode === "kanban" ? "bg-bg-secondary text-white shadow-sm" : "text-fg-muted hover:text-white"}`}
           >
             <LayoutGrid className="h-4 w-4" />
-            Kanban
+            {t("view_kanban")}
           </button>
         </div>
       </div>
@@ -75,7 +77,7 @@ export function MasterPlanClient({ items }: MasterPlanClientProps) {
             <div className="flex items-center justify-between">
               <h3 className="flex items-center gap-2 font-bold text-white">
                 <Clock className="h-5 w-5 text-amber-400" />
-                In Progress / Pending
+                {t("pending_column")}
               </h3>
               <span className="bg-bg-tertiary text-fg-muted rounded-full px-2.5 py-0.5 text-xs font-bold">
                 {pendingItems.length}
@@ -118,7 +120,7 @@ export function MasterPlanClient({ items }: MasterPlanClientProps) {
             <div className="flex items-center justify-between">
               <h3 className="flex items-center gap-2 font-bold text-white">
                 <Clock className="h-5 w-5 text-purple-400" />
-                Paused / Gated
+                {t("paused_column")}
               </h3>
               <span className="bg-bg-tertiary text-fg-muted rounded-full px-2.5 py-0.5 text-xs font-bold">
                 {pausedItems.length}
@@ -161,7 +163,7 @@ export function MasterPlanClient({ items }: MasterPlanClientProps) {
             <div className="flex items-center justify-between">
               <h3 className="flex items-center gap-2 font-bold text-white">
                 <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                Completed
+                {t("completed_column")}
               </h3>
               <span className="bg-bg-tertiary text-fg-muted rounded-full px-2.5 py-0.5 text-xs font-bold">
                 {completedItems.length}
@@ -190,7 +192,7 @@ export function MasterPlanClient({ items }: MasterPlanClientProps) {
               </AnimatePresence>
               {completedItems.length > 15 && (
                 <div className="text-fg-muted text-center text-sm font-medium">
-                  + {completedItems.length - 15} more completed
+                  {t("more_completed", { count: completedItems.length - 15 })}
                 </div>
               )}
             </div>

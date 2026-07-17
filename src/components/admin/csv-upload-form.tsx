@@ -2,6 +2,7 @@
 
 import React, { useRef, useState, useTransition } from "react";
 import { Upload, FileText, AlertTriangle, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { importIncidentsAction } from "@/actions/admin";
 import type { ImportIncidentsResult } from "@/actions/admin";
 import { cn } from "@/lib/utils";
@@ -16,8 +17,8 @@ interface CsvUploadFormProps {
   locale: string;
 }
 
-export function CsvUploadForm({ locale }: CsvUploadFormProps) {
-  const isTr = locale === "tr";
+export function CsvUploadForm({ locale: _locale }: CsvUploadFormProps) {
+  const t = useTranslations("admin");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [source, setSource] = useState<string>("aiaaic_import");
@@ -28,7 +29,7 @@ export function CsvUploadForm({ locale }: CsvUploadFormProps) {
   const handleFileChange = (file: File | null) => {
     if (!file) return;
     if (!file.name.endsWith(".csv")) {
-      alert(isTr ? "Yalnızca CSV dosyası yükleyebilirsiniz." : "Only CSV files are accepted.");
+      alert(t("csv_only_csv"));
       return;
     }
     setSelectedFile(file);
@@ -63,21 +64,15 @@ export function CsvUploadForm({ locale }: CsvUploadFormProps) {
   return (
     <div className="border-border-subtle bg-bg-secondary/20 overflow-hidden rounded-2xl border backdrop-blur-md">
       <div className="border-border-subtle border-b px-6 py-5">
-        <h2 className="text-lg font-black text-white">
-          {isTr ? "CSV ile Toplu Olay İçe Aktar" : "Bulk Incident Import via CSV"}
-        </h2>
-        <p className="text-fg-secondary mt-1 text-xs">
-          {isTr
-            ? "AIAAIC, AIID veya özel kaynaklı CSV dosyası yükleyerek onay kuyruğuna olay ekleyin."
-            : "Upload a CSV file from AIAAIC, AIID, or a custom source to add incidents to the review queue."}
-        </p>
+        <h2 className="text-lg font-black text-white">{t("csv_title")}</h2>
+        <p className="text-fg-secondary mt-1 text-xs">{t("csv_subtitle")}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5 p-6">
         {/* Source selector */}
         <div className="space-y-2">
           <label className="text-fg-secondary block text-xs font-bold tracking-wider uppercase">
-            {isTr ? "Kaynak" : "Source"}
+            {t("csv_source")}
           </label>
           <div className="flex flex-wrap gap-2">
             {SOURCES.map((s) => (
@@ -125,12 +120,8 @@ export function CsvUploadForm({ locale }: CsvUploadFormProps) {
           ) : (
             <>
               <Upload className="text-fg-muted h-8 w-8" />
-              <span className="text-fg-secondary text-sm font-semibold">
-                {isTr
-                  ? "CSV dosyasını sürükleyin veya tıklayın"
-                  : "Drag & drop a CSV or click to browse"}
-              </span>
-              <span className="text-fg-muted text-xs">{isTr ? "Maks. 5 MB" : "Max 5 MB"}</span>
+              <span className="text-fg-secondary text-sm font-semibold">{t("csv_drag_drop")}</span>
+              <span className="text-fg-muted text-xs">{t("csv_max_size")}</span>
             </>
           )}
           <input
@@ -154,12 +145,12 @@ export function CsvUploadForm({ locale }: CsvUploadFormProps) {
           {isPending ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              {isTr ? "İçe aktarılıyor…" : "Importing…"}
+              {t("csv_importing")}
             </>
           ) : (
             <>
               <Upload className="h-4 w-4" />
-              {isTr ? "Onayla ve İçe Aktar" : "Import to Review Queue"}
+              {t("csv_import_btn")}
             </>
           )}
         </button>
@@ -184,16 +175,17 @@ export function CsvUploadForm({ locale }: CsvUploadFormProps) {
                 {result.error && <p className="font-bold text-red-300">{result.error}</p>}
                 {result.ok && (
                   <p className="font-bold text-emerald-300">
-                    {isTr
-                      ? `${result.inserted ?? 0} yeni olay eklendi, ${result.skipped ?? 0} atlandı.`
-                      : `${result.inserted ?? 0} incidents queued, ${result.skipped ?? 0} skipped.`}
+                    {t("csv_success_msg", {
+                      inserted: result.inserted ?? 0,
+                      skipped: result.skipped ?? 0,
+                    })}
                   </p>
                 )}
                 {(result.parseErrors?.length ?? 0) > 0 && (
                   <details className="mt-2">
                     <summary className="text-fg-secondary cursor-pointer text-xs font-bold">
                       <AlertTriangle className="mr-1 inline h-3 w-3 text-yellow-400" />
-                      {result.parseErrors?.length} {isTr ? "parse hatası" : "parse errors"}
+                      {result.parseErrors?.length} {t("csv_parse_error")}
                     </summary>
                     <ul className="text-fg-muted mt-2 space-y-1 text-xs">
                       {result.parseErrors?.slice(0, 10).map((e, idx) => (
@@ -207,7 +199,7 @@ export function CsvUploadForm({ locale }: CsvUploadFormProps) {
                 {(result.errors?.length ?? 0) > 0 && (
                   <details className="mt-2">
                     <summary className="text-fg-secondary cursor-pointer text-xs font-bold">
-                      {result.errors?.length} {isTr ? "DB hatası" : "DB errors"}
+                      {result.errors?.length} {t("csv_db_error")}
                     </summary>
                     <ul className="text-fg-muted mt-2 space-y-1 text-xs">
                       {result.errors?.map((e, idx) => (
