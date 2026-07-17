@@ -248,7 +248,7 @@ export function ImportQueueClient({ initialIncidents, locale }: ImportQueueClien
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-fg-muted transition hover:text-white"
-                          title="Original Source URL"
+                          title={t("import_q_original_source")}
                         >
                           <ExternalLink className="h-3 w-3" />
                         </a>
@@ -260,7 +260,8 @@ export function ImportQueueClient({ initialIncidents, locale }: ImportQueueClien
                     <div className="text-fg-muted flex items-center gap-4 pt-1 text-[10px]">
                       {incident.incident_date && (
                         <span>
-                          {t("import_q_date")}{incident.incident_date}
+                          {t("import_q_date")}
+                          {incident.incident_date}
                         </span>
                       )}
                       {incident.import_external_id && (
