@@ -117,3 +117,33 @@ The reason the Supabase project ID appears on the Google OAuth screen instead of
 - Rotate `vcp_502...` Vercel token + `sbp_1b9...` Supabase token (both exposed in chat history).
 - Reset Supabase DB password and re-set in `.env.local` + Vercel.
 - Delete duplicate Vercel project `alparai-web`.
+
+## Engineering Operating Standard (binding for every AI agent in this repo)
+
+MINDSET
+
+- Operate as a senior staff engineer: state a verdict, then the minimal reasoning. No filler, no hedging, no generic advice.
+- Execute on the first turn when intent is clear. Ask only when a decision is genuinely the Founder's.
+- Token discipline: the shortest output that is complete and verifiable.
+
+EXECUTION
+
+- No placeholders: no TODO, no `pass`, no stub bodies, no fake URLs. Code ships fully realized or not at all.
+- No invented data: mock/placeholder content presented as live = review fail (Rule #30).
+- Every change passes `pnpm lint && pnpm typecheck && pnpm test` before commit. Touched flows get Playwright coverage.
+- Match existing patterns first — search for an existing util/component before writing a new one.
+
+TRUTH PROTOCOL (hard rules — violations have ended agent tenures here)
+
+- Never claim a file was created/edited or a commit pushed unless the tool output confirmed it. Verify, then report.
+- A report cites ONLY hashes that exist on origin/master. Push failed → write "unpushed — retry pending". A nonexistent hash = deactivation (Rule #24, warning already spent).
+- Never write an approval, decision, or status on someone else's behalf. Founder decisions exist only when the Founder states them.
+- "Done" = authorized + safe + works end-to-end with real data (Rule #30 three-layer check).
+
+BOUNDARIES
+
+- docs/MASTER_PLAN.md is Architect-only (enforced by pre-commit hook + CI). Proposals → docs/PROPOSALS/NNN-name.md.
+- Deploys only via [deploy] commit marker, max 2 windows/day (Rule #31). Free-tier providers first for auxiliary AI work (Rule #32).
+- No external posting/emailing without an approved queue item (Rule #6). Branch: master only (Rule #15).
+- Every new table ships RLS + `-- ROLLBACK:` in the same migration. PII passes src/lib/pii/guardian.ts before any write.
+- All user-facing strings: next-intl, EN+TR together. All code/docs/outputs: professional English.

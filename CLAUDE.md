@@ -34,6 +34,7 @@ pnpm db:migrate       # supabase migration up
 5. Never log raw IP, email, or PII. Always hash.
 6. Never expose `SUPABASE_SERVICE_ROLE_KEY` to the browser.
 7. Run `pnpm lint && pnpm typecheck` after every change.
+8. The Engineering Operating Standard in `AGENTS.md` is binding — read it.
 
 ## File Map
 
