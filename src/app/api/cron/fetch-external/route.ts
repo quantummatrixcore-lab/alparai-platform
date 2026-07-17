@@ -34,6 +34,18 @@ export async function GET(request: Request) {
 
   const redditSubs = ["ChatGPT", "artificial", "MachineLearning", "ArtificialIntelligence"];
   const redditKeywords = ["hallucination", "bias", "error", "wrong", "harm"];
+  const positiveKeywords = [
+    "AI breakthrough",
+    "AI helps",
+    "AI benefit",
+    "AI healthcare",
+    "AI climate",
+    "AI education",
+    "AI accessibility",
+    "open source AI",
+    "AI safety research",
+    "responsible AI",
+  ];
   const hnKeywords = ["hallucination", "AI mistake", "AI bias", "AI harm"];
 
   const rssFeeds = [
@@ -51,7 +63,15 @@ export async function GET(request: Request) {
     source_score: number;
   }> = [];
 
-  // 1. Fetch Reddit
+  const allPositive: Array<{
+    source: string;
+    external_url: string;
+    title: string;
+    body: string;
+    source_score: number;
+  }> = [];
+
+  // 1. Fetch Reddit — negative keywords
   for (const sub of redditSubs) {
     for (const kw of redditKeywords) {
       const posts = await fetchRedditPosts(sub, kw);
@@ -59,20 +79,63 @@ export async function GET(request: Request) {
     }
   }
 
-  // 2. Fetch HN
+  // 2. Fetch Reddit — positive keywords
+  for (const sub of redditSubs) {
+    for (const kw of positiveKeywords) {
+      const posts = await fetchRedditPosts(sub, kw);
+      allPositive.push(...posts.map((p) => ({ ...p, source: "reddit" })));
+    }
+  }
+
+  // 3. Fetch HN — negative
   for (const kw of hnKeywords) {
     const stories = await fetchHNStories(kw);
     allFetched.push(...stories.map((s) => ({ ...s, source: "hn" })));
   }
 
-  // 3. Fetch RSS Feeds
+  // 4. Fetch HN — positive
+  for (const kw of positiveKeywords) {
+    const stories = await fetchHNStories(kw);
+    allPositive.push(...stories.map((s) => ({ ...s, source: "hn" })));
+  }
+
+  // 5. Fetch RSS Feeds
   for (const feed of rssFeeds) {
     const items = await fetchRSSFeed(feed.url, feed.name);
     allFetched.push(...items.map((i) => ({ ...i, source: "rss" })));
+    allPositive.push(...items.map((i) => ({ ...i, source: "rss" })));
   }
 
-  logger.info(`[FetchExternal] Fetched total of ${allFetched.length} potential incidents.`);
+  logger.info(
+    `[FetchExternal] Fetched ${allFetched.length} potential incidents, ${allPositive.length} potential positive developments.`,
+  );
 
+  // --- Process positive developments directly into ecosystem_news ---
+  let positiveInserted = 0;
+  for (const item of allPositive) {
+    const { error } = await supabase.from("ecosystem_news").insert({
+      title_en: item.title,
+      summary_en: item.body,
+      category: "positive_development",
+      severity: "low",
+      status: "published",
+      source: item.source,
+      url: item.external_url,
+      is_active: true,
+      published_at: new Date().toISOString(),
+    });
+
+    if (error) {
+      logger.warn("[FetchExternal] Positive insert skipped (likely duplicate)", {
+        url: item.external_url,
+        error: error.message,
+      });
+      continue;
+    }
+    positiveInserted++;
+  }
+
+  // --- Process negative/detection items into external_incidents_queue ---
   const aiAvailable = isGatewayConfigured();
   let insertedCount = 0;
   let aiPublishedCount = 0;
@@ -143,6 +206,8 @@ export async function GET(request: Request) {
   return NextResponse.json({
     success: true,
     total_fetched: allFetched.length,
+    total_positive: allPositive.length,
+    positive_inserted: positiveInserted,
     inserted_or_updated: insertedCount,
     ai_verified_published: aiPublishedCount,
   });

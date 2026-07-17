@@ -137,6 +137,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
   // 3. ECOSYSTEM GROUP (ceo, admin)
   const ecosystemItems = [
     {
+      href: "/admin/ecosystem",
+      label: "Ecosystem Hub",
+      icon: Globe,
+      active: pathname.startsWith("/admin/ecosystem"),
+    },
+    {
       href: "/admin/ai-pulse",
       label: t("nav_aiPulse"),
       icon: Pulse,
