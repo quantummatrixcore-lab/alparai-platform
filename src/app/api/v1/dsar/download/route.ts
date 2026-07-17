@@ -34,7 +34,7 @@ export async function GET(request: Request) {
 
     // 2. Fetch User Data
     const { data: profile } = await adminClient
-      .from("profiles")
+      .from("users")
       .select("*")
       .eq("id", userId)
       .maybeSingle();

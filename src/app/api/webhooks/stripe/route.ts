@@ -66,8 +66,6 @@ export async function POST(request: Request) {
         .from("subscriptions")
         .update({
           status,
-          stripe_price_id: subscription.items.data[0]?.price?.id ?? null,
-          current_period_start: periodStart ? new Date(periodStart * 1000).toISOString() : null,
           current_period_end: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
         })
         .eq("stripe_subscription_id", subscription.id);

@@ -18,6 +18,7 @@ import {
   Activity,
   DollarSign,
   ChevronRight,
+  Cpu,
 } from "lucide-react";
 import type {
   SwotItem,
@@ -348,6 +349,37 @@ export default async function StrategyOverviewPage({
                 className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
               >
                 {t("manage_milestones")}
+                <ChevronRight className="h-3 w-3" />
+              </Link>
+            </div>
+
+            {/* STRATEJİK DEĞERLENDİRME CARD */}
+            <div className="border-border-subtle bg-bg-secondary/40 hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border p-6 transition-all duration-300">
+              <div>
+                <div className="mb-4 flex items-center justify-between">
+                  <div className="rounded-lg border border-emerald-500/25 bg-emerald-500/10 p-2 text-emerald-400">
+                    <Cpu className="h-5 w-5" />
+                  </div>
+                  <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
+                    Module 05
+                  </span>
+                </div>
+                <h2 className="text-lg font-bold text-white">{t("strategy_questionnaire") || "Strategic Questionnaire"}</h2>
+                <p className="text-fg-muted mt-2 text-xs">
+                  {t("strategy_questionnaire_desc") || "Compare model evaluations, latencies, and costs on platform strategy."}
+                </p>
+                <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-2 text-center text-xs">
+                  <span className="text-fg-muted block text-[9px] font-bold tracking-wider uppercase">
+                    Soru Havuzu
+                  </span>
+                  <span className="text-lg font-extrabold text-white">35 Aktif Soru</span>
+                </div>
+              </div>
+              <Link
+                href="/admin/strategy/questionnaire"
+                className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
+              >
+                {t("run_questionnaire") || "Run Evaluation"}
                 <ChevronRight className="h-3 w-3" />
               </Link>
             </div>

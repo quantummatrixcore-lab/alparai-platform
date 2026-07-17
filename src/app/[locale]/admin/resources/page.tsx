@@ -17,5 +17,5 @@ export default async function ResourcesPage({ params }: { params: Promise<{ loca
   // Authenticate user & check admin access
   await requireAdmin();
 
-  return <ResourcesClient />;
+  return <ResourcesClient locale={locale} />;
 }

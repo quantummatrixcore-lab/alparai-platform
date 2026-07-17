@@ -26,7 +26,7 @@ export async function GET() {
 
     const [profileRes, incidentsRes, commentsRes, votesRes, appsRes] = await Promise.all([
       adminClient
-        .from("profiles")
+        .from("users")
         .select("id, email, username, full_name, avatar_url, bio, role, created_at, updated_at")
         .eq("id", userId)
         .maybeSingle(),

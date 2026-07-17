@@ -66,7 +66,7 @@ export default async function AdminUsersPage({ params }: { params: Promise<{ loc
                     <RoleSelect
                       userId={u["id"] as string}
                       currentRole={(u["role"] as string) ?? "user"}
-                      currentUserRole={user.role}
+                      currentUserRole={user.role as "user" | "moderator" | "admin" | "ceo"}
                     />
                   </td>
                   <td className="p-4">

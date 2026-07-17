@@ -78,7 +78,7 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
                     )}
                   </td>
                   <td className="text-fg-muted px-6 py-4 font-mono text-xs">
-                    {new Date(sub.created_at).toLocaleDateString()}
+                    {sub.created_at ? new Date(sub.created_at).toLocaleDateString() : ""}
                   </td>
                 </tr>
               ))}

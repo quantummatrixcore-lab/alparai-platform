@@ -350,16 +350,17 @@ const userRoleSchema = z.object({
   role: z.enum(["user", "moderator", "admin", "ceo"]),
 });
 
-const ROLE_RANK: Record<"user" | "advisor" | "moderator" | "admin" | "ceo", number> = {
+const ROLE_RANK: Record<"user" | "advisor" | "moderator" | "admin" | "ceo" | "instructor", number> = {
   user: 0,
   advisor: 1,
+  instructor: 1,
   moderator: 2,
   admin: 3,
   ceo: 4,
 };
 
 function canAssignRole(
-  actorRole: "user" | "advisor" | "moderator" | "admin" | "ceo",
+  actorRole: "user" | "advisor" | "moderator" | "admin" | "ceo" | "instructor",
   targetRole: "user" | "advisor" | "moderator" | "admin" | "ceo",
 ): boolean {
   if (actorRole === "ceo") return true;
