@@ -19,9 +19,19 @@ export interface AutopilotWorkerConfig {
   updated_at: string;
 }
 
+export interface CronJobLog {
+  id: string;
+  cron_name: string;
+  started_at: string;
+  completed_at: string | null;
+  status: "running" | "success" | "failed";
+  error_message: string | null;
+  execution_metadata: Record<string, unknown> | null;
+}
+
 export interface AdminAutopilotSnapshot {
   runs: PersistedAutopilotRunWithMeta[];
-  stats: AutopilotRunStats;
+  stats: AutopilotRunStats & { avgLatencyMs: number };
   breakers: Record<string, BreakerSnapshot | null>;
   policies: ReadonlyArray<{
     action: string;
@@ -33,6 +43,15 @@ export interface AdminAutopilotSnapshot {
   queue: { available: boolean; size: number };
   workerConfigs: AutopilotWorkerConfig[];
   globalKillSwitch: boolean;
+  cronLogs: CronJobLog[];
+  activeEngines: Array<{
+    id: string;
+    name: string;
+    type: string;
+    status: string;
+    lastHeartbeat: string | null;
+  }>;
+  dailyTokens: number;
 }
 
 export interface AdminAutopilotResult {
@@ -77,16 +96,56 @@ export async function getAdminAutopilotSnapshot(limit = 100): Promise<AdminAutop
   const { getQueue } = await import("@/lib/autopilot");
   const q = getQueue();
   const size = await q.size();
+
+  // 1. Cron run logs from DB
+  const { data: cronLogsData } = await dbAdmin
+    .from("cron_job_logs" as never)
+    .select("*")
+    .order("started_at", { ascending: false })
+    .limit(20);
+
+  const cronLogs = ((cronLogsData || []) as Record<string, unknown>[]).map((row) => ({
+    id: String(row["id"] || ""),
+    cron_name: String(row["cron_name"] || ""),
+    started_at: String(row["started_at"] || ""),
+    completed_at: row["completed_at"] ? String(row["completed_at"]) : null,
+    status: (row["status"] || "failed") as "running" | "success" | "failed",
+    error_message: row["error_message"] ? String(row["error_message"]) : null,
+    execution_metadata: (row["execution_metadata"] || null) as Record<string, unknown> | null,
+  }));
+
+  // 2. Active engines status (from engine registry)
+  const { getRegistryReport } = await import("@/lib/engine-registry");
+  const activeEngines = getRegistryReport().services;
+
+  // 3. Active daily token count (from cross_audit_runs last 24h)
+  const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  const { data: crossAuditRuns } = await dbAdmin
+    .from("cross_audit_runs")
+    .select("tokens_in, tokens_out")
+    .gte("created_at", oneDayAgo);
+
+  const dailyTokens = (crossAuditRuns || []).reduce(
+    (acc, curr) => acc + (curr.tokens_in || 0) + (curr.tokens_out || 0),
+    0,
+  );
+
+  const avgLatencyMs =
+    runs.length > 0 ? runs.reduce((acc, r) => acc + r.duration_ms, 0) / runs.length : 0;
+
   return {
     ok: true,
     snapshot: {
       runs,
-      stats,
+      stats: { ...stats, avgLatencyMs },
       breakers,
       policies,
       queue: { available: q.available, size },
       workerConfigs,
       globalKillSwitch,
+      cronLogs,
+      activeEngines,
+      dailyTokens,
     },
   };
 }

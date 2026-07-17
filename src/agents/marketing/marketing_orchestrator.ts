@@ -20,8 +20,7 @@ export class MarketingOrchestrator {
    */
   async runCampaign() {
     // prettier-ignore
-    // eslint-disable-next-line no-console
-    if (process.env.MARKETING_AUTOPILOT !== "enabled") { console.log("[MarketingOrchestrator] simulated."); return; }
+    if (process.env.MARKETING_AUTOPILOT !== "enabled") { logger.info("[MarketingOrchestrator] simulated."); return; }
     logger.info("=== Starting Autonomous Marketing Campaign ===");
 
     // 1. Get recent updates (Mock data for now)

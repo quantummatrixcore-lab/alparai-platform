@@ -22,3 +22,36 @@ export async function isCostKillSwitchActive(): Promise<boolean> {
 
   return false;
 }
+
+export async function getDailyCost(): Promise<number> {
+  if (process.env.MOCK_DAILY_COST !== undefined) {
+    return Number(process.env.MOCK_DAILY_COST);
+  }
+  if (
+    typeof globalThis !== "undefined" &&
+    (globalThis as Record<string, unknown>).__MOCK_DAILY_COST !== undefined
+  ) {
+    return (globalThis as Record<string, unknown>).__MOCK_DAILY_COST as number;
+  }
+
+  try {
+    const { createAdminClient } = await import("@/lib/supabase/admin");
+    const admin = createAdminClient();
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const { data: llmDaily, error } = await admin
+      .from("cross_audit_runs")
+      .select("cost_usd")
+      .gte("created_at", oneDayAgo);
+
+    if (error) {
+      throw error;
+    }
+
+    if (llmDaily) {
+      return llmDaily.reduce((acc, curr) => acc + Number(curr.cost_usd || 0), 0);
+    }
+  } catch {
+    // Silently fallback if DB is not initialized or fails
+  }
+  return 0;
+}

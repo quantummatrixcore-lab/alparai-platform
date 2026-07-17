@@ -29,7 +29,7 @@ import { HuggingFaceAdapter } from "./adapters/huggingface";
 import { GoogleAdapter } from "./adapters/google";
 import { BlackboxAdapter } from "./adapters/blackbox";
 import { NvidiaNgcAdapter } from "./adapters/nvidia-ngc";
-import { isCostKillSwitchActive } from "./cost-guard";
+import { isCostKillSwitchActive, getDailyCost } from "./cost-guard";
 
 // Export the type interfaces from the common types file to keep backward compatibility
 export type {
@@ -127,14 +127,30 @@ export async function callModel(request: GatewayRequest): Promise<GatewayResult>
     };
   }
 
-  const provider = request.model.provider || "openrouter";
+  // Cost Router fallback routing
+  const dailyCost = await getDailyCost();
+  let modelToCall = request.model;
+
+  if (dailyCost > 45) {
+    // daily cost > $45: Free-tier / local models (T0)
+    if (modelToCall.tier === "premium") {
+      modelToCall = FREE_TRIAGE_MODELS[0]!;
+    }
+  } else if (dailyCost > 30) {
+    // daily cost > $30: Flash models (T2/T1)
+    if (modelToCall.tier === "premium") {
+      modelToCall = TRIAGE_SLOT_1_CHAIN[0]!;
+    }
+  }
+
+  const provider = modelToCall.provider || "openrouter";
   if (provider === "blackbox" && process.env.ENABLE_BLACKBOX_PROVIDER !== "true") {
     return {
       ok: false,
       error: {
         code: "unsupported_provider",
         message: `Provider '${provider}' is disabled by feature flag.`,
-        model: request.model.id,
+        model: modelToCall.id,
       },
     };
   }
@@ -143,14 +159,14 @@ export async function callModel(request: GatewayRequest): Promise<GatewayResult>
 
   if (!adapter) {
     logger.error(`[Gateway] Unsupported provider requested: ${provider}`, {
-      model: request.model.id,
+      model: modelToCall.id,
     });
     return {
       ok: false,
       error: {
         code: "unsupported_provider",
         message: `Provider '${provider}' is not supported or not implemented.`,
-        model: request.model.id,
+        model: modelToCall.id,
       },
     };
   }
@@ -161,12 +177,12 @@ export async function callModel(request: GatewayRequest): Promise<GatewayResult>
       error: {
         code: "no_api_key",
         message: `API Key for provider '${provider}' is not configured in environment variables.`,
-        model: request.model.id,
+        model: modelToCall.id,
       },
     };
   }
 
-  return adapter.call(request);
+  return adapter.call({ ...request, model: modelToCall });
 }
 
 /**
@@ -178,10 +194,19 @@ export async function callWithFailover(
   request: Omit<GatewayRequest, "model">,
   models: readonly GatewayModel[],
 ): Promise<GatewayResult & { attemptedModels: string[] }> {
+  const dailyCost = await getDailyCost();
+  let activeModels = models;
+
+  if (dailyCost > 45) {
+    activeModels = FREE_TRIAGE_MODELS;
+  } else if (dailyCost > 30) {
+    activeModels = TRIAGE_SLOT_1_CHAIN;
+  }
+
   const attemptedModels: string[] = [];
   let lastError: GatewayError | null = null;
 
-  for (const model of models) {
+  for (const model of activeModels) {
     const modelKey = `${model.provider}:${model.id}`;
     attemptedModels.push(modelKey);
 

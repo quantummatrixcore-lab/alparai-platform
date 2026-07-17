@@ -1,3 +1,4 @@
+import { withCronLogger } from "@/lib/utils/cron-logger";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { fetchRedditPosts } from "@/lib/connectors/reddit";
@@ -25,7 +26,7 @@ function getDomain(url: string) {
   }
 }
 
-export async function GET(request: Request) {
+async function getHandler(request: Request) {
   const authHeader = request.headers.get("authorization");
   const isAuthorized = authHeader === `Bearer ${process.env.CRON_SECRET}`;
   if (!isAuthorized) return new NextResponse("Unauthorized", { status: 401 });
@@ -212,3 +213,5 @@ export async function GET(request: Request) {
     ai_verified_published: aiPublishedCount,
   });
 }
+
+export const GET = withCronLogger("fetch-external", getHandler);

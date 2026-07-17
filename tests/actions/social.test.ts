@@ -26,12 +26,18 @@ vi.mock("@/lib/supabase/server", () => ({
   }),
 }));
 
+vi.mock("@/lib/marketing/publishers/linkedin", () => ({
+  publishToLinkedIn: vi.fn().mockResolvedValue({ success: true, shareId: "li-mock-123" }),
+}));
+
 import {
   getSocialPosts,
   getSocialTemplates,
   getSocialAssets,
   createSocialPost,
   updateSocialPost,
+  getMarketingDrafts,
+  publishDraftToLinkedInAction,
 } from "@/actions/social";
 
 describe("social actions", () => {
@@ -122,5 +128,61 @@ describe("social actions", () => {
     await expect(updateSocialPost("post-1", { title: "New Title" })).rejects.toThrow(
       "Update failed",
     );
+  });
+
+  it("getMarketingDrafts fetches marketing drafts", async () => {
+    mockOrder.mockResolvedValue({ data: [{ id: "draft-1", platform: "linkedin" }], error: null });
+    const res = await getMarketingDrafts();
+    expect(res).toEqual([{ id: "draft-1", platform: "linkedin" }]);
+  });
+
+  describe("publishDraftToLinkedInAction", () => {
+    beforeEach(() => {
+      vi.stubEnv("DISABLE_LINKEDIN_POSTING", "false");
+    });
+
+    it("should throw if disabled via env", async () => {
+      vi.stubEnv("DISABLE_LINKEDIN_POSTING", "true");
+      await expect(publishDraftToLinkedInAction("draft-1")).rejects.toThrow(
+        "LinkedIn publishing is disabled.",
+      );
+    });
+
+    it("should successfully publish draft and log audit trail", async () => {
+      // Mock single draft fetch:
+      const mockSingle = vi.fn().mockResolvedValue({
+        data: {
+          id: "draft-1",
+          platform: "linkedin",
+          content: "Test Content",
+          status: "pending_approval",
+        },
+        error: null,
+      });
+      mockSelect.mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          single: mockSingle,
+        }),
+      });
+
+      const res = await publishDraftToLinkedInAction("draft-1");
+      expect(res.success).toBe(true);
+
+      // Verify draft status is updated to published:
+      expect(mockUpdate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          status: "published",
+        }),
+      );
+
+      // Verify audit log insert:
+      expect(mockInsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action: "social.publish_linkedin",
+          entity_type: "marketing_draft",
+          entity_id: "draft-1",
+        }),
+      );
+    });
   });
 });

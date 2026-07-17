@@ -6,28 +6,39 @@ vi.hoisted(() => {
   vi.doMock("@/lib/auth/session", () => ({
     requireAdmin: vi.fn(),
   }));
-  vi.doMock("@/lib/supabase/admin", () => ({
-    createAdminClient: () => ({
-      from: (table: string) => {
-        if (table === "autopilot_worker_config") {
-          return {
-            select: () =>
-              Promise.resolve({
-                data: [
-                  { worker_name: "moderation", enabled: true, updated_at: "2026-07-06T12:00:00Z" },
-                ],
-                error: null,
-              }),
-            upsert: () => Promise.resolve({ error: null }),
-          };
-        }
-        return {
-          select: () => Promise.resolve({ data: [], error: null }),
-          upsert: () => Promise.resolve({ error: null }),
-        };
-      },
-    }),
-  }));
+  vi.doMock("@/lib/supabase/admin", () => {
+    const chainable = {
+      select: () => chainable,
+      order: () => chainable,
+      limit: () => chainable,
+      gte: () => chainable,
+      then: (resolve: (value: { data: Record<string, unknown>[]; error: null }) => void) =>
+        resolve({ data: [], error: null }),
+    };
+    return {
+      createAdminClient: () => ({
+        from: (table: string) => {
+          if (table === "autopilot_worker_config") {
+            return {
+              select: () =>
+                Promise.resolve({
+                  data: [
+                    {
+                      worker_name: "moderation",
+                      enabled: true,
+                      updated_at: "2026-07-06T12:00:00Z",
+                    },
+                  ],
+                  error: null,
+                }),
+              upsert: () => Promise.resolve({ error: null }),
+            };
+          }
+          return chainable;
+        },
+      }),
+    };
+  });
   vi.doMock("@/lib/autopilot", () => ({
     listRecentRuns: vi.fn(),
     summarizeRuns: vi.fn(),

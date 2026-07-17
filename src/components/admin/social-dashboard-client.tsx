@@ -22,7 +22,7 @@ import {
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { createSocialPost, updateSocialPost } from "@/actions/social";
+import { createSocialPost, updateSocialPost, publishDraftToLinkedInAction } from "@/actions/social";
 import { toast } from "sonner";
 import { logger } from "@/lib/utils/logger";
 
@@ -99,11 +99,23 @@ export interface SocialAsset {
   created_at: string;
 }
 
+export interface MarketingDraft {
+  id: string;
+  platform: string;
+  content: string;
+  media_url: string | null;
+  status: "draft" | "pending_approval" | "published" | "rejected";
+  scheduled_for: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Props {
   initialPosts: SocialPost[];
   initialTemplates: SocialTemplate[];
   initialAssets: SocialAsset[];
   initialAccounts: SocialAccount[];
+  initialMarketingDrafts?: MarketingDraft[];
 }
 
 export function SocialDashboardClient({
@@ -111,9 +123,11 @@ export function SocialDashboardClient({
   initialTemplates,
   initialAssets: _initialAssets,
   initialAccounts,
+  initialMarketingDrafts = [],
 }: Props) {
   const tAdmin = useTranslations("admin");
   const [posts, setPosts] = useState<SocialPost[]>(initialPosts);
+  const [marketingDrafts, setMarketingDrafts] = useState<MarketingDraft[]>(initialMarketingDrafts);
   const [activeTab, setActiveTab] = useState<
     "queue" | "calendar" | "drafts" | "templates" | "analytics"
   >("queue");
@@ -292,6 +306,25 @@ export function SocialDashboardClient({
         );
       } catch (err) {
         logger.error("Failed to publish", undefined, err instanceof Error ? err : undefined);
+      }
+    });
+  };
+
+  const handlePublishLinkedIn = (draftId: string) => {
+    startTransition(async () => {
+      try {
+        const res = await publishDraftToLinkedInAction(draftId);
+        if (res.success) {
+          toast.success("Successfully published to LinkedIn!");
+          setMarketingDrafts((prev) =>
+            prev.map((d) => (d.id === draftId ? { ...d, status: "published" } : d)),
+          );
+        } else {
+          toast.error(res.error || "Failed to publish.");
+        }
+      } catch (err) {
+        logger.error("Failed to publish draft", undefined, err instanceof Error ? err : undefined);
+        toast.error(err instanceof Error ? err.message : "An error occurred.");
       }
     });
   };
@@ -610,6 +643,78 @@ export function SocialDashboardClient({
                 <option value="instagram">Instagram</option>
               </select>
             </div>
+
+            {/* LinkedIn Pending Approval Drafts Section */}
+            {marketingDrafts.filter((d) => d.status === "pending_approval").length > 0 && (
+              <div className="mb-6 space-y-4 border-b border-white/10 pb-6">
+                <h3 className="text-fg-primary flex items-center gap-2 text-sm font-bold">
+                  <Linkedin className="text-brand-400 h-4 w-4" />
+                  LinkedIn Drafts (Pending Founder Approval)
+                </h3>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  {marketingDrafts
+                    .filter((d) => d.status === "pending_approval")
+                    .map((draft) => (
+                      <div
+                        key={draft.id}
+                        className="bg-bg-secondary/40 border-brand-500/20 hover:border-brand-500/40 flex flex-col justify-between rounded-2xl border p-5 transition-all duration-300"
+                      >
+                        <div>
+                          <div className="mb-3 flex items-center justify-between">
+                            <div className="text-fg-primary flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-bold">
+                              <Linkedin className="text-brand-400 h-3 w-3" />
+                              <span>LinkedIn</span>
+                            </div>
+                            <span className="rounded border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-400 uppercase">
+                              Pending Approval
+                            </span>
+                          </div>
+                          <p className="text-fg-secondary border-border-subtle/50 line-clamp-6 rounded-lg border bg-black/20 p-3 font-mono text-xs whitespace-pre-wrap">
+                            {draft.content}
+                          </p>
+                          {draft.media_url && (
+                            <div className="mt-3 max-h-[150px] overflow-hidden rounded-lg border border-white/10">
+                              <img
+                                src={draft.media_url}
+                                alt="Draft attachment"
+                                className="h-full w-full object-cover"
+                              />
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="border-border-subtle/50 mt-4 flex flex-col gap-3 border-t pt-4">
+                          <div className="text-fg-muted flex items-center justify-between text-[10px] font-semibold">
+                            <span>Created {new Date(draft.created_at).toLocaleDateString()}</span>
+                          </div>
+
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              onClick={() => handleCopy(draft.id, draft.content)}
+                              className="text-fg-secondary hover:text-fg-primary rounded-lg border border-white/10 bg-white/5 p-2 transition-all hover:bg-white/10"
+                              title="Copy to Clipboard"
+                            >
+                              {copiedId === draft.id ? (
+                                <Check className="text-success-400 h-4 w-4" />
+                              ) : (
+                                <Copy className="h-4 w-4" />
+                              )}
+                            </button>
+                            <button
+                              onClick={() => handlePublishLinkedIn(draft.id)}
+                              disabled={isPending}
+                              className="bg-brand-500 hover:bg-brand-600 flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold text-white transition-all disabled:opacity-50"
+                            >
+                              <Send className="h-3 w-3" />
+                              {isPending ? "Publishing..." : "Publish to LinkedIn"}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               {posts

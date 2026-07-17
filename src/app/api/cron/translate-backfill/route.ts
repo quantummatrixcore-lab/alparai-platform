@@ -1,10 +1,11 @@
+import { withCronLogger } from "@/lib/utils/cron-logger";
 import { NextResponse } from "next/server";
 import { backfillIncidentsTR } from "@/actions/translations";
 import { logger } from "@/lib/utils/logger";
 
 export const maxDuration = 60; // 60 seconds is max on hobby, gives time for 10-15 translations
 
-export async function GET(request: Request) {
+async function getHandler(request: Request) {
   try {
     const authHeader = request.headers.get("authorization");
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -20,3 +21,5 @@ export async function GET(request: Request) {
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
+
+export const GET = withCronLogger("translate-backfill", getHandler);

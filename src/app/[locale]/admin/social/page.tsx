@@ -2,13 +2,17 @@ import { getTranslations } from "next-intl/server";
 import { setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
 import { requireAdmin } from "@/lib/auth/session";
-import { SocialDashboardClient } from "@/components/admin/social-dashboard-client";
+import {
+  SocialDashboardClient,
+  type MarketingDraft,
+} from "@/components/admin/social-dashboard-client";
 import { ShareNetwork } from "@phosphor-icons/react/dist/ssr";
 import {
   getSocialPosts,
   getSocialTemplates,
   getSocialAssets,
   getSocialAccounts,
+  getMarketingDrafts,
 } from "@/actions/social";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -24,11 +28,12 @@ export default async function SocialPage({ params }: { params: Promise<{ locale:
   // Authenticate user & check admin access
   await requireAdmin();
 
-  const [posts, templates, assets, accounts] = await Promise.all([
+  const [posts, templates, assets, accounts, marketingDrafts] = await Promise.all([
     getSocialPosts(),
     getSocialTemplates(),
     getSocialAssets(),
     getSocialAccounts(),
+    getMarketingDrafts(),
   ]);
 
   return (
@@ -53,6 +58,7 @@ export default async function SocialPage({ params }: { params: Promise<{ locale:
           initialTemplates={templates}
           initialAssets={assets}
           initialAccounts={accounts}
+          initialMarketingDrafts={marketingDrafts as MarketingDraft[]}
         />
       </Container>
     </div>

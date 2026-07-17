@@ -3892,6 +3892,7 @@ export type Database = {
           role_view: string | null
           soft_deleted_at: string | null
           stripe_customer_id: string | null
+          stripe_price_id: string | null
           subscription_tier: string | null
           updated_at: string
           username: string | null
@@ -3916,6 +3917,7 @@ export type Database = {
           role_view?: string | null
           soft_deleted_at?: string | null
           stripe_customer_id?: string | null
+          stripe_price_id?: string | null
           subscription_tier?: string | null
           updated_at?: string
           username?: string | null
@@ -3940,6 +3942,7 @@ export type Database = {
           role_view?: string | null
           soft_deleted_at?: string | null
           stripe_customer_id?: string | null
+          stripe_price_id?: string | null
           subscription_tier?: string | null
           updated_at?: string
           username?: string | null

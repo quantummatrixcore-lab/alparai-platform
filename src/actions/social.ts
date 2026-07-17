@@ -163,3 +163,68 @@ export async function getSocialAccounts(): Promise<SocialAccount[]> {
   if (error) throw new Error(error.message);
   return (data || []) as unknown as SocialAccount[];
 }
+
+export async function getMarketingDrafts(): Promise<unknown[]> {
+  await requireAdmin();
+  const supabase = await createServerClient();
+  const { data, error } = await supabase
+    .from("marketing_drafts" as never)
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) throw new Error(error.message);
+  return data || [];
+}
+
+export async function publishDraftToLinkedInAction(
+  draftId: string,
+): Promise<{ success: boolean; error?: string }> {
+  const user = await requireAdmin();
+  if (!user) throw new Error("Unauthorized");
+
+  if (process.env.DISABLE_LINKEDIN_POSTING === "true") {
+    throw new Error("LinkedIn publishing is disabled.");
+  }
+
+  const supabase = await createServerClient();
+
+  const { data: draft, error: fetchError } = await supabase
+    .from("marketing_drafts" as never)
+    .select("*")
+    .eq("id", draftId)
+    .single();
+
+  if (fetchError || !draft) {
+    throw new Error("Draft not found.");
+  }
+
+  const typedDraft = draft as Record<string, unknown>;
+  if (typedDraft["status"] !== "pending_approval") {
+    throw new Error("Draft is not pending approval.");
+  }
+
+  const { publishToLinkedIn } = await import("@/lib/marketing/publishers/linkedin");
+  const res = await publishToLinkedIn(String(typedDraft["content"] || ""), "ALPAR AI Update");
+
+  if (!res.success) {
+    throw new Error(res.error || "LinkedIn publishing failed.");
+  }
+
+  // Update draft status
+  await supabase
+    .from("marketing_drafts" as never)
+    .update({ status: "published", updated_at: new Date().toISOString() } as never)
+    .eq("id", draftId);
+
+  // Write audit log
+  await supabase.from("audit_log").insert({
+    actor_id: user.id,
+    action: "social.publish_linkedin",
+    entity_type: "marketing_draft",
+    entity_id: draftId,
+    before_data: { status: "pending_approval" },
+    after_data: { status: "published", share_id: res.shareId },
+  });
+
+  revalidatePath("/admin/social", "page");
+  return { success: true };
+}

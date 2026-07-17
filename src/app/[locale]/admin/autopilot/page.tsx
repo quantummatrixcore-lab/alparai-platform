@@ -50,8 +50,18 @@ export default async function AdminAutopilotPage({
       </Container>
     );
   }
-  const { runs, stats, breakers, policies, queue, workerConfigs, globalKillSwitch } =
-    result.snapshot;
+  const {
+    runs,
+    stats,
+    breakers,
+    policies,
+    queue,
+    workerConfigs,
+    globalKillSwitch,
+    cronLogs,
+    activeEngines,
+    dailyTokens,
+  } = result.snapshot;
 
   return (
     <Container className="space-y-8 py-10">
@@ -76,7 +86,7 @@ export default async function AdminAutopilotPage({
       </header>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-9">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-11">
         <Stat label={t("stats_total")} value={stats.total} />
         <Stat label={t("stats_succeeded")} value={stats.succeeded} accent="ok" />
         <Stat label={t("stats_failed")} value={stats.failed} accent="danger" />
@@ -86,6 +96,14 @@ export default async function AdminAutopilotPage({
         <Stat label={t("stats_tokens")} value={stats.totalTokens.toLocaleString()} />
         <Stat label={t("stats_p50")} value={formatMs(stats.p50DurationMs)} />
         <Stat label={t("stats_p95")} value={formatMs(stats.p95DurationMs)} />
+        <Stat
+          label={locale === "tr" ? "Ort. Gecikme" : "Avg Latency"}
+          value={formatMs(stats.avgLatencyMs)}
+        />
+        <Stat
+          label={locale === "tr" ? "Günlük Token" : "Daily Tokens"}
+          value={dailyTokens.toLocaleString()}
+        />
       </div>
 
       {/* Workers Management Component */}
@@ -149,6 +167,121 @@ export default async function AdminAutopilotPage({
                 ))}
               </tbody>
             </table>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Active Engines Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              {locale === "tr" ? "Aktif Motor Durumları" : "Active Engines Status"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <caption className="sr-only">Active Engines Status Table</caption>
+                <thead className="text-fg-muted">
+                  <tr>
+                    <th className="py-2 font-medium">{locale === "tr" ? "Motor" : "Engine"}</th>
+                    <th className="py-2 font-medium">{locale === "tr" ? "Tür" : "Type"}</th>
+                    <th className="py-2 font-medium">{locale === "tr" ? "Durum" : "Status"}</th>
+                    <th className="py-2 font-medium">
+                      {locale === "tr" ? "Son Kalp Atışı" : "Last Heartbeat"}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {activeEngines.map((engine) => (
+                    <tr key={engine.id} className="border-border-subtle border-t">
+                      <td className="text-fg-secondary py-2 font-mono">{engine.name}</td>
+                      <td className="py-2 font-mono text-xs">{engine.type}</td>
+                      <td className="py-2">
+                        <span
+                          className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium ${
+                            engine.status === "healthy"
+                              ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
+                              : engine.status === "degraded"
+                                ? "border-amber-500/20 bg-amber-500/10 text-amber-500"
+                                : engine.status === "down"
+                                  ? "border-rose-500/20 bg-rose-500/10 text-rose-400"
+                                  : "text-fg-secondary border-white/10 bg-white/5"
+                          }`}
+                        >
+                          {engine.status}
+                        </span>
+                      </td>
+                      <td className="text-fg-muted py-2 text-xs">
+                        {engine.lastHeartbeat ? formatTime(engine.lastHeartbeat) : "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Cron Job Logs Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{locale === "tr" ? "Cron İş Günlükleri" : "Cron Job Run Logs"}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {cronLogs.length === 0 ? (
+              <p className="text-fg-muted text-sm">
+                {locale === "tr"
+                  ? "Henüz cron çalışması kaydedilmemiş."
+                  : "No cron runs recorded yet."}
+              </p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <caption className="sr-only">Cron Job Run Logs Table</caption>
+                  <thead className="text-fg-muted">
+                    <tr>
+                      <th className="py-2 font-medium">Cron</th>
+                      <th className="py-2 font-medium">{locale === "tr" ? "Durum" : "Status"}</th>
+                      <th className="py-2 font-medium">
+                        {locale === "tr" ? "Başlangıç" : "Started At"}
+                      </th>
+                      <th className="py-2 font-medium">{locale === "tr" ? "Hata" : "Error"}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cronLogs.map((log) => (
+                      <tr key={log.id} className="border-border-subtle border-t">
+                        <td className="text-fg-secondary py-2 font-mono text-xs">
+                          {log.cron_name}
+                        </td>
+                        <td className="py-2">
+                          <span
+                            className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium ${
+                              log.status === "success"
+                                ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
+                                : log.status === "failed"
+                                  ? "border-rose-500/20 bg-rose-500/10 text-rose-400"
+                                  : "border-amber-500/20 bg-amber-500/10 text-amber-500"
+                            }`}
+                          >
+                            {log.status}
+                          </span>
+                        </td>
+                        <td className="text-fg-muted py-2 text-xs">{formatTime(log.started_at)}</td>
+                        <td
+                          className="text-fg-muted max-w-[20ch] truncate py-2 text-xs"
+                          title={log.error_message || ""}
+                        >
+                          {log.error_message || "—"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

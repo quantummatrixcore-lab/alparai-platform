@@ -67,7 +67,7 @@ export async function POST(request: Request) {
         .update({
           status,
           current_period_end: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
-          stripe_price_id: priceId || null,
+          stripe_price_id: (priceId || null) as never,
         })
         .eq("stripe_subscription_id", subscription.id);
       break;

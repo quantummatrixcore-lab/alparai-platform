@@ -4,6 +4,7 @@ import "../helpers/setup";
 
 vi.hoisted(() => {
   vi.stubEnv("OPENROUTER_API_KEY", "test-key");
+  vi.stubEnv("GOOGLE_API_KEY", "test-google-key");
 });
 
 // Mock the openai client
@@ -53,8 +54,9 @@ vi.mock("@/lib/utils/logger", () => ({
 import OpenAI from "openai";
 vi.mock("@/lib/ai/cost-guard", () => ({
   isCostKillSwitchActive: vi.fn().mockResolvedValue(false),
+  getDailyCost: vi.fn().mockResolvedValue(0),
 }));
-import { isCostKillSwitchActive } from "@/lib/ai/cost-guard";
+import { isCostKillSwitchActive, getDailyCost } from "@/lib/ai/cost-guard";
 import { callModel, callWithFailover } from "@/lib/ai/openrouter-gateway";
 import type { GatewayModel } from "@/lib/ai/types";
 
@@ -217,6 +219,123 @@ describe("OpenRouter API Gateway", () => {
 
       expect(res.ok).toBe(false);
       expect(res.attemptedModels.length).toBe(3);
+    });
+  });
+
+  describe("Cost Router Dynamic Fallback", () => {
+    it("uses standard models when cost is normal", async () => {
+      vi.mocked(getDailyCost).mockResolvedValueOnce(10.0); // normal
+      openaiMock.chat.completions.create.mockResolvedValueOnce({
+        model: "anthropic/claude-3.5-sonnet",
+        choices: [{ message: { content: "normal-pro" } }],
+      });
+
+      const res = await callModel({
+        systemPrompt: "sys",
+        userMessage: "usr",
+        model: {
+          id: "anthropic/claude-3.5-sonnet",
+          provider: "openrouter",
+          tier: "premium",
+          maxTokens: 4096,
+        },
+      });
+
+      expect(res.ok).toBe(true);
+      if (res.ok) {
+        expect(res.data.content).toBe("normal-pro");
+      }
+    });
+
+    it("downgrades to T1/T2 Flash models when cost > $30", async () => {
+      vi.mocked(getDailyCost).mockResolvedValueOnce(35.0); // > $30
+
+      const originalFetch = globalThis.fetch;
+      globalThis.fetch = vi.fn().mockResolvedValue({
+        status: 200,
+        ok: true,
+        json: async () => ({
+          candidates: [
+            {
+              content: {
+                parts: [{ text: "flash-fallback" }],
+              },
+            },
+          ],
+          usageMetadata: {
+            promptTokenCount: 5,
+            candidatesTokenCount: 10,
+            totalTokenCount: 15,
+          },
+        }),
+      }) as any;
+
+      try {
+        const res = await callModel({
+          systemPrompt: "sys",
+          userMessage: "usr",
+          model: {
+            id: "anthropic/claude-3.5-sonnet",
+            provider: "openrouter",
+            tier: "premium",
+            maxTokens: 4096,
+          },
+        });
+
+        expect(res.ok).toBe(true);
+        if (res.ok) {
+          expect(res.data.content).toBe("flash-fallback");
+          expect(res.data.model).toBe("gemini-1.5-flash");
+        }
+      } finally {
+        globalThis.fetch = originalFetch;
+      }
+    });
+
+    it("downgrades failover chain to FREE_TRIAGE_MODELS when cost > $45", async () => {
+      vi.mocked(getDailyCost).mockResolvedValue(50.0); // > $45
+
+      const originalFetch = globalThis.fetch;
+      globalThis.fetch = vi.fn().mockResolvedValue({
+        status: 200,
+        ok: true,
+        json: async () => ({
+          candidates: [
+            {
+              content: {
+                parts: [{ text: "free-fallback" }],
+              },
+            },
+          ],
+          usageMetadata: {
+            promptTokenCount: 5,
+            candidatesTokenCount: 10,
+            totalTokenCount: 15,
+          },
+        }),
+      }) as any;
+
+      try {
+        const res = await callWithFailover(
+          {
+            systemPrompt: "sys",
+            userMessage: "usr",
+          },
+          [
+            {
+              id: "anthropic/claude-3.5-sonnet",
+              provider: "openrouter",
+              tier: "premium",
+              maxTokens: 4096,
+            },
+          ],
+        );
+
+        expect(res.ok).toBe(true);
+        expect(res.attemptedModels[0]).toContain("google:gemini-1.5-flash");
+      } finally {
+        globalThis.fetch = originalFetch;
+      }
     });
   });
 });

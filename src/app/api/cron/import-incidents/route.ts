@@ -1,3 +1,4 @@
+import { withCronLogger } from "@/lib/utils/cron-logger";
 import { type NextRequest, NextResponse } from "next/server";
 import { parseIncidentCSV } from "@/lib/import/csv-parser";
 import { importIncidents } from "@/lib/import/incident-importer";
@@ -5,7 +6,7 @@ import { logger } from "@/lib/utils/logger";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
   const isVercelCron = request.headers.get("x-vercel-cron") === "1";
   const cronSecret = process.env.CRON_SECRET;
@@ -104,3 +105,5 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+
+export const GET = withCronLogger("import-incidents", getHandler);

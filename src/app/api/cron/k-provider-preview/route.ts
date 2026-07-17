@@ -1,3 +1,4 @@
+import { withCronLogger } from "@/lib/utils/cron-logger";
 import { type NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getResendClient } from "@/lib/email/resend";
@@ -5,7 +6,7 @@ import { logger } from "@/lib/utils/logger";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
   const isVercelCron = request.headers.get("x-vercel-cron") === "1";
   const cronSecret = process.env.CRON_SECRET;
@@ -35,7 +36,10 @@ export async function GET(request: NextRequest) {
     const sentIds: string[] = [];
     if (pending && pending.length > 0) {
       for (const item of pending) {
-        const provider = item.ai_providers as unknown as { name: string; contact_email: string } | null;
+        const provider = item.ai_providers as unknown as {
+          name: string;
+          contact_email: string;
+        } | null;
         if (!provider || !provider.contact_email) {
           logger.warn(`[K-ProviderPreview] Missing provider email for preview: ${item.id}`);
           continue;
@@ -84,7 +88,10 @@ export async function GET(request: NextRequest) {
     const expiredIds: string[] = [];
     if (expired && expired.length > 0) {
       for (const item of expired) {
-        const provider = item.ai_providers as unknown as { name: string; contact_email: string } | null;
+        const provider = item.ai_providers as unknown as {
+          name: string;
+          contact_email: string;
+        } | null;
         if (!provider || !provider.contact_email) {
           logger.warn(`[K-ProviderPreview] Missing provider email for expired notice: ${item.id}`);
           continue;
@@ -133,3 +140,5 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+export const GET = withCronLogger("k-provider-preview", getHandler);

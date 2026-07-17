@@ -211,7 +211,31 @@ Output your response strictly as a JSON object:
       comments_count: 0,
       shares_count: 0,
     },
-    {
+  ];
+
+  const { error: dbError } = await admin.from("social_posts").insert(insertPayloads);
+  if (dbError) {
+    logger.error("[ContentEngine] Failed to insert social posts into database", {
+      error: dbError.message,
+    });
+    return false;
+  }
+
+  if (process.env.LINKEDIN_PUBLISHING_MODE === "true") {
+    const { error: draftError } = await admin.from("marketing_drafts" as never).insert({
+      platform: "linkedin",
+      content: generated.linkedin_post,
+      media_url: imageUrl,
+      status: "pending_approval",
+    } as never);
+
+    if (draftError) {
+      logger.error("[ContentEngine] Failed to insert LinkedIn draft into database", {
+        error: draftError.message,
+      });
+    }
+  } else {
+    const { error: liError } = await admin.from("social_posts").insert({
       platform: "linkedin" as const,
       status: "draft" as const,
       content_type: "incident_spotlight" as const,
@@ -224,15 +248,12 @@ Output your response strictly as a JSON object:
       likes: 0,
       comments_count: 0,
       shares_count: 0,
-    },
-  ];
-
-  const { error: dbError } = await admin.from("social_posts").insert(insertPayloads);
-  if (dbError) {
-    logger.error("[ContentEngine] Failed to insert social posts into database", {
-      error: dbError.message,
     });
-    return false;
+    if (liError) {
+      logger.error("[ContentEngine] Failed to insert LinkedIn fallback post", {
+        error: liError.message,
+      });
+    }
   }
 
   logger.info("[ContentEngine] Marketing assets queued successfully", {
@@ -338,7 +359,6 @@ Output your response strictly as a JSON object:
     return false;
   }
 
-  // 2. Insert draft posts into social_posts table
   const insertPayloads = [
     {
       platform: "x" as const,
@@ -346,18 +366,6 @@ Output your response strictly as a JSON object:
       content_type: "incident_spotlight" as const,
       title: `Ecosystem News: ${title}`,
       body_text: generated.x_post,
-      linked_news_id: newsId,
-      estimated_reach: 0,
-      likes: 0,
-      comments_count: 0,
-      shares_count: 0,
-    },
-    {
-      platform: "linkedin" as const,
-      status: "draft" as const,
-      content_type: "incident_spotlight" as const,
-      title: `Ecosystem News: ${title}`,
-      body_text: generated.linkedin_post,
       linked_news_id: newsId,
       estimated_reach: 0,
       likes: 0,
@@ -372,6 +380,38 @@ Output your response strictly as a JSON object:
       error: dbError.message,
     });
     return false;
+  }
+
+  if (process.env.LINKEDIN_PUBLISHING_MODE === "true") {
+    const { error: draftError } = await admin.from("marketing_drafts" as never).insert({
+      platform: "linkedin",
+      content: generated.linkedin_post,
+      status: "pending_approval",
+    } as never);
+
+    if (draftError) {
+      logger.error("[ContentEngine] Failed to insert LinkedIn news draft into database", {
+        error: draftError.message,
+      });
+    }
+  } else {
+    const { error: liError } = await admin.from("social_posts").insert({
+      platform: "linkedin" as const,
+      status: "draft" as const,
+      content_type: "incident_spotlight" as const,
+      title: `Ecosystem News: ${title}`,
+      body_text: generated.linkedin_post,
+      linked_news_id: newsId,
+      estimated_reach: 0,
+      likes: 0,
+      comments_count: 0,
+      shares_count: 0,
+    });
+    if (liError) {
+      logger.error("[ContentEngine] Failed to insert LinkedIn news fallback post", {
+        error: liError.message,
+      });
+    }
   }
 
   logger.info("[ContentEngine] News social posts queued successfully", {

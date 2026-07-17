@@ -1,3 +1,4 @@
+import { withCronLogger } from "@/lib/utils/cron-logger";
 import { type NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logger } from "@/lib/utils/logger";
@@ -16,7 +17,7 @@ interface IncidentRecord {
   upvotes_count: number;
 }
 
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
   const isVercelCron = request.headers.get("x-vercel-cron") === "1";
   const cronSecret = process.env.CRON_SECRET;
@@ -159,3 +160,5 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+export const GET = withCronLogger("k-weekly-refresh", getHandler);
