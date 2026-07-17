@@ -8,6 +8,11 @@
 4. Copy the model's full response and paste it into a separate collection file or directly below this document
 5. Repeat for each model, then compare
 
+**Rules:**
+
+- All answers must be in **English**
+- Keep answers **concise** — max 2-3 sentences per question. Short, specific, actionable.
+
 ---
 
 ## TRIGGER PROMPT (Copy-paste this entire block to the AI model)
