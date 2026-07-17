@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,24 @@ export function PollCard({ poll }: { poll: Poll }) {
   );
   const [turnstileError, setTurnstileError] = useState(false);
   const [isVoting, setIsVoting] = useState(false);
+  const [turnstileKey, setTurnstileKey] = useState(0);
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "production") return;
+    const timer = setTimeout(() => {
+      if (!turnstileToken && !turnstileError) {
+        setTurnstileError(true);
+        console.warn("[Turnstile] Script or widget failed to load within timeout.");
+      }
+    }, 8000);
+    return () => clearTimeout(timer);
+  }, [turnstileKey, turnstileToken, turnstileError]);
+
+  const handleRetryTurnstile = () => {
+    setTurnstileError(false);
+    setTurnstileToken(null);
+    setTurnstileKey((prev) => prev + 1);
+  };
 
   const localizedTitle =
     locale === "tr" ? poll.title_tr || poll.title : poll.title_en || poll.title;
@@ -142,6 +160,7 @@ export function PollCard({ poll }: { poll: Poll }) {
           {process.env.NODE_ENV === "production" && (
             <div className="flex flex-col items-center">
               <Turnstile
+                key={turnstileKey}
                 siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "2x00000000000000000000AB"}
                 onSuccess={(token) => {
                   setTurnstileToken(token);
@@ -160,9 +179,19 @@ export function PollCard({ poll }: { poll: Poll }) {
                 }}
               />
               {turnstileError && (
-                <p className="text-danger-400 mt-2 text-center text-xs font-medium">
-                  ⚠️ {t("turnstileError")}
-                </p>
+                <div className="mt-2 flex flex-col items-center gap-2">
+                  <p className="text-danger-400 text-center text-xs font-medium">
+                    ⚠️ {t("turnstileError")}
+                  </p>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={handleRetryTurnstile}
+                    className="text-brand-400 hover:text-brand-300 text-xs font-bold underline animate-pulse"
+                  >
+                    {t("retryVerification")}
+                  </Button>
+                </div>
               )}
             </div>
           )}

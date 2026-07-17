@@ -42,10 +42,10 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
           <table className="w-full text-left text-sm text-white">
             <thead className="text-fg-muted bg-white/5 text-xs font-bold uppercase">
               <tr>
-                <th className="px-6 py-4">ID / Target</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">SLA Countdown</th>
-                <th className="px-6 py-4">Submitted</th>
+                <th className="px-6 py-4">{t("dsar_th_target")}</th>
+                <th className="px-6 py-4">{t("dsar_th_status")}</th>
+                <th className="px-6 py-4">{t("dsar_th_sla")}</th>
+                <th className="px-6 py-4">{t("dsar_th_submitted")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
@@ -62,7 +62,8 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
                       {req.id.substring(0, 8)}...
                       <br />
                       <span className="text-fg-muted">
-                        {req.reason || `Incident ${req.incident_id.substring(0, 8)}`}
+                        {req.reason ||
+                          `${t("dsar_incident_prefix")} ${req.incident_id.substring(0, 8)}`}
                       </span>
                     </td>
                     <td className="px-6 py-4 capitalize">
@@ -72,7 +73,7 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
                         </span>
                       ) : req.status === "rejected" ? (
                         <span className="bg-fg-muted/10 text-fg-muted inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs">
-                          Rejected
+                          {t("dsar_rejected")}
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-1 text-xs text-amber-400">
@@ -94,7 +95,7 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
                           }`}
                         >
                           {isOverdue && <ShieldWarning weight="fill" className="animate-pulse" />}
-                          {daysLeft} days
+                          {t("dsar_days", { count: daysLeft })}
                         </span>
                       )}
                     </td>

@@ -34,6 +34,16 @@ vi.mock("@/lib/ai/adapters/vertex-imagen", () => ({
   })),
 }));
 
+const generateHfImageMock = vi.fn().mockResolvedValue({
+  ok: false,
+  error: "HUGGINGFACE_API_KEY is not configured.",
+});
+vi.mock("@/lib/ai/adapters/huggingface", () => ({
+  HuggingFaceAdapter: vi.fn().mockImplementation(() => ({
+    generateImage: generateHfImageMock,
+  })),
+}));
+
 import { publishToX } from "@/lib/marketing/publishers/x";
 import { publishToLinkedIn } from "@/lib/marketing/publishers/linkedin";
 import { generateMarketingAssets, generateNewsSocialPosts } from "@/lib/marketing/content-engine";
@@ -86,7 +96,52 @@ describe("Marketing Content Engine & Publishers", () => {
   });
 
   describe("generateMarketingAssets", () => {
-    it("generates drafts and image asset successfully", async () => {
+    it("generates drafts and image asset successfully via Hugging Face", async () => {
+      generateHfImageMock.mockResolvedValueOnce({
+        ok: true,
+        base64: "dGVzdC1iYXNlNjQ=",
+        mimeType: "image/png",
+      });
+      // Mock Supabase Database calls
+      const builder: any = {
+        select: () => builder,
+        eq: () => builder,
+        single: () =>
+          Promise.resolve({
+            data: {
+              id: "inc-123",
+              title_masked: "AI Medical Hallucination",
+              description_masked: "The chatbot suggested a lethal cure.",
+              category: "hallucination",
+              severity: "critical",
+              eu_act_risk_category: "High-Risk",
+            },
+            error: null,
+          }),
+        insert: () => Promise.resolve({ error: null }),
+        upload: () => Promise.resolve({ error: null }),
+        getPublicUrl: () => ({ data: { publicUrl: "https://public.url/img.png" } }),
+      };
+
+      mockAdminClient.from.mockImplementation(() => builder);
+      (mockAdminClient as any).storage = {
+        from: () => builder,
+      };
+
+      const success = await generateMarketingAssets("inc-123");
+      expect(success).toBe(true);
+    });
+
+    it("falls back to Vertex Imagen if Hugging Face fails", async () => {
+      generateHfImageMock.mockResolvedValueOnce({
+        ok: false,
+        error: "HF API Overloaded",
+      });
+      generateImageMock.mockResolvedValueOnce({
+        ok: true,
+        base64: "dGVzdC1iYXNlNjQ=",
+        mimeType: "image/jpeg",
+      });
       // Mock Supabase Database calls
       const builder: any = {
         select: () => builder,

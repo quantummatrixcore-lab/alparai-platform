@@ -33,27 +33,27 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
           <table className="w-full text-left text-sm text-white">
             <thead className="text-fg-muted bg-white/5 text-xs font-bold uppercase">
               <tr>
-                <th className="px-6 py-4">Model Name / ID</th>
-                <th className="px-6 py-4">Score</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Evaluated</th>
+                <th className="px-6 py-4">{t("kbench_th_model")}</th>
+                <th className="px-6 py-4">{t("kbench_th_score")}</th>
+                <th className="px-6 py-4">{t("kbench_th_status")}</th>
+                <th className="px-6 py-4">{t("kbench_th_evaluated")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {scores?.map((score) => (
                 <tr key={score.id} className="transition-colors hover:bg-white/5">
                   <td className="px-6 py-4 font-mono text-xs text-white">
-                    {score.model_id || "Unknown Model"}
+                    {score.model_id || t("kbench_unknown_model")}
                     <br />
                     <span className="text-fg-muted">{score.id.substring(0, 8)}...</span>
                   </td>
                   <td className="text-brand-400 px-6 py-4 font-mono text-lg font-bold">
                     <div className="flex items-center gap-1">
-                      {score.score !== null ? score.score : "—"}
+                      {score.score !== null ? score.score : t("kbench_score_empty")}
                       <Star weight="fill" className="h-4 w-4 text-amber-400" />
                     </div>
                   </td>
-                  <td className="px-6 py-4 capitalize">{score.status || "Evaluated"}</td>
+                  <td className="px-6 py-4 capitalize">{score.status || t("kbench_evaluated")}</td>
                   <td className="text-fg-muted px-6 py-4 font-mono text-xs">
                     {new Date(score.created_at).toLocaleDateString()}
                   </td>

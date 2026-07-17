@@ -39,9 +39,9 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
       />
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-        <MetricCard label="Total MRR" value={`$${mrr.toLocaleString()}`} variant="success" />
-        <MetricCard label="Active Subs" value={activeSubs.length} />
-        <MetricCard label="Total Records" value={subs?.length || 0} />
+        <MetricCard label={t("billing_mrr")} value={`$${mrr.toLocaleString()}`} variant="success" />
+        <MetricCard label={t("billing_active_subs")} value={activeSubs.length} />
+        <MetricCard label={t("billing_total_records")} value={subs?.length || 0} />
       </div>
 
       <AdminSectionCard>
@@ -49,10 +49,10 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
           <table className="w-full text-left text-sm">
             <thead className="text-fg-muted bg-bg-tertiary text-xs font-bold uppercase">
               <tr>
-                <th className="px-6 py-4">ID / User</th>
-                <th className="px-6 py-4">Plan</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Created</th>
+                <th className="px-6 py-4">{t("billing_th_id_user")}</th>
+                <th className="px-6 py-4">{t("billing_th_plan")}</th>
+                <th className="px-6 py-4">{t("billing_th_status")}</th>
+                <th className="px-6 py-4">{t("billing_th_created")}</th>
               </tr>
             </thead>
             <tbody className="divide-border-subtle divide-y">
@@ -63,7 +63,9 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
                     <br />
                     <span className="text-fg-muted">{sub.user_id?.substring(0, 8)}...</span>
                   </td>
-                  <td className="text-fg-primary px-6 py-4 capitalize">{sub.plan || "Custom"}</td>
+                  <td className="text-fg-primary px-6 py-4 capitalize">
+                    {sub.plan || t("billing_custom")}
+                  </td>
                   <td className="px-6 py-4">
                     {sub.status === "active" ? (
                       <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-1 text-xs text-emerald-400">

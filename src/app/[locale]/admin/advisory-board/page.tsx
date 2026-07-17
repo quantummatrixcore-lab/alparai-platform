@@ -29,7 +29,7 @@ export default async function AdvisoryBoardPage({
         <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">
           {t("advisory_title")}
         </h1>
-        <p className="text-fg-secondary mt-2">L1 candidate/consent tracking (Rule #21)</p>
+        <p className="text-fg-secondary mt-2">{t("advisory_subtitle")}</p>
       </div>
 
       <div className="bg-bg-secondary/40 overflow-hidden rounded-xl border border-white/5 backdrop-blur-xl">
@@ -43,10 +43,10 @@ export default async function AdvisoryBoardPage({
           <table className="w-full text-left text-sm text-white">
             <thead className="text-fg-muted bg-white/5 text-xs font-bold uppercase">
               <tr>
-                <th className="px-6 py-4">Name / ID</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Term</th>
-                <th className="px-6 py-4">Order</th>
+                <th className="px-6 py-4">{t("advisory_th_name")}</th>
+                <th className="px-6 py-4">{t("advisory_th_status")}</th>
+                <th className="px-6 py-4">{t("advisory_th_term")}</th>
+                <th className="px-6 py-4">{t("advisory_th_order")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
@@ -64,7 +64,7 @@ export default async function AdvisoryBoardPage({
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-1 text-xs text-amber-400">
-                        Inactive
+                        {t("advisory_inactive")}
                       </span>
                     )}
                   </td>

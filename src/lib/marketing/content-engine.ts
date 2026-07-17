@@ -2,6 +2,7 @@ import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { callWithFailover, TRIAGE_SLOT_1_CHAIN } from "@/lib/ai/openrouter-gateway";
 import { HuggingFaceAdapter } from "@/lib/ai/adapters/huggingface";
+import { VertexImagenAdapter } from "@/lib/ai/adapters/vertex-imagen";
 import { logger } from "@/lib/utils/logger";
 
 interface GeneratedContent {
@@ -117,23 +118,53 @@ Output your response strictly as a JSON object:
     return false;
   }
 
-  // 3. Generate image using VertexImagenAdapter (System-level bypass)
+  // 3. Generate image using Hugging Face (with Vertex as fallback)
   let imageUrl: string | null = null;
   const startImgTime = performance.now();
 
   try {
-    const adapter = new HuggingFaceAdapter();
-    const imgRes = await adapter.generateImage(generated.image_prompt, "1:1");
-    if (imgRes.ok) {
-      const { base64, mimeType } = imgRes;
-      const buffer = Buffer.from(base64 as string, "base64");
-      const fileExt = mimeType === "image/png" ? "png" : "jpg";
+    if (process.env.NODE_ENV === "production" && !process.env.HF_API_KEY) {
+      throw new Error("CRITICAL: HF_API_KEY is absent in production environment!");
+    }
+
+    let base64Data: string | undefined;
+    let mimeTypeData: string | undefined;
+
+    logger.info("[ContentEngine] Attempting Hugging Face image generation...");
+    const hfAdapter = new HuggingFaceAdapter();
+    const hfRes = await hfAdapter.generateImage(generated.image_prompt, "1:1");
+
+    if (hfRes.ok && hfRes.base64) {
+      base64Data = hfRes.base64;
+      mimeTypeData = hfRes.mimeType;
+      logger.info("[ContentEngine] Hugging Face image generation succeeded");
+    } else {
+      logger.warn("[ContentEngine] Hugging Face image generation failed, trying Vertex fallback", {
+        error: hfRes.error,
+      });
+      const vertexAdapter = new VertexImagenAdapter();
+      const vertexRes = await vertexAdapter.generateImage(generated.image_prompt, "1:1");
+      if (vertexRes.ok && vertexRes.base64) {
+        base64Data = vertexRes.base64;
+        mimeTypeData = vertexRes.mimeType;
+        logger.info("[ContentEngine] Vertex Imagen fallback image generation succeeded");
+      } else {
+        const errStr = !vertexRes.ok ? vertexRes.error : "No base64 data";
+        logger.error("[ContentEngine] Both Hugging Face and Vertex image generation failed", {
+          vertexError: errStr,
+        });
+      }
+    }
+
+    if (base64Data && mimeTypeData) {
+      const buffer = Buffer.from(base64Data, "base64");
+      const fileExt = mimeTypeData === "image/png" ? "png" : "jpg";
       const fileName = `${incidentId}/marketing-${Date.now()}.${fileExt}`;
 
       const { error: uploadError } = await admin.storage
         .from("social-assets")
         .upload(fileName, buffer, {
-          contentType: mimeType,
+          contentType: mimeTypeData,
           upsert: true,
         });
 
@@ -145,8 +176,6 @@ Output your response strictly as a JSON object:
           error: uploadError.message,
         });
       }
-    } else {
-      logger.warn("[ContentEngine] Hugging Face image generation failed", { error: imgRes.error });
     }
   } catch (err) {
     logger.error(

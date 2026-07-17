@@ -5,6 +5,7 @@ import { Check, X, Shield, ExternalLink } from "lucide-react";
 import { bulkApproveIncidents, bulkRejectIncidents } from "@/actions/admin";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 export interface ImportedIncident {
   id: string;
@@ -25,6 +26,7 @@ interface ImportQueueClientProps {
 }
 
 export function ImportQueueClient({ initialIncidents, locale }: ImportQueueClientProps) {
+  const t = useTranslations("admin");
   const [incidents, setIncidents] = useState<ImportedIncident[]>(initialIncidents);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -52,11 +54,7 @@ export function ImportQueueClient({ initialIncidents, locale }: ImportQueueClien
       if (res.ok) {
         setIncidents((prev) => prev.filter((i) => !selectedIds.includes(i.id)));
         setSelectedIds([]);
-        toast.success(
-          locale === "tr"
-            ? `${selectedIds.length} olay başarıyla onaylandı ve yayınlandı.`
-            : `${selectedIds.length} incidents successfully approved and published.`,
-        );
+        toast.success(t("import_q_approved_toast", { count: selectedIds.length }));
       } else {
         toast.error(res.error || "Failed to approve incidents.");
       }
@@ -70,13 +68,7 @@ export function ImportQueueClient({ initialIncidents, locale }: ImportQueueClien
 
   const handleBulkReject = async () => {
     if (selectedIds.length === 0) return;
-    if (
-      !confirm(
-        locale === "tr"
-          ? `${selectedIds.length} olayı reddetmek istediğinize emin misiniz?`
-          : `Are you sure you want to reject ${selectedIds.length} incidents?`,
-      )
-    ) {
+    if (!confirm(t("import_q_reject_confirm", { count: selectedIds.length }))) {
       return;
     }
     setIsProcessing(true);
@@ -85,11 +77,7 @@ export function ImportQueueClient({ initialIncidents, locale }: ImportQueueClien
       if (res.ok) {
         setIncidents((prev) => prev.filter((i) => !selectedIds.includes(i.id)));
         setSelectedIds([]);
-        toast.success(
-          locale === "tr"
-            ? `${selectedIds.length} olay reddedildi.`
-            : `${selectedIds.length} incidents rejected.`,
-        );
+        toast.success(t("import_q_rejected_toast", { count: selectedIds.length }));
       } else {
         toast.error(res.error || "Failed to reject incidents.");
       }
@@ -123,16 +111,8 @@ export function ImportQueueClient({ initialIncidents, locale }: ImportQueueClien
     <div className="space-y-6">
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
-          <h1 className="text-2xl font-black text-white">
-            {locale === "tr"
-              ? "Küresel AI Olayı İçe Aktarım Kuyruğu"
-              : "Global AI Incident Import Queue"}
-          </h1>
-          <p className="text-fg-secondary mt-1 text-xs">
-            {locale === "tr"
-              ? "AIAAIC ve AIID kaynaklarından içe aktarılan doğrulanmış olayları gözden geçirin."
-              : "Review verified incidents imported from external repositories (AIAAIC & AIID)."}
-          </p>
+          <h1 className="text-2xl font-black text-white">{t("import_q_title")}</h1>
+          <p className="text-fg-secondary mt-1 text-xs">{t("import_q_subtitle")}</p>
         </div>
 
         {/* Source filter tabs */}
@@ -146,7 +126,7 @@ export function ImportQueueClient({ initialIncidents, locale }: ImportQueueClien
                 : "text-fg-muted hover:text-white",
             )}
           >
-            {locale === "tr" ? "Tümü" : "All"}
+            {t("import_q_filter_all")}
           </button>
           <button
             onClick={() => setSourceFilter("aiaaic_import")}
@@ -177,9 +157,7 @@ export function ImportQueueClient({ initialIncidents, locale }: ImportQueueClien
       {selectedIds.length > 0 && (
         <div className="bg-brand-950/20 border-brand-500/30 animate-in fade-in slide-in-from-top-4 flex items-center justify-between rounded-2xl border px-6 py-4 backdrop-blur-md duration-300">
           <span className="text-brand-400 text-xs font-bold">
-            {locale === "tr"
-              ? `${selectedIds.length} olay seçildi`
-              : `${selectedIds.length} incidents selected`}
+            {t("import_q_selected", { count: selectedIds.length })}
           </span>
           <div className="flex gap-3">
             <button
@@ -188,7 +166,7 @@ export function ImportQueueClient({ initialIncidents, locale }: ImportQueueClien
               className="flex items-center gap-1.5 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-bold text-red-400 transition hover:bg-red-500/20"
             >
               <X className="h-4 w-4" />
-              {locale === "tr" ? "Reddet" : "Reject"}
+              {t("import_q_reject")}
             </button>
             <button
               onClick={handleBulkApprove}
@@ -196,7 +174,7 @@ export function ImportQueueClient({ initialIncidents, locale }: ImportQueueClien
               className="bg-brand-600 hover:bg-brand-500 hover:shadow-brand-500/10 flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-white shadow-lg transition"
             >
               <Check className="h-4 w-4" />
-              {locale === "tr" ? "Toplu Onayla ve Yayınla" : "Bulk Approve & Publish"}
+              {t("import_q_bulk_approve")}
             </button>
           </div>
         </div>
@@ -207,14 +185,8 @@ export function ImportQueueClient({ initialIncidents, locale }: ImportQueueClien
         {filteredIncidents.length === 0 ? (
           <div className="py-16 text-center">
             <Shield className="text-fg-muted mx-auto h-12 w-12 opacity-30" />
-            <h3 className="mt-4 text-sm font-bold text-white">
-              {locale === "tr" ? "Onay Bekleyen Olay Yok" : "No Incidents in Queue"}
-            </h3>
-            <p className="text-fg-muted mt-2 text-xs">
-              {locale === "tr"
-                ? "Şu anda onay sırası tamamen boş."
-                : "Import queue is completely empty right now."}
-            </p>
+            <h3 className="mt-4 text-sm font-bold text-white">{t("import_q_empty")}</h3>
+            <p className="text-fg-muted mt-2 text-xs">{t("import_q_empty_desc")}</p>
           </div>
         ) : (
           <div className="divide-y divide-white/5">
@@ -228,14 +200,10 @@ export function ImportQueueClient({ initialIncidents, locale }: ImportQueueClien
                 onChange={handleSelectAll}
                 className="bg-bg-tertiary text-brand-600 focus:ring-brand-500 focus:ring-offset-bg-primary h-4 w-4 rounded border-white/10"
               />
-              <div className="w-16">{locale === "tr" ? "Kaynak" : "Source"}</div>
-              <div className="flex-1">
-                {locale === "tr" ? "Olay Başlığı ve Açıklaması" : "Incident Title & Details"}
-              </div>
-              <div className="w-24 text-center">{locale === "tr" ? "Kategori" : "Category"}</div>
-              <div className="w-24 text-center">
-                {locale === "tr" ? "Önem Derecesi" : "Severity"}
-              </div>
+              <div className="w-16">{t("import_q_source")}</div>
+              <div className="flex-1">{t("import_q_title_details")}</div>
+              <div className="w-24 text-center">{t("import_q_category")}</div>
+              <div className="w-24 text-center">{t("import_q_severity")}</div>
             </div>
 
             {/* Data rows */}
@@ -292,8 +260,7 @@ export function ImportQueueClient({ initialIncidents, locale }: ImportQueueClien
                     <div className="text-fg-muted flex items-center gap-4 pt-1 text-[10px]">
                       {incident.incident_date && (
                         <span>
-                          {locale === "tr" ? "Olay Tarihi: " : "Date: "}
-                          {incident.incident_date}
+                          {t("import_q_date")}{incident.incident_date}
                         </span>
                       )}
                       {incident.import_external_id && (
