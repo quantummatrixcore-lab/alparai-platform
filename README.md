@@ -11,6 +11,10 @@
 
 ---
 
+## Deploy Convention
+
+Production builds run only for commits whose message contains `[deploy]` (enforced by `scripts/deploy-gate.mjs` via `vercel.json` `ignoreCommand`). Batch your commits; put `[deploy]` on the batch-closing commit only. Max 2 deploy windows per executor per day.
+
 ## Why
 
 AI is everywhere. When an AI system causes harm — a hallucination that ruins a paper, a biased loan decision, a privacy leak — users have nowhere to report it. The public record is scattered across Twitter, forums, and Reddit. We fix that.
