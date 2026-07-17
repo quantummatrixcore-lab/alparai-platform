@@ -59,7 +59,6 @@ export async function POST(request: Request) {
     case "customer.subscription.updated": {
       const subscription = event.data.object;
       const status = subscription.status === "active" ? "active" : "inactive";
-      const periodStart = subscription.items.data[0]?.current_period_start;
       const periodEnd = subscription.items.data[0]?.current_period_end;
 
       await admin

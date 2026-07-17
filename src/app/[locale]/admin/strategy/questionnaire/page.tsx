@@ -53,17 +53,18 @@ export default async function QuestionnairePage({
   const supabase = createAdminClient();
 
   const { data: runs } = await supabase
-    .from("strategic_runs")
+    .from("strategic_runs" as never)
     .select("*")
-    .order("started_at", { ascending: false })
+    .order("started_at" as never, { ascending: false })
     .limit(20);
 
   const { data: allAnswers } = await supabase
-    .from("strategic_answers")
+    .from("strategic_answers" as never)
     .select("*")
-    .order("question_index", { ascending: true });
+    .order("question_index" as never, { ascending: true });
 
-  const latestRunId = (runs && runs.length > 0 ? runs[0]!.id : null) as string | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const latestRunId = (runs && runs.length > 0 ? (runs[0] as any)!.id : null) as string | null;
   const typedRuns = (runs || []) as unknown as RunRow[];
   const typedAnswers = (allAnswers || []) as unknown as AnswerRow[];
 

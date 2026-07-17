@@ -36,6 +36,7 @@ import {
   Bank,
   Medal,
   PlugsConnected,
+  ClipboardText,
 } from "@phosphor-icons/react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
@@ -211,6 +212,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       label: t("strategy_state_support") || "Devlet Destekleri",
       icon: Bank,
       active: pathname.startsWith("/admin/strategy/state-support"),
+    },
+    {
+      href: "/admin/strategy/questionnaire",
+      label: t("strategy_questionnaire_title") || "Questionnaire",
+      icon: ClipboardText,
+      active: pathname.startsWith("/admin/strategy/questionnaire"),
     },
     ...(user.role === "admin" || user.role === "ceo"
       ? [
