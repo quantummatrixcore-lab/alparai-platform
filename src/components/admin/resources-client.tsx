@@ -206,7 +206,7 @@ export function ResourcesClient() {
                   rel="noopener noreferrer"
                   className="text-brand-400 hover:text-brand-300 inline-flex items-center gap-1.5 font-mono text-xs transition-colors"
                 >
-                  Vendor Dashboard <ExternalLink className="h-3 w-3" />
+                  {t("resources_vendor_dashboard")} <ExternalLink className="h-3 w-3" />
                 </a>
               )}
             </CardContent>

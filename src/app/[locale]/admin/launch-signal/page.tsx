@@ -11,7 +11,6 @@ import {
   CheckCircle2,
   AlertTriangle,
 } from "lucide-react";
-import { Link } from "@/i18n/routing";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

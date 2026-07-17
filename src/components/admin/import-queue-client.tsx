@@ -25,7 +25,7 @@ interface ImportQueueClientProps {
   locale: string;
 }
 
-export function ImportQueueClient({ initialIncidents, locale }: ImportQueueClientProps) {
+export function ImportQueueClient({ initialIncidents, locale: _locale }: ImportQueueClientProps) {
   const t = useTranslations("admin");
   const [incidents, setIncidents] = useState<ImportedIncident[]>(initialIncidents);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);

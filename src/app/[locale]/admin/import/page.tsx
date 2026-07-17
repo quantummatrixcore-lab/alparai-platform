@@ -1,5 +1,5 @@
 import React from "react";
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { requireAdmin } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { ImportQueueClient, type ImportedIncident } from "@/components/admin/import-queue-client";
@@ -11,9 +11,11 @@ interface PageProps {
   params: Promise<{ locale: string }>;
 }
 
-export async function generateMetadata() {
+export async function generateMetadata({ params }: PageProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "admin" });
   return {
-    title: "AI Incident Import Queue | ALPAR AI Admin",
+    title: `${t("import_q_title")} | ALPAR AI Admin`,
   };
 }
 
