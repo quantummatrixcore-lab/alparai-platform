@@ -41,7 +41,7 @@ BEGIN
     public.is_moderator(NEW.id) OR 
     EXISTS (
       SELECT 1 FROM public.users 
-      WHERE id = NEW.id AND role IN ('admin', 'ceo', 'moderator', 'advisor')
+      WHERE id = NEW.id AND role::text IN ('admin', 'ceo', 'moderator', 'advisor')
     )
   ) THEN
     INSERT INTO public.admin_login_events (user_id, ip_hash)
