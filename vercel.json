@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "ignoreCommand": "node scripts/deploy-gate.mjs",
   "framework": "nextjs",
   "regions": ["fra1"],
   "buildCommand": "pnpm build",
