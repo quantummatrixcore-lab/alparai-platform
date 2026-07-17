@@ -2,16 +2,15 @@
 
 ## PROCESS
 
-1. Copy the TRIGGER PROMPT block below (including all questions and BLOCK sections)
+1. Copy the TRIGGER PROMPT block below (including all questions)
 2. Paste it to an AI model (GPT-4o, Claude Sonnet 4, Gemini 2.5 Pro, DeepSeek-V3, Mistral Large)
-3. The model will answer all questions, starting its response with its own model name as a heading
-4. Copy the model's full response and paste it into a separate collection file or directly below this document
-5. Repeat for each model, then compare
+3. The model will answer all questions, starting with its own name as a heading
+4. Repeat for each model, then compare answers
 
 **Rules:**
 
 - All answers must be in **English**
-- Keep answers **concise** — max 2-3 sentences per question. Short, specific, actionable.
+- Keep answers **concise** — max 2-3 sentences per question
 
 ---
 
