@@ -35,6 +35,7 @@ import {
   Gear,
   Bank,
   Medal,
+  PlugsConnected,
 } from "@phosphor-icons/react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
@@ -284,6 +285,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       label: "Resource Efficiency",
       icon: Cpu,
       active: pathname.startsWith("/admin/resources"),
+    },
+    {
+      href: "/admin/integrations",
+      label: "Integrations",
+      icon: PlugsConnected,
+      active: pathname.startsWith("/admin/integrations"),
     },
   ];
 
