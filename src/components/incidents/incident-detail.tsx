@@ -349,12 +349,14 @@ export function IncidentDetailView({
             <ShareButtons url={`/incidents/${incident.id}`} title={displayTitle} />
           </div>
         </div>
-        <AffectedButton
-          incidentId={incident.id}
-          initialAffectedCount={incident.affected_count ?? 0}
-          initialUserAffected={userAffected}
-          disabled={!isAuthenticated}
-        />
+        <div id="affected">
+          <AffectedButton
+            incidentId={incident.id}
+            initialAffectedCount={incident.affected_count ?? 0}
+            initialUserAffected={userAffected}
+            disabled={!isAuthenticated}
+          />
+        </div>
         <Card>
           <CardHeader>
             <CardTitle className="text-sm">{tCommon("details")}</CardTitle>

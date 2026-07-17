@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { SystemHealthChart } from "./system-health-chart";
 import {
   Wallet,
@@ -66,6 +67,7 @@ function ServiceBadge({ name, status, latencyMs }: ServiceHealth) {
 }
 
 export function System360Overview() {
+  const t = useTranslations("admin");
   const [health, setHealth] = useState<HealthResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -90,16 +92,20 @@ export function System360Overview() {
         <div>
           <h2 className="flex items-center gap-2 text-xl font-bold tracking-tight text-white">
             <ShieldCheck weight="duotone" className="text-brand-400 h-6 w-6" />
-            360° Command Center
+            {t("sys360_title", { defaultValue: "360° Command Center" })}
           </h2>
           <p className="text-fg-muted mt-1 text-sm">
-            Holistic view of system health, finance, and security.
+            {t("sys360_desc", {
+              defaultValue: "Holistic view of system health, finance, and security.",
+            })}
           </p>
         </div>
         <div className="flex items-center gap-2 text-xs">
-          <span className="text-fg-muted">Last check:</span>
+          <span className="text-fg-muted">{t("last_check", { defaultValue: "Last check:" })}</span>
           {loading ? (
-            <span className="animate-pulse text-white/50">Loading...</span>
+            <span className="animate-pulse text-white/50">
+              {t("loading", { defaultValue: "Loading..." })}
+            </span>
           ) : (
             <span className="font-mono text-white/70">
               {health?.timestamp ? new Date(health.timestamp).toLocaleTimeString() : "offline"}
@@ -111,10 +117,10 @@ export function System360Overview() {
       {/* Service Health Grid */}
       <div className="space-y-2">
         <h3 className="text-fg-secondary text-xs font-semibold tracking-widest uppercase">
-          Service Health
+          {t("service_health", { defaultValue: "Service Health" })}
           {totalConfigured > 0 && (
             <span className="ml-2 text-emerald-400">
-              {healthyCount}/{totalConfigured} healthy
+              {healthyCount}/{totalConfigured} {t("healthy", { defaultValue: "healthy" })}
             </span>
           )}
         </h3>
@@ -144,7 +150,9 @@ export function System360Overview() {
         >
           <div className="absolute -top-4 -right-4 rounded-full bg-emerald-500/10 p-6 blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
-            <h3 className="text-fg-secondary text-sm font-semibold">Resource Efficiency</h3>
+            <h3 className="text-fg-secondary text-sm font-semibold">
+              {t("resource_efficiency", { defaultValue: "Resource Efficiency" })}
+            </h3>
             <Cpu weight="duotone" className="h-5 w-5 text-emerald-400" />
           </div>
           <div className="relative z-10 mt-4 flex items-end gap-2">
@@ -152,7 +160,10 @@ export function System360Overview() {
             <span className="text-fg-muted mb-1 font-mono text-xs font-semibold">%</span>
           </div>
           <div className="text-fg-muted relative z-10 mt-2 text-xs">
-            <span className="font-medium text-emerald-400">Optimal</span> resource usage
+            <span className="font-medium text-emerald-400">
+              {t("optimal", { defaultValue: "Optimal" })}
+            </span>{" "}
+            {t("resource_usage", { defaultValue: "resource usage" })}
           </div>
         </motion.div>
 
@@ -163,7 +174,9 @@ export function System360Overview() {
         >
           <div className="absolute -top-4 -right-4 rounded-full bg-emerald-500/10 p-6 blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
-            <h3 className="text-fg-secondary font-semibold">B2B Revenue (MRR)</h3>
+            <h3 className="text-fg-secondary font-semibold">
+              {t("b2b_revenue", { defaultValue: "B2B Revenue (MRR)" })}
+            </h3>
             <Wallet weight="duotone" className="h-5 w-5 text-emerald-400" />
           </div>
           <div className="relative z-10 mt-4 flex items-end gap-2">
@@ -173,7 +186,10 @@ export function System360Overview() {
             </span>
           </div>
           <div className="text-fg-muted relative z-10 mt-2 text-xs">
-            <span className="text-white/60">Active Subscriptions:</span> 48
+            <span className="text-white/60">
+              {t("active_subscriptions", { defaultValue: "Active Subscriptions:" })}
+            </span>{" "}
+            48
           </div>
         </motion.div>
 
@@ -184,7 +200,9 @@ export function System360Overview() {
         >
           <div className="absolute -top-4 -right-4 rounded-full bg-amber-500/10 p-6 blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
-            <h3 className="text-fg-secondary font-semibold">API Operations Cost</h3>
+            <h3 className="text-fg-secondary font-semibold">
+              {t("api_operations_cost", { defaultValue: "API Operations Cost" })}
+            </h3>
             <ChartLineUp weight="duotone" className="h-5 w-5 text-amber-400" />
           </div>
           <div className="relative z-10 mt-4 flex items-end gap-2">
