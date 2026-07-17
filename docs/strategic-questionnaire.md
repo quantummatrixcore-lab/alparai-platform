@@ -1,26 +1,14 @@
 # ALPAR AI — 360° Strategic Questionnaire
 
-> **Purpose**: Cross-model strategic audit. Feed this document to GPT-4o, Claude, Gemini 2.5 Pro, DeepSeek-V3, and Mistral Large. Compare answers, score models, identify blind spots.
+> **Purpose**: Cross-model strategic audit. Feed the TRIGGER PROMPT below to GPT-4o, Claude Sonnet 4, Gemini 2.5 Pro, DeepSeek-V3, and Mistral Large. Compare answers, score models, identify blind spots.
 >
 > **Target audience**: AI models evaluating a single-developer AI incident reporting platform.
 >
-> **Method**: Each model answers all questions in **Block 1**, optionally critiques or extends in **Block 2–3**, then signs with model name + version + date.
+> **Method**: Each model answers all questions in **Block 1**, optionally critiques or extends in **Block 2-3**, then signs with model name + version + date.
 
 ---
 
-## How to Use This Document
-
-Copy the entire block below and paste it into any AI model's chat window. The model will:
-
-1. Answer all **30 questions** in Block 1
-2. Optionally critique bad questions and add new ones (Block 2–3)
-3. Give **3 actionable recommendations** at the end
-4. **Score itself** honestly
-5. **Sign** with its identity
-
----
-
-## TRIGGER PROMPT (Copy-paste this to the AI model)
+## TRIGGER PROMPT (Copy-paste this entire block to the AI model)
 
 ```
 You are evaluating ALPAR AI, a single-developer AI incident reporting platform.
@@ -34,7 +22,7 @@ If a question is irrelevant or poorly framed, say so and explain why.
 You may add up to 3 of your own questions at the end.
 
 After answering, give exactly 3 recommendations to maximize the project's success.
-Then score your own answer (0–1000) using the rubric.
+Then score your own answer (0-1000) using the rubric.
 Finally, sign with your model name + version + date.
 
 ---
@@ -43,7 +31,7 @@ Finally, sign with your model name + version + date.
 
 **Rules:**
 - Every question has a point value. The total questionnaire is worth 1000 points.
-- If a question is irrelevant, poorly framed, or unanswerable — say so explicitly, explain why, and **deduct its points** from the total. This is not a failure; it's critical thinking.
+- If a question is irrelevant, poorly framed, or unanswerable — say so explicitly, explain why, and deduct its points from the total. This is not a failure; it's critical thinking.
 - You may refuse to answer a question if you genuinely lack sufficient context. State what context you would need.
 
 ### 1. PRODUCT & MARKET (7 questions — 210 pts)
@@ -66,7 +54,7 @@ Finally, sign with your model name + version + date.
 
 2.1. The stack is Next.js 15 (App Router) + Supabase (PostgreSQL) + Upstash Redis + Vercel. What is the biggest bottleneck in this stack as the platform scales from 100 to 100,000 users? (30 pts)
 
-2.2. AI verification uses an OpenRouter gateway with model failover (Gemini Flash → DeepSeek → Mistral). Is this over-engineered for an MVP? What would you simplify? (30 pts)
+2.2. AI verification uses an OpenRouter gateway with model failover (Gemini Flash to DeepSeek to Mistral). Is this over-engineered for an MVP? What would you simplify? (30 pts)
 
 2.3. The project uses 16 cron jobs on Vercel Free (max 12/day). Some are already hitting limits. What is your recommendation — optimize crons, migrate to a dedicated worker, or upgrade? (30 pts)
 
@@ -120,7 +108,7 @@ Finally, sign with your model name + version + date.
 
 ---
 
-*End of Block 1 — mandatory questions.*
+*End of Block 1.*
 
 ---
 
@@ -128,7 +116,7 @@ Finally, sign with your model name + version + date.
 
 Add up to 3 questions that you believe should have been asked but were not. For each, state:
 - The question
-- Why it matters (1–2 sentences)
+- Why it matters (1-2 sentences)
 - What answering it would reveal about the project
 
 Each good addition adds up to 50 bonus points to your total score.
@@ -139,41 +127,41 @@ Answer any or all of these honestly:
 
 - **M3.1.** Which question in Block 1 is the weakest? Why? (+40 pts)
 - **M3.2.** Which question would you completely remove or rewrite? (+30 pts)
-- **M3.3.** Rate this questionnaire's coverage (1–10) and explain what's missing. (+30 pts)
+- **M3.3.** Rate this questionnaire's coverage (1-10) and explain what's missing. (+30 pts)
 
 ## BLOCK 4 — SCORING RUBRIC (For model self-assessment)
 
-Score your answer 0–1000 using this formula:
+Score your answer 0-1000 using this formula:
 
 | Criterion | Max | Description |
 |---|---|---|
-| Answer quality | 500 | Substance, depth, specificity — no generic advice |
+| Answer quality | 500 | Substance, depth, specificity - no generic advice |
 | Critical thinking | 200 | Flagging bad questions, challenging assumptions |
 | Actionability | 150 | Every answer should be something the founder can DO |
 | Self-awareness | 100 | Acknowledging uncertainty, data limits, knowledge gaps |
 | Proactiveness | 50 | Adding valuable new questions or insights beyond what was asked |
 
 Scoring guidelines:
-- 900–1000: Exceptional — specific, actionable, honest, no filler
-- 700–899: Good — solid answers, some generic advice
-- 500–699: Average — safe answers, little specificity
-- Below 500: Generic — mostly platitudes, not useful
+- 900-1000: Exceptional - specific, actionable, honest, no filler
+- 700-899: Good - solid answers, some generic advice
+- 500-699: Average - safe answers, little specificity
+- Below 500: Generic - mostly platitudes, not useful
 
-### 8. FINAL OUTPUT FORMAT
+## BLOCK 5 — FINAL OUTPUT FORMAT
 
-After all answers, output:
+After all answers, output exactly this structure:
 
 ```
 
 --- RECOMMENDATIONS ---
 
-1. [Most impactful action — do this tomorrow]
-2. [Medium-term strategic move — next 30 days]
-3. [Long-term bet — next 6 months]
+1. [Most impactful action - do this tomorrow]
+2. [Medium-term strategic move - next 30 days]
+3. [Long-term bet - next 6 months]
 
 --- SELF SCORE ---
-Total: [0–1000]
-Justification: [2–3 sentence explanation]
+Total: [0-1000]
+Justification: [2-3 sentence explanation]
 
 --- SIGNATURE ---
 Model: [name + version, e.g., Claude Sonnet 4 / 2026-07-17]
