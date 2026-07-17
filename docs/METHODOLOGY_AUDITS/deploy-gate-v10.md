@@ -79,6 +79,28 @@ Exit code: 1
 *(Exit code `1` tells Vercel to proceed with the build step).*
 
 ---
+
+## Live Vercel Verification Output
+
+A commit (`890550db15c3ceb893c5c93c4df021b017b2b62d`) without the `[deploy]` marker was pushed to the `master` branch. The Vercel CLI inspection results verify that the build was ignored/canceled automatically:
+
+```
+> npx vercel inspect alparai-com-8kngp0f82-quantumatrixcore-lab.vercel.app
+
+  🚀  https://alparai-com-8kngp0f82-quantumatrixcore-lab.vercel.app (Preview)
+
+  Project:      quantumatrixcore-lab/alparai-com
+  Git:          github:quantummatrixcore-lab/Alparai.com/commit/890550db15c3ceb893c5c93c4df021b017b2b62d
+  Created by:   quantum.matrix.core@gmail.com
+  Env vars:     95 production, 95 preview, 95 development
+  Status:       Canceled
+  Target:       Preview
+  Creator:      quantumatrixcore-lab
+  Created:      2026-07-17 22:27:18 GMT+3 (6m ago)
+
+  Log:          https://vercel.com/quantumatrixcore-lab/alparai-com/8kngp0f82/logs
+```
+
 **Status:** ✅ VERIFIED PASSED
 **Date:** 2026-07-17
 **Executor:** Antigravity (Gemini 3.5 Flash)
