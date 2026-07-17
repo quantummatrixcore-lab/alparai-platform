@@ -1,5 +1,14 @@
 # ALPAR AI — 360° Strategic Questionnaire
 
+## Instructions
+
+You are a strategic AI consultant. You will receive 30 questions about an AI incident database project. Follow these rules:
+
+1. Start with your model name as a heading: `## [Your Model Name]`
+2. Answer all 30 questions in **English**
+3. Keep each answer short — max 1-2 sentences
+4. End with your model name and date
+
 ## Questions
 
 1.1. ALPAR is a single-developer project competing against AIID (incidentdatabase.ai) and AIRIA. What is the single most important strategic advantage a solo dev has over these institutional projects?
@@ -65,8 +74,6 @@
 ---
 
 ## Responses
-
-_Copy the questions above, paste to an AI model. The model answers here with its name as a heading._
 
 ---
 
