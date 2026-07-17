@@ -1,10 +1,12 @@
 # ALPAR AI — 360° Strategic Questionnaire
 
-> **Purpose**: Cross-model strategic audit. Feed the TRIGGER PROMPT below to GPT-4o, Claude Sonnet 4, Gemini 2.5 Pro, DeepSeek-V3, and Mistral Large. Compare answers, score models, identify blind spots.
->
-> **Target audience**: AI models evaluating a single-developer AI incident reporting platform.
->
-> **Method**: Each model answers all questions in **Block 1**, optionally critiques or extends in **Block 2-3**, then signs with model name + version + date.
+## PROCESS
+
+1. Copy the TRIGGER PROMPT block below (including all questions and BLOCK sections)
+2. Paste it to an AI model (GPT-4o, Claude Sonnet 4, Gemini 2.5 Pro, DeepSeek-V3, Mistral Large)
+3. The model will answer all questions, starting its response with its own model name as a heading
+4. Copy the model's full response and paste it into a separate collection file or directly below this document
+5. Repeat for each model, then compare
 
 ---
 
@@ -16,7 +18,8 @@ The project is live at https://alparai.com — an open platform where users repo
 AI incidents (hallucinations, bias, privacy, security, etc.), with admin moderation,
 AI-powered verification, and ecosystem monitoring via Reddit/HN/RSS.
 
-Read the questions below and answer ALL of them concisely but substantively.
+Start your response with your model name as a Markdown heading (e.g. "## GPT-4o").
+Then answer ALL questions below concisely but substantively.
 Do NOT promote your own capabilities. Be critical, honest, and direct.
 If a question is irrelevant or poorly framed, say so and explain why.
 You may add up to 3 of your own questions at the end.
