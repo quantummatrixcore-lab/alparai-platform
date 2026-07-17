@@ -65,7 +65,13 @@ export function InnovationsClient({
         toast.error(res.message);
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to auto-review");
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : locale === "tr"
+            ? "Otomatik inceleme başarısız"
+            : "Failed to auto-review",
+      );
     } finally {
       setIsAutoReviewing(false);
     }
@@ -93,7 +99,13 @@ export function InnovationsClient({
         toast.error(res.message);
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to trigger fetch");
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : locale === "tr"
+            ? "Veri çekme tetiklenemedi"
+            : "Failed to trigger fetch",
+      );
     } finally {
       setIsFetching(false);
     }
@@ -107,7 +119,13 @@ export function InnovationsClient({
         toast.success(locale === "tr" ? "Durum güncellendi" : "Status updated");
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Error updating status");
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : locale === "tr"
+            ? "Durum güncellenirken hata"
+            : "Error updating status",
+      );
     }
   };
 
@@ -131,7 +149,13 @@ export function InnovationsClient({
         );
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Error accepting incident");
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : locale === "tr"
+            ? "Olay onaylanırken hata"
+            : "Error accepting incident",
+      );
     }
   };
 
@@ -155,7 +179,13 @@ export function InnovationsClient({
         );
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to update status");
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : locale === "tr"
+            ? "Durum güncellenemedi"
+            : "Failed to update status",
+      );
     }
   };
 
@@ -184,7 +214,13 @@ export function InnovationsClient({
         toast.success(locale === "tr" ? "Yeni inovasyon eklendi!" : "New innovation added!");
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Error adding innovation");
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : locale === "tr"
+            ? "İnovasyon eklenirken hata"
+            : "Error adding innovation",
+      );
     }
   };
 
@@ -193,6 +229,13 @@ export function InnovationsClient({
     medium: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
     high: "bg-orange-500/10 text-orange-400 border-orange-500/20",
     critical: "bg-red-500/10 text-red-400 border-red-500/20",
+  };
+
+  const priorityLabels = {
+    low: locale === "tr" ? "Düşük" : "Low",
+    medium: locale === "tr" ? "Orta" : "Medium",
+    high: locale === "tr" ? "Yüksek" : "High",
+    critical: locale === "tr" ? "Kritik" : "Critical",
   };
 
   const statusLabels = {
@@ -583,7 +626,7 @@ export function InnovationsClient({
                       priorityColors[inv.priority],
                     )}
                   >
-                    {inv.priority}
+                    {priorityLabels[inv.priority]}
                   </span>
                 </div>
               </div>

@@ -1,150 +1,207 @@
 "use server";
 
-import { createAdminClient } from "@/lib/supabase/admin";
+import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth/session";
-import { callModel } from "@/lib/ai/openrouter-gateway";
-import type { GatewayModel } from "@/lib/ai/types";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { logger } from "@/lib/utils/logger";
+import { callModel, QUESTIONNAIRE_MODELS, type GatewayModel } from "@/lib/ai/openrouter-gateway";
+import { QUESTIONS } from "@/lib/strategy/questions";
+import { isCostKillSwitchActive } from "@/lib/ai/cost-guard";
 
-export interface StrategicQuestion {
-  id: string;
-  section: string;
-  question: string;
-  created_at: string | null;
+const SYSTEM_PROMPT = `You are a senior strategy consultant evaluating an AI-accountability platform. You will receive 35 questions in 8 sections. Rules:
+
+1. Start with your model name as a heading: ## [Your Model Name]
+2. Answer in English, every question, in order, numbered.
+3. Format per answer: Verdict in the first sentence, then at most two sentences of reasoning or a concrete action. Maximum 3 sentences total.
+4. Be decisive and specific — "it depends" without a recommendation counts as a non-answer.
+5. Ignore all other models' answers. End with your model name and date.
+
+Project facts: ALPAR AI — independent public AI incident registry + AI assessor ('Moody's for AI'). EU AI Act Art. 73 platform. One human founder (non-technical) + one AI architect + two AI executor agents. Stack: Next.js, Supabase (free tier), Upstash, Vercel. ~400 seed incidents + organic reports, EN+TR, pre-revenue. Public launch announced for Aug 2, 2026; account required to submit. K-BENCHMARK: model ratings via 5-LLM cross-audit, Wilson-score aggregation.`;
+
+export interface QuestionnaireResult {
+  runId: string;
+  status: string;
+  answers: {
+    questionId: string;
+    modelId: string;
+    answerText: string | null;
+    errorMessage: string | null;
+  }[];
 }
 
-export interface StrategicAnswer {
-  id: string;
-  question_id: string;
-  model_name: string;
-  answer: string;
-  latency_ms: number | null;
-  cost_usd: number | null;
-  created_at: string | null;
-}
+export async function runQuestionnaire(modelIds?: string[]): Promise<{
+  ok: boolean;
+  runId?: string;
+  error?: string;
+}> {
+  try {
+    await requireAdmin();
 
-export async function getStrategicQuestions(): Promise<StrategicQuestion[]> {
-  await requireAdmin();
-  const db = createAdminClient();
-  const { data, error } = await db
-    .from("strategic_questions")
-    .select("*")
-    .order("id", { ascending: true });
+    if (await isCostKillSwitchActive()) {
+      return { ok: false, error: "Cost kill switch is active. Cannot run questionnaire." };
+    }
 
-  if (error) throw new Error(error.message);
-  return data || [];
-}
+    const selectedModels: GatewayModel[] = modelIds
+      ? QUESTIONNAIRE_MODELS.filter((m) => modelIds.includes(m.id))
+      : [...QUESTIONNAIRE_MODELS];
 
-export async function getStrategicAnswers(): Promise<StrategicAnswer[]> {
-  await requireAdmin();
-  const db = createAdminClient();
-  const { data, error } = await db
-    .from("strategic_answers")
-    .select("*")
-    .order("created_at", { ascending: false });
+    if (selectedModels.length === 0) {
+      return { ok: false, error: "No models selected." };
+    }
 
-  if (error) throw new Error(error.message);
-  return data || [];
-}
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const supabase = createAdminClient() as any;
 
-export async function deleteStrategicAnswersForModel(modelName: string): Promise<void> {
-  await requireAdmin();
-  const db = createAdminClient();
-  const { error } = await db
-    .from("strategic_answers")
-    .delete()
-    .eq("model_name", modelName);
+    const { data: run, error: runError } = await supabase
+      .from("strategic_runs")
+      .insert({
+        status: "running",
+        model_ids: selectedModels.map((m) => m.id),
+        total_questions: QUESTIONS.length,
+      })
+      .select("id")
+      .single();
 
-  if (error) throw new Error(error.message);
-}
+    if (runError || !run) {
+      logger.error("Failed to create strategic run", undefined, runError);
+      return { ok: false, error: runError?.message || "Failed to create run" };
+    }
 
-export async function runStrategicQuestionnaireForModel(
-  modelId: string,
-  provider: string,
-  modelName: string
-): Promise<{ success: boolean; count: number; error?: string }> {
-  await requireAdmin();
-  const db = createAdminClient();
+    const runId = run.id as string;
+    const allQuestions = [...QUESTIONS];
+    let totalAnswers = 0;
 
-  // Fetch all questions
-  const { data: questions, error: qErr } = await db
-    .from("strategic_questions")
-    .select("*")
-    .order("id", { ascending: true });
+    for (const model of selectedModels) {
+      const modelLabel = model.id.replace(/:free$/, "").replace(/^.*\//, "");
 
-  if (qErr || !questions) {
-    return { success: false, count: 0, error: qErr?.message || "No questions found" };
-  }
+      for (let qi = 0; qi < allQuestions.length; qi++) {
+        const q = allQuestions[qi]!;
+        const questionBlock = allQuestions.map((qq) => `${qq.id}. ${qq.text}`).join("\n\n");
 
-  const gatewayModel: GatewayModel = {
-    id: modelId,
-    provider: provider,
-    tier: modelId.includes("pro") || modelId.includes("sonnet") || modelId.includes("gpt-4o") ? "premium" : "free",
-    maxTokens: 1024,
-  };
+        const userMessage = `Answer ALL 35 questions below. Each answer: verdict first, then 1-2 sentences.\n\n${questionBlock}`;
 
-  const systemPrompt = `You are a senior strategy consultant evaluating ALPAR AI (independent public AI incident registry + AI assessor, EU AI Act Art. 73 platform).
-Format rules for your response:
-1. Start with your model name as a heading: ## [Model Name]
-2. Answer in English.
-3. Format: Verdict in the first sentence, then at most two sentences of reasoning or concrete action. Maximum 3 sentences total.
-4. Be decisive and specific — no "it depends" without a recommendation.`;
+        const startTime = performance.now();
 
-  let processedCount = 0;
+        try {
+          const result = await callModel({
+            systemPrompt: SYSTEM_PROMPT,
+            userMessage,
+            model,
+            temperature: 0.3,
+          });
 
-  // Process questions in chunks of 5 to avoid timeouts or rate limits
-  const chunkSize = 5;
-  for (let i = 0; i < questions.length; i += chunkSize) {
-    const chunk = questions.slice(i, i + chunkSize);
+          const latencyMs = Math.round(performance.now() - startTime);
 
-    const promises = chunk.map(async (q) => {
-      const userMessage = `Section: ${q.section}\nQuestion ID: ${q.id}\nQuestion: ${q.question}`;
-
-      const startTime = Date.now();
-      try {
-        const result = await callModel({
-          systemPrompt,
-          userMessage,
-          model: gatewayModel,
-          temperature: 0.2,
-        });
-
-        const latencyMs = Date.now() - startTime;
-
-        if (result.ok) {
-          const content = result.data.content;
-          // Calculate cost (standard pricing or estimated)
-          let costUsd = 0;
-          if (result.data.usage) {
-            // GPT-4o approx cost: $2.50 / 1M input, $10.00 / 1M output
-            // Claude 3.5 Sonnet: $3.00 / 1M input, $15.00 / 1M output
-            const promptRate = modelId.includes("sonnet") ? 3.0 : 2.50;
-            const completionRate = modelId.includes("sonnet") ? 15.0 : 10.00;
-            costUsd = ((result.data.usage.promptTokens * promptRate) + (result.data.usage.completionTokens * completionRate)) / 1000000;
-          }
-
-          // Save/Update Answer
-          const { error: insertErr } = await db.from("strategic_answers").upsert(
-            {
+          if (result.ok) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            await (supabase as any).from("strategic_answers").insert({
+              run_id: runId,
+              model_id: model.id,
+              model_name: modelLabel,
+              question_index: qi,
               question_id: q.id,
-              model_name: modelName,
-              answer: content,
+              section: q.section,
+              answer_text: result.data.content,
               latency_ms: latencyMs,
-              cost_usd: parseFloat(costUsd.toFixed(6)),
-            },
-            { onConflict: "question_id,model_name" } // Assuming we add a unique constraint in db
-          );
-
-          if (!insertErr) {
-            processedCount++;
+              tokens_used: result.data.usage?.totalTokens || 0,
+            });
+          } else {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            await (supabase as any).from("strategic_answers").insert({
+              run_id: runId,
+              model_id: model.id,
+              model_name: modelLabel,
+              question_index: qi,
+              question_id: q.id,
+              section: q.section,
+              error_message: result.error?.message || "Unknown error",
+              latency_ms: latencyMs,
+            });
           }
+        } catch (err) {
+          const latencyMs = Math.round(performance.now() - startTime);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          await (supabase as any).from("strategic_answers").insert({
+            run_id: runId,
+            model_id: model.id,
+            model_name: modelLabel,
+            question_index: qi,
+            question_id: q.id,
+            section: q.section,
+            error_message: err instanceof Error ? err.message : "Unknown error",
+            latency_ms: latencyMs,
+          });
         }
-      } catch (err) {
-        console.error(`Failed to invoke model for question ${q.id}:`, err);
+
+        totalAnswers++;
+
+        await new Promise((r) => setTimeout(r, 500));
       }
-    });
+    }
 
-    await Promise.all(promises);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase as any)
+      .from("strategic_runs")
+      .update({
+        status: "completed",
+        completed_at: new Date().toISOString(),
+        total_answers: totalAnswers,
+      })
+      .eq("id", runId);
+
+    revalidatePath("/admin/strategy/questionnaire");
+    return { ok: true, runId };
+  } catch (err) {
+    logger.error("runQuestionnaire failed", undefined, err instanceof Error ? err : undefined);
+    return { ok: false, error: err instanceof Error ? err.message : "Unknown error" };
   }
+}
 
-  return { success: true, count: processedCount };
+export async function getQuestionnaireRuns() {
+  await requireAdmin();
+  const supabase = createAdminClient();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: runs } = await (supabase as any)
+    .from("strategic_runs")
+    .select("*")
+    .order("started_at", { ascending: false })
+    .limit(20);
+
+  return (runs || []) as {
+    id: string;
+    status: string;
+    model_ids: string[];
+    total_questions: number;
+    total_answers: number;
+    started_at: string;
+    completed_at: string | null;
+  }[];
+}
+
+export async function getQuestionnaireRunAnswers(runId: string) {
+  await requireAdmin();
+  const supabase = createAdminClient();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: answers } = await (supabase as any)
+    .from("strategic_answers")
+    .select("*")
+    .eq("run_id", runId)
+    .order("question_index", { ascending: true });
+
+  return (answers || []) as {
+    id: string;
+    run_id: string;
+    model_id: string;
+    model_name: string;
+    question_index: number;
+    question_id: string;
+    section: string;
+    answer_text: string | null;
+    error_message: string | null;
+    latency_ms: number | null;
+    tokens_used: number | null;
+    created_at: string;
+  }[];
 }

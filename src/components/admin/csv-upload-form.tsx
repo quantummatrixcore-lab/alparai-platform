@@ -8,9 +8,9 @@ import type { ImportIncidentsResult } from "@/actions/admin";
 import { cn } from "@/lib/utils";
 
 const SOURCES = [
-  { value: "aiaaic_import", label: "AIAAIC Registry", color: "text-purple-400" },
-  { value: "aiid_import", label: "AI Incident Database (AIID)", color: "text-blue-400" },
-  { value: "news_curated", label: "Curated News / Custom CSV", color: "text-emerald-400" },
+  { value: "aiaaic_import", labelKey: "csv_import_source_aiaaic", color: "text-purple-400" },
+  { value: "aiid_import", labelKey: "csv_import_source_aiid", color: "text-blue-400" },
+  { value: "news_curated", labelKey: "csv_import_source_news", color: "text-emerald-400" },
 ] as const;
 
 interface CsvUploadFormProps {
@@ -87,7 +87,7 @@ export function CsvUploadForm({ locale: _locale }: CsvUploadFormProps) {
                     : "text-fg-muted border-white/5 bg-white/5 hover:border-white/10 hover:text-white",
                 )}
               >
-                <span className={source === s.value ? s.color : ""}>{s.label}</span>
+                <span className={source === s.value ? s.color : ""}>{t(s.labelKey)}</span>
               </button>
             ))}
           </div>

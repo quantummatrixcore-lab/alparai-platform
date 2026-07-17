@@ -81,6 +81,19 @@ export const TRIAGE_SLOT_3_CHAIN: readonly GatewayModel[] = [
   { id: "command-r", provider: "cohere", tier: "free", maxTokens: 2048 },
 ] as const;
 
+// Strategic Questionnaire models — 4 free OpenRouter models + MiMo V2.5 (paid)
+export const QUESTIONNAIRE_MODELS: readonly GatewayModel[] = [
+  { id: "deepseek/deepseek-v4-flash:free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+  { id: "tencent/hy3:free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+  {
+    id: "nvidia/nemotron-3-ultra-550b-a55b:free",
+    provider: "openrouter",
+    tier: "free",
+    maxTokens: 4096,
+  },
+  { id: "cohere/north-mini-code:free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+] as const;
+
 export const SUPREME_COURT_CHAIN: readonly GatewayModel[] = [
   { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
   { id: "anthropic/claude-3.5-sonnet", provider: "openrouter", tier: "premium", maxTokens: 4096 },
