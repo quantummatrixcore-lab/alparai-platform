@@ -51,10 +51,12 @@ describe("DSAR Export API Endpoint", () => {
         return {
           insert: vi.fn().mockReturnThis(),
           select: vi.fn().mockReturnThis(),
-          single: vi.fn().mockResolvedValue({ data: { id: "dsar-123", due_date: "2026-08-11" }, error: null }),
+          single: vi
+            .fn()
+            .mockResolvedValue({ data: { id: "dsar-123", due_date: "2026-08-11" }, error: null }),
         };
       }
-      if (table === "profiles") {
+      if (table === "users") {
         return {
           select: vi.fn().mockReturnThis(),
           eq: vi.fn().mockReturnThis(),
@@ -64,7 +66,12 @@ describe("DSAR Export API Endpoint", () => {
       if (table === "incidents") {
         return {
           select: vi.fn().mockReturnThis(),
-          eq: vi.fn().mockResolvedValue({ data: [{ id: "inc-123", title_masked: "Test Title" }], error: null }),
+          eq: vi
+            .fn()
+            .mockResolvedValue({
+              data: [{ id: "inc-123", title_masked: "Test Title" }],
+              error: null,
+            }),
         };
       }
       // default fallback for comments, votes, expert_applications

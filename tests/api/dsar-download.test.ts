@@ -52,7 +52,7 @@ describe("DSAR Download API Endpoint", () => {
           insert: vi.fn().mockResolvedValue({ error: null }),
         };
       }
-      if (table === "profiles") {
+      if (table === "users") {
         return {
           select: vi.fn().mockReturnThis(),
           eq: vi.fn().mockReturnThis(),
@@ -95,7 +95,7 @@ describe("DSAR Download API Endpoint", () => {
           insert: vi.fn().mockResolvedValue({ error: null }),
         };
       }
-      if (table === "profiles") {
+      if (table === "users") {
         return {
           select: vi.fn().mockReturnThis(),
           eq: vi.fn().mockReturnThis(),

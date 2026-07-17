@@ -31,7 +31,6 @@ const REQUIRED_VARS: { key: string; provider: string; required: boolean }[] = [
   { key: "CRON_SECRET", provider: "cron", required: false },
   { key: "VERCEL_TOKEN", provider: "vercel", required: false },
   { key: "VERCEL_OIDC_TOKEN", provider: "vercel", required: false },
-  { key: "VAULT_MASTER_KEY", provider: "vault", required: false },
   { key: "UNSUBSCRIBE_SALT", provider: "newsletter", required: true },
   { key: "NEXT_PUBLIC_APP_URL", provider: "app", required: true },
 ];

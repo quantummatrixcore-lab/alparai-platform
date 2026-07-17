@@ -48,7 +48,7 @@ describe("DSAR Portable API Endpoint (GDPR Art. 20)", () => {
 
     mockFrom.mockImplementation((table: string) => {
       const mocks: Record<string, unknown> = {
-        profiles: {
+        users: {
           select: vi.fn().mockReturnThis(),
           eq: vi.fn().mockReturnThis(),
           maybeSingle: vi.fn().mockResolvedValue({ data: { full_name: "John Doe" }, error: null }),

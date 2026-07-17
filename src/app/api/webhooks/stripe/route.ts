@@ -60,12 +60,14 @@ export async function POST(request: Request) {
       const subscription = event.data.object;
       const status = subscription.status === "active" ? "active" : "inactive";
       const periodEnd = subscription.items.data[0]?.current_period_end;
+      const priceId = subscription.items.data[0]?.price?.id;
 
       await admin
         .from("subscriptions")
         .update({
           status,
           current_period_end: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
+          stripe_price_id: priceId || null,
         })
         .eq("stripe_subscription_id", subscription.id);
       break;
