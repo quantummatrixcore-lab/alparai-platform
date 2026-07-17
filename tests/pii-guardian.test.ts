@@ -246,5 +246,23 @@ describe("PII Guardian", () => {
         expect(hasPII("Cadde sokak mahalle")).toBe(false);
       });
     });
+
+    describe("Sentinel Integration", () => {
+      it("detects and redacts credentials like AWS secret key or database URL", () => {
+        const r = maskPII("My postgres database URL is postgres://admin:secret@localhost:5432/db");
+        expect(r.masked).toContain("[REDACTED-SECRET]");
+        expect(r.masked).not.toContain("postgres://admin:secret");
+        expect(r.piiFound).toBe(true);
+      });
+
+      it("detects and redacts custom token/key patterns", () => {
+        const r = maskPII(
+          "AWS Key: AKIAIOSFODNN7EXAMPLE and JWT: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNqPZNoaPTR",
+        );
+        expect(r.masked).toContain("[REDACTED-SECRET]");
+        expect(r.masked).not.toContain("AKIAIOSFODNN7EXAMPLE");
+        expect(r.masked).not.toContain("eyJhbGciOiJI");
+      });
+    });
   });
 });

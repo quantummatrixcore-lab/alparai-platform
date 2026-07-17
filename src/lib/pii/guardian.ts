@@ -16,6 +16,8 @@
  * Pure-function: no I/O, no dependencies. Safe for edge runtime.
  */
 
+import { Sentinel } from "../ai/sentinel";
+
 const PATTERNS: ReadonlyArray<{
   name: string;
   re: RegExp;
@@ -169,11 +171,41 @@ export function maskPII(input: string): PiiScanResult {
     }
   }
 
-  const detections = Array.from(detectionMap.values());
+  // Run Sentinel Scanner to intercept and redact credentials / secrets
+  try {
+    const sentinel = new Sentinel();
+    const sentinelResult = sentinel.scan(masked);
+    for (const threat of sentinelResult.threats) {
+      if (threat.rawMatch) {
+        const escaped = threat.rawMatch.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const single = new RegExp(escaped, "g");
+        masked = masked.replace(single, "[REDACTED-SECRET]");
+        totalRedactions++;
+
+        const existing = detectionMap.get(threat.type);
+        if (existing) {
+          existing.count++;
+          if (existing.samples.length < 3) {
+            existing.samples.push(threat.type);
+          }
+        } else {
+          detectionMap.set(threat.type, {
+            type: threat.type,
+            count: 1,
+            samples: [threat.type],
+          });
+        }
+      }
+    }
+  } catch (_err) {
+    // Fallback if sentinel fails or is not configured
+  }
+
+  const finalDetections = Array.from(detectionMap.values());
   return {
     masked,
-    detections,
-    piiFound: detections.length > 0,
+    detections: finalDetections,
+    piiFound: finalDetections.length > 0,
     redactedCount: totalRedactions,
   };
 }

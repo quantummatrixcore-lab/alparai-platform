@@ -9,6 +9,7 @@ export interface SentinelThreat {
   type: ThreatType;
   severity: "low" | "medium" | "high" | "critical";
   match: string;
+  rawMatch?: string;
   context: string;
   line: number;
   recommendation: string;
@@ -44,7 +45,7 @@ const PATTERNS: Record<ThreatType, RegExp> = {
   database_url: /(?:postgres|mysql|mongodb|redis|rediss):\/\/[^\s]{5,}/g,
   auth_token: /(?:access_token|auth_token|api_token|secret_token)[:=]["']?[a-zA-Z0-9_\-]{16,}/gi,
   password: /(?:password|passwd|pwd)[:=]["']?[^"'\s]{8,}/gi,
-  credit_card: /\b(?:\d[ -]*?){13,16}\b/g,
+  credit_card: /\b(?:\d[ -]?){13,16}\b/g,
   ssn: /\b(?!000|666|9\d{2})\d{3}[ -]?(?!00)\d{2}[ -]?(?!0000)\d{4}\b/g,
   email: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g,
   ip_address: /\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b/g,
@@ -124,11 +125,21 @@ export function detectEncodeBypass(data: string): string[] {
 
 export function scanLine(line: string, lineNumber: number, _content: string): SentinelThreat[] {
   const threats: SentinelThreat[] = [];
+  const startTime = typeof performance !== "undefined" ? performance.now() : Date.now();
+
+  // Truncate excessively long lines to prevent ReDoS on complex regex patterns
+  const safeLine = line.length > 4096 ? line.substring(0, 4096) : line;
 
   for (const [type, pattern] of Object.entries(PATTERNS) as [ThreatType, RegExp][]) {
+    // ReDoS guard: abort if matching exceeds 50ms
+    const now = typeof performance !== "undefined" ? performance.now() : Date.now();
+    if (now - startTime > 50) {
+      break;
+    }
+
     pattern.lastIndex = 0;
     let match: RegExpExecArray | null;
-    while ((match = pattern.exec(line)) !== null) {
+    while ((match = pattern.exec(safeLine)) !== null) {
       if (type === "credit_card") {
         const cardNum = match[0].replace(/\D/g, "");
         if (!luhnCheck(cardNum)) continue;
@@ -150,7 +161,8 @@ export function scanLine(line: string, lineNumber: number, _content: string): Se
         type: type as ThreatType,
         severity,
         match: maskMatch(match[0], severity),
-        context: extractContext(line, match.index),
+        rawMatch: match[0],
+        context: extractContext(safeLine, match.index),
         line: lineNumber,
         recommendation: getRecommendation(type as ThreatType),
       });
