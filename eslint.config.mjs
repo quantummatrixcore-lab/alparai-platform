@@ -45,6 +45,8 @@ const eslintConfig = defineConfig([
     "chrome-profile/**",
     "tmp/**",
     "ops/**",
+    "chrome-data/**",
+    "graphify-out/**",
   ]),
 ]);
 
