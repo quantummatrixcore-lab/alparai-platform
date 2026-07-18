@@ -3,6 +3,10 @@
 import { getCurrentUser } from "@/lib/auth/session";
 import { resolveApiKey } from "@/lib/ai/api-keys";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import dns from "dns";
+import { promisify } from "util";
+
+const dnsLookup = promisify(dns.lookup);
 
 interface FetchContentResponse {
   ok: boolean;
@@ -15,6 +19,116 @@ interface GenerateResponse {
   ok: boolean;
   drafts?: string[];
   error?: string;
+}
+
+/**
+ * Validates if a URL is safe from SSRF attacks.
+ * Enforces HTTPS scheme, rejects private/local IP ranges and hostnames.
+ */
+export async function isSafeUrl(
+  urlStr: string,
+): Promise<{ safe: boolean; error?: string; parsedUrl?: URL }> {
+  try {
+    const parsedUrl = new URL(urlStr);
+
+    // 1. Scheme HTTPS-only
+    if (parsedUrl.protocol !== "https:") {
+      return { safe: false, error: "Only HTTPS URLs are allowed." };
+    }
+
+    const host = parsedUrl.hostname.toLowerCase();
+
+    // 2. Reject obvious private hostnames/IPs
+    const isObviousPrivate =
+      host === "localhost" ||
+      host === "127.0.0.1" ||
+      host === "0.0.0.0" ||
+      host === "[::1]" ||
+      /^(10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.|169\.254\.|127\.)/.test(host);
+
+    if (isObviousPrivate) {
+      return { safe: false, error: "Access to private or local network is forbidden." };
+    }
+
+    // 3. DNS resolution check (resolve the host to IP and verify it's public)
+    try {
+      const result = await dnsLookup(parsedUrl.hostname, { all: true });
+      for (const entry of result) {
+        const ip = entry.address;
+        const isIpPrivate =
+          ip === "127.0.0.1" ||
+          ip === "0.0.0.0" ||
+          ip === "::1" ||
+          /^(10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.|169\.254\.|127\.)/.test(ip);
+        if (isIpPrivate) {
+          return { safe: false, error: "Access to private or local network IP is forbidden." };
+        }
+      }
+    } catch {
+      return { safe: false, error: "Could not resolve hostname." };
+    }
+
+    return { safe: true, parsedUrl };
+  } catch {
+    return { safe: false, error: "Invalid URL format." };
+  }
+}
+
+/**
+ * Fetch helper wrapping native fetch with SSRF guards.
+ * Restricts to HTTPS, checks DNS, prevents automated redirect following, and caps size/time.
+ */
+export async function fetchWithSsrfGuard(
+  urlStr: string,
+  options: RequestInit = {},
+): Promise<Response> {
+  let currentUrl = urlStr;
+  const maxRedirects = 3;
+  let redirectCount = 0;
+
+  // Enforce response time cap (8000ms)
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+  try {
+    while (redirectCount <= maxRedirects) {
+      const { safe, error } = await isSafeUrl(currentUrl);
+      if (!safe) {
+        throw new Error(error || "Unsafe URL");
+      }
+
+      const res = await fetch(currentUrl, {
+        ...options,
+        redirect: "manual",
+        signal: controller.signal,
+      });
+
+      if (res.status >= 300 && res.status < 400) {
+        const location = res.headers.get("location");
+        if (!location) {
+          clearTimeout(timeoutId);
+          return res;
+        }
+
+        // Resolve relative redirect location against the current URL
+        const nextUrl = new URL(location, currentUrl).toString();
+        currentUrl = nextUrl;
+        redirectCount++;
+      } else {
+        // Enforce response size cap (2MB limit)
+        const contentLength = res.headers.get("content-length");
+        if (contentLength && parseInt(contentLength, 10) > 2 * 1024 * 1024) {
+          throw new Error("Response size limit exceeded (2MB limit)");
+        }
+        clearTimeout(timeoutId);
+        return res;
+      }
+    }
+    throw new Error("Too many redirects");
+  } catch (err) {
+    clearTimeout(timeoutId);
+    throw err;
+  }
 }
 
 /**
@@ -37,7 +151,7 @@ export async function fetchContentFromUrl(url: string): Promise<FetchContentResp
 
     if (isYouTube) {
       const oEmbedUrl = `https://noembed.com/embed?url=${encodeURIComponent(url)}`;
-      const res = await fetch(oEmbedUrl);
+      const res = await fetchWithSsrfGuard(oEmbedUrl);
       if (!res.ok) {
         throw new Error(`Failed to fetch oEmbed metadata: ${res.statusText}`);
       }
@@ -57,7 +171,7 @@ export async function fetchContentFromUrl(url: string): Promise<FetchContentResp
       if (path.endsWith("/")) path = path.slice(0, -1);
 
       const fxUrl = `https://api.fxtwitter.com${path}`;
-      const res = await fetch(fxUrl, {
+      const res = await fetchWithSsrfGuard(fxUrl, {
         headers: {
           "User-Agent": "Mozilla/5.0",
         },
@@ -79,7 +193,7 @@ export async function fetchContentFromUrl(url: string): Promise<FetchContentResp
       };
     } else {
       // General URL scraper
-      const res = await fetch(url, {
+      const res = await fetchWithSsrfGuard(url, {
         headers: {
           "User-Agent":
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -91,6 +205,9 @@ export async function fetchContentFromUrl(url: string): Promise<FetchContentResp
       }
 
       const html = await res.text();
+      if (html.length > 2 * 1024 * 1024) {
+        throw new Error("Response size limit exceeded (2MB limit)");
+      }
 
       // Basic HTML stripping
       let cleanText = html
