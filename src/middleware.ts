@@ -4,6 +4,7 @@ import createIntlMiddleware from "next-intl/middleware";
 import { updateSession } from "@/lib/supabase/middleware";
 import { routing } from "@/i18n/routing";
 import { logger } from "@/lib/utils/logger";
+import type { Database } from "@/types/database";
 
 const intlMiddleware = createIntlMiddleware(routing);
 
@@ -18,9 +19,10 @@ export async function middleware(request: NextRequest) {
   requestHeaders.set("x-pathname", request.nextUrl.pathname);
 
   const { pathname } = request.nextUrl;
+  const isAdminPath = pathname.startsWith("/admin") || /^\/[a-z]{2}\/admin(\/|$)/.test(pathname);
 
-  if (pathname.startsWith("/admin") && !pathname.startsWith("/api/")) {
-    const supabase = createServerClient(
+  if (isAdminPath && !pathname.startsWith("/api/")) {
+    const supabase = createServerClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
@@ -33,9 +35,26 @@ export async function middleware(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
+    const locale = request.cookies.get("NEXT_LOCALE")?.value ?? "en";
+
     if (!user) {
-      const locale = request.cookies.get("NEXT_LOCALE")?.value ?? "en";
       return NextResponse.redirect(new URL(`/${locale}/auth/signin`, request.url));
+    }
+
+    const { data: profile } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    const userRole = profile?.role as string | undefined;
+    if (
+      userRole !== "moderator" &&
+      userRole !== "admin" &&
+      userRole !== "ceo" &&
+      userRole !== "advisor"
+    ) {
+      return NextResponse.redirect(new URL(`/${locale}`, request.url));
     }
   }
 

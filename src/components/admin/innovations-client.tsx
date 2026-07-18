@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import {
   updateExternalQueueStatus,
   acceptExternalIncident,
@@ -46,6 +47,7 @@ export function InnovationsClient({
   initialConnectors,
   locale,
 }: InnovationsClientProps) {
+  const t = useTranslations("admin");
   const [innovations, setInnovations] = useState<StrategyInnovation[]>(initialInnovations);
   const [queue, setQueue] = useState<ExternalIncidentQueueItem[]>(initialQueue);
   const connectors = initialConnectors;
@@ -65,13 +67,7 @@ export function InnovationsClient({
         toast.error(res.message);
       }
     } catch (err) {
-      toast.error(
-        err instanceof Error
-          ? err.message
-          : locale === "tr"
-            ? "Otomatik inceleme başarısız"
-            : "Failed to auto-review",
-      );
+      toast.error(err instanceof Error ? err.message : t("failed_to_auto_review"));
     } finally {
       setIsAutoReviewing(false);
     }
@@ -99,13 +95,7 @@ export function InnovationsClient({
         toast.error(res.message);
       }
     } catch (err) {
-      toast.error(
-        err instanceof Error
-          ? err.message
-          : locale === "tr"
-            ? "Veri çekme tetiklenemedi"
-            : "Failed to trigger fetch",
-      );
+      toast.error(err instanceof Error ? err.message : t("failed_to_trigger_fetch"));
     } finally {
       setIsFetching(false);
     }
@@ -116,16 +106,10 @@ export function InnovationsClient({
       const res = await updateExternalQueueStatus(id, status);
       if (res.success) {
         setQueue((prev) => prev.filter((item) => item.id !== id));
-        toast.success(locale === "tr" ? "Durum güncellendi" : "Status updated");
+        toast.success(t("status_updated"));
       }
     } catch (err) {
-      toast.error(
-        err instanceof Error
-          ? err.message
-          : locale === "tr"
-            ? "Durum güncellenirken hata"
-            : "Error updating status",
-      );
+      toast.error(err instanceof Error ? err.message : t("error_updating_status"));
     }
   };
 
@@ -142,20 +126,10 @@ export function InnovationsClient({
       if (res.success) {
         setQueue((prev) => prev.filter((item) => item.id !== acceptingItem.id));
         setAcceptingItem(null);
-        toast.success(
-          locale === "tr"
-            ? "Olay başarıyla onaylandı ve yayınlandı!"
-            : "Incident approved and published!",
-        );
+        toast.success(t("incident_approved_and_published"));
       }
     } catch (err) {
-      toast.error(
-        err instanceof Error
-          ? err.message
-          : locale === "tr"
-            ? "Olay onaylanırken hata"
-            : "Error accepting incident",
-      );
+      toast.error(err instanceof Error ? err.message : t("error_accepting_incident"));
     }
   };
 
@@ -174,18 +148,10 @@ export function InnovationsClient({
         setInnovations((prev) =>
           prev.map((inv) => (inv.id === id ? { ...inv, status: nextStatus } : inv)),
         );
-        toast.success(
-          locale === "tr" ? "İnovasyon durumu güncellendi" : "Innovation status updated",
-        );
+        toast.success(t("innovation_status_updated"));
       }
     } catch (err) {
-      toast.error(
-        err instanceof Error
-          ? err.message
-          : locale === "tr"
-            ? "Durum güncellenemedi"
-            : "Failed to update status",
-      );
+      toast.error(err instanceof Error ? err.message : t("failed_to_update_status"));
     }
   };
 
@@ -211,16 +177,10 @@ export function InnovationsClient({
         setNewTitle("");
         setNewDesc("");
         setIsAdding(false);
-        toast.success(locale === "tr" ? "Yeni inovasyon eklendi!" : "New innovation added!");
+        toast.success(t("new_innovation_added"));
       }
     } catch (err) {
-      toast.error(
-        err instanceof Error
-          ? err.message
-          : locale === "tr"
-            ? "İnovasyon eklenirken hata"
-            : "Error adding innovation",
-      );
+      toast.error(err instanceof Error ? err.message : t("error_adding_innovation"));
     }
   };
 
@@ -232,16 +192,16 @@ export function InnovationsClient({
   };
 
   const priorityLabels = {
-    low: locale === "tr" ? "Düşük" : "Low",
-    medium: locale === "tr" ? "Orta" : "Medium",
-    high: locale === "tr" ? "Yüksek" : "High",
-    critical: locale === "tr" ? "Kritik" : "Critical",
+    low: t("low"),
+    medium: t("medium"),
+    high: t("high"),
+    critical: t("critical"),
   };
 
   const statusLabels = {
-    idea: locale === "tr" ? "Fikir" : "Idea",
-    in_progress: locale === "tr" ? "Geliştiriliyor" : "In Progress",
-    done: locale === "tr" ? "Tamamlandı" : "Completed",
+    idea: t("idea"),
+    in_progress: t("in_progress"),
+    done: t("completed"),
   };
 
   const statusColors = {
@@ -257,12 +217,10 @@ export function InnovationsClient({
         <div>
           <h1 className="inline-flex items-center gap-2.5 text-2xl font-bold tracking-tight text-white">
             <Lightbulb className="text-brand-400 h-6 w-6 drop-shadow-[0_0_8px_rgba(168,85,247,0.4)]" />
-            {locale === "tr" ? "İnovasyon Merkezi & Veri Havuzu" : "Innovation Hub & Data Pool"}
+            {t("innovation_hub_data_pool")}
           </h1>
           <p className="text-fg-secondary mt-1 text-sm">
-            {locale === "tr"
-              ? "Harici veri kaynaklarından gelen olayları onaylayın ve geleceğe yönelik geliştirme fikirlerini yönetin."
-              : "Review incidents from external data streams and manage developmental ideas."}
+            {t("review_incidents_from_external_data_stre")}
           </p>
         </div>
         <div className="flex gap-2">
@@ -276,7 +234,7 @@ export function InnovationsClient({
             ) : (
               <Bot className="h-4 w-4" />
             )}
-            {locale === "tr" ? "AI ile İncele" : "AI Review"}
+            {t("ai_review")}
           </button>
           <button
             onClick={handleManualFetch}
@@ -288,14 +246,14 @@ export function InnovationsClient({
             ) : (
               <RefreshCw className="h-4 w-4" />
             )}
-            {locale === "tr" ? "Veri Çekimini Tetikle" : "Trigger Data Fetch"}
+            {t("trigger_data_fetch")}
           </button>
           <button
             onClick={() => setIsAdding(true)}
             className="bg-brand-600 hover:bg-brand-500 hover:shadow-brand-500/10 flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-bold text-white shadow-lg transition"
           >
             <Plus className="h-4 w-4" />
-            {locale === "tr" ? "Yeni İnovasyon Fikri" : "New Innovation"}
+            {t("new_innovation")}
           </button>
         </div>
       </div>
@@ -310,22 +268,18 @@ export function InnovationsClient({
             <div className="flex items-start justify-between">
               <h3 className="text-sm font-bold text-white">{conn.name}</h3>
               <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
-                {locale === "tr" ? "Aktif" : "Active"}
+                {t("active")}
               </span>
             </div>
             <div className="mt-4 space-y-2">
               <div className="flex justify-between text-xs">
-                <span className="text-fg-secondary">
-                  {locale === "tr" ? "Kuyruktaki Bekleyen:" : "Pending In Queue:"}
-                </span>
+                <span className="text-fg-secondary">{t("pending_in_queue")}</span>
                 <span className="font-mono font-bold text-white">{conn.pending_count}</span>
               </div>
               <div className="flex justify-between text-xs">
-                <span className="text-fg-secondary">
-                  {locale === "tr" ? "Son Çekim:" : "Last Fetch:"}
-                </span>
+                <span className="text-fg-secondary">{t("last_fetch")}</span>
                 <span className="text-fg-muted font-mono">
-                  {new Date(conn.last_fetch).toLocaleTimeString()}
+                  {new Date(conn.last_fetch).toLocaleTimeString(locale)}
                 </span>
               </div>
             </div>
@@ -341,9 +295,7 @@ export function InnovationsClient({
             className="bg-bg-secondary w-full max-w-lg space-y-4 rounded-2xl border border-white/10 p-6 shadow-2xl"
           >
             <div className="flex items-center justify-between border-b border-white/5 pb-3">
-              <h3 className="text-lg font-bold text-white">
-                {locale === "tr" ? "Yeni İnovasyon Ekle" : "Add New Innovation"}
-              </h3>
+              <h3 className="text-lg font-bold text-white">{t("add_new_innovation")}</h3>
               <button
                 type="button"
                 onClick={() => setIsAdding(false)}
@@ -354,9 +306,7 @@ export function InnovationsClient({
             </div>
 
             <div className="space-y-1">
-              <label className="text-fg-secondary block text-xs font-bold">
-                {locale === "tr" ? "Başlık" : "Title"}
-              </label>
+              <label className="text-fg-secondary block text-xs font-bold">{t("title")}</label>
               <input
                 type="text"
                 required
@@ -368,7 +318,7 @@ export function InnovationsClient({
 
             <div className="space-y-1">
               <label className="text-fg-secondary block text-xs font-bold">
-                {locale === "tr" ? "Açıklama" : "Description"}
+                {t("description")}
               </label>
               <textarea
                 required
@@ -380,18 +330,16 @@ export function InnovationsClient({
             </div>
 
             <div className="space-y-1">
-              <label className="text-fg-secondary block text-xs font-bold">
-                {locale === "tr" ? "Öncelik" : "Priority"}
-              </label>
+              <label className="text-fg-secondary block text-xs font-bold">{t("priority")}</label>
               <select
                 value={newPriority}
                 onChange={(e) => setNewPriority(e.target.value as StrategyInnovation["priority"])}
                 className="bg-bg-primary border-border-subtle w-full rounded-lg border px-3 py-2 text-sm text-white focus:outline-none"
               >
-                <option value="low">{locale === "tr" ? "Düşük" : "Low"}</option>
-                <option value="medium">{locale === "tr" ? "Orta" : "Medium"}</option>
-                <option value="high">{locale === "tr" ? "Yüksek" : "High"}</option>
-                <option value="critical">{locale === "tr" ? "Kritik" : "Critical"}</option>
+                <option value="low">{t("low")}</option>
+                <option value="medium">{t("medium")}</option>
+                <option value="high">{t("high")}</option>
+                <option value="critical">{t("critical")}</option>
               </select>
             </div>
 
@@ -401,13 +349,13 @@ export function InnovationsClient({
                 onClick={() => setIsAdding(false)}
                 className="border-border-subtle text-fg-primary rounded-lg border px-4 py-2 text-sm font-semibold transition hover:bg-white/5"
               >
-                {locale === "tr" ? "İptal" : "Cancel"}
+                {t("cancel")}
               </button>
               <button
                 type="submit"
                 className="bg-brand-600 hover:bg-brand-500 rounded-lg px-4 py-2 text-sm font-semibold text-white transition"
               >
-                {locale === "tr" ? "Ekle" : "Add"}
+                {t("add")}
               </button>
             </div>
           </form>
@@ -422,9 +370,7 @@ export function InnovationsClient({
             className="bg-bg-secondary w-full max-w-lg space-y-4 rounded-2xl border border-white/10 p-6 shadow-2xl"
           >
             <div className="flex items-center justify-between border-b border-white/5 pb-3">
-              <h3 className="text-lg font-bold text-white">
-                {locale === "tr" ? "Olayı Onayla ve Yayınla" : "Approve & Publish Incident"}
-              </h3>
+              <h3 className="text-lg font-bold text-white">{t("approve_publish_incident")}</h3>
               <button
                 type="button"
                 onClick={() => setAcceptingItem(null)}
@@ -443,50 +389,37 @@ export function InnovationsClient({
                 rel="noreferrer"
                 className="text-brand-400 inline-flex items-center gap-1 hover:underline"
               >
-                {locale === "tr" ? "Orijinal Kaynak" : "Original Source"}{" "}
-                <ExternalLink className="h-3 w-3" />
+                {t("original_source")} <ExternalLink className="h-3 w-3" />
               </a>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="text-fg-secondary block text-xs font-bold">
-                  {locale === "tr" ? "Kategori" : "Category"}
-                </label>
+                <label className="text-fg-secondary block text-xs font-bold">{t("category")}</label>
                 <select
                   value={incidentCategory}
                   onChange={(e) => setIncidentCategory(e.target.value)}
                   className="bg-bg-primary border-border-subtle w-full rounded-lg border px-3 py-2 text-sm text-white focus:outline-none"
                 >
-                  <option value="hallucination">
-                    {locale === "tr" ? "Halüsinasyon" : "Hallucination"}
-                  </option>
-                  <option value="data_leak">
-                    {locale === "tr" ? "Veri Sızıntısı" : "Data Leak"}
-                  </option>
-                  <option value="bias">
-                    {locale === "tr" ? "Önyargı / Ayrımcılık" : "Bias / Discrimination"}
-                  </option>
-                  <option value="security_flaw">
-                    {locale === "tr" ? "Güvenlik Açığı" : "Security Flaw"}
-                  </option>
-                  <option value="other">{locale === "tr" ? "Diğer" : "Other"}</option>
+                  <option value="hallucination">{t("hallucination")}</option>
+                  <option value="data_leak">{t("data_leak")}</option>
+                  <option value="bias">{t("bias_discrimination")}</option>
+                  <option value="security_flaw">{t("security_flaw")}</option>
+                  <option value="other">{t("other")}</option>
                 </select>
               </div>
 
               <div className="space-y-1">
-                <label className="text-fg-secondary block text-xs font-bold">
-                  {locale === "tr" ? "Ciddiyet" : "Severity"}
-                </label>
+                <label className="text-fg-secondary block text-xs font-bold">{t("severity")}</label>
                 <select
                   value={incidentSeverity}
                   onChange={(e) => setIncidentSeverity(e.target.value)}
                   className="bg-bg-primary border-border-subtle w-full rounded-lg border px-3 py-2 text-sm text-white focus:outline-none"
                 >
-                  <option value="low">{locale === "tr" ? "Düşük" : "Low"}</option>
-                  <option value="medium">{locale === "tr" ? "Orta" : "Medium"}</option>
-                  <option value="high">{locale === "tr" ? "Yüksek" : "High"}</option>
-                  <option value="critical">{locale === "tr" ? "Kritik" : "Critical"}</option>
+                  <option value="low">{t("low")}</option>
+                  <option value="medium">{t("medium")}</option>
+                  <option value="high">{t("high")}</option>
+                  <option value="critical">{t("critical")}</option>
                 </select>
               </div>
             </div>
@@ -497,13 +430,13 @@ export function InnovationsClient({
                 onClick={() => setAcceptingItem(null)}
                 className="border-border-subtle text-fg-primary rounded-lg border px-4 py-2 text-sm font-semibold transition hover:bg-white/5"
               >
-                {locale === "tr" ? "İptal" : "Cancel"}
+                {t("cancel")}
               </button>
               <button
                 type="submit"
                 className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500"
               >
-                {locale === "tr" ? "Onayla ve Yayınla" : "Approve & Publish"}
+                {t("approve_publish")}
               </button>
             </div>
           </form>
@@ -516,8 +449,7 @@ export function InnovationsClient({
         <div className="space-y-4 lg:col-span-7">
           <h2 className="flex items-center gap-2 text-lg font-bold text-white">
             <Flame className="h-5 w-5 text-amber-500" />
-            {locale === "tr" ? "Harici Olay İnceleme Kuyruğu" : "External Incidents Review Queue"} (
-            {queue.length})
+            {t("external_incidents_review_queue")} ({queue.length})
           </h2>
 
           <div className="max-h-[600px] space-y-4 overflow-y-auto pr-2">
@@ -537,21 +469,21 @@ export function InnovationsClient({
                     <button
                       onClick={() => setAcceptingItem(item)}
                       className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-1.5 text-emerald-400 transition hover:bg-emerald-500/20"
-                      title={locale === "tr" ? "Onayla" : "Approve"}
+                      title={t("approve")}
                     >
                       <Check className="h-3.5 w-3.5" />
                     </button>
                     <button
                       onClick={() => handleQueueStatus(item.id, "duplicate")}
                       className="rounded-lg border border-yellow-500/20 bg-yellow-500/10 px-2 py-1.5 text-[10px] font-bold text-yellow-400 transition hover:bg-yellow-500/20"
-                      title={locale === "tr" ? "Kopya" : "Mark Duplicate"}
+                      title={t("mark_duplicate")}
                     >
-                      {locale === "tr" ? "Kopya" : "Dup"}
+                      {t("dup")}
                     </button>
                     <button
                       onClick={() => handleQueueStatus(item.id, "rejected")}
                       className="rounded-lg border border-red-500/20 bg-red-500/10 p-1.5 text-red-400 transition hover:bg-red-500/20"
-                      title={locale === "tr" ? "Reddet" : "Reject"}
+                      title={t("reject")}
                     >
                       <X className="h-3.5 w-3.5" />
                     </button>
@@ -570,8 +502,7 @@ export function InnovationsClient({
                     rel="noreferrer"
                     className="flex items-center gap-0.5 transition hover:text-white"
                   >
-                    {locale === "tr" ? "Kaynağa Git" : "Go to Source"}{" "}
-                    <ExternalLink className="h-2.5 w-2.5" />
+                    {t("go_to_source")} <ExternalLink className="h-2.5 w-2.5" />
                   </a>
                 </div>
               </div>
@@ -580,11 +511,7 @@ export function InnovationsClient({
             {queue.length === 0 && (
               <div className="bg-bg-secondary/20 text-fg-muted space-y-2 rounded-xl border border-dashed border-white/10 p-8 text-center text-sm">
                 <CheckCircle className="mx-auto h-8 w-8 text-emerald-500" />
-                <p>
-                  {locale === "tr"
-                    ? "Kuyruk temiz! Harici kaynaklardan yeni olay bulunmuyor."
-                    : "Queue clean! No new external incidents."}
-                </p>
+                <p>{t("queue_clean_no_new_external_incidents")}</p>
               </div>
             )}
           </div>
@@ -594,7 +521,7 @@ export function InnovationsClient({
         <div className="space-y-4 lg:col-span-5">
           <h2 className="flex items-center gap-2 text-lg font-bold text-white">
             <Info className="text-brand-400 h-5 w-5" />
-            {locale === "tr" ? "Gelecek İnovasyon Fikirleri" : "Future Innovation Board"}
+            {t("future_innovation_board")}
           </h2>
 
           <div className="max-h-[600px] space-y-3 overflow-y-auto pr-2">
@@ -618,7 +545,7 @@ export function InnovationsClient({
                 <p className="text-fg-secondary text-xs leading-normal">{inv.description}</p>
                 <div className="flex items-center gap-2">
                   <span className="text-fg-muted font-mono text-[10px] uppercase">
-                    {locale === "tr" ? "Öncelik:" : "Priority:"}
+                    {t("priority_1")}
                   </span>
                   <span
                     className={cn(
