@@ -1,13 +1,23 @@
 "use client";
 
 import * as React from "react";
-import { PlugsConnected, ArrowsClockwise, WarningCircle } from "@phosphor-icons/react";
-import { AdminContainer, AdminPageHeader } from "@/components/admin/admin-design-kit";
+import { Cpu, RefreshCw, AlertTriangle } from "lucide-react";
+import {
+  AdminContainer,
+  AdminPageHeader,
+  ZeroCostBanner,
+} from "@/components/admin/admin-design-kit";
 import { CategoryGroup } from "@/components/admin/integrations/category-group";
 import { INTEGRATION_SERVICES, CATEGORIES } from "@/lib/integrations/registry";
 import type { IntegrationStatus, IntegrationAlternative } from "@/lib/integrations/types";
+import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
 
-export default function AdminIntegrationsPage() {
+export default function AdminIntegrationsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const t = useTranslations("admin");
+  const unwrappedParams = React.use(params);
+  const locale = unwrappedParams.locale;
+
   const [data, setData] = React.useState<{
     services: IntegrationStatus[];
     alternatives: Record<string, IntegrationAlternative[]>;
@@ -66,18 +76,23 @@ export default function AdminIntegrationsPage() {
     [data],
   );
   const totalServices = React.useMemo(() => activeServiceIds.size, [activeServiceIds]);
-  const totalMissing = React.useMemo(
-    () => (data?.services || []).filter((s) => s.status === "missing_key").length,
-    [data],
-  );
+
+  const mockZeroCostServices = [
+    { name: "Supabase", monthlyCost: 0, freeLimit: "500MB DB", usedPercent: 76 },
+    { name: "Vercel", monthlyCost: 0, freeLimit: "100GB Bandwidth", usedPercent: 23 },
+    { name: "Upstash", monthlyCost: 0, freeLimit: "10k req/day", usedPercent: 41 },
+    { name: "Resend", monthlyCost: 0, freeLimit: "3k emails/mo", usedPercent: 7 },
+    { name: "Sentry", monthlyCost: 0, freeLimit: "5k events/mo", usedPercent: 37 },
+    { name: "Cloudflare", monthlyCost: 0, freeLimit: "Unlimited", usedPercent: 12 },
+  ];
 
   if (loading && !data) {
     return (
       <AdminContainer>
         <AdminPageHeader
-          icon={<PlugsConnected weight="duotone" className="text-brand-400 h-6 w-6" />}
-          title="Integrations"
-          subtitle="Loading third-party service status..."
+          icon={<Cpu className="text-brand-400 h-6 w-6 animate-pulse" />}
+          title={t("integrations_title") || "Integrations & Third-Party Services"}
+          subtitle="Syncing third-party integrations status..."
         />
         <div className="space-y-6">
           {[1, 2, 3].map((i) => (
@@ -99,46 +114,57 @@ export default function AdminIntegrationsPage() {
     return (
       <AdminContainer>
         <AdminPageHeader
-          icon={<WarningCircle weight="duotone" className="h-6 w-6 text-rose-400" />}
-          title="Integrations"
-          subtitle="Failed to load integration status"
+          icon={<AlertTriangle className="h-6 w-6 text-rose-400" />}
+          title={t("integrations_title") || "Integrations & Third-Party Services"}
+          subtitle="Failed to sync integration status"
         />
         <div className="bg-bg-secondary/40 border-border-subtle rounded-xl border p-8 text-center">
           <p className="mb-4 text-sm text-rose-400">{error}</p>
-          <button
+          <Button
             onClick={fetchData}
-            className="bg-brand-500/20 text-brand-300 hover:bg-brand-500/30 inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition-colors"
+            variant="outline"
+            leftIcon={<RefreshCw className="h-4 w-4" />}
           >
-            <ArrowsClockwise weight="duotone" className="h-4 w-4" />
-            Retry
-          </button>
+            {t("integrations_retry") || "Retry"}
+          </Button>
         </div>
       </AdminContainer>
     );
   }
 
+  const lastUpdatedTime = data?.lastUpdated
+    ? new Date(data.lastUpdated).toLocaleTimeString(locale, { hour12: false })
+    : "—";
+
   return (
     <AdminContainer>
       <AdminPageHeader
-        icon={<PlugsConnected weight="duotone" className="text-brand-400 h-6 w-6" />}
-        title={`Integrations (${totalConnected}/${totalServices})`}
-        subtitle={`${totalConnected} connected · ${totalMissing} missing keys · Last updated ${data?.lastUpdated ? new Date(data.lastUpdated).toLocaleTimeString() : "—"}`}
+        icon={<Cpu className="text-brand-400 h-6 w-6" />}
+        title={`${t("integrations_title") || "Integrations"} (${totalConnected}/${totalServices})`}
+        subtitle={
+          t("integrations_subtitle") ||
+          "Manage and monitor the status of API, database, security, and email integrations on the platform."
+        }
+        lastUpdated={lastUpdatedTime}
         action={
-          <button
+          <Button
             onClick={fetchData}
             disabled={loading}
-            className="bg-brand-500/20 text-brand-300 hover:bg-brand-500/30 inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-bold transition-colors disabled:opacity-50"
+            variant="outline"
+            size="sm"
+            leftIcon={<RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />}
           >
-            <ArrowsClockwise
-              weight="duotone"
-              className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
-            />
-            {loading ? "Refreshing..." : "Refresh"}
-          </button>
+            {loading
+              ? t("integrations_refreshing") || "Refreshing..."
+              : t("integrations_refresh") || "Refresh"}
+          </Button>
         }
       />
 
-      <div className="space-y-8">
+      {/* Zero Cost Banner Shield */}
+      <ZeroCostBanner services={mockZeroCostServices} totalSaved="$347.00 / mo" locale={locale} />
+
+      <div className="mt-8 space-y-8">
         {CATEGORIES.map((cat) => {
           const services = INTEGRATION_SERVICES.filter(
             (s) => s.category === cat.id && activeServiceIds.has(s.id),
