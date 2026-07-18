@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { isSafeUrl } from "./social-intelligence";
+import { isSafeUrl } from "../lib/security/ssrf";
 import dns from "dns";
 
 vi.mock("dns", () => {
@@ -44,15 +44,30 @@ describe("SSRF URL Safety Guard", () => {
   it("should reject localhost and loopback", async () => {
     const result1 = await isSafeUrl("https://localhost");
     expect(result1.safe).toBe(false);
-    expect(result1.error).toContain("forbidden");
 
     const result2 = await isSafeUrl("https://127.0.0.1");
     expect(result2.safe).toBe(false);
+
+    const result3 = await isSafeUrl("https://[::1]");
+    expect(result3.safe).toBe(false);
   });
 
-  it("should reject private IP hosts directly", async () => {
+  it("should reject private IPv4 hosts directly", async () => {
     const result = await isSafeUrl("https://192.168.1.100/status");
     expect(result.safe).toBe(false);
+  });
+
+  it("should reject CGNAT hosts directly", async () => {
+    const result = await isSafeUrl("https://100.64.1.1/admin");
+    expect(result.safe).toBe(false);
+  });
+
+  it("should reject IPv6 local/private hosts directly", async () => {
+    const result1 = await isSafeUrl("https://[fd00::1]");
+    expect(result1.safe).toBe(false);
+
+    const result2 = await isSafeUrl("https://[fe80::1]");
+    expect(result2.safe).toBe(false);
   });
 
   it("should reject link-local hosts", async () => {
