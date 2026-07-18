@@ -80,11 +80,28 @@ export function MetricCard({
   tooltip?: string;
   className?: string;
 }) {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [coords, setCoords] = React.useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = React.useState(false);
+
   const colorClasses = {
     default: "text-fg-primary",
     success: "text-emerald-400",
     warning: "text-amber-400",
     danger: "text-rose-400",
+  };
+
+  const glowRgb = {
+    default: "168,85,247",
+    success: "39,174,96",
+    warning: "243,156,18",
+    danger: "230,57,70",
+  }[variant];
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    setCoords({ x: e.clientX - rect.left, y: e.clientY - rect.top });
   };
 
   const cardContent = (
@@ -160,7 +177,36 @@ export function MetricCard({
     );
   }
 
-  return <div className={classes}>{cardContent}</div>;
+  return (
+    <div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={classes}
+    >
+      {isHovered && (
+        <div
+          className="pointer-events-none absolute -inset-px transition-opacity duration-500"
+          style={{
+            background: `radial-gradient(400px circle at ${coords.x}px ${coords.y}px, rgba(${glowRgb},0.12), transparent 70%)`,
+          }}
+        />
+      )}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700"
+        style={{
+          opacity: isHovered ? 1 : 0,
+          background:
+            "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.02) 45%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.02) 55%, transparent 60%)",
+          backgroundSize: "200% 100%",
+          animation: isHovered ? "shimmer 2s infinite" : "none",
+        }}
+      />
+      <style>{`@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }`}</style>
+      {cardContent}
+    </div>
+  );
 }
 
 export function GlowCard({
@@ -172,6 +218,10 @@ export function GlowCard({
   glowColor?: "success" | "brand" | "danger" | "warning" | "accent";
   className?: string;
 }) {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [coords, setCoords] = React.useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = React.useState(false);
+
   const glowClasses = {
     brand: "shadow-[0_0_30px_rgba(168,85,247,0.06)] border-brand-500/20 hover:border-brand-500/35",
     accent:
@@ -183,14 +233,52 @@ export function GlowCard({
     warning:
       "shadow-[0_0_25px_rgba(243,156,18,0.06)] border-warning-500/20 hover:border-warning-500/35",
   };
+
+  const glowRgb = {
+    brand: "168,85,247",
+    accent: "6,182,212",
+    success: "39,174,96",
+    danger: "230,57,70",
+    warning: "243,156,18",
+  }[glowColor];
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    setCoords({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
+
   return (
     <div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       className={cn(
-        "bg-bg-secondary rounded-xl border p-6 transition-all duration-300 hover:scale-[1.002]",
+        "bg-bg-secondary relative overflow-hidden rounded-xl border p-6 transition-all duration-300 hover:scale-[1.002]",
         glowClasses[glowColor],
         className,
       )}
     >
+      {isHovered && (
+        <div
+          className="pointer-events-none absolute -inset-px transition-opacity duration-500"
+          style={{
+            background: `radial-gradient(500px circle at ${coords.x}px ${coords.y}px, rgba(${glowRgb},0.08), transparent 70%)`,
+          }}
+        />
+      )}
+      <div
+        className="pointer-events-none absolute inset-0 transition-opacity duration-700"
+        style={{
+          opacity: isHovered ? 1 : 0,
+          background:
+            "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.015) 45%, rgba(255,255,255,0.04) 50%, rgba(255,255,255,0.015) 55%, transparent 60%)",
+          backgroundSize: "200% 100%",
+          animation: isHovered ? "shimmer 2.5s infinite" : "none",
+        }}
+      />
+      <style>{`@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }`}</style>
       {children}
     </div>
   );

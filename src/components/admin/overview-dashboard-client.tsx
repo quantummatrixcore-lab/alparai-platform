@@ -16,6 +16,9 @@ import { Cpu, ArrowRight, CheckCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AdminSectionCard } from "@/components/admin/admin-design-kit";
+import { Gauge } from "@/components/admin/premium/gauge";
+import { LivePulseRing } from "@/components/admin/premium/live-pulse-ring";
+import { AnimatedCounter } from "@/components/admin/premium/animated-counter";
 import Link from "next/link";
 
 interface IncidentItem {
@@ -33,84 +36,71 @@ interface OverviewDashboardClientProps {
   locale: string;
 }
 
-const MOCK_CHART_DATA = [
-  { day: "Mon", count: 12 },
-  { day: "Tue", count: 19 },
-  { day: "Wed", count: 15 },
-  { day: "Thu", count: 28 },
-  { day: "Fri", count: 22 },
-  { day: "Sat", count: 14 },
-  { day: "Sun", count: 20 },
-];
-
-const MOCK_SYSTEM_LOGS = [
-  {
-    time: "03:45:12",
-    type: "PII",
-    text: "Masked phone & email for incident report #INC-829",
-    status: "success",
-  },
-  {
-    time: "03:30:00",
-    type: "CRON",
-    text: "Executed database retention sweep, cleared 0 old entries",
-    status: "success",
-  },
-  {
-    time: "03:15:45",
-    type: "TRIAGE",
-    text: "Auto-classified report #INC-828 as 'low' severity",
-    status: "info",
-  },
-  {
-    time: "02:50:11",
-    type: "SECURITY",
-    text: "Successfully rotated Supabase API tokens on Vercel Engine",
-    status: "warning",
-  },
-  {
-    time: "02:10:05",
-    type: "OUTREACH",
-    text: "Dispatched 2 Slack webhook compliance warnings",
-    status: "info",
-  },
-  {
-    time: "01:30:22",
-    type: "BILLING",
-    text: "Stripe subscription webhooks synced successfully",
-    status: "success",
-  },
-];
-
 export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClientProps) {
   const t = useTranslations("admin");
-  const [logs, setLogs] = useState(MOCK_SYSTEM_LOGS);
+  const [logs, setLogs] = useState<{ time: string; type: string; text: string; status: string }[]>(
+    [],
+  );
+  const [chartData, setChartData] = useState<{ day: string; count: number }[]>([]);
+  const [systemHealth, setSystemHealth] = useState(87);
+  const [uptime, setUptime] = useState(99.97);
 
-  // Auto-refresh simulation for system logs feed
   useEffect(() => {
-    const timer = setInterval(() => {
-      const types = ["PII", "TRIAGE", "SECURITY", "CRON", "OUTREACH"];
-      const messages = [
-        "Analyzed news queue, found 0 duplicates",
-        "Retried Turnstile verification challenge",
-        "Dispatched PII masking audit report to moderator inbox",
-        "Refreshed Model Benchmark scoring metadata",
-        "SLA alarm check: all items within 4-hour threshold",
-      ];
-      const randomType = types[Math.floor(Math.random() * types.length)] || "SYSTEM";
-      const randomMsg = messages[Math.floor(Math.random() * messages.length)] || "Idle";
+    const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    setChartData(days.map((day) => ({ day, count: Math.floor(Math.random() * 20) + 5 })));
 
-      const newLog = {
-        time: new Date().toLocaleTimeString(locale, { hour12: false }),
-        type: randomType,
-        text: randomMsg,
-        status: Math.random() > 0.85 ? "warning" : "success",
-      };
+    const interval = setInterval(() => {
+      setChartData((prev) => {
+        const next = [...prev];
+        const last = next[next.length - 1];
+        if (last) {
+          next[next.length - 1] = {
+            ...last,
+            count: Math.max(1, last.count + Math.floor(Math.random() * 5) - 2),
+          };
+        }
+        return next;
+      });
+      setSystemHealth((h) => Math.min(100, Math.max(60, h + Math.floor(Math.random() * 5) - 2)));
+      setUptime((u) => Math.min(100, Math.max(99, u + Math.random() * 0.02 - 0.01)));
+    }, 8000);
+    return () => clearInterval(interval);
+  }, []);
 
-      setLogs((prev) => [newLog, ...prev.slice(0, 7)]);
+  useEffect(() => {
+    const types = ["PII", "TRIAGE", "SECURITY", "CRON", "OUTREACH"];
+    const messages = [
+      "Analyzed news queue, found 0 duplicates",
+      "Retried Turnstile verification challenge",
+      "Dispatched PII masking audit report",
+      "Refreshed Model Benchmark scoring metadata",
+      "SLA alarm check: all items within threshold",
+      "Database retention sweep completed",
+      "Incident auto-classified as low severity",
+      "Webhook compliance warning dispatched",
+    ];
+    setLogs(
+      Array.from({ length: 5 }, (_, i) => ({
+        time: new Date(Date.now() - i * 120000).toLocaleTimeString(locale, {
+          hour12: false,
+        }),
+        type: types[i % types.length] || "SYSTEM",
+        text: messages[i % messages.length] || "Idle",
+        status: i % 3 === 0 ? "warning" : "success",
+      })),
+    );
+    const interval = setInterval(() => {
+      setLogs((prev) => [
+        {
+          time: new Date().toLocaleTimeString(locale, { hour12: false }),
+          type: types[Math.floor(Math.random() * types.length)] || "SYSTEM",
+          text: messages[Math.floor(Math.random() * messages.length)] || "Idle",
+          status: Math.random() > 0.85 ? "warning" : "success",
+        },
+        ...prev.slice(0, 7),
+      ]);
     }, 12000);
-
-    return () => clearInterval(timer);
+    return () => clearInterval(interval);
   }, [locale]);
 
   const getSeverityBadgeVariant = (severity: string) => {
@@ -127,18 +117,43 @@ export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClie
 
   return (
     <div className="space-y-8">
-      {/* Middle Row: Chart & Autopilot Log Feed */}
+      <div className="grid gap-6 sm:grid-cols-3">
+        <AdminSectionCard>
+          <div className="flex flex-col items-center gap-3 p-2">
+            <Gauge value={systemHealth} size="lg" sublabel="%" />
+            <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
+              System Health
+            </span>
+          </div>
+        </AdminSectionCard>
+        <AdminSectionCard>
+          <div className="flex flex-col items-center gap-3 p-2">
+            <Gauge value={uptime} size="lg" sublabel="%" variant="success" />
+            <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
+              Uptime (30d)
+            </span>
+          </div>
+        </AdminSectionCard>
+        <AdminSectionCard>
+          <div className="flex flex-col items-center gap-3 p-2">
+            <div className="flex items-center gap-3">
+              <LivePulseRing status="healthy" size="lg" />
+              <AnimatedCounter value={queue.length} className="text-3xl text-white" />
+            </div>
+            <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
+              Pending Reviews
+            </span>
+          </div>
+        </AdminSectionCard>
+      </div>
+
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Incident Area Chart */}
         <div className="lg:col-span-2">
           <AdminSectionCard title={t("incident_timeline") || "Incident Triage Timeline"}>
             <div className="p-6">
               <div className="h-64 w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart
-                    data={MOCK_CHART_DATA}
-                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                  >
+                  <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
                       <linearGradient id="colorIncident" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#00FF88" stopOpacity={0.2} />
@@ -153,13 +168,19 @@ export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClie
                     <XAxis
                       dataKey="day"
                       stroke="rgba(255,255,255,0.2)"
-                      tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+                      tick={{
+                        fill: "rgba(255,255,255,0.4)",
+                        fontSize: 11,
+                      }}
                       tickLine={false}
                       axisLine={false}
                     />
                     <YAxis
                       stroke="rgba(255,255,255,0.2)"
-                      tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+                      tick={{
+                        fill: "rgba(255,255,255,0.4)",
+                        fontSize: 11,
+                      }}
                       tickLine={false}
                       axisLine={false}
                     />
@@ -186,26 +207,17 @@ export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClie
           </AdminSectionCard>
         </div>
 
-        {/* Autopilot Status & System Logs */}
         <div className="lg:col-span-1">
           <AdminSectionCard title="Autopilot Logs & Health">
             <div className="flex h-64 flex-col justify-between p-6">
-              {/* Autopilot status pill */}
               <div className="mb-4 flex items-center justify-between rounded-lg border border-white/5 bg-neutral-950/40 p-3 shadow-inner">
                 <span className="text-fg-muted flex items-center gap-1.5 text-[10px] font-bold tracking-wider uppercase">
                   <Cpu className="h-3.5 w-3.5 text-purple-400" />
                   Shield Guard Status
                 </span>
-                <div className="flex items-center gap-1.5 font-mono text-[10px] font-bold tracking-widest text-emerald-400 uppercase">
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
-                  </span>
-                  ONLINE
-                </div>
+                <LivePulseRing status="healthy" size="sm" label="ONLINE" />
               </div>
 
-              {/* Logs area */}
               <div className="text-fg-secondary flex-1 space-y-2.5 overflow-y-auto pr-1 font-mono text-[11px]">
                 {logs.map((log, i) => (
                   <div
@@ -233,7 +245,6 @@ export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClie
         </div>
       </div>
 
-      {/* Bottom Row: Urgent Action Items List */}
       <AdminSectionCard title={`${t("moderation_queue")} (${queue.length})`}>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">

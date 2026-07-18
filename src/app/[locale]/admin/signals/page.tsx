@@ -1,5 +1,5 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
-import { Plug } from "@phosphor-icons/react/dist/ssr";
+import { SignalsClient } from "@/components/admin/signals-client";
 
 export default async function SignalsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -15,16 +15,7 @@ export default async function SignalsPage({ params }: { params: Promise<{ locale
         <p className="text-fg-secondary mt-2">{t("signals_subtitle")}</p>
       </div>
 
-      <div className="bg-bg-secondary/40 flex flex-col items-center justify-center rounded-2xl border border-white/5 p-12 text-center backdrop-blur-xl">
-        <div className="mb-4 rounded-full bg-white/5 p-4">
-          <Plug weight="duotone" className="text-fg-muted h-8 w-8" />
-        </div>
-        <h2 className="mb-2 text-xl font-bold text-white">No data yet — source not connected</h2>
-        <p className="text-fg-muted max-w-md">
-          System signals (latency, traffic, errors) are not yet wired to a live data source (e.g.
-          Sentry/Vercel).
-        </p>
-      </div>
+      <SignalsClient />
     </div>
   );
 }

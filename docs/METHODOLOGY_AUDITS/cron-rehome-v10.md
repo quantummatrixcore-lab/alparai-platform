@@ -28,3 +28,12 @@ Following the removal of crons from `vercel.json` due to Hobby plan limitations,
 1. **Workflow Location**: `.github/workflows/scheduled-crons.yml`
 2. **Authentication**: Uses `secrets.CRON_SECRET` mapped to the `Authorization` header as `Bearer ${token}`.
 3. **Manual Trigger**: The workflow is equipped with `workflow_dispatch` allowing manual execution from the GitHub Actions tab.
+
+## Verification & Execution Results (Item 121)
+
+> [!CAUTION]
+> **FAILED: `CRON_SECRET` is missing and GitHub Actions billing limit reached.**
+>
+> - `gh secret list` confirms that **no repository secrets exist** (including `CRON_SECRET`).
+> - The GitHub Actions run failed to execute because "recent account payments have failed or your spending limit needs to be increased."
+> - **Action Required:** The Founder must add `CRON_SECRET` to GitHub Secrets and resolve the GitHub billing limitation before these cron jobs can actively dispatch.
