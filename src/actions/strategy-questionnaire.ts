@@ -205,3 +205,118 @@ export async function getQuestionnaireRunAnswers(runId: string) {
     created_at: string;
   }[];
 }
+
+export async function exportRunToMarkdown(runId: string): Promise<{ ok: boolean; error?: string }> {
+  try {
+    await requireAdmin();
+    const supabase = createAdminClient();
+
+    // 1. Fetch run details
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: run, error: runErr } = await (supabase as any)
+      .from("strategic_runs")
+      .select("*")
+      .eq("id", runId)
+      .single();
+
+    if (runErr || !run) {
+      return { ok: false, error: runErr?.message || "Run not found" };
+    }
+
+    // 2. Fetch all answers for this run
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: answers, error: answersErr } = await (supabase as any)
+      .from("strategic_answers")
+      .select("*")
+      .eq("run_id", runId)
+      .order("question_index", { ascending: true });
+
+    if (answersErr || !answers || answers.length === 0) {
+      return { ok: false, error: answersErr?.message || "No answers found for this run" };
+    }
+
+    const fs = await import("fs/promises");
+    const path = await import("path");
+
+    // 3. Locate and read the strategic-questionnaire.md
+    const docPath = path.join(process.cwd(), "docs", "strategic-questionnaire.md");
+    let content = "";
+    try {
+      content = await fs.readFile(docPath, "utf-8");
+    } catch (readErr) {
+      logger.error("Failed to read strategic-questionnaire.md", undefined, readErr as Error);
+      return { ok: false, error: "Could not read strategic-questionnaire.md" };
+    }
+
+    // 4. Format the Markdown content
+    const dateStr = new Date(run.started_at).toLocaleString("en-US", { timeZone: "UTC" }) + " UTC";
+    let runMd = `\n\n### Run on ${dateStr} (Run ID: ${runId})\n\n`;
+
+    // Group answers by model
+    const answersByModel: Record<string, typeof answers> = {};
+    for (const ans of answers) {
+      const modelName = ans.model_name || ans.model_id;
+      if (!answersByModel[modelName]) {
+        answersByModel[modelName] = [];
+      }
+      answersByModel[modelName].push(ans);
+    }
+
+    for (const [modelName, modelAnswers] of Object.entries(answersByModel)) {
+      runMd += `### ${modelName}\n\n`;
+      for (const ans of modelAnswers) {
+        const qText = QUESTIONS.find((q) => q.id === ans.question_id)?.text || "Unknown question";
+        runMd += `#### ${ans.question_id}. ${qText}\n\n`;
+        if (ans.error_message) {
+          runMd += `*Error: ${ans.error_message}*\n\n`;
+        } else {
+          runMd += `${ans.answer_text}\n\n`;
+          runMd += `*(Latency: ${ans.latency_ms}ms | Tokens: ${ans.tokens_used})*\n\n`;
+        }
+      }
+      runMd += `---\n\n`;
+    }
+
+    // 5. Append/Insert the Markdown content
+    const targetIndicator = "<!-- COPY ONLY UP TO THIS LINE when sending to a new model. Do not include the Responses section below. -->";
+    const indicatorIndex = content.indexOf(targetIndicator);
+
+    if (indicatorIndex === -1) {
+      return { ok: false, error: "Target copy marker not found in strategic-questionnaire.md" };
+    }
+
+    const insertPosition = indicatorIndex + targetIndicator.length;
+    
+    // We check if "## Responses — v2.0 questions" is already in the file after the indicator
+    const postIndicatorContent = content.substring(insertPosition);
+    const headerTitle = "## Responses — v2.0 questions";
+    
+    let updatedContent = "";
+    if (!postIndicatorContent.includes(headerTitle)) {
+      updatedContent =
+        content.substring(0, insertPosition) +
+        `\n\n${headerTitle}\n\n---\n` +
+        runMd +
+        content.substring(insertPosition);
+    } else {
+      // Insert right after the headerTitle and its following line breaks/separator
+      const headerIndex = content.indexOf(headerTitle);
+      const insertAt = headerIndex + headerTitle.length;
+      updatedContent =
+        content.substring(0, insertAt) +
+        `\n` +
+        runMd +
+        content.substring(insertAt);
+    }
+
+    // 6. Write it back to disk
+    await fs.writeFile(docPath, updatedContent, "utf-8");
+
+    revalidatePath("/admin/strategy/questionnaire");
+    return { ok: true };
+  } catch (err) {
+    logger.error("exportRunToMarkdown failed", undefined, err instanceof Error ? err : undefined);
+    return { ok: false, error: err instanceof Error ? err.message : "Unknown error" };
+  }
+}
+

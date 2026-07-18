@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { runQuestionnaire } from "@/actions/strategy-questionnaire";
+import { runQuestionnaire, exportRunToMarkdown } from "@/actions/strategy-questionnaire";
+import { toast } from "sonner";
 import {
   ClipboardList,
   Play,
@@ -84,6 +85,7 @@ export function QuestionnaireClient({
   i18n: I18nStrings;
 }) {
   const [running, setRunning] = useState(false);
+  const [exporting, setExporting] = useState<string | null>(null);
   const [selectedModels, setSelectedModels] = useState<string[]>(models.map((m) => m.id));
   const [expandedAnswer, setExpandedAnswer] = useState<{
     questionId: string;
@@ -102,6 +104,62 @@ export function QuestionnaireClient({
     } finally {
       setRunning(false);
     }
+  }
+
+  async function handleExport(runId: string) {
+    setExporting(runId);
+    try {
+      const res = await exportRunToMarkdown(runId);
+      if (res.ok) {
+        toast.success(isTurkish ? "Rapor başarıyla markdown dosyasına eklendi!" : "Report successfully appended to markdown file!");
+      } else {
+        toast.error(`${i18n.error}: ${res.error || "Unknown"}`);
+      }
+    } catch {
+      toast.error(isTurkish ? "Dışa aktarım başarısız oldu" : "Export failed");
+    } finally {
+      setExporting(null);
+    }
+  }
+
+  function getAgreementLevel(qId: string): { level: "high" | "medium" | "low"; ratio: number } {
+    const qAnswers = answers.filter((a) => a.question_id === qId && a.answer_text);
+    if (qAnswers.length < 2) return { level: "low", ratio: 0 };
+
+    const clean = (t: string) => {
+      const firstSentence = t.split(/[.!?]/)[0] || "";
+      return new Set(
+        firstSentence
+          .toLowerCase()
+          .replace(/[^a-z0-9\s]/g, "")
+          .split(/\s+/)
+          .filter(Boolean)
+      );
+    };
+
+    const sets = qAnswers.map((a) => clean(a.answer_text!));
+    let totalSim = 0;
+    let pairs = 0;
+
+    for (let i = 0; i < sets.length; i++) {
+      for (let j = i + 1; j < sets.length; j++) {
+        const s1 = sets[i]!;
+        const s2 = sets[j]!;
+        const intersection = new Set([...s1].filter((x) => s2.has(x)));
+        const union = new Set([...s1, ...s2]);
+        if (union.size > 0) {
+          totalSim += intersection.size / union.size;
+        }
+        pairs++;
+      }
+    }
+
+    const avgSim = pairs > 0 ? totalSim / pairs : 0;
+    let level: "high" | "medium" | "low" = "low";
+    if (avgSim > 0.45) level = "high";
+    else if (avgSim > 0.25) level = "medium";
+
+    return { level, ratio: avgSim };
   }
 
   function toggleModel(id: string) {
@@ -213,22 +271,34 @@ export function QuestionnaireClient({
                     </span>
                   </div>
                 </div>
-                <Badge
-                  variant={
-                    run.status === "completed"
-                      ? "success"
+                <div className="flex items-center gap-2">
+                  {run.status === "completed" && (
+                    <button
+                      onClick={() => handleExport(run.id)}
+                      disabled={exporting !== null}
+                      className="bg-bg-secondary hover:bg-bg-tertiary border-border-subtle inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-bold text-white transition-all disabled:opacity-50"
+                    >
+                      <ClipboardList className="h-3.5 w-3.5" />
+                      {exporting === run.id ? (isTurkish ? "Dışa Aktarılıyor..." : "Exporting...") : i18n.exportMd}
+                    </button>
+                  )}
+                  <Badge
+                    variant={
+                      run.status === "completed"
+                        ? "success"
+                        : run.status === "failed"
+                          ? "danger"
+                          : "default"
+                    }
+                    className="text-[10px]"
+                  >
+                    {run.status === "completed"
+                      ? i18n.statusCompleted
                       : run.status === "failed"
-                        ? "danger"
-                        : "default"
-                  }
-                  className="text-[10px]"
-                >
-                  {run.status === "completed"
-                    ? i18n.statusCompleted
-                    : run.status === "failed"
-                      ? i18n.statusFailed
-                      : i18n.statusRunning}
-                </Badge>
+                        ? i18n.statusFailed
+                        : i18n.statusRunning}
+                  </Badge>
+                </div>
               </div>
             ))}
           </div>
@@ -258,12 +328,37 @@ export function QuestionnaireClient({
                   return (
                     <tr key={qId} className="hover:bg-bg-tertiary/20 transition-colors">
                       <td className="px-5 py-3">
-                        <Badge
-                          variant="outline"
-                          className="mb-1.5 font-mono text-[10px] tracking-wider uppercase"
-                        >
-                          {qId} · {section}
-                        </Badge>
+                        <div className="flex flex-col gap-1.5">
+                          <Badge
+                            variant="outline"
+                            className="font-mono text-[10px] tracking-wider uppercase"
+                          >
+                            {qId} · {section}
+                          </Badge>
+                          {(() => {
+                            const { level, ratio } = getAgreementLevel(qId);
+                            if (ratio === 0) return null;
+                            return (
+                              <Badge
+                                variant="outline"
+                                className={
+                                  level === "high"
+                                    ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-[9px] font-bold"
+                                    : level === "medium"
+                                      ? "border-amber-500/20 bg-amber-500/10 text-amber-400 text-[9px] font-bold"
+                                      : "border-blue-500/20 bg-blue-500/10 text-blue-400 text-[9px] font-bold"
+                                }
+                              >
+                                {isTurkish ? "Fikir Birliği: " : "Agreement: "}
+                                {level === "high"
+                                  ? (isTurkish ? "Yüksek" : "High")
+                                  : level === "medium"
+                                    ? (isTurkish ? "Orta" : "Medium")
+                                    : (isTurkish ? "Bölünmüş / Düşük" : "Split / Low")}
+                              </Badge>
+                            );
+                          })()}
+                        </div>
                       </td>
                       {evaluatedModels.map((modelName) => {
                         const ans = answersMap[qId]?.[modelName];
