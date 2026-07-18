@@ -51,7 +51,8 @@ export interface IncidentListItem {
   is_expert?: boolean;
   expert_fix?: string | null;
   is_seed?: boolean;
-  source_badge?: 'community' | 'imported' | 'seed' | 'expert-verified' | null;
+  source_badge?: "community" | "imported" | "seed" | "expert-verified" | null;
+  processing_stage?: string;
 }
 
 export interface IncidentDetail {
@@ -89,7 +90,7 @@ export interface IncidentDetail {
   is_expert?: boolean;
   expert_fix?: string | null;
   is_seed?: boolean;
-  source_badge?: 'community' | 'imported' | 'seed' | 'expert-verified' | null;
+  source_badge?: "community" | "imported" | "seed" | "expert-verified" | null;
 }
 
 export interface EvidenceItem {

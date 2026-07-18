@@ -9,7 +9,7 @@ import { headers } from "next/headers";
 import { getResendClient } from "@/lib/email/resend";
 import { getProviderResponseNotificationEmail } from "@/emails/templates";
 import { generateEmailUnsubscribeToken } from "@/lib/utils/unsubscribe";
-import { checkEmailCapAndLog } from "@/lib/email/cap";
+import { isEmailAllowed } from "@/lib/email/cap";
 import { logger } from "@/lib/utils/logger";
 
 const responseInputSchema = z.object({
@@ -161,11 +161,8 @@ export async function submitProviderResponse(
             if (rlCheck.ok) {
               const resend = getResendClient();
               if (resend) {
-                const isCapped = !(await checkEmailCapAndLog(
-                  reporterUser.email,
-                  "provider_response",
-                ));
-                if (!isCapped) {
+                const allowed = await isEmailAllowed(reporterUser.email, "provider_response");
+                if (allowed) {
                   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://alparai.com";
                   const unsubToken = generateEmailUnsubscribeToken(reporterUser.email);
                   const unsubscribeUrl = `${appUrl}/api/unsubscribe?email=${encodeURIComponent(reporterUser.email)}&token=${unsubToken}`;

@@ -869,7 +869,8 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
   const { error: updateError } = await admin
     .from("incidents")
     .update(updatePayload)
-    .eq("id", incidentId);
+    .eq("id", incidentId)
+    .eq("processing_stage", "scoring");
 
   if (updateError) {
     throw new Error(`Failed to persist results: ${updateError.message}`);
@@ -957,7 +958,19 @@ export async function runCrossAudit(incidentId: string): Promise<TruthScoreResul
   }
 
   const admin = createAdminClient();
-  await admin.from("incidents").update({ processing_stage: "scoring" }).eq("id", incidentId);
+  const { data: updated, error: stageError } = await admin
+    .from("incidents")
+    .update({ processing_stage: "scoring" })
+    .eq("id", incidentId)
+    .in("processing_stage", ["analyzing", "failed"])
+    .select("id");
+
+  if (stageError || !updated || updated.length === 0) {
+    logger.warn(
+      `[CrossAudit] Skipping — Incident already in scoring/complete stage, or update failed.`,
+    );
+    return null;
+  }
 
   const maxAttempts = 3;
   let attempt = 0;
@@ -1005,13 +1018,18 @@ export async function runCrossAudit(incidentId: string): Promise<TruthScoreResul
   try {
     const admin = createAdminClient();
     const updateData: Database["public"]["Tables"]["incidents"]["Update"] = {
-      processing_stage: "complete",
+      processing_stage: "failed",
+      moderator_notes: `[CrossAudit Failed] All audit retries failed. Last error: ${errorMsg}`,
     };
     if (!(lastError instanceof NonRetryableError)) {
       updateData.cross_audit_reasoning = `[DLQ ERROR] All audit retries failed. Last error: ${errorMsg}`;
       updateData.cross_audit_completed_at = new Date().toISOString();
     }
-    await admin.from("incidents").update(updateData).eq("id", incidentId);
+    await admin
+      .from("incidents")
+      .update(updateData)
+      .eq("id", incidentId)
+      .eq("processing_stage", "scoring");
   } catch (dbErr) {
     logger.error(
       "[CrossAudit] Failed to write DLQ failure to database",

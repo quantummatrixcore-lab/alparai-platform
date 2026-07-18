@@ -16,6 +16,7 @@ vi.hoisted(() => {
   }));
   vi.doMock("@/lib/utils/rate-limit", () => ({
     checkRateLimit: vi.fn(),
+    getRedisInstance: vi.fn().mockReturnValue(null),
     RATE_LIMIT_KEYS: {
       global_incident_burst_guard: "ratelimit:global_incident_burst_guard",
       incident_submission: "ratelimit:incident_submission",

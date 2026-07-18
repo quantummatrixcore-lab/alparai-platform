@@ -8,7 +8,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/session";
 import { maskPII } from "@/lib/pii/guardian";
 import { incidentSubmissionSchema, type IncidentSubmissionInput } from "@/lib/validation/schemas";
-import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
+import { checkRateLimit, RATE_LIMIT_KEYS, getRedisInstance } from "@/lib/utils/rate-limit";
 import { hashIp } from "@/lib/utils/hash";
 import { generateAndSaveProviderToken } from "@/lib/utils/provider-token";
 import { headers } from "next/headers";
@@ -22,7 +22,7 @@ import {
 } from "@/lib/autopilot";
 import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
 import { getResendClient } from "@/lib/email/resend";
-import { checkEmailCapAndLog } from "@/lib/email/cap";
+import { isEmailAllowed } from "@/lib/email/cap";
 import {
   getWhistleblowerConfirmationEmail,
   getAdminNotificationEmail,
@@ -283,8 +283,8 @@ const runSubmitWork = async (
         const userEmail = user.email;
         emailPromises.push(
           (async () => {
-            const isCapped = !(await checkEmailCapAndLog(userEmail, "whistleblower_confirmation"));
-            if (!isCapped) {
+            const allowed = await isEmailAllowed(userEmail, "whistleblower_confirmation");
+            if (allowed) {
               const html = getWhistleblowerConfirmationEmail({
                 title: raw.title,
                 category: raw.category,
@@ -318,7 +318,7 @@ const runSubmitWork = async (
       emailPromises.push(
         resend.emails.send({
           from: "ALPAR AI Alerts <alerts@alparai.com>",
-          to: "quantum.matrix.core@gmail.com",
+          to: process.env.ADMIN_ALERT_EMAIL || "quantum.matrix.core@gmail.com",
           subject: `[ALERT] New Incident: ${raw.title.substring(0, 40)}...`,
           html: adminHtml,
         }),
@@ -349,8 +349,8 @@ const runSubmitWork = async (
 
           emailPromises.push(
             (async () => {
-              const isCapped = !(await checkEmailCapAndLog(providerEmail, "provider_alert"));
-              if (!isCapped) {
+              const allowed = await isEmailAllowed(providerEmail, "provider_alert");
+              if (allowed) {
                 await resend.emails.send({
                   from: "ALPAR AI Alerts <alerts@alparai.com>",
                   to: providerEmail,
@@ -462,6 +462,32 @@ export async function submitIncident(
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   const clientIdempotencyKey = hdrs.get("x-idempotency-key");
   const userIdForRl = user?.id ?? "anonymous";
+
+  if (clientIdempotencyKey) {
+    const redis = getRedisInstance();
+    if (redis) {
+      try {
+        const redisKey = `idem:${clientIdempotencyKey}`;
+        const existingIncidentId = await redis.get<string>(redisKey);
+        if (existingIncidentId) {
+          logger.info(
+            "[Idempotency] Duplicate submission detected. Returning existing incident ID.",
+            {
+              clientIdempotencyKey,
+              existingIncidentId,
+            },
+          );
+          return { ok: true, incidentId: existingIncidentId };
+        }
+      } catch (err) {
+        logger.error(
+          "[Idempotency] Failed to read idempotency key from Redis",
+          { clientIdempotencyKey },
+          err instanceof Error ? err : undefined,
+        );
+      }
+    }
+  }
 
   // 1. Global Burst Guard (Max 10 submissions per minute globally across all IPs)
   const globalRl = await checkRateLimit(`${RATE_LIMIT_KEYS.global_incident_burst_guard}:global`);
@@ -591,6 +617,22 @@ export async function submitIncident(
   if (result.kind === "ok") {
     const incidentId = result.value.id;
 
+    if (clientIdempotencyKey) {
+      const redis = getRedisInstance();
+      if (redis) {
+        try {
+          const redisKey = `idem:${clientIdempotencyKey}`;
+          await redis.set(redisKey, incidentId, { nx: true, px: 24 * 60 * 60 * 1000 });
+        } catch (err) {
+          logger.error(
+            "[Idempotency] Failed to write idempotency key to Redis",
+            { clientIdempotencyKey, incidentId },
+            err instanceof Error ? err : undefined,
+          );
+        }
+      }
+    }
+
     // Check submission attempts for this IP in the last 24 hours (F2)
     const admin = createAdminClient();
     let isRateLimitedSuspicious = false;
@@ -667,18 +709,25 @@ export async function submitIncident(
           .eq("id", incidentId);
       } else {
         import("@/actions/autopilot-moderate").then(({ autoModerateIncidentAction }) => {
-          autoModerateIncidentAction(incidentId).catch((err) => {
-            logger.error("Async auto-moderation failed", err);
-          });
-        });
-        import("@/lib/ai/cross-audit-engine").then(({ runCrossAudit }) => {
-          runCrossAudit(incidentId).catch((err) => {
-            logger.error(
-              "[CrossAudit] Async cross-audit pipeline failed",
-              { incidentId },
-              err instanceof Error ? err : undefined,
-            );
-          });
+          autoModerateIncidentAction(incidentId)
+            .then((res) => {
+              if (res.ok) {
+                import("@/lib/ai/cross-audit-engine").then(({ runCrossAudit }) => {
+                  runCrossAudit(incidentId).catch((err) => {
+                    logger.error(
+                      "[CrossAudit] Async cross-audit pipeline failed",
+                      { incidentId },
+                      err instanceof Error ? err : undefined,
+                    );
+                  });
+                });
+              } else {
+                logger.error("Auto-moderation completed with non-ok result", { incidentId });
+              }
+            })
+            .catch((err) => {
+              logger.error("Async auto-moderation failed", err);
+            });
         });
       }
     }

@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Check, X, Eye, MessageSquare, Code, Cpu, Inbox, ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { moderateIncident } from "@/actions/admin";
+import { autoModerateIncidentAction } from "@/actions/autopilot-moderate";
 import { toast } from "sonner";
 import { formatRelativeTime } from "@/lib/utils";
 import { useLocale } from "next-intl";
@@ -57,6 +58,7 @@ function ModerationCard({ incident }: { incident: IncidentListItem }) {
   const [pending, start] = useTransition();
   const [note, setNote] = useState("");
   const [showNote, setShowNote] = useState(false);
+  const [rerunPending, startRerun] = useTransition();
 
   const decide = (decision: "approve" | "reject") => {
     start(async () => {
@@ -69,6 +71,17 @@ function ModerationCard({ incident }: { incident: IncidentListItem }) {
         toast.success(decision === "approve" ? t("approve") + " ✓" : t("reject") + " ✓");
       } else {
         toast.error(res.error ?? tCommon("loading"));
+      }
+    });
+  };
+
+  const handleRerun = () => {
+    startRerun(async () => {
+      const res = await autoModerateIncidentAction(incident.id);
+      if (res.ok) {
+        toast.success("Autopilot re-run triggered successfully.");
+      } else {
+        toast.error("Failed to re-run autopilot.");
       }
     });
   };
@@ -102,6 +115,7 @@ function ModerationCard({ incident }: { incident: IncidentListItem }) {
                 <Cpu className="h-3 w-3 text-cyan-400" />
                 {incident.provider_name}
               </Badge>
+              {incident.processing_stage === "failed" && <Badge variant="danger">FAILED</Badge>}
             </div>
             <span className="text-fg-muted font-mono text-[10px] tracking-wider uppercase">
               {formatRelativeTime(new Date(incident.created_at), locale)}
@@ -189,6 +203,18 @@ function ModerationCard({ incident }: { incident: IncidentListItem }) {
               {showNote ? t("hideNote") : t("addNote")}
             </Button>
             <div className="flex gap-1">
+              {incident.processing_stage === "failed" && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  leftIcon={<Cpu className="h-3.5 w-3.5" />}
+                  isLoading={rerunPending}
+                  onClick={handleRerun}
+                  className="text-xs"
+                >
+                  {t("rerun_autopilot", { defaultValue: "Re-run Autopilot" })}
+                </Button>
+              )}
               <Link href={`/incidents/${incident.id}`}>
                 <Button size="sm" variant="outline" leftIcon={<Eye className="h-3.5 w-3.5" />}>
                   {t("view", { defaultValue: "View" })}

@@ -61,9 +61,22 @@ export function createMockSupabaseClient() {
     }),
   });
 
-  const mockUpdateEq = vi.fn().mockResolvedValue({ data: null, error: null });
-  const mockUpdate = vi.fn().mockReturnValue({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mockUpdateChain = {} as any;
+  const mockUpdateEq = vi.fn().mockImplementation(() => mockUpdateChain);
+  const mockUpdate = vi.fn().mockImplementation(() => ({
     eq: mockUpdateEq,
+    in: vi.fn().mockImplementation(() => mockUpdateChain),
+  }));
+
+  mockUpdateChain.eq = vi.fn().mockImplementation(() => mockUpdateChain);
+  mockUpdateChain.in = vi.fn().mockImplementation(() => mockUpdateChain);
+  mockUpdateChain.select = vi.fn().mockImplementation(() => mockUpdateChain);
+  mockUpdateChain.then = vi.fn().mockImplementation((onfulfilled) => {
+    if (typeof onfulfilled === "function") {
+      onfulfilled({ data: [{ id: "mock-id" }], error: null });
+    }
+    return Promise.resolve({ data: [{ id: "mock-id" }], error: null });
   });
 
   const mockDeleteInnerEq = vi.fn().mockResolvedValue({ data: null, error: null });

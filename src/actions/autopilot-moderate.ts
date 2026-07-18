@@ -47,6 +47,9 @@ Return ONLY a valid JSON object matching this schema (do not output markdown tic
   "reason": "Clear explanation of the evaluation reason."
 }`;
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000);
+
   try {
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
@@ -59,8 +62,11 @@ Return ONLY a valid JSON object matching this schema (do not output markdown tic
             responseMimeType: "application/json",
           },
         }),
+        signal: controller.signal,
       },
     );
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       logger.error("Gemini API call failed for moderation", { status: response.status });
@@ -82,6 +88,7 @@ Return ONLY a valid JSON object matching this schema (do not output markdown tic
       costTokens,
     };
   } catch (error) {
+    clearTimeout(timeoutId);
     logger.error(
       "Error calling Gemini API for incident moderation",
       undefined,
@@ -113,10 +120,31 @@ async function runAutoModerationWork(
     return { kind: "success", value: { score: 0, status: incident.status } }; // Already processed
   }
 
-  await admin.from("incidents").update({ processing_stage: "analyzing" }).eq("id", incidentId);
+  const { data: updatedIncidents, error: stageError } = await admin
+    .from("incidents")
+    .update({ processing_stage: "analyzing" })
+    .eq("id", incidentId)
+    .in("processing_stage", ["queued", "failed"])
+    .select("id");
+
+  if (stageError || !updatedIncidents || updatedIncidents.length === 0) {
+    return {
+      kind: "fatal",
+      error: `Incident already analyzing or processed, or transition failed.`,
+    };
+  }
 
   const evaluation = await evaluateIncidentWithGemini(incident.title, incident.description);
   if (!evaluation) {
+    await admin
+      .from("incidents")
+      .update({
+        processing_stage: "failed",
+        moderator_notes: `[AutoModeration Failed] Gemini evaluation failed or timed out.`,
+      })
+      .eq("id", incidentId)
+      .eq("processing_stage", "analyzing");
+
     return { kind: "retryable", error: "Failed to evaluate incident with Gemini API" };
   }
 
@@ -153,7 +181,8 @@ async function runAutoModerationWork(
   const { error: updateError } = await admin
     .from("incidents")
     .update(updateData)
-    .eq("id", incidentId);
+    .eq("id", incidentId)
+    .eq("processing_stage", "analyzing");
 
   if (updateError) {
     return { kind: "retryable", error: `Failed to update incident: ${updateError.message}` };
@@ -243,6 +272,28 @@ export async function autoModerateIncidentAction(
       revalidatePath("/admin");
     } catch {}
     return { ok: true, score: result.value.score, status: result.value.status };
+  }
+
+  try {
+    const admin = createAdminClient();
+    await admin
+      .from("incidents")
+      .update({
+        processing_stage: "failed",
+        moderator_notes: `[AutoModeration Failed] All autopilot moderation attempts failed. Last error: ${result.kind === "exhausted" ? result.error : "unknown failure"}`,
+      })
+      .eq("id", incidentId)
+      .eq("processing_stage", "analyzing");
+    try {
+      revalidatePath("/incidents");
+      revalidatePath("/admin");
+    } catch {}
+  } catch (dbErr) {
+    logger.error(
+      "Failed to write auto-moderation failure to database",
+      { incidentId },
+      dbErr instanceof Error ? dbErr : undefined,
+    );
   }
 
   return { ok: false };

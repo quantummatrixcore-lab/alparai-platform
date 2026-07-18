@@ -98,6 +98,9 @@ Return ONLY a valid JSON object matching this schema (do not output markdown tic
   "summary_tr": "summary_in_turkish"
 }`;
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000);
+
   try {
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
@@ -110,8 +113,11 @@ Return ONLY a valid JSON object matching this schema (do not output markdown tic
             responseMimeType: "application/json",
           },
         }),
+        signal: controller.signal,
       },
     );
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       logger.error("Gemini API call failed", { status: response.status });
@@ -137,6 +143,7 @@ Return ONLY a valid JSON object matching this schema (do not output markdown tic
       summary_tr: parsed.summary_tr || "",
     };
   } catch (error) {
+    clearTimeout(timeoutId);
     logger.error(
       "Error calling Gemini API for news sync",
       undefined,

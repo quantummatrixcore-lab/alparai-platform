@@ -4,6 +4,11 @@ import type * as retryModule from "@/lib/autopilot/retry";
 import "../helpers/setup";
 import { createMockSupabaseClient, createTestUser } from "../helpers/supabase-mock";
 
+const mockRedisInstance = {
+  get: vi.fn().mockResolvedValue(null),
+  set: vi.fn().mockResolvedValue("OK"),
+};
+
 vi.hoisted(() => {
   vi.doMock("@/lib/supabase/server", () => ({
     createClient: vi.fn(),
@@ -17,11 +22,15 @@ vi.hoisted(() => {
   }));
   vi.doMock("@/lib/utils/rate-limit", () => ({
     checkRateLimit: vi.fn(),
+    getRedisInstance: () => mockRedisInstance,
     RATE_LIMIT_KEYS: {
       incident_submission: "ratelimit:incident_submission",
       suggestion_submission: "ratelimit:suggestion_submission",
       auth_signin: "ratelimit:auth_signin",
       api_general: "ratelimit:api_general",
+      global_incident_burst_guard: "ratelimit:global_incident_burst_guard",
+      incident_submission_fp: "ratelimit:incident_submission_fp",
+      coordinated_incident_burst_guard: "ratelimit:coordinated_incident_burst_guard",
     },
   }));
   vi.doMock("@/lib/pii/guardian", () => ({
@@ -41,6 +50,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/session";
 import { checkRateLimit } from "@/lib/utils/rate-limit";
 import { maskPII } from "@/lib/pii/guardian";
+import { headers } from "next/headers";
 import { submitIncident, voteOnIncident } from "@/actions/incidents";
 
 let mockSupabase: ReturnType<typeof createMockSupabaseClient>;
@@ -49,6 +59,8 @@ let mockUser: ReturnType<typeof createTestUser>;
 
 beforeEach(() => {
   vi.clearAllMocks();
+  mockRedisInstance.get.mockReset().mockResolvedValue(null);
+  mockRedisInstance.set.mockReset().mockResolvedValue("OK");
   mockSupabase = createMockSupabaseClient();
   mockAdminClient = createMockSupabaseClient();
   mockUser = createTestUser();
@@ -264,6 +276,42 @@ describe("submitIncident", () => {
     const result = await submitIncident({ ok: false }, fd);
     expect(result.ok).toBe(true);
   });
+
+  it("uses idempotency key to return existing incident ID if key exists in Redis", async () => {
+    vi.mocked(headers).mockResolvedValue({
+      get: vi.fn().mockImplementation((name: string) => {
+        if (name === "x-idempotency-key") return "test-idempotency-key-123";
+        return "127.0.0.1";
+      }),
+    } as any);
+
+    mockRedisInstance.get.mockResolvedValue("existing-incident-uuid");
+
+    const result = await submitIncident({ ok: false }, buildFormData());
+    expect(result.ok).toBe(true);
+    expect(result.incidentId).toBe("existing-incident-uuid");
+    expect(mockRedisInstance.get).toHaveBeenCalledWith("idem:test-idempotency-key-123");
+  });
+
+  it("sets idempotency key in Redis on successful creation if key does not exist", async () => {
+    vi.mocked(headers).mockResolvedValue({
+      get: vi.fn().mockImplementation((name: string) => {
+        if (name === "x-idempotency-key") return "test-idempotency-key-123";
+        return "127.0.0.1";
+      }),
+    } as any);
+
+    mockRedisInstance.get.mockResolvedValue(null);
+
+    const result = await submitIncident({ ok: false }, buildFormData());
+    expect(result.ok).toBe(true);
+    expect(mockRedisInstance.get).toHaveBeenCalledWith("idem:test-idempotency-key-123");
+    expect(mockRedisInstance.set).toHaveBeenCalledWith(
+      "idem:test-idempotency-key-123",
+      expect.any(String),
+      expect.objectContaining({ nx: true, px: 24 * 60 * 60 * 1000 }),
+    );
+  });
 });
 
 describe("voteOnIncident", () => {
@@ -298,9 +346,7 @@ describe("voteOnIncident", () => {
           single: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
-      update: vi.fn().mockReturnValue({
-        eq: vi.fn().mockResolvedValue({ data: null, error: null }),
-      }),
+      update: mockAdminClient._mocks.mockUpdate,
     } as ReturnType<typeof mockAdminClient.from>);
   });
 
@@ -367,9 +413,7 @@ describe("voteOnIncident", () => {
           single: vi.fn().mockResolvedValue({ data: null, error: null }),
         }),
       }),
-      update: vi.fn().mockReturnValue({
-        eq: vi.fn().mockResolvedValue({ data: null, error: null }),
-      }),
+      update: mockAdminClient._mocks.mockUpdate,
     } as ReturnType<typeof mockAdminClient.from>);
 
     const result = await voteOnIncident({

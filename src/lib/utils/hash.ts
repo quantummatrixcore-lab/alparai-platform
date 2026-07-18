@@ -1,5 +1,5 @@
 import "server-only";
-import { createHash } from "node:crypto";
+import { createHash, timingSafeEqual } from "node:crypto";
 
 export function requireIpSalt(): string {
   const salt = process.env.IP_SALT;
@@ -47,5 +47,11 @@ export function generateProviderToken(incidentId: string, email: string): string
 }
 
 export function verifyProviderToken(incidentId: string, email: string, token: string): boolean {
-  return generateProviderToken(incidentId, email) === token;
+  const expected = generateProviderToken(incidentId, email);
+  const expectedBuf = Buffer.from(expected, "hex");
+  const tokenBuf = Buffer.from(token, "hex");
+  if (expectedBuf.length !== tokenBuf.length) {
+    return false;
+  }
+  return timingSafeEqual(expectedBuf, tokenBuf);
 }

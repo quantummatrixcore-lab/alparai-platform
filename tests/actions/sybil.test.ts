@@ -16,6 +16,7 @@ vi.hoisted(() => {
   }));
   vi.doMock("@/lib/utils/rate-limit", () => ({
     checkRateLimit: vi.fn(),
+    getRedisInstance: vi.fn().mockReturnValue(null),
     RATE_LIMIT_KEYS: {
       global_incident_burst_guard: "ratelimit:global_incident_burst_guard",
       incident_submission: "ratelimit:incident_submission",
@@ -132,18 +133,16 @@ describe("submitIncident Sybil Detection", () => {
         return {
           upsert: vi.fn().mockReturnThis(),
           select: vi.fn().mockReturnThis(),
-          single: vi
-            .fn()
-            .mockResolvedValue({
-              data: {
-                id: "run-123",
-                status: "completed",
-                attempts: 1,
-                result_id: "inc-1",
-                idempotency_key: "key-1",
-              },
-              error: null,
-            }),
+          single: vi.fn().mockResolvedValue({
+            data: {
+              id: "run-123",
+              status: "completed",
+              attempts: 1,
+              result_id: "inc-1",
+              idempotency_key: "key-1",
+            },
+            error: null,
+          }),
         };
       }
       return {

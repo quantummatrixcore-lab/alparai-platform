@@ -36,6 +36,7 @@ type RawIncidentRow = Record<string, unknown> & {
   is_expert?: boolean | null;
   expert_fix?: string | null;
   incident_source?: string | null;
+  processing_stage?: string | null;
 };
 
 export function toIncidentListItem(row: RawIncidentRow): IncidentListItem {
@@ -64,6 +65,7 @@ export function toIncidentListItem(row: RawIncidentRow): IncidentListItem {
     is_expert: row.is_expert ?? false,
     expert_fix: row.expert_fix ?? null,
     incident_source: row.incident_source ?? undefined,
+    processing_stage: row.processing_stage ?? undefined,
   };
 }
 

@@ -5,9 +5,9 @@ import { logger } from "@/lib/utils/logger";
 /**
  * Check if the email recipient has received fewer than 3 notifications in the last 24 hours.
  * If yes, log the email send to the database and return true.
- * If no, return false (indicating email should be capped/skipped).
+ * If no or on error, return false (indicating email should NOT be allowed/sent - fail-closed).
  */
-export async function checkEmailCapAndLog(email: string, emailType: string): Promise<boolean> {
+export async function isEmailAllowed(email: string, emailType: string): Promise<boolean> {
   if (!email) return false;
 
   const admin = createAdminClient();
@@ -30,8 +30,8 @@ export async function checkEmailCapAndLog(email: string, emailType: string): Pro
         undefined,
         error instanceof Error ? error : undefined,
       );
-      // Fail-open: if DB query fails, we allow sending but log it, to avoid blocking critical emails
-      return true;
+      // Fail-closed: if DB query fails, we block sending to protect user from spam
+      return false;
     }
 
     if (count !== null && count >= 3) {
@@ -42,7 +42,6 @@ export async function checkEmailCapAndLog(email: string, emailType: string): Pro
     }
 
     // Log this email send
-
     const { error: insertErr } = await admin.from("email_sent_logs").insert({
       email_hash: emailHash,
       email_type: emailType,
@@ -54,6 +53,8 @@ export async function checkEmailCapAndLog(email: string, emailType: string): Pro
         undefined,
         insertErr instanceof Error ? insertErr : undefined,
       );
+      // Even if logging the send fails, we err on the side of caution (fail-closed)
+      return false;
     }
 
     return true;
@@ -63,6 +64,6 @@ export async function checkEmailCapAndLog(email: string, emailType: string): Pro
       undefined,
       err instanceof Error ? err : undefined,
     );
-    return true; // Fail-open
+    return false; // Fail-closed
   }
 }

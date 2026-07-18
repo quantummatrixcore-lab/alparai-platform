@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { checkEmailCapAndLog } from "@/lib/email/cap";
+import { isEmailAllowed } from "@/lib/email/cap";
 
 const mockSelect = vi.fn();
 const mockInsert = vi.fn();
@@ -18,7 +18,7 @@ vi.mock("@/lib/supabase/admin", () => ({
   }),
 }));
 
-describe("checkEmailCapAndLog", () => {
+describe("isEmailAllowed", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -33,7 +33,7 @@ describe("checkEmailCapAndLog", () => {
     // Mock insert returning success
     mockInsert.mockResolvedValue({ error: null });
 
-    const result = await checkEmailCapAndLog("test@example.com", "test_type");
+    const result = await isEmailAllowed("test@example.com", "test_type");
     expect(result).toBe(true);
     expect(mockInsert).toHaveBeenCalled();
   });
@@ -46,12 +46,12 @@ describe("checkEmailCapAndLog", () => {
       }),
     });
 
-    const result = await checkEmailCapAndLog("test@example.com", "test_type");
+    const result = await isEmailAllowed("test@example.com", "test_type");
     expect(result).toBe(false);
     expect(mockInsert).not.toHaveBeenCalled();
   });
 
-  it("should return true (fail-open) if database query fails", async () => {
+  it("should return false (fail-closed) if database query fails", async () => {
     // Mock select returning error
     mockSelect.mockReturnValue({
       eq: vi.fn().mockReturnValue({
@@ -59,7 +59,7 @@ describe("checkEmailCapAndLog", () => {
       }),
     });
 
-    const result = await checkEmailCapAndLog("test@example.com", "test_type");
-    expect(result).toBe(true);
+    const result = await isEmailAllowed("test@example.com", "test_type");
+    expect(result).toBe(false);
   });
 });

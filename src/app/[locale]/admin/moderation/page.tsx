@@ -28,7 +28,7 @@ export default async function ModerationPage({ params }: { params: Promise<{ loc
   const { data } = await admin
     .from("incidents")
     .select(
-      "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id",
+      "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id, processing_stage",
     )
     .eq("status", "pending_review")
     .order("created_at", { ascending: false })
