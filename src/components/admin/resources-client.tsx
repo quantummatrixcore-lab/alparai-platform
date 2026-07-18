@@ -98,174 +98,174 @@ const VENDORS: Vendor[] = [
     plan: "Pay-as-you-go",
     cost: "~$2.00 / mo",
     prosCons: {
-      en: "Pro: Multi-model failover chains, single API key, competitive pricing. Con: Gateway latency overhead (50-200ms).",
-      tr: "Artı: Çoklu model hata toleransı zinciri, tek API anahtarı. Eksi: Gateway kaynaklı gecikme yükü (50-200ms).",
+      en: "Pro: Single API for 200+ LLMs, auto-fallbacks, detailed logging, token-efficient. Con: Marginal network latency.",
+      tr: "Artı: 200+ LLM için tek API, otomatik geri dönüşler, detaylı günlükleme. Eksi: Küçük de olsa ek ağ gecikmesi.",
     },
     alternatives: {
-      en: "Direct OpenAI/Anthropic/DeepSeek API keys (Medium switch cost, necessitates multiple client implementations).",
-      tr: "Doğrudan OpenAI/Anthropic/DeepSeek API entegrasyonu (Orta maliyet, kodda çoklu istemci yapısı gerektirir).",
+      en: "Direct API Integration (High complexity, separate billing), LiteLLM Proxy (Self-hosted maintenance needed).",
+      tr: "Doğrudan API Entegrasyonu (Yüksek karmaşıklık, ayrı faturalar), LiteLLM Proxy (Sunucu bakım maliyeti).",
     },
     url: "https://openrouter.ai",
   },
   {
-    id: "vertex",
-    name: "Google Vertex / Gemini",
-    category: "AI Models",
-    plan: "Pay-as-you-go",
-    cost: "~$1.00 / mo",
-    prosCons: {
-      en: "Pro: Huge context window, native multimodal support. Con: Complex enterprise billing, regional quota limitations.",
-      tr: "Artı: Devasa bağlam penceresi, yerel multimodel desteği. Eksi: Karmaşık kurumsal faturalandırma, bölgesel kota sınırları.",
-    },
-    alternatives: {
-      en: "OpenRouter Gemini endpoint (Low migration), Google AI Studio (Low cost, API key change).",
-      tr: "OpenRouter Gemini uç noktası (Düşük göç maliyeti), Google AI Studio (Düşük maliyet, API anahtarı değişimi).",
-    },
-    url: "https://console.cloud.google.com/vertex-ai",
-  },
-  {
-    id: "cloudflare",
-    name: "Cloudflare",
-    category: "Security & CAPTCHA",
-    plan: "Free Plan",
-    cost: "$0.00 / mo",
-    prosCons: {
-      en: "Pro: Turnstile is non-intrusive CAPTCHA, robust DNS and DDoS protection. Con: Analytics are aggregated on free tier.",
-      tr: "Artı: Turnstile kullanıcıyı yormayan CAPTCHA sunar, güçlü DNS ve DDoS koruması. Eksi: Ücretsiz planda analitik kısıtlıdır.",
-    },
-    alternatives: {
-      en: "hCaptcha (Low switch cost, client library swap), Google reCAPTCHA (Low switch cost but user-friction concerns).",
-      tr: "hCaptcha (Düşük geçiş maliyeti, kütüphane değişimi), Google reCAPTCHA (Düşük maliyet ancak kullanıcı deneyimi sıkıntıları).",
-    },
-    url: "https://dash.cloudflare.com",
-  },
-  {
-    id: "sentry",
-    name: "Sentry",
-    category: "Observability",
-    plan: "Developer Plan",
-    cost: "$0.00 / mo",
-    prosCons: {
-      en: "Pro: Deep stack traces, Next.js integration, performance profiling. Con: High bandwidth log usage, quickly hits monthly caps.",
-      tr: "Artı: Derin yığın izleri, Next.js entegrasyonu, performans profili. Eksi: Yüksek log hacminde aylık kotayı hızla aşar.",
-    },
-    alternatives: {
-      en: "GlitchTip (Open-source self-hosted alternative, low cost), LogRocket (High cost, heavy client payload).",
-      tr: "GlitchTip (Açık kaynak kendinden barındırmalı alternatif, düşük maliyet), LogRocket (Yüksek maliyet, ağır kod yükü).",
-    },
-    url: "https://sentry.io",
-  },
-  {
-    id: "plausible",
-    name: "Plausible Analytics",
-    category: "Analytics",
-    plan: "Self-Hosted",
-    cost: "$0.00 / mo",
-    prosCons: {
-      en: "Pro: Privacy-friendly, no cookies needed, lightweight script (<1KB). Con: No user segmentation, requires Docker hosting.",
-      tr: "Artı: Gizlilik dostu, çerez gerektirmez, son derece hafif betik (<1KB). Eksi: Kullanıcı segmentasyonu yok, Docker barındırma ister.",
-    },
-    alternatives: {
-      en: "Plausible Cloud ($9/mo, zero maintenance), Umami Analytics (Self-hosted or cloud, low migration cost).",
-      tr: "Plausible Cloud (Aylık 9$, sıfır bakım), Umami Analytics (Kendinden barındırmalı veya bulut, düşük geçiş maliyeti).",
-    },
-    url: "https://plausible.io",
-  },
-  {
-    id: "stripe",
-    name: "Stripe",
-    category: "Payments",
-    plan: "Pay-as-you-go",
-    cost: "2.9% + $0.30",
-    prosCons: {
-      en: "Pro: Industry standard, clean subscriptions portal. Con: High fees compared to local gateways in Turkey.",
-      tr: "Artı: Sektör standardı abonelik altyapısı, kolay entegrasyon. Eksi: Türkiye'deki yerel ödeme geçitlerine göre yüksek komisyon.",
-    },
-    alternatives: {
-      en: "Adyen (High implementation cost), iyzico (For TR home market, lower transaction fees but separate dashboard).",
-      tr: "Adyen (Yüksek kurulum maliyeti), iyzico (TR pazarı için daha düşük işlem ücretleri, ayrı yönetim paneli).",
-    },
-    url: "https://stripe.com",
-  },
-  {
-    id: "anthropic",
-    name: "Anthropic",
-    category: "AI Models",
-    plan: "Pay-as-you-go",
-    cost: "~$1.50 / mo",
-    prosCons: {
-      en: "Pro: Claude 3.5 Sonnet offers exceptional logic & code generation. Con: Premium API cost, strict rate limiting.",
-      tr: "Artı: Claude 3.5 Sonnet olağanüstü mantık ve kod üretimi sunar. Eksi: Pahalı API maliyeti, katı istek hız limitleri.",
-    },
-    alternatives: {
-      en: "OpenRouter Claude endpoint (Near-zero switch cost), OpenAI GPT-4o (Low cost, prompt adaptation required).",
-      tr: "OpenRouter Claude uç noktası (Sıfır göç maliyeti), OpenAI GPT-4o (Düşük maliyet, istemlerin uyarlanması gerekir).",
-    },
-    url: "https://console.anthropic.com",
-  },
-  {
-    id: "openai",
-    name: "OpenAI",
-    category: "AI Models",
-    plan: "Pay-as-you-go",
-    cost: "~$1.00 / mo",
-    prosCons: {
-      en: "Pro: Low latency, excellent structured outputs support. Con: Subnet censorship, model drift over time.",
-      tr: "Artı: Düşük gecikme süresi, mükemmel yapılandırılmış çıktı desteği. Eksi: Ağ sansürleri, zaman içinde model kayması.",
-    },
-    alternatives: {
-      en: "OpenRouter GPT-4o endpoint (Low migration), Anthropic Claude 3.5 (Medium cost, prompt adaptation needed).",
-      tr: "OpenRouter GPT-4o uç noktası (Düşük göç), Anthropic Claude 3.5 (Orta maliyet, istem uyarlama ihtiyacı).",
-    },
-    url: "https://platform.openai.com",
-  },
-  {
-    id: "blackbox",
-    name: "Blackbox AI",
-    category: "AI Models",
-    plan: "Free Tier",
-    cost: "$0.00 / mo",
-    prosCons: {
-      en: "Pro: Specialized code assistant model fallback. Con: Lower reasoning quality for general strategy tasks.",
-      tr: "Artı: Özel kod asistanı modeli yedekleme imkanı. Eksi: Genel strateji görevleri için daha düşük muhakeme kalitesi.",
-    },
-    alternatives: {
-      en: "GitHub Copilot (Paid subscription), DeepSeek Coder (Low cost, high quality alternative).",
-      tr: "GitHub Copilot (Ücretli abonelik), DeepSeek Coder (Düşük maliyetli, yüksek kaliteli alternatif).",
-    },
-    url: "https://blackbox.ai",
-  },
-  {
     id: "huggingface",
     name: "Hugging Face",
-    category: "AI Image & Models",
-    plan: "Free API",
+    category: "AI Inference & Spaces",
+    plan: "Free Hub Tier",
     cost: "$0.00 / mo",
     prosCons: {
-      en: "Pro: Open-source model access, FLUX.1-schnell image generation. Con: Shared rate limits, intermittent down times.",
-      tr: "Artı: Açık kaynaklı model erişimi, FLUX.1-schnell görsel üretimi. Eksi: Paylaşımlı hız limitleri, zaman zaman kesintiler.",
+      en: "Pro: Host model weights, free inference endpoints for popular models. Con: Rate limits, cold starts on unused spaces.",
+      tr: "Artı: Model ağırlıklarını barındırma, popüler modeller için ücretsiz çıkarım. Eksi: Hız limitleri, soğuk başlatma gecikmesi.",
     },
     alternatives: {
-      en: "Replicate (Pay-as-you-go, high reliability), Vertex Imagen (Higher cost, enterprise quota).",
-      tr: "Replicate (Kullanım başı ödeme, yüksek güvenilirlik), Vertex Imagen (Daha yüksek maliyet, kurumsal kota).",
+      en: "Replicate (Pay-per-second, high minimum cost), AWS SageMaker (Enterprise tier complexity, very high base cost).",
+      tr: "Replicate (Saniye başına ödeme, yüksek taban), AWS SageMaker (Kurumsal karmaşıklık, çok yüksek taban maliyeti).",
     },
     url: "https://huggingface.co",
   },
   {
-    id: "github",
-    name: "GitHub",
-    category: "VCS & CI",
-    plan: "Free Plan",
+    id: "googlecloud",
+    name: "Google Cloud",
+    category: "Vertex AI & Cloud Maps",
+    plan: "Free Tier Creds",
     cost: "$0.00 / mo",
     prosCons: {
-      en: "Pro: Industry standard hosting, free actions runners (2000 mins). Con: Closed-source organization features require paid upgrades.",
-      tr: "Artı: Sektör standardı barındırma, ücretsiz CI koşucuları (2000 dk). Eksi: Kapalı kaynak organizasyon özellikleri ücretlidir.",
+      en: "Pro: Enterprise grade Gemini APIs, Imagen 3 access, high security. Con: Complex billing dashboard, strict IAM.",
+      tr: "Artı: Kurumsal sınıf Gemini API'leri, Imagen 3 erişimi, yüksek güvenlik. Eksi: Karmaşık faturalandırma paneli.",
     },
     alternatives: {
-      en: "GitLab (Medium migration complexity, CI yaml rewrite), Bitbucket (Low cost, inferior integration ecosystem).",
-      tr: "GitLab (Orta göç karmaşıklığı, CI yaml yeniden yazımı), Bitbucket (Düşük maliyet, yetersiz entegrasyon ekosistemi).",
+      en: "AWS Bedrock (High migration cost, model coverage difference), Azure OpenAI (High compliance cost, enterprise focus).",
+      tr: "AWS Bedrock (Yüksek geçiş maliyeti), Azure OpenAI (Yüksek uyumluluk maliyeti, kurumsal odaklı).",
+    },
+    url: "https://cloud.google.com",
+  },
+  {
+    id: "github",
+    name: "GitHub",
+    category: "CI/CD & Actions",
+    plan: "Free Organization",
+    cost: "$0.00 / mo",
+    prosCons: {
+      en: "Pro: Industry standard VCS, 2,000 free runner mins/mo. Con: Limit on parallel jobs, spending limit configuration required.",
+      tr: "Artı: Sektör standardı VCS, aylık 2.000 ücretsiz derleme dakikası. Eksi: Paralel işlerde sınır, harcama limiti.",
+    },
+    alternatives: {
+      en: "GitLab CI (Medium switch cost, pipeline refactoring), Bitbucket Pipelines (Low limit, licensing overhead).",
+      tr: "GitLab CI (Orta geçiş maliyeti, boru hattı değişimi), Bitbucket Pipelines (Düşük limit, lisanslama ek yükü).",
     },
     url: "https://github.com",
+  },
+  {
+    id: "sentry",
+    name: "Sentry",
+    category: "Error & Crash Logs",
+    plan: "Developer Free",
+    cost: "$0.00 / mo",
+    prosCons: {
+      en: "Pro: Automatic stack traces, performance monitoring, Next.js SDK. Con: 5,000 errors/mo cap on free tier.",
+      tr: "Artı: Otomatik yığın izleri, performans izleme, Next.js SDK. Eksi: Ücretsiz planda aylık 5.000 hata sınırı.",
+    },
+    alternatives: {
+      en: "LogRocket (High cost, session replay focus), GlitchTip (Open source, self-hosting maintenance overhead).",
+      tr: "LogRocket (Yüksek maliyet, oturum kaydı odaklı), GlitchTip (Açık kaynak, kendinden barındırma yükü).",
+    },
+    url: "https://sentry.io",
+  },
+  {
+    id: "turnstile",
+    name: "Cloudflare Turnstile",
+    category: "Security / Bot Protection",
+    plan: "Free Unlimited",
+    cost: "$0.00 / mo",
+    prosCons: {
+      en: "Pro: Non-intrusive CAPTCHA, privacy-focused, zero cost. Con: Requires client-side script tag injection.",
+      tr: "Artı: Kullanıcıyı yormayan CAPTCHA, gizlilik odaklı, sıfır maliyet. Eksi: İstemci tarafı script entegrasyonu.",
+    },
+    alternatives: {
+      en: "hCaptcha (Low migration cost, key replacement only), Google reCAPTCHA v3 (Intrusive, privacy concerns).",
+      tr: "hCaptcha (Düşük geçiş maliyeti, anahtar değişimi), Google reCAPTCHA v3 (Gizlilik endişeleri).",
+    },
+    url: "https://www.cloudflare.com/products/turnstile/",
+  },
+  {
+    id: "stripe",
+    name: "Stripe",
+    category: "Payments Infrastructure",
+    plan: "Pay-as-you-go",
+    cost: "$0.00 / mo",
+    prosCons: {
+      en: "Pro: Global payout capabilities, sleek Checkout forms, robust subscription billing API. Con: 2.9% + 30c base fee.",
+      tr: "Artı: Küresel ödeme altyapısı, şık Checkout formları, abonelik API'si. Eksi: İşlem başına %2.9 + 30c temel ücret.",
+    },
+    alternatives: {
+      en: "Paddle (Low migration, merchant of record), Adyen (Complex integration, enterprise focus only).",
+      tr: "Paddle (Düşük göç maliyeti, kayıtlı satıcı), Adyen (Karmaşık entegrasyon, yalnızca kurumsal odaklı).",
+    },
+    url: "https://stripe.com",
+  },
+  {
+    id: "resend_domains",
+    name: "DNS & Domains",
+    category: "Domain Registry",
+    plan: "Custom Domain",
+    cost: "$12.00 / yr",
+    prosCons: {
+      en: "Pro: Identity sovereignty, required for brand outreach emails and SSL certs. Con: Annual recurring renewal cost.",
+      tr: "Artı: Kimlik egemenliği, kurumsal e-postalar ve SSL sertifikaları için zorunlu. Eksi: Yıllık yenileme maliyeti.",
+    },
+    alternatives: {
+      en: "Namecheap (Low migration cost, DNS transfer), GoDaddy (High renewal cost, aggressive upselling).",
+      tr: "Namecheap (Düşük göç maliyeti, DNS transferi), GoDaddy (Yüksek yenileme maliyeti, agresif satış stratejileri).",
+    },
+    url: "https://resend.com/domains",
+  },
+  {
+    id: "umami",
+    name: "Umami Analytics",
+    category: "Analytics & Telemetry",
+    plan: "Free Cloud Tier",
+    cost: "$0.00 / mo",
+    prosCons: {
+      en: "Pro: Privacy-friendly, GDPR/KVKK compliant, open-source engine, lightweight script. Con: 10,000 monthly events limit.",
+      tr: "Artı: Gizlilik dostu, GDPR/KVKK uyumlu, hafif izleme betiği. Eksi: Ücretsiz planda aylık 10.000 olay sınırı.",
+    },
+    alternatives: {
+      en: "Plausible Analytics (Paid only, high base cost), Google Analytics 4 (Intrusive, GDPR compliance issues).",
+      tr: "Plausible Analytics (Yalnızca ücretli, yüksek taban), Google Analytics 4 (KVKK/GDPR uyum sorunları).",
+    },
+    url: "https://umami.is",
+  },
+  {
+    id: "slack",
+    name: "Slack Webhooks",
+    category: "Operational Alerts",
+    plan: "Free Workspace",
+    cost: "$0.00 / mo",
+    prosCons: {
+      en: "Pro: Real-time incident & whitelist notifications directly to development channels. Con: 10k messages history limit.",
+      tr: "Artı: Geliştirici kanallarına gerçek zamanlı bildirimler ve uyarılar. Eksi: 10 bin mesajlık geçmiş sınırı.",
+    },
+    alternatives: {
+      en: "Discord Webhooks (Zero cost, minor payload structure adjustment), Telegram Bot API (Very low switch cost).",
+      tr: "Discord Webhooks (Sıfır maliyet, küçük yapı değişikliği), Telegram Bot API (Çok düşük geçiş maliyeti).",
+    },
+    url: "https://slack.com",
+  },
+  {
+    id: "openai",
+    name: "OpenAI API",
+    category: "Evaluation Fallback",
+    plan: "Pay-as-you-go",
+    cost: "~$1.00 / mo",
+    prosCons: {
+      en: "Pro: Standard GPT-4o capabilities, robust JSON schemas. Con: Strictly paid-only tier, require prepaid credits.",
+      tr: "Artı: Standart GPT-4o yetenekleri, kararlı JSON şemaları. Eksi: Yalnızca ücretli kullanım, ön ödemeli kredi.",
+    },
+    alternatives: {
+      en: "Anthropic API (High migration cost, prompt differences), DeepSeek API (Low cost, compatibility mode available).",
+      tr: "Anthropic API (Yüksek geçiş maliyeti, prompt farkları), DeepSeek API (Düşük maliyet, uyumluluk modu).",
+    },
+    url: "https://openai.com",
   },
 ];
 
@@ -295,7 +295,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const isTurkish = locale === "tr";
+  const isTR = locale === "tr";
 
   // Calculate status based on thresholds
   let systemStatus: "operational" | "warning" | "degraded" = "operational";
@@ -345,13 +345,9 @@ export function ResourcesClient({ locale }: { locale: string }) {
         <div>
           <h1 className="inline-flex items-center gap-2 text-3xl font-black tracking-tight text-white">
             <Server className="text-brand-400 h-8 w-8" />
-            {isTurkish ? "Platform Kaynakları ve Sağlayıcılar" : "Platform Resources & Vendors"}
+            {t("resources_title")}
           </h1>
-          <p className="text-fg-secondary mt-2 text-sm">
-            {isTurkish
-              ? "15 aktif ALPAR AI altyapı sağlayıcısını ve canlı sunucu kapasite kullanım oranlarını izleyin."
-              : "Monitor status, metrics, and dashboards for all 15 active ALPAR AI infrastructure vendors."}
-          </p>
+          <p className="text-fg-secondary mt-2 text-sm">{t("resources_subtitle")}</p>
         </div>
         <button
           onClick={() => fetchMetrics(true)}
@@ -359,7 +355,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
           className="bg-bg-secondary hover:bg-bg-tertiary border-border-subtle inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-bold text-white transition duration-200 disabled:opacity-50"
         >
           <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
-          {isTurkish ? "Tazele" : "Refresh"}
+          {t("integrations_refresh")}
         </button>
       </div>
 
@@ -383,23 +379,15 @@ export function ResourcesClient({ locale }: { locale: string }) {
           )}
           <div>
             <h3 className="font-bold">
-              {isTurkish ? "Sistem Sağlığı: " : "System Health: "}
+              {t("resources_system_health")}
               {systemStatus === "operational"
-                ? isTurkish
-                  ? "Tüm Servisler Normal"
-                  : "Operational"
+                ? t("resources_status_operational")
                 : systemStatus === "warning"
-                  ? isTurkish
-                    ? "Kapasite Uyarısı"
-                    : "Capacity Warning"
-                  : isTurkish
-                    ? "Kritik Aşım"
-                    : "Degraded Performance"}
+                  ? t("resources_status_warning")
+                  : t("resources_status_degraded")}
             </h3>
             <p className="mt-1 text-xs opacity-90">
-              {isTurkish
-                ? `Maksimum kaynak doluluk oranı: %${maxUsage.toFixed(1)}. Limit aşımlarını engellemek için kontrolleri sıklaştırın.`
-                : `Maximum resource allocation stands at ${maxUsage.toFixed(1)}%. Track closely to prevent usage lockouts.`}
+              {t("resources_health_desc", { percentage: maxUsage.toFixed(1) })}
             </p>
           </div>
         </div>
@@ -409,18 +397,16 @@ export function ResourcesClient({ locale }: { locale: string }) {
       <div className="bg-bg-secondary border-border-subtle rounded-xl border p-6">
         <h2 className="mb-6 flex items-center gap-2 text-lg font-bold tracking-tight text-white">
           <Database className="text-brand-400 h-5 w-5" />
-          {isTurkish ? "Canlı Kapasite Göstergeleri" : "Live Capacity Telemetry"}
+          {t("resources_live_telemetry")}
         </h2>
 
         {loading ? (
           <div className="text-fg-muted animate-pulse py-8 text-center font-mono text-sm">
-            {isTurkish
-              ? "Canlı kapasite verileri sorgulanıyor..."
-              : "Fetching live capacity metrics..."}
+            {t("resources_loading")}
           </div>
         ) : !metrics ? (
           <div className="py-8 text-center font-mono text-sm text-rose-400">
-            {isTurkish ? "Veriler yüklenemedi." : "Could not load metrics."}
+            {t("resources_error")}
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -428,9 +414,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
             <div className="bg-bg-tertiary/20 flex flex-col justify-between rounded-xl border border-white/5 p-5">
               <div>
                 <div className="flex items-start justify-between">
-                  <span className="text-sm font-bold text-white">
-                    {isTurkish ? "Supabase Veritabanı Boyutu" : "Supabase Database size"}
-                  </span>
+                  <span className="text-sm font-bold text-white">{t("resources_db_size")}</span>
                   <Badge
                     variant="outline"
                     className={getUsageColorClass(metrics.supabaseDb.percentage)}
@@ -440,7 +424,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
                 </div>
                 <p className="text-fg-muted mt-1 font-mono text-xs">
                   {(metrics.supabaseDb.usedBytes / 1024 / 1024).toFixed(2)} MB /{" "}
-                  {isTurkish ? "500 MB limiti" : "500 MB limit"}
+                  {t("resources_db_size_limit")}
                 </p>
               </div>
               {renderProgressBar(metrics.supabaseDb.percentage)}
@@ -451,7 +435,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
               <div>
                 <div className="flex items-start justify-between">
                   <span className="text-sm font-bold text-white">
-                    {isTurkish ? "Supabase Depolama" : "Supabase Storage"}
+                    {t("resources_storage_size")}
                   </span>
                   <Badge
                     variant="outline"
@@ -462,7 +446,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
                 </div>
                 <p className="text-fg-muted mt-1 font-mono text-xs">
                   {(metrics.supabaseStorage.usedBytes / 1024 / 1024).toFixed(2)} MB /{" "}
-                  {isTurkish ? "1,024 MB limiti" : "1,024 MB limit"}
+                  {t("resources_storage_limit")}
                 </p>
               </div>
               {renderProgressBar(metrics.supabaseStorage.percentage)}
@@ -473,7 +457,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
               <div>
                 <div className="flex items-start justify-between">
                   <span className="text-sm font-bold text-white">
-                    {isTurkish ? "Upstash Redis Komutları" : "Upstash Redis Commands"}
+                    {t("resources_redis_commands")}
                   </span>
                   <Badge
                     variant="outline"
@@ -483,16 +467,15 @@ export function ResourcesClient({ locale }: { locale: string }) {
                   </Badge>
                 </div>
                 <p className="text-fg-muted mt-1 font-mono text-xs">
-                  {isTurkish
-                    ? `${metrics.upstashRedis.used.toLocaleString()} / ${metrics.upstashRedis.limit.toLocaleString()} komut/gün`
-                    : `${metrics.upstashRedis.used.toLocaleString()} / ${metrics.upstashRedis.limit.toLocaleString()} commands/day`}
+                  {t("resources_redis_limit_val", {
+                    used: metrics.upstashRedis.used.toLocaleString(),
+                    limit: metrics.upstashRedis.limit.toLocaleString(),
+                  })}
                 </p>
               </div>
               {renderProgressBar(metrics.upstashRedis.percentage)}
               <span className="text-fg-muted mt-2 block text-right font-mono text-[10px]">
-                {isTurkish
-                  ? `Son Doğrulama: ${metrics.upstashRedis.lastVerified} (Manuel Giriş)`
-                  : `Last Verified: ${metrics.upstashRedis.lastVerified} (Manual Entry)`}
+                {t("resources_redis_last_verified", { date: metrics.upstashRedis.lastVerified })}
               </span>
             </div>
 
@@ -500,9 +483,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
             <div className="bg-bg-tertiary/20 flex flex-col justify-between rounded-xl border border-white/5 p-5">
               <div>
                 <div className="flex items-start justify-between">
-                  <span className="text-sm font-bold text-white">
-                    {isTurkish ? "Resend E-posta Gönderimi" : "Resend Emails Sent"}
-                  </span>
+                  <span className="text-sm font-bold text-white">{t("resources_emails_sent")}</span>
                   <Badge
                     variant="outline"
                     className={getUsageColorClass(metrics.resendEmails.percentage)}
@@ -511,9 +492,10 @@ export function ResourcesClient({ locale }: { locale: string }) {
                   </Badge>
                 </div>
                 <p className="text-fg-muted mt-1 font-mono text-xs">
-                  {isTurkish
-                    ? `${metrics.resendEmails.used} / ${metrics.resendEmails.limit} gönderildi (aylık)`
-                    : `${metrics.resendEmails.used} / ${metrics.resendEmails.limit} sent (monthly)`}
+                  {t("resources_emails_sent_val", {
+                    used: metrics.resendEmails.used,
+                    limit: metrics.resendEmails.limit,
+                  })}
                 </p>
               </div>
               {renderProgressBar(metrics.resendEmails.percentage)}
@@ -524,9 +506,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
               <div>
                 <div className="flex items-start justify-between">
                   <span className="text-sm font-bold text-white">
-                    {isTurkish
-                      ? "AI Gateway Maliyet Tavanı (Kural #20)"
-                      : "AI Gateway Cost ceiling (Rule #20)"}
+                    {t("resources_ai_gateway_ceiling")}
                   </span>
                   <div className="flex gap-2">
                     <Badge
@@ -535,7 +515,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
                         (metrics.aiGateway.dailyUsed / metrics.aiGateway.dailyLimit) * 100,
                       )}
                     >
-                      {isTurkish ? "Günlük: " : "Daily: "}
+                      {t("resources_ai_runs_daily")}
                       {((metrics.aiGateway.dailyUsed / metrics.aiGateway.dailyLimit) * 100).toFixed(
                         1,
                       )}
@@ -547,7 +527,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
                         (metrics.aiGateway.monthlyUsed / metrics.aiGateway.monthlyLimit) * 100,
                       )}
                     >
-                      {isTurkish ? "Aylık: " : "Monthly: "}
+                      {t("resources_ai_runs_monthly")}
                       {(
                         (metrics.aiGateway.monthlyUsed / metrics.aiGateway.monthlyLimit) *
                         100
@@ -559,20 +539,19 @@ export function ResourcesClient({ locale }: { locale: string }) {
                 <div className="mt-4 grid grid-cols-2 gap-4">
                   <div>
                     <span className="text-fg-muted block text-xs">
-                      {isTurkish ? "Bugünkü Harcama" : "Today Spend"}
+                      {t("resources_today_spend")}
                     </span>
                     <span className="font-mono text-lg font-bold text-white">
-                      ${metrics.aiGateway.dailyUsed.toFixed(4)} / $10.00{" "}
-                      {isTurkish ? "sınır" : "cap"}
+                      ${metrics.aiGateway.dailyUsed.toFixed(4)} / $10.00 {t("resources_today_cap")}
                     </span>
                   </div>
                   <div>
                     <span className="text-fg-muted block text-xs">
-                      {isTurkish ? "Bu Ayki Harcama" : "This Month Spend"}
+                      {t("resources_month_spend")}
                     </span>
                     <span className="font-mono text-lg font-bold text-white">
                       ${metrics.aiGateway.monthlyUsed.toFixed(4)} / $30.00{" "}
-                      {isTurkish ? "sınır" : "cap"}
+                      {t("resources_month_cap")}
                     </span>
                   </div>
                 </div>
@@ -588,7 +567,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
           <div className="bg-bg-secondary border-border-subtle rounded-xl border p-5">
             <span className="text-fg-muted text-xs font-bold tracking-wide uppercase">
-              {isTurkish ? "Olay Kayıt Sayısı" : "Incidents Row Count"}
+              {t("resources_incident_count")}
             </span>
             <p className="mt-2 font-mono text-2xl font-black text-white">
               {metrics.rowCounts.incidents.toLocaleString()}
@@ -596,7 +575,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
           </div>
           <div className="bg-bg-secondary border-border-subtle rounded-xl border p-5">
             <span className="text-fg-muted text-xs font-bold tracking-wide uppercase">
-              {isTurkish ? "K-Model Puan Sayısı" : "K-Model Scores Count"}
+              {t("resources_scores_count")}
             </span>
             <p className="mt-2 font-mono text-2xl font-black text-white">
               {metrics.rowCounts.kModelScores.toLocaleString()}
@@ -604,7 +583,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
           </div>
           <div className="bg-bg-secondary border-border-subtle rounded-xl border p-5">
             <span className="text-fg-muted text-xs font-bold tracking-wide uppercase">
-              {isTurkish ? "Harici Kuyruk Boyutu" : "External Queue size"}
+              {t("resources_queue_size")}
             </span>
             <p className="mt-2 font-mono text-2xl font-black text-white">
               {metrics.rowCounts.externalIncidentsQueue.toLocaleString()}
@@ -617,30 +596,20 @@ export function ResourcesClient({ locale }: { locale: string }) {
       <div className="bg-bg-secondary border-border-subtle overflow-hidden rounded-xl border">
         <div className="border-border-subtle border-b px-6 py-4">
           <h2 className="text-lg font-bold tracking-tight text-white">
-            {isTurkish
-              ? "15 Altyapı ve AI Sağlayıcı Kataloğu"
-              : "15 Infrastructure & AI Vendors Catalog"}
+            {t("resources_providers_pricing")}
           </h2>
-          <p className="text-fg-muted mt-1 text-xs">
-            {isTurkish
-              ? "Her bir bağımlılığın rolü, maliyeti, artı/eksi yönleri ve alternatif geçiş seçenekleri."
-              : "Core vendor matrices, pricing, pros/cons, and cost/complexity transition options."}
-          </p>
+          <p className="text-fg-muted mt-1 text-xs">{t("resources_providers_pricing_subtitle")}</p>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-left text-sm">
             <thead>
               <tr className="bg-bg-tertiary/50 border-border-subtle text-fg-muted border-b text-xs font-bold tracking-wider uppercase">
-                <th className="px-6 py-4">
-                  {isTurkish ? "Sağlayıcı / Kategori" : "Vendor / Category"}
-                </th>
-                <th className="px-6 py-4">{isTurkish ? "Paket / Plan" : "Plan / Tier"}</th>
-                <th className="px-6 py-4">{isTurkish ? "Aylık Maliyet" : "Monthly Cost"}</th>
-                <th className="px-6 py-4">{isTurkish ? "Artı ve Eksi Yönleri" : "Pros / Cons"}</th>
-                <th className="px-6 py-4">
-                  {isTurkish ? "Alternatifler & Geçiş Maliyeti" : "Alternatives & Switch Costs"}
-                </th>
+                <th className="px-6 py-4">{t("resources_col_vendor")}</th>
+                <th className="px-6 py-4">{t("resources_col_plan")}</th>
+                <th className="px-6 py-4">{t("resources_col_cost")}</th>
+                <th className="px-6 py-4">{t("resources_col_proscons")}</th>
+                <th className="px-6 py-4">{t("resources_col_alternatives")}</th>
               </tr>
             </thead>
             <tbody className="divide-border-subtle divide-y">
@@ -673,11 +642,11 @@ export function ResourcesClient({ locale }: { locale: string }) {
                   </td>
                   {/* Pros & Cons */}
                   <td className="text-fg-muted max-w-sm px-6 py-4 text-xs">
-                    {isTurkish ? v.prosCons.tr : v.prosCons.en}
+                    {isTR ? v.prosCons.tr : v.prosCons.en}
                   </td>
                   {/* Alternatives */}
                   <td className="text-fg-muted max-w-sm px-6 py-4 text-xs">
-                    {isTurkish ? v.alternatives.tr : v.alternatives.en}
+                    {isTR ? v.alternatives.tr : v.alternatives.en}
                   </td>
                 </tr>
               ))}
