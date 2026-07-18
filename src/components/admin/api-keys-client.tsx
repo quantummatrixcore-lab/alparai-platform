@@ -34,32 +34,53 @@ export function ApiKeysClient({ initialKeys }: Props) {
   const [pending, start] = useTransition();
 
   const internalProviders = [
-    { value: "openrouter", name: "OpenRouter", description: t("openrouter_desc") },
-    { value: "cohere", name: "Cohere", description: t("cohere_desc") },
-    {
-      value: "huggingface",
-      name: "HuggingFace",
-      description: t("huggingface_desc", { defaultValue: "HuggingFace keys" }),
-    },
     {
       value: "google",
       name: "Google Gemini",
       description: t("google_desc", { defaultValue: "Gemini keys" }),
+      url: "https://aistudio.google.com/app/apikey",
+    },
+    {
+      value: "openai",
+      name: "OpenAI",
+      description: t("openai_desc", { defaultValue: "OpenAI API keys" }),
+      url: "https://platform.openai.com/api-keys",
+    },
+    {
+      value: "openrouter",
+      name: "OpenRouter",
+      description: t("openrouter_desc"),
+      url: "https://openrouter.ai/keys",
+    },
+    {
+      value: "cohere",
+      name: "Cohere",
+      description: t("cohere_desc"),
+      url: "https://dashboard.cohere.com/api-keys",
+    },
+    {
+      value: "huggingface",
+      name: "HuggingFace",
+      description: t("huggingface_desc", { defaultValue: "HuggingFace keys" }),
+      url: "https://huggingface.co/settings/tokens",
     },
     {
       value: "google_vertex",
       name: "Google Vertex",
       description: t("google_vertex_desc", { defaultValue: "Vertex AI keys" }),
+      url: "https://console.cloud.google.com/vertex-ai",
     },
     {
       value: "blackbox",
       name: "Blackbox AI",
       description: t("blackbox_desc", { defaultValue: "Blackbox keys" }),
+      url: "https://www.blackbox.ai",
     },
     {
       value: "nvidia",
       name: "NVIDIA NGC",
       description: t("nvidia_desc", { defaultValue: "NVIDIA NGC keys" }),
+      url: "https://build.nvidia.com",
     },
   ];
 
@@ -201,6 +222,19 @@ export function ApiKeysClient({ initialKeys }: Props) {
                   <p className="text-fg-muted mt-1 text-xs">
                     {internalProviders.find((p) => p.value === provider)?.description}
                   </p>
+                  {internalProviders.find((p) => p.value === provider)?.url && (
+                    <div className="mt-2.5">
+                      <a
+                        href={internalProviders.find((p) => p.value === provider)?.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-brand-400 hover:text-brand-300 inline-flex items-center gap-1.5 text-xs font-semibold"
+                      >
+                        <Globe className="h-3.5 w-3.5" />
+                        {t("get_key_from_console", { defaultValue: "Get Key from Console" })} &rarr;
+                      </a>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <>

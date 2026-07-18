@@ -20,9 +20,12 @@ import {
   Send,
   RefreshCw,
   X,
+  Brain,
+  Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createSocialPost, updateSocialPost, publishDraftToLinkedInAction } from "@/actions/social";
+import { fetchContentFromUrl, generateStrategicResponse } from "@/actions/social-intelligence";
 import { toast } from "sonner";
 import { logger } from "@/lib/utils/logger";
 
@@ -129,9 +132,22 @@ export function SocialDashboardClient({
   const [posts, setPosts] = useState<SocialPost[]>(initialPosts);
   const [marketingDrafts, setMarketingDrafts] = useState<MarketingDraft[]>(initialMarketingDrafts);
   const [activeTab, setActiveTab] = useState<
-    "queue" | "calendar" | "drafts" | "templates" | "analytics"
+    "queue" | "calendar" | "drafts" | "templates" | "analytics" | "intelligence"
   >("queue");
   const [isPending, startTransition] = useTransition();
+
+  // Intelligence Tab states
+  const [intelligenceUrl, setIntelligenceUrl] = useState("");
+  const [intelligenceText, setIntelligenceText] = useState("");
+  const [intelligencePersona, setIntelligencePersona] = useState<
+    "visionary" | "diplomatic" | "punchy"
+  >("visionary");
+  const [intelligencePlatform, setIntelligencePlatform] = useState<
+    "youtube" | "linkedin" | "x" | "general"
+  >("youtube");
+  const [generatedDrafts, setGeneratedDrafts] = useState<string[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isFetchingUrl, setIsFetchingUrl] = useState(false);
 
   // Form states for creating/editing posts
   const [showFormModal, setShowFormModal] = useState(false);
@@ -380,6 +396,99 @@ export function SocialDashboardClient({
     return "#";
   };
 
+  const handleFetchUrl = async () => {
+    if (!intelligenceUrl) return;
+    setIsFetchingUrl(true);
+    try {
+      const res = await fetchContentFromUrl(intelligenceUrl);
+      if (res.ok && res.content) {
+        setIntelligenceText(res.content);
+        toast.success(
+          tAdmin("intelligenceFetched", { defaultValue: "Content fetched successfully!" }),
+        );
+      } else {
+        toast.error(
+          res.error ||
+            tAdmin("intelligenceFetchError", {
+              defaultValue: "Could not fetch content from this URL.",
+            }),
+        );
+      }
+    } catch {
+      toast.error(
+        tAdmin("intelligenceFetchError", {
+          defaultValue: "Could not fetch content from this URL.",
+        }),
+      );
+    } finally {
+      setIsFetchingUrl(false);
+    }
+  };
+
+  const handleGenerateResponse = () => {
+    if (!intelligenceText) {
+      toast.error("Please provide some context text or URL content.");
+      return;
+    }
+    setIsGenerating(true);
+    setGeneratedDrafts([]);
+    startTransition(async () => {
+      try {
+        const res = await generateStrategicResponse(
+          intelligenceText,
+          intelligencePersona,
+          intelligencePlatform,
+        );
+        if (res.ok && res.drafts) {
+          setGeneratedDrafts(res.drafts);
+          toast.success("Strategic response alternatives generated!");
+        } else {
+          if (res.error === "API_KEY_NOT_FOUND") {
+            toast.error("Google Gemini API Key is missing. Please add it in the API Keys page.");
+          } else {
+            toast.error(
+              res.error ||
+                tAdmin("intelligenceError", { defaultValue: "Failed to generate response." }),
+            );
+          }
+        }
+      } catch {
+        toast.error(tAdmin("intelligenceError", { defaultValue: "Failed to generate response." }));
+      } finally {
+        setIsGenerating(false);
+      }
+    });
+  };
+
+  const handleSaveIntelligenceDraft = (draftText: string) => {
+    startTransition(async () => {
+      try {
+        const platformMap: Record<
+          string,
+          "x" | "linkedin" | "instagram" | "facebook" | "whatsapp"
+        > = {
+          youtube: "x",
+          linkedin: "linkedin",
+          x: "x",
+          general: "linkedin",
+        };
+        const targetPlatform = platformMap[intelligencePlatform] || "linkedin";
+
+        await createSocialPost({
+          platform: targetPlatform,
+          status: "draft",
+          content_type: "manifesto",
+          title: `AI Response Draft - ${new Date().toLocaleDateString()}`,
+          body_text: draftText,
+        });
+        toast.success(tAdmin("intelligenceSaved", { defaultValue: "Saved as draft!" }));
+        setTimeout(() => window.location.reload(), 1000);
+      } catch {
+        toast.error("Failed to save draft.");
+      }
+    });
+  };
+
   const tabs = [
     {
       id: "queue",
@@ -391,6 +500,11 @@ export function SocialDashboardClient({
       id: "calendar",
       label: tAdmin("tabCalendar", { defaultValue: "Content Calendar" }),
       icon: Calendar,
+    },
+    {
+      id: "intelligence",
+      label: tAdmin("tabIntelligence", { defaultValue: "Intelligence" }),
+      icon: Brain,
     },
     {
       id: "templates",
@@ -1022,6 +1136,228 @@ export function SocialDashboardClient({
                 </tbody>
               </table>
             </div>
+          </div>
+        )}
+
+        {/* Tab 5: Intelligence */}
+        {activeTab === "intelligence" && (
+          <div className="bg-bg-secondary/40 border-border-subtle space-y-6 rounded-2xl border bg-gradient-to-br from-violet-500/5 via-transparent to-cyan-500/5 p-6">
+            <div>
+              <h2 className="text-fg-primary flex items-center gap-2 text-xl font-bold">
+                <Brain className="text-brand-500 h-5 w-5" />
+                {tAdmin("intelligenceTitle", { defaultValue: "ALPAR AI Intelligence" })}
+              </h2>
+              <p className="text-fg-muted mt-1.5 text-sm">
+                {tAdmin("intelligenceDesc", {
+                  defaultValue:
+                    "Generate brand-consistent strategic responses with AI-powered engagement engine.",
+                })}
+              </p>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-4">
+                {/* URL Fetch Input */}
+                <div className="space-y-1.5">
+                  <label className="text-fg-secondary text-xs font-bold">
+                    {tAdmin("intelligenceUrlLabel", { defaultValue: "Target URL" })}
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="url"
+                      placeholder={tAdmin("intelligenceUrlPlaceholder", {
+                        defaultValue: "https://youtube.com/watch?v=...",
+                      })}
+                      value={intelligenceUrl}
+                      onChange={(e) => setIntelligenceUrl(e.target.value)}
+                      className="bg-bg-primary border-border-subtle text-fg-primary focus:ring-brand-500 flex-1 rounded-xl border px-3.5 py-2.5 text-sm focus:ring-2 focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleFetchUrl}
+                      disabled={!intelligenceUrl || isFetchingUrl}
+                      className="bg-bg-tertiary/40 border-border-subtle hover:bg-bg-tertiary/60 text-fg-primary inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-semibold transition-all disabled:opacity-50"
+                    >
+                      {isFetchingUrl ? (
+                        <>
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                          Fetching...
+                        </>
+                      ) : (
+                        tAdmin("intelligenceFetchBtn", { defaultValue: "Fetch Content" })
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Direct Text input */}
+                <div className="space-y-1.5">
+                  <label className="text-fg-secondary text-xs font-bold">
+                    {tAdmin("intelligenceTextLabel", { defaultValue: "Or paste content directly" })}
+                  </label>
+                  <textarea
+                    rows={8}
+                    placeholder={tAdmin("intelligenceTextPlaceholder", {
+                      defaultValue:
+                        "Paste the video transcript, post content, or article text here...",
+                    })}
+                    value={intelligenceText}
+                    onChange={(e) => setIntelligenceText(e.target.value)}
+                    className="bg-bg-primary border-border-subtle text-fg-primary focus:ring-brand-500 w-full rounded-xl border p-3 text-sm focus:ring-2 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                {/* Platform selector */}
+                <div className="space-y-2">
+                  <label className="text-fg-secondary text-xs font-bold">
+                    {tAdmin("intelligencePlatformLabel", { defaultValue: "Target Platform" })}
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {(
+                      [
+                        { id: "youtube", label: "YouTube" },
+                        { id: "linkedin", label: "LinkedIn" },
+                        { id: "x", label: "X / Twitter" },
+                        { id: "general", label: "General" },
+                      ] as const
+                    ).map((plat) => (
+                      <button
+                        key={plat.id}
+                        type="button"
+                        onClick={() => setIntelligencePlatform(plat.id)}
+                        className={cn(
+                          "border-border-subtle bg-bg-primary/50 text-fg-primary hover:bg-bg-primary cursor-pointer rounded-xl border px-4 py-3 text-center text-xs font-bold transition-all",
+                          intelligencePlatform === plat.id &&
+                            "border-brand-500 ring-brand-500/25 bg-bg-primary ring-2",
+                        )}
+                      >
+                        {plat.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Persona selector */}
+                <div className="space-y-2">
+                  <label className="text-fg-secondary text-xs font-bold">
+                    {tAdmin("intelligencePersonaLabel", { defaultValue: "Response Persona" })}
+                  </label>
+                  <div className="space-y-2">
+                    {(
+                      [
+                        {
+                          id: "visionary",
+                          title: tAdmin("personaVisionary", { defaultValue: "Visionary" }),
+                          desc: tAdmin("personaVisionaryDesc", {
+                            defaultValue: "Deep, thought-provoking, opens questions",
+                          }),
+                        },
+                        {
+                          id: "diplomatic",
+                          title: tAdmin("personaDiplomatic", { defaultValue: "Diplomatic" }),
+                          desc: tAdmin("personaDiplomaticDesc", {
+                            defaultValue: "Academic, balanced, regulation-focused",
+                          }),
+                        },
+                        {
+                          id: "punchy",
+                          title: tAdmin("personaPunchy", { defaultValue: "Punchy" }),
+                          desc: tAdmin("personaPunchyDesc", {
+                            defaultValue: "Short, sharp, high-engagement",
+                          }),
+                        },
+                      ] as const
+                    ).map((pers) => (
+                      <button
+                        key={pers.id}
+                        type="button"
+                        onClick={() => setIntelligencePersona(pers.id)}
+                        className={cn(
+                          "border-border-subtle bg-bg-primary/50 text-fg-primary hover:bg-bg-primary flex w-full cursor-pointer flex-col gap-0.5 rounded-xl border p-3 text-left transition-all",
+                          intelligencePersona === pers.id &&
+                            "border-brand-500 ring-brand-500/25 bg-bg-primary ring-2",
+                        )}
+                      >
+                        <span className="text-xs font-bold">{pers.title}</span>
+                        <span className="text-fg-muted text-[10px]">{pers.desc}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleGenerateResponse}
+                  disabled={!intelligenceText || isGenerating}
+                  className="from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r py-3 text-sm font-bold text-white shadow-lg transition-all disabled:opacity-50"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      {tAdmin("intelligenceGenerating", { defaultValue: "AI is thinking..." })}
+                    </>
+                  ) : (
+                    <>
+                      <Brain className="h-4 w-4" />
+                      {tAdmin("intelligenceGenerate", {
+                        defaultValue: "Generate Strategic Response",
+                      })}
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Generated results */}
+            {generatedDrafts.length > 0 && (
+              <div className="border-border-subtle/50 space-y-4 border-t pt-6">
+                <h3 className="text-fg-secondary text-sm font-bold">
+                  {tAdmin("generatedAlternatives", { defaultValue: "Generated Alternatives" })}
+                </h3>
+                <div className="grid gap-4 md:grid-cols-3">
+                  {generatedDrafts.map((draft, idx) => (
+                    <div
+                      key={idx}
+                      className="bg-bg-primary/45 border-border-subtle/80 relative flex flex-col justify-between rounded-xl border p-4 backdrop-blur-sm"
+                    >
+                      <div className="bg-brand-500/10 text-brand-400 absolute top-2 right-2 rounded px-1.5 py-0.5 text-[9px] font-bold">
+                        {tAdmin("intelligenceResult", { defaultValue: "Alt" })} {idx + 1}
+                      </div>
+                      <p className="text-fg-primary mt-2 pr-6 text-xs leading-relaxed whitespace-pre-wrap">
+                        {draft}
+                      </p>
+                      <div className="border-border-subtle/40 mt-4 flex gap-2 border-t pt-3">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText(draft);
+                            toast.success(
+                              tAdmin("intelligenceCopied", {
+                                defaultValue: "Copied to clipboard!",
+                              }),
+                            );
+                          }}
+                          className="text-fg-secondary hover:text-fg-primary bg-bg-tertiary/20 hover:bg-bg-tertiary/45 border-border-subtle/50 inline-flex cursor-pointer items-center gap-1 rounded-lg border px-2.5 py-1.5 text-[10px] font-bold transition-all"
+                        >
+                          <Copy className="h-3 w-3" />
+                          {tAdmin("intelligenceCopy", { defaultValue: "Copy" })}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleSaveIntelligenceDraft(draft)}
+                          className="text-brand-400 hover:text-brand-300 bg-brand-500/10 hover:bg-brand-500/20 ml-auto inline-flex cursor-pointer items-center gap-1 rounded-lg px-2.5 py-1.5 text-[10px] font-bold transition-all"
+                        >
+                          <Plus className="h-3 w-3" />
+                          {tAdmin("intelligenceSaveAsDraft", { defaultValue: "Save as Draft" })}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
