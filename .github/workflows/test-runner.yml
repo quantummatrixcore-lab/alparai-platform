@@ -1,0 +1,9 @@
+name: Test Runner
+on:
+  push:
+    branches: [master]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello World"
