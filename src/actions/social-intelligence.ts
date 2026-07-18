@@ -33,6 +33,7 @@ export async function fetchContentFromUrl(url: string): Promise<FetchContentResp
 
   try {
     const isYouTube = url.includes("youtube.com") || url.includes("youtu.be");
+    const isX = url.includes("x.com") || url.includes("twitter.com");
 
     if (isYouTube) {
       const oEmbedUrl = `https://noembed.com/embed?url=${encodeURIComponent(url)}`;
@@ -49,6 +50,32 @@ export async function fetchContentFromUrl(url: string): Promise<FetchContentResp
         ok: true,
         title: data.title || "YouTube Video",
         content: `Title: ${data.title || ""}\nChannel: ${data.author_name || ""}\nURL: ${url}`,
+      };
+    } else if (isX) {
+      const urlObj = new URL(url);
+      let path = urlObj.pathname;
+      if (path.endsWith("/")) path = path.slice(0, -1);
+
+      const fxUrl = `https://api.fxtwitter.com${path}`;
+      const res = await fetch(fxUrl, {
+        headers: {
+          "User-Agent": "Mozilla/5.0",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed to fetch X post metadata: ${res.statusText}`);
+      }
+
+      const data = await res.json();
+      if (data.code !== 200 || !data.tweet) {
+        throw new Error(data.message || "Failed to parse X post");
+      }
+
+      return {
+        ok: true,
+        title: `Post by @${data.tweet.author.screen_name}`,
+        content: `Author: ${data.tweet.author.name} (@${data.tweet.author.screen_name})\nPost: ${data.tweet.text}\nURL: ${url}`,
       };
     } else {
       // General URL scraper
