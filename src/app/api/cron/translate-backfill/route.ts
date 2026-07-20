@@ -12,7 +12,7 @@ async function getHandler(request: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const { processed, success } = await backfillIncidentsTR(10); // process 10 per run
+    const { processed, success } = await backfillIncidentsTR(3); // process 3 per run
 
     logger.info("[Cron] TR Translation backfill completed", { processed, success });
     return NextResponse.json({ processed, success, status: "ok" });
