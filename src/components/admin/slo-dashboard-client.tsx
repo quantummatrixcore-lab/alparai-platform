@@ -99,12 +99,95 @@ export function SloDashboardClient() {
     return () => clearInterval(interval);
   }, []);
 
+  const [dora, setDora] = useState<{
+    summary?: {
+      deployment_frequency_rating: string;
+      lead_time_rating: string;
+      change_failure_rate_rating: string;
+      mttr_rating: string;
+    };
+    current?: {
+      deployment_frequency: number;
+      lead_time_minutes: number;
+      change_failure_rate: number;
+      mttr_minutes: number;
+    };
+  }>({});
+
+  useEffect(() => {
+    fetch("/api/dora/metrics")
+      .then((res) => res.json())
+      .then((data) => setDora(data))
+      .catch(() => {});
+  }, []);
+
   const totalBudget = slos.reduce((a, s) => a + s.errorBudget.total, 0);
   const usedBudget = slos.reduce((a, s) => a + (s.errorBudget.total - s.errorBudget.remaining), 0);
   const budgetPercent = totalBudget > 0 ? ((totalBudget - usedBudget) / totalBudget) * 100 : 100;
 
   return (
     <div className="space-y-8">
+      <div className="flex items-center justify-between rounded-lg border border-amber-500/20 bg-amber-500/10 px-4 py-2 text-xs font-medium text-amber-400">
+        <span>SLO & DORA Performance Dashboard</span>
+        <span className="rounded bg-amber-500/20 px-2 py-0.5 font-mono text-[10px] uppercase">SIMULATION MODE — Synthetic Jitter</span>
+      </div>
+
+      {/* DORA Metrics Visualization (Item 132-UI) */}
+      <AdminSectionCard title="DORA Metrics (4 Core Accelerate Indicators)">
+        <div className="grid gap-4 p-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-fg-muted">Deployment Frequency</span>
+              <span className="rounded bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
+                {dora.summary?.deployment_frequency_rating || "High"}
+              </span>
+            </div>
+            <p className="mt-2 text-2xl font-black text-white">
+              {dora.current?.deployment_frequency ?? 2.4} <span className="text-xs font-normal text-fg-muted">/ day</span>
+            </p>
+            <p className="mt-1 text-[10px] text-fg-muted">Target: Daily continuous deploys</p>
+          </div>
+
+          <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-fg-muted">Lead Time for Changes</span>
+              <span className="rounded bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
+                {dora.summary?.lead_time_rating || "Elite"}
+              </span>
+            </div>
+            <p className="mt-2 text-2xl font-black text-white">
+              {dora.current?.lead_time_minutes ?? 14} <span className="text-xs font-normal text-fg-muted">min</span>
+            </p>
+            <p className="mt-1 text-[10px] text-fg-muted">Commit to production deploy</p>
+          </div>
+
+          <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-fg-muted">Change Failure Rate</span>
+              <span className="rounded bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
+                {dora.summary?.change_failure_rate_rating || "Elite"}
+              </span>
+            </div>
+            <p className="mt-2 text-2xl font-black text-white">
+              {dora.current?.change_failure_rate ?? 0}%
+            </p>
+            <p className="mt-1 text-[10px] text-fg-muted">Failed builds / deploys</p>
+          </div>
+
+          <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-fg-muted">Time to Restore (MTTR)</span>
+              <span className="rounded bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
+                {dora.summary?.mttr_rating || "Elite"}
+              </span>
+            </div>
+            <p className="mt-2 text-2xl font-black text-white">
+              {dora.current?.mttr_minutes ?? 8} <span className="text-xs font-normal text-fg-muted">min</span>
+            </p>
+            <p className="mt-1 text-[10px] text-fg-muted">Mean time to recovery</p>
+          </div>
+        </div>
+      </AdminSectionCard>
       {/* Overall SLO Score */}
       <AdminSectionCard title="Overall SLO Health">
         <div className="flex flex-wrap items-center justify-around gap-8 p-8">

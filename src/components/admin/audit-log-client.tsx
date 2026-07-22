@@ -488,6 +488,12 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
 
   return (
     <div className="space-y-6">
+      {isLive && (
+        <div className="flex items-center justify-between rounded-lg border border-amber-500/20 bg-amber-500/10 px-4 py-2 text-xs font-medium text-amber-400">
+          <span>Realtime Live Feed Simulator</span>
+          <span className="rounded bg-amber-500/20 px-2 py-0.5 font-mono text-[10px] uppercase">SIMULATION MODE</span>
+        </div>
+      )}
       <div className="grid gap-3 sm:grid-cols-4">
         <MetricWidget
           icon={Activity}

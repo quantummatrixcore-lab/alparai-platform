@@ -1,6 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { requireAdmin } from "@/lib/auth/session";
-import { Activity } from "lucide-react";
+import { checkSystemHealth } from "@/lib/health/system-health";
+import { HealthDashboardClient } from "@/components/admin/health-dashboard-client";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -12,13 +13,19 @@ export default async function HealthPage({ params }: { params: Promise<{ locale:
   const { locale } = await params;
   setRequestLocale(locale);
   await requireAdmin();
-  const t = await getTranslations({ locale, namespace: "admin" });
+
+  const initialReport = await checkSystemHealth();
 
   return (
-    <div className="flex flex-col items-center justify-center py-24">
-      <Activity className="text-fg-muted mb-6 h-16 w-16" strokeWidth={1.5} />
-      <h1 className="text-fg-primary mb-2 text-2xl font-bold">{t("nav_systemHealth")}</h1>
-      <p className="text-fg-muted text-sm">Coming soon</p>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight text-white">Unified System Health & SLA Alarms</h1>
+        <p className="text-sm text-fg-muted">
+          Real-time status monitor across 9 core subsystems (DB, Auth, API, Redis, Storage, AI Gateway, Crons, Email, CDN).
+        </p>
+      </div>
+
+      <HealthDashboardClient initialReport={initialReport} />
     </div>
   );
 }

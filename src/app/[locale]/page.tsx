@@ -7,7 +7,7 @@ import { HeroSection } from "@/components/marketing/hero-section";
 import { WebSiteJsonLd } from "@/components/seo/json-ld";
 import { Container, Section } from "@/components/ui/layout";
 import type { IncidentListItem, LeaderboardEntry } from "@/types";
-import { toIncidentListItems } from "@/lib/mappers";
+import { toIncidentListItems, type TranslationMap } from "@/lib/mappers";
 import { checkAndTriggerNewsSyncPassive } from "@/actions/autopilot-sync";
 import { Link } from "@/i18n/routing";
 import dynamic from "next/dynamic";
@@ -163,10 +163,57 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     ).map((p) => [p.id, p]),
   );
 
-  const incidents: IncidentListItem[] = toIncidentListItems(incidentsResult.data).map((item) => {
-    const providerId = (incidentsResult.data as Array<Record<string, unknown>> | null)?.find(
-      (r) => r["id"] === item.id,
-    )?.["ai_provider_id"] as string | null;
+  const localeIsDEorFR = locale === "de" || locale === "fr";
+
+  let translationMap: TranslationMap | undefined;
+  const rawHomeData = incidentsResult.data as Array<Record<string, unknown>> | null;
+  if (localeIsDEorFR && rawHomeData && rawHomeData.length > 0) {
+    const incidentIds = rawHomeData.map((r) => r["id"] as string);
+    const sb = supabase as unknown as {
+      from: (t: string) => {
+        select: (cols: string) => {
+          in: (
+            col: string,
+            vals: string[],
+          ) => {
+            eq: (
+              col: string,
+              val: string,
+            ) => Promise<{
+              data: Array<Record<string, unknown>> | null;
+            }>;
+          };
+        };
+      };
+    };
+    const { data: txRows } = await sb
+      .from("incident_translations")
+      .select("incident_id, title, description, machine_translated")
+      .in("incident_id", incidentIds)
+      .eq("locale", locale);
+
+    if (txRows) {
+      translationMap = new Map(
+        txRows.map((tx) => [
+          tx["incident_id"] as string,
+          {
+            title: tx["title"] as string,
+            description: tx["description"] as string,
+            machine_translated: tx["machine_translated"] as boolean,
+          },
+        ]),
+      );
+    }
+  }
+
+  const incidents: IncidentListItem[] = toIncidentListItems(
+    rawHomeData,
+    translationMap,
+    locale,
+  ).map((item) => {
+    const providerId = rawHomeData?.find((r) => r["id"] === item.id)?.["ai_provider_id"] as
+      | string
+      | null;
     const provider = providerId ? providerMap.get(providerId) : null;
     return {
       ...item,

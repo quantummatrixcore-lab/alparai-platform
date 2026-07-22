@@ -14,11 +14,9 @@ test.describe("i18n Language & Routing Checks", () => {
     page,
     isMobile,
   }) => {
-    // 1. Visit English page
     await page.goto("/en");
     await page.waitForLoadState("domcontentloaded");
 
-    // Header check
     const headerTitle = page.locator("html");
     await expect(headerTitle).toHaveAttribute("lang", "en");
 
@@ -28,7 +26,6 @@ test.describe("i18n Language & Routing Checks", () => {
       await menuBtn.click();
     }
 
-    // 2. Click Language Switcher to switch to Turkish
     const trButton = isMobile
       ? page.locator("#mobile-nav-panel").getByRole("button", { name: /^TR$/i }).first()
       : page.getByRole("button", { name: /^TR$/i }).first();
@@ -36,7 +33,36 @@ test.describe("i18n Language & Routing Checks", () => {
     await trButton.click();
     await page.waitForURL(/\/tr/);
 
-    // Verify html lang is now 'tr'
     await expect(page.locator("html")).toHaveAttribute("lang", "tr");
+  });
+
+  test("DE locale renders correctly with German language attribute", async ({ page }) => {
+    await page.goto("/de");
+    await page.waitForLoadState("domcontentloaded");
+
+    await expect(page.locator("html")).toHaveAttribute("lang", "de");
+    await expect(page.locator("h1").first()).toBeVisible();
+  });
+
+  test("FR locale renders correctly with French language attribute", async ({ page }) => {
+    await page.goto("/fr");
+    await page.waitForLoadState("domcontentloaded");
+
+    await expect(page.locator("html")).toHaveAttribute("lang", "fr");
+    await expect(page.locator("h1").first()).toBeVisible();
+  });
+
+  test("admin routes remain accessible in DE and FR locales", async ({ page }) => {
+    await page.goto("/de/admin");
+    await page.waitForLoadState("domcontentloaded");
+
+    await expect(page.locator("html")).toHaveAttribute("lang", "de");
+    await expect(page).toHaveURL(/\/de\/auth\/signin/);
+
+    await page.goto("/fr/admin");
+    await page.waitForLoadState("domcontentloaded");
+
+    await expect(page.locator("html")).toHaveAttribute("lang", "fr");
+    await expect(page).toHaveURL(/\/fr\/auth\/signin/);
   });
 });

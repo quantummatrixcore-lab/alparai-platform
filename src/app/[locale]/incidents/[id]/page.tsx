@@ -12,6 +12,7 @@ import { APP_URL } from "@/lib/constants";
 import type { IncidentDetail, ProviderResponse, EvidenceItem } from "@/types";
 import { RelatedIncidents } from "@/components/incidents/related-incidents";
 import { StatusBanner } from "@/components/incidents/status-banner";
+import { ProvenanceTrail } from "@/components/incidents/provenance-trail";
 
 export async function generateMetadata({
   params,
@@ -244,6 +245,12 @@ export default async function IncidentDetailPage({
         comments={comments}
         userAffected={userAffected}
         currentUserId={user?.id ?? null}
+      />
+      <ProvenanceTrail
+        incidentId={id}
+        createdAt={incident.incident_date}
+        sourceUrl={incidentRow ? ((incidentRow as Record<string, unknown>)["source_url"] as string | null) : null}
+        providerName={incident.provider_name}
       />
       <RelatedIncidents
         providerId={(incidentRow as Record<string, unknown>)["ai_provider_id"] as string}

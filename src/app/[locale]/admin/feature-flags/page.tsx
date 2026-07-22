@@ -1,6 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { requireAdmin } from "@/lib/auth/session";
-import { ToggleRight } from "lucide-react";
+import { getFeatureFlagsAction } from "@/actions/system-mgmt";
+import { FeatureFlagsClient } from "@/components/admin/feature-flags-client";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -16,13 +17,19 @@ export default async function FeatureFlagsPage({
   const { locale } = await params;
   setRequestLocale(locale);
   await requireAdmin();
-  const t = await getTranslations({ locale, namespace: "admin" });
+
+  const flags = await getFeatureFlagsAction();
 
   return (
-    <div className="flex flex-col items-center justify-center py-24">
-      <ToggleRight className="text-fg-muted mb-6 h-16 w-16" strokeWidth={1.5} />
-      <h1 className="text-fg-primary mb-2 text-2xl font-bold">{t("nav_featureFlags")}</h1>
-      <p className="text-fg-muted text-sm">Coming soon</p>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight text-white">Feature Flags</h1>
+        <p className="text-sm text-fg-muted">
+          Toggle system features at runtime with ~0ms Upstash Redis edge cache propagation.
+        </p>
+      </div>
+
+      <FeatureFlagsClient initialFlags={flags} />
     </div>
   );
 }

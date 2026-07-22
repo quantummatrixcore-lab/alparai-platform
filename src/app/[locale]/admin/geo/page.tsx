@@ -1,6 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { requireAdmin } from "@/lib/auth/session";
-import { Globe } from "lucide-react";
+import { GeoDashboardClient } from "@/components/admin/geo-dashboard-client";
+import { getGeoStatsAction, type GeoCitationRow } from "@/actions/geo";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -12,13 +13,23 @@ export default async function GEOPage({ params }: { params: Promise<{ locale: st
   const { locale } = await params;
   setRequestLocale(locale);
   await requireAdmin();
-  const t = await getTranslations({ locale, namespace: "admin" });
+
+  const stats = await getGeoStatsAction();
 
   return (
-    <div className="flex flex-col items-center justify-center py-24">
-      <Globe className="text-fg-muted mb-6 h-16 w-16" strokeWidth={1.5} />
-      <h1 className="text-fg-primary mb-2 text-2xl font-bold">{t("nav_geo")}</h1>
-      <p className="text-fg-muted text-sm">{t("coming_soon") || "Coming soon"}</p>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight text-white">GEO (Generative Engine Optimization)</h1>
+        <p className="text-sm text-fg-muted">
+          Monitor and optimize ALPAR AI authority, citations, and crawler traffic across LLM engines.
+        </p>
+      </div>
+
+      <GeoDashboardClient
+        initialScore={stats.score}
+        initialCitations={stats.citations as GeoCitationRow[]}
+        botHits={stats.botHits}
+      />
     </div>
   );
 }
