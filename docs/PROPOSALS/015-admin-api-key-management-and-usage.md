@@ -30,7 +30,12 @@ Admin paneline (`/admin/api-keys` veya `/admin/system/api-keys`) entegre edilece
 
 - **Anlık Token ve İstek Grafiği**: Sağlayıcı bazlı günlük/aylık yapılan toplam API çağrısı ve harcanan token miktarı.
 - **Bütçe & Harcama Uyarısı (Cost Guard)**: Belirlenen maliyet limitleri aşıldığında görsel uyarılar ve otomatik kota durdurma (Kill switch) durum göstergesi.
-- **Sağlık & Gecikme (Latency & Health Status)**: Her API anahtarının ortalama yanıt süresi (ms) ve başarı/hata oranı (HTTP 200 vs 429/500).
+
+### 2.3 Ücretsiz AI Modelleri Önceliği (Free-Tier AI First Routing Policy)
+
+- **Model Yönlendirme Önceliği (Rule #32 Entegrasyonu)**: Sistemdeki tüm otomatik işlemler (çeviri, özetleme, pre-triage, haber/olay tarama, arka plan analizleri) için **varsayılan olarak öncelikle ücretsiz AI modelleri** (Google Gemini Free Tier, OpenRouter `:free` etiketli modeller, HuggingFace Free Inference API vb.) kullanılacaktır.
+- **Fallback & Otomatik Geçiş**: Ücretsiz modellerin kotası dolduğunda, yanıt verilemediğinde veya hız limiti (rate limit) aşıldığında sistem otomatik olarak bir sonraki en ucuz veya yedek ücretli API anahtarına geçecektir.
+- **Admin Yönlendirme Önceliği Ayarı**: Admin panelindeki bu API Key ekranından hangi görev tipi için hangi model sıralamasının (Örn: 1. `google/gemini-2.5-flash:free`, 2. `meta-llama/llama-3-70b-instruct:free`, 3. `openai/gpt-4o-mini`) kullanılacağı görsel olarak ayarlanabilecektir.
 
 ## 3. Acceptance Criteria (Kabul Kriterleri)
 
@@ -38,6 +43,7 @@ Admin paneline (`/admin/api-keys` veya `/admin/system/api-keys`) entegre edilece
 2. **Güvenli Saklama**: Veritabanında saklanan API anahtarlarının şifrelenmiş (AES-256-GCM / SHA-256) olarak tutulması ve istemciye asla açık metin gönderilmemesi.
 3. **CRUD & Rotasyon**: Yeni key ekleme, düzenleme, silme ve rotasyon işlemlerinin çalışması.
 4. **Metrik Takibi**: API anahtarının son kullanım tarihi, kalan kota/istek sayısı ve kullanım grafiğinin gösterilmesi.
+5. **Ücretsiz Model Önceliği**: Model router'ın öncelikli olarak ücretsiz sağlayıcıları çalıştırması ve ücretli modellere yalnızca zorunlu hallerde (fallback) geçmesi.
 
 ## 4. Risk / Maliyet
 
