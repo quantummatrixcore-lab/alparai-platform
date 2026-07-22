@@ -189,6 +189,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: "daily",
         priority: 0.7,
       });
+      base.push({
+        url: `${APP_URL}/${locale}/incidents/provider/${p.slug}`,
+        lastModified: new Date(),
+        changeFrequency: "daily",
+        priority: 0.8,
+      });
     }
   }
 

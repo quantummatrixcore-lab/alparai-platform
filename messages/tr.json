@@ -3101,5 +3101,15 @@
     "submit": "Gönder",
     "submitting": "Gönderiliyor...",
     "submitted": "Gönderin alındı! Onaylandıktan sonra görünecektir."
+  },
+  "providerCluster": {
+    "meta_title": "{providerName} Yapay Zeka Hataları ve Olay Raporları",
+    "meta_description": "{providerName} modellerinin ürettiği doğruluk ihlalleri, halüsinasyonlar ve güvenlik zafiyetlerinin açık veri tabanı.",
+    "header_title": "{providerName} AI Olay Raporları",
+    "header_default_desc": "Bu sağlayıcıya ait tüm yapay zeka hataları ve topluluk bildirimleri.",
+    "recent_incidents": "Son Bildirilen Olaylar",
+    "no_incidents": "Bu sağlayıcı için henüz doğrulanmış olay bulunmuyor.",
+    "cta_title": "{providerName} ile İlgili Bir Sorun mu Yaşadınız?",
+    "cta_button": "Yeni Olay Bildir"
   }
 }

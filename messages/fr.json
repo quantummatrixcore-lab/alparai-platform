@@ -3101,5 +3101,15 @@
     "submit": "Submit",
     "submitting": "Submitting...",
     "submitted": "Your submission has been received! It will appear once approved."
+  },
+  "providerCluster": {
+    "meta_title": "Incidents et rapports de défaillance de l'IA {providerName}",
+    "meta_description": "Base de données publique sur les incidents de sécurité, les hallucinations et les rapports de responsabilité pour les modèles d'IA {providerName}.",
+    "header_title": "Cluster d'incidents IA {providerName}",
+    "header_default_desc": "Journal d'incidents vérifié et suivi de responsabilité pour ce fournisseur d'IA.",
+    "recent_incidents": "Incidents récents signalés",
+    "no_incidents": "Aucun incident vérifié n'a encore été signalé pour ce fournisseur.",
+    "cta_title": "Vous avez rencontré un problème avec {providerName} ?",
+    "cta_button": "Signaler un nouvel incident"
   }
 }

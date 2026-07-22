@@ -3101,5 +3101,15 @@
     "submit": "Submit",
     "submitting": "Submitting...",
     "submitted": "Your submission has been received! It will appear once approved."
+  },
+  "providerCluster": {
+    "meta_title": "{providerName} KI-Vorfälle und Fehlerberichte",
+    "meta_description": "Öffentliche Datenbank für Sicherheitsvorfälle, Halluzinationen und Rechenschaftsberichte für {providerName} KI-Modelle.",
+    "header_title": "{providerName} KI-Vorfallscluster",
+    "header_default_desc": "Verifiziertes Vorfallprotokoll und Rechenschaftspfad für diesen KI-Anbieter.",
+    "recent_incidents": "Kürzlich gemeldete Vorfälle",
+    "no_incidents": "Für diesen Anbieter wurden noch keine verifizierten Vorfälle gemeldet.",
+    "cta_title": "Haben Sie ein Problem mit {providerName} festgestellt?",
+    "cta_button": "Neuen Vorfall melden"
   }
 }

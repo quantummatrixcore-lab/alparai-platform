@@ -3101,5 +3101,15 @@
     "submit": "Submit",
     "submitting": "Submitting...",
     "submitted": "Your submission has been received! It will appear once approved."
+  },
+  "providerCluster": {
+    "meta_title": "{providerName} AI Incidents & Failure Reports",
+    "meta_description": "Public database of safety incidents, hallucinations, and accountability reports for {providerName} AI models.",
+    "header_title": "{providerName} AI Incident Cluster",
+    "header_default_desc": "Verified incident log and accountability trail for this AI provider.",
+    "recent_incidents": "Recently Reported Incidents",
+    "no_incidents": "No verified incidents reported for this provider yet.",
+    "cta_title": "Encountered an issue with {providerName}?",
+    "cta_button": "Report New Incident"
   }
 }
