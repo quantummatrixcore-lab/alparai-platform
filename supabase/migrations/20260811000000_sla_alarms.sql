@@ -23,12 +23,7 @@ ALTER TABLE public.sla_alarms ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Admin full access sla_alarms"
     ON public.sla_alarms FOR ALL
     TO authenticated
-    USING (
-        EXISTS (
-            SELECT 1 FROM public.users
-            WHERE users.id = auth.uid() AND users.is_admin = true
-        )
-    );
+    USING (public.is_admin(auth.uid()));
 
 -- -- ROLLBACK:
 -- DROP POLICY IF EXISTS "Admin full access sla_alarms" ON public.sla_alarms;

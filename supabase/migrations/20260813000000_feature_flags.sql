@@ -25,12 +25,7 @@ CREATE POLICY "Public read feature_flags"
 CREATE POLICY "Admin full access feature_flags"
     ON public.feature_flags FOR ALL
     TO authenticated
-    USING (
-        EXISTS (
-            SELECT 1 FROM public.users
-            WHERE users.id = auth.uid() AND users.is_admin = true
-        )
-    );
+    USING (public.is_admin(auth.uid()));
 
 -- -- ROLLBACK:
 -- DROP POLICY IF EXISTS "Admin full access feature_flags" ON public.feature_flags;
