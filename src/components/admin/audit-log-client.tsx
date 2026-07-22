@@ -206,7 +206,11 @@ const NEW_LIVE_EVENTS_POOL = [
   {
     action: "incident.publish",
     entity_type: "incident",
-    users: { email: "moderator.one@alparai.com", full_name: "Ece Yüksel", role: "moderator" },
+    users: {
+      email: "moderator@alparai.com",
+      full_name: "Platform Moderasyon Yöneticisi",
+      role: "moderator",
+    },
     before_data: { status: "pending_review", published: false },
     after_data: { status: "published", published: true },
     ip_hash: "46.101.99.12 (Amsterdam, NL)",
@@ -214,7 +218,11 @@ const NEW_LIVE_EVENTS_POOL = [
   {
     action: "security.ip_whitelist_added",
     entity_type: "api_keys",
-    users: { email: "ceo@alparai.com", full_name: "Alpar Arslan", role: "ceo" },
+    users: {
+      email: "security@alparai.com",
+      full_name: "Sistem Güvenlik Başdenetçisi",
+      role: "admin",
+    },
     before_data: { allowed_ips: ["12.34.56.78"] },
     after_data: {
       allowed_ips: ["12.34.56.78", "82.146.42.11"],
@@ -237,9 +245,13 @@ const NEW_LIVE_EVENTS_POOL = [
   {
     action: "user.role_assign",
     entity_type: "users",
-    users: { email: "admin.moderator@alparai.com", full_name: "Cem Bölükbaşı", role: "admin" },
+    users: { email: "admin@alparai.com", full_name: "Sistem Yönetim Operatörü", role: "admin" },
     before_data: { email: "new.hire@alparai.com", role: "user" },
-    after_data: { email: "new.hire@alparai.com", role: "moderator", assigned_by: "Cem Bölükbaşı" },
+    after_data: {
+      email: "new.hire@alparai.com",
+      role: "moderator",
+      assigned_by: "Sistem Yönetim Operatörü",
+    },
     ip_hash: "109.228.12.87 (Dublin, IE)",
   },
 ];

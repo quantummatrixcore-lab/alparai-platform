@@ -37,7 +37,13 @@ export default async function AdminDashboardPage({
 
   const admin = createAdminClient();
 
-  const [{ count: total }, { count: pending }, { data: pendingData }] = await Promise.all([
+  const [
+    { count: total },
+    { count: pending },
+    { data: pendingData },
+    { count: totalUsers },
+    { data: recentUsers },
+  ] = await Promise.all([
     admin.from("incidents").select("*", { count: "exact", head: true }),
     admin
       .from("incidents")
@@ -51,9 +57,26 @@ export default async function AdminDashboardPage({
       .eq("status", "pending_review")
       .order("created_at", { ascending: false })
       .limit(10),
+    admin.from("users").select("*", { count: "exact", head: true }),
+    admin
+      .from("users")
+      .select("id, email, full_name, role, created_at")
+      .order("created_at", { ascending: false })
+      .limit(5),
   ]);
 
-  const queue: IncidentListItem[] = toIncidentListItems(pendingData);
+  const queue: IncidentListItem[] = toIncidentListItems(
+    pendingData as unknown as Parameters<typeof toIncidentListItems>[0],
+  );
+
+  interface SafeUserItem {
+    id: string;
+    email: string;
+    full_name?: string | null;
+    role?: string | null;
+    created_at: string;
+  }
+  const userList = (recentUsers as unknown as SafeUserItem[]) ?? [];
 
   return (
     <AdminContainer>
@@ -78,15 +101,55 @@ export default async function AdminDashboardPage({
           variant={(pending ?? 0) > 5 ? "danger" : (pending ?? 0) > 0 ? "warning" : "success"}
         />
         <MetricCard
-          label={t("metric_api_costs") || "API Monthly Costs"}
-          value="$241.50 / $500"
-          variant="default"
+          label={t("users") || "Toplam Kayıtlı Kullanıcı"}
+          value={totalUsers ?? 0}
+          variant="success"
         />
         <MetricCard
           label={t("metric_autopilot_guard") || "Autopilot Guard"}
           value="ACTIVE"
           variant="success"
         />
+      </div>
+
+      {/* Son Kayıt Olan Kullanıcılar (Users Widget) */}
+      <div className="space-y-4 rounded-xl border border-white/10 bg-black/40 p-6">
+        <h2 className="flex items-center gap-2 text-lg font-bold text-white">
+          <span className="h-2 w-2 rounded-full bg-emerald-400"></span>
+          Son Kayıt Olan Kullanıcılar ({totalUsers ?? 0})
+        </h2>
+        {userList.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs text-white">
+              <thead className="text-fg-muted border-b border-white/10 bg-white/5 text-[11px] font-semibold uppercase">
+                <tr>
+                  <th className="px-4 py-2.5">Kullanıcı</th>
+                  <th className="px-4 py-2.5">E-posta</th>
+                  <th className="px-4 py-2.5">Rol</th>
+                  <th className="px-4 py-2.5">Kayıt Tarihi</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {userList.map((u) => (
+                  <tr key={u.id} className="hover:bg-white/5">
+                    <td className="px-4 py-2.5 font-medium">{u.full_name || "Kullanıcı"}</td>
+                    <td className="text-fg-muted px-4 py-2.5 font-mono">{u.email}</td>
+                    <td className="px-4 py-2.5">
+                      <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-400 uppercase">
+                        {u.role || "user"}
+                      </span>
+                    </td>
+                    <td className="text-fg-muted px-4 py-2.5">
+                      {new Date(u.created_at).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="text-fg-muted text-xs">Henüz kayıtlı kullanıcı bulunmuyor.</p>
+        )}
       </div>
 
       <OverviewDashboardClient queue={queue} locale={locale} />
