@@ -2941,16 +2941,6 @@
     "tableTimestamp": "Recorded At",
     "noUsageRecords": "No usage records logged in the database yet."
   },
-  "waitlist": {
-    "title": "ALPAR AI Launches August 2, 2026",
-    "subtitle": "Get early access to our developer APIs, structured datasets, and reporter tools. Join the pre-launch waitlist now.",
-    "email_placeholder": "Enter your professional email",
-    "submit": "Join Waitlist",
-    "submitting": "Joining...",
-    "success": "Welcome to the waitlist!",
-    "success_desc": "We will email you with your early access credentials on August 2. Thank you for building trust with us.",
-    "privacy": "By signing up, you agree to receive early access updates and marketing communications. Opt-out at any time."
-  },
   "ratings": {
     "title": "ALPAR AI — K-BENCHMARK Model Ratings",
     "subtitle": "Objective, cross-model safety and capability evaluations. Grounded in real incident data and multi-model debate adjudication.",

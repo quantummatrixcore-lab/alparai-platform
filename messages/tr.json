@@ -2941,16 +2941,6 @@
     "tableTimestamp": "Kayıt Zamanı",
     "noUsageRecords": "Veritabanında henüz kaydedilmiş kullanım kaydı bulunmuyor."
   },
-  "waitlist": {
-    "title": "ALPAR AI 2 Ağustos 2026'da Lansman Yapıyor",
-    "subtitle": "Geliştirici API'lerimize, yapılandırılmış veri setlerimize ve olay raporlama araçlarımıza erken erişim sağlayın. Bekleme listesine şimdi katılın.",
-    "email_placeholder": "Profesyonel e-posta adresinizi girin",
-    "submit": "Bekleme Listesine Katıl",
-    "submitting": "Katılınıyor...",
-    "success": "Bekleme listesine katıldınız!",
-    "success_desc": "2 Ağustos'ta erken erişim kimlik bilgilerinizi içeren bir e-posta göndereceğiz. Güven inşa ettiğiniz için teşekkür ederiz.",
-    "privacy": "Kaydolarak, erken erişim güncellemeleri ve bilgilendirici e-postalar almayı kabul edersiniz. Dilediğiniz zaman ayrılabilirsiniz."
-  },
   "ratings": {
     "title": "ALPAR AI — K-BENCHMARK Model Derecelendirmeleri",
     "subtitle": "Objektif, modeller arası güvenlik ve yetkinlik değerlendirmeleri. Gerçek olay verileri ve çoklu model tartışma hakemliğine dayanır.",
