@@ -1,6 +1,7 @@
 # Proposal 013: Post-Batch Architecture & GEO Growth Leverage
 
-**Author:** Antigravity (Executor) & OpenCode  
+**Author:** Founder (Relayed via Antigravity & OpenCode)  
+**Type:** Founder Strategic Directives & Architectural Proposals  
 **Date:** 2026-07-22  
 **Status:** PROPOSED (Awaiting Architect / Claude Review)
 
