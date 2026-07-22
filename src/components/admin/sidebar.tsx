@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import { useState, useEffect } from "react";
@@ -34,6 +34,14 @@ import {
   LogOut,
   Settings,
   Shield,
+  Compass,
+  Target,
+  Grid2X2,
+  Map,
+  AlertTriangle,
+  ClipboardList,
+  Building2,
+  Calculator,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
@@ -66,6 +74,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     overview: true,
     operations: true,
     intelligence: true,
+    strategy: true,
     governance: true,
     growth: true,
     system: true,
@@ -143,6 +152,51 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       label: t("nav_geo") || "GEO Engine",
       icon: Globe,
       active: pathname.startsWith("/admin/geo"),
+    },
+  ];
+
+  const strategyItems = [
+    {
+      href: "/admin/strategy",
+      label: t("strategy_overview"),
+      icon: Target,
+      active: pathname === "/admin/strategy",
+    },
+    {
+      href: "/admin/strategy/swot",
+      label: t("strategy_swot"),
+      icon: Grid2X2,
+      active: pathname.startsWith("/admin/strategy/swot"),
+    },
+    {
+      href: "/admin/strategy/roadmap",
+      label: t("strategy_roadmap"),
+      icon: Map,
+      active: pathname.startsWith("/admin/strategy/roadmap"),
+    },
+    {
+      href: "/admin/strategy/risks",
+      label: t("strategy_risks"),
+      icon: AlertTriangle,
+      active: pathname.startsWith("/admin/strategy/risks"),
+    },
+    {
+      href: "/admin/strategy/questionnaire",
+      label: t("questionnaire_title"),
+      icon: ClipboardList,
+      active: pathname.startsWith("/admin/strategy/questionnaire"),
+    },
+    {
+      href: "/admin/strategy/state-support",
+      label: t("strategy_state_support"),
+      icon: Building2,
+      active: pathname.startsWith("/admin/strategy/state-support"),
+    },
+    {
+      href: "/admin/strategy/valuation",
+      label: t("strategy_valuation"),
+      icon: Calculator,
+      active: pathname.startsWith("/admin/strategy/valuation"),
     },
   ];
 
@@ -225,22 +279,11 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       icon: ToggleRight,
       active: pathname.startsWith("/admin/feature-flags"),
     },
-    {
-      href: "/admin/settings",
-      label: "Settings & Security",
-      icon: Settings,
-      active: pathname.startsWith("/admin/settings"),
-    },
-    {
-      href: "/admin/crons",
-      label: "Cron Topology",
-      icon: Shield,
-      active: pathname.startsWith("/admin/crons"),
-    },
   ];
 
   const showOperations = user.role === "ceo" || user.role === "admin" || user.role === "moderator";
   const showIntelligence = user.role === "ceo" || user.role === "admin";
+  const showStrategy = user.role === "ceo" || user.role === "admin";
   const showGovernance = user.role === "ceo" || user.role === "admin";
   const showGrowth = user.role === "ceo" || user.role === "admin" || user.role === "advisor";
   const showSystem = user.role === "ceo" || user.role === "admin";
@@ -455,6 +498,13 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
               t("nav_group_intelligence") || "Intelligence",
               BrainCircuit,
               intelligenceItems,
+            )}
+          {showStrategy &&
+            renderNavGroup(
+              "strategy",
+              t("nav_group_strategy") || "Strategy",
+              Compass,
+              strategyItems,
             )}
           {showGovernance &&
             renderNavGroup(
