@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import { useState, useEffect } from "react";
@@ -6,38 +6,35 @@ import { Link, usePathname } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import {
-  SquaresFour,
-  ShieldWarning,
-  FileArrowDown,
-  Users,
+  LayoutDashboard,
+  ShieldAlert,
+  Import,
+  BarChart3,
+  BrainCircuit,
   Cpu,
-  Lightning,
-  ChartBar,
-  Clock,
-  SignOut,
+  Sparkles,
   Globe,
-  List,
-  ShieldCheck,
-  Key,
-  ShareNetwork,
-  GridFour,
-  TrendUp,
-  Compass,
-  Megaphone,
-  Lightbulb,
-  Pulse,
+  Users,
+  Lock,
+  FileText,
+  Award,
+  Share2,
+  TrendingUp,
+  Radio,
+  Activity,
+  DollarSign,
+  Server,
+  Plug,
+  ToggleRight,
+  ChevronDown,
+  ChevronRight,
+  ChevronLeft,
+  Menu,
   X,
-  CaretDown,
-  CaretRight,
-  CaretLeft,
-  Brain,
-  Folder,
-  Gear,
-  Bank,
-  Medal,
-  PlugsConnected,
-  ClipboardText,
-} from "@phosphor-icons/react";
+  LogOut,
+  Settings,
+  Shield,
+} from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
 import { Wordmark } from "../layout/wordmark";
@@ -66,9 +63,10 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
   });
 
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
-    command: true,
-    cases: true,
-    ecosystem: true,
+    overview: true,
+    operations: true,
+    intelligence: true,
+    governance: true,
     growth: true,
     system: true,
   });
@@ -96,65 +94,59 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     setExpandedGroups((prev) => ({ ...prev, [group]: !prev[group] }));
   };
 
-  // 1. COMMAND GROUP
-  const commandItems = [
-    { href: "/admin", label: t("dashboard"), icon: SquaresFour, active: pathname === "/admin" },
+  const overviewItem = [
+    { href: "/admin", label: t("dashboard"), icon: LayoutDashboard, active: pathname === "/admin" },
   ];
 
-  // 2. CASES GROUP (ceo, admin, moderator)
-  const casesItems = [
+  const operationsItems = [
     {
       href: "/admin/moderation",
       label: t("moderation_queue"),
-      icon: ShieldWarning,
+      icon: ShieldAlert,
       active: pathname.startsWith("/admin/moderation"),
     },
     {
-      href: "/admin/redaction-queue",
-      label: t("redaction_queue_title") || "Redaction",
-      icon: ShieldWarning,
-      active: pathname.startsWith("/admin/redaction-queue"),
-    },
-    {
-      href: "/admin/import",
-      label: t("import_queue"),
-      icon: FileArrowDown,
-      active: pathname.startsWith("/admin/import"),
-    },
-    {
-      href: "/admin/dsar",
-      label: t("nav_dsar") || "DSAR Queue",
-      icon: ShieldWarning,
-      active: pathname.startsWith("/admin/dsar"),
-    },
-    {
-      href: "/admin/cross-audit-dashboard",
-      label: t("cross_audit_dashboard") || "Cross-Audit",
-      icon: ShieldCheck,
-      active: pathname.startsWith("/admin/cross-audit-dashboard"),
+      href: "/admin/ecosystem",
+      label: t("nav_ecosystem") || "Import Feeds",
+      icon: Import,
+      active: pathname.startsWith("/admin/ecosystem"),
     },
   ];
 
-  // 3. ECOSYSTEM GROUP (ceo, admin)
-  const ecosystemItems = [
+  const intelligenceItems = [
     {
-      href: "/admin/ecosystem",
-      label: t("nav_ecosystem") || "Ecosystem Hub",
-      icon: Globe,
-      active: pathname.startsWith("/admin/ecosystem"),
+      href: "/admin/k-benchmark",
+      label: t("nav_kBenchmark") || "K-BENCHMARK",
+      icon: BarChart3,
+      active: pathname.startsWith("/admin/k-benchmark"),
     },
     {
-      href: "/admin/ai-pulse",
-      label: t("nav_aiPulse"),
-      icon: Pulse,
-      active: pathname.startsWith("/admin/ai-pulse"),
+      href: "/admin/analysis",
+      label: t("cross_audit_dashboard") || "Cross Audit Engine",
+      icon: BrainCircuit,
+      active: pathname.startsWith("/admin/analysis"),
     },
     {
-      href: "/admin/providers",
-      label: t("providers"),
+      href: "/admin/autopilot",
+      label: t("autopilot"),
       icon: Cpu,
-      active: pathname.startsWith("/admin/providers"),
+      active: pathname.startsWith("/admin/autopilot"),
     },
+    {
+      href: "/admin/innovations",
+      label: t("innovations") || "AI Lab",
+      icon: Sparkles,
+      active: pathname.startsWith("/admin/innovations"),
+    },
+    {
+      href: "/admin/geo",
+      label: t("nav_geo") || "GEO Engine",
+      icon: Globe,
+      active: pathname.startsWith("/admin/geo"),
+    },
+  ];
+
+  const governanceItems = [
     {
       href: "/admin/users",
       label: t("users"),
@@ -162,165 +154,95 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       active: pathname.startsWith("/admin/users"),
     },
     {
-      href: "/admin/experts",
-      label: t("expertApplications"),
-      icon: Medal,
-      active: pathname.startsWith("/admin/experts"),
-    },
-    {
-      href: "/admin/advisory-board",
-      label: t("nav_advisoryBoard") || "Advisory Board",
-      icon: Users,
-      active: pathname.startsWith("/admin/advisory-board"),
-    },
-    {
-      href: "/admin/k-benchmark",
-      label: t("nav_kBenchmark") || "K-Benchmark",
-      icon: TrendUp,
-      active: pathname.startsWith("/admin/k-benchmark"),
-    },
-  ];
-
-  // 4. GROWTH & STRATEGY GROUP (ceo, admin, advisor)
-  const growthItems = [
-    {
-      href: "/admin/master-plan",
-      label: t("nav_masterPlan") || "Master Plan",
-      icon: Compass,
-      active: pathname.startsWith("/admin/master-plan"),
-    },
-    {
-      href: "/admin/strategy",
-      label: t("strategy_overview") || "Overview",
-      icon: Compass,
-      active: pathname === "/admin/strategy",
-    },
-    {
-      href: "/admin/strategy/swot",
-      label: t("strategy_swot") || "SWOT",
-      icon: GridFour,
-      active: pathname === "/admin/strategy/swot",
-    },
-    {
-      href: "/admin/strategy/risks",
-      label: t("strategy_risks") || "Risks",
-      icon: ShieldCheck,
-      active: pathname === "/admin/strategy/risks",
-    },
-    {
-      href: "/admin/strategy/state-support",
-      label: t("strategy_state_support") || "Devlet Destekleri",
-      icon: Bank,
-      active: pathname.startsWith("/admin/strategy/state-support"),
-    },
-    {
-      href: "/admin/strategy/questionnaire",
-      label: t("strategy_questionnaire_title") || "Questionnaire",
-      icon: ClipboardText,
-      active: pathname.startsWith("/admin/strategy/questionnaire"),
-    },
-    ...(user.role === "admin" || user.role === "ceo"
-      ? [
-          {
-            href: "/admin/finance",
-            label: t("finance_dashboard") || "Finance & FinOps",
-            icon: Bank,
-            active: pathname.startsWith("/admin/finance"),
-          },
-          {
-            href: "/admin/outreach",
-            label: t("outreach_hub") || "Outreach Hub",
-            icon: Megaphone,
-            active: pathname.startsWith("/admin/outreach"),
-          },
-          {
-            href: "/admin/innovations",
-            label: t("innovations") || "Innovations",
-            icon: Lightbulb,
-            active: pathname.startsWith("/admin/innovations"),
-          },
-          {
-            href: "/admin/investors",
-            label: t("investors_title") || "Investor Applications",
-            icon: TrendUp,
-            active: pathname.startsWith("/admin/investors"),
-          },
-          {
-            href: "/admin/billing",
-            label: t("nav_billing") || "Billing",
-            icon: Bank,
-            active: pathname.startsWith("/admin/billing"),
-          },
-        ]
-      : []),
-    {
-      href: "/admin/social",
-      label: t("social_media_hub") || "Social Media Hub",
-      icon: ShareNetwork,
-      active: pathname.startsWith("/admin/social"),
-    },
-  ];
-
-  // 5. SYSTEM GROUP (ceo, admin)
-  const systemItems = [
-    {
-      href: "/admin/api-keys",
-      label: t("api_keys"),
-      icon: Key,
-      active: pathname.startsWith("/admin/api-keys"),
+      href: "/admin/dsar",
+      label: t("nav_dsar") || "DSAR Queue",
+      icon: Lock,
+      active: pathname.startsWith("/admin/dsar"),
     },
     {
       href: "/admin/audit",
       label: t("audit_log"),
-      icon: Clock,
+      icon: FileText,
       active: pathname.startsWith("/admin/audit"),
     },
     {
-      href: "/admin/autopilot",
-      label: t("autopilot"),
-      icon: Lightning,
-      active: pathname.startsWith("/admin/autopilot"),
+      href: "/admin/advisory-board",
+      label: t("nav_advisoryBoard") || "Advisory Board",
+      icon: Award,
+      active: pathname.startsWith("/admin/advisory-board"),
+    },
+  ];
+
+  const growthItems = [
+    {
+      href: "/admin/social",
+      label: t("social_media_hub") || "Social Publisher",
+      icon: Share2,
+      active: pathname.startsWith("/admin/social"),
     },
     {
-      href: "/admin/slo-dashboard",
-      label: t("slo_nav") || "SLI/SLO",
-      icon: Clock,
-      active: pathname.startsWith("/admin/slo-dashboard"),
+      href: "/admin/marketing",
+      label: t("nav_marketing") || "Marketing Pipeline",
+      icon: TrendingUp,
+      active: pathname.startsWith("/admin/marketing"),
     },
     {
-      href: "/admin/signals",
-      label: t("signals_nav") || "Golden Signals",
-      icon: ChartBar,
-      active: pathname.startsWith("/admin/signals"),
+      href: "/admin/launch-signal",
+      label: t("launch_signal_title") || "Launch Signal",
+      icon: Radio,
+      active: pathname.startsWith("/admin/launch-signal"),
+    },
+  ];
+
+  const systemItems = [
+    {
+      href: "/admin/health",
+      label: t("nav_systemHealth") || "System Health",
+      icon: Activity,
+      active: pathname.startsWith("/admin/health"),
+    },
+    {
+      href: "/admin/billing",
+      label: t("nav_billing") || "Cost & Limits",
+      icon: DollarSign,
+      active: pathname.startsWith("/admin/billing"),
     },
     {
       href: "/admin/resources",
-      label: t("nav_resourceEfficiency") || "Resource Efficiency",
-      icon: Cpu,
+      label: t("nav_resourceEfficiency") || "Capacity & Vendors",
+      icon: Server,
       active: pathname.startsWith("/admin/resources"),
     },
     {
       href: "/admin/integrations",
-      label: t("nav_integrations") || "Integrations",
-      icon: PlugsConnected,
+      label: t("nav_integrations") || "Integrations & APIs",
+      icon: Plug,
       active: pathname.startsWith("/admin/integrations"),
+    },
+    {
+      href: "/admin/feature-flags",
+      label: t("nav_featureFlags") || "Feature Flags",
+      icon: ToggleRight,
+      active: pathname.startsWith("/admin/feature-flags"),
     },
   ];
 
-  // Visibility Flags
-  const showCases = user.role === "ceo" || user.role === "admin" || user.role === "moderator";
-  const showEcosystem = user.role === "ceo" || user.role === "admin";
+  const showOperations = user.role === "ceo" || user.role === "admin" || user.role === "moderator";
+  const showIntelligence = user.role === "ceo" || user.role === "admin";
+  const showGovernance = user.role === "ceo" || user.role === "admin";
   const showGrowth = user.role === "ceo" || user.role === "admin" || user.role === "advisor";
   const showSystem = user.role === "ceo" || user.role === "admin";
 
   const renderNavGroup = (
     id: string,
     title: string,
-    GroupIcon: React.ComponentType<{
-      weight?: "thin" | "light" | "regular" | "bold" | "fill" | "duotone";
-      className?: string;
+    GroupIcon: React.ElementType,
+    groupItems: Array<{
+      href: string;
+      label: string;
+      icon: React.ElementType;
+      active: boolean;
     }>,
-    groupItems: typeof commandItems,
   ) => {
     if (groupItems.length === 0) return null;
     const isExpanded = expandedGroups[id];
@@ -350,7 +272,6 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
                   />
                 )}
                 <Icon
-                  weight="duotone"
                   className={cn(
                     "relative z-10 h-5 w-5 transition-colors duration-300",
                     item.active
@@ -358,7 +279,6 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
                       : "text-fg-muted group-hover:text-fg-primary drop-shadow-[0_0_3px_rgba(255,255,255,0.1)]",
                   )}
                 />
-                {/* Tooltip */}
                 <span className="bg-bg-secondary border-border-subtle pointer-events-none absolute left-14 z-50 hidden rounded-lg border px-3 py-1.5 text-xs font-bold whitespace-nowrap text-white shadow-xl group-hover:block">
                   {item.label}
                 </span>
@@ -376,24 +296,15 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
           className="group text-fg-secondary hover:text-fg-primary flex w-full items-center justify-between px-4 py-2 transition-colors duration-200"
         >
           <div className="flex items-center gap-2.5">
-            <GroupIcon
-              weight="duotone"
-              className="text-brand-400 group-hover:text-brand-300 h-4.5 w-4.5 drop-shadow-[0_0_8px_rgba(168,85,247,0.3)] transition-colors duration-200"
-            />
+            <GroupIcon className="text-brand-400 group-hover:text-brand-300 h-4.5 w-4.5 drop-shadow-[0_0_8px_rgba(168,85,247,0.3)] transition-colors duration-200" />
             <span className="text-fg-primary text-[10px] font-black tracking-wider uppercase">
               {title}
             </span>
           </div>
           {isExpanded ? (
-            <CaretDown
-              weight="bold"
-              className="text-fg-muted group-hover:text-fg-primary h-3.5 w-3.5 transition-colors duration-200"
-            />
+            <ChevronDown className="text-fg-muted group-hover:text-fg-primary h-3.5 w-3.5 transition-colors duration-200" />
           ) : (
-            <CaretRight
-              weight="bold"
-              className="text-fg-muted group-hover:text-fg-primary h-3.5 w-3.5 transition-colors duration-200"
-            />
+            <ChevronRight className="text-fg-muted group-hover:text-fg-primary h-3.5 w-3.5 transition-colors duration-200" />
           )}
         </button>
 
@@ -419,7 +330,6 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
                     />
                   )}
                   <Icon
-                    weight="duotone"
                     className={cn(
                       "relative z-10 h-4 w-4 transition-colors duration-300",
                       item.active
@@ -446,7 +356,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
             onClick={() => setIsOpen(true)}
             className="text-fg-secondary hover:text-fg-primary rounded-xl p-2 transition hover:bg-white/5"
           >
-            <List weight="duotone" className="h-6 w-6" />
+            <Menu className="h-6 w-6" />
           </button>
           <Link href="/admin" className="flex items-center gap-3">
             <Wordmark className="text-xl" />
@@ -506,43 +416,45 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
             title="Toggle Sidebar (Ctrl+B)"
           >
             {isCollapsed ? (
-              <CaretRight weight="bold" className="h-4 w-4" />
+              <ChevronRight className="h-4 w-4" />
             ) : (
-              <CaretLeft weight="bold" className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4" />
             )}
           </button>
         </div>
 
         <nav className="scrollbar-hide flex-1 overflow-y-auto py-4">
           {renderNavGroup(
-            "command",
-            t("nav_group_command") || "Command Center",
-            SquaresFour,
-            commandItems,
+            "overview",
+            t("nav_group_operations") || "Overview",
+            LayoutDashboard,
+            overviewItem,
           )}
-          {showCases &&
-            renderNavGroup("cases", t("nav_group_cases") || "Case Management", Folder, casesItems)}
-          {showEcosystem &&
+          {showOperations &&
             renderNavGroup(
-              "ecosystem",
-              t("nav_group_ecosystem") || "AI Ecosystem",
-              Brain,
-              ecosystemItems,
+              "operations",
+              t("nav_group_operations") || "Operations",
+              Shield,
+              operationsItems,
+            )}
+          {showIntelligence &&
+            renderNavGroup(
+              "intelligence",
+              t("nav_group_intelligence") || "Intelligence",
+              BrainCircuit,
+              intelligenceItems,
+            )}
+          {showGovernance &&
+            renderNavGroup(
+              "governance",
+              t("nav_group_governance") || "Governance",
+              Shield,
+              governanceItems,
             )}
           {showGrowth &&
-            renderNavGroup(
-              "growth",
-              t("nav_group_growth") || "Growth & Strategy",
-              Compass,
-              growthItems,
-            )}
+            renderNavGroup("growth", t("nav_group_growth") || "Growth", TrendingUp, growthItems)}
           {showSystem &&
-            renderNavGroup(
-              "system",
-              t("nav_group_system") || "System & Security",
-              Gear,
-              systemItems,
-            )}
+            renderNavGroup("system", t("nav_group_system") || "System", Settings, systemItems)}
         </nav>
 
         {/* User Profile Footer */}
@@ -572,7 +484,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
                   type="submit"
                   className="text-danger-400 hover:bg-danger-500/10 group relative rounded-xl p-2 transition"
                 >
-                  <SignOut weight="duotone" className="h-5 w-5" />
+                  <LogOut className="h-5 w-5" />
                   <span className="bg-bg-secondary border-border-subtle pointer-events-none absolute left-14 z-50 hidden rounded-lg border px-3 py-1.5 text-xs whitespace-nowrap text-white shadow-xl group-hover:block">
                     {tAuth("signOut") ?? "Sign Out"}
                   </span>
@@ -610,7 +522,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
                   href="/"
                   className="text-fg-muted hover:bg-bg-tertiary/60 hover:text-fg-primary flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition"
                 >
-                  <Globe weight="duotone" className="h-3.5 w-3.5" />
+                  <Globe className="h-3.5 w-3.5" />
                   {tNav("home")}
                 </Link>
                 <LanguageSwitcher className="h-7 text-xs" />
@@ -620,7 +532,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
                     className="text-danger-400 hover:bg-danger-500/10 flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition"
                     title={tAuth("signOut") ?? "Sign Out"}
                   >
-                    <SignOut weight="duotone" className="h-3.5 w-3.5" />
+                    <LogOut className="h-3.5 w-3.5" />
                   </button>
                 </form>
               </div>
