@@ -27,12 +27,7 @@ CREATE POLICY "Public read incident_translations"
 CREATE POLICY "Admin full access incident_translations"
     ON public.incident_translations FOR ALL
     TO authenticated
-    USING (
-        EXISTS (
-            SELECT 1 FROM public.users
-            WHERE users.id = auth.uid() AND users.is_admin = true
-        )
-    );
+    USING (public.is_admin(auth.uid()));
 
 -- -- ROLLBACK:
 -- DROP POLICY IF EXISTS "Admin full access incident_translations" ON public.incident_translations;

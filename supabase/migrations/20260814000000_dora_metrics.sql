@@ -27,12 +27,7 @@ CREATE POLICY "Public read dora_metrics"
 CREATE POLICY "Admin full access dora_metrics"
     ON public.dora_metrics FOR ALL
     TO authenticated
-    USING (
-        EXISTS (
-            SELECT 1 FROM public.users
-            WHERE users.id = auth.uid() AND users.is_admin = true
-        )
-    );
+    USING (public.is_admin(auth.uid()));
 
 -- -- ROLLBACK:
 -- DROP POLICY IF EXISTS "Admin full access dora_metrics" ON public.dora_metrics;

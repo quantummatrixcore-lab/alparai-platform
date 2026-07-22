@@ -50,23 +50,13 @@ CREATE POLICY "Public read geo_citations"
 CREATE POLICY "Admin full access geo_citations"
     ON public.geo_citations FOR ALL
     TO authenticated
-    USING (
-        EXISTS (
-            SELECT 1 FROM public.users
-            WHERE users.id = auth.uid() AND users.is_admin = true
-        )
-    );
+    USING (public.is_admin(auth.uid()));
 
 -- Admin full access to geo_scores
 CREATE POLICY "Admin full access geo_scores"
     ON public.geo_scores FOR ALL
     TO authenticated
-    USING (
-        EXISTS (
-            SELECT 1 FROM public.users
-            WHERE users.id = auth.uid() AND users.is_admin = true
-        )
-    );
+    USING (public.is_admin(auth.uid()));
 
 -- 6. Auto-Prune Function (30-day data retention protecting 500MB DB cap)
 CREATE OR REPLACE FUNCTION public.prune_old_telemetry()
