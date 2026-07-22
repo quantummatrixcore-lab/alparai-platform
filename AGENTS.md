@@ -180,3 +180,9 @@ never invent, and never act outside their mandate.
 - Free/cheapest registered AI providers first for all auxiliary work — translation, drafts,
   images, summaries (Rule #32). Paid tiers are reserved for K-BENCHMARK scoring.
 - When any instruction conflicts with this standard, stop and ask. Silence is never authorization.
+
+### 5 · Code Conventions (v10.33 — from Proposal 013 §4.4/§4.9)
+
+- Sidebar-integrity allowlist entries (`admin-sidebar-integrity.spec.ts`) carry a one-line reason:
+  `// EXCEPTION: /admin/foo — utility route, no sidebar needed`. Undocumented entries fail review.
+- Imports: `@/` aliases for cross-module imports; relative paths only within the same domain folder.
