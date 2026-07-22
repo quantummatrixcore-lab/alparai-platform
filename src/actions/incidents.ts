@@ -422,7 +422,26 @@ export async function preTriageCheck(
     return { ok: false, reason: "Repetitive character frequency exceeds threshold" };
   }
 
-  // 3. Duplicate check in DB (checking last 30 days)
+  // 3. Duplicate check via Upstash Redis edge cache (~0ms) & DB fallback (30 days)
+  const cleanedTitle = title.trim().toLowerCase();
+  const redis = getRedisInstance();
+  const cacheKey = `pretriage:title:${createHash("sha256").update(cleanedTitle).digest("hex")}`;
+
+  if (redis) {
+    try {
+      const isCachedDuplicate = await redis.get<string>(cacheKey);
+      if (isCachedDuplicate) {
+        return {
+          ok: false,
+          reason:
+            "Duplicate check triggered: an incident with this exact title already exists (Redis edge cache hit)",
+        };
+      }
+    } catch {
+      // Redis outage fallback — fail open to DB check
+    }
+  }
+
   const admin = createAdminClient();
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
   const { data: duplicate } = await admin
@@ -434,10 +453,25 @@ export async function preTriageCheck(
     .maybeSingle();
 
   if (duplicate) {
+    if (redis) {
+      try {
+        await redis.set(cacheKey, "1", { ex: 30 * 24 * 60 * 60 });
+      } catch {
+        // Ignored
+      }
+    }
     return {
       ok: false,
       reason: "Duplicate check triggered: an incident with this exact title already exists",
     };
+  }
+
+  if (redis) {
+    try {
+      await redis.set(cacheKey, "1", { ex: 30 * 24 * 60 * 60 });
+    } catch {
+      // Ignored
+    }
   }
 
   return { ok: true };

@@ -88,4 +88,28 @@ describe("preTriageCheck", () => {
     expect(result.ok).toBe(false);
     expect(result.reason).toContain("Duplicate check triggered");
   });
+
+  it("filters synthetic spam batch without reaching LLM moderation (Rule #32 cost win)", async () => {
+    const spamBatch = [
+      { title: "Short", description: "Too short description." },
+      {
+        title: "Valid Incident Title",
+        description:
+          "asdfasdf qwertyqwerty asdfasdf qwertyqwerty asdfasdf qwertyqwerty asdfasdf qwertyqwerty",
+      },
+      {
+        title: "Another Valid Title",
+        description:
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      },
+    ];
+
+    let rejectedCount = 0;
+    for (const item of spamBatch) {
+      const res = await preTriageCheck(item.title, item.description);
+      if (!res.ok) rejectedCount++;
+    }
+
+    expect(rejectedCount).toBe(spamBatch.length);
+  });
 });
