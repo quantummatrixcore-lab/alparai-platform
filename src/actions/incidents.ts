@@ -617,6 +617,10 @@ export async function submitIncident(
   if (result.kind === "ok") {
     const incidentId = result.value.id;
 
+    import("@/actions/translations").then(({ translateIncidentToTR }) => {
+      translateIncidentToTR(incidentId).catch(() => {});
+    });
+
     if (clientIdempotencyKey) {
       const redis = getRedisInstance();
       if (redis) {

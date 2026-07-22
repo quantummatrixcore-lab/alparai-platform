@@ -184,6 +184,14 @@ export async function importIncidents(
     }
 
     result.inserted += data?.length ?? 0;
+
+    if (data && data.length > 0) {
+      import("@/actions/translations").then(({ translateIncidentToTR }) => {
+        for (const item of data) {
+          translateIncidentToTR(item.id).catch(() => {});
+        }
+      });
+    }
   }
 
   logger.info("Import pipeline completed", {

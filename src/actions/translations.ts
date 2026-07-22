@@ -82,11 +82,17 @@ Description: "${incident.description}"
     return false;
   }
 
-  const { error: updateError } = await admin
-    .from("incidents")
+  const { error: updateError } = await (
+    admin.from("incidents") as unknown as {
+      update: (values: unknown) => {
+        eq: (col: string, val: string) => Promise<{ error: { message: string } | null }>;
+      };
+    }
+  )
     .update({
       title_tr: translated.title_tr,
       description_tr: translated.description_tr,
+      machine_translated: true,
     })
     .eq("id", incidentId);
 
