@@ -1,14 +1,13 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { Container } from "@/components/ui/layout";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { MetricWidget } from "@/components/ui/metric-widget";
+import { QuickActionGrid, type QuickAction } from "@/components/ui/quick-action-grid";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { formatDate } from "@/lib/utils";
-import { Users } from "lucide-react";
+import { Users, UserPlus, Shield, ShieldCheck, Download, Mail } from "lucide-react";
 import { PromoteUserForm } from "@/components/admin/promote-user-form";
-import { RoleSelect } from "@/components/admin/role-select";
+import { UsersClient } from "@/app/[locale]/admin/users/users-client";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -31,6 +30,24 @@ export default async function AdminUsersPage({ params }: { params: Promise<{ loc
     .order("created_at", { ascending: false })
     .limit(100);
 
+  const users = (data as Array<Record<string, unknown>>) ?? [];
+  const adminCount = users.filter((u) => u["role"] === "admin" || u["role"] === "ceo").length;
+  const moderatorCount = users.filter((u) => u["role"] === "moderator").length;
+  const verifiedCount = users.filter((u) => u["is_verified"]).length;
+
+  const quickActions: QuickAction[] = [
+    { id: "invite", icon: UserPlus, label: "Invite User", onClick: () => {} },
+    {
+      id: "moderators",
+      icon: Shield,
+      label: "Moderators",
+      description: `${moderatorCount} active`,
+      onClick: () => {},
+    },
+    { id: "export", icon: Download, label: "Export CSV", onClick: () => {} },
+    { id: "contact", icon: Mail, label: "Contact All", onClick: () => {} },
+  ];
+
   return (
     <Container className="py-10">
       <header className="mb-6 flex flex-wrap items-start justify-between gap-4">
@@ -42,51 +59,22 @@ export default async function AdminUsersPage({ params }: { params: Promise<{ loc
         </div>
         <PromoteUserForm currentUserRole={user.role} />
       </header>
-      <Card>
-        <CardContent className="p-0">
-          <table className="w-full text-sm">
-            <caption className="sr-only">Registered Users Table</caption>
-            <thead>
-              <tr className="border-border-subtle text-fg-muted border-b text-left text-xs font-semibold tracking-wider uppercase">
-                <th className="p-4">{t("name")}</th>
-                <th className="p-4">{t("email")}</th>
-                <th className="p-4">{t("role")}</th>
-                <th className="p-4">{t("status")}</th>
-                <th className="p-4 text-right">{t("joined")}</th>
-              </tr>
-            </thead>
-            <tbody className="divide-border-subtle divide-y">
-              {((data as Array<Record<string, unknown>>) ?? []).map((u) => (
-                <tr key={u["id"] as string} className="hover:bg-bg-tertiary/30">
-                  <td className="text-fg-primary p-4">
-                    {(u["full_name"] as string | null) ?? "—"}
-                  </td>
-                  <td className="text-fg-muted p-4 text-xs">{(u["email"] as string) ?? "—"}</td>
-                  <td className="p-4">
-                    <RoleSelect
-                      userId={u["id"] as string}
-                      currentRole={(u["role"] as string) ?? "user"}
-                      currentUserRole={user.role as "user" | "moderator" | "admin" | "ceo"}
-                    />
-                  </td>
-                  <td className="p-4">
-                    {u["is_verified"] ? (
-                      <Badge variant="success" dot>
-                        {t("verified")}
-                      </Badge>
-                    ) : (
-                      <Badge variant="muted">{t("active")}</Badge>
-                    )}
-                  </td>
-                  <td className="text-fg-muted p-4 text-right">
-                    {formatDate(new Date(u["created_at"] as string), locale)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </CardContent>
-      </Card>
+
+      <div className="mb-6 grid gap-3 sm:grid-cols-3">
+        <MetricWidget icon={Users} label="Total Users" value={users.length} />
+        <MetricWidget icon={Shield} label="Admins" value={adminCount} />
+        <MetricWidget icon={ShieldCheck} label="Verified" value={verifiedCount} />
+      </div>
+
+      <div className="mb-6">
+        <QuickActionGrid actions={quickActions} columns={4} />
+      </div>
+
+      <UsersClient
+        users={users}
+        userRole={user.role as "user" | "moderator" | "admin" | "ceo"}
+        locale={locale}
+      />
     </Container>
   );
 }

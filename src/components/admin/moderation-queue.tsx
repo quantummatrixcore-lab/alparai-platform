@@ -1,12 +1,25 @@
 "use client";
 
 import * as React from "react";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Check, X, Eye, MessageSquare, Code, Cpu, Inbox, ArrowRight } from "lucide-react";
+import { MetricWidget } from "@/components/ui/metric-widget";
+import { SegmentedControl, type SegmentedOption } from "@/components/ui/segmented-control";
+import {
+  Check,
+  X,
+  Eye,
+  MessageSquare,
+  Code,
+  Cpu,
+  Inbox,
+  ArrowRight,
+  AlertTriangle,
+  ShieldCheck,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { moderateIncident } from "@/actions/admin";
 import { autoModerateIncidentAction } from "@/actions/autopilot-moderate";
@@ -16,8 +29,32 @@ import { useLocale } from "next-intl";
 import { Link } from "@/i18n/routing";
 import type { IncidentListItem } from "@/types";
 
+const severityOptions: SegmentedOption[] = [
+  { value: "all", label: "All" },
+  { value: "critical", label: "Critical" },
+  { value: "high", label: "High" },
+  { value: "medium", label: "Medium" },
+  { value: "low", label: "Low" },
+];
+
 export function ModerationQueue({ incidents }: { incidents: IncidentListItem[] }) {
   const t = useTranslations("admin");
+  const [filterSeverity, setFilterSeverity] = useState("all");
+
+  const criticalCount = useMemo(
+    () => incidents.filter((i) => i.severity === "critical").length,
+    [incidents],
+  );
+  const highCount = useMemo(
+    () => incidents.filter((i) => i.severity === "high").length,
+    [incidents],
+  );
+
+  const filtered = useMemo(
+    () =>
+      filterSeverity === "all" ? incidents : incidents.filter((i) => i.severity === filterSeverity),
+    [incidents, filterSeverity],
+  );
 
   if (incidents.length === 0) {
     return (
@@ -43,10 +80,42 @@ export function ModerationQueue({ incidents }: { incidents: IncidentListItem[] }
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2">
-      {incidents.map((inc) => (
-        <ModerationCard key={inc.id} incident={inc} />
-      ))}
+    <div className="space-y-6">
+      <div className="grid gap-3 sm:grid-cols-3">
+        <MetricWidget
+          icon={Inbox}
+          label="Total Pending"
+          value={incidents.length}
+          trend={criticalCount > 0 ? "up" : "neutral"}
+          trendValue={criticalCount > 0 ? `${criticalCount} critical` : "0 critical"}
+        />
+        <MetricWidget
+          icon={AlertTriangle}
+          label="High / Critical"
+          value={criticalCount + highCount}
+          trend={criticalCount + highCount > 0 ? "down" : "neutral"}
+          trendValue={`${highCount} high`}
+        />
+        <MetricWidget
+          icon={ShieldCheck}
+          label="Moderated Today"
+          value={incidents.length - filtered.length}
+          trend="neutral"
+          trendValue="pending"
+        />
+      </div>
+
+      <SegmentedControl
+        options={severityOptions}
+        value={filterSeverity}
+        onChange={setFilterSeverity}
+      />
+
+      <div className="grid gap-6 md:grid-cols-2">
+        {filtered.map((inc) => (
+          <ModerationCard key={inc.id} incident={inc} />
+        ))}
+      </div>
     </div>
   );
 }
