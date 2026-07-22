@@ -701,6 +701,7 @@
     "nav_group_operations": "Operations",
     "nav_group_community": "Community & Growth",
     "nav_group_settings": "System Settings",
+    "nav_group_strategy": "Strategy",
     "nav_group_finance": "Finance & FinOps",
     "nav_group_intelligence": "Intelligence",
     "nav_group_governance": "Governance",
@@ -1734,8 +1735,7 @@
     "dismiss": "Dismiss",
     "cookiePreferences": "Cookie preferences",
     "select": "Select",
-    "machine_translated": "Machine translated",
-    "_machineTranslated": "true"
+    "machine_translated": "Machine translated"
   },
   "autopilot": {
     "dashboard": "Dashboard",
