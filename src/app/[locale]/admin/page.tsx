@@ -60,19 +60,33 @@ export default async function AdminDashboardPage({
       <AdminPageHeader
         icon={<Shield className="h-7 w-7 text-emerald-400" />}
         title={t("dashboard") || "Control Center"}
-        subtitle="360-degree platform monitoring and operations cockpit."
+        subtitle={
+          t("dashboard_subtitle") || "360-degree platform monitoring and operations cockpit."
+        }
       />
 
       {/* Top Row: 4 Metric Cards */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard label="Incident Volume" value={total ?? 0} variant="default" />
         <MetricCard
-          label="Moderation Queue Load"
+          label={t("metric_incident_volume") || "Incident Volume"}
+          value={total ?? 0}
+          variant="default"
+        />
+        <MetricCard
+          label={t("metric_queue_load") || "Moderation Queue Load"}
           value={pending ?? 0}
           variant={(pending ?? 0) > 5 ? "danger" : (pending ?? 0) > 0 ? "warning" : "success"}
         />
-        <MetricCard label="API Monthly Costs" value="$241.50 / $500" variant="default" />
-        <MetricCard label="Autopilot Guard" value="ACTIVE" variant="success" />
+        <MetricCard
+          label={t("metric_api_costs") || "API Monthly Costs"}
+          value="$241.50 / $500"
+          variant="default"
+        />
+        <MetricCard
+          label={t("metric_autopilot_guard") || "Autopilot Guard"}
+          value="ACTIVE"
+          variant="success"
+        />
       </div>
 
       <OverviewDashboardClient queue={queue} locale={locale} />

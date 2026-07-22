@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import {
@@ -122,7 +121,7 @@ export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClie
           <div className="flex flex-col items-center gap-3 p-2">
             <Gauge value={systemHealth} size="lg" sublabel="%" />
             <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
-              System Health
+              {t("system_health") || "System Health"}
             </span>
           </div>
         </AdminSectionCard>
@@ -130,7 +129,7 @@ export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClie
           <div className="flex flex-col items-center gap-3 p-2">
             <Gauge value={uptime} size="lg" sublabel="%" variant="success" />
             <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
-              Uptime (30d)
+              {t("uptime_30d") || "Uptime (30d)"}
             </span>
           </div>
         </AdminSectionCard>
@@ -141,7 +140,7 @@ export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClie
               <AnimatedCounter value={queue.length} className="text-3xl text-white" />
             </div>
             <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
-              Pending Reviews
+              {t("pending_reviews") || "Pending Reviews"}
             </span>
           </div>
         </AdminSectionCard>
@@ -208,12 +207,12 @@ export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClie
         </div>
 
         <div className="lg:col-span-1">
-          <AdminSectionCard title="Autopilot Logs & Health">
+          <AdminSectionCard title={t("autopilot_logs_health") || "Autopilot Logs & Health"}>
             <div className="flex h-64 flex-col justify-between p-6">
               <div className="mb-4 flex items-center justify-between rounded-lg border border-white/5 bg-neutral-950/40 p-3 shadow-inner">
                 <span className="text-fg-muted flex items-center gap-1.5 text-[10px] font-bold tracking-wider uppercase">
                   <Cpu className="h-3.5 w-3.5 text-purple-400" />
-                  Shield Guard Status
+                  {t("shield_guard_status") || "Shield Guard Status"}
                 </span>
                 <LivePulseRing status="healthy" size="sm" label="ONLINE" />
               </div>
@@ -250,11 +249,11 @@ export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClie
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-border-subtle text-fg-muted border-b bg-neutral-950/20 text-xs font-semibold tracking-wider uppercase">
-                <th className="p-4 pl-6">Reported At</th>
-                <th className="p-4">Incident Title</th>
-                <th className="p-4">Category</th>
-                <th className="p-4">Severity</th>
-                <th className="p-4 pr-6 text-right">Actions</th>
+                <th className="p-4 pl-6">{t("col_reported_at") || "Reported At"}</th>
+                <th className="p-4">{t("col_incident_title") || "Incident Title"}</th>
+                <th className="p-4">{t("category") || "Category"}</th>
+                <th className="p-4">{t("severity") || "Severity"}</th>
+                <th className="p-4 pr-6 text-right">{t("actions") || "Actions"}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
@@ -298,7 +297,7 @@ export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClie
                 <tr>
                   <td colSpan={5} className="text-fg-muted p-12 text-center">
                     <CheckCircle className="mx-auto mb-3 h-8 w-8 text-emerald-500/30" />
-                    All clear! No pending incidents in moderation queue.
+                    {t("queue_all_clear") || "All clear! No pending incidents in moderation queue."}
                   </td>
                 </tr>
               )}

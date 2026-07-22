@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { StatsCards } from "./stats-cards";
 import { ApprovalQueue } from "./approval-queue";
 import { LiveFeed } from "./live-feed";
@@ -24,16 +25,18 @@ interface DashboardData {
 }
 
 export function EcosystemDashboard({ data }: { data: DashboardData }) {
+  const t = useTranslations("admin");
+
   return (
     <div className="animate-in fade-in space-y-6 duration-500">
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">
-            Ecosystem Intelligence Hub
+            {t("ecosystem_hub_title") || "Ecosystem Intelligence Hub"}
           </h1>
           <p className="text-fg-secondary mt-2">
-            Monitor AI ecosystem news, review external incident submissions, and track positive
-            developments — all in one place.
+            {t("ecosystem_hub_subtitle") ||
+              "Monitor AI ecosystem news, review external incident submissions, and track positive developments — all in one place."}
           </p>
         </div>
         <ManualFetchButton />
