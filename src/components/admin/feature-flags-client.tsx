@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AdminSectionCard } from "@/components/admin/admin-design-kit";
-import { toggleFeatureFlagAction, FeatureFlagItem } from "@/actions/system-mgmt";
+import { toggleFeatureFlagAction, type FeatureFlagItem } from "@/actions/system-mgmt";
 import { ToggleLeft, ToggleRight, ShieldCheck, Zap } from "lucide-react";
 
 interface FeatureFlagsClientProps {
@@ -20,9 +20,7 @@ export function FeatureFlagsClient({ initialFlags }: FeatureFlagsClientProps) {
     setUpdatingKey(null);
 
     if (res.success) {
-      setFlags((prev) =>
-        prev.map((f) => (f.key === key ? { ...f, enabled: newEnabled } : f)),
-      );
+      setFlags((prev) => prev.map((f) => (f.key === key ? { ...f, enabled: newEnabled } : f)));
     }
   };
 
@@ -31,21 +29,24 @@ export function FeatureFlagsClient({ initialFlags }: FeatureFlagsClientProps) {
       <AdminSectionCard title="Runtime Feature Flag Controls">
         <div className="divide-y divide-white/10 p-6">
           {flags.map((flag) => (
-            <div key={flag.key} className="flex items-center justify-between py-4 first:pt-0 last:pb-0">
+            <div
+              key={flag.key}
+              className="flex items-center justify-between py-4 first:pt-0 last:pb-0"
+            >
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-sm font-bold text-white">{flag.key}</span>
                   <span
                     className={`rounded px-2 py-0.5 font-mono text-[10px] font-bold uppercase ${
                       flag.enabled
-                        ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                        : "bg-white/10 text-fg-muted"
+                        ? "border border-emerald-500/30 bg-emerald-500/20 text-emerald-400"
+                        : "text-fg-muted bg-white/10"
                     }`}
                   >
                     {flag.enabled ? "ACTIVE" : "DISABLED"}
                   </span>
                 </div>
-                <p className="text-xs text-fg-muted">{flag.description}</p>
+                <p className="text-fg-muted text-xs">{flag.description}</p>
               </div>
 
               <button
@@ -61,7 +62,7 @@ export function FeatureFlagsClient({ initialFlags }: FeatureFlagsClientProps) {
                   </>
                 ) : (
                   <>
-                    <ToggleLeft className="h-6 w-6 text-fg-muted" />
+                    <ToggleLeft className="text-fg-muted h-6 w-6" />
                     <span className="text-fg-muted">OFF</span>
                   </>
                 )}
@@ -72,14 +73,16 @@ export function FeatureFlagsClient({ initialFlags }: FeatureFlagsClientProps) {
       </AdminSectionCard>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-lg border border-white/10 bg-white/5 p-4 text-xs text-fg-muted space-y-1">
-          <span className="font-bold text-white flex items-center gap-1.5">
+        <div className="text-fg-muted space-y-1 rounded-lg border border-white/10 bg-white/5 p-4 text-xs">
+          <span className="flex items-center gap-1.5 font-bold text-white">
             <Zap className="h-4 w-4 text-amber-400" /> Edge Cache Speed
           </span>
-          <p>Flags are cached in Upstash Redis (`ff:{key}`) for 60s with ~0ms edge evaluation.</p>
+          <p>
+            Flags are cached in Upstash Redis (`ff:&lt;key&gt;`) for 60s with ~0ms edge evaluation.
+          </p>
         </div>
-        <div className="rounded-lg border border-white/10 bg-white/5 p-4 text-xs text-fg-muted space-y-1">
-          <span className="font-bold text-white flex items-center gap-1.5">
+        <div className="text-fg-muted space-y-1 rounded-lg border border-white/10 bg-white/5 p-4 text-xs">
+          <span className="flex items-center gap-1.5 font-bold text-white">
             <ShieldCheck className="h-4 w-4 text-emerald-400" /> RLS Protection
           </span>
           <p>Table writes restricted to authenticated admins (`is_admin = true`).</p>

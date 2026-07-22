@@ -18,19 +18,48 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
   const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "20", 10)));
-  const vendor = searchParams.get("vendor");
+  const _vendor = searchParams.get("vendor");
   const offset = (page - 1) * limit;
 
   const admin = createAdminClient();
   const db = admin as unknown as {
     from: (table: string) => {
-      select: (cols: string, opts: { count: string }) => {
-        eq: (col: string, val: boolean) => {
-          order: (col: string, opts: { ascending: boolean }) => {
-            range: (from: number, to: number) => Promise<{ data: PublicIncidentItem[] | null; count: number | null; error: { message: string } | null }>;
-            ilike?: (col: string, pattern: string) => {
-              order: (col: string, opts: { ascending: boolean }) => {
-                range: (from: number, to: number) => Promise<{ data: PublicIncidentItem[] | null; count: number | null; error: { message: string } | null }>;
+      select: (
+        cols: string,
+        opts: { count: string },
+      ) => {
+        eq: (
+          col: string,
+          val: boolean,
+        ) => {
+          order: (
+            col: string,
+            opts: { ascending: boolean },
+          ) => {
+            range: (
+              from: number,
+              to: number,
+            ) => Promise<{
+              data: PublicIncidentItem[] | null;
+              count: number | null;
+              error: { message: string } | null;
+            }>;
+            ilike?: (
+              col: string,
+              pattern: string,
+            ) => {
+              order: (
+                col: string,
+                opts: { ascending: boolean },
+              ) => {
+                range: (
+                  from: number,
+                  to: number,
+                ) => Promise<{
+                  data: PublicIncidentItem[] | null;
+                  count: number | null;
+                  error: { message: string } | null;
+                }>;
               };
             };
           };
@@ -42,7 +71,9 @@ export async function GET(request: Request) {
   try {
     const { data, count, error } = await db
       .from("incidents")
-      .select("id, title, description, vendor, severity, created_at, published_at, source_url", { count: "exact" })
+      .select("id, title, description, vendor, severity, created_at, published_at, source_url", {
+        count: "exact",
+      })
       .eq("published", true)
       .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);

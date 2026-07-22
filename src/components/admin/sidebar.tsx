@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import * as React from "react";
 import { useState, useEffect } from "react";
@@ -224,6 +224,18 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       label: t("nav_featureFlags") || "Feature Flags",
       icon: ToggleRight,
       active: pathname.startsWith("/admin/feature-flags"),
+    },
+    {
+      href: "/admin/settings",
+      label: "Settings & Security",
+      icon: Settings,
+      active: pathname.startsWith("/admin/settings"),
+    },
+    {
+      href: "/admin/crons",
+      label: "Cron Topology",
+      icon: Shield,
+      active: pathname.startsWith("/admin/crons"),
     },
   ];
 

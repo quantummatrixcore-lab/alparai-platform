@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 import { AdminSectionCard } from "@/components/admin/admin-design-kit";
-import type { SystemHealthReport } from "@/lib/health/system-health";
+import type { UnifiedHealthReport } from "@/lib/health/system-health";
 import { RefreshCw, CheckCircle2, AlertTriangle, XCircle, Bell } from "lucide-react";
 
 interface HealthDashboardClientProps {
-  initialReport: SystemHealthReport;
+  initialReport: UnifiedHealthReport;
 }
 
 export function HealthDashboardClient({ initialReport }: HealthDashboardClientProps) {
-  const [report, setReport] = useState<SystemHealthReport>(initialReport);
+  const [report, setReport] = useState<UnifiedHealthReport>(initialReport);
   const [refreshing, setRefreshing] = useState(false);
 
   const handleRefresh = async () => {
@@ -51,17 +51,17 @@ export function HealthDashboardClient({ initialReport }: HealthDashboardClientPr
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span
-            className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ${
+            className={`rounded-full px-3 py-1 text-xs font-bold tracking-wider uppercase ${
               report.overall === "healthy"
-                ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                ? "border border-emerald-500/30 bg-emerald-500/20 text-emerald-400"
                 : report.overall === "degraded"
-                  ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
-                  : "bg-rose-500/20 text-rose-400 border border-rose-500/30"
+                  ? "border border-amber-500/30 bg-amber-500/20 text-amber-400"
+                  : "border border-rose-500/30 bg-rose-500/20 text-rose-400"
             }`}
           >
             System Status: {report.overall}
           </span>
-          <span className="text-xs text-fg-muted font-mono">
+          <span className="text-fg-muted font-mono text-xs">
             Checked: {new Date(report.timestamp).toLocaleTimeString()}
           </span>
         </div>
@@ -79,18 +79,18 @@ export function HealthDashboardClient({ initialReport }: HealthDashboardClientPr
 
       <AdminSectionCard title="9-Subsystem Health Grid">
         <div className="grid gap-4 p-6 sm:grid-cols-2 lg:grid-cols-3">
-          {Object.entries(report.subsystems || {}).map(([key, sub]) => (
+          {(report.subsystems || []).map((sub) => (
             <div
-              key={key}
-              className="rounded-lg border border-white/10 bg-black/40 p-4 space-y-2 hover:border-white/20 transition"
+              key={sub.name}
+              className="space-y-2 rounded-lg border border-white/10 bg-black/40 p-4 transition hover:border-white/20"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono font-bold text-white uppercase">{key}</span>
+                <span className="font-mono text-xs font-bold text-white uppercase">{sub.name}</span>
                 {getStatusBadge(sub.status)}
               </div>
-              <p className="text-[11px] text-fg-muted">{sub.message}</p>
+              {sub.message && <p className="text-fg-muted text-[11px]">{sub.message}</p>}
               {sub.latencyMs !== undefined && (
-                <div className="text-[10px] font-mono text-fg-muted">
+                <div className="text-fg-muted font-mono text-[10px]">
                   Latency: <span className="text-white">{sub.latencyMs}ms</span>
                 </div>
               )}
@@ -100,7 +100,7 @@ export function HealthDashboardClient({ initialReport }: HealthDashboardClientPr
       </AdminSectionCard>
 
       <AdminSectionCard title="SLA Alarms & Incidents Log (sla_alarms)">
-        <div className="p-6 text-xs text-fg-muted space-y-3">
+        <div className="text-fg-muted space-y-3 p-6 text-xs">
           <div className="flex items-center justify-between rounded border border-emerald-500/20 bg-emerald-500/10 p-3 text-emerald-300">
             <span className="flex items-center gap-2 font-medium">
               <Bell className="h-4 w-4" /> SLA Alarm Monitor Active
@@ -108,7 +108,8 @@ export function HealthDashboardClient({ initialReport }: HealthDashboardClientPr
             <span className="font-mono text-[10px]">0 Active Breaches</span>
           </div>
           <p className="text-[11px]">
-            Automated alerts trigger to `sla_alarms` table and email notifications if latency exceeds &gt;500ms or error rates exceed &gt;1%.
+            Automated alerts trigger to `sla_alarms` table and email notifications if latency
+            exceeds &gt;500ms or error rates exceed &gt;1%.
           </p>
         </div>
       </AdminSectionCard>

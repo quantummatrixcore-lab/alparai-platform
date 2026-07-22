@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AdminSectionCard } from "@/components/admin/admin-design-kit";
 import { Gauge } from "@/components/admin/premium/gauge";
 import { addGeoCitationAction } from "@/actions/geo";
-import { Globe, Bot, Award, FileText, Plus, CheckCircle2 } from "lucide-react";
+import { Bot, Award, FileText, Plus, CheckCircle2 } from "lucide-react";
 
 interface CitationItem {
   id?: string;
@@ -73,8 +73,9 @@ export function GeoDashboardClient({
             <Gauge value={initialScore} size="lg" sublabel="Authority Index" variant="success" />
             <div className="mt-4 space-y-1">
               <p className="text-xs font-semibold text-emerald-400">High Citability Status</p>
-              <p className="text-[11px] text-fg-muted">
-                Weighted composite score across JSON-LD valid ratio, /llms.txt availability, and AI engine citation volume.
+              <p className="text-fg-muted text-[11px]">
+                Weighted composite score across JSON-LD valid ratio, /llms.txt availability, and AI
+                engine citation volume.
               </p>
             </div>
           </div>
@@ -83,7 +84,7 @@ export function GeoDashboardClient({
         <AdminSectionCard title="AI-Crawler Live Traffic Gauge">
           <div className="space-y-4 p-6">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-fg-primary flex items-center gap-2">
+              <span className="text-fg-primary flex items-center gap-2 text-xs font-bold">
                 <Bot className="h-4 w-4 text-emerald-400" /> Total 24h Bot Hits
               </span>
               <span className="font-mono text-xl font-bold text-emerald-400">{totalBotHits}</span>
@@ -91,19 +92,27 @@ export function GeoDashboardClient({
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div className="rounded border border-white/10 bg-white/5 p-2.5">
                 <span className="text-fg-muted block text-[10px]">GPTBot (OpenAI)</span>
-                <span className="font-mono text-sm font-semibold text-cyan-400">{botHits.gptbot}</span>
+                <span className="font-mono text-sm font-semibold text-cyan-400">
+                  {botHits.gptbot}
+                </span>
               </div>
               <div className="rounded border border-white/10 bg-white/5 p-2.5">
                 <span className="text-fg-muted block text-[10px]">ClaudeBot (Anthropic)</span>
-                <span className="font-mono text-sm font-semibold text-purple-400">{botHits.claudebot}</span>
+                <span className="font-mono text-sm font-semibold text-purple-400">
+                  {botHits.claudebot}
+                </span>
               </div>
               <div className="rounded border border-white/10 bg-white/5 p-2.5">
                 <span className="text-fg-muted block text-[10px]">PerplexityBot</span>
-                <span className="font-mono text-sm font-semibold text-amber-400">{botHits.perplexitybot}</span>
+                <span className="font-mono text-sm font-semibold text-amber-400">
+                  {botHits.perplexitybot}
+                </span>
               </div>
               <div className="rounded border border-white/10 bg-white/5 p-2.5">
                 <span className="text-fg-muted block text-[10px]">Google-Extended</span>
-                <span className="font-mono text-sm font-semibold text-blue-400">{botHits.googleExtended}</span>
+                <span className="font-mono text-sm font-semibold text-blue-400">
+                  {botHits.googleExtended}
+                </span>
               </div>
             </div>
           </div>
@@ -115,11 +124,11 @@ export function GeoDashboardClient({
         <form onSubmit={handleSubmit} className="space-y-4 p-6">
           <div className="grid gap-4 sm:grid-cols-3">
             <div>
-              <label className="block text-xs font-semibold text-fg-muted mb-1">AI Engine</label>
+              <label className="text-fg-muted mb-1 block text-xs font-semibold">AI Engine</label>
               <select
                 value={form.ai_engine}
                 onChange={(e) => setForm({ ...form, ai_engine: e.target.value })}
-                className="w-full rounded border border-white/10 bg-black/40 px-3 py-2 text-xs text-fg-primary focus:outline-none focus:border-emerald-500"
+                className="text-fg-primary w-full rounded border border-white/10 bg-black/40 px-3 py-2 text-xs focus:border-emerald-500 focus:outline-none"
               >
                 <option value="ChatGPT / GPTBot">ChatGPT / GPTBot</option>
                 <option value="Claude / ClaudeBot">Claude / ClaudeBot</option>
@@ -129,35 +138,39 @@ export function GeoDashboardClient({
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-fg-muted mb-1">Prompt / Query</label>
+              <label className="text-fg-muted mb-1 block text-xs font-semibold">
+                Prompt / Query
+              </label>
               <input
                 type="text"
                 value={form.query}
                 onChange={(e) => setForm({ ...form, query: e.target.value })}
                 placeholder="e.g. List major AI failure registries"
-                className="w-full rounded border border-white/10 bg-black/40 px-3 py-2 text-xs text-fg-primary focus:outline-none focus:border-emerald-500"
+                className="text-fg-primary w-full rounded border border-white/10 bg-black/40 px-3 py-2 text-xs focus:border-emerald-500 focus:outline-none"
                 required
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-fg-muted mb-1">Cited URL</label>
+              <label className="text-fg-muted mb-1 block text-xs font-semibold">Cited URL</label>
               <input
                 type="url"
                 value={form.cited_url}
                 onChange={(e) => setForm({ ...form, cited_url: e.target.value })}
                 placeholder="https://alparai.com/incidents/..."
-                className="w-full rounded border border-white/10 bg-black/40 px-3 py-2 text-xs text-fg-primary focus:outline-none focus:border-emerald-500"
+                className="text-fg-primary w-full rounded border border-white/10 bg-black/40 px-3 py-2 text-xs focus:border-emerald-500 focus:outline-none"
                 required
               />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-fg-muted mb-1">Cited Snippet (Optional)</label>
+            <label className="text-fg-muted mb-1 block text-xs font-semibold">
+              Cited Snippet (Optional)
+            </label>
             <textarea
               value={form.passage_snippet}
               onChange={(e) => setForm({ ...form, passage_snippet: e.target.value })}
               placeholder="Excerpt cited by the LLM response..."
-              className="w-full rounded border border-white/10 bg-black/40 px-3 py-2 text-xs text-fg-primary focus:outline-none focus:border-emerald-500 h-20"
+              className="text-fg-primary h-20 w-full rounded border border-white/10 bg-black/40 px-3 py-2 text-xs focus:border-emerald-500 focus:outline-none"
             />
           </div>
           <div className="flex items-center justify-between">
@@ -170,7 +183,7 @@ export function GeoDashboardClient({
               {submitting ? "Saving..." : "Record Citation"}
             </button>
             {successMsg && (
-              <span className="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+              <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-400">
                 <CheckCircle2 className="h-4 w-4" /> Citation logged successfully
               </span>
             )}
@@ -184,20 +197,20 @@ export function GeoDashboardClient({
           <div className="p-6">
             <div className="space-y-3">
               <div className="flex items-center justify-between border-b border-white/10 pb-2 text-xs">
-                <span className="font-bold text-white flex items-center gap-2">
+                <span className="flex items-center gap-2 font-bold text-white">
                   <Award className="h-4 w-4 text-emerald-400" /> ALPAR AI (Our Registry)
                 </span>
-                <span className="font-mono text-emerald-400 font-bold">88.5 / 100</span>
+                <span className="font-mono font-bold text-emerald-400">88.5 / 100</span>
               </div>
-              <div className="flex items-center justify-between border-b border-white/10 pb-2 text-xs text-fg-muted">
+              <div className="text-fg-muted flex items-center justify-between border-b border-white/10 pb-2 text-xs">
                 <span>AI Incident Database (AIID)</span>
                 <span className="font-mono">64.2 / 100</span>
               </div>
-              <div className="flex items-center justify-between border-b border-white/10 pb-2 text-xs text-fg-muted">
+              <div className="text-fg-muted flex items-center justify-between border-b border-white/10 pb-2 text-xs">
                 <span>EU AI Observatory</span>
                 <span className="font-mono">58.0 / 100</span>
               </div>
-              <div className="flex items-center justify-between text-xs text-fg-muted">
+              <div className="text-fg-muted flex items-center justify-between text-xs">
                 <span>OECD AI Policy Observatory</span>
                 <span className="font-mono">51.5 / 100</span>
               </div>
@@ -206,17 +219,18 @@ export function GeoDashboardClient({
         </AdminSectionCard>
 
         <AdminSectionCard title="Passage Citability Suggestions">
-          <div className="space-y-3 p-6 text-xs text-fg-muted">
+          <div className="text-fg-muted space-y-3 p-6 text-xs">
             <div className="rounded border border-amber-500/20 bg-amber-500/10 p-3 text-amber-300">
-              <p className="font-semibold flex items-center gap-1.5 mb-1">
+              <p className="mb-1 flex items-center gap-1.5 font-semibold">
                 <FileText className="h-4 w-4" /> Add Structured Key Findings Box
               </p>
               <p className="text-[11px]">
-                LLMs extract blockquotes with clear quantitative figures 3.4× more often. Ensure every incident summary starts with a 2-sentence executive summary.
+                LLMs extract blockquotes with clear quantitative figures 3.4× more often. Ensure
+                every incident summary starts with a 2-sentence executive summary.
               </p>
             </div>
             <div className="rounded border border-white/10 bg-white/5 p-3">
-              <p className="font-semibold text-fg-primary mb-1">Schema.org ClaimReview Alignment</p>
+              <p className="text-fg-primary mb-1 font-semibold">Schema.org ClaimReview Alignment</p>
               <p className="text-[11px]">
                 Valid JSON-LD ClaimReview tags are present on 100% of incident detail pages.
               </p>
@@ -233,7 +247,7 @@ export function GeoDashboardClient({
               <div key={c.id} className="py-3 text-xs">
                 <div className="flex items-center justify-between">
                   <span className="font-semibold text-emerald-400">{c.ai_engine}</span>
-                  <span className="text-[10px] text-fg-muted">
+                  <span className="text-fg-muted text-[10px]">
                     {c.created_at ? new Date(c.created_at).toLocaleDateString() : "Just now"}
                   </span>
                 </div>
@@ -242,7 +256,7 @@ export function GeoDashboardClient({
                   href={c.cited_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-fg-muted hover:text-white underline block mt-1 text-[11px] truncate"
+                  className="text-fg-muted mt-1 block truncate text-[11px] underline hover:text-white"
                 >
                   {c.cited_url}
                 </a>
