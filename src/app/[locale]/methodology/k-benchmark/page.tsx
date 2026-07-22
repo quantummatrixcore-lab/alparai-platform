@@ -45,7 +45,7 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
         <h2 className="text-fg-primary mb-4 text-2xl font-semibold">{t("scoringTitle")}</h2>
         <p className="text-fg-muted mb-4 leading-relaxed">{t("scoringText")}</p>
         <div className="border-border-subtle bg-bg-elevated rounded-lg border p-4">
-          <pre className="text-fg-muted overflow-x-auto text-sm">
+          <pre className="text-fg-muted overflow-x-auto text-sm" tabIndex={0}>
             Wilson score = (p + z²/2n - z√(p(1-p)/n + z²/4n²)) / (1 + z²/n)
           </pre>
         </div>

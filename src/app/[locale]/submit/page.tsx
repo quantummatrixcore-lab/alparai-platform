@@ -65,17 +65,9 @@ export default async function SubmitPage({ params }: { params: Promise<{ locale:
       <div className="mb-6 rounded-lg border border-purple-500/30 bg-purple-500/10 p-4 text-xs">
         <div className="mb-1 flex items-center gap-2 font-semibold text-purple-300">
           <Shield className="h-4 w-4 text-purple-400" />
-          <span>
-            {locale === "tr"
-              ? "Korumalı Bilgi Uçurma Kanalı (Whistleblower Protection)"
-              : "Protected Whistleblower & Safe Disclosure Channel"}
-          </span>
+          <span>{t("whistleblower_title")}</span>
         </div>
-        <p className="text-fg-muted leading-relaxed">
-          {locale === "tr"
-            ? "Gönderimleriniz AB Yapay Zeka Yasası (EU AI Act) Whistleblower standartlarıyla koruma altındadır. Kimlik bilgileriniz PII Guardian tarafından otomatik olarak temizlenir ve asla 3. taraflarla paylaşılmaz."
-            : "Disclosures comply with EU AI Act whistleblower protections. Personal details are cryptographically hashed and automatically sanitized by PII Guardian before storage."}
-        </p>
+        <p className="text-fg-muted leading-relaxed">{t("whistleblower_desc")}</p>
       </div>
 
       {!isLoggedIn ? (
@@ -83,24 +75,18 @@ export default async function SubmitPage({ params }: { params: Promise<{ locale:
           <CardContent className="flex flex-col items-center py-16 text-center">
             <Shield className="text-brand-400 mb-6 h-16 w-16" />
             <h2 className="text-fg-primary mb-3 text-2xl font-bold">
-              {locale === "tr" ? "Hesap Gerekli" : "Account Required"}
+              {t("account_required_title")}
             </h2>
             <p className="text-fg-secondary mx-auto mb-8 max-w-md text-sm leading-relaxed">
-              {locale === "tr"
-                ? "ALPAR AI, topluluk güvenliği ve hesap verebilirlik için hesap doğrulaması gerektirir. Kimliğiniz korunur, asla yayınlanmaz ve tüm kişisel verileriniz gönderim sırasında otomatik olarak maskelenir."
-                : "ALPAR AI requires account verification for community safety and accountability. Your identity is protected, never published, and all personal data is automatically masked during submission."}
+              {t("account_required_desc")}
             </p>
             <div className="space-y-3">
               <Link href="/auth/signin">
                 <Button size="lg" leftIcon={<LogIn className="h-4 w-4" />}>
-                  {locale === "tr" ? "Giriş Yap / Kaydol" : "Sign In / Register"}
+                  {t("signin_btn")}
                 </Button>
               </Link>
-              <p className="text-fg-muted text-xs">
-                {locale === "tr"
-                  ? "Google hesabınızla tek tıkla kaydolun"
-                  : "Sign up with your Google account in one click"}
-              </p>
+              <p className="text-fg-muted text-xs">{t("signin_google_desc")}</p>
             </div>
           </CardContent>
         </Card>

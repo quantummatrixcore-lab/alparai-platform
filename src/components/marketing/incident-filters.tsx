@@ -70,19 +70,18 @@ export function IncidentFilters({
             leftIcon={<Search className="h-4 w-4" />}
           />
         </div>
-        <div className="space-y-1.5">
-          <label className="text-fg-primary block text-sm font-medium">{t("sort_by")}</label>
-          <Select
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-            options={[
-              { value: "newest", label: t("sort_newest") },
-              { value: "votes", label: t("sort_votes") },
-              { value: "views", label: t("sort_views") },
-              { value: "truth_score", label: t("sort_truth_score") },
-            ]}
-          />
-        </div>
+        <Select
+          id="sort-by-select"
+          label={t("sort_by")}
+          value={sort}
+          onChange={(e) => setSort(e.target.value)}
+          options={[
+            { value: "newest", label: t("sort_newest") },
+            { value: "votes", label: t("sort_votes") },
+            { value: "views", label: t("sort_views") },
+            { value: "truth_score", label: t("sort_truth_score") },
+          ]}
+        />
         <div className="grid grid-cols-2 gap-2">
           <CategoryPill
             label={tCommon("all")}

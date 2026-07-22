@@ -59,16 +59,21 @@ describe("Cost-Alarm Cron Job", () => {
     vi.mocked(Redis).mockImplementation(() => redisInstance);
 
     // Set Upstash Redis env variables
-    process.env.UPSTASH_REDIS_REST_URL = "https://mock-redis.upstash.io";
-    process.env.UPSTASH_REDIS_REST_TOKEN = "mock-token";
+    try {
+      process.env.UPSTASH_REDIS_REST_URL = "https://mock-redis.upstash.io";
+      process.env.UPSTASH_REDIS_REST_TOKEN = "mock-token";
 
-    const res = await GET(req as unknown as NextRequest);
-    expect(res.status).toBe(200);
+      const res = await GET(req as unknown as NextRequest);
+      expect(res.status).toBe(200);
 
-    const body = await res.json();
-    expect(body.success).toBe(true);
-    expect(body.killSwitchActive).toBe(true);
-    expect(setSpy).toHaveBeenCalledWith("cost_kill_switch", "true");
+      const body = await res.json();
+      expect(body.success).toBe(true);
+      expect(body.killSwitchActive).toBe(true);
+      expect(setSpy).toHaveBeenCalledWith("cost_kill_switch", "true");
+    } finally {
+      delete process.env.UPSTASH_REDIS_REST_URL;
+      delete process.env.UPSTASH_REDIS_REST_TOKEN;
+    }
   });
 
   it("should not trigger cost_kill_switch if costs are under limit", async () => {

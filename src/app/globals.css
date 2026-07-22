@@ -13,11 +13,11 @@
   --brand-200: #e9d5ff;
   --brand-300: #d8b4fe;
   --brand-400: #c084fc;
-  --brand-500: #a855f7;
-  --brand-600: #9333ea;
-  --brand-700: #7e22ce;
-  --brand-800: #6b21a8;
-  --brand-900: #581c87;
+  --brand-500: #9333ea;
+  --brand-600: #7e22ce;
+  --brand-700: #6b21a8;
+  --brand-800: #581c87;
+  --brand-900: #3b0764;
 
   /* Accent — Cyan (Future/Tech) */
   --accent-300: #67e8f9;
@@ -31,23 +31,23 @@
   --success-500: #27ae60;
   --success-600: #219653;
 
-  /* Danger — Rose/Crimson (alerts) -> Fire Red */
-  --danger-300: #ff6b6b;
-  --danger-400: #ff4757;
-  --danger-500: #e63946;
-  --danger-600: #c0392b;
+  /* Danger — Rose/Crimson (alerts) -> Fire Red (WCAG AA compliant) */
+  --danger-300: #fca5a5;
+  --danger-400: #f87171;
+  --danger-500: #dc2626;
+  --danger-600: #b91c1c;
 
-  /* Warning — Amber -> Gold */
-  --warning-300: #fde047;
-  --warning-400: #f1c40f;
-  --warning-500: #f39c12;
-  --warning-600: #e67e22;
+  /* Warning — Amber -> Gold (WCAG AA compliant) */
+  --warning-300: #fbbf24;
+  --warning-400: #f59e0b;
+  --warning-500: #d97706;
+  --warning-600: #b45309;
 
   /* Surfaces — OLED Black / Deep Space -> Deep Navy */
   --bg-primary: #0a0f1e;
   --bg-secondary: #0f172a;
-  --bg-tertiary: #1e293b;
-  --bg-elevated: #334155;
+  --bg-tertiary: #131b2f;
+  --bg-elevated: #1e293b;
   --border-subtle: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.15);
   --fg-primary: #ffffff;
@@ -368,6 +368,12 @@ html,
 body {
   overflow-x: hidden;
   max-width: 100%;
+  background-color: var(--bg-primary);
+  color: var(--fg-primary);
+}
+
+a {
+  color: inherit;
 }
 
 @keyframes flow-line {

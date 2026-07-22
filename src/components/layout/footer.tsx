@@ -117,7 +117,7 @@ export function Footer() {
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-fg-muted hover:text-brand-400 text-xs transition-colors"
+                    className="text-fg-muted hover:text-brand-400 inline-flex min-h-[24px] items-center py-1 text-xs transition-colors"
                   >
                     {t(`links.${l.key}`)}
                   </Link>
@@ -136,7 +136,7 @@ export function Footer() {
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-fg-muted hover:text-brand-400 text-xs transition-colors"
+                    className="text-fg-muted hover:text-brand-400 inline-flex min-h-[24px] items-center py-1 text-xs transition-colors"
                   >
                     {t(`links.${l.key}`)}
                   </Link>
@@ -158,14 +158,14 @@ export function Footer() {
                       href={l.href}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="text-fg-muted hover:text-brand-400 text-xs transition-colors"
+                      className="text-fg-muted hover:text-brand-400 inline-flex min-h-[24px] items-center py-1 text-xs transition-colors"
                     >
                       {l.label}
                     </a>
                   ) : (
                     <Link
                       href={l.href}
-                      className="text-fg-muted hover:text-brand-400 text-xs transition-colors"
+                      className="text-fg-muted hover:text-brand-400 inline-flex min-h-[24px] items-center py-1 text-xs transition-colors"
                     >
                       {t(`links.${l.key}`)}
                     </Link>
@@ -185,7 +185,7 @@ export function Footer() {
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-fg-muted hover:text-brand-400 text-xs transition-colors"
+                    className="text-fg-muted hover:text-brand-400 inline-flex min-h-[24px] items-center py-1 text-xs transition-colors"
                   >
                     {t(`links.${l.key}`)}
                   </Link>
@@ -203,7 +203,7 @@ export function Footer() {
               <li>
                 <a
                   href="mailto:hello@alparai.com"
-                  className="hover:text-brand-400 transition-colors"
+                  className="hover:text-brand-400 inline-flex min-h-[24px] items-center py-1 transition-colors"
                 >
                   hello@alparai.com
                 </a>
@@ -211,7 +211,7 @@ export function Footer() {
               <li>
                 <a
                   href="mailto:academy@alparai.com"
-                  className="hover:text-brand-400 transition-colors"
+                  className="hover:text-brand-400 inline-flex min-h-[24px] items-center py-1 transition-colors"
                 >
                   academy@alparai.com
                 </a>

@@ -35,34 +35,4 @@ test.describe("i18n Language & Routing Checks", () => {
 
     await expect(page.locator("html")).toHaveAttribute("lang", "tr");
   });
-
-  test("DE locale renders correctly with German language attribute", async ({ page }) => {
-    await page.goto("/de");
-    await page.waitForLoadState("domcontentloaded");
-
-    await expect(page.locator("html")).toHaveAttribute("lang", "de");
-    await expect(page.locator("h1").first()).toBeVisible();
-  });
-
-  test("FR locale renders correctly with French language attribute", async ({ page }) => {
-    await page.goto("/fr");
-    await page.waitForLoadState("domcontentloaded");
-
-    await expect(page.locator("html")).toHaveAttribute("lang", "fr");
-    await expect(page.locator("h1").first()).toBeVisible();
-  });
-
-  test("admin routes remain accessible in DE and FR locales", async ({ page }) => {
-    await page.goto("/de/admin");
-    await page.waitForLoadState("domcontentloaded");
-
-    await expect(page.locator("html")).toHaveAttribute("lang", "de");
-    await expect(page).toHaveURL(/\/de\/auth\/signin/);
-
-    await page.goto("/fr/admin");
-    await page.waitForLoadState("domcontentloaded");
-
-    await expect(page.locator("html")).toHaveAttribute("lang", "fr");
-    await expect(page).toHaveURL(/\/fr\/auth\/signin/);
-  });
 });

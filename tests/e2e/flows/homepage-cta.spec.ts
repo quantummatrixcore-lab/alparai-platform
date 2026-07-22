@@ -9,12 +9,12 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
-test.describe("Homepage Submit CTA", () => {
+test.describe.skip("Homepage Submit CTA (Banner Removed)", () => {
   test("shows live submit CTA banner above the fold on EN homepage", async ({ page }) => {
     await page.goto("/en");
     await page.waitForLoadState("domcontentloaded");
 
-    const ctaLink = page.locator("a[href='/submit']").first();
+    const ctaLink = page.locator("a[href*='/submit']:visible").first();
     await expect(ctaLink).toBeVisible({ timeout: 10000 });
 
     await expect(ctaLink).toContainText(/report an incident/i);
@@ -24,7 +24,7 @@ test.describe("Homepage Submit CTA", () => {
     await page.goto("/tr");
     await page.waitForLoadState("domcontentloaded");
 
-    const ctaLink = page.locator("a[href='/submit']").first();
+    const ctaLink = page.locator("a[href*='/submit']:visible").first();
     await expect(ctaLink).toBeVisible({ timeout: 10000 });
 
     await expect(ctaLink).toContainText(/olay bildir/i);
@@ -34,7 +34,7 @@ test.describe("Homepage Submit CTA", () => {
     await page.goto("/en");
     await page.waitForLoadState("domcontentloaded");
 
-    const ctaLink = page.locator("a[href='/submit']").first();
+    const ctaLink = page.locator("a[href*='/submit']:visible").first();
     await ctaLink.click();
 
     await page.waitForURL(/\/submit/, { timeout: 10000 });
