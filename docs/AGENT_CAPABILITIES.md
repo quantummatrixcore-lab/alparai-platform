@@ -68,6 +68,7 @@
   4. **DevOps & Verification:** `pnpm lint`, `pnpm typecheck`, `pnpm test`, Vercel CLI deployments (`[deploy]`), DORA Elite telemetry via Vercel REST API.
   5. **Auto-Prune & Performance:** DB retention policies (`prune_old_telemetry()`), Redis TTL governance, Next.js `unstable_cache` / React `cache()` data fetching.
   6. **Security Hardening:** SSRF-safe fetch (host allowlist, no private-IP redirect, response size/time caps), `crypto.timingSafeEqual` for all secret comparisons, env-only secrets (no file-based vault), security scanning CI (semgrep, trivy, gitleaks).
+  7. **Stitch MCP Architecture & Design Specs:** Utilizing Stitch MCP tools (`create_project`, `create_design_system`, `generate_screen_from_text`, `edit_screens`) to produce machine-readable UI specs (`ia-spec.md`), bento-grid layout frames, and design token definitions for OpenCode to implement.
 
 ---
 
@@ -79,9 +80,10 @@
   1. **iOS / Android UI Components:** Building `MetricWidget`, `QuickActionGrid`, `SlideOverPanel`, `SegmentedControl`, `SkeletonLoader`, `EmptyStateIllustration`.
   2. **Table-to-Card Transformations:** Converting Moderation Queue (iOS Mail style), Audit Log, Users & Providers tables into touch-first card grid layouts.
   3. **Design System & Tailwind v4:** CSS design tokens in `globals.css` (`@theme inline`), Framer Motion spring micro-interactions, neon glow, glassmorphism.
-  4. **i18n & Translation Parity:** Multi-language key management in `messages/en.json` and `messages/tr.json`, `useTranslations()` / `getTranslations()` hooks.
-  5. **Client-Side Responsiveness:** Touch target optimization (44px min), `overscroll-behavior` locks, mobile Safari / Android Chrome viewport responsiveness.
-  6. **E2E & Quality Testing:** Playwright E2E test writing (critical user paths: submit, vote, admin triage), Lighthouse performance budgets (≥90 mobile/desktop), Core Web Vitals enforcement in CI.
-  7. **Legal Copy & Documentation:** `messages/*.json` legal namespace management, `/legal/*` page content writing, `docs/HANDOVER.md`, `docs/OPS_*` runbook writing, AGPL-3.0 compliance notices.
-  8. **Accessibility (a11y):** `@axe-core/playwright` CI gating, WCAG 2.2 AA compliance (0 critical/serious violations), semantic HTML, keyboard navigation, screen reader support.
-  9. **SEO & Social Metadata:** `generateMetadata()` pattern, Open Graph + Twitter Card tags, structured data `<head>` injection, `robots.txt` and `sitemap.xml` management.
+  4. **Stitch MCP UI Implementation:** Leveraging Stitch MCP tools (`generate_screen_from_text`, `edit_screens`, `generate_variants`) to inspect, generate, and refine Next.js 16 UI component variants matching `ia-spec.md`.
+  5. **i18n & Translation Parity:** Multi-language key management in `messages/en.json` and `messages/tr.json`, `useTranslations()` / `getTranslations()` hooks.
+  6. **Client-Side Responsiveness:** Touch target optimization (44px min), `overscroll-behavior` locks, mobile Safari / Android Chrome viewport responsiveness.
+  7. **E2E & Quality Testing:** Playwright E2E test writing (critical user paths: submit, vote, admin triage), Lighthouse performance budgets (≥90 mobile/desktop), Core Web Vitals enforcement in CI.
+  8. **Legal Copy & Documentation:** `messages/*.json` legal namespace management, `/legal/*` page content writing, `docs/HANDOVER.md`, `docs/OPS_*` runbook writing, AGPL-3.0 compliance notices.
+  9. **Accessibility (a11y):** `@axe-core/playwright` CI gating, WCAG 2.2 AA compliance (0 critical/serious violations), semantic HTML, keyboard navigation, screen reader support.
+  10. **SEO & Social Metadata:** `generateMetadata()` pattern, Open Graph + Twitter Card tags, structured data `<head>` injection, `robots.txt` and `sitemap.xml` management.
