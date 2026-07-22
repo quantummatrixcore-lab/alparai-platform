@@ -69,7 +69,7 @@ export function HealthDashboardClient({ initialReport }: HealthDashboardClientPr
                 : t("health_status_down")}
           </span>
           <span className="text-fg-muted font-mono text-xs">
-            Checked: {new Date(report.timestamp).toLocaleTimeString()}
+            {t("health_checked_at")}: {new Date(report.timestamp).toLocaleTimeString()}
           </span>
         </div>
 

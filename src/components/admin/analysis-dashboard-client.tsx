@@ -989,39 +989,50 @@ export function AnalysisDashboardClient({
           </h2>
 
           <div className="space-y-6">
-            {analyses.map((analysis, i) => {
-              const isPending = analysis.includes("[PENDING:");
-              const modelMatch = analysis.match(/^\s*(.+?)\n/);
-              const modelName = modelMatch?.[1]?.replace(/\]/g, "").trim() ?? `Model ${i + 1}`;
+            {analyses.length === 0 ? (
+              <div className="flex flex-col items-center justify-center rounded-lg border border-amber-500/20 bg-amber-500/10 p-12 text-amber-400">
+                <AlertTriangle className="mb-4 h-10 w-10 opacity-80" />
+                <h4 className="text-base font-semibold">Analiz Dosyası Bulunamadı</h4>
+                <p className="mt-2 max-w-md text-center text-sm opacity-80">
+                  Sunucuda okunan analiz dosyası (MASTER-ANALYSIS.md) eksik veya henüz
+                  oluşturulmamış. Lütfen canlı analiz başlatmayı deneyin.
+                </p>
+              </div>
+            ) : (
+              analyses.map((analysis, i) => {
+                const isPending = analysis.includes("[PENDING:");
+                const modelMatch = analysis.match(/^\s*(.+?)\n/);
+                const modelName = modelMatch?.[1]?.replace(/\]/g, "").trim() ?? `Model ${i + 1}`;
 
-              return (
-                <div
-                  key={i}
-                  className={cn(
-                    "rounded-lg border border-white/10 bg-neutral-900/60 p-6 shadow-md backdrop-blur-xl",
-                    isPending ? "opacity-60" : "",
-                  )}
-                >
-                  <div className="mb-4 flex flex-col gap-2 border-b border-white/10 pb-3">
-                    <h3 className="inline-flex items-center gap-2 text-sm font-semibold text-white">
-                      {isPending ? (
-                        <span className="h-2 w-2 rounded-full bg-neutral-800" />
-                      ) : (
-                        <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                      )}
-                      #{i + 1} — {modelName}
-                    </h3>
-                  </div>
-                  {isPending ? (
-                    <p className="text-fg-muted text-sm italic">{t("analysisPending")}</p>
-                  ) : (
-                    <div className="prose prose-invert prose-sm text-fg-secondary max-h-[300px] max-w-none scrollbar-thin overflow-x-auto overflow-y-auto rounded-lg bg-neutral-950 p-4 font-mono text-xs whitespace-pre-wrap">
-                      {analysis.trim()}
+                return (
+                  <div
+                    key={i}
+                    className={cn(
+                      "rounded-lg border border-white/10 bg-neutral-900/60 p-6 shadow-md backdrop-blur-xl",
+                      isPending ? "opacity-60" : "",
+                    )}
+                  >
+                    <div className="mb-4 flex flex-col gap-2 border-b border-white/10 pb-3">
+                      <h3 className="inline-flex items-center gap-2 text-sm font-semibold text-white">
+                        {isPending ? (
+                          <span className="h-2 w-2 rounded-full bg-neutral-800" />
+                        ) : (
+                          <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                        )}
+                        #{i + 1} — {modelName}
+                      </h3>
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                    {isPending ? (
+                      <p className="text-fg-muted text-sm italic">{t("analysisPending")}</p>
+                    ) : (
+                      <div className="prose prose-invert prose-sm text-fg-secondary max-h-[300px] max-w-none scrollbar-thin overflow-x-auto overflow-y-auto rounded-lg bg-neutral-950 p-4 font-mono text-xs whitespace-pre-wrap">
+                        {analysis.trim()}
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
       )}

@@ -130,7 +130,7 @@ export function ValuationCalculatorClient({
         setNotes("");
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to log valuation snapshot.");
+      toast.error(err instanceof Error ? err.message : t("val_snapshot_failed"));
     } finally {
       setIsSaving(false);
     }
@@ -192,36 +192,22 @@ export function ValuationCalculatorClient({
         {activeTab === "berkus" && (
           <div className="border-border-subtle bg-bg-secondary/40 space-y-4 rounded-2xl border p-6 backdrop-blur-md">
             <h3 className="border-b border-white/5 pb-2 text-sm font-bold tracking-wider text-white uppercase">
-              Berkus pre-money valuation calculator
+              {t("val_berkus_title")}
             </h3>
-            <p className="text-fg-muted text-xs leading-relaxed">
-              {locale === "tr"
-                ? "Fikir aşamasındaki startup'lar için geliştirilen, risk azaltıcı 5 kriteri $500.000 limitleriyle puanlayan model."
-                : "A pre-revenue valuation model assigning up to $500,000 for each risk-reducing milestone."}
-            </p>
+            <p className="text-fg-muted text-xs leading-relaxed">{t("val_berkus_desc")}</p>
 
             <div className="space-y-4 pt-2">
               {Object.keys(berkusInputs).map((key) => {
                 const label =
                   key === "idea"
-                    ? locale === "tr"
-                      ? "Sağlam Fikir (Sound Idea)"
-                      : "Sound Idea / Concept"
+                    ? t("val_berkus_idea")
                     : key === "prototype"
-                      ? locale === "tr"
-                        ? "Çalışan Prototip (Prototype)"
-                        : "Working Prototype"
+                      ? t("val_berkus_prototype")
                       : key === "team"
-                        ? locale === "tr"
-                          ? "Kaliteli Yönetim Kadrosu (Quality Management Team)"
-                          : "Management Team Quality"
+                        ? t("val_berkus_team")
                         : key === "relations"
-                          ? locale === "tr"
-                            ? "Stratejik İlişkiler / Ortaklıklar (Strategic Relations)"
-                            : "Strategic Partnerships"
-                          : locale === "tr"
-                            ? "Ürün Dağıtımı veya Satış Gücü (Product Rollout / Sales)"
-                            : "Product Rollout Moats";
+                          ? t("val_berkus_relations")
+                          : t("val_berkus_rollout");
 
                 return (
                   <div
@@ -249,9 +235,7 @@ export function ValuationCalculatorClient({
 
             <div className="mt-6 flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4">
               <span className="text-sm font-extrabold text-white">
-                {locale === "tr"
-                  ? "Hesaplanan Berkus Değerlemesi:"
-                  : "Calculated Berkus Valuation:"}
+                {t("val_berkus_calc_result")}
               </span>
               <span className="font-mono text-2xl font-black text-emerald-400">
                 {formatCurrency(berkusValuation)}
@@ -264,20 +248,14 @@ export function ValuationCalculatorClient({
         {activeTab === "scorecard" && (
           <div className="border-border-subtle bg-bg-secondary/40 space-y-4 rounded-2xl border p-6 backdrop-blur-md">
             <h3 className="border-b border-white/5 pb-2 text-sm font-bold tracking-wider text-white uppercase">
-              Scorecard pre-money valuation calculator
+              {t("val_scorecard_title")}
             </h3>
-            <p className="text-fg-muted text-xs leading-relaxed">
-              {locale === "tr"
-                ? "Bulunulan pazardaki benzer ortalama startup değerlemesini referans alan, ağırlıklı çarpan modeli."
-                : "Weights and rates your startup against an average benchmark startup in the same sector."}
-            </p>
+            <p className="text-fg-muted text-xs leading-relaxed">{t("val_scorecard_desc")}</p>
 
             <div className="grid grid-cols-1 gap-4 pt-2 sm:grid-cols-2">
               <div>
                 <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                  {locale === "tr"
-                    ? "Pazar Ortalama Değerlemesi ($)"
-                    : "Baseline Average Valuation ($)"}
+                  {t("val_scorecard_baseline_label")}
                 </label>
                 <input
                   type="number"
@@ -292,32 +270,18 @@ export function ValuationCalculatorClient({
               {Object.keys(scorecardInputs).map((key) => {
                 const label =
                   key === "team"
-                    ? locale === "tr"
-                      ? "Yönetim Kadrosunun Gücü (%25 Ağırlık)"
-                      : "Management Team (25% Weight)"
+                    ? t("val_scorecard_team")
                     : key === "opportunity"
-                      ? locale === "tr"
-                        ? "Fırsatın / Pazarın Büyüklüğü (%25 Ağırlık)"
-                        : "Opportunity Size (25% Weight)"
+                      ? t("val_scorecard_opportunity")
                       : key === "technology"
-                        ? locale === "tr"
-                          ? "Ürün / Teknoloji Gücü (%15 Ağırlık)"
-                          : "Product / Technology (15% Weight)"
+                        ? t("val_scorecard_technology")
                         : key === "competition"
-                          ? locale === "tr"
-                            ? "Rekabet Ortamı Analizi (%10 Ağırlık)"
-                            : "Competitive Environment (10% Weight)"
+                          ? t("val_scorecard_competition")
                           : key === "marketing"
-                            ? locale === "tr"
-                              ? "Pazarlama / Satış Kanalları (%10 Ağırlık)"
-                              : "Marketing & Sales (10% Weight)"
+                            ? t("val_scorecard_marketing")
                             : key === "capital"
-                              ? locale === "tr"
-                                ? "Ek Yatırım İhtiyacı Derecesi (%5 Ağırlık)"
-                                : "Need for Add. Investment (5% Weight)"
-                              : locale === "tr"
-                                ? "Diğer Faktörler (%10 Ağırlık)"
-                                : "Other Factors (10% Weight)";
+                              ? t("val_scorecard_capital")
+                              : t("val_scorecard_other");
 
                 return (
                   <div
@@ -360,19 +324,13 @@ export function ValuationCalculatorClient({
             </div>
 
             <div className="text-fg-muted flex justify-between font-mono text-xs font-bold">
-              <span>
-                {locale === "tr"
-                  ? "Kümülatif Çarpan Katsayısı:"
-                  : "Consolidated Multiplier Factor:"}
-              </span>
+              <span>{t("val_scorecard_multiplier_label")}</span>
               <span className="text-white">{scorecardMultiplier.toFixed(3)}x</span>
             </div>
 
             <div className="mt-4 flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4">
               <span className="text-sm font-extrabold text-white">
-                {locale === "tr"
-                  ? "Hesaplanan Scorecard Değerlemesi:"
-                  : "Calculated Scorecard Valuation:"}
+                {t("val_scorecard_calc_result")}
               </span>
               <span className="font-mono text-2xl font-black text-emerald-400">
                 {formatCurrency(scorecardValuation)}
@@ -385,18 +343,14 @@ export function ValuationCalculatorClient({
         {activeTab === "vc" && (
           <div className="border-border-subtle bg-bg-secondary/40 space-y-4 rounded-2xl border p-6 backdrop-blur-md">
             <h3 className="border-b border-white/5 pb-2 text-sm font-bold tracking-wider text-white uppercase">
-              VC method valuation calculator
+              {t("val_vc_title")}
             </h3>
-            <p className="text-fg-muted text-xs leading-relaxed">
-              {locale === "tr"
-                ? "Gelecekteki olası exit değerini baz alan, yatırımcının beklediği getiri (ROI) oranına göre geriye dönük hesaplayan VC modeli."
-                : "Exit-based post/pre money valuation calculation according to targeted return multipliers."}
-            </p>
+            <p className="text-fg-muted text-xs leading-relaxed">{t("val_vc_desc")}</p>
 
             <div className="space-y-4 pt-2">
               <div className="flex flex-col justify-between gap-2 border-b border-white/5 pb-3 sm:flex-row sm:items-center">
                 <span className="text-xs font-semibold text-white/90">
-                  {locale === "tr" ? "Beklenen Exit Değeri ($)" : "Estimated Exit Value ($)"}
+                  {t("val_vc_exit_val_label")}
                 </span>
                 <input
                   type="number"
@@ -407,11 +361,7 @@ export function ValuationCalculatorClient({
               </div>
 
               <div className="flex flex-col justify-between gap-2 border-b border-white/5 pb-3 sm:flex-row sm:items-center">
-                <span className="text-xs font-semibold text-white/90">
-                  {locale === "tr"
-                    ? "Yatırımcı Hedef ROI Çarpanı (x)"
-                    : "Expected ROI Target (x Multiplier)"}
-                </span>
+                <span className="text-xs font-semibold text-white/90">{t("val_vc_roi_label")}</span>
                 <input
                   type="number"
                   value={vcTargetRoi}
@@ -422,9 +372,7 @@ export function ValuationCalculatorClient({
 
               <div className="flex flex-col justify-between gap-2 border-b border-white/5 pb-3 sm:flex-row sm:items-center">
                 <span className="text-xs font-semibold text-white/90">
-                  {locale === "tr"
-                    ? "Talep Edilen Yatırım Miktarı ($)"
-                    : "Investment Capital Target ($)"}
+                  {t("val_vc_investment_label")}
                 </span>
                 <input
                   type="number"
@@ -436,16 +384,12 @@ export function ValuationCalculatorClient({
             </div>
 
             <div className="text-fg-muted flex justify-between font-mono text-xs font-bold">
-              <span>Post-Money Valuation:</span>
+              <span>{t("val_vc_post_money_label")}</span>
               <span className="text-white">{formatCurrency(vcPostMoney)}</span>
             </div>
 
             <div className="mt-4 flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4">
-              <span className="text-sm font-extrabold text-white">
-                {locale === "tr"
-                  ? "Hesaplanan VC Değerlemesi (Pre-Money):"
-                  : "Calculated VC Valuation (Pre-Money):"}
-              </span>
+              <span className="text-sm font-extrabold text-white">{t("val_vc_calc_result")}</span>
               <span className="font-mono text-2xl font-black text-emerald-400">
                 {formatCurrency(vcValuation)}
               </span>
@@ -457,28 +401,24 @@ export function ValuationCalculatorClient({
         {activeTab === "history" && (
           <div className="border-border-subtle bg-bg-secondary/40 space-y-4 rounded-2xl border p-6 backdrop-blur-md">
             <h3 className="border-b border-white/5 pb-2 text-sm font-bold tracking-wider text-white uppercase">
-              {locale === "tr" ? "Geçmiş Değerleme Kayıtları" : "Valuation Snapshot Logs"}
+              {t("val_history_title")}
             </h3>
 
             <div className="overflow-x-auto">
               <table className="text-fg-secondary w-full text-left text-sm">
                 <thead className="text-fg-muted border-b border-white/5 text-[10px] font-bold tracking-wider uppercase">
                   <tr>
-                    <th className="pb-3">{locale === "tr" ? "Tarih" : "Date"}</th>
-                    <th className="pb-3">{locale === "tr" ? "Metot" : "Method"}</th>
-                    <th className="pb-3 text-right">
-                      {locale === "tr" ? "Değerleme" : "Valuation"}
-                    </th>
-                    <th className="pb-3 pl-4">{locale === "tr" ? "Not" : "Notes"}</th>
+                    <th className="pb-3">{t("val_col_date")}</th>
+                    <th className="pb-3">{t("val_col_method")}</th>
+                    <th className="pb-3 text-right">{t("val_col_valuation")}</th>
+                    <th className="pb-3 pl-4">{t("val_col_notes")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5 font-mono text-xs">
                   {valuations.length === 0 ? (
                     <tr>
                       <td colSpan={4} className="text-fg-muted py-8 text-center italic">
-                        {locale === "tr"
-                          ? "Kayıtlı değerleme bulunmamaktadır."
-                          : "No valuation logs recorded yet."}
+                        {t("val_history_empty")}
                       </td>
                     </tr>
                   ) : (
@@ -517,24 +457,24 @@ export function ValuationCalculatorClient({
           <div>
             <h3 className="mb-4 flex items-center gap-1.5 text-xs font-bold tracking-wider text-white uppercase">
               <BarChart2 className="text-brand-400 h-4 w-4" />
-              Consolidated Model
+              {t("val_consolidated_title")}
             </h3>
 
             <div className="space-y-4">
               <div className="flex justify-between border-b border-white/5 pb-2 text-xs">
-                <span className="text-fg-muted">Berkus Method:</span>
+                <span className="text-fg-muted">{t("val_berkus_method_label")}</span>
                 <span className="font-mono font-bold text-white">
                   {formatCurrency(berkusValuation)}
                 </span>
               </div>
               <div className="flex justify-between border-b border-white/5 pb-2 text-xs">
-                <span className="text-fg-muted">Scorecard Method:</span>
+                <span className="text-fg-muted">{t("val_scorecard_method_label")}</span>
                 <span className="font-mono font-bold text-white">
                   {formatCurrency(scorecardValuation)}
                 </span>
               </div>
               <div className="flex justify-between border-b border-white/5 pb-2 text-xs">
-                <span className="text-fg-muted">VC Exit Method:</span>
+                <span className="text-fg-muted">{t("val_vc_method_label")}</span>
                 <span className="font-mono font-bold text-white">
                   {formatCurrency(vcValuation)}
                 </span>
@@ -542,7 +482,7 @@ export function ValuationCalculatorClient({
 
               <div className="mt-6 rounded-xl border border-emerald-500/10 bg-emerald-500/5 p-4 text-center">
                 <span className="text-fg-muted block text-[10px] font-bold tracking-wider uppercase">
-                  {locale === "tr" ? "KONSOLİDE ORTALAMA DEĞERLEME" : "CONSOLIDATED AVG VALUATION"}
+                  {t("val_consolidated_avg_label")}
                 </span>
                 <span className="mt-1 block font-mono text-2xl font-black text-emerald-400">
                   {formatCurrency(averageValuation)}
@@ -554,16 +494,12 @@ export function ValuationCalculatorClient({
           {!isReadOnly && activeTab !== "history" && (
             <div className="mt-6 space-y-3 border-t border-white/5 pt-4">
               <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                {locale === "tr" ? "Snapshot Notu" : "Snapshot Notes"}
+                {t("val_snapshot_notes_label")}
               </label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder={
-                  locale === "tr"
-                    ? "örn. Lansman öncesi kurul değerlemesi"
-                    : "e.g. Pre-launch consensus"
-                }
+                placeholder={t("val_snapshot_notes_placeholder")}
                 rows={2}
                 className="bg-bg-tertiary border-border-subtle focus:border-brand-500 w-full rounded-xl border px-3 py-2 text-xs text-white focus:outline-none"
               />
@@ -576,12 +512,12 @@ export function ValuationCalculatorClient({
                 {isSaving ? (
                   <>
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    {locale === "tr" ? "Kaydediliyor..." : "Saving..."}
+                    {t("swot_saving")}
                   </>
                 ) : (
                   <>
                     <Plus className="h-3.5 w-3.5" />
-                    {locale === "tr" ? "Snapshot Olarak Kaydet" : "Log Valuation Snapshot"}
+                    {t("val_save_snapshot")}
                   </>
                 )}
               </button>

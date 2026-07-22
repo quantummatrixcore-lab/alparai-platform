@@ -65,7 +65,7 @@ export function SwotBoardClient({
         toast.success(t("swot_item_deleted"));
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to delete SWOT item.");
+      toast.error(err instanceof Error ? err.message : t("swot_delete_failed"));
     }
   };
 
@@ -112,7 +112,7 @@ export function SwotBoardClient({
         setIsModalOpen(false);
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Operation failed.");
+      toast.error(err instanceof Error ? err.message : t("operation_failed"));
     } finally {
       setIsSaving(false);
     }

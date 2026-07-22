@@ -71,13 +71,15 @@ export function GeoDashboardClient({
       <div className="grid gap-6 md:grid-cols-2">
         <AdminSectionCard title={t("geo_authority_score")}>
           <div className="flex flex-col items-center justify-center p-6 text-center">
-            <Gauge value={initialScore} size="lg" sublabel="Authority Index" variant="success" />
+            <Gauge
+              value={initialScore}
+              size="lg"
+              sublabel={t("geo_authority_index")}
+              variant="success"
+            />
             <div className="mt-4 space-y-1">
               <p className="text-xs font-semibold text-emerald-400">{t("geo_status_success")}</p>
-              <p className="text-fg-muted text-[11px]">
-                Weighted composite score across JSON-LD valid ratio, /llms.txt availability, and AI
-                engine citation volume.
-              </p>
+              <p className="text-fg-muted text-[11px]">{t("geo_score_desc")}</p>
             </div>
           </div>
         </AdminSectionCard>
@@ -141,19 +143,21 @@ export function GeoDashboardClient({
             </div>
             <div>
               <label className="text-fg-muted mb-1 block text-xs font-semibold">
-                Prompt / Query
+                {t("geo_prompt_query")}
               </label>
               <input
                 type="text"
                 value={form.query}
                 onChange={(e) => setForm({ ...form, query: e.target.value })}
-                placeholder="e.g. List major AI failure registries"
+                placeholder={t("geo_prompt_placeholder")}
                 className="text-fg-primary w-full rounded border border-white/10 bg-black/40 px-3 py-2 text-xs focus:border-emerald-500 focus:outline-none"
                 required
               />
             </div>
             <div>
-              <label className="text-fg-muted mb-1 block text-xs font-semibold">Cited URL</label>
+              <label className="text-fg-muted mb-1 block text-xs font-semibold">
+                {t("geo_cited_url")}
+              </label>
               <input
                 type="url"
                 value={form.cited_url}
@@ -166,12 +170,12 @@ export function GeoDashboardClient({
           </div>
           <div>
             <label className="text-fg-muted mb-1 block text-xs font-semibold">
-              Cited Snippet (Optional)
+              {t("geo_cited_snippet")}
             </label>
             <textarea
               value={form.passage_snippet}
               onChange={(e) => setForm({ ...form, passage_snippet: e.target.value })}
-              placeholder="Excerpt cited by the LLM response..."
+              placeholder={t("geo_snippet_placeholder")}
               className="text-fg-primary h-20 w-full rounded border border-white/10 bg-black/40 px-3 py-2 text-xs focus:border-emerald-500 focus:outline-none"
             />
           </div>
@@ -182,11 +186,11 @@ export function GeoDashboardClient({
               className="inline-flex items-center gap-2 rounded bg-emerald-500 px-4 py-2 text-xs font-bold text-black hover:bg-emerald-400 disabled:opacity-50"
             >
               <Plus className="h-4 w-4" />
-              {submitting ? t("saving") : t("add_api_key")}
+              {submitting ? t("saving") : t("geo_add_citation")}
             </button>
             {successMsg && (
               <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-400">
-                <CheckCircle2 className="h-4 w-4" /> {t("key_saved")}
+                <CheckCircle2 className="h-4 w-4" /> {t("geo_citation_added")}
               </span>
             )}
           </div>
@@ -223,18 +227,13 @@ export function GeoDashboardClient({
           <div className="text-fg-muted space-y-3 p-6 text-xs">
             <div className="rounded border border-amber-500/20 bg-amber-500/10 p-3 text-amber-300">
               <p className="mb-1 flex items-center gap-1.5 font-semibold">
-                <FileText className="h-4 w-4" /> Add Structured Key Findings Box
+                <FileText className="h-4 w-4" /> {t("geo_add_findings_title")}
               </p>
-              <p className="text-[11px]">
-                LLMs extract blockquotes with clear quantitative figures 3.4x more often. Ensure
-                every incident summary starts with a 2-sentence executive summary.
-              </p>
+              <p className="text-[11px]">{t("geo_add_findings_desc")}</p>
             </div>
             <div className="rounded border border-white/10 bg-white/5 p-3">
-              <p className="text-fg-primary mb-1 font-semibold">Schema.org ClaimReview Alignment</p>
-              <p className="text-[11px]">
-                Valid JSON-LD ClaimReview tags are present on 100% of incident detail pages.
-              </p>
+              <p className="text-fg-primary mb-1 font-semibold">{t("geo_claim_review_title")}</p>
+              <p className="text-[11px]">{t("geo_claim_review_desc")}</p>
             </div>
           </div>
         </AdminSectionCard>
@@ -248,7 +247,7 @@ export function GeoDashboardClient({
                 <div className="flex items-center justify-between">
                   <span className="font-semibold text-emerald-400">{c.ai_engine}</span>
                   <span className="text-fg-muted text-[10px]">
-                    {c.created_at ? new Date(c.created_at).toLocaleDateString() : "Just now"}
+                    {c.created_at ? new Date(c.created_at).toLocaleDateString() : t("geo_just_now")}
                   </span>
                 </div>
                 <p className="text-fg-primary mt-1 font-medium">"{c.query}"</p>

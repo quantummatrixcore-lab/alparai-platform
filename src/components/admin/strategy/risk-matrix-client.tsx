@@ -14,7 +14,11 @@ interface RiskMatrixClientProps {
   locale: string;
 }
 
-export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatrixClientProps) {
+export function RiskMatrixClient({
+  initialRisks,
+  isReadOnly,
+  locale: _locale,
+}: RiskMatrixClientProps) {
   const t = useTranslations("admin");
 
   const [risks, setRisks] = useState<StrategyRisk[]>(initialRisks);
@@ -75,11 +79,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
 
   const handleDelete = async (id: string) => {
     if (isReadOnly) return;
-    if (
-      !confirm(
-        t("are_you_sure_you_want_to_delete_this_ris"),
-      )
-    ) {
+    if (!confirm(t("are_you_sure_you_want_to_delete_this_ris"))) {
       return;
     }
 
@@ -90,7 +90,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
         toast.success(t("risk_deleted_successfully"));
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to delete risk.");
+      toast.error(err instanceof Error ? err.message : t("risk_delete_failed"));
     }
   };
 
@@ -138,7 +138,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
         setIsModalOpen(false);
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Operation failed.");
+      toast.error(err instanceof Error ? err.message : t("operation_failed"));
     } finally {
       setIsSaving(false);
     }
@@ -159,9 +159,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
       <div className="lg:col-span-5">
         <div className="border-border-subtle bg-bg-secondary/40 rounded-2xl border p-5 backdrop-blur-md">
           <h3 className="mb-4 flex items-center justify-between text-xs font-bold tracking-wider text-white uppercase">
-            <span>
-              {t("5x5_risk_heatmap_matrix")}
-            </span>
+            <span>{t("5x5_risk_heatmap_matrix")}</span>
             {selectedCell && (
               <button
                 onClick={() => setSelectedCell(null)}
@@ -250,7 +248,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
                 {t("risk_matrix_logs")}
                 {selectedCell && (
                   <span className="text-brand-400 ml-2 font-mono lowercase">
-                    (filtered by P{selectedCell.p} × I{selectedCell.i})
+                    {t("risk_filtered")} P{selectedCell.p} × I{selectedCell.i})
                   </span>
                 )}
               </h3>
@@ -312,7 +310,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
                           >
                             <span>{score}</span>
                             <span className="mt-0.5 text-[7px] font-bold tracking-wider uppercase">
-                              score
+                              {t("risk_score_label")}
                             </span>
                           </div>
                         </div>
@@ -355,7 +353,13 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
                                   : "text-fg-muted border-white/10 bg-white/5",
                           )}
                         >
-                          {risk.status}
+                          {risk.status === "active"
+                            ? t("risk_active")
+                            : risk.status === "mitigated"
+                              ? t("risk_mitigated")
+                              : risk.status === "triggered"
+                                ? t("risk_triggered")
+                                : t("risk_closed")}
                         </span>
                       </div>
 
@@ -391,9 +395,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
           <div className="bg-bg-secondary border-border-strong w-full max-w-lg rounded-2xl border p-6 shadow-2xl">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-bold text-white uppercase">
-                {activeRisk.id
-                  ? t("edit_risk_log")
-                  : t("register_strategic_risk")}
+                {activeRisk.id ? t("edit_risk_log") : t("register_strategic_risk")}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -407,14 +409,14 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                    Code
+                    {t("risk_code_label")}
                   </label>
                   <input
                     type="text"
                     required
                     value={activeRisk.code || ""}
                     onChange={(e) => setActiveRisk({ ...activeRisk, code: e.target.value })}
-                    placeholder="e.g. R001"
+                    placeholder={t("risk_code_placeholder")}
                     className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-4 py-2.5 text-sm text-white focus:ring-1 focus:outline-none"
                   />
                 </div>
@@ -427,7 +429,7 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
                     required
                     value={activeRisk.title || ""}
                     onChange={(e) => setActiveRisk({ ...activeRisk, title: e.target.value })}
-                    placeholder="e.g. Legal host liability claim"
+                    placeholder={t("risk_title_placeholder")}
                     className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-4 py-2.5 text-sm text-white focus:ring-1 focus:outline-none"
                   />
                 </div>
@@ -457,11 +459,11 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
                     }
                     className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-4 py-2.5 text-sm text-white focus:ring-1 focus:outline-none"
                   >
-                    <option value="1">1 - Very Low</option>
-                    <option value="2">2 - Low</option>
-                    <option value="3">3 - Medium</option>
-                    <option value="4">4 - High</option>
-                    <option value="5">5 - Very High</option>
+                    <option value="1">1 - {t("risk_prob_very_low")}</option>
+                    <option value="2">2 - {t("risk_prob_low")}</option>
+                    <option value="3">3 - {t("risk_prob_medium")}</option>
+                    <option value="4">4 - {t("risk_prob_high")}</option>
+                    <option value="5">5 - {t("risk_prob_very_high")}</option>
                   </select>
                 </div>
 
@@ -476,11 +478,11 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
                     }
                     className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-4 py-2.5 text-sm text-white focus:ring-1 focus:outline-none"
                   >
-                    <option value="1">1 - Negligible</option>
-                    <option value="2">2 - Minor</option>
-                    <option value="3">3 - Moderate</option>
-                    <option value="4">4 - Major</option>
-                    <option value="5">5 - Catastrophic</option>
+                    <option value="1">1 - {t("risk_impact_negligible")}</option>
+                    <option value="2">2 - {t("risk_impact_minor")}</option>
+                    <option value="3">3 - {t("risk_impact_moderate")}</option>
+                    <option value="4">4 - {t("risk_impact_major")}</option>
+                    <option value="5">5 - {t("risk_impact_catastrophic")}</option>
                   </select>
                 </div>
               </div>
@@ -514,10 +516,10 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
                     }
                     className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-4 py-2.5 text-sm text-white focus:ring-1 focus:outline-none"
                   >
-                    <option value="active">Active</option>
-                    <option value="mitigated">Mitigated</option>
-                    <option value="triggered">Triggered</option>
-                    <option value="closed">Closed</option>
+                    <option value="active">{t("risk_active")}</option>
+                    <option value="mitigated">{t("risk_mitigated")}</option>
+                    <option value="triggered">{t("risk_triggered")}</option>
+                    <option value="closed">{t("risk_closed")}</option>
                   </select>
                 </div>
 
@@ -552,10 +554,8 @@ export function RiskMatrixClient({ initialRisks, isReadOnly, locale }: RiskMatri
                       <Loader2 className="h-4 w-4 animate-spin" />
                       {t("saving")}
                     </>
-                  ) : locale === "tr" ? (
-                    "Kaydet"
                   ) : (
-                    "Save"
+                    t("swot_save")
                   )}
                 </button>
               </div>

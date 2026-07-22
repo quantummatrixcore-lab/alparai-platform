@@ -63,7 +63,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, _locale }: Roadma
         toast.success(t("milestone_deleted"));
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to delete milestone.");
+      toast.error(err instanceof Error ? err.message : t("milestone_delete_failed"));
     }
   };
 
@@ -112,7 +112,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, _locale }: Roadma
         setIsModalOpen(false);
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Operation failed.");
+      toast.error(err instanceof Error ? err.message : t("operation_failed"));
     } finally {
       setIsSaving(false);
     }
@@ -220,7 +220,13 @@ export function RoadmapClient({ initialMilestones, isReadOnly, _locale }: Roadma
                                   : "text-fg-muted border-white/10 bg-white/5",
                           )}
                         >
-                          {m.status}
+                          {m.status === "planned"
+                            ? t("rm_status_planned")
+                            : m.status === "in_progress"
+                              ? t("rm_status_in_progress")
+                              : m.status === "done"
+                                ? t("rm_status_done")
+                                : t("rm_status_missed")}
                         </span>
                       </div>
 
@@ -279,7 +285,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, _locale }: Roadma
                     onChange={(e) =>
                       setActiveMilestone({ ...activeMilestone, quarter: e.target.value })
                     }
-                    placeholder="e.g. 2026-Q3"
+                    placeholder={t("rm_quarter_placeholder")}
                     className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-4 py-2.5 font-mono text-sm text-white focus:ring-1 focus:outline-none"
                   />
                 </div>
@@ -294,7 +300,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, _locale }: Roadma
                     onChange={(e) =>
                       setActiveMilestone({ ...activeMilestone, title: e.target.value })
                     }
-                    placeholder="e.g. Launch friends & family round"
+                    placeholder={t("rm_title_placeholder")}
                     className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-4 py-2.5 text-sm text-white focus:ring-1 focus:outline-none"
                   />
                 </div>
@@ -346,7 +352,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, _locale }: Roadma
                     onChange={(e) =>
                       setActiveMilestone({ ...activeMilestone, linked_metric: e.target.value })
                     }
-                    placeholder="e.g. Users, MRR"
+                    placeholder={t("rm_metric_placeholder")}
                     className="bg-bg-tertiary border-border-subtle focus:border-brand-500 w-full rounded-xl border px-4 py-2.5 text-sm text-white focus:outline-none"
                   />
                 </div>
@@ -403,7 +409,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, _locale }: Roadma
                       {t("saving")}
                     </>
                   ) : (
-                    t("saving")
+                    t("swot_save")
                   )}
                 </button>
               </div>
