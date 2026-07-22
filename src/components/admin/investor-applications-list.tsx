@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useState, useTransition } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -57,7 +56,7 @@ export function InvestorApplicationsList({
       {filtered.length === 0 ? (
         <Card>
           <CardContent className="text-fg-muted py-12 text-center text-sm">
-            No investor applications found.
+            {t("no_investor_applications") || "No investor applications found."}
           </CardContent>
         </Card>
       ) : (
@@ -85,7 +84,7 @@ function InvestorApplicationRow({ application }: { application: InvestorApplicat
           : await rejectInvestor(application.id);
 
       if (res.ok) {
-        toast.success(decision === "approve" ? "Approved ✓" : "Rejected ✓");
+        toast.success(decision === "approve" ? t("approved") + " ✓" : t("rejected") + " ✓");
       } else {
         toast.error(res.error ?? tCommon("loading"));
       }

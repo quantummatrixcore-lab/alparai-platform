@@ -1,10 +1,14 @@
 // @vitest-environment jsdom
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { expect, test, describe, vi, beforeEach } from "vitest";
 import { GoogleSignInButton, EmailMagicLinkForm } from "@/components/auth/auth-buttons";
 
 vi.mock("next-intl", () => ({
-  useTranslations: () => (key: string) => key,
+  useTranslations: () => {
+    const t = (key: string) => key;
+    t.rich = (key: string) => key;
+    return t;
+  },
 }));
 
 vi.mock("@/actions/auth", () => ({
@@ -47,9 +51,8 @@ describe("EmailMagicLinkForm", () => {
 
   test("shows validation error for invalid email", async () => {
     render(<EmailMagicLinkForm />);
-    const input = screen.getByLabelText("email_label") as HTMLInputElement;
-    input.value = "invalid-email";
-    input.dispatchEvent(new Event("change", { bubbles: true }));
+    const input = screen.getByLabelText("email_label");
+    fireEvent.change(input, { target: { value: "invalid-email" } });
     screen.getByRole("button", { name: "send" }).click();
     expect(await screen.findByRole("alert")).toBeDefined();
     expect(screen.getByText("invalid_email")).toBeDefined();
@@ -59,21 +62,19 @@ describe("EmailMagicLinkForm", () => {
     const { signInWithMagicLink } = await import("@/actions/auth");
     vi.mocked(signInWithMagicLink).mockResolvedValueOnce({ ok: true });
     render(<EmailMagicLinkForm />);
-    const input = screen.getByLabelText("email_label") as HTMLInputElement;
-    input.value = "test@example.com";
-    input.dispatchEvent(new Event("change", { bubbles: true }));
+    const input = screen.getByLabelText("email_label");
+    fireEvent.change(input, { target: { value: "test@example.com" } });
     screen.getByRole("button", { name: "send" }).click();
     expect(await screen.findByText("magic_link_heading")).toBeDefined();
   });
 
-  test("shows error toast when signInWithMagicLink fails", async () => {
+  test("calls toast.error when signInWithMagicLink fails", async () => {
     const { signInWithMagicLink } = await import("@/actions/auth");
     vi.mocked(signInWithMagicLink).mockResolvedValueOnce({ ok: false, error: "Server error" });
     render(<EmailMagicLinkForm />);
-    const input = screen.getByLabelText("email_label") as HTMLInputElement;
-    input.value = "test@example.com";
-    input.dispatchEvent(new Event("change", { bubbles: true }));
+    const input = screen.getByLabelText("email_label");
+    fireEvent.change(input, { target: { value: "test@example.com" } });
     screen.getByRole("button", { name: "send" }).click();
-    expect(await screen.findByText("Server error")).toBeDefined();
+    await vi.waitFor(() => expect(mockToast).toHaveBeenCalledWith("Server error"));
   });
 });

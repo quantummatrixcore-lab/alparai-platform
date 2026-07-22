@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useState, useEffect } from "react";
 import {
   Activity,
@@ -28,6 +27,7 @@ import { Modal } from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 interface UserProfile {
   email: string;
@@ -246,6 +246,7 @@ const NEW_LIVE_EVENTS_POOL = [
 ];
 
 export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
+  const t = useTranslations("admin");
   // Merge real logs (if any) with high-fidelity mock logs to ensure a rich list.
   const [logs, setLogs] = useState<AuditLogItem[]>(() => {
     const combined = [...initialLogs];
@@ -375,7 +376,7 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
             </div>
             <div>
               <p className="text-fg-muted text-xs font-medium tracking-wider uppercase">
-                Total Actions
+                {t("audit_total_actions") || "Total Actions"}
               </p>
               <h3 className="mt-0.5 font-mono text-2xl font-bold text-white">{totalCount}</h3>
             </div>
@@ -389,7 +390,7 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
             </div>
             <div>
               <p className="text-fg-muted text-xs font-medium tracking-wider uppercase">
-                Security Logs
+                {t("audit_security_logs") || "Security Logs"}
               </p>
               <h3 className="mt-0.5 font-mono text-2xl font-bold text-white">{securityCount}</h3>
             </div>
@@ -403,7 +404,7 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
             </div>
             <div>
               <p className="text-fg-muted text-xs font-medium tracking-wider uppercase">
-                Autopilot Runs
+                {t("audit_autopilot_runs") || "Autopilot Runs"}
               </p>
               <h3 className="mt-0.5 font-mono text-2xl font-bold text-white">{systemCount}</h3>
             </div>
@@ -420,10 +421,10 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
               </div>
               <div>
                 <p className="text-fg-muted text-xs font-medium tracking-wider uppercase">
-                  Live Stream
+                  {t("audit_live_stream") || "Live Stream"}
                 </p>
                 <h3 className="mt-0.5 text-sm font-semibold text-white">
-                  {isLive ? "Active" : "Paused"}
+                  {isLive ? t("audit_active") || "Active" : t("audit_paused") || "Paused"}
                 </h3>
               </div>
             </div>
@@ -434,7 +435,7 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
               className="flex h-8 items-center gap-1 px-2.5"
             >
               {isLive ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
-              {isLive ? "Stop" : "Simulate"}
+              {isLive ? t("audit_stop") || "Stop" : t("audit_simulate") || "Simulate"}
             </Button>
           </CardContent>
         </Card>
@@ -447,7 +448,7 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
             <Search className="text-fg-muted absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2" />
             <Input
               type="text"
-              placeholder="Search by action, actor, IP..."
+              placeholder={t("audit_search_placeholder") || "Search by action, actor, IP..."}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full border-white/5 bg-neutral-950/40 pl-10 text-sm"
@@ -482,11 +483,11 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="text-fg-muted border-b border-white/5 bg-neutral-950/20 text-xs font-semibold tracking-wider uppercase">
-                  <th className="p-4 pl-6">Time / ID</th>
-                  <th className="p-4">Actor</th>
-                  <th className="p-4">Action</th>
-                  <th className="p-4">Target Entity</th>
-                  <th className="p-4">IP Location</th>
+                  <th className="p-4 pl-6">{t("audit_col_time_id") || "Time / ID"}</th>
+                  <th className="p-4">{t("audit_col_actor") || "Actor"}</th>
+                  <th className="p-4">{t("audit_col_action") || "Action"}</th>
+                  <th className="p-4">{t("audit_col_target") || "Target Entity"}</th>
+                  <th className="p-4">{t("audit_col_ip") || "IP Location"}</th>
                   <th className="p-4 pr-6 text-right"></th>
                 </tr>
               </thead>

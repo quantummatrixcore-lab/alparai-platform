@@ -24,6 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function SocialPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "admin" });
 
   // Authenticate user & check admin access
   await requireAdmin();
@@ -44,11 +45,12 @@ export default async function SocialPage({ params }: { params: Promise<{ locale:
             <div className="flex items-center gap-2">
               <ShareNetwork className="text-brand-400 h-6 w-6" />
               <h1 className="text-2xl font-extrabold tracking-tight text-white md:text-3xl">
-                Social Media Automation
+                {t("social_automation_title") || "Social Media Automation"}
               </h1>
             </div>
             <p className="text-fg-muted mt-1 text-sm">
-              Manage accounts and approve AI-generated drafts before publishing
+              {t("social_automation_subtitle") ||
+                "Manage accounts and approve AI-generated drafts before publishing"}
             </p>
           </div>
         </div>
