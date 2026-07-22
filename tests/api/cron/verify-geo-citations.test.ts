@@ -4,7 +4,21 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 vi.mock("@/lib/supabase/admin", () => ({
   createAdminClient: () => ({
     from: () => ({
-      insert: vi.fn().mockResolvedValue({ error: null }),
+      select: () => ({
+        limit: vi.fn().mockResolvedValue({
+          data: [
+            {
+              id: "c1",
+              cited_url: "https://alparai.com/incidents",
+              ai_engine: "ChatGPT",
+              bot_hit_count: 5,
+            },
+          ],
+        }),
+      }),
+      update: () => ({
+        eq: vi.fn().mockResolvedValue({ error: null }),
+      }),
     }),
   }),
 }));
@@ -26,8 +40,13 @@ describe("Item 148 — GEO Citation Verifier Cron", () => {
     expect(resUnauth.status).toBe(401);
   });
 
-  it("should execute successfully with valid CRON_SECRET header", async () => {
+  it("should execute real verification and handle fetch reachability check", async () => {
     process.env.CRON_SECRET = "test-secret-key-12345678901234567890";
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+    }) as unknown as typeof fetch;
+
     const { GET } = await import("@/app/api/cron/verify-geo-citations/route");
 
     const reqValid = new Request("http://localhost:3000/api/cron/verify-geo-citations", {
@@ -41,6 +60,7 @@ describe("Item 148 — GEO Citation Verifier Cron", () => {
 
     const body = await res.json();
     expect(body.ok).toBe(true);
-    expect(body.citations_verified).toBeGreaterThan(0);
+    expect(body.citations_verified).toBe(1);
+    expect(body.total_scanned).toBe(1);
   });
 });

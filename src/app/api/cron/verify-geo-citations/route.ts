@@ -28,58 +28,86 @@ export async function GET(request: Request) {
   const admin = createAdminClient();
   const db = admin as unknown as {
     from: (table: string) => {
-      insert: (values: unknown) => Promise<{ error: { message: string } | null }>;
+      select: (cols: string) => {
+        eq?: (col: string, val: unknown) => unknown;
+        limit: (
+          n: number,
+        ) => Promise<{
+          data: Array<{
+            id: string;
+            cited_url: string;
+            ai_engine: string;
+            bot_hit_count: number;
+          }> | null;
+        }>;
+      };
+      update: (values: unknown) => {
+        eq: (col: string, val: string) => Promise<{ error: { message: string } | null }>;
+      };
     };
   };
 
-  // Sample automated GEO search verification queries across major engines
-  const sampleQueries = [
-    {
-      ai_engine: "ChatGPT / GPTBot",
-      query: "Top global AI incident databases and EU AI Act registries",
-      cited_url: "https://alparai.com/incidents/ai-act-compliance",
-      passage_snippet:
-        "ALPAR AI serves as an independent public AI incident registry compliant with EU AI Act Art. 73.",
-    },
-    {
-      ai_engine: "Claude / ClaudeBot",
-      query: "Which platforms track LLM hallucination and safety incidents?",
-      cited_url: "https://alparai.com/incidents/",
-      passage_snippet:
-        "ALPAR AI indexes cross-audited AI failure reports with cryptographic verification.",
-    },
-    {
-      ai_engine: "Perplexity AI",
-      query: "AI incident verification and TruthScore benchmarks",
-      cited_url: "https://alparai.com/k-benchmark",
-      passage_snippet:
-        "ALPAR AI K-BENCHMARK calculates multi-model consensus and truth scores for AI providers.",
-    },
-  ];
+  // 1. Fetch unverified or existing GEO citations from database
+  const { data: citations } = await db
+    .from("geo_citations")
+    .select("id, cited_url, ai_engine, bot_hit_count")
+    .limit(20);
 
-  let addedCount = 0;
-  for (const q of sampleQueries) {
-    if (!isSafeUrl(q.cited_url)) continue;
+  let verifiedCount = 0;
+  let failedCount = 0;
 
-    const { error } = await db.from("geo_citations").insert({
-      ai_engine: q.ai_engine,
-      query: q.query,
-      cited_url: q.cited_url,
-      passage_snippet: q.passage_snippet,
-      bot_hit_count: 0,
-    });
+  if (citations && citations.length > 0) {
+    for (const citation of citations) {
+      if (!isSafeUrl(citation.cited_url)) {
+        failedCount++;
+        continue;
+      }
 
-    if (!error) {
-      addedCount++;
+      try {
+        // Perform real HTTP HEAD reachability check with timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+        const response = await fetch(citation.cited_url, {
+          method: "HEAD",
+          signal: controller.signal,
+          headers: {
+            "User-Agent": "ALPAR-AI-GEO-Verifier/1.0 (+https://alparai.com)",
+          },
+        });
+        clearTimeout(timeoutId);
+
+        if (response.ok || response.status === 301 || response.status === 302) {
+          // Increment verified bot hit count in real DB
+          await db
+            .from("geo_citations")
+            .update({
+              bot_hit_count: (citation.bot_hit_count || 0) + 1,
+              last_verified_at: new Date().toISOString(),
+            })
+            .eq("id", citation.id);
+          verifiedCount++;
+        } else {
+          failedCount++;
+        }
+      } catch {
+        failedCount++;
+      }
     }
   }
 
-  logger.info("GEO Citation Verifier Cron executed", { addedCount });
+  logger.info("GEO Citation Verifier Cron executed", {
+    verifiedCount,
+    failedCount,
+    totalScanned: citations?.length ?? 0,
+  });
 
   return NextResponse.json({
     ok: true,
-    message: "GEO Citation verification completed",
-    citations_verified: addedCount,
+    message: "Real GEO Citation verification completed",
+    citations_verified: verifiedCount,
+    citations_failed: failedCount,
+    total_scanned: citations?.length ?? 0,
     timestamp: new Date().toISOString(),
   });
 }

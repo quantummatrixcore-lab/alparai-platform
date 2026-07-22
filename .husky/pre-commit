@@ -1,7 +1,7 @@
 if [ "$ARCHITECT" != "1" ]; then
   blocked=$(git diff --cached --name-only | grep -E '^(docs/MASTER_PLAN\.md|\.husky/|\.github/workflows/plan-guard\.yml|[^/]+\.md)$' | grep -vE '^(README|CLAUDE|AGENTS)\.md$' || true)
   if [ -n "$blocked" ]; then
-    echo "BLOCKED by plan-guard (Rule #14): Architect-only paths:" >&2
+    echo "BLOCKED by plan-guard (Rule #14 / #35): Architect-only paths cannot be edited by Executor." >&2
     echo "$blocked" | sed 's/^/  - /' >&2
     exit 1
   fi
