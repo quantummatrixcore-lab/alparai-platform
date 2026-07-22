@@ -116,8 +116,34 @@ async function getHandler(request: NextRequest) {
       }
     }
 
+    // === WEEKLY DIGEST DRAFT GENERATOR (Rule #6 Compliant — Drafts Only) ===
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+    const { data: recentIncidents } = await admin
+      .from("incidents")
+      .select("title_masked, created_at")
+      .eq("status", "published")
+      .gte("created_at", sevenDaysAgo)
+      .limit(5);
+
+    let digestCreated = false;
+    if (recentIncidents && recentIncidents.length > 0) {
+      const digestContent =
+        `[Weekly AI Incident Digest]\nSummary of recent failures across ${recentIncidents.length} reported AI incidents:\n` +
+        recentIncidents.map((i) => `- ${i.title_masked}`).join("\n");
+
+      const { error: digestErr } = await admin.from("social_posts").insert({
+        platform: "x",
+        status: "draft",
+        content_type: "incident_spotlight",
+        title: "Weekly AI Incident Digest Draft",
+        body_text: digestContent,
+      });
+      if (!digestErr) digestCreated = true;
+    }
+
     return NextResponse.json({
       success: true,
+      weekly_digest_draft_created: digestCreated,
       incidents: {
         found: pendingIncidents.length,
         processed: processedIds.length,

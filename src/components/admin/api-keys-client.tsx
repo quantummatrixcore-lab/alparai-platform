@@ -23,9 +23,9 @@ interface Props {
   initialKeys: ApiKeyRow[];
 }
 
-export function ApiKeysClient({ initialKeys }: Props) {
+export function ApiKeysClient({ initialKeys = [] }: Props) {
   const t = useTranslations("admin");
-  const [keys, setKeys] = useState<ApiKeyRow[]>(initialKeys);
+  const [keys, setKeys] = useState<ApiKeyRow[]>(initialKeys || []);
   const [keyType, setKeyType] = useState<"internal" | "external">("internal");
   const [provider, setProvider] = useState("openrouter");
   const [customProvider, setCustomProvider] = useState("");

@@ -325,7 +325,7 @@ export function IncidentForm({
       const { hasPII } = await import("@/lib/pii/guardian");
       const text = `${title} ${description}`;
       if (!text.trim()) {
-        setPiiDetected(false);
+        if (active) setPiiDetected(false);
         return;
       }
       const has = hasPII(text);

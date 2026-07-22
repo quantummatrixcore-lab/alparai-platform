@@ -9,8 +9,8 @@ interface FeatureFlagsClientProps {
   initialFlags: FeatureFlagItem[];
 }
 
-export function FeatureFlagsClient({ initialFlags }: FeatureFlagsClientProps) {
-  const [flags, setFlags] = useState<FeatureFlagItem[]>(initialFlags);
+export function FeatureFlagsClient({ initialFlags = [] }: FeatureFlagsClientProps) {
+  const [flags, setFlags] = useState<FeatureFlagItem[]>(initialFlags || []);
   const [updatingKey, setUpdatingKey] = useState<string | null>(null);
 
   const handleToggle = async (key: string, currentEnabled: boolean) => {
@@ -20,7 +20,9 @@ export function FeatureFlagsClient({ initialFlags }: FeatureFlagsClientProps) {
     setUpdatingKey(null);
 
     if (res.success) {
-      setFlags((prev) => prev.map((f) => (f.key === key ? { ...f, enabled: newEnabled } : f)));
+      setFlags((prev) =>
+        (prev || []).map((f) => (f.key === key ? { ...f, enabled: newEnabled } : f)),
+      );
     }
   };
 
@@ -28,7 +30,7 @@ export function FeatureFlagsClient({ initialFlags }: FeatureFlagsClientProps) {
     <div className="space-y-6" data-testid="feature-flags-client">
       <AdminSectionCard title="Runtime Feature Flag Controls">
         <div className="divide-y divide-white/10 p-6">
-          {flags.map((flag) => (
+          {(flags || []).map((flag) => (
             <div
               key={flag.key}
               className="flex items-center justify-between py-4 first:pt-0 last:pb-0"

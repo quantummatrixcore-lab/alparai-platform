@@ -246,10 +246,32 @@ export default async function IncidentDetailPage({
         userAffected={userAffected}
         currentUserId={user?.id ?? null}
       />
+      <div className="border-brand-500/30 from-brand-500/10 my-8 rounded-xl border bg-gradient-to-r via-purple-500/10 to-transparent p-6 text-center shadow-lg">
+        <h3 className="mb-2 text-lg font-bold text-white">
+          {locale === "tr"
+            ? "Benzer Bir Yapay Zeka Hatası mı Yaşadınız?"
+            : "Experienced a Similar AI Failure?"}
+        </h3>
+        <p className="text-fg-muted mx-auto mb-4 max-w-xl text-sm">
+          {locale === "tr"
+            ? "ALPAR AI hesap verebilirlik platformuna yeni bir olay bildirerek topluluğu koruyun."
+            : "Protect the community by reporting a new incident to the ALPAR AI accountability platform."}
+        </p>
+        <a
+          href={`/${locale}/submit`}
+          className="bg-brand-500 hover:bg-brand-600 inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-semibold text-white shadow-md transition"
+        >
+          {locale === "tr" ? "Olay Bildir (Report an Incident)" : "Report an Incident"}
+        </a>
+      </div>
       <ProvenanceTrail
         incidentId={id}
         createdAt={incident.incident_date}
-        sourceUrl={incidentRow ? ((incidentRow as Record<string, unknown>)["source_url"] as string | null) : null}
+        sourceUrl={
+          incidentRow
+            ? ((incidentRow as Record<string, unknown>)["source_url"] as string | null)
+            : null
+        }
         providerName={incident.provider_name}
       />
       <RelatedIncidents

@@ -61,6 +61,23 @@ export default async function SubmitPage({ params }: { params: Promise<{ locale:
         <p className="text-fg-muted text-sm">{t("submit_page_subtitle")}</p>
       </header>
 
+      {/* Whistleblower Protection Pathway Banner */}
+      <div className="mb-6 rounded-lg border border-purple-500/30 bg-purple-500/10 p-4 text-xs">
+        <div className="mb-1 flex items-center gap-2 font-semibold text-purple-300">
+          <Shield className="h-4 w-4 text-purple-400" />
+          <span>
+            {locale === "tr"
+              ? "Korumalı Bilgi Uçurma Kanalı (Whistleblower Protection)"
+              : "Protected Whistleblower & Safe Disclosure Channel"}
+          </span>
+        </div>
+        <p className="text-fg-muted leading-relaxed">
+          {locale === "tr"
+            ? "Gönderimleriniz AB Yapay Zeka Yasası (EU AI Act) Whistleblower standartlarıyla koruma altındadır. Kimlik bilgileriniz PII Guardian tarafından otomatik olarak temizlenir ve asla 3. taraflarla paylaşılmaz."
+            : "Disclosures comply with EU AI Act whistleblower protections. Personal details are cryptographically hashed and automatically sanitized by PII Guardian before storage."}
+        </p>
+      </div>
+
       {!isLoggedIn ? (
         <Card className="border-brand-500/20 bg-brand-500/5">
           <CardContent className="flex flex-col items-center py-16 text-center">
