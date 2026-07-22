@@ -21,7 +21,7 @@ function corsHeaders(origin: string | null) {
   return {
     "Access-Control-Allow-Origin": allowedOrigin,
     "Access-Control-Allow-Methods": "GET, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, x-api-key",
     "Access-Control-Max-Age": "86400",
   };
 }
@@ -50,17 +50,19 @@ export async function GET(request: Request) {
 
   // 1. API Key Authentication & Tier Identification
   const authHeader = request.headers.get("authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return NextResponse.json(
-      { error: "unauthorized", message: "Missing or invalid Authorization header." },
-      { status: 401, headers: corsHeaders(origin) },
-    );
-  }
+  const xApiKeyHeader = request.headers.get("x-api-key");
 
-  const apiKey = authHeader.split(" ")[1];
+  const apiKey =
+    authHeader && authHeader.startsWith("Bearer ")
+      ? authHeader.split(" ")[1]
+      : (xApiKeyHeader ?? null);
+
   if (!apiKey) {
     return NextResponse.json(
-      { error: "unauthorized", message: "API key is empty." },
+      {
+        error: "unauthorized",
+        message: "Missing or invalid API key in Authorization or x-api-key header.",
+      },
       { status: 401, headers: corsHeaders(origin) },
     );
   }
