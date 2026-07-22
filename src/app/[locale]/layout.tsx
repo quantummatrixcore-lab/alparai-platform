@@ -11,6 +11,7 @@ import { ClientProviders } from "@/components/client-providers";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { OrganizationJsonLd } from "@/components/seo/json-ld";
 import { PlausibleWithConsent } from "@/components/plausible-consent";
+import { PwaRegister } from "@/components/pwa-register";
 
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -49,6 +50,11 @@ export default async function LocaleLayout({
       className={`${sans.variable} ${display.variable} ${mono.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+      </head>
       <body className="bg-bg-primary text-fg-primary relative min-h-screen w-full overflow-x-hidden font-sans antialiased">
         <a
           href="#main-content"
@@ -69,10 +75,10 @@ export default async function LocaleLayout({
           {!isEmbed && <MobileBottomNav />}
           <ClientProviders />
           {!isEmbed && <ScrollToTop />}
+          <PwaRegister />
           <OrganizationJsonLd />
           <PlausibleWithConsent />
           <Analytics />
-
           <SpeedInsights />
         </NextIntlClientProvider>
       </body>
