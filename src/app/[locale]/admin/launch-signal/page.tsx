@@ -69,6 +69,17 @@ export default async function LaunchSignalPage({
         </div>
       </div>
 
+      <div className="border-brand-500/20 bg-brand-500/10 text-brand-300 rounded-lg border p-4 text-xs">
+        <p className="mb-1 flex items-center gap-2 text-sm font-bold">
+          🚀 Launch Freeze Signal (Lansman Dondurma Sinyali) Nedir?
+        </p>
+        <p className="text-[11px] leading-relaxed">
+          Bu panel, ALPAR AI platformunun Hacker News (Show HN), Product Hunt ve X/Twitter kamuoyuna
+          lansman yapılmadan önceki platform hazır bulunurluk metriklerini, veri dondurma
+          stabilitesini ve sunucu operasyonellik durumunu izleyen ana kontrol merkezidir.
+        </p>
+      </div>
+
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <div className="bg-bg-secondary border-border-subtle rounded-xl border p-6">
           <div className="flex items-center gap-4">

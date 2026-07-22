@@ -17,15 +17,19 @@ export default async function FeatureFlagsPage({
   const { locale } = await params;
   setRequestLocale(locale);
   await requireAdmin();
+  const t = await getTranslations({ locale, namespace: "admin" });
 
   const flags = await getFeatureFlagsAction();
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">Feature Flags</h1>
-        <p className="text-sm text-fg-muted">
-          Toggle system features at runtime with ~0ms Upstash Redis edge cache propagation.
+        <h1 className="text-2xl font-bold tracking-tight text-white">
+          {t("nav_featureFlags")} — Canlı Özellik Bayrakları Yönetimi
+        </h1>
+        <p className="text-fg-muted mt-1 text-sm">
+          Sistem özelliklerini (PII Guardian, Sybil Shield, Cross-Audit, GEO Verifier) Upstash Redis
+          ~0ms edge önbellek dağıtımı ile anlık açıp kapatın.
         </p>
       </div>
 
