@@ -9,7 +9,6 @@ import { Container, Section } from "@/components/ui/layout";
 import type { IncidentListItem, LeaderboardEntry } from "@/types";
 import { toIncidentListItems, type TranslationMap } from "@/lib/mappers";
 import { checkAndTriggerNewsSyncPassive } from "@/actions/autopilot-sync";
-import { Link } from "@/i18n/routing";
 import dynamic from "next/dynamic";
 import { logger } from "@/lib/utils/logger";
 
@@ -212,8 +211,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     locale,
   ).map((item) => {
     const providerId = rawHomeData?.find((r) => r["id"] === item.id)?.["ai_provider_id"] as
-      | string
-      | null;
+      string | null;
     const provider = providerId ? providerMap.get(providerId) : null;
     return {
       ...item,
@@ -266,44 +264,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   return (
     <>
       <WebSiteJsonLd />
-
-      {/* Live Submit CTA Banner — replaces pre-launch countdown */}
-      <Section className="relative overflow-hidden border-b border-white/5 bg-slate-950/40 py-10">
-        <div className="bg-danger-500/8 absolute -top-[50%] left-1/2 h-[300px] w-[600px] -translate-x-1/2 rounded-full blur-[80px]" />
-        <Container className="relative z-10 max-w-4xl">
-          <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
-            <div>
-              <div className="border-danger-500/30 bg-danger-500/10 text-danger-400 mb-3 inline-flex items-center gap-1.5 rounded-sm border px-3 py-1 text-[10px] font-bold tracking-[0.15em] uppercase">
-                <span className="bg-danger-500 h-1.5 w-1.5 animate-pulse rounded-full" />
-                {locale === "tr" ? "CANLI YAYINDA" : "LIVE NOW"}
-              </div>
-              <h2 className="text-fg-primary text-2xl font-black tracking-tight sm:text-3xl">
-                {locale === "tr"
-                  ? "Bir Yapay Zeka Olayı mı Gördünüz?"
-                  : "Witnessed an AI Incident?"}
-              </h2>
-              <p className="text-fg-secondary mt-2 max-w-md text-sm">
-                {locale === "tr"
-                  ? "ALPAR AI şu anda canlı yayında. Olayları doğrudan kamuya açık kayıt defterimize bildirin. Hiçbir hesap gerekmez — kimliğiniz korunur."
-                  : "ALPAR AI is live. Report incidents directly to the public registry. No account needed — your identity is protected."}
-              </p>
-            </div>
-            <div className="flex flex-col items-center gap-4">
-              <Link
-                href="/submit"
-                className="bg-danger-500 hover:bg-danger-400 inline-flex h-14 items-center gap-3 rounded-md px-10 text-lg font-black text-white shadow-[0_0_30px_rgba(230,57,70,0.5)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-[0_0_50px_rgba(230,57,70,0.8)]"
-              >
-                {locale === "tr" ? "Olay Bildir" : "Report an Incident"}
-              </Link>
-              <p className="text-fg-muted text-xs">
-                {locale === "tr"
-                  ? "Zaten 400+ doğrulanmış olay kayıtlı"
-                  : "400+ verified incidents already documented"}
-              </p>
-            </div>
-          </div>
-        </Container>
-      </Section>
 
       <HeroSection
         totalIncidents={incidentsCountResult.count ?? 0}
