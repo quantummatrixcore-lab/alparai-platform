@@ -39,7 +39,14 @@ export const incidentsResponseSchema = z.object({
   }),
 });
 
-// 2. GET /api/v1/incidents/[id]
+// 1b. GET /api/v1/incidents/export
+export const incidentsExportResponseSchema = z.object({
+  license: z.string(),
+  provider: z.string(),
+  total_records: z.number(),
+  dataset: z.array(z.record(z.string(), z.unknown())),
+  exported_at: z.string(),
+});
 export const incidentDetailResponseSchema = z.object({
   data: z.object({
     id: z.string().uuid(),
