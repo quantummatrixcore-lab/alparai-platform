@@ -123,7 +123,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
     {
       href: "/admin/dsar",
-      label: "DSAR Queue",
+      label: t("nav_dsar") || "DSAR Queue",
       icon: ShieldWarning,
       active: pathname.startsWith("/admin/dsar"),
     },
@@ -139,7 +139,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
   const ecosystemItems = [
     {
       href: "/admin/ecosystem",
-      label: "Ecosystem Hub",
+      label: t("nav_ecosystem") || "Ecosystem Hub",
       icon: Globe,
       active: pathname.startsWith("/admin/ecosystem"),
     },
@@ -169,13 +169,13 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
     {
       href: "/admin/advisory-board",
-      label: "Advisory Board",
+      label: t("nav_advisoryBoard") || "Advisory Board",
       icon: Users,
       active: pathname.startsWith("/admin/advisory-board"),
     },
     {
       href: "/admin/k-benchmark",
-      label: "K-Benchmark",
+      label: t("nav_kBenchmark") || "K-Benchmark",
       icon: TrendUp,
       active: pathname.startsWith("/admin/k-benchmark"),
     },
@@ -185,7 +185,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
   const growthItems = [
     {
       href: "/admin/master-plan",
-      label: "Master Plan",
+      label: t("nav_masterPlan") || "Master Plan",
       icon: Compass,
       active: pathname.startsWith("/admin/master-plan"),
     },
@@ -247,7 +247,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
           },
           {
             href: "/admin/billing",
-            label: "Billing",
+            label: t("nav_billing") || "Billing",
             icon: Bank,
             active: pathname.startsWith("/admin/billing"),
           },
@@ -295,13 +295,13 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
     {
       href: "/admin/resources",
-      label: "Resource Efficiency",
+      label: t("nav_resourceEfficiency") || "Resource Efficiency",
       icon: Cpu,
       active: pathname.startsWith("/admin/resources"),
     },
     {
       href: "/admin/integrations",
-      label: "Integrations",
+      label: t("nav_integrations") || "Integrations",
       icon: PlugsConnected,
       active: pathname.startsWith("/admin/integrations"),
     },
