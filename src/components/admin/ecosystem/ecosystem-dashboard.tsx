@@ -1,11 +1,14 @@
 "use client";
 
+import React from "react";
 import { useTranslations } from "next-intl";
 import { StatsCards } from "./stats-cards";
 import { ApprovalQueue } from "./approval-queue";
 import { LiveFeed } from "./live-feed";
 import { PositiveDevelopments } from "./positive-developments";
 import { ManualFetchButton } from "./manual-fetch-button";
+import { LivePulseRing } from "@/components/admin/premium/live-pulse-ring";
+import { Info, Bot, Rss, ShieldCheck } from "lucide-react";
 import type { Database } from "@/types/database";
 
 type QueueItem = Database["public"]["Tables"]["external_incidents_queue"]["Row"];
@@ -28,36 +31,75 @@ export function EcosystemDashboard({ data }: { data: DashboardData }) {
   const t = useTranslations("admin");
 
   return (
-    <div className="animate-in fade-in space-y-6 duration-500">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">
-            {t("ecosystem_hub_title") || "Ecosystem Intelligence Hub"}
-          </h1>
-          <p className="text-fg-secondary mt-2">
-            {t("ecosystem_hub_subtitle") ||
-              "Küresel yapay zeka ekosistem haberlerini izleyin, dış kaynaklardan çekilen otomatik olay taslaklarını onaylayın."}
-          </p>
+    <div className="animate-fade-in space-y-8">
+      {/* Top Banner Header */}
+      <div className="border-brand-500/20 to-brand-950/30 relative overflow-hidden rounded-2xl border bg-gradient-to-br from-zinc-950 via-zinc-900 p-6 shadow-2xl backdrop-blur-xl">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center space-x-4">
+            <LivePulseRing status="healthy" />
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl font-black tracking-tight text-white sm:text-2xl">
+                  {t("ecosystem_hub_title") || "Ecosystem Intelligence Hub"}
+                </h1>
+                <span className="border-brand-500/30 bg-brand-500/20 text-brand-300 rounded-full border px-3 py-0.5 text-xs font-extrabold">
+                  CRAWLER ACTIVE
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-zinc-400">
+                {t("ecosystem_hub_subtitle") ||
+                  "Küresel yapay zeka ekosistem haberlerini izleyin, dış kaynaklardan çekilen otomatik olay taslaklarını onaylayın."}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-3">
+            <ManualFetchButton />
+          </div>
         </div>
-        <ManualFetchButton />
       </div>
 
-      <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 p-4 text-xs text-amber-300">
-        <p className="mb-1 flex items-center gap-1.5 text-sm font-bold">
-          ℹ️ Review Queue (İnceleme Kuyruğu) Nedir?
-        </p>
-        <p className="text-[11px] leading-relaxed">
-          Kuyruktaki kayıtlar; OECD AI Observatory, AI Incident Database (AIID) ve global RSS haber
-          akışlarından ALPAR AI botları tarafından otomatik çekilen potansiyel olay taslaklarıdır.
-          Moderatör onayından geçen taslaklar doğrudan onaylı halka açık incident kaydına
-          dönüştürülür.
-        </p>
+      {/* Review Queue Explanation Glass Banner */}
+      <div className="rounded-2xl border border-amber-500/20 bg-gradient-to-r from-amber-500/10 via-zinc-950/60 to-transparent p-5 shadow-xl backdrop-blur-xl">
+        <div className="flex items-start space-x-3">
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-amber-500/30 bg-amber-500/20">
+            <Info className="h-4 w-4 text-amber-400" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <h4 className="flex items-center gap-2 text-xs font-bold tracking-wider text-amber-300 uppercase">
+              <span>Review Queue Guidance (İnceleme Kuyruğu Rehberi)</span>
+            </h4>
+            <p className="mt-1 text-xs leading-relaxed text-zinc-300">
+              Kuyruktaki kayıtlar; <strong>OECD AI Observatory</strong>,{" "}
+              <strong>AI Incident Database (AIID)</strong> ve küresel RSS haber akışlarından ALPAR
+              AI otonom tarayıcıları tarafından otomatik çekilen potansiyel olay taslaklarıdır.
+              Moderatör onayından geçen taslaklar doğrudan onaylı halka açık incident kaydına
+              dönüştürülür.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-4 text-[11px] text-zinc-400">
+              <span className="flex items-center gap-1.5 font-medium">
+                <Bot className="text-brand-400 h-3.5 w-3.5" />
+                OECD AI & AIID Integration Active
+              </span>
+              <span className="flex items-center gap-1.5 font-medium">
+                <Rss className="h-3.5 w-3.5 text-sky-400" />
+                Global RSS News Feeds
+              </span>
+              <span className="flex items-center gap-1.5 font-medium">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+                Human Moderator Gatekeeping
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
+      {/* KPI Stats Cards */}
       <StatsCards stats={data.stats} />
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
-        <div className="space-y-6 lg:col-span-3">
+      {/* Main Split Grid */}
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
+        <div className="space-y-8 lg:col-span-3">
           <ApprovalQueue items={data.queue} />
           <LiveFeed items={data.feed} />
         </div>

@@ -1,10 +1,8 @@
 "use client";
 
-import { useTransition } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import React, { useTransition } from "react";
 import { approveQueueItem, rejectQueueItem } from "@/actions/ecosystem";
-import { Clock, Check, X, Globe } from "@phosphor-icons/react/dist/ssr";
+import { Clock, Check, X, ExternalLink } from "lucide-react";
 import type { Database } from "@/types/database";
 
 type QueueItem = Database["public"]["Tables"]["external_incidents_queue"]["Row"];
@@ -14,10 +12,15 @@ function SourceBadge({ source }: { source: string }) {
     reddit: "bg-orange-500/15 text-orange-400 border-orange-500/30",
     hn: "bg-amber-500/15 text-amber-400 border-amber-500/30",
     rss: "bg-sky-500/15 text-sky-400 border-sky-500/30",
+    oecd: "bg-purple-500/15 text-purple-400 border-purple-500/30",
+    aiid: "bg-rose-500/15 text-rose-400 border-rose-500/30",
   };
+
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase ${colors[source] || "bg-bg-tertiary text-fg-muted border-border-subtle"}`}
+      className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 font-mono text-[10px] font-bold tracking-wider uppercase ${
+        colors[source?.toLowerCase()] || "border-white/10 bg-zinc-800 text-zinc-400"
+      }`}
     >
       {source}
     </span>
@@ -36,80 +39,98 @@ export function ApprovalQueue({ items }: { items: QueueItem[] }) {
   };
 
   return (
-    <Card variant="glass" padding="none">
-      <CardHeader className="flex flex-row items-center justify-between border-b border-white/5 px-5 py-4">
-        <CardTitle className="text-fg-primary flex items-center gap-2 text-sm font-black tracking-wider uppercase">
-          <Clock weight="duotone" className="text-warning-400 h-4 w-4" />
-          Review Queue
-          {items.length > 0 && (
-            <Badge variant="warning" size="sm">
-              {items.length}
-            </Badge>
-          )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-0">
+    <div className="overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/80 shadow-2xl backdrop-blur-xl">
+      <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
+        <div className="flex items-center space-x-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-amber-500/30 bg-amber-500/10">
+            <Clock className="h-4 w-4 text-amber-400" />
+          </div>
+          <div>
+            <h3 className="flex items-center gap-2 text-sm font-bold tracking-wider text-white uppercase">
+              <span>Review Queue</span>
+              {items.length > 0 && (
+                <span className="rounded-full border border-amber-500/30 bg-amber-500/20 px-2 py-0.5 text-[11px] font-extrabold text-amber-400">
+                  {items.length} PENDING
+                </span>
+              )}
+            </h3>
+            <p className="text-xs text-zinc-400">
+              Crawled drafts from OECD, AIID, RSS feeds awaiting human moderation
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div>
         {items.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Check weight="duotone" className="mb-2 h-8 w-8 text-emerald-400" />
-            <p className="text-fg-muted text-sm">Queue is clear — no pending items</p>
+          <div className="flex flex-col items-center justify-center p-12 text-center">
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10">
+              <Check className="h-6 w-6 text-emerald-400" />
+            </div>
+            <h4 className="text-sm font-bold text-white">Queue is Empty</h4>
+            <p className="mt-1 text-xs text-zinc-400">
+              All external incident drafts have been reviewed and moderated.
+            </p>
           </div>
         ) : (
           <div className="divide-y divide-white/5">
             {items.map((item) => (
               <div
                 key={item.id}
-                className="flex items-start gap-4 px-5 py-4 transition-colors hover:bg-white/[0.02]"
+                className="group flex flex-col justify-between gap-4 p-5 transition-colors hover:bg-white/[0.02] sm:flex-row sm:items-center"
               >
                 <div className="min-w-0 flex-1">
-                  <div className="mb-1 flex items-center gap-2">
-                    <SourceBadge source={item.source} />
-                    <span className="text-fg-muted font-mono text-[10px]">
-                      {new Date(item.created_at).toLocaleDateString()}
+                  <div className="mb-2 flex flex-wrap items-center gap-2">
+                    <SourceBadge source={item.source || "crawl"} />
+                    <span className="font-mono text-[10px] text-zinc-500">
+                      {item.created_at ? new Date(item.created_at).toLocaleDateString() : "Recent"}
                     </span>
                   </div>
-                  <a
-                    href={item.external_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-fg-primary hover:text-brand-300 line-clamp-2 text-sm font-bold transition-colors"
-                  >
-                    {item.title}
-                  </a>
-                  <p className="text-fg-muted mt-1 line-clamp-2 text-xs">{item.body}</p>
-                  <div className="mt-2 flex items-center gap-3">
-                    <Globe weight="duotone" className="text-fg-muted h-3 w-3" />
-                    <span className="text-fg-muted truncate font-mono text-[10px]">
-                      {item.external_url}
-                    </span>
-                    <span className="text-fg-muted font-mono text-[10px]">
-                      Score: {item.source_score}
-                    </span>
-                  </div>
+
+                  {item.external_url ? (
+                    <a
+                      href={item.external_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/link hover:text-brand-300 flex items-center gap-1.5 text-sm font-bold text-white transition-colors"
+                    >
+                      <span className="line-clamp-1">{item.title}</span>
+                      <ExternalLink className="h-3.5 w-3.5 shrink-0 opacity-60 transition-opacity group-hover/link:opacity-100" />
+                    </a>
+                  ) : (
+                    <h4 className="line-clamp-1 text-sm font-bold text-white">{item.title}</h4>
+                  )}
+
+                  {item.body && (
+                    <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-zinc-400">
+                      {item.body}
+                    </p>
+                  )}
                 </div>
-                <div className="flex shrink-0 gap-2">
+
+                <div className="flex shrink-0 items-center space-x-2">
                   <button
                     onClick={() => handleApprove(item.id)}
                     disabled={isPending}
-                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 transition hover:bg-emerald-500/20 disabled:opacity-40"
-                    title="Approve & publish"
+                    className="flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-400 transition-colors hover:border-emerald-500/50 hover:bg-emerald-500/20 disabled:opacity-40"
                   >
-                    <Check weight="bold" className="h-4 w-4" />
+                    <Check className="h-3.5 w-3.5" />
+                    <span>Approve</span>
                   </button>
                   <button
                     onClick={() => handleReject(item.id)}
                     disabled={isPending}
-                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-red-500/30 bg-red-500/10 text-red-400 transition hover:bg-red-500/20 disabled:opacity-40"
-                    title="Reject"
+                    className="flex items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-bold text-rose-400 transition-colors hover:border-rose-500/50 hover:bg-rose-500/20 disabled:opacity-40"
                   >
-                    <X weight="bold" className="h-4 w-4" />
+                    <X className="h-3.5 w-3.5" />
+                    <span>Reject</span>
                   </button>
                 </div>
               </div>
             ))}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

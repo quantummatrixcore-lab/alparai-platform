@@ -1,70 +1,85 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkle, Star } from "@phosphor-icons/react/dist/ssr";
+import React from "react";
+import { Sparkles, ExternalLink, ShieldCheck } from "lucide-react";
 import type { Database } from "@/types/database";
 
 type EcosystemNews = Database["public"]["Tables"]["ecosystem_news"]["Row"];
 
 export function PositiveDevelopments({ items }: { items: EcosystemNews[] }) {
   return (
-    <Card variant="glass" padding="none">
-      <CardHeader className="flex flex-row items-center justify-between border-b border-white/5 px-5 py-4">
-        <CardTitle className="text-fg-primary flex items-center gap-2 text-sm font-black tracking-wider uppercase">
-          <Sparkle weight="duotone" className="h-4 w-4 text-emerald-400" />
-          Positive Developments
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-0">
+    <div className="overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/80 shadow-2xl backdrop-blur-xl">
+      <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
+        <div className="flex items-center space-x-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10">
+            <Sparkles className="h-4 w-4 text-emerald-400" />
+          </div>
+          <div>
+            <h3 className="text-sm font-bold tracking-wider text-white uppercase">
+              Positive Developments
+            </h3>
+            <p className="text-xs text-zinc-400">AI Safety wins, governance & alignment news</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
         {items.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Star weight="duotone" className="text-fg-muted mb-2 h-8 w-8" />
-            <p className="text-fg-muted text-sm">No positive developments tracked yet</p>
+          <div className="flex flex-col items-center justify-center p-12 text-center">
+            <ShieldCheck className="mb-3 h-8 w-8 text-zinc-600" />
+            <h4 className="text-sm font-bold text-white">No Items Tracked</h4>
+            <p className="mt-1 text-xs text-zinc-400">
+              Positive AI milestones and safety breakthroughs will appear here.
+            </p>
           </div>
         ) : (
           <div className="divide-y divide-white/5">
             {items.map((item) => (
               <div
                 key={item.id}
-                className="flex items-start gap-4 px-5 py-4 transition-colors hover:bg-white/[0.02]"
+                className="group flex items-start gap-3.5 p-5 transition-colors hover:bg-white/[0.02]"
               >
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10">
-                  <Sparkle weight="fill" className="h-3.5 w-3.5 text-emerald-400" />
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/10">
+                  <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
                 </div>
+
                 <div className="min-w-0 flex-1">
-                  <div className="mb-1 flex items-center gap-2">
+                  <div className="mb-1.5 flex items-center gap-2">
                     {item.source && (
-                      <span className="text-fg-muted font-mono text-[10px]">{item.source}</span>
+                      <span className="font-mono text-[10px] text-zinc-500">{item.source}</span>
                     )}
                     {item.published_at && (
-                      <span className="text-fg-muted font-mono text-[10px]">
+                      <span className="font-mono text-[10px] text-zinc-500">
                         {new Date(item.published_at).toLocaleDateString()}
                       </span>
                     )}
                   </div>
+
                   {item.url ? (
                     <a
                       href={item.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-fg-primary hover:text-brand-300 line-clamp-2 text-sm font-semibold transition-colors"
+                      className="group/link flex items-center gap-1.5 text-sm font-bold text-white transition-colors hover:text-emerald-300"
                     >
-                      {item.title_en}
+                      <span className="line-clamp-2">{item.title_en}</span>
+                      <ExternalLink className="h-3.5 w-3.5 shrink-0 opacity-60 transition-opacity group-hover/link:opacity-100" />
                     </a>
                   ) : (
-                    <span className="text-fg-primary line-clamp-2 text-sm font-semibold">
-                      {item.title_en}
-                    </span>
+                    <h4 className="line-clamp-2 text-sm font-bold text-white">{item.title_en}</h4>
                   )}
+
                   {item.summary_en && (
-                    <p className="text-fg-muted mt-1 line-clamp-2 text-xs">{item.summary_en}</p>
+                    <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-zinc-400">
+                      {item.summary_en}
+                    </p>
                   )}
                 </div>
               </div>
             ))}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
