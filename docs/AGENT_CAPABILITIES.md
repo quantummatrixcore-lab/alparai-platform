@@ -87,3 +87,20 @@
   8. **Legal Copy & Documentation:** `messages/*.json` legal namespace management, `/legal/*` page content writing, `docs/HANDOVER.md`, `docs/OPS_*` runbook writing, AGPL-3.0 compliance notices.
   9. **Accessibility (a11y):** `@axe-core/playwright` CI gating, WCAG 2.2 AA compliance (0 critical/serious violations), semantic HTML, keyboard navigation, screen reader support.
   10. **SEO & Social Metadata:** `generateMetadata()` pattern, Open Graph + Twitter Card tags, structured data `<head>` injection, `robots.txt` and `sitemap.xml` management.
+
+---
+
+## 3. AVAILABLE MCP TOOL ECOSYSTEM (Antigravity & Agent MCP Powers)
+
+Ajanlar (özellikle Antigravity ve Claude Architect) aşağıdaki MCP sunucu ve araç kümesini doğrudan kullanabilir:
+
+| Kategori                      | MCP Sunucuları                                                                                  | Sağlanan Yetenekler                                                                                                             |
+| ----------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| **Tasarım & UI**              | `StitchMCP`                                                                                     | Arayüz tasarımı, ekran üretimi (`generate_screen_from_text`), tasarım sistemi (`create_design_system`), bento-grid varyantları. |
+| **Veritabanı & Cloud SQL**    | `supabase`, `mcp-server-neon`, `cloud-sql`, `alloydb-postgresql`, `bigquery`, `clickhouse`      | Canlı SQL sorguları, RLS yönetimi, şema karşılaştırma, Neon branch yönetimi, BigQuery & ClickHouse analitiği.                   |
+| **Dağıtım & Cloud Infra**     | `vercel`, `cloudrun`, `google-compute-engine`, `gcloud`                                         | Otomatik Vercel & Cloud Run deploy, VM ve container yönetimi, SSL ve alan adı yapılandırması.                                   |
+| **Kod & İş Takibi**           | `github`, `atlassian-mcp-server`                                                                | GitHub PR/Issue yönetimi, kod arama, Jira bilet yönetimi, Confluence dokümantasyonu.                                            |
+| **Tarayıcı & Web Otomasyonu** | `openchrome`, `chrome-devtools-mcp`                                                             | Yerel Chrome/Edge CDP kontrolü, form doldurma, Captcha/Auth duvarı geçme, DOM snapshot & screenshot.                            |
+| **Ajan Köprüleri & Engine**   | `mcp-agent-bridge`, `mcp-engine-bridge`                                                         | Alt ajan orkestrasyonu (Agent B, F, Tartarus, Omega, Kairos, Atlas, Prometheus).                                                |
+| **AI & Derin Akıl Yürütme**   | `sequential-thinking`, `genkit-mcp-server`, `vertex-ai-search`                                  | Çok adımlı dinamik akıl yürütme, Genkit AI flow çalıştırma, Vertex AI arama motoru entegrasyonu.                                |
+| **Gelişmiş Servisler**        | `google-cloud-spanner`, `google-cloud-firestore`, `google-cloud-pubsub`, `google-cloud-logging` | Ölçeklenebilir Spanner SQL, NoSQL Firestore, Pub/Sub mesajlaşma, canlı Cloud Logging analizi.                                   |
