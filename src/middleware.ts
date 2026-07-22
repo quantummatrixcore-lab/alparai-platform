@@ -38,7 +38,10 @@ export async function middleware(request: NextRequest) {
     const locale = request.cookies.get("NEXT_LOCALE")?.value ?? "en";
 
     if (!user) {
-      return NextResponse.redirect(new URL(`/${locale}/auth/signin`, request.url));
+      const currentPath = request.nextUrl.pathname + request.nextUrl.search;
+      const signinUrl = new URL(`/${locale}/auth/signin`, request.url);
+      signinUrl.searchParams.set("next", currentPath);
+      return NextResponse.redirect(signinUrl);
     }
 
     const { data: profile } = await supabase

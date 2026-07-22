@@ -37,6 +37,8 @@ interface OverviewDashboardClientProps {
   locale: string;
 }
 
+import { Observe360Dashboard } from "@/components/admin/observe-360-dashboard";
+
 export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClientProps) {
   const t = useTranslations("admin");
   const [logs, setLogs] = useState<{ time: string; type: string; text: string; status: string }[]>(
@@ -118,9 +120,12 @@ export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClie
 
   return (
     <div className="space-y-8">
+      <Observe360Dashboard />
       <div className="flex items-center justify-between rounded-lg border border-amber-500/20 bg-amber-500/10 px-4 py-2 text-xs font-medium text-amber-400">
         <span>Overview System Telemetry</span>
-        <span className="rounded bg-amber-500/20 px-2 py-0.5 font-mono text-[10px] uppercase">SIMULATION MODE — Realtime Event Stream</span>
+        <span className="rounded bg-amber-500/20 px-2 py-0.5 font-mono text-[10px] uppercase">
+          SIMULATION MODE — Realtime Event Stream
+        </span>
       </div>
       <div className="grid gap-6 sm:grid-cols-3">
         <AdminSectionCard>

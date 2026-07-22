@@ -12,8 +12,8 @@ test.beforeEach(async ({ page }) => {
 test.describe("Admin Panel Journey - Security Gates", () => {
   test("unauthenticated access to /admin redirects to signin page", async ({ page }) => {
     await page.goto("/en/admin");
-    await page.waitForURL(/\/auth\/signin/);
-    await expect(page).toHaveURL(/.*signin.*/);
+    await page.waitForURL(/\/auth\/signin\?next=/);
+    await expect(page).toHaveURL(/.*signin\?next=.*/);
 
     // Check if signin page renders Google button
     await expect(page.getByRole("button", { name: /continue with google/i })).toBeVisible();
@@ -23,19 +23,19 @@ test.describe("Admin Panel Journey - Security Gates", () => {
     page,
   }) => {
     await page.goto("/en/admin/autopilot/analytics");
-    await page.waitForURL(/\/auth\/signin/);
-    await expect(page).toHaveURL(/.*signin.*/);
+    await page.waitForURL(/\/auth\/signin\?next=/);
+    await expect(page).toHaveURL(/.*signin\?next=.*/);
   });
 
   test("admin triage queue page redirects unauthenticated users", async ({ page }) => {
     await page.goto("/en/admin/incidents");
-    await page.waitForURL(/\/auth\/signin/);
-    await expect(page).toHaveURL(/.*signin.*/);
+    await page.waitForURL(/\/auth\/signin\?next=/);
+    await expect(page).toHaveURL(/.*signin\?next=.*/);
   });
 
   test("admin moderation page redirects unauthenticated users", async ({ page }) => {
     await page.goto("/en/admin/moderation");
-    await page.waitForURL(/\/auth\/signin/);
-    await expect(page).toHaveURL(/.*signin.*/);
+    await page.waitForURL(/\/auth\/signin\?next=/);
+    await expect(page).toHaveURL(/.*signin\?next=.*/);
   });
 });

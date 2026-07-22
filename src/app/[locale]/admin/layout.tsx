@@ -4,6 +4,8 @@ import { AdminSidebar } from "@/components/admin/sidebar";
 import { getCurrentUser } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 
+import { Manage360CommandPalette } from "@/components/admin/manage-360-palette";
+
 export default async function AdminLayout({
   children,
   params,
@@ -42,6 +44,7 @@ export default async function AdminLayout({
       <div className="pointer-events-none absolute top-[20%] -left-[20%] h-[500px] w-[500px] rounded-full bg-cyan-500/5 blur-[120px]" />
 
       <AdminSidebar user={sidebarUser} />
+      <Manage360CommandPalette />
       <div className="relative z-10 flex min-w-0 flex-1 flex-col pt-16 lg:h-screen lg:overflow-y-auto lg:pt-0">
         <main className="w-full flex-1">{children}</main>
       </div>
