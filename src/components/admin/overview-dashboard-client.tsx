@@ -14,6 +14,8 @@ import {
 import { Cpu, ArrowRight, CheckCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { AreaGradient } from "@/components/ui/chart-gradient";
+import { CHART_COLORS } from "@/lib/utils/chart-colors";
 import { AdminSectionCard } from "@/components/admin/admin-design-kit";
 import { Gauge } from "@/components/admin/premium/gauge";
 import { LivePulseRing } from "@/components/admin/premium/live-pulse-ring";
@@ -154,47 +156,38 @@ export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClie
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
-                      <linearGradient id="colorIncident" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#00FF88" stopOpacity={0.2} />
-                        <stop offset="95%" stopColor="#00FF88" stopOpacity={0} />
-                      </linearGradient>
+                      <AreaGradient id="colorIncident" from={CHART_COLORS.accent.emerald} />
                     </defs>
                     <CartesianGrid
                       strokeDasharray="3 3"
-                      stroke="rgba(255,255,255,0.05)"
+                      stroke={CHART_COLORS.neutrals.grid}
                       vertical={false}
                     />
                     <XAxis
                       dataKey="day"
-                      stroke="rgba(255,255,255,0.2)"
-                      tick={{
-                        fill: "rgba(255,255,255,0.4)",
-                        fontSize: 11,
-                      }}
+                      stroke={CHART_COLORS.neutrals.line}
+                      tick={{ fill: CHART_COLORS.neutrals.fill, fontSize: 11 }}
                       tickLine={false}
                       axisLine={false}
                     />
                     <YAxis
-                      stroke="rgba(255,255,255,0.2)"
-                      tick={{
-                        fill: "rgba(255,255,255,0.4)",
-                        fontSize: 11,
-                      }}
+                      stroke={CHART_COLORS.neutrals.line}
+                      tick={{ fill: CHART_COLORS.neutrals.fill, fontSize: 11 }}
                       tickLine={false}
                       axisLine={false}
                     />
                     <Tooltip
                       contentStyle={{
                         backgroundColor: "#0E1622",
-                        borderColor: "rgba(255,255,255,0.1)",
+                        borderColor: CHART_COLORS.neutrals.grid,
                         borderRadius: "8px",
                       }}
-                      itemStyle={{ color: "#00FF88" }}
+                      itemStyle={{ color: CHART_COLORS.accent.emerald }}
                     />
                     <Area
                       type="monotone"
                       dataKey="count"
-                      stroke="#00FF88"
+                      stroke={CHART_COLORS.accent.emerald}
                       strokeWidth={2}
                       fillOpacity={1}
                       fill="url(#colorIncident)"
