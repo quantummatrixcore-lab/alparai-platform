@@ -10,7 +10,7 @@
 
 Following the completion of Queue Batch (Items 108r, 136, 139, 132-UI, 147, 143, 144, 145, 129), all primary administrative, integrity, and public read-only API surfaces are fully built, tested, and verified (%100 test pass across 743 unit/integration tests).
 
-To further solidify ALPAR AI's position as the primary authority and "Moody's for AI", we propose four strategic technical leverage additions for the Advisory Board & Architect's consideration — including leveraging **Stitch MCP** for Antigravity-driven frontend UI design generation.
+To further solidify ALPAR AI's position as the primary authority and "Moody's for AI", we propose five strategic technical leverage additions for the Advisory Board & Architect's consideration — including a mandatory **Post-Batch Professional Reflection & Proposal Protocol**.
 
 ---
 
@@ -28,13 +28,19 @@ To further solidify ALPAR AI's position as the primary authority and "Moody's fo
 - **Solution:** Formally empower Antigravity (Gemini Flash) to utilize **Stitch MCP** (`generate_screen_from_text`, `edit_screens`, `create_design_system`) to generate pixel-perfect, premium frontend interfaces and design systems directly. OpenCode can then handle the mechanical i18n and Playwright test coverage.
 - **Value:** Unlocks ultra-fast, premium UI creation using Gemini's multimodal and design capabilities, accelerating frontend shipping velocity.
 
-### Proposal 13.3 — Live B2B Risk Score Webhooks Engine (P2)
+### Proposal 13.3 — Mandatory Post-Batch Innovation & Reflection Protocol (P1 - Founder Directive)
+
+- **Problem:** After completing a batch of tasks, executors stop and go idle without proactively surfacing discovered architectural improvements.
+- **Solution:** Establish a mandatory standard operating protocol: Upon 100% completion of any assigned task batch (quality crucible green), Antigravity and OpenCode MUST autonomously perform a 360° architecture & system audit, synthesize high-leverage technical/strategic improvements, and append them as a structured proposal in `docs/PROPOSALS/0NN-*.md` for Claude (Architect) review.
+- **Value:** Ensures continuous, autonomous innovation and architectural evolution after every execution cycle.
+
+### Proposal 13.4 — Live B2B Risk Score Webhooks Engine (P2)
 
 - **Problem:** Enterprise users consuming the new public read-only Incidents API (`/api/v1/incidents/export`) need real-time alerts when a specific provider/model's TruthScore drops below threshold.
 - **Solution:** Create an automated webhook dispatcher in `src/lib/webhooks/risk-alert.ts` triggered when `cross_audit_truth_score` degrades >5% on ingest.
 - **Value:** Opens the B2B SaaS revenue wedge for enterprise risk management.
 
-### Proposal 13.4 — Playwright Visual Regression Snapshot Suite (P2)
+### Proposal 13.5 — Playwright Visual Regression Snapshot Suite (P2)
 
 - **Problem:** Functional Playwright tests check DOM presence, but subtle CSS/layout drifts across Next.js 15 route updates can bypass linting.
 - **Solution:** Add `tests/e2e/visual/admin-visual.spec.ts` using Playwright visual comparison (`toHaveScreenshot()`) for the core 5 admin dashboard groups.
