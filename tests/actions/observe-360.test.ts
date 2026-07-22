@@ -37,14 +37,17 @@ describe("Observe360 Server Action", () => {
     });
 
     const mockCountResult = { count: 12, data: [], error: null };
-    const mockOrder = vi.fn().mockResolvedValue(mockCountResult);
+    const mockLimit = vi.fn().mockResolvedValue({ data: [], error: null });
+    const mockOrder = vi.fn().mockImplementation(() => {
+      const promise = Promise.resolve(mockCountResult) as never;
+      (promise as { limit: typeof mockLimit }).limit = mockLimit;
+      return promise;
+    });
     const mockEq = vi.fn().mockResolvedValue(mockCountResult);
-    const mockGte = vi
-      .fn()
-      .mockResolvedValue({
-        data: [{ cost_usd: 0.5, latency_ms: 120, consensus_reached: true }],
-        error: null,
-      });
+    const mockGte = vi.fn().mockResolvedValue({
+      data: [{ cost_usd: 0.5, latency_ms: 120, consensus_reached: true }],
+      error: null,
+    });
 
     mockSupabaseClient.from.mockImplementation(() => {
       return {
@@ -70,5 +73,44 @@ describe("Observe360 Server Action", () => {
     expect(telemetry).toHaveProperty("kBenchmark");
     expect(telemetry.securityRls.status).toBe("HARDENED");
     expect(typeof telemetry.timestamp).toBe("string");
+  });
+
+  it("extracts real DORA metrics when dora_metrics table has records", async () => {
+    mockSupabaseClient.rpc.mockResolvedValue({ data: 24641536, error: null } as never);
+
+    const mockDoraRow = {
+      deployment_frequency: 3,
+      lead_time_seconds: 1800,
+      change_failure_rate: 0.05,
+      mttr_seconds: 600,
+    };
+
+    mockSupabaseClient.from.mockImplementation((table) => {
+      if (table === "dora_metrics") {
+        return {
+          select: vi.fn().mockReturnValue({
+            order: vi.fn().mockReturnValue({
+              limit: vi.fn().mockResolvedValue({ data: [mockDoraRow], error: null }),
+            }),
+          }),
+        } as never;
+      }
+      return {
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockResolvedValue({ count: 5, data: [] }),
+          order: vi.fn().mockResolvedValue({ count: 5, data: [] }),
+          gte: vi.fn().mockResolvedValue({ data: [] }),
+          then: (cb: (val: unknown) => unknown) => cb({ count: 5, data: [] }),
+        }),
+      } as never;
+    });
+
+    const telemetry = await getObserve360Telemetry();
+
+    expect(telemetry.dora.isInstrumented).toBe(true);
+    expect(telemetry.dora.deployFrequency).toBe("3 / day");
+    expect(telemetry.dora.leadTimeMinutes).toBe(30);
+    expect(telemetry.dora.mttrMinutes).toBe(10);
+    expect(telemetry.dora.changeFailureRatePct).toBe(0.05);
   });
 });

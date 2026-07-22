@@ -471,6 +471,39 @@ export type Database = {
         }
         Relationships: []
       }
+      dora_metrics: {
+        Row: {
+          id: string
+          metric_date: string
+          deployment_frequency: number
+          lead_time_seconds: number
+          change_failure_rate: number
+          mttr_seconds: number
+          metadata: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          metric_date: string
+          deployment_frequency?: number
+          lead_time_seconds?: number
+          change_failure_rate?: number
+          mttr_seconds?: number
+          metadata?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          metric_date?: string
+          deployment_frequency?: number
+          lead_time_seconds?: number
+          change_failure_rate?: number
+          mttr_seconds?: number
+          metadata?: Json
+          created_at?: string
+        }
+        Relationships: []
+      }
       art73_obligation_status: {
         Row: {
           created_at: string

@@ -85,6 +85,7 @@ export async function getObserve360Telemetry(): Promise<Observe360Telemetry> {
     monthlyCostRes,
     crossAuditStatsRes,
     dbSizeRes,
+    doraRes,
   ] = await Promise.all([
     db.from("incidents").select("id", { count: "exact", head: true }),
     db
@@ -104,6 +105,15 @@ export async function getObserve360Telemetry(): Promise<Observe360Telemetry> {
       (r) => r,
       () => null,
     ),
+    db
+      .from("dora_metrics")
+      .select("deployment_frequency, lead_time_seconds, change_failure_rate, mttr_seconds")
+      .order("metric_date", { ascending: false })
+      .limit(1)
+      .then(
+        (r) => r,
+        () => ({ data: null, error: null }),
+      ),
   ]);
 
   const totalIncidents = incidentsRes.count ?? 0;
@@ -150,6 +160,24 @@ export async function getObserve360Telemetry(): Promise<Observe360Telemetry> {
     dbSizeMb = Math.round((dbSizeRes.data / (1024 * 1024)) * 100) / 100;
   }
 
+  // Real DORA metrics from dora_metrics table
+  const latestDora = doraRes.data?.[0];
+  const doraData = latestDora
+    ? {
+        deployFrequency: `${latestDora.deployment_frequency} / day`,
+        leadTimeMinutes: Math.round(latestDora.lead_time_seconds / 60),
+        mttrMinutes: Math.round(latestDora.mttr_seconds / 60),
+        changeFailureRatePct: Number(latestDora.change_failure_rate),
+        isInstrumented: true,
+      }
+    : {
+        deployFrequency: "Daily (Rule #31 Cap)",
+        leadTimeMinutes: null,
+        mttrMinutes: null,
+        changeFailureRatePct: 0.0,
+        isInstrumented: false,
+      };
+
   const telemetry: Observe360Telemetry = {
     incidents: {
       total: totalIncidents,
@@ -167,13 +195,7 @@ export async function getObserve360Telemetry(): Promise<Observe360Telemetry> {
       piiGuardianActive: true,
       rlsPolicyCount: 28,
     },
-    dora: {
-      deployFrequency: "Daily (Rule #31 Cap)",
-      leadTimeMinutes: null, // Honest: null until CI webhook ingestion is added
-      mttrMinutes: null,
-      changeFailureRatePct: 0.0,
-      isInstrumented: false,
-    },
+    dora: doraData,
     cost: {
       dailySpendUsd: Math.round(dailySpendUsd * 100) / 100,
       dailyLimitUsd: Number(process.env.COST_LIMIT_DAILY ?? 50),
