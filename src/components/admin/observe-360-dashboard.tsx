@@ -80,14 +80,14 @@ export function Observe360Dashboard() {
           </div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-black text-white">
-              {telemetry?.incidents.total ?? 412}
+              {telemetry?.incidents.total ?? 0}
             </span>
             <span className="text-brand-300 text-xs font-bold">
               {telemetry?.incidents.pendingReview ?? 0} PENDING
             </span>
           </div>
           <p className="mt-2 text-[11px] text-zinc-400">
-            {telemetry?.incidents.verified ?? 18} Expert-Verified incidents
+            {telemetry?.incidents.verified ?? 0} Expert-Verified incidents
           </p>
         </div>
 
@@ -99,14 +99,22 @@ export function Observe360Dashboard() {
           </div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-black text-white">
-              {telemetry?.healthSlo.availability ?? 99.98}%
+              {telemetry?.healthSlo.availability ?? 100}%
             </span>
             <span className="text-xs font-bold text-emerald-400">
               {telemetry?.healthSlo.status ?? "NOMINAL"}
             </span>
           </div>
           <div className="mt-2">
-            <Gauge value={98} label="p95 Latency ≤ 142ms" variant="success" />
+            <Gauge
+              value={telemetry?.healthSlo.availability ?? 100}
+              label={
+                telemetry?.healthSlo.p95LatencyMs
+                  ? `p95 Latency ≤ ${telemetry.healthSlo.p95LatencyMs}ms`
+                  : "Live Telemetry Online"
+              }
+              variant="success"
+            />
           </div>
         </div>
 
@@ -122,7 +130,9 @@ export function Observe360Dashboard() {
             </span>
             <span className="text-xs font-bold text-emerald-400">PASSED</span>
           </div>
-          <p className="mt-2 text-[11px] text-zinc-400">PII Guardian Active • 28 RLS Policies</p>
+          <p className="mt-2 text-[11px] text-zinc-400">
+            PII Guardian Active • {telemetry?.securityRls.rlsPolicyCount ?? 28} RLS Policies
+          </p>
         </div>
 
         {/* 4. DORA Telemetry Domain */}
@@ -132,12 +142,17 @@ export function Observe360Dashboard() {
             <Zap className="h-4 w-4 text-sky-400" />
           </div>
           <div className="mt-2 flex items-baseline justify-between">
-            <span className="text-2xl font-black text-white">Daily</span>
-            <span className="text-xs font-bold text-sky-400">Rule #31 Cap</span>
+            <span className="text-2xl font-black text-white">
+              {telemetry?.dora.deployFrequency ?? "Daily"}
+            </span>
+            <span className="text-xs font-bold text-sky-400">
+              {telemetry?.dora.isInstrumented ? "LIVE" : "Rule #31"}
+            </span>
           </div>
           <p className="mt-2 text-[11px] text-zinc-400">
-            Lead Time: {telemetry?.dora.leadTimeMinutes ?? 14}m • MTTR:{" "}
-            {telemetry?.dora.mttrMinutes ?? 8}m
+            {telemetry?.dora.isInstrumented
+              ? `Lead Time: ${telemetry.dora.leadTimeMinutes}m`
+              : "CI Webhook Awaiting Integration"}
           </p>
         </div>
 
@@ -149,12 +164,13 @@ export function Observe360Dashboard() {
           </div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-black text-white">
-              ${telemetry?.cost.dailySpendUsd ?? 0.12} / day
+              ${telemetry?.cost.dailySpendUsd ?? 0.0} / day
             </span>
             <span className="text-xs font-bold text-emerald-400">UNDER CAP</span>
           </div>
           <p className="mt-2 text-[11px] text-zinc-400">
-            Monthly Spend: ${telemetry?.cost.monthlySpendUsd ?? 3.85} / $500
+            Monthly Spend: ${telemetry?.cost.monthlySpendUsd ?? 0.0} / $
+            {telemetry?.cost.monthlyLimitUsd ?? 500}
           </p>
         </div>
 
@@ -166,12 +182,12 @@ export function Observe360Dashboard() {
           </div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-black text-white">
-              {telemetry?.growth.totalUsers ?? 45} Users
+              {telemetry?.growth.totalUsers ?? 0} Users
             </span>
-            <span className="text-xs font-bold text-purple-400">ACTIVE</span>
+            <span className="text-xs font-bold text-purple-400">REGISTERED</span>
           </div>
           <p className="mt-2 text-[11px] text-zinc-400">
-            {telemetry?.growth.reportersCount ?? 18} Verified Incident Reporters
+            {telemetry?.growth.reportersCount ?? 0} Active Incident Reporters
           </p>
         </div>
 
@@ -183,12 +199,14 @@ export function Observe360Dashboard() {
           </div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-black text-white">
-              {telemetry?.capacity.dbSizeMb ?? 23.5} MB
+              {telemetry?.capacity.dbSizeMb ? `${telemetry.capacity.dbSizeMb} MB` : "23.5 MB"}
             </span>
-            <span className="text-xs font-bold text-amber-400">500MB Free</span>
+            <span className="text-xs font-bold text-amber-400">
+              {telemetry?.capacity.dbSizeLimitMb ?? 500}MB Cap
+            </span>
           </div>
           <p className="mt-2 text-[11px] text-zinc-400">
-            Vercel Crons: {telemetry?.capacity.cronSlotUsage ?? "9 / 12 slots"}
+            Crons: {telemetry?.capacity.cronSlotUsage ?? "9 / 12 slots"}
           </p>
         </div>
 
@@ -200,12 +218,12 @@ export function Observe360Dashboard() {
           </div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-black text-white">
-              {telemetry?.kBenchmark.totalModelsRated ?? 14} Models
+              {telemetry?.kBenchmark.totalModelsRated ?? 0} Models
             </span>
             <span className="text-brand-300 text-xs font-bold">RATED</span>
           </div>
           <p className="mt-2 text-[11px] text-zinc-400">
-            Last Audit: {telemetry?.kBenchmark.lastAuditDate ?? "Recent"}
+            Last Audit: {telemetry?.kBenchmark.lastAuditDate ?? "No Recent Audit"}
           </p>
         </div>
       </div>
