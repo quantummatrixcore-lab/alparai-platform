@@ -141,7 +141,7 @@ export default async function RoadmapPage({ params }: { params: Promise<{ locale
         <RoadmapClient
           initialMilestones={initialMilestones}
           isReadOnly={isReadOnly}
-          locale={locale}
+          _locale={locale}
         />
 
         {/* Roadmap To-Dos / Checklists */}

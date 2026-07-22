@@ -14,15 +14,14 @@ export default async function GEOPage({ params }: { params: Promise<{ locale: st
   setRequestLocale(locale);
   await requireAdmin();
 
+  const t = await getTranslations({ locale, namespace: "admin" });
   const stats = await getGeoStatsAction();
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">GEO (Generative Engine Optimization)</h1>
-        <p className="text-sm text-fg-muted">
-          Monitor and optimize ALPAR AI authority, citations, and crawler traffic across LLM engines.
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight text-white">{t("nav_geo")}</h1>
+        <p className="text-fg-muted text-sm">{t("geo_ai_traffic_gauge")}</p>
       </div>
 
       <GeoDashboardClient

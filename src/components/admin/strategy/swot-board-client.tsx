@@ -175,7 +175,11 @@ export function SwotBoardClient({
                             : "bg-blue-500/10 text-blue-400",
                       )}
                     >
-                      {item.weight}
+                      {item.weight === "high"
+                        ? t("swot_weight_high")
+                        : item.weight === "medium"
+                          ? t("swot_weight_medium")
+                          : t("swot_weight_low")}
                     </span>
                   </div>
                 </div>

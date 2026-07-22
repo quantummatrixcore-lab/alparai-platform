@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { AdminSectionCard } from "@/components/admin/admin-design-kit";
 import type { UnifiedHealthReport } from "@/lib/health/system-health";
 import { RefreshCw, CheckCircle2, AlertTriangle, XCircle, Bell } from "lucide-react";
@@ -10,6 +11,7 @@ interface HealthDashboardClientProps {
 }
 
 export function HealthDashboardClient({ initialReport }: HealthDashboardClientProps) {
+  const t = useTranslations("admin");
   const [report, setReport] = useState<UnifiedHealthReport>(initialReport);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -28,19 +30,19 @@ export function HealthDashboardClient({ initialReport }: HealthDashboardClientPr
       case "healthy":
         return (
           <span className="flex items-center gap-1 text-xs font-semibold text-emerald-400">
-            <CheckCircle2 className="h-4 w-4" /> Healthy
+            <CheckCircle2 className="h-4 w-4" /> {t("health_status_healthy")}
           </span>
         );
       case "degraded":
         return (
           <span className="flex items-center gap-1 text-xs font-semibold text-amber-400">
-            <AlertTriangle className="h-4 w-4" /> Degraded
+            <AlertTriangle className="h-4 w-4" /> {t("health_status_degraded")}
           </span>
         );
       case "down":
         return (
           <span className="flex items-center gap-1 text-xs font-semibold text-rose-400">
-            <XCircle className="h-4 w-4" /> Down
+            <XCircle className="h-4 w-4" /> {t("health_status_down")}
           </span>
         );
     }
@@ -59,7 +61,12 @@ export function HealthDashboardClient({ initialReport }: HealthDashboardClientPr
                   : "border border-rose-500/30 bg-rose-500/20 text-rose-400"
             }`}
           >
-            System Status: {report.overall}
+            {t("health_system_status")}{" "}
+            {report.overall === "healthy"
+              ? t("health_status_healthy")
+              : report.overall === "degraded"
+                ? t("health_status_degraded")
+                : t("health_status_down")}
           </span>
           <span className="text-fg-muted font-mono text-xs">
             Checked: {new Date(report.timestamp).toLocaleTimeString()}
@@ -73,11 +80,11 @@ export function HealthDashboardClient({ initialReport }: HealthDashboardClientPr
           className="flex items-center gap-1.5 rounded border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-50"
         >
           <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? "animate-spin" : ""}`} />
-          Refresh Status
+          {t("health_refresh_status")}
         </button>
       </div>
 
-      <AdminSectionCard title="9-Subsystem Health Grid">
+      <AdminSectionCard title={t("health_subsystem_grid")}>
         <div className="grid gap-4 p-6 sm:grid-cols-2 lg:grid-cols-3">
           {(report.subsystems || []).map((sub) => (
             <div
@@ -91,7 +98,7 @@ export function HealthDashboardClient({ initialReport }: HealthDashboardClientPr
               {sub.message && <p className="text-fg-muted text-[11px]">{sub.message}</p>}
               {sub.latencyMs !== undefined && (
                 <div className="text-fg-muted font-mono text-[10px]">
-                  Latency: <span className="text-white">{sub.latencyMs}ms</span>
+                  {t("health_latency")} <span className="text-white">{sub.latencyMs}ms</span>
                 </div>
               )}
             </div>
@@ -99,18 +106,15 @@ export function HealthDashboardClient({ initialReport }: HealthDashboardClientPr
         </div>
       </AdminSectionCard>
 
-      <AdminSectionCard title="SLA Alarms & Incidents Log (sla_alarms)">
+      <AdminSectionCard title={t("health_sla_monitor")}>
         <div className="text-fg-muted space-y-3 p-6 text-xs">
           <div className="flex items-center justify-between rounded border border-emerald-500/20 bg-emerald-500/10 p-3 text-emerald-300">
             <span className="flex items-center gap-2 font-medium">
-              <Bell className="h-4 w-4" /> SLA Alarm Monitor Active
+              <Bell className="h-4 w-4" /> {t("health_sla_active")}
             </span>
-            <span className="font-mono text-[10px]">0 Active Breaches</span>
+            <span className="font-mono text-[10px]">{t("health_sla_breaches")}</span>
           </div>
-          <p className="text-[11px]">
-            Automated alerts trigger to `sla_alarms` table and email notifications if latency
-            exceeds &gt;500ms or error rates exceed &gt;1%.
-          </p>
+          <p className="text-[11px]">{t("health_sla_desc")}</p>
         </div>
       </AdminSectionCard>
     </div>

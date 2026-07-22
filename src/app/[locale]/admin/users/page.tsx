@@ -1,11 +1,9 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { Container } from "@/components/ui/layout";
-import { MetricWidget } from "@/components/ui/metric-widget";
-import { QuickActionGrid, type QuickAction } from "@/components/ui/quick-action-grid";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { Users, UserPlus, Shield, ShieldCheck, Download, Mail } from "lucide-react";
+import { Users } from "lucide-react";
 import { PromoteUserForm } from "@/components/admin/promote-user-form";
 import { UsersClient } from "@/app/[locale]/admin/users/users-client";
 
@@ -51,22 +49,6 @@ export default async function AdminUsersPage({ params }: { params: Promise<{ loc
       },
     ];
   }
-  const adminCount = users.filter((u) => u["role"] === "admin" || u["role"] === "ceo").length;
-  const moderatorCount = users.filter((u) => u["role"] === "moderator").length;
-  const verifiedCount = users.filter((u) => u["is_verified"]).length;
-
-  const quickActions: QuickAction[] = [
-    { id: "invite", icon: UserPlus, label: "Invite User", onClick: () => {} },
-    {
-      id: "moderators",
-      icon: Shield,
-      label: "Moderators",
-      description: `${moderatorCount} active`,
-      onClick: () => {},
-    },
-    { id: "export", icon: Download, label: "Export CSV", onClick: () => {} },
-    { id: "contact", icon: Mail, label: "Contact All", onClick: () => {} },
-  ];
 
   return (
     <Container className="py-10">
@@ -79,16 +61,6 @@ export default async function AdminUsersPage({ params }: { params: Promise<{ loc
         </div>
         <PromoteUserForm currentUserRole={user.role} />
       </header>
-
-      <div className="mb-6 grid gap-3 sm:grid-cols-3">
-        <MetricWidget icon={Users} label="Total Users" value={users.length} />
-        <MetricWidget icon={Shield} label="Admins" value={adminCount} />
-        <MetricWidget icon={ShieldCheck} label="Verified" value={verifiedCount} />
-      </div>
-
-      <div className="mb-6">
-        <QuickActionGrid actions={quickActions} columns={4} />
-      </div>
 
       <UsersClient
         users={users}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { AdminSectionCard } from "@/components/admin/admin-design-kit";
 import { toggleFeatureFlagAction, type FeatureFlagItem } from "@/actions/system-mgmt";
 import { ToggleLeft, ToggleRight, ShieldCheck, Zap } from "lucide-react";
@@ -9,8 +10,9 @@ interface FeatureFlagsClientProps {
   initialFlags: FeatureFlagItem[];
 }
 
-export function FeatureFlagsClient({ initialFlags = [] }: FeatureFlagsClientProps) {
-  const [flags, setFlags] = useState<FeatureFlagItem[]>(initialFlags || []);
+export function FeatureFlagsClient({ initialFlags }: FeatureFlagsClientProps) {
+  const t = useTranslations("admin");
+  const [flags, setFlags] = useState<FeatureFlagItem[]>(initialFlags);
   const [updatingKey, setUpdatingKey] = useState<string | null>(null);
 
   const handleToggle = async (key: string, currentEnabled: boolean) => {
@@ -20,17 +22,15 @@ export function FeatureFlagsClient({ initialFlags = [] }: FeatureFlagsClientProp
     setUpdatingKey(null);
 
     if (res.success) {
-      setFlags((prev) =>
-        (prev || []).map((f) => (f.key === key ? { ...f, enabled: newEnabled } : f)),
-      );
+      setFlags((prev) => prev.map((f) => (f.key === key ? { ...f, enabled: newEnabled } : f)));
     }
   };
 
   return (
     <div className="space-y-6" data-testid="feature-flags-client">
-      <AdminSectionCard title="Runtime Feature Flag Controls">
+      <AdminSectionCard title={t("ff_controls_title")}>
         <div className="divide-y divide-white/10 p-6">
-          {(flags || []).map((flag) => (
+          {flags.map((flag) => (
             <div
               key={flag.key}
               className="flex items-center justify-between py-4 first:pt-0 last:pb-0"
@@ -45,7 +45,7 @@ export function FeatureFlagsClient({ initialFlags = [] }: FeatureFlagsClientProp
                         : "text-fg-muted bg-white/10"
                     }`}
                   >
-                    {flag.enabled ? "ACTIVE" : "DISABLED"}
+                    {flag.enabled ? t("ff_active") : t("ff_disabled")}
                   </span>
                 </div>
                 <p className="text-fg-muted text-xs">{flag.description}</p>
@@ -60,12 +60,12 @@ export function FeatureFlagsClient({ initialFlags = [] }: FeatureFlagsClientProp
                 {flag.enabled ? (
                   <>
                     <ToggleRight className="h-6 w-6 text-emerald-400" />
-                    <span className="text-emerald-400">ON</span>
+                    <span className="text-emerald-400">{t("ff_on")}</span>
                   </>
                 ) : (
                   <>
                     <ToggleLeft className="text-fg-muted h-6 w-6" />
-                    <span className="text-fg-muted">OFF</span>
+                    <span className="text-fg-muted">{t("ff_off")}</span>
                   </>
                 )}
               </button>
@@ -77,17 +77,15 @@ export function FeatureFlagsClient({ initialFlags = [] }: FeatureFlagsClientProp
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="text-fg-muted space-y-1 rounded-lg border border-white/10 bg-white/5 p-4 text-xs">
           <span className="flex items-center gap-1.5 font-bold text-white">
-            <Zap className="h-4 w-4 text-amber-400" /> Edge Cache Speed
+            <Zap className="h-4 w-4 text-amber-400" /> {t("ff_edge_cache")}
           </span>
-          <p>
-            Flags are cached in Upstash Redis (`ff:&lt;key&gt;`) for 60s with ~0ms edge evaluation.
-          </p>
+          <p>{t("ff_edge_cache_desc")}</p>
         </div>
         <div className="text-fg-muted space-y-1 rounded-lg border border-white/10 bg-white/5 p-4 text-xs">
           <span className="flex items-center gap-1.5 font-bold text-white">
-            <ShieldCheck className="h-4 w-4 text-emerald-400" /> RLS Protection
+            <ShieldCheck className="h-4 w-4 text-emerald-400" /> {t("ff_rls_protection")}
           </span>
-          <p>Table writes restricted to authenticated admins (`is_admin = true`).</p>
+          <p>{t("ff_rls_protection_desc")}</p>
         </div>
       </div>
     </div>

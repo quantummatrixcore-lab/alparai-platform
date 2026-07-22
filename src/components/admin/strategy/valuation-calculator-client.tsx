@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Plus, BarChart2, Calendar, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { saveValuationAction } from "@/actions/strategy";
@@ -19,6 +20,7 @@ export function ValuationCalculatorClient({
   isReadOnly,
   locale,
 }: ValuationCalculatorClientProps) {
+  const t = useTranslations("admin");
   const [valuations, setValuations] = useState<StrategyValuation[]>(initialValuations);
   const [activeTab, setActiveTab] = useState<"berkus" | "scorecard" | "vc" | "history">("berkus");
   const [isSaving, setIsSaving] = useState(false);
@@ -112,11 +114,7 @@ export function ValuationCalculatorClient({
       });
 
       if (res.success) {
-        toast.success(
-          locale === "tr"
-            ? "Değerleme snapshot kaydı kaydedildi."
-            : "Valuation snapshot history logged.",
-        );
+        toast.success(t("val_snapshot_saved"));
         // Add to local state list
         const logged: StrategyValuation = {
           id: res.id,
@@ -153,7 +151,7 @@ export function ValuationCalculatorClient({
                 : "text-fg-muted hover:bg-white/5 hover:text-white",
             )}
           >
-            Berkus Method
+            {t("val_berkus_method")}
           </button>
           <button
             onClick={() => setActiveTab("scorecard")}
@@ -164,7 +162,7 @@ export function ValuationCalculatorClient({
                 : "text-fg-muted hover:bg-white/5 hover:text-white",
             )}
           >
-            Scorecard Method
+            {t("val_scorecard_method")}
           </button>
           <button
             onClick={() => setActiveTab("vc")}
@@ -175,7 +173,7 @@ export function ValuationCalculatorClient({
                 : "text-fg-muted hover:bg-white/5 hover:text-white",
             )}
           >
-            VC Exit Method
+            {t("val_vc_exit_method")}
           </button>
           <button
             onClick={() => setActiveTab("history")}
@@ -186,7 +184,7 @@ export function ValuationCalculatorClient({
                 : "text-fg-muted hover:bg-white/5 hover:text-white",
             )}
           >
-            {locale === "tr" ? "Geçmiş" : "Log History"}
+            {t("val_log_history")}
           </button>
         </div>
 

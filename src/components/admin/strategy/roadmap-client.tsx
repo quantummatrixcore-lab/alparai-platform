@@ -11,10 +11,10 @@ import type { StrategyMilestone } from "@/types";
 interface RoadmapClientProps {
   initialMilestones: StrategyMilestone[];
   isReadOnly: boolean;
-  locale: string;
+  _locale: string;
 }
 
-export function RoadmapClient({ initialMilestones, isReadOnly, locale }: RoadmapClientProps) {
+export function RoadmapClient({ initialMilestones, isReadOnly, _locale }: RoadmapClientProps) {
   const t = useTranslations("admin");
 
   const [milestones, setMilestones] = useState<StrategyMilestone[]>(initialMilestones);
@@ -52,11 +52,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
 
   const handleDelete = async (id: string) => {
     if (isReadOnly) return;
-    if (
-      !confirm(
-        t("are_you_sure_you_want_to_delete_this_okr"),
-      )
-    ) {
+    if (!confirm(t("are_you_sure_you_want_to_delete_this_okr"))) {
       return;
     }
 
@@ -260,9 +256,7 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
           <div className="bg-bg-secondary border-border-strong w-full max-w-lg rounded-2xl border p-6 shadow-2xl">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-bold text-white uppercase">
-                {activeMilestone.id
-                  ? t("edit_okr_milestone")
-                  : t("add_okr_milestone_1")}
+                {activeMilestone.id ? t("edit_okr_milestone") : t("add_okr_milestone_1")}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -335,10 +329,10 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
                     }
                     className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-4 py-2.5 text-sm text-white focus:ring-1 focus:outline-none"
                   >
-                    <option value="planned">Planned</option>
-                    <option value="in_progress">In Progress</option>
-                    <option value="done">Done</option>
-                    <option value="missed">Missed</option>
+                    <option value="planned">{t("rm_status_planned")}</option>
+                    <option value="in_progress">{t("rm_status_in_progress")}</option>
+                    <option value="done">{t("rm_status_done")}</option>
+                    <option value="missed">{t("rm_status_missed")}</option>
                   </select>
                 </div>
 
@@ -408,10 +402,8 @@ export function RoadmapClient({ initialMilestones, isReadOnly, locale }: Roadmap
                       <Loader2 className="h-4 w-4 animate-spin" />
                       {t("saving")}
                     </>
-                  ) : locale === "tr" ? (
-                    "Kaydet"
                   ) : (
-                    "Save"
+                    t("saving")
                   )}
                 </button>
               </div>
