@@ -86,15 +86,15 @@ const PREDEFINED_HIGH_FIDELITY_MOCK_LOGS: AuditLogItem[] = [
       published_at: new Date().toISOString(),
     },
     users: {
-      email: "triage.lead@alparai.com",
-      full_name: "Derin Yılmaz",
+      email: "triage@alparai.com",
+      full_name: "Kıdemli Moderasyon Başdenetçisi",
       role: "moderator",
     },
     ip_hash: "192.168.1.42 (Frankfurt, DE)",
   },
   {
     id: "b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e",
-    created_at: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
+    created_at: new Date("2026-07-22T14:30:00Z").toISOString(),
     action: "security.api_key_rotated",
     entity_type: "api_keys",
     entity_id: "f3b89e21-098d-42ef-8cb6-9d1419e0018c",
@@ -103,12 +103,12 @@ const PREDEFINED_HIGH_FIDELITY_MOCK_LOGS: AuditLogItem[] = [
       provider: "supabase",
       key_hint: "sbp_5f2...",
       status: "active",
-      rotated_at: new Date().toISOString(),
+      rotated_at: "2026-07-22T14:30:00Z",
     },
     users: {
-      email: "ceo@alparai.com",
-      full_name: "Alpar Arslan",
-      role: "ceo",
+      email: "system-security@alparai.com",
+      full_name: "ALPAR AI Sistem Güvenlik Yetkilisi",
+      role: "admin",
     },
     ip_hash: "82.146.42.11 (Istanbul, TR)",
   },
@@ -491,7 +491,9 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
       {isLive && (
         <div className="flex items-center justify-between rounded-lg border border-amber-500/20 bg-amber-500/10 px-4 py-2 text-xs font-medium text-amber-400">
           <span>Realtime Live Feed Simulator</span>
-          <span className="rounded bg-amber-500/20 px-2 py-0.5 font-mono text-[10px] uppercase">SIMULATION MODE</span>
+          <span className="rounded bg-amber-500/20 px-2 py-0.5 font-mono text-[10px] uppercase">
+            SIMULATION MODE
+          </span>
         </div>
       )}
       <div className="grid gap-3 sm:grid-cols-4">

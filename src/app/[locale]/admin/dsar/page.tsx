@@ -32,9 +32,25 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
     <div className="animate-in fade-in space-y-8 duration-500">
       <div>
         <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">
-          {t("dsar_title")}
+          {t("dsar_title") || "DSAR & KVKK Veri Sahibi Hakları Yönetimi"}
         </h1>
-        <p className="text-fg-secondary mt-2">{t("dsar_subtitle")}</p>
+        <p className="text-fg-secondary mt-2">
+          {t("dsar_subtitle") ||
+            "KVKK ve GDPR kapsamında gelen veri silme, anonimleştirme ve unutulma taleplerinin yasal 30 günlük SLA takibi."}
+        </p>
+      </div>
+
+      <div className="rounded-lg border border-purple-500/20 bg-purple-500/10 p-4 text-xs text-purple-300">
+        <p className="mb-1 flex items-center gap-2 text-sm font-bold">
+          🛡️ DSAR (Data Subject Access Request) Nedir ve Ne İş Eder?
+        </p>
+        <p className="text-[11px] leading-relaxed">
+          DSAR (Veri Sahibi Erişim ve Unutulma Talebi); kullanıcıların veya kurumların KVKK Madde 11
+          ve GDPR Madde 17 uyarınca kişisel verilerinin silinmesi, sansürlenmesi veya
+          anonimleştirilmesi için ALPAR AI platformuna ilettiği resmi başvurulardır. Yasal olarak 30
+          gün içerisinde sonuçlandırılması zorunludur. SLA süresi dolmak üzere olan başvurular
+          kırmızı alarm verir.
+        </p>
       </div>
 
       <div className="bg-bg-secondary/40 overflow-hidden rounded-xl border border-white/5 backdrop-blur-xl">

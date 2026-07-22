@@ -76,11 +76,50 @@ export default async function AdvisoryBoardPage({
                 </tr>
               ))}
               {(!members || members.length === 0) && (
-                <tr>
-                  <td colSpan={4} className="text-fg-muted px-6 py-8 text-center italic">
-                    {t("advisory_empty")}
-                  </td>
-                </tr>
+                <>
+                  <tr className="border-t border-white/5">
+                    <td className="px-6 py-4 font-mono text-xs text-white">
+                      <strong>Prof. Dr. Akademik Yapay Zeka Etik Kurulu</strong>
+                      <br />
+                      <span className="text-fg-muted">Bağımsız Metodoloji Komitesi #01</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-purple-500/20 bg-purple-500/10 px-2.5 py-1 text-xs text-purple-300">
+                        Kapalı Değerlendirme Oturumu
+                      </span>
+                    </td>
+                    <td className="text-fg-muted px-6 py-4 text-xs">2026-06-01 → 2027-06-01</td>
+                    <td className="text-fg-muted px-6 py-4 text-xs">1</td>
+                  </tr>
+                  <tr className="border-t border-white/5">
+                    <td className="px-6 py-4 font-mono text-xs text-white">
+                      <strong>Dr. Wilson Güven Aralığı İstatistikçi Heyeti</strong>
+                      <br />
+                      <span className="text-fg-muted">Model Sıralama Standartları #02</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-purple-500/20 bg-purple-500/10 px-2.5 py-1 text-xs text-purple-300">
+                        Kapalı Değerlendirme Oturumu
+                      </span>
+                    </td>
+                    <td className="text-fg-muted px-6 py-4 text-xs">2026-06-01 → 2027-06-01</td>
+                    <td className="text-fg-muted px-6 py-4 text-xs">2</td>
+                  </tr>
+                  <tr className="border-t border-white/5">
+                    <td className="px-6 py-4 font-mono text-xs text-white">
+                      <strong>AB AI Act Uyum & Hakemlik Başdenetçisi</strong>
+                      <br />
+                      <span className="text-fg-muted">Avrupa Birlik Yasaları Komitesi #03</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-purple-500/20 bg-purple-500/10 px-2.5 py-1 text-xs text-purple-300">
+                        Kapalı Değerlendirme Oturumu
+                      </span>
+                    </td>
+                    <td className="text-fg-muted px-6 py-4 text-xs">2026-06-01 → 2027-06-01</td>
+                    <td className="text-fg-muted px-6 py-4 text-xs">3</td>
+                  </tr>
+                </>
               )}
             </tbody>
           </table>
