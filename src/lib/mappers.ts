@@ -1,9 +1,3 @@
-/**
- * Database row → DTO mappers.
- * Centralizes the boilerplate of casting untyped Supabase responses
- * into our strongly-typed view models.
- */
-
 import type { IncidentCategory, IncidentSeverity, IncidentStatus } from "@/types";
 import type { IncidentListItem } from "@/types";
 
@@ -37,15 +31,44 @@ type RawIncidentRow = Record<string, unknown> & {
   expert_fix?: string | null;
   incident_source?: string | null;
   processing_stage?: string | null;
+  machine_translated?: boolean | null;
 };
 
-export function toIncidentListItem(row: RawIncidentRow): IncidentListItem {
+export type TranslationMap = Map<
+  string,
+  { title: string; description: string; machine_translated: boolean }
+>;
+
+export function toIncidentListItem(
+  row: RawIncidentRow,
+  translations?: TranslationMap,
+  locale?: string,
+): IncidentListItem {
+  const localeIsDEorFR = locale === "de" || locale === "fr";
+  let machineTranslated = false;
+  let translatedTitle: string | null = null;
+  let translatedDesc: string | null = null;
+
+  if (localeIsDEorFR && translations) {
+    const tx = translations.get(row.id);
+    if (tx) {
+      translatedTitle = tx.title;
+      translatedDesc = tx.description;
+      machineTranslated = tx.machine_translated;
+    }
+  } else if (locale === "tr") {
+    machineTranslated = row.machine_translated ?? false;
+  }
+
   return {
     id: row.id,
     title_masked: row.title_masked ?? row.title ?? "",
     description_masked: row.description_masked ?? row.description ?? "",
     title_tr: row.title_tr ?? null,
     description_tr: row.description_tr ?? null,
+    translated_title: translatedTitle,
+    translated_description: translatedDesc,
+    machine_translated: machineTranslated,
     severity: row.severity as IncidentSeverity,
     status: row.status as IncidentStatus,
     category: row.category as IncidentCategory,
@@ -69,7 +92,11 @@ export function toIncidentListItem(row: RawIncidentRow): IncidentListItem {
   };
 }
 
-export function toIncidentListItems(rows: unknown): IncidentListItem[] {
+export function toIncidentListItems(
+  rows: unknown,
+  translations?: TranslationMap,
+  locale?: string,
+): IncidentListItem[] {
   if (!Array.isArray(rows)) return [];
-  return rows.map((r) => toIncidentListItem(r as RawIncidentRow));
+  return rows.map((r) => toIncidentListItem(r as RawIncidentRow, translations, locale));
 }

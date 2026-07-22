@@ -17,6 +17,10 @@ export default getRequestConfig(async ({ requestLocale }) => {
   try {
     if (locale === "tr") {
       messages = (await import("../../messages/tr.json")).default as AbstractIntlMessages;
+    } else if (locale === "de") {
+      messages = (await import("../../messages/de.json")).default as AbstractIntlMessages;
+    } else if (locale === "fr") {
+      messages = (await import("../../messages/fr.json")).default as AbstractIntlMessages;
     } else {
       messages = (await import("../../messages/en.json")).default as AbstractIntlMessages;
     }

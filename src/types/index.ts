@@ -29,6 +29,9 @@ export interface IncidentListItem {
   description_masked: string;
   title_tr: string | null;
   description_tr: string | null;
+  translated_title: string | null;
+  translated_description: string | null;
+  machine_translated: boolean;
   severity: IncidentSeverity;
   status: IncidentStatus;
   category: IncidentCategory;

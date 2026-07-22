@@ -42,6 +42,9 @@ describe("mappers", () => {
         description_masked: "Masked Description",
         title_tr: "Turkish Title",
         description_tr: "Turkish Description",
+        translated_title: null,
+        translated_description: null,
+        machine_translated: false,
         severity: "high",
         status: "verified",
         category: "bias",
@@ -60,6 +63,8 @@ describe("mappers", () => {
         affected_count: 1000,
         is_expert: true,
         expert_fix: "Perform data sanitation",
+        incident_source: undefined,
+        processing_stage: undefined,
       });
     });
 
@@ -76,6 +81,9 @@ describe("mappers", () => {
         description_masked: "",
         title_tr: null,
         description_tr: null,
+        translated_title: null,
+        translated_description: null,
+        machine_translated: false,
         severity: undefined,
         status: undefined,
         category: undefined,
@@ -94,6 +102,8 @@ describe("mappers", () => {
         affected_count: 0,
         is_expert: false,
         expert_fix: null,
+        incident_source: undefined,
+        processing_stage: undefined,
       });
     });
 

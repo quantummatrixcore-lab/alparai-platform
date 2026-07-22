@@ -13,7 +13,7 @@ import {
   type SidebarPollData,
 } from "@/components/dilemmas/sidebar-engagement";
 import type { IncidentListItem } from "@/types";
-import { toIncidentListItems } from "@/lib/mappers";
+import { toIncidentListItems, type TranslationMap } from "@/lib/mappers";
 import type { Database } from "@/types/database";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -86,6 +86,8 @@ export default async function IncidentsPage({
   const toOffset = pageNum * pageSize - 1;
   query = query.range(fromOffset, toOffset);
 
+  const localeIsDEorFR = locale === "de" || locale === "fr";
+
   const [incidentsResult, providersResult, pollResult, newsResult] = await Promise.all([
     query,
     supabase.from("ai_providers").select("id, slug, name"),
@@ -111,17 +113,72 @@ export default async function IncidentsPage({
     ]),
   );
 
-  const items: IncidentListItem[] = toIncidentListItems(incidentsResult.data).map((item) => {
-    const providerId = (incidentsResult.data as Array<Record<string, unknown>> | null)?.find(
-      (r) => r["id"] === item.id,
-    )?.["ai_provider_id"] as string | null;
-    const provider = providerId ? providerMap.get(providerId) : null;
-    return {
-      ...item,
-      provider_name: provider?.name ?? tCommon("unknown"),
-      provider_slug: provider?.slug ?? "",
+  const rawData = incidentsResult.data as Array<Record<string, unknown>> | null;
+
+  let translationMap: TranslationMap | undefined;
+  if (localeIsDEorFR && rawData && rawData.length > 0) {
+    const incidentIds = rawData.map((r) => r["id"] as string);
+    const admin = supabase as unknown as {
+      from: (table: string) => {
+        select: (cols: string) => {
+          in: (
+            col: string,
+            vals: string[],
+          ) => {
+            eq: (
+              col: string,
+              val: string,
+            ) => Promise<{
+              data: Array<{
+                incident_id: string;
+                title: string;
+                description: string;
+                machine_translated: boolean;
+              }> | null;
+            }>;
+          };
+        };
+      };
     };
-  });
+    const { data: txRows } = await admin
+      .from("incident_translations")
+      .select("incident_id, title, description, machine_translated")
+      .in("incident_id", incidentIds)
+      .eq("locale", locale);
+
+    if (txRows) {
+      translationMap = new Map(
+        (
+          txRows as unknown as Array<{
+            incident_id: string;
+            title: string;
+            description: string;
+            machine_translated: boolean;
+          }>
+        ).map((tx) => [
+          tx.incident_id,
+          {
+            title: tx.title,
+            description: tx.description,
+            machine_translated: tx.machine_translated,
+          },
+        ]),
+      );
+    }
+  }
+
+  const items: IncidentListItem[] = toIncidentListItems(rawData, translationMap, locale).map(
+    (item) => {
+      const providerId = rawData?.find((r) => r["id"] === item.id)?.["ai_provider_id"] as
+        string | null;
+      const provider = providerId ? providerMap.get(providerId) : null;
+      return {
+        ...item,
+        provider_name: provider?.name ?? tCommon("unknown"),
+        provider_slug: provider?.slug ?? "",
+      };
+    },
+  );
 
   const totalCount = incidentsResult.count ?? 0;
   const totalPages = Math.ceil(totalCount / pageSize);

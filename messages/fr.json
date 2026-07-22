@@ -1734,7 +1734,8 @@
     "dismiss": "Dismiss",
     "cookiePreferences": "Cookie preferences",
     "select": "Select",
-    "machine_translated": "Machine translated"
+    "machine_translated": "Machine translated",
+    "_machineTranslated": "true"
   },
   "autopilot": {
     "dashboard": "Dashboard",

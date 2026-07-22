@@ -58,14 +58,22 @@ export function IncidentCard({
   const tFeed = useTranslations("feed");
   const locale = useLocale();
 
+  const localeIsDEorFR = locale === "de" || locale === "fr";
+
   const displayTitle =
     locale === "tr" && incident.title_tr && incident.title_tr.length > 0
       ? incident.title_tr
-      : incident.title_masked;
+      : localeIsDEorFR && incident.translated_title && incident.translated_title.length > 0
+        ? incident.translated_title
+        : incident.title_masked;
   const displayDesc =
     locale === "tr" && incident.description_tr && incident.description_tr.length > 0
       ? incident.description_tr
-      : incident.description_masked;
+      : localeIsDEorFR &&
+          incident.translated_description &&
+          incident.translated_description.length > 0
+        ? incident.translated_description
+        : incident.description_masked;
 
   const severity = incident.severity as IncidentSeverity;
 
@@ -164,6 +172,20 @@ export function IncidentCard({
                 >
                   <CheckCircle2 className="mr-1 h-3 w-3 text-emerald-400" aria-hidden="true" />
                   {t("expert_verified", { defaultValue: "Expert Verified" })}
+                </Badge>
+              )}
+              {incident.machine_translated && (
+                <Badge
+                  variant="muted"
+                  className="border-amber-500/20 bg-amber-500/10 text-amber-400"
+                  title={t("machine_translated_tooltip", {
+                    defaultValue: "This content was machine-translated for accessibility",
+                  })}
+                >
+                  <span className="mr-1" aria-hidden="true">
+                    &#x1F916;
+                  </span>
+                  {t("machine_translated_badge", { defaultValue: "Machine Translated" })}
                 </Badge>
               )}
               {incident.source_badge === "seed" && (
