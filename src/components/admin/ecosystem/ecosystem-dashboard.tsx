@@ -36,10 +36,22 @@ export function EcosystemDashboard({ data }: { data: DashboardData }) {
           </h1>
           <p className="text-fg-secondary mt-2">
             {t("ecosystem_hub_subtitle") ||
-              "Monitor AI ecosystem news, review external incident submissions, and track positive developments — all in one place."}
+              "Küresel yapay zeka ekosistem haberlerini izleyin, dış kaynaklardan çekilen otomatik olay taslaklarını onaylayın."}
           </p>
         </div>
         <ManualFetchButton />
+      </div>
+
+      <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 p-4 text-xs text-amber-300">
+        <p className="mb-1 flex items-center gap-1.5 text-sm font-bold">
+          ℹ️ Review Queue (İnceleme Kuyruğu) Nedir?
+        </p>
+        <p className="text-[11px] leading-relaxed">
+          Kuyruktaki kayıtlar; OECD AI Observatory, AI Incident Database (AIID) ve global RSS haber
+          akışlarından ALPAR AI botları tarafından otomatik çekilen potansiyel olay taslaklarıdır.
+          Moderatör onayından geçen taslaklar doğrudan onaylı halka açık incident kaydına
+          dönüştürülür.
+        </p>
       </div>
 
       <StatsCards stats={data.stats} />

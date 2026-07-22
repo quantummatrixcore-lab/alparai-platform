@@ -86,7 +86,7 @@ export default async function AdminAutopilotPage({
       </header>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-11">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
         <Stat label={t("stats_total")} value={stats.total} />
         <Stat label={t("stats_succeeded")} value={stats.succeeded} accent="ok" />
         <Stat label={t("stats_failed")} value={stats.failed} accent="danger" />

@@ -605,6 +605,16 @@
     "badgeDesc": "İlk 100 beta katılımcımıza verilen özel erken benimseyen doğrulama rozeti."
   },
   "admin": {
+    "kbench_title": "K-BENCHMARK — Yapay Zeka Model & Sağlayıcı Derecelendirmeleri",
+    "kbench_subtitle": "ALPAR AI bağımsız doğruluk, tarafsızlık, güvenlik ve Wilson güven aralığı skoru matrisi.",
+    "kbench_th_model": "Model / Sağlayıcı",
+    "kbench_th_score": "Güven Puanı (K-Score)",
+    "kbench_th_status": "Değerlendirme Durumu",
+    "kbench_th_evaluated": "Değerlendirme Tarihi",
+    "kbench_score_empty": "Puan Hesaplanıyor",
+    "kbench_evaluated": "Doğrulandı",
+    "kbench_unknown_model": "Bilinmeyen Model",
+    "kbench_empty": "Henüz kayıtlı K-BENCHMARK model skoru bulunmuyor.",
     "integrations_title": "Entegrasyonlar & Üçüncü Taraf Servisler",
     "integrations_subtitle": "Platform altyapısına bağlı API, veritabanı, güvenlik ve e-posta entegrasyonlarının canlı durumunu yönetin.",
     "integrations_connected": "Bağlı",

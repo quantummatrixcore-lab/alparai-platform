@@ -28,6 +28,18 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
         <p className="text-fg-secondary mt-2">{t("kbench_subtitle")}</p>
       </div>
 
+      <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-4 text-xs text-emerald-300">
+        <p className="mb-1 flex items-center gap-2 text-sm font-bold">
+          📊 K-BENCHMARK Metodolojisi Nedir?
+        </p>
+        <p className="text-[11px] leading-relaxed">
+          K-BENCHMARK, ALPAR AI bağımsız doğrulama motorunun yapay zeka modelleri (OpenAI,
+          Anthropic, Google Gemini vb.) üzerinde uyguladığı Wilson güven aralığı, doğruluk,
+          tarafsızlık ve güvenlik puanlaması matrisidir. Model puanları kamusal ve bağımsız denetim
+          verileriyle anlık güncellenir.
+        </p>
+      </div>
+
       <div className="bg-bg-secondary/40 overflow-hidden rounded-xl border border-white/5 backdrop-blur-xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-white">

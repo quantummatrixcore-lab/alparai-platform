@@ -605,6 +605,16 @@
     "badgeDesc": "Exclusive early-adopter verification badge awarded to our first 100 beta participants."
   },
   "admin": {
+    "kbench_title": "K-BENCHMARK — AI-Modell & Anbieter-Bewertungsmatrix",
+    "kbench_subtitle": "Unabhängige Genauigkeits-, Neutralitäts- und Sicherheits-Benchmarks von ALPAR AI.",
+    "kbench_th_model": "Modell / Anbieter",
+    "kbench_th_score": "TruthScore (K-Score)",
+    "kbench_th_status": "Bewertungsstatus",
+    "kbench_th_evaluated": "Bewertungsdatum",
+    "kbench_score_empty": "Berechne Punktezahl",
+    "kbench_evaluated": "Verifiziert",
+    "kbench_unknown_model": "Unbekanntes Modell",
+    "kbench_empty": "Noch keine K-BENCHMARK Modell-Scores registriert.",
     "integrations_title": "Integrations & Third-Party Services",
     "integrations_subtitle": "Manage and monitor the status of API, database, security, and email integrations on the platform.",
     "integrations_connected": "Connected",
