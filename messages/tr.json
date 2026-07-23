@@ -365,6 +365,10 @@
   "incident": {
     "takedown": "Kaldırma / Düzeltme",
     "takedownDesc": "Bir kaldırma veya düzeltme talebi gönderin. Tüm başvuruları 7 gün içinde inceliyoruz.",
+    "passport_btn": "AB Yapay Zeka Yasası Pasaportu İndir",
+    "passport_desc": "Komisyon'un resmi Art. 73 bildiri şablonu formatında uyumlu olay raporu.",
+    "passport_downloaded": "Pasaport başarıyla indirildi.",
+    "passport_error": "Pasaport oluşturulamadı. Daha sonra tekrar deneyin.",
     "risk_disclaimer": "Bu olay, AB Yapay Zeka Yasası (EU AI Act) taksonomisi kapsamında {risk} olarak sınıflandırılmıştır. Bu sınıflandırma, ALPAR AI çapraz denetim motoru tarafından yalnızca bilgilendirme amacıyla otonom olarak üretilmiş olup, yasal veya resmi bir idari karar niteliği taşımamaktadır.",
     "me_too": "Ben de Yaşadım",
     "comment_action": "Yorum Yap",

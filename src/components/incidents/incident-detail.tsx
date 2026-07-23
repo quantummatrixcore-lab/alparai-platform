@@ -21,6 +21,7 @@ import { Badge as UIBadge } from "@/components/ui/badge";
 import type { IncidentDetail, ProviderResponse } from "@/types";
 import { Link } from "@/i18n/routing";
 import { TakedownButton } from "./takedown-button";
+import { PassportButton } from "./passport-button";
 import Image from "next/image";
 import { ViewTracker } from "./view-tracker";
 import { AffectedButton } from "./affected-button";
@@ -391,6 +392,7 @@ export function IncidentDetailView({
             />
           </CardContent>
         </Card>
+        <PassportButton incidentId={incident.id} />
         <TakedownButton incidentId={incident.id} />
       </aside>
     </article>

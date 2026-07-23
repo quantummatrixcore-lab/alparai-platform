@@ -365,6 +365,10 @@
   "incident": {
     "takedown": "Takedown / Correction",
     "takedownDesc": "Submit a takedown or correction request. We review all submissions within 7 days.",
+    "passport_btn": "Download EU AI Act Passport",
+    "passport_desc": "Art. 73 compliant incident report in the Commission's reporting template format.",
+    "passport_downloaded": "Passport downloaded successfully.",
+    "passport_error": "Failed to generate passport. Try again later.",
     "risk_disclaimer": "This incident has been classified under the EU AI Act taxonomy as {risk}. This classification is generated autonomously by ALPAR AI's cross-audit engine for informational purposes only and does not constitute a legal or official regulatory determination.",
     "me_too": "Me Too",
     "comment_action": "Comment",
