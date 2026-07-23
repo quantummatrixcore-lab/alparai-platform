@@ -9,7 +9,7 @@ import { Footer } from "@/components/layout/footer";
 import { MainContent } from "@/components/layout/main-content";
 import { ClientProviders } from "@/components/client-providers";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
-import { OrganizationJsonLd } from "@/components/seo/json-ld";
+import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/json-ld";
 import { PlausibleWithConsent } from "@/components/plausible-consent";
 import { PwaRegister } from "@/components/pwa-register";
 
@@ -77,6 +77,7 @@ export default async function LocaleLayout({
           {!isEmbed && <ScrollToTop />}
           <PwaRegister />
           <OrganizationJsonLd />
+          <WebSiteJsonLd />
           <PlausibleWithConsent />
           <Analytics />
           <SpeedInsights />
