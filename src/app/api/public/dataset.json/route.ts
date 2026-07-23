@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createServerClient } from "@/lib/supabase/server";
 
 export const revalidate = 600; // 10 min cache
 
@@ -10,28 +10,19 @@ interface DatasetItem {
   vendor: string;
   severity: string;
   created_at: string;
-  published_at?: string;
-  source_url?: string;
+  published_at: string | null;
+  source_url: string | null;
 }
 
 export async function GET() {
-  const admin = createAdminClient();
-  const db = admin as unknown as {
-    from: (table: string) => {
-      select: (cols: string) => {
-        eq: (col: string, val: boolean) => {
-          order: (col: string, opts: { ascending: boolean }) => {
-            limit: (n: number) => Promise<{ data: DatasetItem[] | null; error: { message: string } | null }>;
-          };
-        };
-      };
-    };
-  };
+  const supabase = await createServerClient();
 
-  const { data, error } = await db
+  const { data, error } = await supabase
     .from("incidents")
-    .select("id, title, description, vendor, severity, created_at, published_at, source_url")
-    .eq("published", true)
+    .select(
+      "id, title_masked, description_masked, provider_custom_name, severity, created_at, published_at, source_url, ai_providers(name)",
+    )
+    .eq("status", "published")
     .order("created_at", { ascending: false })
     .limit(1000);
 
@@ -39,14 +30,25 @@ export async function GET() {
     return NextResponse.json({ error: "Failed to generate dataset" }, { status: 500 });
   }
 
+  const incidents: DatasetItem[] = data.map((row) => ({
+    id: row.id,
+    title: row.title_masked ?? "",
+    description: row.description_masked ?? "",
+    vendor: row.ai_providers?.name ?? row.provider_custom_name ?? "Unknown",
+    severity: row.severity,
+    created_at: row.created_at,
+    published_at: row.published_at,
+    source_url: row.source_url,
+  }));
+
   return NextResponse.json(
     {
       dataset_name: "ALPAR AI Registry Open Dataset",
       version: "1.0",
       license: "AGPL-3.0",
       exported_at: new Date().toISOString(),
-      record_count: data.length,
-      incidents: data,
+      record_count: incidents.length,
+      incidents,
     },
     {
       headers: {
