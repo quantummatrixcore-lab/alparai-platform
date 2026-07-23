@@ -1,4 +1,24 @@
-# ALPAR AI — MASTER PLAN v10.66 (ACP-1 verification of P1 executor commit `e9a7ab6` — WebSiteJsonLd ✅, FeedCardSkeleton ✅, wiring pending [architect])
+# ALPAR AI — MASTER PLAN v10.67 (All three P1 items CLOSED — skeleton wired, mobile card view optimized, JSON-LD live [architect])
+
+> **v10.67 (2026-07-23) — ACP-1 diff-verified executor commit `429b9d6`. All three v10.64 P1 items now closed. Qwen-driven improvements complete. [architect]**
+>
+> **Executor commit `429b9d6` — diff-level ACP-1 verification (3 files, +26/-8):**
+>
+> **(1) FeedCardSkeleton WIRED ✅.** `src/app/[locale]/incidents/loading.tsx`: replaced generic `<Skeleton className="h-48" />` with `<FeedCardSkeleton />` in the 6-card grid — now shows a structurally accurate skeleton matching the actual feed card layout during streaming. New `src/app/[locale]/loading.tsx` (18L): root-level loading page created with same `FeedCardSkeleton` grid + header skeleton. Both use `Container` for consistent layout. The v10.66 "wiring pending" gap is now CLOSED.
+>
+> **(2) Mobile Card View ✅.** `src/components/feed/feed-card.tsx` (6 line changes): `p-6` → `p-4 sm:p-6` (responsive padding), header row `flex-wrap gap-2.5 sm:flex-nowrap` (prevents badge/provider overflow on mobile), provider avatar `shrink-0` (prevents squish), inner badge row `flex-wrap gap-1.5 sm:gap-2`, watch button `ml-1` removed (unnecessary margin on wrap). These are correct responsive-first changes that address the v10.64 P1 "Mobile Incident List: Table → Card View" item — the component already rendered as cards (not a table), so the fix was optimizing the existing card layout for narrow viewports.
+>
+> **(3) Rule #36 — CLEAN.** `docs/MASTER_PLAN.md` was NOT edited by the executor ✅.
+>
+> **P1 COMPLETE — all three items closed:**
+>
+> | P1 Item                 | Status | Commits                                    |
+> | ----------------------- | ------ | ------------------------------------------ |
+> | JSON-LD Structured Data | ✅     | `e9a7ab6` (WebSiteJsonLd)                  |
+> | Skeleton Loaders        | ✅     | `e9a7ab6` (component) + `429b9d6` (wiring) |
+> | Mobile Card View        | ✅     | `429b9d6` (responsive flex-wrap)           |
+>
+> **Qwen 88/100 action queue status:** P0 closed (v10.65, pre-existing). P1 closed (this entry). P2 unchanged (Founder-gated: live incident feed, provider trend graph, Developers/API nav). **Queue after v10.67:** No open P0/P1 executor tasks from the Qwen analysis. Only P2 strategic items remain (Founder approval required). §7 remaining: §7/17 (Vercel).
 
 > **v10.66 (2026-07-23) — ACP-1 diff-verified executor commit `e9a7ab6` (P1 JSON-LD + Skeleton). Two of three P1 items partially delivered; one remaining. Rule #36 clean. [architect]**
 >
