@@ -1,3 +1,84 @@
+# ALPAR AI — MASTER PLAN v10.89 (Sonraki Öncelik Triyajı: Dependabot Çakışmaları + Google OAuth + W1-W5 [architect])
+
+> **v10.89 (2026-07-23) — Architect (Claude) görevi teslim aldı. v10.88 itibarıyla sistem v1.0.0'da, 780/780 test yeşil, master temiz. Bu girdi bir sonraki döngünün spec'ini tanımlar. [architect]**
+
+## Mevcut Sistem Durumu (ACP-1 Read-Only Doğrulama)
+
+| Katman                        | Durum                                                                                      |
+| ----------------------------- | ------------------------------------------------------------------------------------------ |
+| **Vercel Deployment**         | `b06151f` → alparai.com LIVE, Hobby plan                                                   |
+| **Supabase**                  | `alparai-prod` (`azszpzyvxjduhemkjsdh`) ACTIVE_HEALTHY, eu-west-1                          |
+| **Test Suite**                | 780/780 ✅ (122 dosya)                                                                     |
+| **Açık GitHub PR**            | PR #47 (Release 1.0.1 — auto) · PR #41 (14 prod dep) · PR #40, 37, 36, 35, 32 (Dependabot) |
+| **Bekleyen Founder Aksiyonu** | Google OAuth Consent Screen · W1-W5 Hibe Başvuruları                                       |
+
+## Öncelik Sırası (Architect Kararı)
+
+### P0 — Executor Yapabilir (Sıradaki Sprint)
+
+**A. Dependabot PR'larını Birleştir (PR #41, #40, #37, #36, #35, #32)**
+
+PR #41 (`production-dependencies`, 14 paket) `master`la çakışıyor. Doğru sıra:
+
+1. `git fetch origin dependabot/npm_and_yarn/production-dependencies-90aedca244`
+2. `git checkout` → çakışmaları `pnpm-lock.yaml` ve `package.json` üzerinde manuel çöz
+3. `pnpm install` → lock güncelle → `pnpm lint && pnpm typecheck && pnpm test`
+4. `git push` → `gh pr merge 41 --squash`
+5. PR #40 (`actions/setup-node 4→7`), #37 (`lucide-react`), #36 (`@types/node`), #35 (`knip`), #32 (`pnpm/action-setup`) sırayla merge et — bunlarda çakışma olmaz.
+
+**B. Release 1.0.1 PR'ını Birleştir (PR #47)**
+
+PR #41 merge'den sonra PR #47 otomatik güncellenir. `gh pr merge 47 --squash` ile birleştir. CHANGELOG v1.0.1 hazır.
+
+---
+
+### P1 — Founder Tarayıcı Aksiyonu Gerekiyor
+
+**C. Google OAuth Consent Screen (5 Dakika)**
+
+Kullanıcılar Google ile giriş yaparken marka adımız yerine Supabase proje ID'si görünüyor. Tek sebep Cloud Console'daki OAuth ayarı. API üzerinden değiştirilemez — mutlaka elle yapılması gerekiyor:
+
+- URL: `https://console.cloud.google.com/apis/credentials/consent?project=341717447635`
+- **App name:** `ALPAR AI`
+- **User support email:** `quantum.matrix.core@gmail.com`
+- **Developer contact:** `quantum.matrix.core@gmail.com`
+- **Save** → Yayınlama başvurusu gerekebilir (şu an Test modunda kalan bir OAuth uygulaması 100 kullanıcıyla sınırlıdır).
+
+**D. W1-W5 Startup Hibe Başvuruları**
+
+Mevcut infrastructure maliyetleri $0 (Hobby + Supabase Free). Büyüme için kredi şart. Executor bu formları dolduramaz — kimlik doğrulama gerektiriyor:
+
+| Öncelik | Program                   | Miktar               | URL                                        |
+| ------- | ------------------------- | -------------------- | ------------------------------------------ |
+| 🥇      | Microsoft for Startups    | $150K Azure          | https://foundershub.startups.microsoft.com |
+| 🥇      | Google for Startups Cloud | $200K GCP            | https://cloud.google.com/startup           |
+| 🥈      | AWS Activate              | $100K AWS            | https://aws.amazon.com/activate            |
+| 🥈      | GitHub for Startups       | Enterprise + Copilot | https://github.com/enterprise/startups     |
+| 🥉      | Supabase Grant            | Prod altyapı         | https://supabase.com/grant                 |
+
+---
+
+### P2 — Teknik Özellik Geliştirme (Executor Sprint 3)
+
+Bunlar kod düzeyinde yapılabilir, Founder onayı beklenmez:
+
+| ID  | Özellik                                     | Etki         |
+| --- | ------------------------------------------- | ------------ |
+| I12 | Trust Score API — gerçek hesaplama          | Temel metrik |
+| I16 | Whistleblower Portal — şifreli form         | Güvenlik     |
+| I17 | Litigasyon Paketi — chain-of-custody export | Hukuki       |
+| I18 | EU AI Act Compliance Checker                | Regülatif    |
+
+---
+
+## Architect Direktifi (Executor için)
+
+**Bu turda tek görev:** P0-A ve P0-B (Dependabot PR merge + Release 1.0.1). P1 Founder aksiyon gerektirir — Executor beklemez, doğrudan P2'ye geçebilir.
+
+**Executor boot sequence:** `docs/BOOTSTRAP.md` → `graphify query "pending PRs and conflicts"` → P0-A'yı uygula.
+
+---
+
 # ALPAR AI — MASTER PLAN v10.88 (GitHub Release 1.0.0 + Dependabot Updates + Lint Clean Shipped [architect])
 
 > **v10.88 (2026-07-23) — `d11c02a` [deploy]: 360-derece GitHub taraması ve otomasyonu tamamlandı. PR #46 (Release 1.0.0) ve PR #45 (Dependabot 9 bağımlılık güncellemesi) birleştirildi, TypeScript `no-explicit-any` lint düzeltmesi uygulandı. [architect]**
