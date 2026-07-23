@@ -1,4 +1,51 @@
-# ALPAR AI — MASTER PLAN v10.67 (All three P1 items CLOSED — skeleton wired, mobile card view optimized, JSON-LD live [architect])
+# ALPAR AI — MASTER PLAN v10.68 (Hibe Başvuru E-posta Kuyruğu — executor-ready spec for Antigravity Gmail MCP [architect])
+
+> **v10.68 (2026-07-23) — Hibe Başvuru E-posta Kuyruğu: v10.63 programlarına başvuru spec'i. Executor (Antigravity) Gmail MCP ile gönderecek. [architect]**
+>
+> **Bağlam:** Founder direktifi — "gönderilecek mailler var." Advisory board (v10.61) 7/7 tamamlandı, tekrar gerekmez. Hibe programları (v10.63) için başvuru e-postaları/form rehberleri henüz hazır değildi. Bu giriş executor-ready spec sağlar.
+>
+> **Gönderim yöntemi:** Antigravity executor'ın Gmail MCP entegrasyonu. Gönderen: `ercument.erden@alparai.com` (veya `quantum.matrix.core@gmail.com` — Founder tercihi).
+>
+> ---
+>
+> ### Hemen Gönderilebilir E-postalar (Executor — Gmail MCP)
+>
+> **E1 — Anthropic Researcher Access Program**
+>
+> - **Kime:** External Researcher Access formu (`claude.ai > Help Center`) + `startups@anthropic.com`
+> - **Konu:** ALPAR AI — Open-Source AI Accountability Platform: Researcher Access Application
+> - **İçerik özeti:** ALPAR AI is an open-source AI incident registry and EU AI Act compliance grading platform (AGPL-3.0). We operate at alparai.com with a live K-BENCHMARK system that rates AI models across 6 safety axes. We request Researcher Access API credits to power our automated cross-audit pipeline for public AI incident reporting. This is non-commercial, public-benefit infrastructure.
+> - **Referans:** v10.63 B1 detayları. $1,000 doğrudan API hibesi hedefi.
+>
+> **E2 — NVIDIA Inception Program**
+>
+> - **Kime:** `inception@nvidia.com` veya web form (`nvidia.com/en-us/startups/`)
+> - **Konu:** ALPAR AI — AI Safety & Accountability Platform: NVIDIA Inception Application
+> - **İçerik özeti:** ALPAR AI builds trust infrastructure for AI accountability — incident registry, K-BENCHMARK model safety scoring, automated EU AI Act compliance grading. Seeking GPU cloud partner access for model evaluation pipeline scaling. AGPL-3.0 open-source. Startup stage: pre-seed, self-funded.
+> - **Şart:** `@alparai.com` kurumsal mail zorunlu. Gmail reddedilir.
+>
+> **E3 — Vercel Open Source Program (Ön Kayıt)**
+>
+> - **Kime:** `sponsorships@vercel.com`
+> - **Konu:** ALPAR AI — Open Source Pre-Registration for OSS Program (August 2026 Cohort)
+> - **İçerik özeti:** ALPAR AI is an AGPL-3.0 licensed AI accountability platform deployed on Vercel (alparai.com). Currently on Vercel Pro. Requesting pre-registration for the OSS program reopening in August 2026. GitHub: github.com/quantummatrixcore-lab/Alparai.com.
+> - **Not:** Program şu an kapalı; Ağustos 2026'da açılacak. Ön kayıt e-postası.
+>
+> ---
+>
+> ### Web Form Başvuruları (Founder doğrudan dolduracak — e-posta değil)
+>
+> | Program                   | URL                            | Öncelik                     | Not                                   |
+> | ------------------------- | ------------------------------ | --------------------------- | ------------------------------------- |
+> | Microsoft for Startups    | startups.microsoft.com         | **EN YÜKSEK** ($150K Azure) | VC desteği şart değil, 3 iş günü onay |
+> | Google for Startups Cloud | cloud.google.com/startup       | YÜKSEK ($2K–$350K)          | AI-first tier yazılı beyan gerekli    |
+> | AWS Activate              | aws.amazon.com/startups        | YÜKSEK ($1K–$200K)          | `@alparai.com` mail zorunlu           |
+> | Supabase for Startups     | supabase.com/startups          | ORTA ($3K kredi)            | Zaten Supabase Pro'da                 |
+> | GitHub for Startups       | github.com/enterprise/startups | ORTA ($10K + Enterprise)    | Partner referansı gerekli             |
+>
+> **Executor talimatı:** E1, E2, E3 e-postalarını Gmail MCP üzerinden `ercument.erden@alparai.com` adresinden gönder. Her e-posta profesyonel, kısa (max 200 kelime), ALPAR AI'ın misyonunu ve ilgili programla uyumunu vurgulayan yapıda olmalı. CC: `quantum.matrix.core@gmail.com`. Gönderim sonuçlarını (başarı/hata) raporla.
+>
+> **Status:** Advisory board §7/4 ✅ (v10.61). Hibe başvuruları: executor kuyruğuna girdi. §7 remaining: §7/17 (Vercel). **Rule #36 clean.**
 
 > **v10.67 (2026-07-23) — ACP-1 diff-verified executor commit `429b9d6`. All three v10.64 P1 items now closed. Qwen-driven improvements complete. [architect]**
 >
