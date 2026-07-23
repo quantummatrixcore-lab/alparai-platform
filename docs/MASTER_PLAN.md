@@ -1,4 +1,10 @@
-# ALPAR AI — MASTER PLAN v10.57 (§7 closure batch: GitHub Pro payment verified via Gmail MCP; Vercel recovery email active; §7/4 advisory candidates identified; §7/28 auto-publish approved)
+# ALPAR AI — MASTER PLAN v10.58 (Item 162 ✅ Proposal 014 Autonomous Public Incident Auto-Publish Pipeline implemented [deploy])
+
+> **v10.58 (2026-07-23) — Item 162 (Proposal 014) Implemented ✅. Zero-Intervention Public AI Incident Ingestion & Auto-Publish Pipeline live.**
+>
+> - **Item 162 — Proposal 014 Implementation:** `src/lib/import/incident-importer.ts` updated to default `autoPublish: true` (`status: "published"`, `published_at: ISOString`, `processing_stage: "completed"`, `ai_moderation_score: 100`, `moderator_notes: "Auto-published via Proposal 014 Zero-Intervention Pipeline"`). All public feeds (AIAAIC, AIID, RSS) now auto-publish imported incidents directly into the live registry without manual Founder moderation gate per Founder directive.
+> - **Unit Tests:** `tests/lib/import/incident-importer.test.ts` updated and verified. Status defaults to `published` with 100 AI moderation score, and respects `autoPublish: false` when explicitly passed.
+> - **Proposal Status:** `docs/PROPOSALS/014-autonomous-public-ai-incident-ingestion.md` updated to `status: approved_and_implemented`.
 
 > **v10.57 (2026-07-23) — §7 Founder Decisions — Gmail MCP-verified closure batch. Four previously open §7 items now recorded with independent evidence. [architect]**
 >

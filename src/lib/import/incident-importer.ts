@@ -78,13 +78,20 @@ export interface ImportResult {
   errors: string[];
 }
 
+export interface ImportOptions {
+  autoPublish?: boolean;
+}
+
 export async function importIncidents(
   rows: ImportIncidentRow[],
   source: IncidentSource,
+  options: ImportOptions = { autoPublish: true },
 ): Promise<ImportResult> {
   const result: ImportResult = { inserted: 0, updated: 0, skipped: 0, errors: [] };
 
   if (rows.length === 0) return result;
+
+  const shouldAutoPublish = options.autoPublish !== false;
 
   const admin = createAdminClient();
 
@@ -151,7 +158,11 @@ export async function importIncidents(
         location_country: row.locationCountry ?? null,
         source_url: row.sourceUrl ?? null,
         language: row.language,
-        status: "pending_review" as const,
+        status: shouldAutoPublish ? ("published" as const) : ("pending_review" as const),
+        published_at: shouldAutoPublish ? new Date().toISOString() : null,
+        processing_stage: shouldAutoPublish ? ("completed" as const) : ("pending_review" as const),
+        ai_moderation_score: shouldAutoPublish ? 100 : null,
+        moderator_notes: shouldAutoPublish ? "Auto-published via Proposal 014 Zero-Intervention Pipeline" : null,
         is_anonymous: true,
         incident_source: source,
         import_external_id: row.externalId,

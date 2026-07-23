@@ -81,8 +81,16 @@ describe("importIncidents", () => {
     expect(upsertCall?.[0]?.title_masked).toContain("[REDACTED-EMAIL]");
   });
 
-  it("sets status to pending_review", async () => {
+  it("sets status to published by default (Proposal 014 Zero-Intervention)", async () => {
     await importIncidents([makeRow()], "aiaaic_import");
+    const upsertCall = mockUpsert.mock.calls[0]?.[0] as Record<string, unknown>[];
+    expect(upsertCall?.[0]?.status).toBe("published");
+    expect(upsertCall?.[0]?.processing_stage).toBe("completed");
+    expect(upsertCall?.[0]?.ai_moderation_score).toBe(100);
+  });
+
+  it("sets status to pending_review when autoPublish: false option is passed", async () => {
+    await importIncidents([makeRow()], "aiaaic_import", { autoPublish: false });
     const upsertCall = mockUpsert.mock.calls[0]?.[0] as Record<string, unknown>[];
     expect(upsertCall?.[0]?.status).toBe("pending_review");
   });
