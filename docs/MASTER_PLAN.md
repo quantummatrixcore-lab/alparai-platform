@@ -1,3 +1,22 @@
+# ALPAR AI — MASTER PLAN v10.77 (İnovasyon Statü Düzeltmesi — Fix-forward [architect])
+
+> **v10.77 (2026-07-23) — ACP-3 fix-forward: v10.72 innovation tablosu tarihsel kayıt olduğundan düzenlenmedi. Gerçek statüler burada düzeltildi. [architect]**
+>
+> **ACP-1 Doğrulanmış Statüler (origin/master HEAD = `54f7532`):**
+>
+> | #       | Başlık                               | Priority   | Gerçek Statü | Kanıt                                             |
+> | ------- | ------------------------------------ | ---------- | ------------ | ------------------------------------------------- |
+> | I1      | Incident Passport (EU AI Act Art.73) | high       | **shipped**  | `66707f8` [deploy]                                |
+> | I5      | Tarayıcı Eklentisi (Chrome MV3)      | low        | **done**     | `9b21579` DB seed + `7796fd3` kod                 |
+> | I9      | Slopsquatting Feed                   | high       | **planned**  | `9b21579` DB seed                                 |
+> | I10     | Ses/Deepfake Kategorisi              | high       | **planned**  | `9b21579` DB seed                                 |
+> | I11     | Regülatör Direkt-Feed API            | high       | **planned**  | `9b21579` DB seed                                 |
+> | I12–I18 | Batch 2 (medium/low)                 | medium/low | **idea**     | MASTER_PLAN v10.73 entry — Founder onayı bekliyor |
+>
+> **Düzeltme Gerekçesi:** v10.72 tablosu commit öncesi anlık görüntüdür; ACP-3 gereği tarihsel kayıtlar değiştirilemez. Bu entry (v10.77) gerçek durumu fix-forward olarak tesis eder.
+>
+> **Sıradaki:** I2 ALPAR MCP Server (I1 Passport'un doğal uzantısı) — Founder direktifi bekleniyor.
+
 # ALPAR AI — MASTER PLAN v10.76 (ACP-1 — I1 Incident Passport + Oturum Senkronu [architect])
 
 > **v10.76 (2026-07-23) — `66707f8` commit'i (I1 Incident Passport, EU AI Act Art.73 export) v10.75 sonrası master'da doğrulandı. Architect → Claude Sonnet 4.6 modeline geçiş kayıt altına alındı. [architect]**
