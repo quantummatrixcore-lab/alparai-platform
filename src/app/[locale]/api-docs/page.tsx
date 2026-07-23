@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { Code2, Shield, Zap, Globe, ArrowLeft } from "lucide-react";
+import { ApiPlayground } from "@/components/api-docs/api-playground";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -387,6 +388,10 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
       </div>
 
       <Container className="py-12">
+        <div className="mb-10">
+          <ApiPlayground />
+        </div>
+
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_300px]">
           <div className="space-y-6">
             <h2 className="text-lg font-bold text-white">

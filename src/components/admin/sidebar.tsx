@@ -276,6 +276,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       active: pathname.startsWith("/admin/api-management"),
     },
     {
+      href: "/admin/providers",
+      label: t("nav_providers") || "AI Provider Keys",
+      icon: Cpu,
+      active: pathname.startsWith("/admin/providers"),
+    },
+    {
       href: "/api-docs",
       label: t("nav_publicApiDocs") || "Public API Docs (20 Endpoints)",
       icon: BookOpen,

@@ -18,7 +18,6 @@ test.describe("Item 147 — Admin Sidebar & Page Integrity", () => {
     "/admin/investors", // EXCEPTION: /admin/investors — utility route, no sidebar needed
     "/admin/master-plan", // EXCEPTION: /admin/master-plan — utility route, no sidebar needed
     "/admin/outreach", // EXCEPTION: /admin/outreach — utility route, no sidebar needed
-    "/admin/providers", // EXCEPTION: /admin/providers — utility route, no sidebar needed
     "/admin/redaction-queue", // EXCEPTION: /admin/redaction-queue — utility route, no sidebar needed
     "/admin/settings", // EXCEPTION: /admin/settings — utility route, no sidebar needed
     "/admin/signals", // EXCEPTION: /admin/signals — utility route, no sidebar needed
