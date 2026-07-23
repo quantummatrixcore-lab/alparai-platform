@@ -1,3 +1,16 @@
+# ALPAR AI — MASTER PLAN v10.96 (AI Provider Hub + Interactive API Playground Shipped [architect])
+
+> **v10.96 (2026-07-24) — `1a34b05` [deploy]: AI Provider Management Hub (`/admin/providers`) ve İnteraktif OpenAPI 3.1 API Playground (`/api-docs`) Canlıya Dağıtıldı:**
+>
+> **Geliştirme Özeti:**
+>
+> - **AI Provider Hub (`/admin/providers`):** OpenAI, Google Gemini, OpenRouter, Cohere, HuggingFace, NVIDIA NGC, Blackbox AI adaptörleri ve key rotasyon arayüzü yayınlandı.
+> - **İnteraktif API Playground (`/api-docs`):** Geliştiricilerin 20 public REST endpoint'ini canlıda cURL kopyalama ve anlık HTTP yanıt takibi ile test edebileceği `ApiPlayground` bileşeni canlıya alındı.
+> - **Sidebar & Integrity:** Admin sol menüsüne `/admin/providers` linki eklendi; `admin-sidebar-integrity.spec.ts` yeşil teyit edildi.
+> - **Quality Gate:** `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` ✅ (782/782 tests green across 123 test files)
+
+---
+
 # ALPAR AI — MASTER PLAN v10.95 (Supabase Service Role Key & Full Security Rotation Completed [architect])
 
 > **v10.95 (2026-07-24) — Vercel ve Supabase Güvenlik Rotasyonu %100 Tamamlandı:**
