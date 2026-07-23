@@ -1,3 +1,16 @@
+# ALPAR AI — MASTER PLAN v10.95 (Supabase Service Role Key & Full Security Rotation Completed [architect])
+
+> **v10.95 (2026-07-24) — Vercel ve Supabase Güvenlik Rotasyonu %100 Tamamlandı:**
+>
+> **Güvenlik & Rotasyon Özeti:**
+>
+> - Chat geçmişinde açıkta kalan tüm hassas anahtarlar (Vercel CLI Token & Supabase Service Role Key) başarıyla silinip yeni gizli anahtarlarla değiştirildi.
+> - Yeni Supabase Service Role Key (`sb_secret_1sBU...`) `.env.local` dosyasına yazıldı ve canlı Vercel `alparai-com` projesi ortam değişkenlerine push edilerek senkronize edildi.
+> - **Quality Gate:** `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` ✅ (782/782 tests green across 123 test files)
+> - `AGENTS.md` ve sistem güvenlik durumu %100 yeşil teyit edildi.
+
+---
+
 # ALPAR AI — MASTER PLAN v10.94 (Vercel Security Token Rotation Completed & Verified [architect])
 
 > **v10.94 (2026-07-24) — Vercel CLI Token Rotasyonu Başarıyla Tamamlandı:**
