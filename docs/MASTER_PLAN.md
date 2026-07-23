@@ -1,3 +1,14 @@
+# ALPAR AI — MASTER PLAN v10.75 (ACP-1 Doğrulaması — Option A ve B Canlıda [architect])
+
+> **v10.75 (2026-07-23) — Option A (Proposal 019 UI Refactor) ve Option B (I9, I10, I11 Seed) geliştirildi, test edildi ve canlıya alındı. [architect]**
+>
+> **Bağlam (ACP-1 doğrulandı):**
+>
+> - `7796fd3`: Option A (Proposal 019) -> `master-plan-client.tsx` üzerinde UX (`cursor-grab` kaldırıldı), A11y (`aria` etiketleri), empty state ve `useMemo` optimizasyonları yapıldı. [deploy] ile Vercel'e itildi.
+> - `9b21579`: Option B -> `20260723000001_seed_high_priority_innovations.sql` migration'ı yazıldı. I9 (Slopsquatting), I10 (Deepfake), I11 (Regülatör API) eklendi ve I5 statüsü `done` yapıldı. [deploy] ile Vercel'e itildi.
+>
+> **Durum:** İki dağıtım da canlıda (alparai.com). Teknik borç: 0. Founder direktifi bekleniyor.
+
 # ALPAR AI — MASTER PLAN v10.74 (Sıradaki Dağıtım Triyajı — Proposal 019 vs Innovation Seed [architect])
 
 > **v10.74 (2026-07-23) — Executor iki dağıtım seçeneği (A: Proposal 019 UI polish, B: I9-I18 DB seed) arasında Founder kararı bekliyor. Architect değerlendirmesi + önerilen sıra: A → B. [architect]**
