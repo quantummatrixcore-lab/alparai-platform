@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { CheckCircle2, Circle, Clock, LayoutGrid, List } from "lucide-react";
@@ -14,13 +14,25 @@ export function MasterPlanClient({ items }: MasterPlanClientProps) {
   const t = useTranslations("admin");
   const [viewMode, setViewMode] = useState<"list" | "kanban">("kanban");
 
-  const pendingItems = items.filter((i) => i.status === "pending");
-  const completedItems = items.filter((i) => i.status === "completed");
-  const pausedItems = items.filter((i) => i.status === "paused");
+  const { pendingItems, completedItems, pausedItems, progress, completedCount, activeTotal } =
+    useMemo(() => {
+      const pending = items.filter((i) => i.status === "pending");
+      const completed = items.filter((i) => i.status === "completed");
+      const paused = items.filter((i) => i.status === "paused");
 
-  const completedCount = completedItems.length;
-  const activeTotal = items.length - pausedItems.length;
-  const progress = activeTotal > 0 ? (completedCount / activeTotal) * 100 : 0;
+      const cCount = completed.length;
+      const aTotal = items.length - paused.length;
+      const prog = aTotal > 0 ? (cCount / aTotal) * 100 : 0;
+
+      return {
+        pendingItems: pending,
+        completedItems: completed,
+        pausedItems: paused,
+        completedCount: cCount,
+        activeTotal: aTotal,
+        progress: prog,
+      };
+    }, [items]);
 
   return (
     <div className="space-y-8">
@@ -54,14 +66,18 @@ export function MasterPlanClient({ items }: MasterPlanClientProps) {
         <div className="bg-bg-tertiary border-border-subtle flex items-center gap-1 rounded-lg border p-1">
           <button
             onClick={() => setViewMode("list")}
-            className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold transition-all ${viewMode === "list" ? "bg-bg-secondary text-white shadow-sm" : "text-fg-muted hover:text-white"}`}
+            aria-pressed={viewMode === "list"}
+            aria-label={t("view_list")}
+            className={`focus:ring-brand-500/50 flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold transition-all focus:ring-2 focus:outline-none ${viewMode === "list" ? "bg-bg-secondary text-white shadow-sm" : "text-fg-muted hover:text-white"}`}
           >
             <List className="h-4 w-4" />
             {t("view_list")}
           </button>
           <button
             onClick={() => setViewMode("kanban")}
-            className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold transition-all ${viewMode === "kanban" ? "bg-bg-secondary text-white shadow-sm" : "text-fg-muted hover:text-white"}`}
+            aria-pressed={viewMode === "kanban"}
+            aria-label={t("view_kanban")}
+            className={`focus:ring-brand-500/50 flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold transition-all focus:ring-2 focus:outline-none ${viewMode === "kanban" ? "bg-bg-secondary text-white shadow-sm" : "text-fg-muted hover:text-white"}`}
           >
             <LayoutGrid className="h-4 w-4" />
             {t("view_kanban")}
@@ -84,34 +100,41 @@ export function MasterPlanClient({ items }: MasterPlanClientProps) {
               </span>
             </div>
             <div className="space-y-3">
-              <AnimatePresence>
-                {pendingItems.map((item, index) => (
-                  <motion.div
-                    key={item.id}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="bg-bg-secondary border-border-subtle hover:border-brand-500/30 group relative flex cursor-grab flex-col gap-3 rounded-xl border p-4 shadow-sm transition-all hover:shadow-md"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="bg-bg-tertiary text-fg-secondary border-border-subtle rounded border px-2 py-0.5 text-[10px] font-black tracking-wider uppercase">
-                        Item {item.id}
-                      </span>
-                      <span
-                        className={`rounded px-2 py-0.5 text-[10px] font-black tracking-wider uppercase ${item.priority.includes("P0") ? "border border-red-500/20 bg-red-500/10 text-red-400" : item.priority.includes("P1") ? "border border-amber-500/20 bg-amber-500/10 text-amber-400" : "border border-blue-500/20 bg-blue-500/10 text-blue-400"}`}
-                      >
-                        {item.priority}
-                      </span>
-                    </div>
-                    <p className="font-medium text-white">{item.title}</p>
-                    {item.owner && (
-                      <span className="text-fg-muted self-end text-[10px] font-semibold tracking-wider uppercase">
-                        [{item.owner}]
-                      </span>
-                    )}
-                  </motion.div>
-                ))}
-              </AnimatePresence>
+              {pendingItems.length === 0 ? (
+                <div className="bg-bg-secondary/40 border-border-subtle/50 text-fg-muted flex flex-col items-center justify-center rounded-xl border border-dashed py-8 text-center">
+                  <Clock className="mb-2 h-6 w-6 opacity-40" />
+                  <p className="text-xs font-medium">No pending items</p>
+                </div>
+              ) : (
+                <AnimatePresence>
+                  {pendingItems.map((item, index) => (
+                    <motion.div
+                      key={item.id}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="bg-bg-secondary border-border-subtle hover:border-brand-500/30 group relative flex flex-col gap-3 rounded-xl border p-4 shadow-sm transition-all hover:shadow-md"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="bg-bg-tertiary text-fg-secondary border-border-subtle rounded border px-2 py-0.5 text-[10px] font-black tracking-wider uppercase">
+                          Item {item.id}
+                        </span>
+                        <span
+                          className={`rounded px-2 py-0.5 text-[10px] font-black tracking-wider uppercase ${item.priority.includes("P0") ? "border border-red-500/20 bg-red-500/10 text-red-400" : item.priority.includes("P1") ? "border border-amber-500/20 bg-amber-500/10 text-amber-400" : "border border-blue-500/20 bg-blue-500/10 text-blue-400"}`}
+                        >
+                          {item.priority}
+                        </span>
+                      </div>
+                      <p className="font-medium text-white">{item.title}</p>
+                      {item.owner && (
+                        <span className="text-fg-muted self-end text-[10px] font-semibold tracking-wider uppercase">
+                          [{item.owner}]
+                        </span>
+                      )}
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              )}
             </div>
           </div>
 
@@ -127,34 +150,41 @@ export function MasterPlanClient({ items }: MasterPlanClientProps) {
               </span>
             </div>
             <div className="space-y-3">
-              <AnimatePresence>
-                {pausedItems.map((item, index) => (
-                  <motion.div
-                    key={item.id}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="bg-bg-secondary border-border-subtle group relative flex cursor-grab flex-col gap-3 rounded-xl border border-purple-500/20 p-4 shadow-sm transition-all"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="bg-bg-tertiary text-fg-secondary border-border-subtle rounded border px-2 py-0.5 text-[10px] font-black tracking-wider uppercase">
-                        Item {item.id}
-                      </span>
-                      <span
-                        className={`rounded px-2 py-0.5 text-[10px] font-black tracking-wider uppercase ${item.priority.includes("P0") ? "border border-red-500/20 bg-red-500/10 text-red-400" : item.priority.includes("P1") ? "border border-amber-500/20 bg-amber-500/10 text-amber-400" : "border border-blue-500/20 bg-blue-500/10 text-blue-400"}`}
-                      >
-                        {item.priority}
-                      </span>
-                    </div>
-                    <p className="font-medium text-white">{item.title}</p>
-                    {item.owner && (
-                      <span className="text-fg-muted self-end text-[10px] font-semibold tracking-wider uppercase">
-                        [{item.owner}]
-                      </span>
-                    )}
-                  </motion.div>
-                ))}
-              </AnimatePresence>
+              {pausedItems.length === 0 ? (
+                <div className="bg-bg-secondary/40 border-border-subtle/50 text-fg-muted flex flex-col items-center justify-center rounded-xl border border-dashed py-8 text-center">
+                  <Clock className="mb-2 h-6 w-6 opacity-40" />
+                  <p className="text-xs font-medium">No paused items</p>
+                </div>
+              ) : (
+                <AnimatePresence>
+                  {pausedItems.map((item, index) => (
+                    <motion.div
+                      key={item.id}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="bg-bg-secondary border-border-subtle group relative flex flex-col gap-3 rounded-xl border border-purple-500/20 p-4 shadow-sm transition-all"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="bg-bg-tertiary text-fg-secondary border-border-subtle rounded border px-2 py-0.5 text-[10px] font-black tracking-wider uppercase">
+                          Item {item.id}
+                        </span>
+                        <span
+                          className={`rounded px-2 py-0.5 text-[10px] font-black tracking-wider uppercase ${item.priority.includes("P0") ? "border border-red-500/20 bg-red-500/10 text-red-400" : item.priority.includes("P1") ? "border border-amber-500/20 bg-amber-500/10 text-amber-400" : "border border-blue-500/20 bg-blue-500/10 text-blue-400"}`}
+                        >
+                          {item.priority}
+                        </span>
+                      </div>
+                      <p className="font-medium text-white">{item.title}</p>
+                      {item.owner && (
+                        <span className="text-fg-muted self-end text-[10px] font-semibold tracking-wider uppercase">
+                          [{item.owner}]
+                        </span>
+                      )}
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              )}
             </div>
           </div>
 
@@ -170,30 +200,39 @@ export function MasterPlanClient({ items }: MasterPlanClientProps) {
               </span>
             </div>
             <div className="space-y-3 opacity-60 transition-opacity hover:opacity-100">
-              <AnimatePresence>
-                {completedItems.slice(0, 15).map((item, index) => (
-                  <motion.div
-                    key={item.id}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.02 }}
-                    className="group relative flex flex-col gap-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4 shadow-sm"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="bg-bg-tertiary text-fg-secondary border-border-subtle rounded border px-2 py-0.5 text-[10px] font-black tracking-wider uppercase">
-                        Item {item.id}
-                      </span>
-                    </div>
-                    <p className="text-fg-secondary text-sm font-medium line-through">
-                      {item.title}
-                    </p>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-              {completedItems.length > 15 && (
-                <div className="text-fg-muted text-center text-sm font-medium">
-                  {t("more_completed", { count: completedItems.length - 15 })}
+              {completedItems.length === 0 ? (
+                <div className="bg-bg-secondary/40 border-border-subtle/50 text-fg-muted flex flex-col items-center justify-center rounded-xl border border-dashed py-8 text-center">
+                  <CheckCircle2 className="mb-2 h-6 w-6 opacity-40" />
+                  <p className="text-xs font-medium">No completed items</p>
                 </div>
+              ) : (
+                <>
+                  <AnimatePresence>
+                    {completedItems.slice(0, 15).map((item, index) => (
+                      <motion.div
+                        key={item.id}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: index * 0.02 }}
+                        className="group relative flex flex-col gap-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4 shadow-sm"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="bg-bg-tertiary text-fg-secondary border-border-subtle rounded border px-2 py-0.5 text-[10px] font-black tracking-wider uppercase">
+                            Item {item.id}
+                          </span>
+                        </div>
+                        <p className="text-fg-secondary text-sm font-medium line-through">
+                          {item.title}
+                        </p>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                  {completedItems.length > 15 && (
+                    <div className="text-fg-muted text-center text-sm font-medium">
+                      {t("more_completed", { count: completedItems.length - 15 })}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
