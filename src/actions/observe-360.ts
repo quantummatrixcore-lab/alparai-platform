@@ -91,6 +91,7 @@ export async function getObserve360Telemetry(): Promise<Observe360Telemetry> {
     costDailyRes,
     costMonthlyRes,
     dbSizeRes,
+    reportersRes,
   ] = await Promise.all([
     db.from("incidents").select("id", { count: "exact", head: true }),
     db
@@ -118,12 +119,17 @@ export async function getObserve360Telemetry(): Promise<Observe360Telemetry> {
     db.rpc("get_ai_gateway_costs", { time_interval: "1 day" }),
     db.rpc("get_ai_gateway_costs", { time_interval: "30 days" }),
     db.rpc("get_database_size"),
+    db
+      .from("incidents")
+      .select("user_id", { count: "exact", head: true })
+      .not("user_id", "is", null),
   ]);
 
   const totalIncidents = incidentsRes.count ?? 0;
   const pendingIncidents = pendingRes.count ?? 0;
   const verifiedIncidents = verifiedRes.count ?? 0;
   const totalUsers = usersRes.count ?? 0;
+  const reportersCount = reportersRes.count ?? 0;
 
   const kModelData = Array.isArray(kModelsRes.data) ? kModelsRes.data : [];
   const totalModelsRated = kModelData.length;
@@ -186,7 +192,7 @@ export async function getObserve360Telemetry(): Promise<Observe360Telemetry> {
     },
     growth: {
       totalUsers,
-      reportersCount: Math.floor(totalUsers * 0.4),
+      reportersCount,
     },
     capacity: {
       dbSizeMb,

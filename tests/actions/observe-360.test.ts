@@ -5,6 +5,7 @@ const makeCountChain = (count: number) => {
   const chain: Record<string, unknown> & { [Symbol.toStringTag]?: string } = {};
   const terminal = Promise.resolve({ count, data: null, error: null });
   chain.eq = () => makeCountChain(count);
+  chain.not = () => makeCountChain(count);
   chain.then = terminal.then.bind(terminal);
   chain.catch = terminal.catch.bind(terminal);
   chain[Symbol.toStringTag] = "Promise";
