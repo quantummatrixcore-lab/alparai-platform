@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import * as React from "react";
 import { useState, useEffect } from "react";
@@ -16,6 +16,7 @@ import {
   Globe,
   Users,
   Lock,
+  BookOpen,
   FileText,
   Award,
   Share2,
@@ -273,6 +274,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       label: t("nav_apiManagement") || "API Management Hub",
       icon: Zap,
       active: pathname.startsWith("/admin/api-management"),
+    },
+    {
+      href: "/api-docs",
+      label: t("nav_publicApiDocs") || "Public API Docs (20 Endpoints)",
+      icon: BookOpen,
+      active: pathname.startsWith("/api-docs"),
     },
     {
       href: "/admin/integrations",
