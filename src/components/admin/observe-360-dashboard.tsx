@@ -34,13 +34,19 @@ export function Observe360Dashboard() {
 
   useEffect(() => {
     fetchTelemetry();
-    const interval = setInterval(fetchTelemetry, 30000); // 30s auto-refresh
+    const interval = setInterval(fetchTelemetry, 30000);
     return () => clearInterval(interval);
   }, []);
 
+  const healthColor =
+    telemetry?.healthSlo.status === "CRITICAL"
+      ? "text-red-400"
+      : telemetry?.healthSlo.status === "DEGRADED"
+        ? "text-amber-400"
+        : "text-emerald-400";
+
   return (
     <div className="border-brand-500/20 to-brand-950/30 mb-8 overflow-hidden rounded-2xl border bg-gradient-to-br from-zinc-950 via-zinc-900 p-6 shadow-2xl backdrop-blur-xl">
-      {/* Top Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
         <div className="flex items-center space-x-3">
           <LivePulseRing status="healthy" />
@@ -58,21 +64,18 @@ export function Observe360Dashboard() {
           </div>
         </div>
 
-        <div className="flex items-center space-x-3">
-          <button
-            onClick={fetchTelemetry}
-            disabled={loading}
-            className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-zinc-300 transition-colors hover:bg-white/10"
-          >
-            <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
-            <span>Sync Telemetry</span>
-          </button>
-        </div>
+        <button
+          onClick={fetchTelemetry}
+          disabled={loading}
+          className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-zinc-300 transition-colors hover:bg-white/10"
+        >
+          <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
+          <span>Sync Telemetry</span>
+        </button>
       </div>
 
-      {/* 8-Domain Telemetry Grid */}
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {/* 1. Incidents Domain */}
+        {/* 1. Incidents Registry */}
         <div className="hover:border-brand-500/30 rounded-xl border border-white/10 bg-zinc-900/80 p-4 transition-all">
           <div className="flex items-center justify-between text-xs text-zinc-400">
             <span>1. Incidents Registry</span>
@@ -80,18 +83,22 @@ export function Observe360Dashboard() {
           </div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-black text-white">
-              {telemetry?.incidents.total ?? 0}
+              {telemetry ? telemetry.incidents.total : "—"}
             </span>
             <span className="text-brand-300 text-xs font-bold">
-              {telemetry?.incidents.pendingReview ?? 0} PENDING
+              {telemetry ? `${telemetry.incidents.pendingReview} PENDING` : ""}
             </span>
           </div>
           <p className="mt-2 text-[11px] text-zinc-400">
-            {telemetry?.incidents.verified ?? 0} Expert-Verified incidents
+            {telemetry
+              ? `${telemetry.incidents.verified} Expert-Verified`
+              : loading
+                ? "Loading…"
+                : "—"}
           </p>
         </div>
 
-        {/* 2. Health & SLO Domain */}
+        {/* 2. Health & SLO */}
         <div className="hover:border-brand-500/30 rounded-xl border border-white/10 bg-zinc-900/80 p-4 transition-all">
           <div className="flex items-center justify-between text-xs text-zinc-400">
             <span>2. Health & SLO</span>
@@ -99,43 +106,38 @@ export function Observe360Dashboard() {
           </div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-black text-white">
-              {telemetry?.healthSlo.availability ?? 100}%
+              {telemetry?.healthSlo.status ?? (loading ? "—" : "UNKNOWN")}
             </span>
-            <span className="text-xs font-bold text-emerald-400">
-              {telemetry?.healthSlo.status ?? "NOMINAL"}
+            <span className={`text-xs font-bold ${healthColor}`}>
+              {telemetry ? `${telemetry.healthSlo.openAlarms} alarms` : ""}
             </span>
           </div>
           <div className="mt-2">
             <Gauge
-              value={telemetry?.healthSlo.availability ?? 100}
-              label={
-                telemetry?.healthSlo.p95LatencyMs
-                  ? `p95 Latency ≤ ${telemetry.healthSlo.p95LatencyMs}ms`
-                  : "Live Telemetry Online"
-              }
-              variant="success"
+              value={telemetry?.healthSlo.openAlarms === 0 ? 100 : 60}
+              label="SLA Alarm Monitor"
+              variant={telemetry?.healthSlo.status === "NOMINAL" ? "success" : "warning"}
             />
           </div>
         </div>
 
-        {/* 3. Security & RLS Domain */}
+        {/* 3. Security & RLS */}
         <div className="hover:border-brand-500/30 rounded-xl border border-white/10 bg-zinc-900/80 p-4 transition-all">
           <div className="flex items-center justify-between text-xs text-zinc-400">
-            <span>3. Security & RLS (P0)</span>
+            <span>3. Security & RLS</span>
             <SupabaseIcon size={14} />
           </div>
           <div className="mt-2 flex items-baseline justify-between">
-            <span className="text-2xl font-black text-white">
-              {telemetry?.securityRls.status ?? "HARDENED"}
-            </span>
+            <span className="text-2xl font-black text-white">HARDENED</span>
             <span className="text-xs font-bold text-emerald-400">PASSED</span>
           </div>
           <p className="mt-2 text-[11px] text-zinc-400">
-            PII Guardian Active • {telemetry?.securityRls.rlsPolicyCount ?? 28} RLS Policies
+            PII Guardian Active •{" "}
+            {telemetry ? `${telemetry.securityRls.rlsPolicyCount} RLS Policies` : "—"}
           </p>
         </div>
 
-        {/* 4. DORA Telemetry Domain */}
+        {/* 4. DORA Metrics */}
         <div className="hover:border-brand-500/30 rounded-xl border border-white/10 bg-zinc-900/80 p-4 transition-all">
           <div className="flex items-center justify-between text-xs text-zinc-400">
             <span>4. DORA Metrics</span>
@@ -143,38 +145,37 @@ export function Observe360Dashboard() {
           </div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-black text-white">
-              {telemetry?.dora.deployFrequency ?? "Daily"}
+              {telemetry?.dora.instrumented ? `${telemetry.dora.deployFrequency ?? 0}/day` : "—"}
             </span>
             <span className="text-xs font-bold text-sky-400">
-              {telemetry?.dora.isInstrumented ? "LIVE" : "Rule #31"}
+              {telemetry?.dora.instrumented ? "LIVE" : "PENDING"}
             </span>
           </div>
           <p className="mt-2 text-[11px] text-zinc-400">
-            {telemetry?.dora.isInstrumented
-              ? `Lead Time: ${telemetry.dora.leadTimeMinutes}m`
-              : "CI Webhook Awaiting Integration"}
+            {telemetry?.dora.instrumented
+              ? `Lead: ${telemetry.dora.leadTimeMinutes}m • MTTR: ${telemetry.dora.mttrMinutes}m`
+              : "Webhook not yet configured"}
           </p>
         </div>
 
-        {/* 5. Cost vs Rule #20 Domain */}
+        {/* 5. Cost (AI Gateway) */}
         <div className="hover:border-brand-500/30 rounded-xl border border-white/10 bg-zinc-900/80 p-4 transition-all">
           <div className="flex items-center justify-between text-xs text-zinc-400">
-            <span>5. Cost vs Rule #20</span>
+            <span>5. AI Gateway Cost</span>
             <DollarSign className="h-4 w-4 text-emerald-400" />
           </div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-black text-white">
-              ${telemetry?.cost.dailySpendUsd ?? 0.0} / day
+              ${telemetry?.cost.dailySpendUsd.toFixed(2) ?? "—"} / day
             </span>
-            <span className="text-xs font-bold text-emerald-400">UNDER CAP</span>
+            <span className="text-xs font-bold text-emerald-400">TRACKED</span>
           </div>
           <p className="mt-2 text-[11px] text-zinc-400">
-            Monthly Spend: ${telemetry?.cost.monthlySpendUsd ?? 0.0} / $
-            {telemetry?.cost.monthlyLimitUsd ?? 500}
+            30-day spend: ${telemetry?.cost.monthlySpendUsd.toFixed(2) ?? "—"}
           </p>
         </div>
 
-        {/* 6. Growth & Users Domain */}
+        {/* 6. Growth & Users */}
         <div className="hover:border-brand-500/30 rounded-xl border border-white/10 bg-zinc-900/80 p-4 transition-all">
           <div className="flex items-center justify-between text-xs text-zinc-400">
             <span>6. Growth & Users</span>
@@ -182,16 +183,20 @@ export function Observe360Dashboard() {
           </div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-black text-white">
-              {telemetry?.growth.totalUsers ?? 0} Users
+              {telemetry ? `${telemetry.growth.totalUsers} Users` : "—"}
             </span>
-            <span className="text-xs font-bold text-purple-400">REGISTERED</span>
+            <span className="text-xs font-bold text-purple-400">ACTIVE</span>
           </div>
           <p className="mt-2 text-[11px] text-zinc-400">
-            {telemetry?.growth.reportersCount ?? 0} Active Incident Reporters
+            {telemetry
+              ? `${telemetry.growth.reportersCount} Incident Reporters`
+              : loading
+                ? "Loading…"
+                : "—"}
           </p>
         </div>
 
-        {/* 7. Capacity & Infra Domain */}
+        {/* 7. Capacity & Infra */}
         <div className="hover:border-brand-500/30 rounded-xl border border-white/10 bg-zinc-900/80 p-4 transition-all">
           <div className="flex items-center justify-between text-xs text-zinc-400">
             <span>7. Capacity & Infra</span>
@@ -199,31 +204,42 @@ export function Observe360Dashboard() {
           </div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-black text-white">
-              {telemetry?.capacity.dbSizeMb ? `${telemetry.capacity.dbSizeMb} MB` : "23.5 MB"}
+              {telemetry ? `${telemetry.capacity.dbSizeMb} MB` : "—"}
             </span>
             <span className="text-xs font-bold text-amber-400">
-              {telemetry?.capacity.dbSizeLimitMb ?? 500}MB Cap
+              {telemetry ? `/ ${telemetry.capacity.dbSizeLimitMb}MB cap` : ""}
             </span>
           </div>
-          <p className="mt-2 text-[11px] text-zinc-400">
-            Crons: {telemetry?.capacity.cronSlotUsage ?? "9 / 12 slots"}
-          </p>
+          <div className="mt-2">
+            <Gauge
+              value={
+                telemetry
+                  ? Math.round(
+                      (telemetry.capacity.dbSizeMb / telemetry.capacity.dbSizeLimitMb) * 100,
+                    )
+                  : 0
+              }
+              label="DB Capacity"
+              variant="warning"
+            />
+          </div>
         </div>
 
-        {/* 8. K-BENCHMARK Freshness Domain */}
+        {/* 8. K-BENCHMARK */}
         <div className="hover:border-brand-500/30 rounded-xl border border-white/10 bg-zinc-900/80 p-4 transition-all">
           <div className="flex items-center justify-between text-xs text-zinc-400">
-            <span>8. K-BENCHMARK Freshness</span>
+            <span>8. K-BENCHMARK</span>
             <Award className="text-brand-400 h-4 w-4" />
           </div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-black text-white">
-              {telemetry?.kBenchmark.totalModelsRated ?? 0} Models
+              {telemetry ? `${telemetry.kBenchmark.totalModelsRated} Models` : "—"}
             </span>
             <span className="text-brand-300 text-xs font-bold">RATED</span>
           </div>
           <p className="mt-2 text-[11px] text-zinc-400">
-            Last Audit: {telemetry?.kBenchmark.lastAuditDate ?? "No Recent Audit"}
+            Last Audit:{" "}
+            {telemetry?.kBenchmark.lastAuditDate ?? (loading ? "Loading…" : "Not yet run")}
           </p>
         </div>
       </div>

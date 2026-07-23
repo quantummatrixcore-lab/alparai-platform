@@ -3,9 +3,10 @@ import { redirect } from "next/navigation";
 import { Container } from "@/components/ui/layout";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { Award } from "lucide-react";
+import { Award, CheckCircle2, Clock } from "lucide-react";
 import { ExpertApplicationsList } from "@/components/admin/expert-applications-list";
 import type { ExpertApplicationItem } from "@/components/admin/expert-applications-list";
+import { MetricCard } from "@/components/admin/metric-card";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -37,8 +38,39 @@ export default async function AdminExpertsPage({
 
   const applications = (data as unknown as ExpertApplicationItem[]) ?? [];
 
+  const approved = applications.filter((a) => a.status === "approved");
+  const pending = applications.filter((a) => a.status === "pending");
+
   return (
     <Container className="py-10">
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <MetricCard
+          title="Expert Applications"
+          value={applications.length}
+          icon={Award}
+          trend="up"
+          trendLabel="Total received"
+          accentColor="#f59e0b"
+          sparkData={applications.slice(0, 8).map((_, i) => ({ value: i + 1 }))}
+          chartType="bar"
+        />
+        <MetricCard
+          title="Approved Experts"
+          value={approved.length}
+          icon={CheckCircle2}
+          trend={approved.length > 0 ? "up" : "neutral"}
+          trendLabel="Verified panel"
+          accentColor="#10b981"
+        />
+        <MetricCard
+          title="Pending Review"
+          value={pending.length}
+          icon={Clock}
+          trend={pending.length > 0 ? "up" : "neutral"}
+          trendLabel="Awaiting decision"
+          accentColor="#6366f1"
+        />
+      </div>
       <header className="mb-6">
         <h1 className="text-fg-primary inline-flex items-center gap-2 text-2xl font-bold">
           <Award className="text-brand-400 h-6 w-6" />{" "}

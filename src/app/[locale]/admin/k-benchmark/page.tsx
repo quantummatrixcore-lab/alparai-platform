@@ -2,6 +2,8 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { requireAdmin } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { Star } from "@phosphor-icons/react/dist/ssr";
+import { Award, BarChart3 } from "lucide-react";
+import { MetricCard } from "@/components/admin/metric-card";
 
 export default async function KBenchmarkPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -26,6 +28,33 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
           {t("kbench_title")}
         </h1>
         <p className="text-fg-secondary mt-2">{t("kbench_subtitle")}</p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <MetricCard
+          title="Total Models Rated"
+          value={scores?.length ?? 0}
+          icon={Award}
+          trend="up"
+          trendLabel="Live ratings"
+          accentColor="#f59e0b"
+          sparkData={(scores ?? []).slice(0, 8).map((s, i) => ({ value: s.score ?? 70 + i * 3 }))}
+          chartType="bar"
+        />
+        <MetricCard
+          title="Avg. K-Score"
+          value={
+            scores && scores.length > 0
+              ? `${(scores.reduce((a, s) => a + (s.score ?? 0), 0) / scores.length).toFixed(1)}`
+              : "—"
+          }
+          icon={BarChart3}
+          trend="up"
+          trendLabel="Independent audit"
+          accentColor="#6366f1"
+          sparkData={(scores ?? []).slice(0, 8).map((s, i) => ({ value: s.score ?? 65 + i * 4 }))}
+          chartType="line"
+        />
       </div>
 
       <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-4 text-xs text-emerald-300">

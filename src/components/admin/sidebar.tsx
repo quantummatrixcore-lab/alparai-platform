@@ -42,6 +42,7 @@ import {
   ClipboardList,
   Building2,
   Calculator,
+  Zap,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
@@ -266,6 +267,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       label: t("nav_resourceEfficiency") || "Capacity & Vendors",
       icon: Server,
       active: pathname.startsWith("/admin/resources"),
+    },
+    {
+      href: "/admin/api-management",
+      label: t("nav_apiManagement") || "API Management Hub",
+      icon: Zap,
+      active: pathname.startsWith("/admin/api-management"),
     },
     {
       href: "/admin/integrations",

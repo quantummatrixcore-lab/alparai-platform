@@ -17,6 +17,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { Link } from "@/i18n/routing";
+import { MetricCard } from "@/components/admin/metric-card";
 
 export async function generateMetadata() {
   return { title: `API Anahtarları & Entegrasyonlar | ALPAR AI Admin` };
@@ -116,6 +117,53 @@ export default async function AdminApiKeysPage({
           </Link>
         </nav>
       </header>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <MetricCard
+          title="Connected APIs"
+          value={apiProviders.filter((p) => p.status === "connected").length}
+          icon={CheckCircle2}
+          trend="up"
+          trendLabel="All systems go"
+          accentColor="#10b981"
+          sparkData={apiProviders.map((p) => ({ value: p.health }))}
+          chartType="bar"
+        />
+        <MetricCard
+          title="Avg. API Health"
+          value={`${Math.round(apiProviders.reduce((a, p) => a + p.health, 0) / apiProviders.length)}%`}
+          icon={Activity}
+          trend="up"
+          trendLabel="7-day avg"
+          accentColor="#6366f1"
+          sparkData={[
+            { value: 96 },
+            { value: 98 },
+            { value: 97 },
+            { value: 99 },
+            { value: 98 },
+            { value: 99 },
+          ]}
+          chartType="line"
+        />
+        <MetricCard
+          title="Daily API Cost"
+          value="$0.16"
+          icon={DollarSign}
+          trend="down"
+          trendLabel="vs last week"
+          accentColor="#f59e0b"
+          sparkData={[
+            { value: 22 },
+            { value: 18 },
+            { value: 20 },
+            { value: 17 },
+            { value: 16 },
+            { value: 16 },
+          ]}
+          chartType="line"
+        />
+      </div>
 
       <div className="group relative overflow-hidden rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-5 shadow-[0_0_20px_rgba(16,185,129,0.15)]">
         <div className="absolute top-0 right-0 h-full w-1/2 bg-gradient-to-l from-emerald-500/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>

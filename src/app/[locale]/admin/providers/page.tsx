@@ -5,8 +5,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { Building2 } from "lucide-react";
+import { Building2, CheckCircle2 } from "lucide-react";
 import { VerifiedRespondentToggle } from "@/components/admin/verified-respondent-toggle";
+import { MetricCard } from "@/components/admin/metric-card";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -36,8 +37,41 @@ export default async function AdminProvidersPage({
     )
     .order("name");
 
+  const verified = (data ?? []).filter((p) => p.is_verified);
+  const respondents = (data ?? []).filter((p) => p.is_verified_respondent);
+
   return (
     <Container className="py-10">
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <MetricCard
+          title="Total AI Providers"
+          value={data?.length ?? 0}
+          icon={Building2}
+          trend="up"
+          trendLabel="Registered"
+          accentColor="#6366f1"
+          sparkData={(data ?? []).map((_, i) => ({ value: i + 1 }))}
+          chartType="bar"
+        />
+        <MetricCard
+          title="Verified Providers"
+          value={verified.length}
+          icon={CheckCircle2}
+          trend="up"
+          trendLabel="Verified status"
+          accentColor="#10b981"
+          badge={`${data && data.length > 0 ? Math.round((verified.length / data.length) * 100) : 0}%`}
+          badgeColor="text-emerald-400"
+        />
+        <MetricCard
+          title="Active Respondents"
+          value={respondents.length}
+          icon={Building2}
+          trend="neutral"
+          trendLabel="Responding providers"
+          accentColor="#f59e0b"
+        />
+      </div>
       <header className="mb-6">
         <h1 className="text-fg-primary inline-flex items-center gap-2 text-2xl font-bold">
           <Building2 className="text-brand-400 h-6 w-6" /> {t("providers")}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/routing";
 import {
@@ -16,8 +16,28 @@ import {
   EyeOff,
   Flame,
   Command,
+  CheckCircle,
+  XCircle,
+  Bell,
+  DollarSign,
+  Award,
+  HardDrive,
+  TrendingUp,
 } from "lucide-react";
 import { triggerExternalFetch } from "@/actions/ecosystem";
+import {
+  approveIncident,
+  rejectIncident,
+  toggleFeatureFlag,
+  resolveAlarm,
+  getPendingIncidents,
+} from "@/actions/admin-quick-actions";
+
+interface PendingIncident {
+  id: string;
+  title: string;
+  status: string;
+}
 
 export function Manage360CommandPalette() {
   const t = useTranslations("admin");
@@ -25,6 +45,17 @@ export function Manage360CommandPalette() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
+  const [statusOk, setStatusOk] = useState(true);
+  const [pendingIncidents, setPendingIncidents] = useState<PendingIncident[]>([]);
+
+  const loadPendingIncidents = useCallback(async () => {
+    try {
+      const items = await getPendingIncidents();
+      setPendingIncidents(items);
+    } catch {
+      setPendingIncidents([]);
+    }
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -32,35 +63,56 @@ export function Manage360CommandPalette() {
         e.preventDefault();
         setIsOpen((prev) => !prev);
       }
-      if (e.key === "Escape") {
-        setIsOpen(false);
-      }
+      if (e.key === "Escape") setIsOpen(false);
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const handleCrawlerTrigger = async () => {
-    setStatusMsg("Triggering AI Scraper & Crawler...");
-    const res = await triggerExternalFetch();
-    setStatusMsg(res.message);
+  useEffect(() => {
+    if (isOpen) loadPendingIncidents();
+  }, [isOpen, loadPendingIncidents]);
+
+  const showStatus = (msg: string, ok = true) => {
+    setStatusMsg(msg);
+    setStatusOk(ok);
     setTimeout(() => {
       setStatusMsg(null);
       setIsOpen(false);
     }, 2000);
   };
 
-  const actions = [
-    {
-      id: "moderation",
-      title: t("moderation_queue") || "Moderation Queue (Approve / Reject)",
-      category: "Operations",
-      icon: Shield,
-      action: () => {
-        router.push("/admin/moderation");
-        setIsOpen(false);
-      },
-    },
+  const handleCrawlerTrigger = async () => {
+    setStatusMsg("Triggering AI Scraper & Crawler…");
+    const res = await triggerExternalFetch();
+    showStatus(res.message, true);
+  };
+
+  const handleApprove = async (id: string) => {
+    setStatusMsg("Approving incident…");
+    const res = await approveIncident(id);
+    showStatus(res.message, res.ok);
+  };
+
+  const handleReject = async (id: string) => {
+    setStatusMsg("Rejecting incident…");
+    const res = await rejectIncident(id);
+    showStatus(res.message, res.ok);
+  };
+
+  const handleToggleFlag = async (key: string, enabled: boolean) => {
+    setStatusMsg(`Toggling ${key}…`);
+    const res = await toggleFeatureFlag(key, enabled);
+    showStatus(res.message, res.ok);
+  };
+
+  const handleResolveAlarm = async (id: string) => {
+    setStatusMsg("Resolving SLA alarm…");
+    const res = await resolveAlarm(id);
+    showStatus(res.message, res.ok);
+  };
+
+  const staticActions = [
     {
       id: "crawl-trigger",
       title: "Trigger AI Scraper & Ingestion Cron",
@@ -69,9 +121,40 @@ export function Manage360CommandPalette() {
       action: handleCrawlerTrigger,
     },
     {
+      id: "toggle-maintenance",
+      title: "Toggle Maintenance Mode Flag",
+      category: "Operations",
+      icon: ToggleRight,
+      action: () => handleToggleFlag("maintenance_mode", true),
+    },
+    {
+      id: "toggle-registration",
+      title: "Toggle User Registration Flag",
+      category: "Operations",
+      icon: ToggleRight,
+      action: () => handleToggleFlag("user_registration_open", false),
+    },
+    {
+      id: "resolve-alarms",
+      title: "Resolve All Open SLA Alarms",
+      category: "Operations",
+      icon: Bell,
+      action: () => handleResolveAlarm("all"),
+    },
+    {
+      id: "moderation",
+      title: t("moderation_queue") || "Moderation Queue (Approve / Reject)",
+      category: "Navigate",
+      icon: Shield,
+      action: () => {
+        router.push("/admin/moderation");
+        setIsOpen(false);
+      },
+    },
+    {
       id: "feature-flags",
       title: t("nav_featureFlags") || "Feature Flags & Kill-Switch",
-      category: "System",
+      category: "Navigate",
       icon: ToggleRight,
       action: () => {
         router.push("/admin/feature-flags");
@@ -81,8 +164,8 @@ export function Manage360CommandPalette() {
     {
       id: "cost-alarm",
       title: "Cost Telemetry & Throttle Controls",
-      category: "System",
-      icon: Flame,
+      category: "Navigate",
+      icon: DollarSign,
       action: () => {
         router.push("/admin/api-metrics");
         setIsOpen(false);
@@ -91,7 +174,7 @@ export function Manage360CommandPalette() {
     {
       id: "redaction",
       title: "Redaction & Provider Privacy Queue",
-      category: "Governance",
+      category: "Navigate",
       icon: EyeOff,
       action: () => {
         router.push("/admin/redaction-queue");
@@ -101,7 +184,7 @@ export function Manage360CommandPalette() {
     {
       id: "takedown",
       title: "DSA Art. 14 Legal Takedowns",
-      category: "Governance",
+      category: "Navigate",
       icon: RotateCw,
       action: () => {
         router.push("/admin/takedown");
@@ -111,7 +194,7 @@ export function Manage360CommandPalette() {
     {
       id: "geo",
       title: t("nav_geo") || "GEO Engine Telemetry",
-      category: "Intelligence",
+      category: "Navigate",
       icon: Globe,
       action: () => {
         router.push("/admin/geo");
@@ -121,7 +204,7 @@ export function Manage360CommandPalette() {
     {
       id: "health",
       title: t("nav_systemHealth") || "System Health & SLO Alarms",
-      category: "System",
+      category: "Navigate",
       icon: Activity,
       action: () => {
         router.push("/admin/health");
@@ -131,7 +214,7 @@ export function Manage360CommandPalette() {
     {
       id: "audit",
       title: t("audit_log") || "Audit Log & System Tracing",
-      category: "Governance",
+      category: "Navigate",
       icon: FileText,
       action: () => {
         router.push("/admin/audit");
@@ -141,24 +224,89 @@ export function Manage360CommandPalette() {
     {
       id: "users",
       title: t("users") || "Users & Moderator Permissions",
-      category: "Governance",
+      category: "Navigate",
       icon: Users,
       action: () => {
         router.push("/admin/users");
         setIsOpen(false);
       },
     },
+    {
+      id: "dora",
+      title: "DORA Metrics Dashboard",
+      category: "Navigate",
+      icon: TrendingUp,
+      action: () => {
+        router.push("/admin/dora");
+        setIsOpen(false);
+      },
+    },
+    {
+      id: "capacity",
+      title: "Capacity & Infrastructure Monitor",
+      category: "Navigate",
+      icon: HardDrive,
+      action: () => {
+        router.push("/admin/health");
+        setIsOpen(false);
+      },
+    },
+    {
+      id: "kbenchmark",
+      title: "K-BENCHMARK Model Ratings",
+      category: "Navigate",
+      icon: Award,
+      action: () => {
+        router.push("/admin/k-benchmark");
+        setIsOpen(false);
+      },
+    },
+    {
+      id: "flame",
+      title: "Cost Alarm & Billing Monitor",
+      category: "Navigate",
+      icon: Flame,
+      action: () => {
+        router.push("/admin/finance");
+        setIsOpen(false);
+      },
+    },
   ];
 
-  const filteredActions = actions.filter(
+  const pendingActions = pendingIncidents.flatMap((inc) => [
+    {
+      id: `approve-${inc.id}`,
+      title: `Approve: ${inc.title.slice(0, 40)}…`,
+      category: "Quick-Approve",
+      icon: CheckCircle,
+      action: () => handleApprove(inc.id),
+    },
+    {
+      id: `reject-${inc.id}`,
+      title: `Reject: ${inc.title.slice(0, 40)}…`,
+      category: "Quick-Reject",
+      icon: XCircle,
+      action: () => handleReject(inc.id),
+    },
+  ]);
+
+  const allActions = [...pendingActions, ...staticActions];
+
+  const filteredActions = allActions.filter(
     (a) =>
       a.title.toLowerCase().includes(query.toLowerCase()) ||
       a.category.toLowerCase().includes(query.toLowerCase()),
   );
 
+  const categoryColors: Record<string, string> = {
+    "Quick-Approve": "text-emerald-400",
+    "Quick-Reject": "text-red-400",
+    Operations: "text-sky-400",
+    Navigate: "text-zinc-400",
+  };
+
   return (
     <>
-      {/* Mobile Floating Command Button */}
       <button
         onClick={() => setIsOpen(true)}
         aria-label="Open 360 Command Palette"
@@ -168,7 +316,7 @@ export function Manage360CommandPalette() {
       </button>
 
       {isOpen && (
-        <div className="animate-fade-in fixed inset-0 z-50 flex items-start justify-center bg-black/70 pt-20 backdrop-blur-md">
+        <div className="animate-fade-in fixed inset-0 z-50 flex items-start justify-center bg-black/70 pt-16 backdrop-blur-md">
           <div className="mx-4 w-full max-w-xl overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/95 shadow-2xl">
             <div className="flex items-center border-b border-white/10 px-4 py-3.5">
               <Search className="h-5 w-5 text-zinc-400" />
@@ -176,7 +324,7 @@ export function Manage360CommandPalette() {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="360° Command Palette — Type a command or search (Cmd+K)"
+                placeholder="360° Command Palette — search actions (Cmd+K)"
                 className="ml-3 flex-1 bg-transparent text-sm text-white placeholder-zinc-500 focus:outline-none"
                 autoFocus
               />
@@ -184,12 +332,18 @@ export function Manage360CommandPalette() {
             </div>
 
             {statusMsg && (
-              <div className="border-brand-500/30 bg-brand-500/10 text-brand-300 border-b px-4 py-2 text-center text-xs font-bold">
+              <div
+                className={`border-b px-4 py-2 text-center text-xs font-bold ${
+                  statusOk
+                    ? "border-brand-500/30 bg-brand-500/10 text-brand-300"
+                    : "border-red-500/30 bg-red-500/10 text-red-300"
+                }`}
+              >
                 {statusMsg}
               </div>
             )}
 
-            <div className="max-h-80 overflow-y-auto p-2">
+            <div className="max-h-96 overflow-y-auto p-2">
               {filteredActions.length === 0 ? (
                 <div className="p-6 text-center text-xs text-zinc-500">
                   No matching 360° actions found.
@@ -197,6 +351,7 @@ export function Manage360CommandPalette() {
               ) : (
                 filteredActions.map((action) => {
                   const Icon = action.icon;
+                  const catColor = categoryColors[action.category] ?? "text-zinc-400";
                   return (
                     <button
                       key={action.id}
@@ -204,7 +359,7 @@ export function Manage360CommandPalette() {
                       className="hover:bg-brand-500/15 flex w-full items-center justify-between rounded-xl px-3.5 py-3 text-left text-sm text-zinc-200 transition-colors hover:text-white"
                     >
                       <div className="flex items-center space-x-3">
-                        <Icon className="text-brand-400 h-4 w-4" />
+                        <Icon className={`h-4 w-4 ${catColor}`} />
                         <span className="font-medium">{action.title}</span>
                       </div>
                       <span className="rounded-md bg-zinc-800 px-2 py-0.5 text-[10px] font-bold tracking-wider text-zinc-400 uppercase">
@@ -217,7 +372,7 @@ export function Manage360CommandPalette() {
             </div>
 
             <div className="flex items-center justify-between border-t border-white/5 bg-zinc-950/80 px-4 py-2.5 text-[11px] text-zinc-500">
-              <span>ALPAR AI 360° Manage Surface</span>
+              <span>ALPAR AI 360° Manage Surface • {allActions.length} actions</span>
               <span className="font-mono text-zinc-400">Cmd + K / Ctrl + K</span>
             </div>
           </div>

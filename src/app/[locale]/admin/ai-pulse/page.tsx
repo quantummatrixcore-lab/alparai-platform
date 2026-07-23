@@ -1,6 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Radio, Cpu, Pulse } from "@phosphor-icons/react/dist/ssr";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MetricCard } from "@/components/admin/metric-card";
 
 export default async function AiPulsePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -30,23 +31,19 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
 
   const newsFeed = [
     {
-      title:
-        t("openai_announces_new_reasoning_capabilit"),
+      title: t("openai_announces_new_reasoning_capabilit"),
       date: t("2_hours_ago"),
     },
     {
-      title:
-        t("anthropic_expands_claude_3_5_api_context"),
+      title: t("anthropic_expands_claude_3_5_api_context"),
       date: t("5_hours_ago"),
     },
     {
-      title:
-        t("google_deepmind_open_sources_new_protein"),
+      title: t("google_deepmind_open_sources_new_protein"),
       date: t("1_day_ago"),
     },
     {
-      title:
-        t("eu_ai_act_implementation_phase_begins"),
+      title: t("eu_ai_act_implementation_phase_begins"),
       date: t("2_days_ago"),
     },
   ];
@@ -58,6 +55,60 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
           {t("ai_pulse_title")}
         </h1>
         <p className="text-fg-secondary mt-2">{t("ai_pulse_subtitle")}</p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <MetricCard
+          title="GPT-4o P95 Latency"
+          value="340ms"
+          icon={Cpu}
+          trend="neutral"
+          trendLabel="Stable"
+          accentColor="#10b981"
+          sparkData={[
+            { value: 310 },
+            { value: 345 },
+            { value: 320 },
+            { value: 360 },
+            { value: 330 },
+            { value: 340 },
+          ]}
+          chartType="line"
+        />
+        <MetricCard
+          title="Claude 3.5 Sonnet Latency"
+          value="210ms"
+          icon={Cpu}
+          trend="down"
+          trendLabel="Improving"
+          accentColor="#6366f1"
+          sparkData={[
+            { value: 250 },
+            { value: 230 },
+            { value: 220 },
+            { value: 215 },
+            { value: 218 },
+            { value: 210 },
+          ]}
+          chartType="line"
+        />
+        <MetricCard
+          title="Gemini 1.5 Flash Latency"
+          value="180ms"
+          icon={Cpu}
+          trend="down"
+          trendLabel="Fastest"
+          accentColor="#f59e0b"
+          sparkData={[
+            { value: 200 },
+            { value: 195 },
+            { value: 188 },
+            { value: 190 },
+            { value: 183 },
+            { value: 180 },
+          ]}
+          chartType="line"
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

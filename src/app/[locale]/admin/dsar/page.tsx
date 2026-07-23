@@ -2,6 +2,8 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { requireAdmin } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { Clock, ShieldWarning, CheckCircle } from "@phosphor-icons/react/dist/ssr";
+import { FileText, AlertTriangle } from "lucide-react";
+import { MetricCard } from "@/components/admin/metric-card";
 
 export default async function DsarPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -39,6 +41,43 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
             "KVKK ve GDPR kapsamında gelen veri silme, anonimleştirme ve unutulma taleplerinin yasal 30 günlük SLA takibi."}
         </p>
       </div>
+
+      {(() => {
+        const pending = (requests ?? []).filter((r) => r.status === "pending");
+        const urgent = (requests ?? []).filter((r) => getSlaDaysLeft(r.created_at) < 7);
+        return (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <MetricCard
+              title="Total DSAR Requests"
+              value={requests?.length ?? 0}
+              icon={FileText}
+              trend="neutral"
+              trendLabel="30-day SLA"
+              accentColor="#a855f7"
+              sparkData={(requests ?? []).slice(0, 8).map((_, i) => ({ value: i + 1 }))}
+              chartType="bar"
+            />
+            <MetricCard
+              title="Pending Review"
+              value={pending.length}
+              icon={Clock}
+              trend={pending.length > 0 ? "up" : "neutral"}
+              trendLabel="Awaiting action"
+              accentColor="#f59e0b"
+            />
+            <MetricCard
+              title="SLA Urgent (<7 days)"
+              value={urgent.length}
+              icon={AlertTriangle}
+              trend={urgent.length > 0 ? "down" : "neutral"}
+              trendLabel={urgent.length > 0 ? "Action required" : "All on track"}
+              accentColor={urgent.length > 0 ? "#ef4444" : "#10b981"}
+              badge={urgent.length > 0 ? "URGENT" : "OK"}
+              badgeColor={urgent.length > 0 ? "text-red-400" : "text-emerald-400"}
+            />
+          </div>
+        );
+      })()}
 
       <div className="rounded-lg border border-purple-500/20 bg-purple-500/10 p-4 text-xs text-purple-300">
         <p className="mb-1 flex items-center gap-2 text-sm font-bold">
