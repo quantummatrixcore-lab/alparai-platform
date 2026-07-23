@@ -1,3 +1,17 @@
+# ALPAR AI — MASTER PLAN v10.90 (Founder Direktifleri: OAuth Plan Güncellemesi + W1-W5 Otomasyon Paketi + I12/I16/I17/I18 Doğrulaması [architect])
+
+> **v10.90 (2026-07-24) — Founder Direktifleri Uygulandı: (1) Google OAuth Consent Screen planı iptal edildi/kaldırıldı. (2) W1-W5 hibe otomasyon rehberi hazırlandı. (3) I12, I16, I17, I18 inovasyon paketleri %100 doğrulandı ve 780/780 test yeşil. [architect]**
+>
+> **Plan Güncellemeleri:**
+>
+> - **Google OAuth Consent Screen:** Founder direktifiyle Supabase/Google planından kaldırıldı.
+> - **W1-W5 Hibe Otomasyonu:** Microsoft ($150K), Google ($200K), AWS ($100K), GitHub ve Supabase hibe paketleri otomasyon kılavuzuna işlendi.
+> - **Inovasyon Paketleri (I12, I16, I17, I18):** `playbooks`, `whistleblower`, `litigation/export`, `provenance` API ve arayüz bileşenleri %100 aktif.
+>
+> **Quality Gate:** `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` ✅ (780/780 tests green across 122 test files)
+
+---
+
 # ALPAR AI — MASTER PLAN v10.89 (Sonraki Öncelik Triyajı: Dependabot Çakışmaları + Google OAuth + W1-W5 [architect])
 
 > **v10.89 (2026-07-23) — Architect (Claude) görevi teslim aldı. v10.88 itibarıyla sistem v1.0.0'da, 780/780 test yeşil, master temiz. Bu girdi bir sonraki döngünün spec'ini tanımlar. [architect]**
