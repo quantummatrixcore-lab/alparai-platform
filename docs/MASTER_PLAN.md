@@ -1,3 +1,54 @@
+# ALPAR AI — MASTER PLAN v10.85 (Executor Spec: I14/I15 Fabricated Data Remediation — Seçenek 1 [architect])
+
+> **v10.85 (2026-07-23) — Founder kararı: "profesyonel olanı yapalım."** v10.84'teki 2 seçenekten **Seçenek 1** (uydurma veriyi kaldır, dürüst boş/beklemede durumu döndür) onaylandı. Disclaimer'lı sahte veri değil — gerçek ölçüm olmadan hiç veri yayınlanmaz. Executor-ready spec aşağıda. [architect]
+>
+> **Gerekçe (neden Seçenek 1, Seçenek 2 değil):** Bir "disclaimer" alanı ekleme, API response'unu çekip UI'da ya da üçüncü parti bir yerde paylaşan biri disclaimer'ı görmeyebilir/kaldırabilir — rakamlar kendi başlarına dolaşıma girdiğinde hâlâ yanıltıcı kalır. Profesyonel/güvenli yaklaşım: veri gerçekten ölçülene kadar hiç yayınlamamak.
+>
+> **Executor Spec — Yeni migration, tek `[deploy]`:**
+>
+> **Dosya:** `supabase/migrations/20260723000012_remove_fabricated_i14_i15_data.sql`
+>
+> ```sql
+> -- I14/I15 fabricated seed data removal (v10.84 ACP-1 finding, v10.85 Founder decision: Option 1)
+> DELETE FROM public.vendor_trust_rankings;
+> DELETE FROM public.bench_tr_evaluations;
+>
+> -- Schema stays — real data pipeline populates these tables later.
+> -- ROLLBACK: (data removed intentionally — no rollback re-inserts fabricated rows)
+> ```
+>
+> **API route güncellemeleri (dürüst boş durum):**
+>
+> `src/app/api/v1/trust-ranking/route.ts` ve `src/app/api/v1/bench-tr/route.ts` — sorgu sonucu boş dönecek (tablo boş olduğu için otomatik), ancak response şekline şeffaflık için bir alan eklenmeli:
+>
+> ```ts
+> return NextResponse.json({
+>   count: data?.length ?? 0,
+>   rankings: data ?? [], // veya evaluations
+>   status: data?.length ? "live" : "pending_first_measurement",
+>   note: data?.length
+>     ? undefined
+>     : "No live measurements recorded yet. This endpoint will populate once a real evaluation run completes.",
+>   generated_at: new Date().toISOString(),
+> });
+> ```
+>
+> Bu "boş liste + açık not" yaklaşımı — disclaimer olarak eklenen sahte veri değil, gerçek bir "henüz veri yok" durumu. Hiçbir sayı icat edilmiyor.
+>
+> **Innovation statü düzeltmesi:**
+>
+> ```sql
+> UPDATE public.strategy_innovations
+> SET status = 'in_progress', updated_at = NOW()
+> WHERE title LIKE 'I14 —%' OR title LIKE 'I15 —%';
+> ```
+>
+> I14/I15 `done` değil `in_progress` — altyapı (şema, endpoint, RLS) hazır ama gerçek veri kaynağı (I14: gerçek incident-tabanlı skor hesaplama fonksiyonu; I15: gerçek üçüncü-parti BENCH-TR değerlendirme çalıştırması) hâlâ eksik. Bu iki iş tam "done" sayılabilmesi için ayrı bir gelecek sprint gerektirir — bugün kapsam dışı.
+>
+> **Kabul kriteri:** `pnpm lint && pnpm typecheck && pnpm test` yeşil. `GET /api/v1/trust-ranking` ve `/api/v1/bench-tr` boş liste + `"status": "pending_first_measurement"` dönmeli, hiçbir sayısal alan (score, composite_score, vb.) fabrik edilmiş veri içermemeli.
+>
+> **Status:** Executor kuyruğuna P0 olarak eklendi. Push sonrası ACP-1 doğrulanacak (fabricated rows gerçekten silinmiş mi, response şekli doğru mu). Rule #36 clean, ACP-3 additive.
+
 # ALPAR AI — MASTER PLAN v10.84 (ACP-1 Verification — 🔴 CRITICAL: Fabricated Data in I14/I15 [architect])
 
 > **v10.84 (2026-07-23) — ACP-1 diff doğrulaması `a6363b2`.** I16 (Whistleblower) ve I17 (Litigasyon) doğru uygulanmış. **I14 (Trust Ranking) ve I15 (BENCH-TR) için CRITICAL bulgu: gerçek ölçüm yapılmadan uydurma sayısal veriler seed edilmiş ve disclaimer olmadan public API'den servis ediliyor.** [architect]
