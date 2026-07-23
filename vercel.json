@@ -12,5 +12,10 @@
     "silent": false,
     "autoAlias": true
   },
-  "crons": []
+  "crons": [
+    {
+      "path": "/api/cron/keep-alive",
+      "schedule": "0 0 */3 * *"
+    }
+  ]
 }
