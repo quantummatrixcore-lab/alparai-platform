@@ -1,4 +1,24 @@
-# ALPAR AI — MASTER PLAN v10.65 (ACP-1 post-deploy verification of executor commit `6a2b129` — P0 CTA/Report already clean, Sign In pill accepted, Rule #36 violation noted [architect])
+# ALPAR AI — MASTER PLAN v10.66 (ACP-1 verification of P1 executor commit `e9a7ab6` — WebSiteJsonLd ✅, FeedCardSkeleton ✅, wiring pending [architect])
+
+> **v10.66 (2026-07-23) — ACP-1 diff-verified executor commit `e9a7ab6` (P1 JSON-LD + Skeleton). Two of three P1 items partially delivered; one remaining. Rule #36 clean. [architect]**
+>
+> **Executor commit `e9a7ab6` — diff-level ACP-1 verification (2 files, +26/-2):**
+>
+> **(1) `WebSiteJsonLd` — ACCEPTED ✅.** `src/components/seo/json-ld.tsx` adds `WebSiteJsonLd` component (`@type: "WebSite"` + `SearchAction` targeting `/en/incidents?q={search_term_string}` for Google Sitelinks Search Box). Added to root `src/app/[locale]/layout.tsx:80` immediately below `<OrganizationJsonLd />` — correct placement. The existing `json-ld.tsx` already contains `OrganizationJsonLd`, `BreadcrumbJsonLd`, `FAQJsonLd`, `IncidentJsonLd`, `ModelJsonLd`, `BlogArticleJsonLd` — rich SEO infrastructure. **v10.64 P1 "JSON-LD Structured Data" WebSite layer: DONE.** Note: the v10.64 spec also targeted `Dataset` + `Report` schemas for the incidents list page — those remain unimplemented; `IncidentJsonLd` (Article type) already exists per-incident but a list-level `Dataset` schema is a separate iteration.
+>
+> **(2) `FeedCardSkeleton` — ACCEPTED ✅ (component exists, not yet wired).** `src/components/ui/skeleton.tsx` adds `FeedCardSkeleton` — mirrors incident feed card structure (severity badge, date, title, description, action buttons) with `animate-pulse`. Base `Skeleton` opacity softened `bg-bg-tertiary` → `bg-bg-tertiary/60`. **v10.64 P1 "Skeleton Loaders" first layer: DONE (component).** Note: `FeedCardSkeleton` is NOT yet used in any `loading.tsx` or Suspense boundary — the component is defined but not wired. Expected to be connected in a follow-up executor commit.
+>
+> **(3) Rule #36 — CLEAN.** `docs/MASTER_PLAN.md` was NOT edited by the executor. Only `src/` files changed. ✅
+>
+> **P1 status after v10.66:**
+>
+> | P1 Item                 | Status     | Detail                                               |
+> | ----------------------- | ---------- | ---------------------------------------------------- |
+> | JSON-LD Structured Data | ✅ partial | WebSite schema live; Dataset/Report schemas remain   |
+> | Skeleton Loaders        | ✅ partial | `FeedCardSkeleton` defined; not wired to loading.tsx |
+> | Mobile Card View        | ⬜ open    | Incident table → card view at mobile breakpoints     |
+>
+> **Queue after v10.66:** P1 mobile card view still open. Skeleton wiring (loading.tsx integration) expected next. Dataset JSON-LD is a nice-to-have iteration. P2 unchanged (Founder-gated). §7 remaining: §7/17 (Vercel).
 
 > **v10.65 (2026-07-23) — ACP-1 diff-verified executor commit `6a2b129`. Both P0 items were already addressed pre-commit. Sign In styling accepted as cosmetic bonus. Rule #36 violation recorded. [architect]**
 >
