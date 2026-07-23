@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import * as React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { expect, test, describe, vi, beforeEach } from "vitest";
 
 vi.mock("next-intl", () => ({
@@ -26,10 +26,11 @@ beforeEach(() => {
 });
 
 describe("SignInForm", () => {
-  test("renders Google sign-in button", async () => {
+  test("renders Google sign-in button enabled by default with pre-checked consent at top", async () => {
     const { SignInForm } = await import("@/components/auth/sign-in-form");
     render(<SignInForm locale="en" />);
-    expect(screen.getByRole("button", { name: "signin_with_google" })).toBeDefined();
+    const btn = screen.getByRole("button", { name: "signin_with_google" });
+    expect(btn.hasAttribute("disabled")).toBe(false);
   });
 
   test("renders email magic link form", async () => {
@@ -38,20 +39,13 @@ describe("SignInForm", () => {
     expect(screen.getByLabelText("email_label")).toBeDefined();
   });
 
-  test("google button is disabled when consent not checked", async () => {
-    const { SignInForm } = await import("@/components/auth/sign-in-form");
-    render(<SignInForm locale="en" />);
-    const btn = screen.getByRole("button", { name: "signin_with_google" });
-    expect(btn.hasAttribute("disabled")).toBe(true);
-  });
-
-  test("checkbox enables google sign-in button", async () => {
+  test("unchecking consent checkbox disables google sign-in button", async () => {
     const { SignInForm } = await import("@/components/auth/sign-in-form");
     render(<SignInForm locale="en" />);
     const checkbox = screen.getByRole("checkbox");
-    checkbox.click();
+    fireEvent.click(checkbox);
     const btn = screen.getByRole("button", { name: "signin_with_google" });
-    expect(btn.hasAttribute("disabled")).toBe(false);
+    expect(btn.hasAttribute("disabled")).toBe(true);
   });
 
   test("renders terms and privacy links", async () => {

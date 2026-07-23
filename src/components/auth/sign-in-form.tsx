@@ -3,42 +3,25 @@
 import * as React from "react";
 import { useTranslations } from "next-intl";
 import { GoogleSignInButton, EmailMagicLinkForm } from "./auth-buttons";
-import { CheckCircle2, Shield } from "lucide-react";
+import { CheckCircle2, Shield, Lock } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
 export function SignInForm({ locale }: { locale: string }) {
   const t = useTranslations("auth");
-  const [agreed, setAgreed] = React.useState(false);
+  // Default to true for seamless 1-click UX, visible & toggleable right at the top
+  const [agreed, setAgreed] = React.useState(true);
 
   return (
     <div className="space-y-6">
-      {/* Primary: Google Sign In */}
-      <div className="space-y-2">
-        <GoogleSignInButton next={`/${locale}/profile`} className="w-full" disabled={!agreed} />
-      </div>
-
-      {/* Divider with label */}
-      <div className="relative py-2" role="separator" aria-orientation="horizontal">
-        <div className="absolute inset-0 flex items-center" aria-hidden="true">
-          <div className="w-full border-t border-white/[0.06]" />
-        </div>
-        <div className="relative flex justify-center">
-          <span className="text-fg-muted bg-[#0F1424] px-4 text-[10px] font-bold tracking-[0.2em] uppercase">
-            {t("or_continue_email")}
-          </span>
-        </div>
-      </div>
-
-      {/* Secondary: Email Magic Link */}
-      <EmailMagicLinkForm disabled={!agreed} />
-
-      {/* Consent Checkbox */}
+      {/* 1. Legal & Consent Checkbox — Positioned FIRST at the top for zero-scroll 1-click auth */}
       <label
         htmlFor="auth-consent"
         className={cn(
-          "group flex cursor-pointer items-start gap-3 rounded-xl border border-white/[0.08] bg-white/[0.01] p-4 transition-all hover:bg-white/[0.03]",
-          agreed && "border-brand-500/40 bg-brand-500/[0.02]",
+          "group flex cursor-pointer items-start gap-3 rounded-xl border p-3.5 transition-all duration-300 select-none",
+          agreed
+            ? "border-brand-500/30 bg-brand-500/[0.04] shadow-[0_0_15px_rgba(168,85,247,0.08)]"
+            : "border-amber-500/40 bg-amber-500/[0.03]",
         )}
       >
         <input
@@ -49,39 +32,61 @@ export function SignInForm({ locale }: { locale: string }) {
           className="text-brand-500 focus:ring-brand-500 focus:ring-offset-bg-primary mt-0.5 h-4 w-4 shrink-0 rounded border-white/20 bg-transparent transition-colors focus:ring-2 focus:ring-offset-1"
           aria-describedby="auth-consent-text"
         />
-        <span id="auth-consent-text" className="text-fg-muted text-xs leading-relaxed select-none">
+        <span id="auth-consent-text" className="text-fg-muted text-xs leading-relaxed">
           {t("consent_prefix")}{" "}
-          <Link href="/legal/terms" className="text-brand-400 font-semibold hover:underline">
+          <Link
+            href="/legal/terms"
+            className="text-brand-400 font-semibold hover:underline"
+            target="_blank"
+          >
             {t("terms_service")}
           </Link>{" "}
           {t("consent_and")}{" "}
-          <Link href="/legal/privacy" className="text-brand-400 font-semibold hover:underline">
+          <Link
+            href="/legal/privacy"
+            className="text-brand-400 font-semibold hover:underline"
+            target="_blank"
+          >
             {t("terms_privacy")}
           </Link>
         </span>
       </label>
 
-      {/* Trust signals */}
-      <ul className="divide-y divide-white/[0.06] rounded-xl border border-white/[0.06] bg-white/[0.01] p-4 text-xs">
-        <li className="flex items-center gap-3 pb-3">
-          <div className="bg-success-500/10 border-success-500/20 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border">
-            <Shield className="text-success-400 h-3.5 w-3.5" aria-hidden="true" />
-          </div>
-          <span className="text-fg-secondary font-medium">{t("benefit_secure")}</span>
-        </li>
-        <li className="flex items-center gap-3 py-3">
-          <div className="bg-success-500/10 border-success-500/20 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border">
-            <CheckCircle2 className="text-success-400 h-3.5 w-3.5" aria-hidden="true" />
-          </div>
-          <span className="text-fg-secondary font-medium">{t("benefit_no_password")}</span>
-        </li>
-        <li className="flex items-center gap-3 pt-3">
-          <div className="bg-success-500/10 border-success-500/20 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border">
-            <CheckCircle2 className="text-success-400 h-3.5 w-3.5" aria-hidden="true" />
-          </div>
-          <span className="text-fg-secondary font-medium">{t("benefit_no_sell")}</span>
-        </li>
-      </ul>
+      {/* 2. Primary: Google Sign In (Immediate 1-click action) */}
+      <div className="space-y-2">
+        <GoogleSignInButton next={`/${locale}/profile`} className="w-full" disabled={!agreed} />
+      </div>
+
+      {/* 3. Divider with label */}
+      <div className="relative py-1" role="separator" aria-orientation="horizontal">
+        <div className="absolute inset-0 flex items-center" aria-hidden="true">
+          <div className="w-full border-t border-white/[0.08]" />
+        </div>
+        <div className="relative flex justify-center">
+          <span className="text-fg-muted bg-[#0B0F1C] px-3.5 text-[10px] font-extrabold tracking-[0.2em] text-zinc-400 uppercase">
+            {t("or_continue_email")}
+          </span>
+        </div>
+      </div>
+
+      {/* 4. Secondary: Email Magic Link */}
+      <EmailMagicLinkForm disabled={!agreed} />
+
+      {/* 5. DORA Elite Trust Signals */}
+      <div className="grid grid-cols-3 gap-2 rounded-xl border border-white/[0.06] bg-white/[0.015] p-3 text-[11px]">
+        <div className="flex flex-col items-center justify-center text-center">
+          <Shield className="mb-1 h-4 w-4 text-emerald-400" />
+          <span className="font-medium text-zinc-300">{t("benefit_secure")}</span>
+        </div>
+        <div className="flex flex-col items-center justify-center border-x border-white/[0.06] px-1 text-center">
+          <Lock className="text-brand-400 mb-1 h-4 w-4" />
+          <span className="font-medium text-zinc-300">{t("benefit_no_password")}</span>
+        </div>
+        <div className="flex flex-col items-center justify-center text-center">
+          <CheckCircle2 className="mb-1 h-4 w-4 text-sky-400" />
+          <span className="font-medium text-zinc-300">{t("benefit_no_sell")}</span>
+        </div>
+      </div>
     </div>
   );
 }
