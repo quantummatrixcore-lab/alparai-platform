@@ -1,4 +1,28 @@
-# ALPAR AI — MASTER PLAN v10.69 (Browser Extension Optimization — ACP-1 triage of proposed performance improvements [architect])
+# ALPAR AI — MASTER PLAN v10.70 (Browser Extension Optimization — ACP-1 verified executor commit `6792a01` [architect])
+
+> **v10.70 (2026-07-23) — ACP-1 diff-verified executor commit `6792a01`. All 5 extension optimizations from v10.69 spec confirmed applied. `limit=100` correctly preserved per caveat. [architect]**
+>
+> **Commit:** `6792a01` — `perf(extension): add 300ms debounce, 3s fetch timeout, in-memory cache, and safe storage error handling [deploy]`
+>
+> **ACP-1 Diff Verification — `git diff b6c39cc..6792a01 -- apps/extension/`:**
+>
+> | v10.69 Spec Item                 | Diff'te Doğrulandı | Detay                                                                                                          |
+> | -------------------------------- | ------------------ | -------------------------------------------------------------------------------------------------------------- |
+> | 300ms debounce (background.js)   | ✅                 | `debouncedCheckDomain(tab, delay = 300)` + Map-based timer yönetimi. `onActivated`/`onUpdated` artık debounced |
+> | 3s fetch timeout (her iki dosya) | ✅                 | `AbortController` + `FETCH_TIMEOUT_MS = 3000` hem bg hem popup'ta                                              |
+> | `limit=100` korunması (CAVEAT)   | ✅                 | Her iki dosyada `&limit=100` aynen duruyor. Executor v10.69 uyarısına uydu                                     |
+> | In-memory cache (popup.js)       | ✅                 | `popupCache = new Map()` + `popupCache.has(domain)` check                                                      |
+> | Modüler UI helpers (popup.js)    | ✅                 | `hideLoading()`, `showEmpty(msg)`, `displayResults(count, domain)` çıkarıldı                                   |
+>
+> **Bonus (spec dışı ama pozitif):**
+>
+> - `new URL(tab.url)` try/catch eklendi (background.js) — crash koruması
+> - `updateBadge` try/catch ile sarıldı — kapalı tab koruması
+> - `chrome.storage.local.get/set` try/catch — storage hata yönetimi (spec item #4)
+> - `reportBtn` null check — defensive DOM erişimi
+> - Tüm `getElementById` sonuçları null-safe kontrol altında
+>
+> **Status:** Extension optimizasyonu ✅ tamamlandı. v10.69 spec'i executor tarafından tam uygulandı, ACP-1 doğrulandı. `limit=1` optimizasyonu gelecekte API `meta.count` desteği doğrulandığında yapılabilir.
 
 > **v10.69 (2026-07-23) — Browser Extension (`apps/extension/`) Optimization: ACP-1 triage of proposed performance improvements. 5 optimizations validated, 1 critical caveat flagged, executor-ready spec below. [architect]**
 >
