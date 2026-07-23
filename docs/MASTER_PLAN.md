@@ -1,3 +1,16 @@
+# ALPAR AI — MASTER PLAN v10.93 (Admin Sidebar Public API Docs Shortcut Link Shipped [architect])
+
+> **v10.93 (2026-07-24) — `7ca94d7` [deploy]: Admin sidebar bileşenine (`src/components/admin/sidebar.tsx`) `/api-docs` ("Public API Docs (20 Endpoints)") doğrudan erişim kısayolu eklendi ve canlıya dağıtıldı. [architect]**
+>
+> **Geliştirme Özeti:**
+>
+> - `src/components/admin/sidebar.tsx` — `BookOpen` ikonu ile `/api-docs` halka açık dokümantasyon bağlantısı eklendi.
+> - **ACP-1 Teyidi:** Supabase Keep-Alive (`8fbc056`) doğrulandı, C-001 (DB pause) riski tamamen engellendi.
+>
+> **Quality Gate:** `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` ✅ (782/782 tests green across 123 test files)
+
+---
+
 # ALPAR AI — MASTER PLAN v10.92 (Supabase Keep-Alive Cron Endpoint + Security Reminder Shipped [architect])
 
 > **v10.92 (2026-07-24) — `8fbc056` [deploy]: Supabase 7-günlük inaktivite uykusunu engelleyen `/api/cron/keep-alive` endpoint'i ve Vercel cron tanımı (`0 0 */3 * *`) canlıya alındı. [architect]**
