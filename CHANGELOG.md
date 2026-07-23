@@ -5,6 +5,20 @@ All notable changes to ALPAR AI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0](https://github.com/quantummatrixcore-lab/Alparai.com/compare/v1.0.1...v1.1.0) (2026-07-23)
+
+
+### Features
+
+* **admin:** add AI provider management hub and interactive API playground to /api-docs [deploy] ([1a34b05](https://github.com/quantummatrixcore-lab/Alparai.com/commit/1a34b05acb7396550ffa4cc5786b238135d68f6f))
+* **admin:** add public API docs shortcut link to admin sidebar [deploy] ([7ca94d7](https://github.com/quantummatrixcore-lab/Alparai.com/commit/7ca94d76816b81efec1f5e4d3cb3c03bfe9164df))
+* **cron:** implement Supabase keep-alive endpoint and vercel cron [deploy] ([8fbc056](https://github.com/quantummatrixcore-lab/Alparai.com/commit/8fbc056b589a7f6b864d3ae237accd34fefe7244))
+
+
+### Bug Fixes
+
+* **ui:** fix admin sidebar translation keys & /api-docs grid overflow [deploy] ([537152d](https://github.com/quantummatrixcore-lab/Alparai.com/commit/537152deb741f7b47a4dd88c622bb58207a2d438))
+
 ## [1.0.1](https://github.com/quantummatrixcore-lab/Alparai.com/compare/v1.0.0...v1.0.1) (2026-07-23)
 
 
