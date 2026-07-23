@@ -24,9 +24,10 @@ describe("getApiTelemetryData — API Management Hub server action", () => {
     return getApiTelemetryData();
   }
 
-  it("returns provider matrix and API key telemetry", async () => {
+  it("returns provider matrix, flags honest env audit & benchmark status", async () => {
     const data = await fetchTelemetry();
-    expect(data.isLiveTelemetry).toBe(true);
+    expect(data.isEnvAuditLive).toBe(true);
+    expect(data.isUsageBenchmark).toBe(true);
     expect(Array.isArray(data.providers)).toBe(true);
     expect(data.providers.length).toBeGreaterThanOrEqual(5);
     expect(Array.isArray(data.apiKeys)).toBe(true);
@@ -34,11 +35,17 @@ describe("getApiTelemetryData — API Management Hub server action", () => {
     expect(() => new Date(data.timestamp)).not.toThrow();
   });
 
-  it("accurately detects environment API key status for providers", async () => {
+  it("does NOT attribute fake 50/50 cost splits per provider", async () => {
     const data = await fetchTelemetry();
-    const google = data.providers.find((p) => p.id === "google");
-    expect(google).toBeDefined();
-    expect(typeof google?.status).toBe("string");
-    expect(typeof google?.health).toBe("number");
+    for (const provider of data.providers) {
+      expect(provider.dailyCostUsd).toBe(0.0);
+    }
+  });
+
+  it("accurately detects environment API key status for providers without fake lastUsed dates", async () => {
+    const data = await fetchTelemetry();
+    const googleKey = data.apiKeys.find((k) => k.envKey === "GEMINI_API_KEY");
+    expect(googleKey).toBeDefined();
+    expect(googleKey?.created).toBe("Configured in Environment");
   });
 });

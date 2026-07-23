@@ -34,7 +34,8 @@ export interface ApiTelemetryData {
   providers: RealProvider[];
   apiKeys: RealApiKeyEntry[];
   totalDailySpendUsd: number;
-  isLiveTelemetry: boolean;
+  isEnvAuditLive: boolean;
+  isUsageBenchmark: boolean;
   timestamp: string;
 }
 
@@ -43,7 +44,7 @@ export async function getApiTelemetryData(): Promise<ApiTelemetryData> {
 
   const db = createAdminClient();
 
-  // Query real costs from RPC or DB
+  // Query real total daily costs from AI Gateway RPC
   let dailySpend = 0;
   try {
     const costRes = await db.rpc("get_ai_gateway_costs", { time_interval: "1 day" });
@@ -54,7 +55,7 @@ export async function getApiTelemetryData(): Promise<ApiTelemetryData> {
     console.warn("[ApiManagement] Cost RPC query error:", err);
   }
 
-  // Real provider env key checks
+  // Real provider env key checks (Zero fabrication)
   const hasOpenAI = Boolean(process.env.OPENAI_API_KEY);
   const hasAnthropic = Boolean(process.env.ANTHROPIC_API_KEY);
   const hasGoogle = Boolean(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY);
@@ -66,6 +67,10 @@ export async function getApiTelemetryData(): Promise<ApiTelemetryData> {
   );
   const hasResend = Boolean(process.env.RESEND_API_KEY);
 
+  // Honest Provider Matrix:
+  // - status, health, isRealEnvKey: Live environment audit
+  // - dailyCostUsd: 0.0 (honest: un-attributed per provider; total is shown at top level)
+  // - latencyMs, dailyRequests, quota: Baseline benchmarks (explicitly labeled in UI)
   const providers: RealProvider[] = [
     {
       id: "google",
@@ -92,7 +97,7 @@ export async function getApiTelemetryData(): Promise<ApiTelemetryData> {
       dailyRequests: 18920,
       quotaUsed: 8920000,
       quotaLimit: 50000000,
-      dailyCostUsd: Number((dailySpend * 0.5).toFixed(2)),
+      dailyCostUsd: 0.0,
       monthlyLimitUsd: 800,
       respondentActive: true,
       isRealEnvKey: hasAnthropic,
@@ -107,7 +112,7 @@ export async function getApiTelemetryData(): Promise<ApiTelemetryData> {
       dailyRequests: 12400,
       quotaUsed: 4250000,
       quotaLimit: 100000000,
-      dailyCostUsd: Number((dailySpend * 0.5).toFixed(2)),
+      dailyCostUsd: 0.0,
       monthlyLimitUsd: 500,
       respondentActive: true,
       isRealEnvKey: hasOpenAI,
@@ -173,8 +178,8 @@ export async function getApiTelemetryData(): Promise<ApiTelemetryData> {
       envKey: "GEMINI_API_KEY",
       maskedKey: mask(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY),
       status: hasGoogle ? "active" : "missing",
-      created: "2026-06-08",
-      lastUsed: "Active now",
+      created: "Configured in Environment",
+      lastUsed: hasGoogle ? "Present in environment" : "Not configured",
     },
     {
       id: "key-2",
@@ -183,8 +188,8 @@ export async function getApiTelemetryData(): Promise<ApiTelemetryData> {
       envKey: "ANTHROPIC_API_KEY",
       maskedKey: mask(process.env.ANTHROPIC_API_KEY),
       status: hasAnthropic ? "active" : "missing",
-      created: "2026-06-08",
-      lastUsed: "Active now",
+      created: "Configured in Environment",
+      lastUsed: hasAnthropic ? "Present in environment" : "Not configured",
     },
     {
       id: "key-3",
@@ -193,8 +198,8 @@ export async function getApiTelemetryData(): Promise<ApiTelemetryData> {
       envKey: "OPENAI_API_KEY",
       maskedKey: mask(process.env.OPENAI_API_KEY),
       status: hasOpenAI ? "active" : "missing",
-      created: "2026-06-08",
-      lastUsed: "Active now",
+      created: "Configured in Environment",
+      lastUsed: hasOpenAI ? "Present in environment" : "Not configured",
     },
     {
       id: "key-4",
@@ -203,8 +208,8 @@ export async function getApiTelemetryData(): Promise<ApiTelemetryData> {
       envKey: "SUPABASE_SERVICE_ROLE_KEY",
       maskedKey: mask(process.env.SUPABASE_SERVICE_ROLE_KEY),
       status: hasSupabase ? "active" : "missing",
-      created: "2026-06-06",
-      lastUsed: "Active now",
+      created: "Configured in Environment",
+      lastUsed: hasSupabase ? "Present in environment" : "Not configured",
     },
     {
       id: "key-5",
@@ -213,8 +218,8 @@ export async function getApiTelemetryData(): Promise<ApiTelemetryData> {
       envKey: "UPSTASH_REDIS_REST_TOKEN",
       maskedKey: mask(process.env.UPSTASH_REDIS_REST_TOKEN),
       status: hasUpstash ? "active" : "missing",
-      created: "2026-06-06",
-      lastUsed: "Active now",
+      created: "Configured in Environment",
+      lastUsed: hasUpstash ? "Present in environment" : "Not configured",
     },
     {
       id: "key-6",
@@ -223,8 +228,8 @@ export async function getApiTelemetryData(): Promise<ApiTelemetryData> {
       envKey: "RESEND_API_KEY",
       maskedKey: mask(process.env.RESEND_API_KEY),
       status: hasResend ? "active" : "missing",
-      created: "2026-06-08",
-      lastUsed: "Active now",
+      created: "Configured in Environment",
+      lastUsed: hasResend ? "Present in environment" : "Not configured",
     },
   ];
 
@@ -232,7 +237,8 @@ export async function getApiTelemetryData(): Promise<ApiTelemetryData> {
     providers,
     apiKeys,
     totalDailySpendUsd: dailySpend,
-    isLiveTelemetry: true,
+    isEnvAuditLive: true,
+    isUsageBenchmark: true,
     timestamp: new Date().toISOString(),
   };
 }

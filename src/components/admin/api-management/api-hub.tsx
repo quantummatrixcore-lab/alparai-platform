@@ -151,17 +151,19 @@ export function ApiManagementHub() {
           <ShieldCheck className="h-5 w-5 shrink-0 text-emerald-400" />
           <div>
             <p className="font-semibold text-emerald-200">
-              Live Provider Telemetry & Environment Audit Active
+              Live Environment Audit & Baseline Benchmarks
             </p>
             <p className="text-xs text-emerald-400/80">
-              Provider statuses, environment key presence, and AI Gateway spend are queried live
-              from Supabase & process environment. Latency P95 charts display baseline benchmarks.
+              <strong className="text-emerald-300">Live:</strong> Provider credentials presence,
+              masked keys, and AI Gateway spend from RPC.{" "}
+              <strong className="text-zinc-300">Benchmark:</strong> Latency P95, request volume, and
+              quota limits are baseline benchmark estimates.
             </p>
           </div>
         </div>
         <div className="flex items-center gap-2 text-xs">
           <span className="rounded-full bg-emerald-500/20 px-2.5 py-1 font-mono font-medium text-emerald-300">
-            {isRealTelemetry ? "ENV LIVE AUDIT" : "INITIALIZING"}
+            {isRealTelemetry ? "ENV AUDIT LIVE" : "INITIALIZING"}
           </span>
           {lastRefreshed && (
             <span className="font-mono text-zinc-400">Updated: {lastRefreshed}</span>
@@ -172,7 +174,7 @@ export function ApiManagementHub() {
       {/* Header Actions */}
       <div className="flex items-center justify-between rounded-lg border border-white/10 bg-zinc-900/50 px-4 py-3">
         <div>
-          <p className="text-xs text-zinc-400">Daily API Spend (AI Gateway)</p>
+          <p className="text-xs text-zinc-400">Total Daily API Spend (AI Gateway RPC)</p>
           <p className="text-2xl font-bold text-white">${totalDailyCost.toFixed(2)}</p>
         </div>
         <button
@@ -187,7 +189,12 @@ export function ApiManagementHub() {
 
       {/* Provider Matrix */}
       <section>
-        <h2 className="mb-4 text-lg font-bold tracking-tight text-white">Provider Status Matrix</h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-bold tracking-tight text-white">Provider Status Matrix</h2>
+          <span className="rounded border border-emerald-500/30 bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] text-emerald-300">
+            Live Env Key Audit
+          </span>
+        </div>
         <ProviderMatrix providers={providers} />
       </section>
 
@@ -206,23 +213,36 @@ export function ApiManagementHub() {
 
       {/* Quota Gauges */}
       <section>
-        <h2 className="mb-4 text-lg font-bold tracking-tight text-white">
-          Quota Usage by Provider
-        </h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-bold tracking-tight text-white">Quota Usage by Provider</h2>
+          <span className="rounded border border-white/5 bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-400">
+            Estimated Limits
+          </span>
+        </div>
         <QuotaGauges providers={providers} />
       </section>
 
       {/* Usage Heatmap */}
       <section>
-        <h2 className="mb-4 text-lg font-bold tracking-tight text-white">
-          Daily Request Volume (24h Heatmap)
-        </h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-bold tracking-tight text-white">
+            Daily Request Volume (24h Heatmap)
+          </h2>
+          <span className="rounded border border-white/5 bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-400">
+            Estimated Volume
+          </span>
+        </div>
         <UsageHeatmap providers={providers} />
       </section>
 
       {/* API Key Manager */}
       <section>
-        <h2 className="mb-4 text-lg font-bold tracking-tight text-white">API Keys & Credentials</h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-bold tracking-tight text-white">API Keys & Credentials</h2>
+          <span className="rounded border border-emerald-500/30 bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] text-emerald-300">
+            Live Masked Audit
+          </span>
+        </div>
         <ApiKeyManager providers={providers} />
       </section>
     </div>
