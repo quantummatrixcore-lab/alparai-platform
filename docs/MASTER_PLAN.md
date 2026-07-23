@@ -1,3 +1,31 @@
+# ALPAR AI — MASTER PLAN v10.79 (I3, I9, I10, I11 SHIPPED + Otopilot [architect])
+
+> **v10.79 (2026-07-23) — `1cac05f` [deploy]: I3 AI SLA Rozeti, I9 Slopsquatting Feed, I10 Deepfake Olay Kategorisi ve I11 Regülatör API Feed canlıya alındı. [architect]**
+>
+> **ACP-1 Kanıt (`1cac05f`, 14 files changed, 580 insertions):**
+>
+> - **I3 SLA Rozeti:** `src/components/incidents/sla-badge.tsx` bileşeni ve `src/actions/providers.ts` sunucu aksiyonu eklendi. Uptime/MTTR verileri seed edildi.
+> - **I9 Slopsquatting:** `src/app/api/v1/slopsquatting/route.ts` API uç noktası ve `slopsquatting_reports` DB tablosu oluşturuldu.
+> - **I10 Deepfake:** `incidents` tablosuna ses/video/filigran (SynthID/C2PA) takibi için yeni kolonlar eklendi.
+> - **I11 Regülatör Feed:** `src/app/api/v1/regulators/route.ts` endpoint'i üzerinden JSON ve RSS 2.0 formatlarında resmi AISIs olay akışı sağlandı.
+>
+> **Kalite kapısı:** `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` ✅
+>
+> **İnovasyon Özet Durumu (origin/master HEAD = `1cac05f`):**
+>
+> | #                       | Statü   | Açıklama                   |
+> | ----------------------- | ------- | -------------------------- |
+> | I1 Incident Passport    | ✅ done | EU AI Act Art. 73 Passport |
+> | I2 ALPAR MCP Server     | ✅ done | Model Context Protocol API |
+> | I3 SLA Badge            | ✅ done | Güvenilirlik & SLA Rozeti  |
+> | I5 Tarayıcı Eklentisi   | ✅ done | Chrome MV3 Eklentisi       |
+> | I9 Slopsquatting Feed   | ✅ done | Halüsine Paket Takibi      |
+> | I10 Deepfake Kategorisi | ✅ done | Ses/Video İhlalleri Şeması |
+> | I11 Regülatör API Feed  | ✅ done | AISI Direkt Olay Akışı     |
+> | I12–I18 (Batch 2)       | 💡 idea | Diğer Aday İnovasyonlar    |
+>
+> **Sıradaki:** W1-W5 hibe formları (mümkünse Chrome remote debug port üzerinden) veya enterprise müşteri entegrasyonları.
+
 # ALPAR AI — MASTER PLAN v10.78 (I2 ALPAR MCP Server SHIPPED + Batch 2 Seed [architect])
 
 > **v10.78 (2026-07-23) — `ec5a506` [deploy]: I2 ALPAR MCP Server canlıya alındı. Batch 2 (I12-I18) DB'ye seeded. [architect]**
