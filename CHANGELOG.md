@@ -5,6 +5,13 @@ All notable changes to ALPAR AI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1](https://github.com/quantummatrixcore-lab/Alparai.com/compare/v1.0.0...v1.0.1) (2026-07-23)
+
+
+### Bug Fixes
+
+* **admin:** resolve typescript any lint error in run-bench-tr-evaluation action [deploy] ([d11c02a](https://github.com/quantummatrixcore-lab/Alparai.com/commit/d11c02a587c69ebd7eaac33d4c5d8a938f980377))
+
 ## 1.0.0 (2026-07-23)
 
 
