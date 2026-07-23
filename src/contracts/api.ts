@@ -373,3 +373,76 @@ export const provenanceResponseSchema = z.object({
     alpar_provenance_seal: z.string(),
   }),
 });
+
+// 21. GET /api/v1/trust-ranking
+export const trustRankingResponseSchema = z.object({
+  count: z.number(),
+  rankings: z.array(
+    z.object({
+      id: z.string().uuid(),
+      provider_slug: z.string(),
+      provider_name: z.string(),
+      composite_score: z.number(),
+      incident_penalty: z.number(),
+      response_rate_bonus: z.number(),
+      ranking_tier: z.string(),
+      last_evaluated_at: z.string(),
+    }),
+  ),
+  generated_at: z.string(),
+});
+
+// 22. GET /api/v1/bench-tr
+export const benchTrResponseSchema = z.object({
+  count: z.number(),
+  evaluations: z.array(
+    z.object({
+      id: z.string().uuid(),
+      model_name: z.string(),
+      provider_slug: z.string(),
+      tr_grammar_score: z.number(),
+      tr_bias_score: z.number(),
+      tr_factuality_pct: z.number(),
+      eval_dataset_ver: z.string(),
+      created_at: z.string(),
+    }),
+  ),
+  benchmark: z.string(),
+  generated_at: z.string(),
+});
+
+// 23. POST /api/v1/whistleblower
+export const whistleblowerResponseSchema = z.object({
+  message: z.string(),
+  receipt: z.object({
+    submission_id: z.string().uuid(),
+    receipt_hash: z.string(),
+    submitted_at: z.string(),
+    anonymity_status: z.string(),
+  }),
+});
+
+// 24. GET /api/v1/litigation/export
+export const litigationExportResponseSchema = z.object({
+  litigation_package: z.object({
+    package_id: z.string(),
+    court_admissible_notice: z.string(),
+    incident_evidence: z.object({
+      id: z.string().uuid(),
+      title: z.string(),
+      description: z.string(),
+      category: z.string(),
+      severity: z.string(),
+      incident_date: z.string().nullable(),
+      reported_at: z.string(),
+      provider: z.string().nullable(),
+      source_url: z.string().nullable(),
+      country: z.string().nullable(),
+    }),
+    chain_of_custody: z.object({
+      sha256_integrity_hash: z.string(),
+      custody_timestamp: z.string(),
+      provenance_authority: z.string(),
+    }),
+  }),
+});

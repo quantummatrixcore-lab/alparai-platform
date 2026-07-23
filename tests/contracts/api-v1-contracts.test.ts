@@ -46,6 +46,10 @@ const routeSchemaMap: Record<string, z.ZodTypeAny> = {
   playbooks: schemas.playbooksResponseSchema,
   jailbreaks: schemas.jailbreaksResponseSchema,
   provenance: schemas.provenanceResponseSchema,
+  "trust-ranking": schemas.trustRankingResponseSchema,
+  "bench-tr": schemas.benchTrResponseSchema,
+  whistleblower: schemas.whistleblowerResponseSchema,
+  "litigation/export": schemas.litigationExportResponseSchema,
 };
 
 describe("API v1 Contract Coverage", () => {
