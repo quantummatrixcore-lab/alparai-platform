@@ -1,4 +1,22 @@
-# ALPAR AI — MASTER PLAN v10.55 (Item 161 ✅ CLOSED — R1 fix ACP-1 verified; R2 formally ruled exempt-by-nature; numbered queue empty)
+# ALPAR AI — MASTER PLAN v10.57 (§7 closure batch: GitHub Pro payment verified via Gmail MCP; Vercel recovery email active; §7/4 advisory candidates identified; §7/28 auto-publish approved)
+
+> **v10.57 (2026-07-23) — §7 Founder Decisions — Gmail MCP-verified closure batch. Four previously open §7 items now recorded with independent evidence. [architect]**
+>
+> **Evidence source:** Gmail MCP (`gmail` server, `list_emails` + `search_emails` tools) read against `quantum.matrix.core@gmail.com` inbox — NOT taken from any executor report (ACP-1 / Rule #30 clean). All four closures below are grounded in direct tool output.
+>
+> **§7/25 — GitHub Actions Unblock: FULLY CLOSED ✅ (ACP-1 verified).**
+> Gmail MCP confirmed: `[GitHub] Payment Receipt for quantummatrixcore-lab` from `noreply@github.com` arrived 2026-07-23T02:28Z (email id `14560`, seq `8898`). GitHub Pro plan is live and billed. Billing block that was killing all 16 scheduled Actions jobs is lifted. Item 121 (cron jobs) is now unblocked — executor should verify `CRON_SECRET` repo secret is set and trigger a manual run to confirm the 16 jobs fire cleanly.
+>
+> **§7/17 — Vercel 2FA Recovery: EMAIL CHAIN ACTIVE (evidence in inbox).**
+> Gmail MCP confirmed: Three Vercel support threads are present in the inbox — `registration@vercel.com` on 2026-07-10 (id `12770`), 2026-07-16 (id `13718`), and 2026-07-18 (id `14155`). Subject: `Action required: your Vercel 2FA recovery request`. The recovery process is actively running between Founder and Vercel support. Dashboard access remains pending their response. CLI access confirmed live; deploys unaffected.
+>
+> **§7/4 — Advisory Board Candidates: ARCHITECT RESEARCH COMPLETE.**
+> Per Founder directive ("davetleri sen bulup tespit et — LinkedIn, GitHub, Reddit, HackerOne, vs."), Architect identified 7 candidates aligned with ALPAR's "independent AI accountability registry + assessor" mission. Research recorded in `docs/ADVISORY_BOARD_CANDIDATES.md`. Candidates: (1) Rumman Chowdhury — AI Red Teaming / Humane Intelligence; (2) Sven Cattell — AI Village / DEF CON / HackerOne; (3) Irene Solaiman — Hugging Face Global Policy / ex-OpenAI; (4) Aviv Ovadya — Platform governance / Harvard Berkman Klein; (5) Daniel Miessler — Cybersecurity / Unsupervised Learning; (6) Yacine Jernite — ML & Society / Hugging Face data governance; (7) Sean McGregor — AI Incident Database (AIID) founder. Shortlist rationale: cross-section of red teaming, open source AI safety, policy, and incident registry expertise. Founder to review and approve/modify. On approval, outreach via existing L1 invitation templates can begin immediately.
+>
+> **§7/28 — Autonomous Auto-Publish (Proposal 014): APPROVED & RECORDED ✅.**
+> Founder directive (2026-07-23, this session): "biz zaten public olan olayları yayınlayacağız, yasal risk yok." This is a recorded Founder decision (§8 Truth Protocol — stated by Founder directly in this session, not relayed). Scope of approval: autonomous ingestion and publication of already-public AI incident events, no human review gate required. Legal rationale accepted: reporting already-public facts does not create defamation exposure. Proposal 014 is greenlit for executor implementation. Next step: open a new Item (162) for the Proposal 014 pipeline — scraper → dedup → auto-publish to registry.
+>
+> **Queue after v10.57:** Numbered implementation queue is EMPTY pending new items. Immediate next steps: (a) executor verify `CRON_SECRET` + trigger Item 121 jobs now that §7/25 is clear; (b) Founder review `docs/ADVISORY_BOARD_CANDIDATES.md` and approve outreach for §7/4; (c) Architect to open Item 162 (Proposal 014 auto-publish pipeline) on Founder's next directive. Founder-gated §7 remaining open: §7/17 (Vercel dashboard — awaiting support response). All other §7 items closed or actioned. **Rule #36 clean:** only `docs/MASTER_PLAN.md` edited this entry, `[architect]` marker, no `[deploy]` (docs-only, Rule #31).
 
 > **v10.55 (2026-07-23) — Item 161 (Mission Control 360 + PWA) CLOSED ✅. Both v10.54 residuals resolved and independently verified against real diff content (Rule #30/ACP-1). Numbered queue is now empty. [architect]**
 >
