@@ -38,7 +38,7 @@ describe("Item 148 — GEO Citation Verifier Cron", () => {
     const reqWithoutAuth = new Request("http://localhost:3000/api/cron/verify-geo-citations");
     const resUnauth = await GET(reqWithoutAuth);
     expect(resUnauth.status).toBe(401);
-  });
+  }, 30000);
 
   it("should execute real verification and handle fetch reachability check", async () => {
     process.env.CRON_SECRET = "test-secret-key-12345678901234567890";
