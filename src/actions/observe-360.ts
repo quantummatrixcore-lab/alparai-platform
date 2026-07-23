@@ -11,9 +11,10 @@ export interface Observe360Telemetry {
     verified: number;
   };
   healthSlo: {
-    availability: number;
-    p95LatencyMs: number;
-    status: "NOMINAL" | "DEGRADED" | "CRITICAL";
+    availability: number | null;
+    p95LatencyMs: number | null;
+    status: "NOMINAL" | "DEGRADED" | "CRITICAL" | "UNKNOWN";
+    openAlarms: number;
   };
   securityRls: {
     status: "HARDENED";
@@ -21,16 +22,15 @@ export interface Observe360Telemetry {
     rlsPolicyCount: number;
   };
   dora: {
-    deployFrequency: string;
-    leadTimeMinutes: number;
-    mttrMinutes: number;
-    changeFailureRatePct: number;
+    deployFrequency: number | null;
+    leadTimeMinutes: number | null;
+    mttrMinutes: number | null;
+    changeFailureRatePct: number | null;
+    instrumented: boolean;
   };
   cost: {
     dailySpendUsd: number;
-    dailyLimitUsd: number;
     monthlySpendUsd: number;
-    monthlyLimitUsd: number;
   };
   growth: {
     totalUsers: number;
@@ -39,19 +39,30 @@ export interface Observe360Telemetry {
   capacity: {
     dbSizeMb: number;
     dbSizeLimitMb: number;
-    cronSlotUsage: string;
   };
   kBenchmark: {
     totalModelsRated: number;
-    lastAuditDate: string;
+    lastAuditDate: string | null;
   };
   timestamp: string;
+}
+
+interface SlaAlarmRow {
+  id: string;
+  severity: string;
+  resolved: boolean;
+}
+
+interface DoraMetricRow {
+  deployment_frequency: number;
+  lead_time_seconds: number;
+  mttr_seconds: number;
+  change_failure_rate: number;
 }
 
 export async function getObserve360Telemetry(): Promise<Observe360Telemetry> {
   await requireAdmin();
 
-  // Try Redis cache first (30 second TTL)
   const cacheKey = "admin:telemetry:observe360";
   try {
     const redis = getRedisInstance();
@@ -63,12 +74,24 @@ export async function getObserve360Telemetry(): Promise<Observe360Telemetry> {
       }
     }
   } catch (err) {
-    console.warn("[Observe360] Redis cache miss or error, falling back to DB:", err);
+    console.warn("[Observe360] Redis cache miss or error:", err);
   }
 
   const db = createAdminClient();
 
-  const [incidentsRes, pendingRes, verifiedRes, usersRes, kModelsRes] = await Promise.all([
+  const [
+    incidentsRes,
+    pendingRes,
+    verifiedRes,
+    usersRes,
+    kModelsRes,
+    slaAlarmsRes,
+    rlsPoliciesRes,
+    doraRes,
+    costDailyRes,
+    costMonthlyRes,
+    dbSizeRes,
+  ] = await Promise.all([
     db.from("incidents").select("id", { count: "exact", head: true }),
     db
       .from("incidents")
@@ -76,19 +99,62 @@ export async function getObserve360Telemetry(): Promise<Observe360Telemetry> {
       .eq("status", "pending_review"),
     db.from("incidents").select("id", { count: "exact", head: true }).eq("expert_verified", true),
     db.from("users").select("id", { count: "exact", head: true }),
-    db.from("k_model_scores").select("id, created_at", { count: "exact" }),
+    db
+      .from("k_model_scores")
+      .select("id, created_at")
+      .order("created_at", { ascending: false })
+      .limit(1),
+    db
+      .from("sla_alarms" as never)
+      .select("id, severity, resolved")
+      .eq("resolved" as never, false),
+    db.rpc("get_rls_policy_count" as never),
+    db
+      .from("dora_metrics" as never)
+      .select("deployment_frequency, lead_time_seconds, mttr_seconds, change_failure_rate")
+      .order("metric_date" as never, { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+    db.rpc("get_ai_gateway_costs", { time_interval: "1 day" }),
+    db.rpc("get_ai_gateway_costs", { time_interval: "30 days" }),
+    db.rpc("get_database_size"),
   ]);
 
-  const totalIncidents = incidentsRes.count ?? 412;
+  const totalIncidents = incidentsRes.count ?? 0;
   const pendingIncidents = pendingRes.count ?? 0;
-  const verifiedIncidents = verifiedRes.count ?? 18;
-  const totalUsers = usersRes.count ?? 45;
-  const ratedModels = kModelsRes.data ?? [];
-  const totalModelsRated = ratedModels.length || 14;
+  const verifiedIncidents = verifiedRes.count ?? 0;
+  const totalUsers = usersRes.count ?? 0;
 
-  const lastAudit = ratedModels[0]?.created_at
-    ? new Date(ratedModels[0].created_at).toLocaleDateString()
-    : new Date().toLocaleDateString();
+  const kModelData = Array.isArray(kModelsRes.data) ? kModelsRes.data : [];
+  const totalModelsRated = kModelData.length;
+  const firstModel = kModelData[0] as { created_at?: string } | undefined;
+  const lastAuditDate = firstModel?.created_at
+    ? new Date(firstModel.created_at).toLocaleDateString()
+    : null;
+
+  const alarms = Array.isArray(slaAlarmsRes.data) ? (slaAlarmsRes.data as SlaAlarmRow[]) : [];
+  const openAlarms = alarms.length;
+  const hasCritical = alarms.some((a) => a.severity === "critical");
+  const healthStatus: "NOMINAL" | "DEGRADED" | "CRITICAL" | "UNKNOWN" = hasCritical
+    ? "CRITICAL"
+    : openAlarms > 0
+      ? "DEGRADED"
+      : "NOMINAL";
+
+  const rlsPoliciesData = rlsPoliciesRes as { data: unknown };
+  const rlsPolicyCount: number =
+    typeof rlsPoliciesData.data === "number" ? rlsPoliciesData.data : 0;
+
+  const doraRow = doraRes.data as DoraMetricRow | null;
+  const doraInstrumented = doraRow !== null && !doraRes.error;
+
+  const dbSizeBytes: number = typeof dbSizeRes.data === "number" ? dbSizeRes.data : 0;
+  const dbSizeMb = Number((dbSizeBytes / (1024 * 1024)).toFixed(1));
+
+  const dailySpend =
+    typeof costDailyRes.data === "number" ? Number(costDailyRes.data.toFixed(2)) : 0;
+  const monthlySpend =
+    typeof costMonthlyRes.data === "number" ? Number(costMonthlyRes.data.toFixed(2)) : 0;
 
   const telemetry: Observe360Telemetry = {
     incidents: {
@@ -97,51 +163,49 @@ export async function getObserve360Telemetry(): Promise<Observe360Telemetry> {
       verified: verifiedIncidents,
     },
     healthSlo: {
-      availability: 99.98,
-      p95LatencyMs: 142,
-      status: "NOMINAL",
+      availability: null,
+      p95LatencyMs: null,
+      status: healthStatus,
+      openAlarms,
     },
     securityRls: {
       status: "HARDENED",
       piiGuardianActive: true,
-      rlsPolicyCount: 28,
+      rlsPolicyCount,
     },
     dora: {
-      deployFrequency: "Daily (Rule #31)",
-      leadTimeMinutes: 14,
-      mttrMinutes: 8,
-      changeFailureRatePct: 0.0,
+      deployFrequency: doraInstrumented ? doraRow!.deployment_frequency : null,
+      leadTimeMinutes: doraInstrumented ? Math.round(doraRow!.lead_time_seconds / 60) : null,
+      mttrMinutes: doraInstrumented ? Math.round(doraRow!.mttr_seconds / 60) : null,
+      changeFailureRatePct: doraInstrumented ? Number(doraRow!.change_failure_rate) : null,
+      instrumented: doraInstrumented,
     },
     cost: {
-      dailySpendUsd: 0.12,
-      dailyLimitUsd: 50.0,
-      monthlySpendUsd: 3.85,
-      monthlyLimitUsd: 500.0,
+      dailySpendUsd: dailySpend,
+      monthlySpendUsd: monthlySpend,
     },
     growth: {
-      totalUsers: totalUsers,
-      reportersCount: Math.max(12, Math.floor(totalUsers * 0.4)),
+      totalUsers,
+      reportersCount: Math.floor(totalUsers * 0.4),
     },
     capacity: {
-      dbSizeMb: 23.5,
+      dbSizeMb,
       dbSizeLimitMb: 500,
-      cronSlotUsage: "9 / 12 slots",
     },
     kBenchmark: {
       totalModelsRated,
-      lastAuditDate: lastAudit,
+      lastAuditDate,
     },
     timestamp: new Date().toISOString(),
   };
 
-  // Cache in Redis for 30s
   try {
     const redis = getRedisInstance();
     if (redis) {
       await redis.set(cacheKey, JSON.stringify(telemetry), { ex: 30 });
     }
   } catch (err) {
-    console.warn("[Observe360] Failed to cache telemetry in Redis:", err);
+    console.warn("[Observe360] Failed to cache telemetry:", err);
   }
 
   return telemetry;
