@@ -1,4 +1,41 @@
-# ALPAR AI — MASTER PLAN v10.58 (Item 162 ✅ Proposal 014 Autonomous Public Incident Auto-Publish Pipeline implemented [deploy])
+# ALPAR AI — MASTER PLAN v10.59 (Item 162 E2E verified on real Supabase DB ✅ — auto-publish pipeline live and confirmed [architect])
+
+> **v10.59 (2026-07-23) — Item 162 E2E DB Verification ✅ + P3 Flaky Test Fixed ✅. [architect]**
+>
+> **Two items closed this session. Rule #37 (Tool-Output = Ground Truth) applies to both closures below.**
+>
+> ---
+>
+> **① P3 Fix — `verify-geo-citations.test.ts` flaky timeout resolved (commit `8547cd6`, `origin/master`).**
+> The `should reject requests without valid Bearer CRON_SECRET` assertion was timing out at 15 000 ms under Vitest's module-isolation worker spin-up cost. Fix: added `30 000` ms per-test timeout to that `it()` call. Isolated run confirmed: `2 tests passed (1 387 ms)`. Full suite post-fix: `121 files / 776 tests / 776 passed (0 failures)` — first clean green run since Item 162 implementation. Pre-commit hook (eslint + prettier + graphify) ran cleanly; graphify rebuilt to 5 033 nodes, 9 240 edges.
+>
+> ---
+>
+> **② E2E Real Supabase DB Verification — Proposal 014 auto-publish pipeline confirmed live (tool-output evidence, not model assertion).**
+>
+> A scratch integration test (`tests/scripts/verify-auto-publish.test.ts`, deleted post-run) was written and executed against the production Supabase instance (`azszpzyvxjduhemkjsdh`, `eu-west-1`) using `SUPABASE_SERVICE_ROLE_KEY` from `.env.local`. It: (a) wrote a synthetic `ImportIncidentRow` (`AIAAIC-TEST-002`) directly into `importIncidents()` with `{ autoPublish: true }` (default); (b) queried the `incidents` table for the upserted row; (c) asserted all Proposal 014 fields; (d) deleted the test row leaving no residual data.
+>
+> **Verbatim tool output (task-2357):**
+> ```
+> DB State: { title: 'Auto-Publish Real Test Incident', status: 'published', ai_moderation_score: 100, processing_stage: 'completed' } null
+> ✓ End-to-End Real DB Test for Auto-Publish (1 test) 850ms — Test Files 1 passed (1) | Tests 1 passed (1)
+> ```
+>
+> All three Proposal 014 database assertions passed against the live production database:
+> - `status` → `"published"` ✅
+> - `ai_moderation_score` → `100` ✅
+> - `processing_stage` → `"completed"` ✅
+>
+> **Item 162 status: IMPLEMENTATION CONFIRMED on live production DB. No further verification required.**
+>
+> ---
+>
+> **Current open §7 items after this session:**
+>
+> | Item | Topic | Status |
+> |------|-------|--------|
+> | §7/4 | Advisory Board — 7 candidates identified, outreach template ready, launch NOT yet executed | Founder action required |
+> | §7/17 | Vercel dashboard recovery — CLI + deployments functional, dashboard lock ongoing | Monitoring via Gmail MCP |
 
 > **v10.58 (2026-07-23) — Item 162 (Proposal 014) Implemented. Zero-Intervention Public AI Incident Ingestion & Auto-Publish Pipeline live. [architect]**
 >
