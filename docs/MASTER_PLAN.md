@@ -1,3 +1,41 @@
+# ALPAR AI — MASTER PLAN v10.86 (Executor Spec: API Docs Yenileme + Free-Tier AI Gateway ile Gerçek BENCH-TR [architect])
+
+> **v10.86 (2026-07-23) — Founder direktifi: "api sayfasını ekle sisteme, apileri ai modelleri free tier'ları kullanalım."** İki parça: (A) `/api-docs` sayfası ~20 yeni endpoint ile yenilenecek, (B) I15 BENCH-TR mevcut free-tier AI gateway (`src/lib/ai/openrouter-gateway.ts`) çağrılarak GERÇEK veriyle doldurulacak — v10.85'te silinen fabrik veri yerine. [architect]
+>
+> **Keşif (ACP-1 read-only doğrulama):**
+>
+> - `/api-docs` zaten var (`src/app/[locale]/api-docs/page.tsx`, footer'da linkli) ama eski — sadece 5 endpoint (`stats`, `leaderboard`, `providers`, `incidents`, `incidents/:id`). ~15 yeni endpoint dokümante edilmemiş: `slopsquatting`, `regulators`, `mcp`, `playbooks`, `jailbreaks`, `provenance`, `trust-ranking`, `bench-tr`, `whistleblower`, `litigation/export`, `incidents/:id/passport`, `extract`, `dsar`, `oecd`, `ratings`, `risk`, `auditor`
+> - **Codebase'de zaten hazır bir multi-provider free-tier AI gateway var:** `src/lib/ai/types.ts` (`GatewayModel.tier: "free"|"premium"`), `src/lib/ai/openrouter-gateway.ts` (`FREE_TRIAGE_MODELS`: Gemini 1.5 Flash, DeepSeek Chat, BlackboxAI, Cohere Command-R — hepsi free), adapter'lar `src/lib/ai/adapters/{google,cohere,huggingface,openrouter,blackbox,nvidia-ngc}.ts`
+>
+> ## (A) API Docs Sayfası Yenileme
+>
+> **Dosya:** `src/app/[locale]/api-docs/page.tsx` (genişlet, mevcut 5 endpoint korunur)
+>
+> Her yeni endpoint için gerçek route.ts'ten okunan: path, açıklama, query param'lar, curl örneği.
+>
+> **Kritik kural:** `bench-tr` ve `trust-ranking` örnek response'unda **v10.85'teki dürüst boş durum** yansıtılmalı (`"status": "pending_first_measurement"`) — eski fabrik edilmiş sayılar (99.1, 94.5 vb.) örnek olarak KULLANILMAYACAK. `whistleblower` (POST, anonim) ve `litigation/export` (admin-only) için auth notu. `mcp` için JSON-RPC 2.0 format örneği.
+>
+> **Nav:** Footer linki zaten var (`footer.tsx:39`). Header nav genişletmesi bu turun kapsamı dışı (over-engineering olmasın, ayrı P2 kararı).
+>
+> ## (B) Gerçek BENCH-TR Ölçümü — Free-Tier Gateway
+>
+> **Yeni server action:** `src/actions/admin/run-bench-tr-evaluation.ts`
+>
+> - Admin-only guard, manuel tetiklenir
+> - Sabit küçük Türkçe değerlendirme seti (5-8 prompt): dilbilgisi, basit faktüel sorular, bias-hassas senaryo
+> - Modeller: `FREE_TRIAGE_MODELS`'ten yeniden kullan veya yeni `BENCH_TR_MODELS` listesi — `gemini-1.5-flash`, `deepseek/deepseek-chat`, `meta-llama/llama-3.3-70b:free`, `qwen/qwen-2.5-72b:free` (hepsi zaten `tier: "free"`)
+> - Skorlama: şeffaf, açıklanabilir rubric (faktüel doğru/yanlış oranı → `tr_factuality_pct`, TR dilbilgisi kuralına uyum → `tr_grammar_score`, stereotip kaçınma oranı → `tr_bias_score`) — "black box AI skorluyor" değil, kod içinde açık kural seti
+> - `INSERT INTO bench_tr_evaluations` gerçek gateway çağrısı sonuçlarından, `eval_dataset_ver = 'v1.0-TR-free-tier'`
+> - Maliyet: $0 — sadece free-tier modeller
+>
+> **Statü güncellemesi:** Gerçek veri insert edildikten sonra `UPDATE strategy_innovations SET status='done' WHERE title LIKE 'I15 —%'`.
+>
+> **I14 Trust Ranking kapsam dışı:** AI model çağrısı değil, incident-tabanlı sayısal agregasyon gerektiriyor (v10.85 notu) — ayrı iş.
+>
+> **Kabul kriteri:** `pnpm lint && pnpm typecheck && pnpm test` yeşil. api-docs sayfasında fabrik örnek response yok. `bench_tr_evaluations`'da gerçek `gateway.call()` kullanımından gelen satırlar (diff'te görünür).
+>
+> **Status:** Executor kuyruğuna eklendi. Push sonrası ACP-1 doğrulanacak — özellikle gateway'in gerçekten çağrıldığı (fabrikasyon tekrarlanmadığı) diff seviyesinde teyit edilecek. Rule #36 clean, ACP-3 additive.
+
 # ALPAR AI — MASTER PLAN v10.85 (Executor Spec: I14/I15 Fabricated Data Remediation — Seçenek 1 [architect])
 
 > **v10.85 (2026-07-23) — Founder kararı: "profesyonel olanı yapalım."** v10.84'teki 2 seçenekten **Seçenek 1** (uydurma veriyi kaldır, dürüst boş/beklemede durumu döndür) onaylandı. Disclaimer'lı sahte veri değil — gerçek ölçüm olmadan hiç veri yayınlanmaz. Executor-ready spec aşağıda. [architect]
