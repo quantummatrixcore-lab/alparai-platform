@@ -1,3 +1,42 @@
+# ALPAR AI — MASTER PLAN v10.73 (AI Ekosistem Taraması — 10 yeni aday inovasyon (I9-I18) [architect])
+
+> **v10.73 (2026-07-23) — Founder direktifi: "AI ekosistemini tarayıp beyin fırtınası yap, yeni inovasyonlar ekle." Mevcut 14 kaydın kapsam analizi + 2026-Temmuz ekosistem sinyallerine göre 10 yeni aday (I9-I18) önerildi. DB'ye yazım Founder onayı bekliyor. [architect]**
+>
+> **Kapsam Analizi (v10.72 envanteri karşı):**
+>
+> - ✅ Zaten kapsanan: EU AI Act Art. 73 (I1), MCP/ajan ekosistemi (I2), sağlayıcı SLA rozeti (I3), sigorta feed (I4), tarayıcı ext (I5 shipped), model drift (I6), akademik notebook (I7), KVKK (I8), Reddit/HN kuyruğu, News feed, Community Notes, Bounty, Yanıt sayacı, Admin UI.
+> - ⚠️ Boşluklar: Ses/deepfake, kod-üretim güvenliği, regülatör direkt entegrasyonu, dikey sektör playbook'ları, whistleblower kanalı, litigasyon desteği, içerik köken doğrulama, TR bias benchmark, jailbreak müzesi, AI vendor trust score.
+>
+> **10 Yeni Aday Inovasyon (I9-I18):**
+>
+> | #       | Başlık                                                       | Öncelik | Gerekçe / Ekosistem Sinyali                                                                                                                                                                                |
+> | ------- | ------------------------------------------------------------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+> | **I9**  | Slopsquatting Feed (Halüsine Paket Adı İzleme)               | high    | Kod-üretim AI'ları npm/PyPI'de olmayan paketler öneriyor → tehdit aktörleri o adları kaparak tedarik zinciri saldırısı yapıyor (2025-2026 boyunca artan trend). Güvenlik araştırmacıları için premium feed |
+> | **I10** | Ses/Deepfake Olay Kategorisi                                 | high    | ElevenLabs clone dolandırıcılıkları, seçim disinformation, banka çağrı fraud'ları. Mevcut şema metin-ağırlıklı; ses/video için özel alanlar (kaynak medya URL, watermark durumu, tespit yöntemi) gerekli   |
+> | **I11** | Regülatör Direkt-Feed API'si                                 | high    | EU AI Office, UK AISI, US AISI, NIST için pre-formatlı olay akışı. B2G kanalı, ALPAR'ı "resmi kaynak" seviyesine taşır. I1 Passport'un doğal genişlemesi                                                   |
+> | **I12** | Dikey Sektör Playbook'ları (Sağlık/Hukuk/Finans)             | medium  | Sektör-özel intake formları + hukuki şablonlar. Enterprise satış kancası. Her sektör kendi regülatörüne (FDA/BaFin/HIPAA) haritalanır                                                                      |
+> | **I13** | Prompt Injection Müzesi (Reproducible Jailbreak Kütüphanesi) | medium  | Chatbot Arena benzeri; her jailbreak PII maskeli, reproducible, model+versiyon etiketli. Red-team ekipleri için altın standart. Anthropic/OpenAI red-team programlarıyla stratejik hizalanma               |
+> | **I14** | AI Vendor Trust Score (Halka Açık Sıralanabilir)             | medium  | Olay verisi + SLA (I3) + response quality bileşiği. Basın için "ALPAR endeksi" narrative. K-BENCHMARK altyapısını yeniden kullanır                                                                         |
+> | **I15** | TR Dil Bias Benchmark ("BENCH-TR")                           | medium  | Türkçe-öncelikli bias eval kiti. Akademik + regülatör hendeği. I8 KVKK ile hizalı, mevcut `k_model_scores` mat-view altyapısını genişletir                                                                 |
+> | **I16** | Whistleblower Portal (Anonim Çalışan Bildirimi)              | low     | Signal-tarzı anonim submission, AI lab çalışanlarından. Yasal risk yüksek (jurisdiction bağımlı), ama medya + güven boost'u yüksek                                                                         |
+> | **I17** | Litigasyon Destek Paketi                                     | low     | Davacılar/avukatlar için PII-scrubbed kanıt paketi (ihlal ID, timestamp, chain-of-custody metadata). I4 Sigorta ile aynı pazar segmenti, tamamlayıcı                                                       |
+> | **I18** | İçerik Köken İzleyici (C2PA/Watermark Doğrulama)             | low     | Bir URL/dosya verilir, C2PA imzasını + bilinen watermark'ları (SynthID, vs.) doğrular. I10 Deepfake ile tamamlayıcı; ücretsiz kamu aracı = organik traffic                                                 |
+>
+> **Öncelik Dağılımı:** 3 high (I9, I10, I11) · 4 medium (I12-I15) · 3 low (I16-I18)
+>
+> **Stratejik Kümeler:**
+>
+> - **Regülatör/uyum ekseni:** I11, I15 → v10.63 hibe programları + I1 Passport ile hizalı, Türk pazarında kama
+> - **Güvenlik/enterprise ekseni:** I9, I13, I14 → I4 sigorta + dev topluluğu, monetization yakın
+> - **Medya/gazetecilik ekseni:** I10, I14, I16 → "ALPAR endeksi" narrative, PR fırsatı
+> - **Dikey pazar ekseni:** I12, I17 → enterprise satış, high-ticket
+>
+> **Architect Önerisi:** Founder onayı halinde en yüksek ROI **I9 (slopsquatting)** — mevcut altyapıya minimal ek, güvenlik topluluğunda net pazar boşluğu. İkinci **I11 (regülatör API)** — I1 Passport'un doğal uzantısı, B2G kanalı açar.
+>
+> **Rule #36 Kapı:** Bu entry sadece plan seviyesi. DB'ye seed etmek için executor `supabase/migrations/<ts>_seed_i9_i18_innovations.sql` yazacak — Architect bu dosyaya dokunmaz. Founder hangi alt kümenin seed edileceğini seçtikten sonra executor `[deploy]` commit'ini push eder, sonraki Architect turu (v10.74) ACP-1 doğrular.
+>
+> **Status:** 10 aday MASTER_PLAN'da kayıt altında. Founder aksiyonu bekliyor: (1) Hangi alt küme seed edilecek? (2) Onaylanan setin öncelik/statü değerleri? (3) Yeni kayıtlarda "IX — <başlık>" formatı korunacak mı?
+
 # ALPAR AI — MASTER PLAN v10.72 (Innovations Envanteri — /admin/innovations 14 kayıt + 3 statü uyumsuzluğu triyajı [architect])
 
 > **v10.72 (2026-07-23) — `/[locale]/admin/innovations` sayfası envanterlendi. 14 inovasyon (6 orijinal + I1-I8) tablo halinde kaydedildi. ACP-1 ile 3 kritik DB↔kod statü uyumsuzluğu tespit edildi. [architect]**
