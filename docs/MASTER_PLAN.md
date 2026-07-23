@@ -1,4 +1,4 @@
-# ALPAR AI — MASTER PLAN v10.63 (Startup Altyapı & Ekosistem Stratejisi — Kaynaklı, Architect-Doğrulamalı ✅ [architect])
+# ALPAR AI — MASTER PLAN v10.64 (Qwen 88/100 External Site Audit: P0–P2 executor queue from ACP-1 triage [architect])
 
 > **v10.63 (2026-07-23) — §7 Yeni Madde: Startup Altyapı Hibe Stratejisi — 360° Tarama, Kaynaklı & Güncel [architect]**
 >
@@ -131,6 +131,38 @@
 > _Kaynak doğrulama tarihi: 23 Temmuz 2026. Program şartları değişebilir; başvuru öncesi resmi linkler teyit edilmeli._
 >
 > ---
+
+> **v10.64 (2026-07-23) — External audit integration: Qwen scored alparai.com 88/100 (Conversion Funnel 75/100 lowest sub-score). ACP-1 triage into P0/P1/P2 executor queue. [architect]**
+>
+> **Site score:** 88/100 reflects genuine structural strength (Supabase RLS, K-BENCHMARK 6-axis, Admin panel, API Hub, DORA instrumentation — all verified ✅ on master). Conversion Funnel 75/100 is the actionable signal: platform opened public access but may carry legacy "waitlist" CTA language.
+>
+> **P0 Executor Tasks (1–3 days):**
+>
+> - **CTA Language Audit.** Check `src/app/[locale]/(home)/page.tsx` + `src/components/landing/` hero/CTA buttons. Replace any "Join Waitlist" / "Waitlist" text with action-oriented language ("Report an Incident" / "Start Auditing"). Target: Conversion Funnel 75 → 90+/100.
+> - **Header "Report" button contrast.** Check `src/components/layout/header.tsx`. If primary CTA uses weak contrast (`bg-white/10`), elevate to `bg-red-500` or `bg-emerald-500`. One Tailwind token change.
+>
+> **P1 Executor Tasks (3–7 days):**
+>
+> - **JSON-LD Structured Data (Schema.org).** Add `Dataset` + `Report` JSON-LD to `src/app/[locale]/incidents/page.tsx` and provider pages via `generateMetadata` or `<script type="application/ld+json">`. Value: Google rich snippets → organic discovery + academic citability. ~1 day.
+> - **Mobile Incident List: Table → Card View.** If incident table overflows at mobile breakpoints: add `md:hidden` card variant. Quick responsive UX win.
+> - **Skeleton Loaders (CLS prevention).** Add `loading.tsx` / `<Skeleton>` to Supabase-backed pages (`/incidents`, `/k-benchmark`, `/admin/*`). Core Web Vitals improvement.
+>
+> **P2 Strategic Tasks (Founder approval required):**
+>
+> - **Live Incident Feed on homepage** — polling/realtime widget, FOMO psychology. Medium effort.
+> - **Provider Risk Trend Graph** — time-series per-provider incident trend (Recharts). K-BENCHMARK roadmap extension; may need `provider_incidents_daily` materialized view.
+> - **Developers/API Nav Section** — existing routes (`/api/public/incidents`, `/api/public/dataset.json`) need nav entry + docs page. Targets researcher audience.
+> - **Social Proof Badges** — deferred until genuine university/institution partnerships exist.
+> - **Blog/Research Section** — "AI Safety Weekly" SEO strategy. High editorial cost; post-MVP.
+>
+> **Already done / out of scope:**
+>
+> - Severity colour-coding: K-BENCHMARK 6-axis already covers ✅
+> - CAPTCHA: Turnstile integration verified active ✅
+> - Sandbox simulator animation: out of scope 🚫 (chart-for-chart's-sake)
+> - Hero subheadline length: minor copy, Founder call
+>
+> **Status:** Item 161 ✅ (closed v10.55). Item 162 ✅ (closed v10.59). Numbered queue: P0 CTA audit enters as new fast-win executor task. Founder-gated §7 remaining: §7/17 (Vercel). **Rule #36 clean:** only `docs/MASTER_PLAN.md`, `[architect]` marker, no `[deploy]`.
 
 > **v10.61 (2026-07-23) — §7/4 Advisory Board Outreach FULLY DELIVERED ✅. [architect]**
 >
