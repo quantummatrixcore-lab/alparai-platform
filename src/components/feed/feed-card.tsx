@@ -120,15 +120,15 @@ export function FeedCard({
         variant="glass"
         className="border-border-subtle relative transition-all duration-300 hover:border-white/10"
       >
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           {/* Header */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2.5 sm:flex-nowrap">
             <div className="flex items-center gap-3">
-              <div className="text-brand-400 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 font-bold uppercase">
+              <div className="text-brand-400 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 font-bold uppercase">
                 {incident.provider_name ? incident.provider_name.charAt(0) : "A"}
               </div>
               <div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                   <Link
                     href={`/press-kit/${incident.provider_slug}`}
                     className="text-fg-primary hover:text-brand-400 text-sm font-bold transition-colors"
@@ -143,7 +143,7 @@ export function FeedCard({
                         onToggleWatch();
                       }}
                       className={cn(
-                        "ml-1 cursor-pointer rounded-md px-1.5 py-0.5 text-[10px] font-bold tracking-wider uppercase transition-all",
+                        "cursor-pointer rounded-md px-1.5 py-0.5 text-[10px] font-bold tracking-wider uppercase transition-all",
                         isWatched
                           ? "text-fg-secondary bg-white/10 hover:bg-white/15"
                           : "bg-brand-500/10 text-brand-400 border-brand-500/20 hover:bg-brand-500/20 border",
@@ -168,7 +168,7 @@ export function FeedCard({
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
               <SeverityBadge severity={incident.severity} />
               <StatusBadge status={incident.status} />
             </div>

@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton, FeedCardSkeleton } from "@/components/ui/skeleton";
 import { Container } from "@/components/ui/layout";
 
 export default function IncidentsLoading() {
@@ -10,7 +10,7 @@ export default function IncidentsLoading() {
       </div>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
-          <Skeleton key={i} className="h-48" />
+          <FeedCardSkeleton key={i} />
         ))}
       </div>
     </Container>
