@@ -1,3 +1,42 @@
+# ALPAR AI — MASTER PLAN v10.72 (Innovations Envanteri — /admin/innovations 14 kayıt + 3 statü uyumsuzluğu triyajı [architect])
+
+> **v10.72 (2026-07-23) — `/[locale]/admin/innovations` sayfası envanterlendi. 14 inovasyon (6 orijinal + I1-I8) tablo halinde kaydedildi. ACP-1 ile 3 kritik DB↔kod statü uyumsuzluğu tespit edildi. [architect]**
+>
+> **Kaynak (ACP-1 kanıt):** Sayfa `src/app/[locale]/admin/innovations/page.tsx` → server actions `src/actions/innovations.ts` → Supabase `strategy_innovations` tablosu (RLS: `is_ceo`/`is_admin`). Seed'ler: `supabase/migrations/20260702100000_seed_strategy_innovations.sql` (6 kayıt) + `20260715000001_seed_i_series_innovations.sql` (I1-I8).
+>
+> **Tam Envanter (14 kayıt):**
+>
+> | #   | Başlık                                           | Priority | DB Status   | Not                                                  |
+> | --- | ------------------------------------------------ | -------- | ----------- | ---------------------------------------------------- |
+> | 1   | Otomatik Vaka Kuyruğu (Reddit & HN)              | high     | planned     | ⚠️ Uyumsuzluk-B (aşağıda)                            |
+> | 2   | AI Haberleri (AI News Feed)                      | medium   | idea        | NewsAPI/RSS toplayıcı                                |
+> | 3   | Topluluk Doğrulaması (Community Notes)           | medium   | idea        | "Doğru/Eksik/Giderildi" oylama                       |
+> | 4   | Sağlayıcı Yanıt Süresi Canlı Sayacı              | low      | idea        | Leaderboard SLA metriği                              |
+> | 5   | AI Auditor Bounty & Rozet Sistemi                | low      | idea        | B2B sponsor ödül                                     |
+> | 6   | Admin Paneli Profesyonel UI Güncellemesi         | high     | in_progress | ⚠️ Uyumsuzluk-C                                      |
+> | I1  | Incident Passport (Art. 73 resmi şablon çıktısı) | high     | idea        | EU AI Act Art. 73 uyum, "format uyumlu ilk platform" |
+> | I2  | ALPAR MCP Server / LLM Aracı                     | high     | idea        | Ajan ekosistemi, sıfır CAC dağıtım                   |
+> | I3  | Sağlayıcı Yanıt SLA Rozeti                       | medium   | idea        | Ücretsiz gömülebilir "X gün içinde yanıtlar"         |
+> | I4  | Sigorta/Aktüeryal Veri Akışı                     | low      | idea        | AI sorumluluk sigortacıları için                     |
+> | I5  | Tarayıcı Eklentisi                               | low      | idea        | ⚠️ Uyumsuzluk-A (SHIPPED)                            |
+> | I6  | Model Sürüklenme İzleme                          | low      | idea        | Sağlayıcı model kartı/sürüm değişikliği izleme       |
+> | I7  | Araştırma Sanal Ortamı                           | low      | idea        | Akademisyen notebook (F2 uzantısı)                   |
+> | I8  | KVKK Köprüsü                                     | medium   | idea        | Türk kamu için KVKK uyumlu bildirim biçimi           |
+>
+> **⚠️ ACP-1 Statü Uyumsuzlukları (DB ↔ Kod):**
+>
+> | #   | Innovation                               | DB status     | Kod Gerçekliği                                                                                                                                                                                                  | Aksiyon                                                           |
+> | --- | ---------------------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+> | A   | I5 — Tarayıcı Eklentisi                  | `idea`        | ✅ SHIPPED — `apps/extension/` mevcut, v10.69 spec + v10.70 ACP-1 optimize edildi (`6792a01`). Chrome MV3, badge, popup, background hepsi canlı                                                                 | Founder DB'de **`done`** yapmalı                                  |
+> | B   | Otomatik Vaka Kuyruğu (Reddit & HN)      | `planned`     | 🔶 KISMEN SHIPPED — `external_incidents_queue` tablosu + `getExternalQueue()` + `triggerManualFetch()` + `/api/cron/fetch-external` cron mevcut. Reddit/HN/RSS connector statüleri client'ta grup halinde canlı | E2E connector doğrulama sonrası **`in_progress`** veya **`done`** |
+> | C   | Admin Paneli Profesyonel UI Güncellemesi | `in_progress` | 🔶 BELİRSİZ — Item 161 (v10.55) kapanışında bir bölümü tamamlandı; sparkline + right-menu spec'inin tam bitip bitmediği görsel doğrulama gerektirir                                                             | Sayfa açılıp UI kontrolü sonrası güncellenmeli                    |
+>
+> **Priority Dağılımı:** 4 high (Reddit/HN, Admin UI, I1 Passport, I2 MCP) · 4 medium (News, Community, I3 SLA, I8 KVKK) · 6 low (Yanıt sayacı, Bounty, I4 Sigorta, I5 Ext, I6 Drift, I7 Research).
+>
+> **Yorum (Architect):** Yüksek öncelikli 4 maddeden 2'si (Admin UI, Reddit/HN kuyruğu) fiilen ilerlemiş — sadece DB statüleri senkron değil. Yeni build önerisi için en yüksek ROI: **I1 Incident Passport** (EU AI Act Art. 73 uyumu — regülasyon hendeği, ilk-hareket avantajı) ve **I2 ALPAR MCP Server** (ajan ekosisteminde sıfır-CAC dağıtım). Her ikisi de v10.63 hibe programları (Anthropic, NVIDIA) ve v10.68 outreach ile stratejik olarak hizalı.
+>
+> **Status:** Envanter kayıt altında. Executor kuyruğuna eklenmedi — tüm açık maddeler Founder-gated stratejik karar. Sonraki Founder aksiyonu: (a) 3 DB statü uyumsuzluğunu düzeltmek, (b) I1/I2 arasında build sırası kararı, (c) Uyumsuzluk-C için admin sayfası görsel doğrulama. Rule #36 clean.
+
 # ALPAR AI — MASTER PLAN v10.71 (Hibe E-posta Gönderim Kapanışı + Sistem Snapshot [architect])
 
 > **v10.71 (2026-07-23) — v10.68 hibe başvuru e-postaları (E1 Anthropic, E2 NVIDIA Inception, E3 Vercel OSS) Antigravity executor tarafından Gmail MCP ile gönderildi. Fix-forward: v10.68 spec statüsü ✅. [architect]**
