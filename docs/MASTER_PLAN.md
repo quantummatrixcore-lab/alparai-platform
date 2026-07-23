@@ -1,3 +1,17 @@
+# ALPAR AI — MASTER PLAN v10.88 (GitHub Release 1.0.0 + Dependabot Updates + Lint Clean Shipped [architect])
+
+> **v10.88 (2026-07-23) — `d11c02a` [deploy]: 360-derece GitHub taraması ve otomasyonu tamamlandı. PR #46 (Release 1.0.0) ve PR #45 (Dependabot 9 bağımlılık güncellemesi) birleştirildi, TypeScript `no-explicit-any` lint düzeltmesi uygulandı. [architect]**
+>
+> **Release Evidence (ACP-1 Mandatory):**
+>
+> - Merged PR #46 (`chore(master): release 1.0.0` → CHANGELOG.md güncellendi).
+> - Merged PR #45 (`chore(dev-deps): bump development-dependencies` → `@playwright/test` 1.61.1, `prettier` 3.9.6, `tailwindcss` 4.3.3 vb.).
+> - Commit `d11c02a` [deploy]: `fix(admin): resolve typescript any lint error in run-bench-tr-evaluation action`.
+>
+> **Quality Gate:** `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` ✅ (780/780 tests green across 122 test files)
+
+---
+
 # ALPAR AI — MASTER PLAN v10.87 (API Docs 20 Endpoints + Real Free-Tier BENCH-TR Shipped [architect])
 
 > **v10.87 (2026-07-23) — `591305b` [deploy]: (A) `/api-docs` 20 endpoint'e genişletildi. (B) `run-bench-tr-evaluation.ts` ile free-tier AI gateway üzerinden GERÇEK BENCH-TR ölçüm altyapısı canlıda. [architect]**
