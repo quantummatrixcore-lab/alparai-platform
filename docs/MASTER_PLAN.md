@@ -1,3 +1,21 @@
+# ALPAR AI — MASTER PLAN v10.76 (ACP-1 — I1 Incident Passport + Oturum Senkronu [architect])
+
+> **v10.76 (2026-07-23) — `66707f8` commit'i (I1 Incident Passport, EU AI Act Art.73 export) v10.75 sonrası master'da doğrulandı. Architect → Claude Sonnet 4.6 modeline geçiş kayıt altına alındı. [architect]**
+>
+> **ACP-1 Kanıt:**
+>
+> - `66707f8` (`feat(incident): I1 Incident Passport — EU AI Act Art.73 export [deploy]`) — executor commit'i, `[deploy]` işaretli, origin/master'da mevcut.
+>
+> **Mevcut Açık Maddeler:**
+>
+> | ID      | Madde                                   | Bloker                       |
+> | ------- | --------------------------------------- | ---------------------------- |
+> | W1      | Microsoft for Startups ($150K Azure)    | Founder web formu dolduracak |
+> | W2–W5   | Google/AWS/Supabase/GitHub for Startups | Founder web formu dolduracak |
+> | I12–I18 | Innovation batch 2 (medium/low öncelik) | Founder onayı                |
+>
+> **Status:** Teknik borç: 0. Açık kalemler Founder aksiyon gerektirir.
+
 # ALPAR AI — MASTER PLAN v10.75 (ACP-1 Doğrulaması — Option A ve B Canlıda [architect])
 
 > **v10.75 (2026-07-23) — Option A (Proposal 019 UI Refactor) ve Option B (I9, I10, I11 Seed) geliştirildi, test edildi ve canlıya alındı. [architect]**
