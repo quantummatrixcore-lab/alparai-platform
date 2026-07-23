@@ -1,3 +1,18 @@
+# ALPAR AI — MASTER PLAN v10.92 (Supabase Keep-Alive Cron Endpoint + Security Reminder Shipped [architect])
+
+> **v10.92 (2026-07-24) — `8fbc056` [deploy]: Supabase 7-günlük inaktivite uykusunu engelleyen `/api/cron/keep-alive` endpoint'i ve Vercel cron tanımı (`0 0 */3 * *`) canlıya alındı. [architect]**
+>
+> **Geliştirme Özeti:**
+>
+> - `src/app/api/cron/keep-alive/route.ts` — Supabase ping query + latency izleme + `withCronLogger` entegrasyonu.
+> - `tests/api/cron/keep-alive.test.ts` — Birim testler eklendi (782/782 test yeşil).
+> - `vercel.json` — 3 günde bir çalışan otomatik Vercel Cron kuralı eklendi.
+> - **Güvenlik Notu:** Founder tarafından Vercel/Supabase token rotasyonu manuel olarak tamamlanacaktır.
+>
+> **Quality Gate:** `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` ✅ (782/782 tests green across 123 test files)
+
+---
+
 # ALPAR AI — MASTER PLAN v10.91 (Release 1.0.1 + All Dependabot PRs Merged & Deployed [architect])
 
 > **v10.91 (2026-07-24) — `3a1b289` [deploy]: Release 1.0.1 (PR #47) ve tüm Dependabot bağımlılık güncellemeleri birleştirildi, Vercel'e dağıtıldı. [architect]**
