@@ -1,4 +1,46 @@
-# ALPAR AI — MASTER PLAN v10.68 (Hibe Başvuru E-posta Kuyruğu — executor-ready spec for Antigravity Gmail MCP [architect])
+# ALPAR AI — MASTER PLAN v10.69 (Browser Extension Optimization — ACP-1 triage of proposed performance improvements [architect])
+
+> **v10.69 (2026-07-23) — Browser Extension (`apps/extension/`) Optimization: ACP-1 triage of proposed performance improvements. 5 optimizations validated, 1 critical caveat flagged, executor-ready spec below. [architect]**
+>
+> **Bağlam:** Executor tarafından önerilen 5 optimizasyon (`background.js` debounce, fetch timeout, limit azaltma, in-memory cache, modüler UI) ACP-1 disipliniyle mevcut koda (`apps/extension/background.js` 59L, `popup.js` 57L) karşı doğrulandı. **Bulgular: Önerilerin HİÇBİRİ henüz uygulanmamış — mevcut kod orijinal/optimize edilmemiş hali.** Öneriler teknik olarak doğru ve uygulanabilir, bir kritik caveat ile.
+>
+> **ACP-1 Doğrulama — Mevcut Kod vs Rapor:**
+>
+> | Rapordaki İddia                    | Mevcut Kodda                                 | Doğru mu?                     |
+> | ---------------------------------- | -------------------------------------------- | ----------------------------- |
+> | Debounce 300ms                     | YOK — `onActivated`/`onUpdated` direkt çağrı | Öneri doğru, uygulanmalı ✅   |
+> | Fetch Timeout (AbortController 3s) | YOK — düz `fetch()` (bg:37, popup:25)        | Öneri doğru, uygulanmalı ✅   |
+> | `limit=100` → `limit=1`            | Hâlâ `limit=100` (bg:38, popup:26)           | Öneri doğru AMA **CAVEAT** ⚠️ |
+> | In-Memory Cache (Map)              | YOK — popup'ta cache yok                     | Öneri doğru, uygulanmalı ✅   |
+> | Modüler UI fonksiyonları           | YOK — inline `document.getElementById`       | Öneri doğru, kozmetik ✅      |
+>
+> **⚠️ KRİTİK CAVEAT — `limit=1` değişikliği:**
+> Mevcut kod `data.meta?.count ?? data.data?.length` kullanıyor. `limit=1` yapılırsa `data.data?.length` her zaman 0 veya 1 döner. Bu ANCAK API'nin `meta.count` alanında toplam sayıyı döndürmesi durumunda doğru çalışır. Executor `GET /api/v1/incidents` endpoint'inin response yapısını doğrulamalı: `meta.count` yoksa `limit=1` ile badge her zaman "1" gösterir — hatalı. Güvenli yaklaşım: `limit=1` + `head: true` (Supabase count-only query) veya API'ye `count_only=true` parametresi eklemek.
+>
+> **Executor-Ready Spec (5 değişiklik, `apps/extension/` — 2 dosya):**
+>
+> **background.js:**
+>
+> 1. `onActivated` + `onUpdated` listener'larına 300ms debounce ekle (tab switching spam engeli)
+> 2. `fetch()` çağrısını `AbortController` ile 3s timeout'a sar
+> 3. `limit=100` → `limit=1` YALNIZCA `meta.count` doğrulandıktan sonra; aksi halde `limit=100` kalsın
+> 4. Storage hata handling'i `try/catch` ile sarılsın (bg:44)
+>
+> **popup.js:**
+>
+> 1. Session-scoped `Map` cache ekle — aynı domain için tekrar fetch yapma
+> 2. `fetch()` çağrısına AbortController 3s timeout ekle
+> 3. `hideLoading()`, `showEmpty(msg)`, `displayResults(count, domain)` helper fonksiyonları çıkar
+> 4. `limit` değişikliği background.js ile aynı caveat'a tabi
+>
+> **Performans beklentisi (uygulandığında):**
+>
+> - ~%70-90 daha az API çağrısı (debounce + cache)
+> - 3s max bekleme (timeout)
+> - Popup anlık açılış (cache hit durumunda)
+> - `limit=1` **ancak** API `meta.count` destekliyorsa: %99 küçük response
+>
+> **Status:** Extension optimizasyonu executor kuyruğuna girdi. `limit=1` caveat'ı Founder/executor tarafından API doğrulamasıyla çözülecek. Rule #36 clean.
 
 > **v10.68 (2026-07-23) — Hibe Başvuru E-posta Kuyruğu: v10.63 programlarına başvuru spec'i. Executor (Antigravity) Gmail MCP ile gönderecek. [architect]**
 >
