@@ -1,3 +1,15 @@
+# ALPAR AI — MASTER PLAN v10.99 (Admin Sidebar Localization & Api-Docs Grid Overflow Fixed [architect])
+
+> **v10.99 (2026-07-24) — `[deploy]`: Admin Sidebar Dil Çevirileri ve Api-Docs Sağ Kolon Taşıma/Taşma Hataları Çözüldü:**
+>
+> **Düzeltme & İyileştirme Detayları:**
+>
+> - **Sidebar Çevirileri (M1):** Admin panel yan menüsündeki eksik `nav_apiManagement`, `nav_providers` ve `nav_publicApiDocs` anahtarları tüm dil dosyalarına (`en`, `tr`, `de`, `fr`) eklendi. Ham anahtar isimlerinin görünmesi engellendi.
+> - **API Docs Taşma Hatası (M2):** `/api-docs` sayfası grid yapısında sol kolona ve `ApiPlayground` bileşeni grid sütunlarına `min-w-0` kuralı eklendi. `<pre>` etiketlerindeki uzun kod satırlarının kolonu genişleterek sağ taraftaki yapışkan paneli ekran dışına taşırması engellendi.
+> - **Quality Gate:** `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` ✅ (785/785 tests green across 124 test files)
+
+---
+
 # ALPAR AI — MASTER PLAN v10.98 (P0 Security Encryption at Rest + Verified Respondent Moderation Restored [architect])
 
 > **v10.98 (2026-07-24) — `6839378` [deploy]: P0 Güvenlik ve Moderasyon Düzeltmeleri Canlıya Dağıtıldı:**

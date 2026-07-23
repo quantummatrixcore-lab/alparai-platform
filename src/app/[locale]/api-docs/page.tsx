@@ -393,7 +393,7 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
         </div>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_300px]">
-          <div className="space-y-6">
+          <div className="min-w-0 space-y-6">
             <h2 className="text-lg font-bold text-white">
               {isEn ? "API Endpoints (20 Total)" : "API Endpoint'leri (Toplam 20)"}
             </h2>

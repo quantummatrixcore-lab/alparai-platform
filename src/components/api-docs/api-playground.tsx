@@ -187,7 +187,7 @@ export function ApiPlayground() {
 
       <div className="grid gap-6 lg:grid-cols-12">
         {/* Endpoint Selector & Query Params */}
-        <div className="space-y-4 lg:col-span-5">
+        <div className="min-w-0 space-y-4 lg:col-span-5">
           <label className="block text-xs font-semibold text-slate-300">Select Endpoint</label>
           <div className="space-y-2">
             {PUBLIC_ENDPOINTS.map((ep) => {
@@ -241,7 +241,7 @@ export function ApiPlayground() {
         </div>
 
         {/* Live HTTP Console */}
-        <div className="flex flex-col lg:col-span-7">
+        <div className="flex min-w-0 flex-col lg:col-span-7">
           <div className="flex items-center justify-between text-xs font-semibold text-slate-300">
             <span className="flex items-center gap-1.5">
               <Terminal className="h-4 w-4 text-emerald-400" />
