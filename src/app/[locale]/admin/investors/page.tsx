@@ -3,10 +3,11 @@ import { redirect } from "next/navigation";
 import { Container } from "@/components/ui/layout";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, DollarSign, Clock } from "lucide-react";
 import { InvestorApplicationsList } from "@/components/admin/investor-applications-list";
 import type { InvestorApplicationItem } from "@/components/admin/investor-applications-list";
 import { logger } from "@/lib/utils/logger";
+import { MetricCard } from "@/components/admin/metric-card";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -49,8 +50,39 @@ export default async function AdminInvestorsPage({
 
   const applications = (data as unknown as InvestorApplicationItem[]) ?? [];
 
+  const approved = applications.filter((a) => a.status === "approved");
+  const pendingApps = applications.filter((a) => a.status === "pending");
+
   return (
     <Container className="py-10">
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <MetricCard
+          title="Investor Applications"
+          value={applications.length}
+          icon={TrendingUp}
+          trend="up"
+          trendLabel="Pipeline"
+          accentColor="#10b981"
+          sparkData={applications.slice(0, 8).map((_, i) => ({ value: i + 1 }))}
+          chartType="bar"
+        />
+        <MetricCard
+          title="Approved Investors"
+          value={approved.length}
+          icon={DollarSign}
+          trend={approved.length > 0 ? "up" : "neutral"}
+          trendLabel="High intent"
+          accentColor="#f59e0b"
+        />
+        <MetricCard
+          title="Pending Review"
+          value={pendingApps.length}
+          icon={Clock}
+          trend={pendingApps.length > 0 ? "up" : "neutral"}
+          trendLabel="Awaiting contact"
+          accentColor="#6366f1"
+        />
+      </div>
       <header className="mb-6">
         <h1 className="text-fg-primary inline-flex items-center gap-2 text-2xl font-bold">
           <TrendingUp className="h-6 w-6 text-emerald-400" /> {t("investors_heading")}

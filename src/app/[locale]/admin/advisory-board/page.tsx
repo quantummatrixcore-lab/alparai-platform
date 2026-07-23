@@ -2,6 +2,8 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { requireAdmin } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { WarningCircle, CheckCircle } from "@phosphor-icons/react/dist/ssr";
+import { Users, Shield } from "lucide-react";
+import { MetricCard } from "@/components/admin/metric-card";
 
 export default async function AdvisoryBoardPage({
   params,
@@ -30,6 +32,29 @@ export default async function AdvisoryBoardPage({
           {t("advisory_title")}
         </h1>
         <p className="text-fg-secondary mt-2">{t("advisory_subtitle")}</p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <MetricCard
+          title="Advisory Board Members"
+          value={members?.length ?? 0}
+          icon={Users}
+          trend="neutral"
+          trendLabel="Rule §21 bound"
+          accentColor="#6366f1"
+          sparkData={(members ?? []).map((_, i) => ({ value: i + 1 }))}
+          chartType="bar"
+        />
+        <MetricCard
+          title="Governance Status"
+          value="ACTIVE"
+          icon={Shield}
+          trend="up"
+          trendLabel="Compliant"
+          accentColor="#10b981"
+          badge="§21 OK"
+          badgeColor="text-emerald-400"
+        />
       </div>
 
       <div className="bg-bg-secondary/40 overflow-hidden rounded-xl border border-white/5 backdrop-blur-xl">
