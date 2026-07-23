@@ -1,3 +1,16 @@
+# ALPAR AI — MASTER PLAN v10.97 (Zero-Leak Security Token Rotation Completed & Verified [architect])
+
+> **v10.97 (2026-07-24) — Sıfır Sızıntı Güvenlik Rotasyonu %100 Doğrulandı ve Canlıya Senkronize Edildi:**
+>
+> **Güvenlik & Rotasyon Özeti:**
+>
+> - PowerShell betiği ile yerel `.env.local` ve canlı Vercel üretimi (`alparai-com`) ortam değişkenleri ekrana/sohbete hiçbir anahtar yazdırılmadan sessizce güncellendi.
+> - **Vercel CLI Token:** `vcp_64I...` `npx vercel whoami` ile doğrulandı (`quantumatrixcore-lab`).
+> - **Supabase Service Role Key:** `sb_secret_ksK...` Vercel Production ortamına şifreli şekilde push edildi (`✓ Overrode SUPABASE_SERVICE_ROLE_KEY`).
+> - **Quality Gate:** `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` ✅ (782/782 tests green across 123 test files)
+
+---
+
 # ALPAR AI — MASTER PLAN v10.96 (AI Provider Hub + Interactive API Playground Shipped [architect])
 
 > **v10.96 (2026-07-24) — `1a34b05` [deploy]: AI Provider Management Hub (`/admin/providers`) ve İnteraktif OpenAPI 3.1 API Playground (`/api-docs`) Canlıya Dağıtıldı:**
