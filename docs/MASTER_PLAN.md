@@ -1,3 +1,51 @@
+# ALPAR AI — MASTER PLAN v10.74 (Sıradaki Dağıtım Triyajı — Proposal 019 vs Innovation Seed [architect])
+
+> **v10.74 (2026-07-23) — Executor iki dağıtım seçeneği (A: Proposal 019 UI polish, B: I9-I18 DB seed) arasında Founder kararı bekliyor. Architect değerlendirmesi + önerilen sıra: A → B. [architect]**
+>
+> **Bağlam (ACP-1 doğrulandı):**
+>
+> - `77ee04d`: v10.73 girişim master'a mergelendi (aynı içerik, farklı hash — squash/cherry-pick)
+> - `aec8024`: Executor Proposal 019 doküman commit'i (`docs/PROPOSALS/019-master-plan-client-ux-a11y-audit.md`) — Qwen 87/100 audit'i, 4 madde
+>
+> **Option A — Proposal 019 (`master-plan-client.tsx` UX/A11y):**
+>
+> | Kriter           | Değer                                                                                                                                  |
+> | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+> | Kapsam           | Sadece `src/components/admin/master-plan-client.tsx`                                                                                   |
+> | Maliyet          | ~15 dk                                                                                                                                 |
+> | Risk             | Sıfır breaking change                                                                                                                  |
+> | Founder input    | ❌ Gerekmez                                                                                                                            |
+> | Etki             | Internal admin UX polish (revenue-neutral)                                                                                             |
+> | Maddeler         | (1) `cursor-grab` temizliği (2) `aria-pressed`/`aria-label` (3) empty state (4) `useMemo`                                              |
+> | Reddedilen kısım | Full drag-and-drop + client fetch hooks — Rule #36 (Architect-only) + Next.js 15 SSR ile uyumsuz → **executor'ın red kararı doğru ✅** |
+>
+> **Option B — I9-I18 DB Seed:**
+>
+> | Kriter        | Değer                                                                                       |
+> | ------------- | ------------------------------------------------------------------------------------------- |
+> | Kapsam        | `supabase/migrations/<ts>_seed_i9_i18_innovations.sql`                                      |
+> | Maliyet       | ~10 dk (executor SQL yazımı)                                                                |
+> | Risk          | Düşük (yeni satırlar, RLS zaten yerinde)                                                    |
+> | Founder input | ✅ **BLOKER** — hangi alt küme? (tümü mü, sadece high mi, custom mu?)                       |
+> | Etki          | /admin/innovations sayfasında 10 yeni aday görünür → Founder onay/prioritize döngüsü açılır |
+>
+> **Bağımsızlık:** A ve B mutually exclusive değil — farklı katmanlar (UI vs DB), farklı dosyalar, ayrı risk profilleri. Rule #31 iki deploy penceresi/gün izin veriyor → aynı gün ikisi de shippable.
+>
+> **Architect Kararı — Sıra: A → B (paralel Founder karar):**
+>
+> 1. **Şimdi:** Executor **Option A** ile devam etsin (self-contained, 15 dk, Founder input beklemez)
+> 2. **Paralel:** Founder Option B alt kümesini seçsin (öneri: high-öncelikli pilot batch = **I9 + I10 + I11**; kalan I12-I18 ikinci batch)
+> 3. **Sonra:** Executor onaylanan alt küme için migration yazar
+> 4. **v10.75:** Architect A commit'ini + B migration commit'ini ACP-1 doğrular
+>
+> **Architect Önerisi Gerekçesi:**
+>
+> - A'nın founder blocker'ı yok → derhal ilerlerken B için düşünme süresi kazanılır
+> - B'yi high-öncelikli 3 aday ile pilot yapmak = "hepsini seed etmek" yerine sinyal-gürültü oranı yüksek (Founder'ın 14 kayıt üzerine 10 daha görmesi UI'ı boğar; 14→17 daha yönetilebilir)
+> - I12-I18 (medium+low) düşük öncelikli — batch olarak bekleyebilir
+>
+> **Status:** Founder kararı bekleniyor. Rule #36 clean, ACP-3 additive (önceki entry'ler değişmedi).
+
 # ALPAR AI — MASTER PLAN v10.73 (AI Ekosistem Taraması — 10 yeni aday inovasyon (I9-I18) [architect])
 
 > **v10.73 (2026-07-23) — Founder direktifi: "AI ekosistemini tarayıp beyin fırtınası yap, yeni inovasyonlar ekle." Mevcut 14 kaydın kapsam analizi + 2026-Temmuz ekosistem sinyallerine göre 10 yeni aday (I9-I18) önerildi. DB'ye yazım Founder onayı bekliyor. [architect]**
