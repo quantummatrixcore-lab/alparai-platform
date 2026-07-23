@@ -1,9 +1,6 @@
 import { createCipheriv, createDecipheriv, randomBytes, scryptSync } from "crypto";
 
-const VAULT_SECRET =
-  process.env.CRON_SECRET ||
-  process.env.SUPABASE_SERVICE_ROLE_KEY ||
-  "alpar-vault-fallback-secret-2026";
+const VAULT_SECRET = process.env.CRON_SECRET || "alpar-vault-fallback-secret-2026";
 const ALGORITHM = "aes-256-gcm";
 const KEY = scryptSync(VAULT_SECRET, "alpar-salt-vault-v1", 32);
 
