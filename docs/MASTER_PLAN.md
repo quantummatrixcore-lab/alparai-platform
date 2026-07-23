@@ -1,3 +1,27 @@
+# ALPAR AI — MASTER PLAN v10.78 (I2 ALPAR MCP Server SHIPPED + Batch 2 Seed [architect])
+
+> **v10.78 (2026-07-23) — `ec5a506` [deploy]: I2 ALPAR MCP Server canlıya alındı. Batch 2 (I12-I18) DB'ye seeded. [architect]**
+>
+> **ACP-1 Kanıt (`ec5a506`, 3 file changed, 454 insertions):**
+>
+> - `src/app/api/mcp/route.ts` — JSON-RPC 2.0 / MCP 2024-11-05 endpoint. 4 araç: `alpar_search_incidents`, `alpar_get_passport`, `alpar_get_trust_score`, `alpar_submit_incident`. PII Guardian entegre.
+> - `supabase/migrations/20260723000002_seed_batch2_and_update_i2_innovations.sql` — I1 ve I2 statüsü `done`'a alındı. I12–I18 (Batch 2) DB'ye eklendi.
+> - `tests/api/mcp-route.test.ts` — 4/4 birim testi yeşil.
+>
+> **Kalite kapısı:** `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` ✅
+>
+> **İnovasyon Özet Durumu (origin/master HEAD = `ec5a506`):**
+>
+> | #                     | Statü      |
+> | --------------------- | ---------- |
+> | I1 Incident Passport  | ✅ done    |
+> | I2 ALPAR MCP Server   | ✅ done    |
+> | I5 Tarayıcı Eklentisi | ✅ done    |
+> | I9, I10, I11          | 📋 planned |
+> | I12–I18 (Batch 2)     | 💡 idea    |
+>
+> **Sıradaki:** W1-W5 hibe formları (Founder aksiyonu) · I3 SLA Rozeti · I9-I11 önceliklendirme.
+
 # ALPAR AI — MASTER PLAN v10.77 (İnovasyon Statü Düzeltmesi — Fix-forward [architect])
 
 > **v10.77 (2026-07-23) — ACP-3 fix-forward: v10.72 innovation tablosu tarihsel kayıt olduğundan düzenlenmedi. Gerçek statüler burada düzeltildi. [architect]**
