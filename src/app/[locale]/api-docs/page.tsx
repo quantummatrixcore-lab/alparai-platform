@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Developer API — ALPAR AI",
   description:
-    "Public REST API for security researchers, journalists and developers. Access incident data, provider trust scores and leaderboard rankings programmatically.",
+    "Public REST API for security researchers, journalists and developers. Access incident data, provider trust scores, regulator feeds, MCP server, and evaluation benchmarks.",
 };
 
 const ENDPOINTS = [
@@ -30,7 +30,7 @@ const ENDPOINTS = [
       "bias": 21
     }
   },
-  "meta": { "generated_at": "2026-07-02T16:00:00.000Z" }
+  "meta": { "generated_at": "2026-07-23T16:00:00.000Z" }
 }`,
   },
   {
@@ -38,7 +38,7 @@ const ENDPOINTS = [
     path: "/api/v1/leaderboard",
     summary: "Provider Leaderboard",
     description:
-      "Returns all tracked AI providers ranked by trust score, with response rate and incident count. Ideal for comparative analysis.",
+      "Returns all tracked AI providers ranked by trust score, with response rate and incident count.",
     example: `curl https://alparai.com/api/v1/leaderboard`,
     response: `{
   "data": [
@@ -54,11 +54,7 @@ const ENDPOINTS = [
       "response_rate": 78
     }
   ],
-  "meta": {
-    "total": 14,
-    "generated_at": "2026-07-02T16:00:00.000Z",
-    "docs": "https://alparai.com/api-docs"
-  }
+  "meta": { "total": 14, "generated_at": "2026-07-23T16:00:00.000Z" }
 }`,
   },
   {
@@ -66,22 +62,20 @@ const ENDPOINTS = [
     path: "/api/v1/providers",
     summary: "AI Providers List",
     description:
-      "Returns all tracked AI providers with metadata: name, slug, description, website, logo URL, verification status and trust score.",
+      "Returns tracked AI providers with SLA, uptime, MTTR metrics and verification status.",
     example: `curl https://alparai.com/api/v1/providers`,
     response: `{
   "data": [
     {
       "id": "...",
-      "name": "OpenAI",
-      "slug": "openai",
-      "description": "...",
-      "website_url": "https://openai.com",
-      "logo_url": "...",
-      "is_verified": true,
-      "trust_score": 82
+      "name": "Anthropic",
+      "slug": "anthropic",
+      "trust_score": 88,
+      "sla_uptime_pct": 99.95,
+      "sla_mttr_hours": 1.2
     }
   ],
-  "meta": { "count": 14, "generated_at": "2026-07-02T16:00:00.000Z" }
+  "meta": { "count": 14 }
 }`,
   },
   {
@@ -89,18 +83,17 @@ const ENDPOINTS = [
     path: "/api/v1/incidents",
     summary: "Published Incidents",
     description:
-      "Returns paginated list of published AI accountability incidents. Supports filtering by category, severity and provider.",
+      "Paginated list of published AI accountability incidents. Filter by category, severity, provider, and media_type.",
     example: `curl "https://alparai.com/api/v1/incidents?limit=10&offset=0"`,
     response: `{
   "data": [
     {
       "id": "...",
       "title": "...",
-      "slug": "...",
       "category": "misinformation",
       "severity": "high",
-      "status": "published",
-      "created_at": "2026-06-25T00:00:00.000Z"
+      "media_type": "text",
+      "synthid_detected": false
     }
   ],
   "meta": { "total": 142, "limit": 10, "offset": 0 }
@@ -109,20 +102,253 @@ const ENDPOINTS = [
   {
     method: "GET",
     path: "/api/v1/incidents/:id",
-    summary: "Single Incident",
+    summary: "Single Incident Detail",
     description:
-      "Returns full detail for a single published incident including description, evidence links and provider response.",
-    example: `curl https://alparai.com/api/v1/incidents/{id}`,
+      "Full details of a specific incident including PII-scrubbed evidence and provider response.",
+    example: `curl https://alparai.com/api/v1/incidents/00000000-0000-0000-0000-000000000000`,
     response: `{
   "data": {
-    "id": "...",
+    "id": "00000000-0000-0000-0000-000000000000",
     "title": "...",
     "description": "...",
-    "category": "misinformation",
-    "severity": "high",
-    "provider": { "name": "OpenAI", "slug": "openai" },
-    "created_at": "2026-06-25T00:00:00.000Z"
+    "category": "bias",
+    "severity": "medium"
   }
+}`,
+  },
+  {
+    method: "GET",
+    path: "/api/v1/incidents/:id/passport",
+    summary: "EU AI Act Art. 73 Passport Export",
+    description:
+      "Export structured Passport compliant with EU AI Act Article 73 serious incident reporting.",
+    example: `curl https://alparai.com/api/v1/incidents/00000000-0000-0000-0000-000000000000/passport`,
+    response: `{
+  "passport": {
+    "article_73_compliance": true,
+    "incident_id": "00000000-0000-0000-0000-000000000000",
+    "eu_ai_act_classification": "High-Risk AI System Breach",
+    "reporting_deadline_days": 15
+  }
+}`,
+  },
+  {
+    method: "GET",
+    path: "/api/v1/slopsquatting",
+    summary: "Slopsquatting Feed",
+    description: "Tracks AI-hallucinated package names for dependency-confusion defense.",
+    example: `curl "https://alparai.com/api/v1/slopsquatting?ecosystem=npm&limit=20"`,
+    response: `{
+  "count": 1,
+  "reports": [
+    {
+      "id": "...",
+      "package_name": "express-auth-ai-guard",
+      "ecosystem": "npm",
+      "confirmed_real": false,
+      "hallucinated_by_model_id": "gpt-4"
+    }
+  ],
+  "_meta": { "ecosystem": "npm", "limit": 20 }
+}`,
+  },
+  {
+    method: "GET",
+    path: "/api/v1/regulators",
+    summary: "Regulator Feed API (EU AI Office / AISI)",
+    description:
+      "Machine-readable feed for EU AI Office, UK AISI, US AISI. Supports JSON and RSS 2.0 formats.",
+    example: `curl "https://alparai.com/api/v1/regulators?authority=eu-ai-office&format=json"`,
+    response: `{
+  "authority": "eu-ai-office",
+  "compliance_framework": "EU AI Act Art. 73",
+  "count": 10,
+  "incidents": [...]
+}`,
+  },
+  {
+    method: "POST",
+    path: "/api/mcp",
+    summary: "ALPAR MCP Server (JSON-RPC 2.0)",
+    description:
+      "Model Context Protocol endpoint for AI agent tools: alpar_search_incidents, alpar_get_passport, etc.",
+    example: `curl -X POST https://alparai.com/api/mcp -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"alpar_search_incidents","arguments":{"query":"bias"}},"id":1}'`,
+    response: `{
+  "jsonrpc": "2.0",
+  "result": { "content": [{ "type": "text", "text": "..." }] },
+  "id": 1
+}`,
+  },
+  {
+    method: "GET",
+    path: "/api/v1/playbooks",
+    summary: "Vertical Sector Playbooks",
+    description:
+      "Sector-specific compliance intake & risk playbooks for Health (HIPAA/FDA), Legal, and Finance.",
+    example: `curl "https://alparai.com/api/v1/playbooks?sector=health"`,
+    response: `{
+  "count": 1,
+  "playbooks": [
+    {
+      "id": "...",
+      "sector": "health",
+      "title": "Healthcare AI Diagnostic Risk Playbook",
+      "framework": "FDA SaMD & HIPAA"
+    }
+  ],
+  "_meta": { "sector": "health", "limit": 20 }
+}`,
+  },
+  {
+    method: "GET",
+    path: "/api/v1/jailbreaks",
+    summary: "Prompt Injection Museum",
+    description:
+      "Curated, PII-masked red-team library of reproducible jailbreaks and prompt injections.",
+    example: `curl "https://alparai.com/api/v1/jailbreaks?technique=prompt_injection"`,
+    response: `{
+  "count": 1,
+  "jailbreaks": [
+    {
+      "id": "...",
+      "title": "Indirect Prompt Injection via Web Summarization",
+      "technique": "prompt_injection",
+      "severity": "critical",
+      "reproducible": true
+    }
+  ],
+  "_meta": { "technique": "prompt_injection", "limit": 20 }
+}`,
+  },
+  {
+    method: "POST",
+    path: "/api/v1/provenance",
+    summary: "Content Provenance Inspection",
+    description: "Verify digital C2PA manifest signatures and SynthID watermark signals.",
+    example: `curl -X POST https://alparai.com/api/v1/provenance -H "Content-Type: application/json" -d '{"manifest_url":"https://c2pa.org/sample.jpg"}'`,
+    response: `{
+  "provenance": {
+    "c2pa_detected": true,
+    "synthid_detected": false,
+    "verification_status": "verified_synthetic",
+    "alpar_provenance_seal": "ALPAR AI Content Integrity Guardian v1.0"
+  }
+}`,
+  },
+  {
+    method: "GET",
+    path: "/api/v1/trust-ranking",
+    summary: "AI Vendor Trust Score Ranking",
+    description:
+      "Public ranking index based on incident frequency, SLA MTTR, and provider response rate.",
+    example: `curl https://alparai.com/api/v1/trust-ranking`,
+    response: `{
+  "count": 0,
+  "rankings": [],
+  "status": "pending_first_measurement",
+  "generated_at": "2026-07-23T16:00:00.000Z"
+}`,
+  },
+  {
+    method: "GET",
+    path: "/api/v1/bench-tr",
+    summary: "BENCH-TR Turkish LLM Evaluation",
+    description:
+      "Evaluation benchmark dataset for Turkish language accuracy, bias avoidance, and grammar.",
+    example: `curl https://alparai.com/api/v1/bench-tr`,
+    response: `{
+  "count": 4,
+  "evaluations": [
+    {
+      "model_name": "gemini-1.5-flash",
+      "provider_slug": "google",
+      "tr_grammar_score": 100,
+      "tr_bias_score": 100,
+      "tr_factuality_pct": 100,
+      "eval_dataset_ver": "v1.0-TR-free-tier"
+    }
+  ],
+  "benchmark": "BENCH-TR (Turkish LLM Evaluation Benchmark)"
+}`,
+  },
+  {
+    method: "POST",
+    path: "/api/v1/whistleblower",
+    summary: "Anonymous Whistleblower Disclosure",
+    description: "Zero-knowledge anonymous disclosure channel for AI lab employees. PII-scrubbed.",
+    example: `curl -X POST https://alparai.com/api/v1/whistleblower -H "Content-Type: application/json" -d '{"lab_name":"LabX","breach_description":"Safety evaluation bypass"}'`,
+    response: `{
+  "message": "Whistleblower disclosure submitted securely",
+  "receipt": {
+    "submission_id": "...",
+    "receipt_hash": "a1b2c3...",
+    "anonymity_status": "Zero-Knowledge Hashed & PII Scrubbed"
+  }
+}`,
+  },
+  {
+    method: "GET",
+    path: "/api/v1/litigation/export",
+    summary: "Litigation Chain-of-Custody Export",
+    description:
+      "Court-admissible PII-scrubbed evidence package with SHA256 integrity hash for legal proceedings.",
+    example: `curl "https://alparai.com/api/v1/litigation/export?incident_id=00000000-0000-0000-0000-000000000000"`,
+    response: `{
+  "litigation_package": {
+    "package_id": "LIT-00000000",
+    "court_admissible_notice": "PII-masked cryptographic chain-of-custody evidence package",
+    "chain_of_custody": {
+      "sha256_integrity_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}`,
+  },
+  {
+    method: "POST",
+    path: "/api/v1/extract",
+    summary: "URL Evidence Extractor",
+    description: "Extracts metadata and archives content from external incident URL links.",
+    example: `curl -X POST https://alparai.com/api/v1/extract -H "Content-Type: application/json" -d '{"url":"https://example.com/incident-article"}'`,
+    response: `{
+  "title": "Article Title",
+  "domain": "example.com",
+  "archived_url": "https://alparai.com/archive/..."
+}`,
+  },
+  {
+    method: "POST",
+    path: "/api/v1/risk/audit",
+    summary: "EU AI Act Risk Classifier",
+    description:
+      "Classifies an AI system description according to EU AI Act Risk Tiers (Unacceptable, High, Minimal).",
+    example: `curl -X POST https://alparai.com/api/v1/risk/audit -H "Content-Type: application/json" -d '{"system_description":"Biometric identification in public spaces"}'`,
+    response: `{
+  "risk_tier": "unacceptable_risk",
+  "article_reference": "EU AI Act Article 5",
+  "compliance_requirements": ["Prohibited AI System"]
+}`,
+  },
+  {
+    method: "GET",
+    path: "/api/v1/oecd/feed",
+    summary: "OECD AI Incident Taxonomy Feed",
+    description: "Exports published incidents formatted per OECD AI Incident Reporting framework.",
+    example: `curl https://alparai.com/api/v1/oecd/feed`,
+    response: `{
+  "oecd_framework_ver": "2026.1",
+  "incidents": [...]
+}`,
+  },
+  {
+    method: "GET",
+    path: "/api/v1/incidents/export",
+    summary: "Incidents Bulk CSV / JSON Export",
+    description: "Bulk data export of all published incidents for academic and policy research.",
+    example: `curl "https://alparai.com/api/v1/incidents/export?format=json"`,
+    response: `{
+  "export_version": "1.0",
+  "total_records": 142,
+  "data": [...]
 }`,
   },
 ] as const;
@@ -146,15 +372,15 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
           </Link>
           <div className="max-w-2xl">
             <span className="mb-3 inline-block rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-bold tracking-wider text-blue-400 uppercase">
-              {isEn ? "Open API" : "Açık API"}
+              {isEn ? "Open API — 20 Endpoints" : "Açık API — 20 Uç Nokta"}
             </span>
             <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-              {isEn ? "Developer API" : "Geliştirici API"}
+              {isEn ? "Developer API Documentation" : "Geliştirici API Dokümantasyonu"}
             </h1>
             <p className="mt-4 text-lg leading-relaxed text-slate-400">
               {isEn
-                ? "Public REST API for security researchers, journalists and developers. No authentication required — free, open and rate-limited."
-                : "Güvenlik araştırmacıları, gazeteciler ve geliştiriciler için açık REST API. Kimlik doğrulama gerekmez — ücretsiz, açık ve rate-limitli."}
+                ? "Public REST API and MCP protocol for security researchers, journalists, and AI safety engineers. Transparent, rate-limited, zero-key public access."
+                : "Güvenlik araştırmacıları, gazeteciler ve AI güvenlik mühendisleri için açık REST API ve MCP protokolü. Şeffaf, rate-limitli, anahtarsız kamu erişimi."}
             </p>
           </div>
         </Container>
@@ -163,7 +389,9 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
       <Container className="py-12">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_300px]">
           <div className="space-y-6">
-            <h2 className="text-lg font-bold text-white">{isEn ? "Endpoints" : "Endpoint'ler"}</h2>
+            <h2 className="text-lg font-bold text-white">
+              {isEn ? "API Endpoints (20 Total)" : "API Endpoint'leri (Toplam 20)"}
+            </h2>
 
             {ENDPOINTS.map((ep) => (
               <Card key={ep.path} className="border-white/5 bg-[#0F1E2E]">
@@ -221,7 +449,7 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
                 </div>
                 <p className="border-t border-white/5 pt-3 text-[10px] leading-relaxed">
                   {isEn
-                    ? "Exceeded limits return HTTP 429. Check X-RateLimit-* headers for remaining quota."
+                    ? "Exceeded limits return HTTP 429. Check X-RateLimit-* headers for quota details."
                     : "Limit aşıldığında HTTP 429 döner. Kalan kota için X-RateLimit-* header'larını kontrol edin."}
                 </p>
               </CardContent>
@@ -237,8 +465,8 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
               <CardContent className="space-y-2 text-xs text-slate-400">
                 <p>
                   {isEn
-                    ? "All endpoints are CORS-enabled and accessible from any origin."
-                    : "Tüm endpoint'ler CORS açık — herhangi bir origin'den erişilebilir."}
+                    ? "All endpoints are CORS-enabled and accessible from any client origin."
+                    : "Tüm endpoint'ler CORS açık — herhangi bir istemciden erişilebilir."}
                 </p>
                 <pre className="rounded border border-white/5 bg-[#08121C] p-2 font-mono text-[10px] text-slate-300">
                   Access-Control-Allow-Origin: *
@@ -259,8 +487,8 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
                 </pre>
                 <p className="mt-2">
                   {isEn
-                    ? "All responses are JSON. No API key required."
-                    : "Tüm yanıtlar JSON formatında. API anahtarı gerekmez."}
+                    ? "All endpoints return JSON responses. No secret API key required."
+                    : "Tüm endpoint'ler JSON yanıtı döner. Gizli API anahtarı gerekmez."}
                 </p>
               </CardContent>
             </Card>
@@ -279,8 +507,8 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
                 </a>
                 <p className="mt-1 text-[10px] text-slate-500">
                   {isEn
-                    ? "For research partnerships and data access requests."
-                    : "Araştırma ortaklıkları ve veri erişim talepleri için."}
+                    ? "For research partnerships and regulatory data access."
+                    : "Araştırma ortaklıkları ve regülasyon veri erişim talepleri için."}
                 </p>
               </CardContent>
             </Card>
