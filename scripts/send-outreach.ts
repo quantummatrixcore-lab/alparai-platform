@@ -74,7 +74,10 @@ async function sendOutreachEmails() {
 
     // Extract subject from metadata line
     const subjectMatch = fixedContent.match(/\*\*Subject:\*\*\s*(.+)/);
-    const subject = subjectMatch ? subjectMatch[1].trim() : `ALPAR AI Advisory Board Invitation`;
+    const subject =
+      subjectMatch && subjectMatch[1]
+        ? subjectMatch[1].trim()
+        : `ALPAR AI Advisory Board Invitation`;
 
     // Letter body only (no markdown metadata)
     const bodyText = extractBodyText(fixedContent);
