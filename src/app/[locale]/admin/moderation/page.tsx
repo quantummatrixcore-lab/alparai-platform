@@ -3,10 +3,13 @@ import { redirect } from "next/navigation";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { ModerationQueue } from "@/components/admin/moderation-queue";
+import { VerifiedRespondentListClient } from "@/components/admin/verified-respondent-list-client";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getVerifiedRespondentProviders } from "@/actions/admin";
 import type { IncidentListItem } from "@/types";
 import { toIncidentListItems } from "@/lib/mappers";
+import { ShieldCheck, Flag } from "lucide-react";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -25,30 +28,56 @@ export default async function ModerationPage({ params }: { params: Promise<{ loc
   }
 
   const admin = createAdminClient();
-  const { data } = await admin
-    .from("incidents")
-    .select(
-      "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id, processing_stage",
-    )
-    .eq("status", "pending_review")
-    .order("created_at", { ascending: false })
-    .limit(50);
+  const [incidentsRes, providersRes] = await Promise.all([
+    admin
+      .from("incidents")
+      .select(
+        "id, title_masked, description_masked, severity, status, category, is_anonymous, incident_date, views_count, created_at, ai_provider_id, user_id, processing_stage",
+      )
+      .eq("status", "pending_review")
+      .order("created_at", { ascending: false })
+      .limit(50),
+    getVerifiedRespondentProviders(),
+  ]);
 
-  const items: IncidentListItem[] = toIncidentListItems(data);
+  const items: IncidentListItem[] = toIncidentListItems(incidentsRes.data);
+  const providers = providersRes.ok && providersRes.data ? providersRes.data : [];
 
   return (
     <Container className="py-10">
-      <header className="mb-6">
-        <h1 className="text-fg-primary text-2xl font-bold">{t("moderation_queue")}</h1>
-        <p className="text-fg-muted mt-1 text-sm">
-          {items.length} {t("pending_review")}.
+      <header className="mb-8">
+        <h1 className="flex items-center gap-3 text-2xl font-bold text-white">
+          <Flag className="h-6 w-6 text-emerald-400" />
+          {t("moderation_queue")}
+        </h1>
+        <p className="mt-1 text-sm text-slate-400">
+          Review pending incident reports and grant Verified Respondent moderation badges to
+          official AI providers.
         </p>
       </header>
-      <Card>
-        <CardContent className="pt-6">
-          <ModerationQueue incidents={items} />
-        </CardContent>
-      </Card>
+
+      <div className="space-y-10">
+        {/* Section 1: Pending Incident Moderation Queue */}
+        <div>
+          <h2 className="mb-4 text-base font-semibold text-white">
+            {t("pending_review")} ({items.length})
+          </h2>
+          <Card className="border-white/10 bg-[#0F1E2E]">
+            <CardContent className="pt-6">
+              <ModerationQueue incidents={items} />
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Section 2: Verified Respondent Badge Moderation */}
+        <div>
+          <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-white">
+            <ShieldCheck className="h-5 w-5 text-emerald-400" />
+            Verified Respondent Badge Moderation
+          </h2>
+          <VerifiedRespondentListClient providers={providers} />
+        </div>
+      </div>
     </Container>
   );
 }
