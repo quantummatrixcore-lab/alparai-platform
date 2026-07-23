@@ -1,3 +1,31 @@
+# ALPAR AI — MASTER PLAN v10.71 (Hibe E-posta Gönderim Kapanışı + Sistem Snapshot [architect])
+
+> **v10.71 (2026-07-23) — v10.68 hibe başvuru e-postaları (E1 Anthropic, E2 NVIDIA Inception, E3 Vercel OSS) Antigravity executor tarafından Gmail MCP ile gönderildi. Fix-forward: v10.68 spec statüsü ✅. [architect]**
+>
+> **Kanıt — Gmail MessageID'ler (Rule #30, end-to-end gönderim doğrulandı):**
+>
+> | #   | Alıcı                   | E-posta                   | Gmail MessageID                                    |
+> | --- | ----------------------- | ------------------------- | -------------------------------------------------- |
+> | E1  | Anthropic Startups      | `startups@anthropic.com`  | `<24c2638a-2b4f-6265-4d32-313704207677@gmail.com>` |
+> | E2  | NVIDIA Inception        | `inception@nvidia.com`    | `<f54d580e-125b-4f8d-3eeb-31cab7382a35@gmail.com>` |
+> | E3  | Vercel OSS Sponsorships | `sponsorships@vercel.com` | `<b563620d-c437-51e6-6607-5ba198b84e34@gmail.com>` |
+>
+> **Sistem Snapshot (v10.71 kesitinde):**
+>
+> | Kapsam                                                       | Durum | Referans                                        |
+> | ------------------------------------------------------------ | ----- | ----------------------------------------------- |
+> | Qwen P0 (CTA dil temizliği, buton kontrastı)                 | ✅    | v10.64, v10.65                                  |
+> | Qwen P1 (JSON-LD, Skeleton loaders, Mobile card view)        | ✅    | v10.66, v10.67                                  |
+> | Browser Extension Optimizasyonu (5/5 + bonus)                | ✅    | v10.69 spec → v10.70 ACP-1 verified (`6792a01`) |
+> | Hibe E-postaları (E1-E3)                                     | ✅    | v10.68 spec → **v10.71** gönderim doğrulandı    |
+> | Advisory Board E-postaları (7/7)                             | ✅    | v10.61                                          |
+> | Hibe Web Formları (W1-W5: MS, Google, AWS, Supabase, GitHub) | ⏸️    | Founder self-serve — form doldurma              |
+> | Qwen P2 (Live feed, trend graph, Developers/API nav)         | ⏸️    | Founder-gated stratejik onay                    |
+> | §7/17 (Vercel)                                               | ⏸️    | Kalan tek §7 item                               |
+> | Teknik Borç                                                  | 0     | Typecheck & test suite yeşil                    |
+>
+> **Status:** Executor kuyruğu (P0/P1/Extension/Hibe E-postaları) tamamen kapandı. Açık kalan tüm maddeler Founder karar/aksiyon bekliyor. Rule #36 clean, ACP-3 additive (v10.68 entry değişmedi, v10.71 fix-forward ile kapanış kaydedildi).
+
 # ALPAR AI — MASTER PLAN v10.70 (Browser Extension Optimization — ACP-1 verified executor commit `6792a01` [architect])
 
 > **v10.70 (2026-07-23) — ACP-1 diff-verified executor commit `6792a01`. All 5 extension optimizations from v10.69 spec confirmed applied. `limit=100` correctly preserved per caveat. [architect]**
