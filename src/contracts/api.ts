@@ -317,3 +317,59 @@ export const slopsquattingResponseSchema = z.object({
     limit: z.number(),
   }),
 });
+
+// 18. GET /api/v1/playbooks
+export const playbooksResponseSchema = z.object({
+  count: z.number(),
+  playbooks: z.array(
+    z.object({
+      id: z.string().uuid(),
+      sector: z.string(),
+      title: z.string(),
+      framework: z.string(),
+      summary: z.string(),
+      checklist: z.any(),
+      created_at: z.string(),
+      updated_at: z.string(),
+    }),
+  ),
+  _meta: z.object({
+    sector: z.string(),
+    limit: z.number(),
+  }),
+});
+
+// 19. GET /api/v1/jailbreaks
+export const jailbreaksResponseSchema = z.object({
+  count: z.number(),
+  jailbreaks: z.array(
+    z.object({
+      id: z.string().uuid(),
+      title: z.string(),
+      technique: z.string(),
+      severity: z.string(),
+      prompt_masked: z.string(),
+      target_model: z.string(),
+      reproducible: z.boolean(),
+      mitigation: z.string().nullable(),
+      created_at: z.string(),
+    }),
+  ),
+  _meta: z.object({
+    technique: z.string(),
+    limit: z.number(),
+  }),
+});
+
+// 20. POST /api/v1/provenance
+export const provenanceResponseSchema = z.object({
+  provenance: z.object({
+    c2pa_detected: z.boolean(),
+    c2pa_manifest_url: z.string().nullable(),
+    synthid_detected: z.boolean(),
+    media_hash: z.string().nullable(),
+    verification_status: z.string(),
+    verified_at: z.string(),
+    alpar_provenance_seal: z.string(),
+  }),
+});
