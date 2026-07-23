@@ -2162,7 +2162,15 @@
     "reporter_notifications_desc": "Bildirdiğiniz olaylara sağlayıcılardan yanıt geldiğinde veya uzmanlar doğruladığında e-posta alın.",
     "save_preferences": "Tercihleri Kaydet",
     "delete_account": "Hesabı Sil",
-    "delete_account_btn": "Hesabı Sil"
+    "delete_account_btn": "Hesabı Sil",
+    "delete_warning_title": "Tehlikeli Bölge",
+    "delete_warning_desc": "Hesap silme talebi 72 saatlik bir askıya alma süresi başlatır. 72 saat sonra hesabınız yumuşak bir şekilde silinecektir (e-posta adresi temizlenecek, adınız 'Anonim Kullanıcı' yapılacak ve tüm listelerden çıkışınız yapılacaktır). 30 gün sonra ise hesabınız kalıcı olarak tamamen silinir.",
+    "delete_confirm_prompt": "Hesabınızı silmek istediğinize emin misiniz? Bu işlem 72 saat içinde iptal edilebilir.",
+    "delete_requested_success": "Hesap silme talebi oluşturuldu. İptal etmek için 72 saatiniz var.",
+    "delete_cancelled_success": "Hesap silme talebi iptal edildi.",
+    "delete_scheduled_warning_title": "Hesap Silinmek Üzere Programlandı",
+    "delete_scheduled_warning_desc": "Hesabınız {date} tarihinde silinmek üzere programlanmıştır. Kişisel verileriniz silinecek ve bildirdiğiniz olaylar anonimleştirilecektir.",
+    "cancel_deletion_btn": "Silme Talebini İptal Et"
   },
   "blog": {
     "eyebrow": "İçgörüler ve Araştırma",

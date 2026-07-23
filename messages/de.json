@@ -2161,7 +2161,15 @@
     "reporter_notifications_desc": "Receive emails when AI providers respond or domain experts verify incidents you reported.",
     "save_preferences": "Save Preferences",
     "delete_account": "Delete Account",
-    "delete_account_btn": "Delete Account"
+    "delete_account_btn": "Delete Account",
+    "delete_warning_title": "Danger Zone",
+    "delete_warning_desc": "Requesting account deletion will initiate a 72-hour grace period. After 72 hours, your account will be soft-deleted (email cleared, name set to 'Anonim Kullanıcı', and unsubscribed from all lists). After 30 days, your account will be completely hard-deleted.",
+    "delete_confirm_prompt": "Are you sure you want to delete your account? This action can be cancelled within 72 hours.",
+    "delete_requested_success": "Account deletion requested. You have 72 hours to cancel this request.",
+    "delete_cancelled_success": "Account deletion request has been cancelled.",
+    "delete_scheduled_warning_title": "Account Scheduled for Deletion",
+    "delete_scheduled_warning_desc": "Your account is scheduled to be deleted on {date}. Your personal data will be erased and your incidents anonymized.",
+    "cancel_deletion_btn": "Cancel Deletion Request"
   },
   "blog": {
     "eyebrow": "Insights & Research",
