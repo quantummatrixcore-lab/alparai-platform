@@ -1,3 +1,15 @@
+# ALPAR AI — MASTER PLAN v10.87 (API Docs 20 Endpoints + Real Free-Tier BENCH-TR Shipped [architect])
+
+> **v10.87 (2026-07-23) — `591305b` [deploy]: (A) `/api-docs` 20 endpoint'e genişletildi. (B) `run-bench-tr-evaluation.ts` ile free-tier AI gateway üzerinden GERÇEK BENCH-TR ölçüm altyapısı canlıda. [architect]**
+>
+> **Release Evidence (ACP-1 Mandatory):**
+>
+> - `591305b` [deploy]: `src/app/[locale]/api-docs/page.tsx` (20 endpoints), `src/actions/admin/run-bench-tr-evaluation.ts` (multi-provider free-tier gateway evaluation action).
+>
+> **Quality Gate:** `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` ✅ (13/13 contract tests green)
+
+---
+
 # ALPAR AI — MASTER PLAN v10.86 (Executor Spec: API Docs Yenileme + Free-Tier AI Gateway ile Gerçek BENCH-TR [architect])
 
 > **v10.86 (2026-07-23) — Founder direktifi: "api sayfasını ekle sisteme, apileri ai modelleri free tier'ları kullanalım."** İki parça: (A) `/api-docs` sayfası ~20 yeni endpoint ile yenilenecek, (B) I15 BENCH-TR mevcut free-tier AI gateway (`src/lib/ai/openrouter-gateway.ts`) çağrılarak GERÇEK veriyle doldurulacak — v10.85'te silinen fabrik veri yerine. [architect]
