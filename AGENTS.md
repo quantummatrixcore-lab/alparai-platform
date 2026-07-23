@@ -114,7 +114,8 @@ The reason the Supabase project ID appears on the Google OAuth screen instead of
 
 ## Pending user actions
 
-- Rotate `vcp_502...` Vercel token + `sbp_1b9...` Supabase token (both exposed in chat history).
+- Vercel token (`vcp_5deU...`) successfully rotated and verified on `alparai-com`.
+- Supabase `service_role` key & DB password reset pending Founder action.
 - Reset Supabase DB password and re-set in `.env.local` + Vercel.
 - ~~Delete duplicate Vercel project `alparai-web`~~ ✅ (Confirmed deleted by Founder).
 

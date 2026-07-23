@@ -1,3 +1,16 @@
+# ALPAR AI — MASTER PLAN v10.94 (Vercel Security Token Rotation Completed & Verified [architect])
+
+> **v10.94 (2026-07-24) — Vercel CLI Token Rotasyonu Başarıyla Tamamlandı:**
+>
+> **Güvenlik & Rotasyon Özeti:**
+>
+> - Chat geçmişinde sızmış olan eski `vcp_502...` Vercel token'ı Founder tarafından Vercel Dashboard'dan silindi (Revoked).
+> - Yeni oluşturulan Vercel token (`vcp_5deU...`) `.env.local` dosyasına işlendi ve `npx vercel whoami` ile doğrulandı (`quantumatrixcore-lab`).
+> - Canlı Vercel projesi `alparai-com` ortam değişkenleri ve CLI bağlantısı %100 yeşil teyit edildi.
+> - `AGENTS.md` postmortem kaydı güncellendi.
+
+---
+
 # ALPAR AI — MASTER PLAN v10.93 (Admin Sidebar Public API Docs Shortcut Link Shipped [architect])
 
 > **v10.93 (2026-07-24) — `7ca94d7` [deploy]: Admin sidebar bileşenine (`src/components/admin/sidebar.tsx`) `/api-docs` ("Public API Docs (20 Endpoints)") doğrudan erişim kısayolu eklendi ve canlıya dağıtıldı. [architect]**
