@@ -1,3 +1,17 @@
+# ALPAR AI — MASTER PLAN v10.91 (Release 1.0.1 + All Dependabot PRs Merged & Deployed [architect])
+
+> **v10.91 (2026-07-24) — `3a1b289` [deploy]: Release 1.0.1 (PR #47) ve tüm Dependabot bağımlılık güncellemeleri birleştirildi, Vercel'e dağıtıldı. [architect]**
+>
+> **Release & Dependency Evidence:**
+>
+> - Merged PR #47 (`chore(master): release 1.0.1` → CHANGELOG.md güncellendi).
+> - Merged Dependabot PRs (#40 `setup-node`, #37 `lucide-react`, #36 `@types/node`, #32 `action-setup`, #41/#48 `production-dependencies`, #35 `knip`).
+> - Commit `006677b` [deploy]: `chore(deps): update production dependencies and dev packages`.
+>
+> **Quality Gate:** `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` ✅ (780/780 tests green across 122 test files)
+
+---
+
 # ALPAR AI — MASTER PLAN v10.90 (Founder Direktifleri: OAuth Plan Güncellemesi + W1-W5 Otomasyon Paketi + I12/I16/I17/I18 Doğrulaması [architect])
 
 > **v10.90 (2026-07-24) — Founder Direktifleri Uygulandı: (1) Google OAuth Consent Screen planı iptal edildi/kaldırıldı. (2) W1-W5 hibe otomasyon rehberi hazırlandı. (3) I12, I16, I17, I18 inovasyon paketleri %100 doğrulandı ve 780/780 test yeşil. [architect]**
