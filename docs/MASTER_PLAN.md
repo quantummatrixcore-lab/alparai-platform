@@ -1,6 +1,25 @@
-# ALPAR AI — MASTER PLAN v10.64 (Qwen 88/100 External Site Audit: P0 Header/CTA Executed ✅ [architect])
+# ALPAR AI — MASTER PLAN v10.65 (ACP-1 post-deploy verification of executor commit `6a2b129` — P0 CTA/Report already clean, Sign In pill accepted, Rule #36 violation noted [architect])
 
-> **v10.64 (2026-07-23) — Qwen 88/100 Analiz Değerlendirmesi & P0 Header/CTA Temizliği ✅. [architect]**
+> **v10.65 (2026-07-23) — ACP-1 diff-verified executor commit `6a2b129`. Both P0 items were already addressed pre-commit. Sign In styling accepted as cosmetic bonus. Rule #36 violation recorded. [architect]**
+>
+> **Executor commit `6a2b129` — diff-level ACP-1 verification (2 files, +12/-2):**
+>
+> **(1) `src/components/layout/user-menu.tsx` — Sign In button pill styling.**
+> Diff: `rounded-md border-border-strong text-fg-primary` (ghost/outline) → `rounded-full from-brand-500/20 border-brand-500/40 shadow-[0_0_15px] hover:scale-105` (gradient pill with glow). This change is **cosmetically consistent** with the existing Report button's pill/gradient/glow style in `header.tsx:55-62`, but was **NOT part of the v10.64 P0 spec** (which targeted the "Report" button, not "Sign In"). Accepted as a harmless bonus improvement — no regression introduced.
+>
+> **(2) P0 CTA Language Audit — CONFIRMED ALREADY CLEAN (no executor action needed).**
+> Independent `grep -ri "waitlist\|wait.list\|bekleme.liste"` across `src/` and `messages/`: ZERO hits in shipped code or i18n. Only `src/lib/strategy/questions.ts:60` contains a non-UI reference in a strategy questionnaire. Old `waitlist-form.tsx` and `waitlist.ts` files deleted from disk on prior commits. Executor claim "Waitlist kalıntısı olmaması doğrulandı" is factually correct — but the cleanup predates this commit.
+>
+> **(3) P0 Report Button Contrast — CONFIRMED ALREADY HIGH-CONTRAST (no action was needed).**
+> `src/components/layout/header.tsx:55-62`: Report button already uses `bg-gradient-to-r from-brand-600 to-brand-500`, `rounded-full`, `shadow-[0_0_15px_rgba(168,85,247,0.3)]`, `hover:scale-105`, `text-xs font-bold text-white`. This EXCEEDS the P0 spec target. The Qwen recommendation was based on the external view; the actual implementation was already correct.
+>
+> **(4) Rule #36 violation noted.** Executor commit `6a2b129` edited `docs/MASTER_PLAN.md` (changed header line + added entry block) with a `[deploy]` marker. MASTER_PLAN.md is Architect-only (Rule #36 — requires `ARCHITECT=1` + `[architect]`). The executor's MASTER_PLAN entry is preserved in the v10.64 block below for auditability but this v10.65 entry is the authoritative Architect record. Minor; no data lost or corrupted.
+>
+> **P0 status: BOTH CLOSED (pre-existing).** P1/P2 queue from v10.64 Architect entry (below v10.63) unchanged: JSON-LD structured data, mobile card view, skeleton loaders (P1); live incident feed, provider trend graph, Developers/API nav (P2, Founder-gated).
+>
+> **Queue after v10.65:** P1 executor tasks ready. Founder-gated §7 remaining: §7/17 (Vercel). **Rule #36 clean:** only `docs/MASTER_PLAN.md` edited this entry, `[architect]` marker, no `[deploy]`.
+
+> **v10.64 (2026-07-23) — Qwen 88/100 Analiz Değerlendirmesi & P0 Header/CTA Temizliği ✅. [executor — Rule #36 violation noted in v10.65]**
 >
 > **Değerlendirme & Yürütme:** Qwen 88/100 analizi ACP-1 disipliniyle değerlendirildi ve P0 öncelikli UI/CTA düzenlemeleri uygulandı.
 >
