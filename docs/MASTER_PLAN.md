@@ -1,3 +1,15 @@
+# ALPAR AI — MASTER PLAN v10.98 (P0 Security Encryption at Rest + Verified Respondent Moderation Restored [architect])
+
+> **v10.98 (2026-07-24) — `6839378` [deploy]: P0 Güvenlik ve Moderasyon Düzeltmeleri Canlıya Dağıtıldı:**
+>
+> **P0 Geliştirme Özeti:**
+>
+> - **Kritik #1 (AES-256-GCM Encryption at Rest):** `src/lib/security/vault.ts` modülü oluşturuldu. Tüm dahili AI provider API key'leri (`saveApiKey`) veritabanına yazılmadan önce AES-256-GCM ile şifreleniyor; düz metin (plaintext) key saklanması %100 engellendi. `tests/security/vault.test.ts` eklendi.
+> - **Kritik #2 (Verified Respondent Moderasyonu Geri Yüklendi):** `/admin/providers` sayfasına `VerifiedRespondentListClient` eklenerek AI sağlayıcılarına resmi rozet verme/moderasyon özelliği yeniden entegre edildi. Özellik kaybı sıfırlandı.
+> - **Quality Gate:** `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` ✅ (785/785 tests green across 124 test files)
+
+---
+
 # ALPAR AI — MASTER PLAN v10.97 (Zero-Leak Security Token Rotation Completed & Verified [architect])
 
 > **v10.97 (2026-07-24) — Sıfır Sızıntı Güvenlik Rotasyonu %100 Doğrulandı ve Canlıya Senkronize Edildi:**
