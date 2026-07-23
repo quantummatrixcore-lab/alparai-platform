@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { createHash } from "crypto";
+import { encryptAtRest, decryptAtRest } from "@/lib/security/vault";
 
 interface DbApiKeyRow {
   provider: string;
@@ -39,16 +40,16 @@ export async function getApiKeys() {
 
     // Mask the API keys before returning to the client
     const masked = (data ?? []).map((row) => {
-      const key = row.api_key;
+      const decrypted = decryptAtRest(row.api_key);
       let maskedKey = "••••";
 
       if (row.client_type === "internal") {
-        if (key && key.length > 8) {
-          maskedKey = `${key.slice(0, 4)}••••${key.slice(-4)}`;
+        if (decrypted && decrypted.length > 8) {
+          maskedKey = `${decrypted.slice(0, 4)}••••${decrypted.slice(-4)}`;
         }
       } else {
-        if (key && key.length > 8) {
-          maskedKey = `sha256:${key.slice(0, 6)}••••${key.slice(-6)}`;
+        if (decrypted && decrypted.length > 8) {
+          maskedKey = `sha256:${decrypted.slice(0, 6)}••••${decrypted.slice(-6)}`;
         }
       }
 
@@ -87,10 +88,12 @@ export async function saveApiKey(
   try {
     const admin = createAdminClient();
 
-    // If it's an external client key, hash it using SHA-256
+    // If external, SHA-256 hash. If internal, AES-256-GCM encrypt at rest.
     let keyToSave = apiKey;
     if (clientType === "external") {
       keyToSave = createHash("sha256").update(apiKey).digest("hex");
+    } else {
+      keyToSave = encryptAtRest(apiKey);
     }
 
     const { error } = await (
