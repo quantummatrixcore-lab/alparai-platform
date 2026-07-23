@@ -6,6 +6,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Card } from "@/components/ui/card";
 import { SeverityBadge, StatusBadge, Badge } from "@/components/ui/badge";
+import { SlaBadge } from "@/components/incidents/sla-badge";
 import type { IncidentListItem, IncidentSeverity, IncidentStatus } from "@/types";
 import { MessageSquare, ThumbsUp, Clock, Building2, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -147,6 +148,7 @@ export function IncidentCard({
                 <Building2 className="h-3 w-3" aria-hidden="true" />
                 {incident.provider_name}
               </Badge>
+              <SlaBadge uptimePct={null} />
               {(() => {
                 const source = incident.incident_source || "user_submitted";
                 const isUserSubmitted = source === "user_submitted";

@@ -3284,5 +3284,12 @@
     "no_incidents": "Aucun incident vérifié n'a encore été signalé pour ce fournisseur.",
     "cta_title": "Vous avez rencontré un problème avec {providerName} ?",
     "cta_button": "Signaler un nouvel incident"
+  },
+  "sla": {
+    "unknown": "SLA N/D",
+    "tooltip": "Disponibilité: {uptime}% · MTTR: {mttr}h",
+    "tooltip_unknown": "Aucune donnée de SLA disponible",
+    "aria_label": "Disponibilité du fournisseur: {uptime}%",
+    "aria_unknown": "Données de SLA non disponibles"
   }
 }

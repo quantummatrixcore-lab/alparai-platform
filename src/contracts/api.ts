@@ -264,3 +264,56 @@ export const auditorAuditLogsResponseSchema = z.object({
 
 // 15. GET /api/v1/dsar/portable
 export const dsarPortableResponseSchema = z.any(); // Returns ZIP binary stream
+
+// 16. GET /api/v1/regulators
+export const regulatorsResponseSchema = z.union([
+  z.object({
+    authority: z.string(),
+    authority_label: z.string(),
+    compliance_framework: z.string(),
+    generated_at: z.string(),
+    count: z.number(),
+    incidents: z.array(
+      z.object({
+        id: z.string().uuid(),
+        title: z.string(),
+        description: z.string(),
+        category: z.string(),
+        severity: z.string(),
+        incident_date: z.string().nullable(),
+        reported_at: z.string(),
+        source_url: z.string().nullable(),
+        country: z.string().nullable(),
+        provider: z.string().nullable(),
+        eu_ai_act: z.object({
+          risk_category: z.string().nullable(),
+          serious_incident_class: z.string().nullable(),
+          reporting_deadline_days: z.number().nullable(),
+        }),
+        alpar_provenance: z.string(),
+        passport_url: z.string(),
+      }),
+    ),
+  }),
+  z.string(),
+]);
+
+// 17. GET /api/v1/slopsquatting
+export const slopsquattingResponseSchema = z.object({
+  count: z.number(),
+  reports: z.array(
+    z.object({
+      id: z.string().uuid(),
+      package_name: z.string(),
+      ecosystem: z.string(),
+      first_seen_at: z.string(),
+      confirmed_real: z.boolean(),
+      source_url: z.string().nullable(),
+      hallucinated_by_model_id: z.string().nullable(),
+    }),
+  ),
+  _meta: z.object({
+    ecosystem: z.string(),
+    limit: z.number(),
+  }),
+});

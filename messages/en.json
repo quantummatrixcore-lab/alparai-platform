@@ -3285,5 +3285,12 @@
     "no_incidents": "No verified incidents reported for this provider yet.",
     "cta_title": "Encountered an issue with {providerName}?",
     "cta_button": "Report New Incident"
+  },
+  "sla": {
+    "unknown": "SLA N/A",
+    "tooltip": "Uptime: {uptime}% · MTTR: {mttr}h",
+    "tooltip_unknown": "No SLA data available",
+    "aria_label": "Provider uptime: {uptime}%",
+    "aria_unknown": "SLA data not available"
   }
 }

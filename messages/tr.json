@@ -3285,5 +3285,12 @@
     "no_incidents": "Bu sağlayıcı için henüz doğrulanmış olay bulunmuyor.",
     "cta_title": "{providerName} ile İlgili Bir Sorun mu Yaşadınız?",
     "cta_button": "Yeni Olay Bildir"
+  },
+  "sla": {
+    "unknown": "SLA Yok",
+    "tooltip": "Çalışma süresi: {uptime}% · MTTR: {mttr} saat",
+    "tooltip_unknown": "SLA verisi mevcut değil",
+    "aria_label": "Sağlayıcı çalışma süresi: {uptime}%",
+    "aria_unknown": "SLA verisi mevcut değil"
   }
 }
