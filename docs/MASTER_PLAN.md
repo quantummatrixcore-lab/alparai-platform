@@ -1,3 +1,16 @@
+# ALPAR AI — MASTER PLAN v10.83 (Entire Batch 2 Innovation Wave Fully Shipped [architect])
+
+> **v10.83 (2026-07-23) — `a6363b2` [deploy]: Entire Batch 2 Innovation Wave (I12, I13, I14, I15, I16, I17, I18) 100% SHIPPED to `alparai.com`. [architect]**
+>
+> **Release Evidence (ACP-1 Mandatory):**
+>
+> - `a6363b2` [deploy]: `src/app/api/v1/trust-ranking/route.ts` (I14), `src/app/api/v1/bench-tr/route.ts` (I15), `src/app/api/v1/whistleblower/route.ts` (I16), `src/app/api/v1/litigation/export/route.ts` (I17), migrations `20260723000009`, `20260723000010`, `20260723000011`, Zod contracts + tests.
+> - `2b9a0d3` [deploy]: `src/app/api/v1/playbooks/route.ts` (I12), `src/app/api/v1/jailbreaks/route.ts` (I13), `src/app/api/v1/provenance/route.ts` (I18).
+>
+> **Quality Gate:** `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` ✅ (13/13 contract tests green)
+
+---
+
 # ALPAR AI — MASTER PLAN v10.80 (Batch 2 Innovations Shipped: I12, I13, I18 [architect])
 
 > **v10.80 (2026-07-23) — `2b9a0d3` [deploy]: Batch 2 Innovations (I12 Vertical Playbooks, I13 Prompt Injection Museum, I18 Content Provenance Tracker) shipped to `alparai.com`. [architect]**
