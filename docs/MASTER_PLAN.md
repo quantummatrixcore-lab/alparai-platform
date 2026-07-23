@@ -1,3 +1,60 @@
+# ALPAR AI — MASTER PLAN v10.84 (ACP-1 Verification — 🔴 CRITICAL: Fabricated Data in I14/I15 [architect])
+
+> **v10.84 (2026-07-23) — ACP-1 diff doğrulaması `a6363b2`.** I16 (Whistleblower) ve I17 (Litigasyon) doğru uygulanmış. **I14 (Trust Ranking) ve I15 (BENCH-TR) için CRITICAL bulgu: gerçek ölçüm yapılmadan uydurma sayısal veriler seed edilmiş ve disclaimer olmadan public API'den servis ediliyor.** [architect]
+>
+> ---
+>
+> ## 🔴 CRITICAL — I14 & I15 Fabricated Data Sorunu
+>
+> **CLAUDE.md ihlali:** "Numeric-claim honesty: every UI number is live from DB with source visible." Sayı DB'den geliyor, ama DB'nin kendisi **gerçek bir ölçüm/hesaplama olmadan executor tarafından elle uydurulmuş** rakamlarla dolduruldu.
+>
+> **I14 — `vendor_trust_rankings` (migration `20260723000009`):**
+>
+> ```
+> Anthropic  composite_score=98.50  incident_penalty=1.00
+> Google     composite_score=97.20  incident_penalty=2.10
+> OpenAI     composite_score=94.80  incident_penalty=4.50
+> Meta       composite_score=91.50  incident_penalty=6.00
+> Mistral    composite_score=93.00  incident_penalty=3.20
+> ```
+>
+> Bu değerler gerçek `incidents` tablosu sorgulanarak hesaplanmamış — doğrudan `INSERT` ile sabit yazılmış. `GET /api/v1/trust-ranking` bunu hiçbir disclaimer olmadan, public + cache'li (`s-maxage=300`) olarak servis ediyor.
+>
+> **I15 — `bench_tr_evaluations` (migration `20260723000010`):**
+>
+> ```
+> Claude 3.5 Sonnet  tr_grammar=99.1  tr_bias=94.5  tr_factuality=96.8
+> GPT-4o             tr_grammar=98.4  tr_bias=91.2  tr_factuality=95.2
+> Gemini 1.5 Pro     tr_grammar=98.9  tr_bias=93.8  tr_factuality=96.1
+> Llama 3.1 70B      tr_grammar=95.0  tr_bias=88.0  tr_factuality=91.5
+> ```
+>
+> Hiçbir gerçek "BENCH-TR" değerlendirmesi çalıştırılmadı — bu "Türkçe LLM Değerlendirme Benchmark'ı" adı altında rakiplerin modelleri hakkında **icat edilmiş karşılaştırmalı iddialar**. `GET /api/v1/bench-tr` bunu "benchmark: BENCH-TR (Turkish LLM Evaluation Benchmark)" etiketiyle, sanki gerçek bir değerlendirmeymiş gibi sunuyor.
+>
+> **Neden ciddi:**
+>
+> 1. **İtibar riski:** ALPAR AI'ın tüm değer önerisi "AI accountability/trust infrastructure" — kendi platformunda rakip modeller hakkında uydurma karşılaştırmalı veri yayınlamak, keşfedildiğinde platformun güvenilirliğini kökten zedeler.
+> 2. **Yasal risk:** OpenAI/Google/Meta modelleri hakkında spesifik, ölçülü görünen (99.1, 94.5 gibi ondalıklı) ama gerçek olmayan rakamların "resmi bir benchmark" adı altında yayınlanması, yanıltıcı ticari iddia olarak değerlendirilebilir.
+> 3. Founder'ın onayı olmadan, "seed data placeholder yeterli" spec'ine rağmen bu rakamlar gerçekmiş gibi (disclaimer'sız, ondalıklı hassasiyetle) yazılmış — v10.82 spec'i "over-engineering yapılmasın, placeholder yeterli" demişti, ama placeholder ile "gerçekçi görünen icat veri" arasındaki fark gözden kaçırılmış.
+>
+> **Architect Önerisi — Founder karar bekliyor (2 seçenek):**
+>
+> - **Seçenek 1 (hızlı, güvenli):** İki tabloyu `TRUNCATE` et veya seed satırlarını `DELETE` et; endpoint'ler boş liste dönsün ta ki gerçek veri kaynağı (gerçek SLA/incident hesaplaması I14 için, gerçek üçüncü-parti BENCH-TR çalıştırması I15 için) hazır olana kadar.
+> - **Seçenek 2 (hızlı, şeffaf):** API response'una `"disclaimer": "Illustrative example data — not yet backed by live measurement"` alanı eklenir, DB'de `is_placeholder boolean default true` kolonu eklenir. Gerçek veri geldiğinde `false` yapılır.
+>
+> **Bu iş executor kuyruğuna P0 olarak eklenmeli — mevcut haliyle canlıda kalması Rule (numeric-claim honesty) ihlalidir.**
+>
+> ---
+>
+> ## ACP-1 Doğrulama — I16, I17 (Doğru ✅)
+>
+> | İnovasyon             | Kanıt                                                                                                                                                                                                                             | Sonuç                                                    |
+> | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+> | I16 Whistleblower     | `src/app/api/v1/whistleblower/route.ts` — mevcut `whistleblower_submissions` tablosunu (migration `20260619000002`, önceden var) yeniden kullanıyor, `maskPII()` ile PII masking uygulanmış, rate-limited, `user_id` yok (anonim) | ✅ Doğru, yeni tablo icat edilmemiş — mimari temiz       |
+> | I17 Litigasyon Paketi | `src/app/api/v1/litigation/export/route.ts` — `createHash("sha256")` ile gerçek `custodyHash` hesaplanıyor, `package_id`, `custody_timestamp` gerçek veriden türetiliyor                                                          | ✅ Doğru, uydurma veri yok, chain-of-custody gerçek hash |
+>
+> **Status:** I16/I17 ✅ done. I14/I15 statüsü ⚠️ **`done` olarak işaretlenmemeli** — Founder kararı bekleniyor. Bir sonraki executor turunda Seçenek 1 veya 2 uygulanmalı. Rule #36 clean, ACP-3 additive.
+
 # ALPAR AI — MASTER PLAN v10.83 (Entire Batch 2 Innovation Wave Fully Shipped [architect])
 
 > **v10.83 (2026-07-23) — `a6363b2` [deploy]: Entire Batch 2 Innovation Wave (I12, I13, I14, I15, I16, I17, I18) 100% SHIPPED to `alparai.com`. [architect]**
