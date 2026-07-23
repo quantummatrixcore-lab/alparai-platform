@@ -107,9 +107,10 @@ export async function runBenchTrEvaluationAction(): Promise<BenchTrResult> {
 
     const providerSlug = model.provider === "google" ? "google" : "openrouter";
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error: insertErr } = await (
-      adminClient.from("bench_tr_evaluations" as never) as any
+      adminClient.from("bench_tr_evaluations" as never) as unknown as {
+        insert: (data: Record<string, unknown>) => Promise<{ error: { message: string } | null }>;
+      }
     ).insert({
       model_name: model.id,
       provider_slug: providerSlug,
