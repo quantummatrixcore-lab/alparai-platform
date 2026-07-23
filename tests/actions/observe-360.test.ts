@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import "../helpers/setup";
 
 const makeCountChain = (count: number) => {
-  const chain: Record<string, unknown> = {};
+  const chain: Record<string, unknown> & { [Symbol.toStringTag]?: string } = {};
   const terminal = Promise.resolve({ count, data: null, error: null });
   chain.eq = () => makeCountChain(count);
   chain.then = terminal.then.bind(terminal);
@@ -13,7 +13,7 @@ const makeCountChain = (count: number) => {
 
 const makeDataChain = <T>(data: T) => {
   const terminal = Promise.resolve({ data, error: null, count: null });
-  const chain: Record<string, unknown> = {};
+  const chain: Record<string, unknown> & { [Symbol.toStringTag]?: string } = {};
   chain.eq = () => makeDataChain(data);
   chain.order = () => chain;
   chain.limit = () => chain;
