@@ -1,4 +1,14 @@
-# ALPAR AI — MASTER PLAN v10.64 (Qwen 88/100 External Site Audit: P0–P2 executor queue from ACP-1 triage [architect])
+# ALPAR AI — MASTER PLAN v10.64 (Qwen 88/100 External Site Audit: P0 Header/CTA Executed ✅ [architect])
+
+> **v10.64 (2026-07-23) — Qwen 88/100 Analiz Değerlendirmesi & P0 Header/CTA Temizliği ✅. [architect]**
+>
+> **Değerlendirme & Yürütme:** Qwen 88/100 analizi ACP-1 disipliniyle değerlendirildi ve P0 öncelikli UI/CTA düzenlemeleri uygulandı.
+>
+> - **P0 (Tamamlandı ✅):** Waitlist kalıntısı olmaması doğrulandı; Header "Giriş Yap" (Sign In) butonu pill shape (`rounded-full`), `h-9` ve yüksek kontrast mor-cam gradient tasarımına dönüştürüldü (`src/components/layout/user-menu.tsx`).
+> - **P1 (3-7 Gün Planlandı):** JSON-LD yapısal veri, mobil card view, skeleton loader.
+> - **P2 (Founder Onayında):** Canlı olay akışı, provider trend grafiği, Developers/API nav, sosyal kanıt.
+>
+> ---
 
 > **v10.63 (2026-07-23) — §7 Yeni Madde: Startup Altyapı Hibe Stratejisi — 360° Tarama, Kaynaklı & Güncel [architect]**
 >
