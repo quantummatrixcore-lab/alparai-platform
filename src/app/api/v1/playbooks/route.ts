@@ -1,6 +1,7 @@
 import "server-only";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdmin } from "@/lib/auth/session";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { headers } from "next/headers";
 import { hashIp } from "@/lib/utils/hash";
@@ -20,6 +21,7 @@ interface PlaybookRow {
 }
 
 export async function GET(request: Request) {
+  await requireAdmin();
   const hdrs = await headers();
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   const ipHash = hashIp(ip);

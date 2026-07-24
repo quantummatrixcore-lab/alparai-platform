@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdmin } from "@/lib/auth/session";
 import { maskPII } from "@/lib/pii/guardian";
 import type { Database } from "@/types/database";
 
@@ -90,6 +91,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
+    await requireAdmin();
     const body = await req.json();
     const { jsonrpc, id, method, params } = body ?? {};
 

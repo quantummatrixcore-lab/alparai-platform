@@ -1,6 +1,7 @@
 import "server-only";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdmin } from "@/lib/auth/session";
 import { maskPII } from "@/lib/pii/guardian";
 import { headers } from "next/headers";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
@@ -20,6 +21,7 @@ interface SlopsquattingRow {
 }
 
 export async function GET(request: Request) {
+  await requireAdmin();
   const { searchParams } = new URL(request.url);
   const ecosystem = searchParams.get("ecosystem");
   const limit = Math.min(Number(searchParams.get("limit") ?? "20"), 100);
@@ -56,6 +58,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  await requireAdmin();
   const hdrs = await headers();
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   const ipHash = hashIp(ip);
