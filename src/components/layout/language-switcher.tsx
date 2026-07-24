@@ -2,17 +2,26 @@
 
 import * as React from "react";
 import { useLocale } from "next-intl";
-import { usePathname } from "@/i18n/routing";
+import { usePathname, useRouter } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
+import { SUPPORTED_LOCALES } from "@/lib/constants";
+
+const LOCALE_LABELS: Record<string, string> = {
+  en: "EN",
+  tr: "TR",
+  de: "DE",
+  fr: "FR",
+  ru: "RU",
+};
 
 export function LanguageSwitcher({ className }: { className?: string }) {
   const locale = useLocale();
   const pathname = usePathname();
+  const router = useRouter();
 
   const handleLocaleChange = (targetLocale: string) => {
     if (targetLocale === locale) return;
-    const targetHref = "/" + targetLocale + (pathname === "/" ? "" : pathname);
-    window.location.href = targetHref;
+    router.replace(pathname, { locale: targetLocale });
   };
 
   return (
@@ -22,31 +31,23 @@ export function LanguageSwitcher({ className }: { className?: string }) {
         className,
       )}
     >
-      <button
-        type="button"
-        onClick={() => handleLocaleChange("tr")}
-        className={cn(
-          "rounded-full px-2.5 py-1 text-[10px] font-extrabold tracking-wider transition-all duration-300",
-          locale === "tr"
-            ? "bg-brand-500 text-white shadow-[0_0_12px_rgba(168,85,247,0.4)]"
-            : "text-fg-muted hover:text-fg-primary",
-        )}
-      >
-        TR
-      </button>
-      <div className="mx-0.5 h-3.5 w-[1px] bg-white/[0.08]" />
-      <button
-        type="button"
-        onClick={() => handleLocaleChange("en")}
-        className={cn(
-          "rounded-full px-2.5 py-1 text-[10px] font-extrabold tracking-wider transition-all duration-300",
-          locale === "en"
-            ? "bg-brand-500 text-white shadow-[0_0_12px_rgba(168,85,247,0.4)]"
-            : "text-fg-muted hover:text-fg-primary",
-        )}
-      >
-        EN
-      </button>
+      {SUPPORTED_LOCALES.map((loc, i) => (
+        <React.Fragment key={loc}>
+          {i > 0 && <div className="mx-0.5 h-3.5 w-[1px] bg-white/[0.08]" />}
+          <button
+            type="button"
+            onClick={() => handleLocaleChange(loc)}
+            className={cn(
+              "rounded-full px-2.5 py-1 text-[10px] font-extrabold tracking-wider transition-all duration-300",
+              locale === loc
+                ? "bg-brand-500 text-white shadow-[0_0_12px_rgba(168,85,247,0.4)]"
+                : "text-fg-muted hover:text-fg-primary",
+            )}
+          >
+            {LOCALE_LABELS[loc] ?? loc.toUpperCase()}
+          </button>
+        </React.Fragment>
+      ))}
     </div>
   );
 }
