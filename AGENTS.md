@@ -54,6 +54,22 @@ pnpm db:migrate       # supabase migration up
 > 5. If `graphify-out/` is stale, run `graphify update .` (AST-only, no API cost).
 > 6. Graphify auto-updates on every `git commit` via pre-commit hook.
 
+## Model Routing (token economy — binding)
+
+Delegate discovery to Haiku. An expensive model must never scan the codebase directly — it dispatches a Haiku subagent and works from the returned summary.
+
+| Work type                                                                                        | Model                                          |
+| ------------------------------------------------------------------------------------------------ | ---------------------------------------------- |
+| Code search, file location, inventory, grep/glob discovery, "where is X defined"                 | **Haiku** (Explore subagent, `model: "haiku"`) |
+| Routine/mechanical: translation fill-in, formatting, repetitive edits                            | **Haiku**                                      |
+| Architecture decisions, strategy, security analysis, MASTER_PLAN authoring, multi-step reasoning | **Opus 5 / Fable 5**                           |
+
+## MASTER_PLAN Evidence Rule
+
+Every number written into `docs/MASTER_PLAN.md` cites its source (file path, table name, or measurement). Unmeasured values are written as "ölçülmedi"; projections are tagged `[tahmin — doğrulanmamış]`. Unsourced figures are a defect.
+
+Note: `/admin/master-plan` parses this file at runtime via `parseMasterPlan()` (`src/lib/utils/markdown-parser.ts`). It ingests only table rows whose **first cell is a bare number** — never start a MASTER_PLAN table column with a plain integer unless it is intended as a tracked plan item.
+
 ## Safety
 
 - Never log raw IP, email, or PII. Always hash.

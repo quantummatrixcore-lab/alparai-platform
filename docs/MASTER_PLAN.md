@@ -1,3 +1,151 @@
+# ALPAR AI — MASTER PLAN v11.03 (P0 K-Benchmark Bütünlük Krizi + Operasyonel Sponsor Hattı + Model Yönlendirme Kuralı [architect])
+
+> **v11.03 (2026-07-24) — Kod tabanlı zemin doğrulaması.** Founder'ın 360° stratejik güncelleme talebi üzerine yapılan tarama, sponsor stratejisinin dayandığı temel iddianın kodda karşılığı olmadığını ortaya çıkardı. Bu giriş önce o krizi, sonra doğrulanmış envanteri, sonra operasyonel sponsor hattını tanımlar. [architect]
+>
+> **Yöntem kuralı (bundan sonra bağlayıcı):** MASTER_PLAN'a yazılan her sayı ve iddia kaynağıyla (dosya yolu / tablo adı / ölçüm) birlikte yazılır. Kaynağı olmayan rakam yazılmaz — gerekiyorsa "ölçülmedi" denir. v11.02'de bu kurala uyulmadı; aşağıda §2'de düzeltiliyor.
+>
+> ---
+>
+> ## 1. P0 — K-BENCHMARK ŞU AN ÖLÇÜM YAPMIYOR (VAROLUŞSAL RİSK)
+>
+> Sponsor ve ekosistem stratejisinin tamamı tek bir iddiaya dayanıyor: _"Alparai AI modellerini bağımsız olarak denetler."_ Kodun gerçeği:
+>
+> | İddia                          | Koddaki gerçek                                                                                                                            | Kanıt                                                           |
+> | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+> | Skorlar ölçümle üretiliyor     | `floor(random() * N)` — model ismine göre kovalanmış (`ILIKE '%gpt-4%'`, `'%claude%'`, diğer)                                             | `supabase/migrations/20260723000000_k_benchmark.sql`            |
+> | Wilson güven aralığı var       | `wilson_lower = score - 3`, `wilson_upper = score + 3`. Wilson score interval formülü **hiç yok**                                         | aynı migration                                                  |
+> | 8 kategori (K5–K12) denetlenir | Haftalık cron **yalnızca K5**'i günceller; K6–K12 seed değeriyle sonsuza kadar taşınır                                                    | `src/app/api/cron/k-weekly-refresh/route.ts`                    |
+> | `sample_size` gerçek örneklem  | `100 + incidentsList.length` — baştaki 100 uydurma sabit                                                                                  | aynı cron                                                       |
+> | Tarihsel skor serisi var       | `k_model_scores_history` düz pass-through `SELECT`; repoda hiçbir `REFRESH` çağrısı yok → zaman serisi üretilmiyor                        | `supabase/migrations/20260726000001_k_model_scores_history.sql` |
+> | Metodoloji sayfası şeffaf      | Sayfa 6 kategori ilan ediyor (safety, truthfulness, fairness, privacy, robustness, transparency) — **bunlar DB'de yok**; DB'de K5–K12 var | `src/app/[locale]/methodology/k-benchmark/page.tsx`             |
+> | Türkçe benchmark gerçek        | `bench_tr_evaluations` 4 satır, elle girilmiş sabit skorlar (Claude 3.5 Sonnet, GPT-4o, Gemini 1.5 Pro, Llama 3.1 70B)                    | seed migration                                                  |
+>
+> **Neden varoluşsal:** Sistem 36 sağlayıcı ve 92 model için, şirket isimleriyle birlikte skor yayınlıyor. Microsoft/OpenAI/Anthropic'e "modelinizi denetledik" denildikten sonra teknik due diligence yapılırsa `random()` görülür. Sonuçları:
+>
+> - **(a) Ticari:** Sponsorluk görüşmesi anında biter, itibar geri kazanılmaz.
+> - **(b) Hukuki:** Adı geçen şirketler hakkında yayınlanmış, dayanaksız değerlendirme.
+> - **(c) Bilimsel:** "Wilson" etiketi yanlış beyan — metodoloji sayfası DB ile uyuşmuyor.
+>
+> **Düzeltme planı (sponsor temasından ÖNCE bitmeli):**
+>
+> - **K-FIX-1:** `random()` üretilmiş skorları üretimden kaldır; kaldırılamıyorsa UI ve API'de açıkça `"demo/placeholder"` olarak işaretle.
+> - **K-FIX-2:** `wilson_lower/upper` ya gerçek Wilson score interval ile hesaplansın ya da adı `score_lower/score_upper` olarak değiştirilsin (yanlış beyanı kaldır).
+> - **K-FIX-3:** K6–K12 için gerçek değerlendirme hattı kurulana kadar UI'da "henüz değerlendirilmedi" durumu gösterilsin — sabit sayı gösterilmesin.
+> - **K-FIX-4:** `methodology/k-benchmark` sayfasındaki 6 hayali kategori, DB'deki K5–K12 ile eşitlensin.
+> - **K-FIX-5:** `k_model_scores_history` gerçek snapshot yazan bir cron'a bağlansın (şu an ölü).
+>
+> **Karar:** K-FIX-1, K-FIX-2 ve K-FIX-4 tamamlanmadan hiçbir dış sponsor/partner temasına başlanmaz. Bu sıralama pazarlama tercihi değil, risk yönetimidir.
+>
+> ---
+>
+> ## 2. v11.02'DEKİ KAYNAKSIZ RAKAMLAR GEÇERSİZDİR (ACP-3 düzeltme, silme değil)
+>
+> v11.02 girişi doğrulanmamış sayılar içeriyor. Girdi ACP-3 gereği silinmedi; aşağıdaki değerler **geçersiz** olarak işaretlendi:
+>
+> | v11.02'de yazan                     | Doğrulanmış durum                                          |
+> | ----------------------------------- | ---------------------------------------------------------- |
+> | "K-Benchmark 2500+ LLM parametresi" | Gerçek: 8 kategori (K5–K12), `k_categories` tablosu        |
+> | "API calls/month: 5k → 100k"        | Ölçüm yok — kaynaksız                                      |
+> | "incidents tablosu 90k+ satır"      | Kaynaksız                                                  |
+> | "€5k–50k/ay sağlayıcı başına"       | Dayanaksız fiyatlandırma varsayımı                         |
+> | "2-3 sponsor/ay = €60–150k/yıl"     | Dayanaksız projeksiyon                                     |
+> | "20 REST endpoint"                  | Gerçek: 63 `route.ts` (26'sı `/api/v1/*`) — eksik sayılmış |
+>
+> Bundan sonra projeksiyon yazılacaksa `[tahmin — doğrulanmamış]` etiketiyle yazılır.
+>
+> ---
+>
+> ## 3. MİMARİ — DOĞRULANMIŞ ENVANTER (Mimar Sinan bölümü)
+>
+> Abartıya gerek yok; gerçek envanter zaten ciddi bir yapı:
+>
+> | Katman           | Doğrulanmış gerçek                                                                                  |
+> | ---------------- | --------------------------------------------------------------------------------------------------- |
+> | Sayfa yüzeyi     | 37 üst düzey route, 72 ikinci düzey (`src/app/[locale]/`)                                           |
+> | API              | 63 `route.ts` — 26 `/api/v1/*`, 16 cron, 6 admin, 3 public dataset                                  |
+> | Veri             | 95 tablo, 50 migration (20260605–20260624)                                                          |
+> | Uygulama mantığı | 46 server action (`src/actions/`)                                                                   |
+> | Test             | 138 test dosyası, ~829 `it/test` bloğu, 21 Playwright spec, 10 CI workflow                          |
+> | Yerelleştirme    | 5 dil (`en, tr, de, fr, ru`) — `src/lib/constants/index.ts`                                         |
+> | AI entegrasyonu  | 9 adaptör (google, cohere, huggingface, nvidia-ngc, openrouter, vertex-gemini/imagen/veo, blackbox) |
+> | Ekosistem verisi | 36 sağlayıcı + 92 model seed'li                                                                     |
+>
+> **Güven katmanı (gerçek ve çalışıyor):** PII Guardian (`src/lib/pii/guardian.ts`) → Vault AES-256-GCM (`src/lib/security/vault.ts`) → RLS politikaları → `audit_log` tablosu.
+>
+> **Çalışan uçtan uca akışlar:** strategy CRUD, 35 soruluk çoklu-model questionnaire (`strategy-questionnaire.ts`), ekosistem haber hattı (`/api/cron/fetch-external` → `ecosystem_news`), yatırımcı başvuru→onay→token→portal akışı, DSAR export, litigation export (admin-gated), EU AI Act tracker.
+>
+> ---
+>
+> ## 4. SPONSOR HATTI — PROSE DEĞİL, OPERASYON (en yüksek kaldıraç)
+>
+> Founder "hızlı sponsor" istiyor. Bulgu: **altyapı %80 hazır ama kablosu takılı değil.**
+>
+> | Bileşen                              | Durum                                                                                                                        |
+> | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+> | `outreach_queue` tablosu             | ✅ Var — `recipient_email, template_type, subject, body_template, status, sent_at`                                           |
+> | `processOutreachQueue()` göndericisi | ✅ Gerçek — Resend entegre, 50/gün limit, unsubscribe token'lı, `approved → sent/failed` (`src/lib/audit/outreach-agent.ts`) |
+> | Kuyruğa kayıt ekleyen üretici        | ❌ **Yok** — repoda `outreach_queue`'ya tek bir INSERT bile yok                                                              |
+> | Göndericiyi çağıran cron/route       | ❌ **Yok** — `processOutreachQueue` repoda yalnızca kendi tanımında geçiyor (ölü kod)                                        |
+> | `/admin/outreach` sayfası            | ❌ Statik — iki sabit metin (`MEDIA_PITCH`, `EXPERT_PITCH`) + kopyala butonu. DB yok, kuyruk yok, takip yok                  |
+> | Sponsor/partner takibi               | ❌ Yok — `/admin/ecosystem` içinde `partner\|sponsor` araması 0 sonuç                                                        |
+> | Yatırımcı akışı (kopyalanacak desen) | ✅ Uçtan uca çalışıyor — `src/actions/investor.ts`: zod + rate limit + admin onayı + SHA-256 token + portal daveti           |
+>
+> **İş kalemleri (sıra 1 tamamlandıktan sonra başlar):**
+>
+> - **S-1:** `outreach_queue`'ya kayıt ekleyen server action + admin UI yaz (`/admin/outreach`'i statik sayfadan kuyruk ekranına çevir).
+> - **S-2:** `processOutreachQueue`'yu bir cron route'a bağla (mevcut 16 cron deseni kullanılsın).
+> - **S-3:** `template_type` enum'una `'sponsor' | 'partner'` ekle.
+> - **S-4:** Sponsor onay/portal akışı için `investor.ts` desenini birebir uyarla — yeniden mimari tasarım gereksiz.
+> - **S-5:** `/admin/ecosystem`'e sponsor/partner CRM görünümü ekle.
+>
+> **Hedef kurumlar (GitHub, Microsoft, Amazon, Anthropic, OpenAI, Hugging Face):** temas, K-FIX-1/2/4 kapandıktan **sonra** başlar. Alparai'nin savunulabilir gerçek farkı şu — uydurma metrik değil: regülasyon-hazır altyapı (EU AI Act tracker, DSAR export, litigation export, OECD feed, whistleblower kanalı, 5 dil, 95 tablo, ~829 test).
+>
+> ---
+>
+> ## 5. GELECEK VİZYONU — HER FAZIN GİRİŞ KOŞULU VAR
+>
+> v11.02'deki v1→v4 yol haritası korunuyor, ancak her faz artık bir **giriş koşuluna** bağlı. Koşul sağlanmadan sonraki faza geçilmez:
+>
+> | Faz                            | Giriş koşulu                                                                                    |
+> | ------------------------------ | ----------------------------------------------------------------------------------------------- |
+> | v1.x — Trust as a Service      | K-FIX-1/2/4 kapalı; skorlar gerçek ölçüme dayanıyor                                             |
+> | v2.x — Merkeziyetsiz denetim   | K6–K12 için gerçek değerlendirme hattı çalışıyor; `k_model_scores_history` gerçek seri üretiyor |
+> | v3.x — AGI hesap verebilirliği | Bağımsız üçüncü taraf metodoloji denetimi tamamlanmış                                           |
+>
+> Sertifikasyon (ISO 27001 / ISO 42001) hedefleri korunuyor; ancak ölçüm hattı düzelmeden sertifikasyon başvurusu yapılmaz.
+>
+> ---
+>
+> ## 6. MODEL YÖNLENDİRME KURALI (Founder talimatı — kalıcı)
+>
+> Founder talimatı: _"Taramaları, diğer işleri Haiku'ya yaptır. Bunu da kural olarak yaz."_ `CLAUDE.md` ve `AGENTS.md`'ye kalıcı olarak işlendi.
+>
+> | İş türü                                                                           | Model                        |
+> | --------------------------------------------------------------------------------- | ---------------------------- |
+> | Kod tarama, dosya bulma, envanter, grep/glob keşfi, "X nerede tanımlı"            | **Haiku** (Explore subagent) |
+> | Rutin/mekanik: çeviri doldurma, format düzeltme, tekrarlayan düzenleme            | **Haiku**                    |
+> | Mimari karar, strateji, güvenlik analizi, MASTER_PLAN yazımı, çok adımlı muhakeme | **Opus 5 / Fable 5**         |
+>
+> Pahalı model keşif için doğrudan dosya taramaz — önce Haiku subagent'a delege eder, dönen özetle çalışır. Bu giriş bu kurala uyularak hazırlandı: üç zemin taraması (ürün envanteri, K-Benchmark ground truth, sponsor altyapısı) subagent'lara delege edildi.
+>
+> ---
+>
+> ## 7. MASTER_PLAN DOSYASI KENDİSİ MİMARİ BORÇ
+>
+> - Dosya **2438 satır / 588 KB**, 30 versiyon girişi.
+> - `CLAUDE.md` Kural #3: _"10KB'den büyük dosyayı asla doğrudan okuma."_ Dosya kendi kuralını **58 kat** ihlal ediyor — her ajan turunda token yanmasının kök nedeni bu.
+> - **Dikkat:** `/admin/master-plan` bu dosyayı canlı parse ediyor (`parseMasterPlan()` → `src/lib/utils/markdown-parser.ts`). Parser yalnızca **ilk hücresi saf sayı** olan tablo satırlarını okur; bu girişteki tabloların ilk sütunu metindir, dolayısıyla admin ekranı etkilenmez. Gelecekte ilk sütunu sayı olan tablo eklenirse admin listesine sahte kayıt düşer.
+>
+> **Karar (A-1):** v10.x girişleri `docs/archive/MASTER_PLAN-v10.md`'ye taşınacak; ana dosyada son 3 versiyon + kalıcı kurallar kalacak. Taşımadan önce `markdown-parser.ts` davranışı doğrulanacak.
+>
+> ---
+>
+> **Öncelik sırası:** K-FIX-1/2/4 (P0) → A-1 arşivleme (P1) → S-1..S-5 sponsor hattı (P1) → Rusça çeviri kalanı (P2, ~2589 anahtar) → K-FIX-3/5 (P2).
+>
+> **Founder aksiyonu:** Vercel ortam değişkenlerinde `VAULT_ENCRYPTION_KEY` ayarlı mı teyit et (kod hazır, bekliyor).
+
+---
+
 # ALPAR AI — MASTER PLAN v11.02 (Fable 5: 360° Ekosistem Entegrasyonu, Sponsor Stratejisi, Mimari İyileştirme [architect])
 
 > **v11.02 (2026-07-24) — Fable 5 Zekası ile Kapsamlı Mimari Güncelleme: Alparai'ı Ekosistem Merkezine Konumlandırma**

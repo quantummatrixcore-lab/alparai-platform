@@ -35,6 +35,13 @@ pnpm db:migrate       # supabase migration up
 6. Never expose `SUPABASE_SERVICE_ROLE_KEY` to the browser.
 7. Run `pnpm lint && pnpm typecheck` after every change.
 8. The Engineering Operating Standard in `AGENTS.md` is binding — read it.
+9. **Model routing (token economy)** — delegate discovery to Haiku; never scan the codebase directly with an expensive model:
+   | Work type                                                                                        | Model                                          |
+   | ------------------------------------------------------------------------------------------------ | ---------------------------------------------- |
+   | Code search, file location, inventory, grep/glob discovery, "where is X defined"                 | **Haiku** (Explore subagent, `model: "haiku"`) |
+   | Routine/mechanical: translation fill-in, formatting, repetitive edits                            | **Haiku**                                      |
+   | Architecture decisions, strategy, security analysis, MASTER_PLAN authoring, multi-step reasoning | **Opus 5 / Fable 5**                           |
+10. **No unsourced numbers in `docs/MASTER_PLAN.md`** — every figure cites a file path, table name, or measurement. If unmeasured, write "ölçülmedi". Projections must be tagged `[tahmin — doğrulanmamış]`.
 
 ## File Map
 
