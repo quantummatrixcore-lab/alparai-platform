@@ -130,7 +130,7 @@ export async function runBenchTrEvaluationAction(): Promise<BenchTrResult> {
   await adminClient
     .from("strategy_innovations")
     .update({ status: "done", updated_at: new Date().toISOString() })
-    .ilike("title", "I15 —%");
+    .or("title.ilike.%I15%,title.ilike.%I21%");
 
   return {
     ok: true,
