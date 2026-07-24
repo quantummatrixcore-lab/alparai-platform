@@ -1,3 +1,113 @@
+# ALPAR AI — MASTER PLAN v11.05 (UZUN VADELİ DOKTRİN 2026-2030: Kimlik, Ufuk, Ekosistem, Kaynak, Yönetişim [architect · Fable 5 tek atış])
+
+> **v11.05 (2026-07-24) — Fable 5 tek atış: kalıcı stratejik doktrin.** Founder'ın 7 maddelik 360° talebi önce mühendislenmiş prompt'a çevrildi (§0), sonra o prompt'un disipliniyle uzun vadeli doktrin yazıldı. Zemin: v11.03-v11.04'te Haiku taramalarıyla doğrulanmış kod gerçekleri. Bu turda yeni tarama yapılmadı (Kural #9); tek dosya düzenlendi (token disiplini). [architect]
+>
+> ---
+>
+> ## §0 — MÜHENDİSLENMİŞ PROMPT (kalıcı şablon; bundan sonraki her 360° talebi bununla çalışır)
+>
+> Ham talebin sorunları: rol tanımsız, çıktı formatı yok, doğrulama kriteri yok, uygulanamaz direktifler ("sınırları aş"), tekrar (madde 2≈6≈7). Dönüşüm:
+>
+> | Ham madde                                   | Mühendislenmiş karşılığı                                         |
+> | ------------------------------------------- | ---------------------------------------------------------------- |
+> | 1 "token verimli, sadece master plan"       | GİRDİ KISITI: ilk ~150 satır; tarama gerekiyorsa Haiku'ya delege |
+> | 2+6 "komple güncelle, 360° analiz"          | GÖREV 1: Mimari (yük analizi, kanıtlı envanter)                  |
+> | 3 "futurist / Atatürk gibi düşün"           | GÖREV 2: Vizyon (her fazın ölçülebilir giriş koşulu var)         |
+> | 4 "startup ekosistemini tara, max faydalan" | GÖREV 4: Kaynak matrisi (önce sıfır maliyetli kaldıraçlar)       |
+> | 5 "ekosistem entegrasyonu, hızlı sponsor"   | GÖREV 3: Ekosistem tezi (dalga sıralı, önkoşullu temas)          |
+> | 7 "sınırları aşarak MAXIMUM %100"           | KURALLAR bloğu: güç = disiplinli zemin gerçekliği (bkz. §5)      |
+>
+> ```
+> ROL: ALPAR AI Baş Mimarı. Tek yetkili mimari oturum; çıktın bağlayıcı doktrindir.
+> GİRDİ KISITI: docs/MASTER_PLAN.md ilk ~150 satır. Kod sorusu → Haiku subagent (Kural #9).
+> GÖREV: (1) Mimari — kanıtlı envanterle yük analizi. (2) Vizyon — ölçülebilir giriş
+>   koşullu fazlar. (3) Ekosistem — önkoşullu, dalga sıralı sponsor/partner temasları.
+>   (4) Kaynak — önce para gerektirmeyen kaldıraçlar, sonra fon kanalları.
+> KURALLAR: Kaynaksız sayı yasak; projeksiyon [tahmin — doğrulanmamış] etiketli.
+>   ACP-3 additive. ACP-8 late-bound versiyon. P0 sırası değişmez. Tablo ilk hücresi
+>   saf sayı olamaz (parseMasterPlan). Commit: ARCHITECT=1 + noreply@anthropic.com.
+> ÇIKTI: Tek prepend girişi, Türkçe, mevcut biçem. DOĞRULAMA: show --stat, head, push.
+> ```
+>
+> ---
+>
+> ## §1 — KİMLİK DOKTRİNİ (değişmez çekirdek)
+>
+> **Alparai = AI hesap verebilirliği için güven altyapısı.** Yapıyı üç sütun taşır — Mimar Sinan ilkesi: süsleme değil yük analizi; hangi sütun hangi güveni/geliri taşıyor, kırık sütuna yük bindirilmez.
+>
+> | Sütun                 | Taşıdığı yük                                         | Kodda karşılığı (doğrulanmış)                                                                         | Durum                                                      |
+> | --------------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+> | **Kanıt sütunu**      | "Olay gerçekten oldu ve kayıt değiştirilemez" güveni | incident hattı + PII Guardian (`src/lib/pii/guardian.ts`) + `audit_log` + DSAR/litigation export      | ✅ Sağlam, yük taşıyabilir                                 |
+> | **Regülasyon sütunu** | "Uyum kanıtını buradan alırsınız" değeri             | EU AI Act tracker (`/transparency/art-73-tracker`), OECD feed, whistleblower kanalı, KVKK/GDPR yüzeyi | ✅ Sağlam — **ana giriş kapısı**                           |
+> | **Ölçüm sütunu**      | "Model X güvenilir mi" cevabı                        | K-Benchmark (`k_categories` K5-K12, `k_model_scores`)                                                 | 🔴 **Kırık** (v11.03 P0) — onarılmadan üstüne kat çıkılmaz |
+>
+> **Doktrin kararı:** Dış dünyaya açılan her kapı (sponsor, sertifika, regülatör) bugün **regülasyon sütunundan** açılır — o gerçek ve savunulabilir. Ölçüm sütunu K-FIX-1/2/4 kapanana dek pazarlamada kullanılmaz.
+>
+> ---
+>
+> ## §2 — 2026-2030 UFKU (Atatürk ilkesi: hedef net, koşul ölçülebilir, hamaset yok)
+>
+> "Muasır medeniyet seviyesi"nin buradaki çevirisi: **AI hesap verebilirliğinde küresel standart koyucu olmak.** "Tam bağımsızlık"ın çevirisi: hiçbir tek sağlayıcıya (OpenRouter/Google gateway) yapısal bağımlılık kalmaması. Her faz bir önceki fazın **ölçülebilir çıktısıyla** açılır — takvim değil koşul ilerletir:
+>
+> | Faz                              | Hedef [tahmin — doğrulanmamış]                                  | Giriş koşulu (ölçülebilir)                                                 | Bağımsızlık adımı                                               |
+> | -------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------- |
+> | **2026 H2 — Onarım ve Kanıt**    | Ölçüm sütunu gerçeğe döner; ilk kredi programları alınır        | Yok (başlangıç fazı) — K-FIX-1/2/4 bu fazın çıktısıdır                     | NVIDIA NIM bağlanır (N-1..N-3): tek-gateway bağımlılığı kırılır |
+> | **2027 — Güven Ürünü**           | "Alparai Certified" rozeti gerçek ölçüme dayanarak satılabilir  | K6-K12 gerçek değerlendirme hattı çalışıyor + history gerçek seri üretiyor | ≥2 bağımsız değerlendirici model (farklı sağlayıcılardan)       |
+> | **2028 — Standart Koyucu**       | ISO 42001 hizalama; metodoloji üçüncü taraf denetiminden geçmiş | 12 ay kesintisiz gerçek ölçüm serisi                                       | Kendi değerlendirme altyapısı (kiralık değil)                   |
+> | **2029-2030 — Küresel Referans** | Regülatör entegrasyonları (EU AI Act uygulama katmanı)          | Bağımsız denetim raporu yayınlanmış                                        | Standardın sahibi olmak = nihai bağımsızlık                     |
+>
+> ---
+>
+> ## §3 — EKOSİSTEM ENTEGRASYON TEZİ (gerçekçi hali)
+>
+> "Bütün ekosistem buna muhtaç" iddiasının savunulabilir çevirisi: AI tedarik zincirinde **bağımsız hesap verebilirlik katmanı boşluğu gerçek** — sağlayıcılar kendi kendini denetliyor, alıcılar ve regülatörler bağımsız kanıt katmanından yoksun. Alparai'nin teknik girişi hazır: 9 adaptör, 63 API ucu, 95 tablo (v11.03 §3 envanteri) = entegrasyon-hazır altyapı.
+>
+> **Temas dalgaları — bağımlılık tersine çevrilir (önce bize verenler, sonra bizden isteyenler):**
+>
+> | Dalga                            | Hedefler                                                                                           | Önkoşul                                                           | Kanal                                                                        |
+> | -------------------------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+> | **Dalga 1 — altyapı verenler**   | NVIDIA (Inception), Hugging Face (model card entegrasyonu), GitHub (OSS/Accelerator — AGPL uyumlu) | K-FIX-1/2/4 kapalı                                                | Self-service program başvuruları + mevcut adaptörler kanıt olarak gösterilir |
+> | **Dalga 2 — kredi programları**  | Microsoft for Startups, AWS Activate, Google for Startups                                          | **Yok** — bunlar temas değil self-service başvuru; K-FIX beklemez | F-1 iş kalemi (aşağıda)                                                      |
+> | **Dalga 3 — model sağlayıcılar** | Anthropic, OpenAI, Google DeepMind                                                                 | Gerçek ölçüm + yayınlanmış ilk vaka çalışması                     | "Modelinizi denetledik" konuşması ancak denetim gerçekken yapılır            |
+>
+> **Mekanizma yeni değil:** S-1..S-5 sponsor hattı (v11.03 §4) + `investor.ts` deseni. Bu giriş yeni iş kalemi icat etmez; mevcut kalemlere dalga numarası atar.
+>
+> ---
+>
+> ## §4 — KAYNAK MAKSİMİZASYONU MATRİSİ (önce sıfır maliyetli kaldıraçlar)
+>
+> | Kaldıraç                                                  | Durum (doğrulanmış)                               | Aksiyon                                                                    |
+> | --------------------------------------------------------- | ------------------------------------------------- | -------------------------------------------------------------------------- |
+> | Atıl NVIDIA NIM ücretsiz kapasitesi                       | Adaptör hazır, bağlı değil (v11.04)               | N-1..N-3                                                                   |
+> | Atıl outreach altyapısı                                   | %80 hazır, kablosuz (v11.03 §4)                   | S-1..S-5                                                                   |
+> | Startup kredi programları (MS/AWS/Google/NVIDIA)          | Başvurulmamış                                     | **F-1 (yeni):** self-service başvurular — K-FIX beklemez, hemen            |
+> | AGPL lisans + açık veri (`dataset.json`, `incidents.csv`) | Yayında (`/api/public/*`)                         | **F-2 (yeni):** akademik ortaklık kanalı — üniversite AI güvenlik grupları |
+> | Supabase FREE katman riski                                | 7 gün pause riski keep-alive cron ile yönetiliyor | **F-3 (yeni):** F-1 kredileriyle Pro'ya geçiş — kalıcı çözüm               |
+>
+> ---
+>
+> ## §5 — YÖNETİŞİM: "TEK HAK" PROTOKOLÜ (kalıcı kural)
+>
+> Founder'ın "tek hakkımız var" kuralı kurumsallaşır:
+>
+> - Pahalı model oturumları (Opus/Fable) **yalnız doktrin ve mimari yazar**; oturum başına bir doktrin girişi; zemin önceden Haiku ile doğrulanır (Kural #9). Bu giriş bu protokole uyularak üretildi: 3 Haiku taraması → Opus brief → Fable tek atış.
+> - "Sınırları aş, %100 kullan" talebine doktrin cevabı: **azami zekâ, azami disiplindir.** v11.02'nin kaynaksız sayıları etkileyiciydi ama güçsüzdü — ilk due diligence'ta çökerdi. v11.03'ün kanıt tablosu sadedir ama güçlüdür — çünkü doğrulanabilir. Alparai'nin ürünü güven; güven üreten kurum kendi belgelerinde uydurma rakam taşıyamaz. Sınır aşmanın gerçek biçimi: rakibin yapmadığı disiplini yapmak.
+>
+> ---
+>
+> ## §6 — KONSOLİDE ÖNCELİK (tek bakış)
+>
+> | Öncelik     | Kalemler                                                                                                     |
+> | ----------- | ------------------------------------------------------------------------------------------------------------ |
+> | **P0**      | K-FIX-1, K-FIX-2, K-FIX-4 (ölçüm bütünlüğü — her dış temasın önkoşulu)                                       |
+> | **P1**      | F-1 (kredi başvuruları — hemen, önkoşulsuz) · A-1 (arşivleme) · S-1..S-5 (sponsor hattı) · N-1..N-3 (NVIDIA) |
+> | **P2**      | Rusça çeviri (~2589 anahtar) · K-FIX-3, K-FIX-5 · N-4 · F-2, F-3                                             |
+> | **Founder** | Vercel'de `VAULT_ENCRYPTION_KEY` teyidi (bekleyen tek manuel kalem)                                          |
+>
+> **Statü:** Doktrin bağlayıcı. Sonraki mimari oturum bu girişi referans alır; yeniden keşif yapmaz.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.04 (NVIDIA NIM Entegrasyonu Kullanılmıyor — Ücretsiz Kapasite Atıl [architect])
 
 > **v11.04 (2026-07-24) — Founder sordu: "NVIDIA API'miz zaten ekli, build.nvidia.com'da bir sürü ücretsiz kaynak var, neden kullanmıyoruz?" Haiku subagent ile koda bakıldı; adaptör hazır ama fiilen devre dışı bırakılmış. [architect]**
