@@ -15,6 +15,61 @@
 
 ---
 
+# ALPAR AI — MASTER PLAN v11.02 (Danışma Kurulu İlk Onay: Prof. Dr. Musa Aygül + Outreach Mail & LinkedIn Listeleri [architect])
+
+> **v11.02 (2026-07-24) — `[architect]`: İlk Onaylı Danışman Kaydı, Tam Outreach Mail Kuyruğu ve LinkedIn Bağlantı Listesi:**
+>
+> **✅ Danışma Kurulu — İlk Onaylı Üye:**
+>
+> **Prof. Dr. Musa Aygül** — Selçuk Üniversitesi Hukuk Fakültesi, Ticaret Hukuku ABD (Profesör, 2022)
+>
+> - Uzmanlık: Milletlerarası Özel Hukuk · Uluslararası Ticari Tahkim · AB Hukuku · KVKK / GDPR · Göç & Sığınma Hukuku
+> - ALPAR AI Değeri: EU AI Act Art. 73 Türk hukuku yorumu · `/api/v1/litigation/export` delil niteliği güvencesi · PII Guardian hukuki meşruiyeti · 9 Devlet Regülatör API yetki alanı rehberliği
+> - Profil: https://selcuk.edu.tr/birim/personeldetay/6368/musa.aygul | Göreve Başlama: 2026-07-24
+>
+> ---
+>
+> **📧 Outreach Mail Kuyruğu (Founder Gönderim Listesi):**
+>
+> | #   | Alıcı                         | Kurum                       | E-posta / Form URL                 | Öncelik | Durum                           |
+> | --- | ----------------------------- | --------------------------- | ---------------------------------- | ------- | ------------------------------- |
+> | M1  | Rumman Chowdhury              | Humane Intelligence         | rumman@humane-intelligence.org     | 🔴 P0   | ⏳ Advisory Board daveti        |
+> | M2  | Sean McGregor                 | AI Incident Database (AIID) | sean@incidentdatabase.ai           | 🔴 P0   | ⏳ Advisory Board / İşbirliği   |
+> | M3  | Irene Solaiman                | Hugging Face                | irene@huggingface.co               | 🟠 P1   | ⏳ Advisory Board daveti        |
+> | M4  | Sven Cattell                  | AI Village / DEF CON        | sven@aivillage.org                 | 🟠 P1   | ⏳ Advisory Board daveti        |
+> | M5  | Aviv Ovadya                   | Harvard Berkman Klein       | aovadya@cyber.harvard.edu          | 🟡 P2   | ⏳ Advisory Board daveti        |
+> | M6  | Daniel Miessler               | Unsupervised Learning       | daniel@danielmiessler.com          | 🟡 P2   | ⏳ Advisory Board daveti        |
+> | M7  | Yacine Jernite                | Hugging Face                | yacine@huggingface.co              | 🟡 P2   | ⏳ Advisory Board daveti        |
+> | M8  | startups@anthropic.com        | Anthropic                   | startups@anthropic.com             | 🔴 P0   | ✅ Gönderildi (v10.71)          |
+> | M9  | inception@nvidia.com          | NVIDIA                      | inception@nvidia.com               | 🔴 P0   | ✅ Gönderildi (v10.71)          |
+> | M10 | sponsorships@vercel.com       | Vercel                      | sponsorships@vercel.com            | 🟠 P1   | ✅ Gönderildi (v10.71)          |
+> | M11 | W1 Microsoft for Startups     | Microsoft                   | foundershub.startups.microsoft.com | 🔴 P0   | ⏳ Form başvurusu — $150K Azure |
+> | M12 | W2 Google for Startups        | Google                      | cloud.google.com/startup           | 🔴 P0   | ⏳ Form başvurusu — $200K GCP   |
+> | M13 | W3 AWS Activate               | AWS                         | aws.amazon.com/activate            | 🔴 P0   | ⏳ Form başvurusu — $100K AWS   |
+> | M14 | T1 KOSGEB Yapay Zeka Kredisi  | KOSGEB                      | kosgeb.gov.tr (KBS sistemi)        | 🔴 P0   | ⏳ 500K-5M TL faizsiz kredi     |
+> | M15 | T2 TÜBİTAK 1711 YZ Ekosistemi | TÜBİTAK                     | eteydeb.tubitak.gov.tr             | 🟠 P1   | ⏳ AI Ekosistemi Ar-Ge Hibesi   |
+>
+> **📌 Gönderen:** `ercument.erden@alparai.com` · CC: `quantum.matrix.core@gmail.com`
+>
+> ---
+>
+> **🔗 LinkedIn Bağlantı Listesi (Founder Profili Üzerinden Eklenmesi Gereken Kişiler):**
+>
+> | #   | Kişi                     | Unvan & Kurum               | LinkedIn                            | Bağlantı Mesajı                                                                                   |
+> | --- | ------------------------ | --------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------- |
+> | L1  | **Rumman Chowdhury**     | CEO, Humane Intelligence    | linkedin.com/in/rumman-chowdhury-dr | _"ALPAR AI — bağımsız AI hesap verilebilirlik altyapısı. Advisory Board konuşmak ister misiniz?"_ |
+> | L2  | **Sean McGregor**        | Founder, AIID               | linkedin.com/in/seanmcgregor        | _"AI Incident Database ile ALPAR AI sinerjisi — işbirliği önerisi."_                              |
+> | L3  | **Irene Solaiman**       | Global Policy, Hugging Face | linkedin.com/in/irenesolaiman       | _"EU AI Act uyum katmanı — açık kaynak AI güven altyapısı."_                                      |
+> | L4  | **Sven Cattell**         | Founder, AI Village         | linkedin.com/in/svencattell         | _"AI kırmızı takım & olay sicili — ALPAR AI Advisory."_                                           |
+> | L5  | **Aviv Ovadya**          | Researcher, Harvard Berkman | linkedin.com/in/avivovadya          | _"Bağımsız AI gözetim altyapısı — platform yönetişimi."_                                          |
+> | L6  | **Daniel Miessler**      | Security / AI Safety        | linkedin.com/in/danielmiessler      | _"AI güvenlik & hesap verilebilirlik altyapısı."_                                                 |
+> | L7  | **Yacine Jernite**       | ML & Society, Hugging Face  | linkedin.com/in/yacine-jernite      | _"Veri yönetişimi + PII şeffaflık katmanı — ALPAR AI."_                                           |
+> | L8  | **Prof. Dr. Musa Aygül** | Hukuk Fakültesi, Selçuk Ü.  | selcuk.edu.tr/personeldetay/6368    | _(Onaylı danışman — teyit amaçlı bağlantı isteği)_                                                |
+>
+> **Quality Gate:** `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` ✅ (839/839)
+
+---
+
 # ALPAR AI — MASTER PLAN v10.99 (Admin Sidebar Localization & Api-Docs Grid Overflow Fixed [architect])
 
 > **v10.99 (2026-07-24) — `[deploy]`: Admin Sidebar Dil Çevirileri ve Api-Docs Sağ Kolon Taşıma/Taşma Hataları Çözüldü:**
