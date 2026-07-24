@@ -42,6 +42,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  secretlint:
+    name: Secretlint Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+      - run: npx secretlint --secretlintignore .gitignore "**/*"
+
   semgrep:
     name: Semgrep Scan
     runs-on: ubuntu-latest

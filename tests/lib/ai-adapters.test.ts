@@ -91,7 +91,9 @@ describe("AI Adapters", () => {
     const adapter = new CohereAdapter();
 
     it("should return true for isConfigured", () => {
+      process.env.COHERE_API_KEY = "test-key";
       expect(adapter.isConfigured()).toBe(true);
+      delete process.env.COHERE_API_KEY;
     });
 
     it("should return no_api_key error when API key is missing", async () => {
@@ -396,7 +398,9 @@ describe("AI Adapters", () => {
     const adapter = new HuggingFaceAdapter();
 
     it("should return true for isConfigured", () => {
+      process.env.HUGGINGFACE_API_KEY = "test-key";
       expect(adapter.isConfigured()).toBe(true);
+      delete process.env.HUGGINGFACE_API_KEY;
     });
 
     it("should return no_api_key error when API key is missing", async () => {
@@ -550,7 +554,9 @@ describe("AI Adapters", () => {
     const adapter = new BlackboxAdapter();
 
     it("should return true for isConfigured", () => {
+      process.env.BLACKBOX_API_KEY = "test-key";
       expect(adapter.isConfigured()).toBe(true);
+      delete process.env.BLACKBOX_API_KEY;
     });
 
     it("should return no_api_key error when API key is missing", async () => {
@@ -646,7 +652,9 @@ describe("AI Adapters", () => {
     const adapter = new NvidiaNgcAdapter();
 
     it("should return true for isConfigured", () => {
+      process.env.NVIDIA_NGC_API_KEY = "test-key";
       expect(adapter.isConfigured()).toBe(true);
+      delete process.env.NVIDIA_NGC_API_KEY;
     });
 
     it("should return no_api_key error when API key is missing", async () => {

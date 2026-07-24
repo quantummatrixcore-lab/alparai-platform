@@ -9,7 +9,7 @@ import { resolveApiKey } from "../api-keys";
 
 export class HuggingFaceAdapter implements ProviderAdapter {
   isConfigured(): boolean {
-    return true; // Configurable via DB at runtime
+    return !!(process.env.HUGGINGFACE_API_KEY || process.env.HF_API_KEY);
   }
 
   async generateImage(

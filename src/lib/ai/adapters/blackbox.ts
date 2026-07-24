@@ -11,7 +11,7 @@ import { resolveApiKey } from "../api-keys";
 
 export class BlackboxAdapter implements ProviderAdapter {
   isConfigured(): boolean {
-    return true; // Configurable via DB at runtime
+    return !!process.env.BLACKBOX_API_KEY;
   }
 
   async call(request: GatewayRequest): Promise<GatewayResult> {

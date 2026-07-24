@@ -40,7 +40,19 @@ import { Redis } from "@upstash/redis";
 import { logger } from "@/lib/utils/logger";
 import type { Database } from "@/types/database";
 
-const CACHE_TTL_SECONDS = 3600; // 1 hour
+const SEVERITY_TTL_MAP: Record<string, number> = {
+  "unacceptable-risk": 300, // 5 min — invalidate fast
+  "high-risk": 900, // 15 min
+  "limited-risk": 3600, // 1 hour
+  "minimal-risk": 7200, // 2 hours
+};
+
+function computeCacheTtl(severity?: string | null): number {
+  if (severity && SEVERITY_TTL_MAP[severity]) {
+    return SEVERITY_TTL_MAP[severity]!;
+  }
+  return 3600; // default 1 hour
+}
 
 function getRedis() {
   if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null;
@@ -909,11 +921,13 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
         euActDataPrivacyScore: supremeResult.euActDataPrivacyScore,
         euActRiskCategory: supremeResult.euActRiskCategory,
       };
-      await redis.set(cacheKey, JSON.stringify(result), { ex: CACHE_TTL_SECONDS });
+      const ttl = computeCacheTtl(supremeResult.euActRiskCategory);
+      await redis.set(cacheKey, JSON.stringify(result), { ex: ttl });
       logger.info("[CrossAudit] Cached result in Redis", {
         incidentId,
         cacheKey,
-        ttl: CACHE_TTL_SECONDS,
+        ttl,
+        severity: supremeResult.euActRiskCategory,
       });
     } catch (err) {
       logger.warn("[CrossAudit] Redis cache write failed", {
