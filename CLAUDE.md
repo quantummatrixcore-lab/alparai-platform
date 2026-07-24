@@ -22,7 +22,7 @@ pnpm db:migrate       # supabase migration up
 - **Server Actions** for mutations — never `supabase.from().insert()` from the client.
 - **RLS** — every table has policies. Admin client only for moderation/audit.
 - **PII Guardian** — every user free-text is masked before insert (`src/lib/pii/guardian.ts`).
-- **i18n** — `messages/{en,tr}.json`. Use `useTranslations("namespace")` / `getTranslations({locale, namespace})`.
+- **i18n** — `messages/{en,tr}.json`. Use `useTranslations("namespace")` / `getTranslations({locale, namespace})`. **Admin panels (authorization-gated): EN/TR only** — no DE/FR/RU needed for `/admin/*` routes. Public-facing pages (`/insights`, `/community`, `/documentation`) require all 5 languages.
 - **Tailwind v4** — design tokens in `src/app/globals.css` (`@theme inline`). No `tailwind.config.ts`.
 
 ## Standing Rules

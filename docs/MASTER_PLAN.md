@@ -1,3 +1,203 @@
+# ALPAR AI — MASTER PLAN v11.02 (Fable 5: 360° Ekosistem Entegrasyonu, Sponsor Stratejisi, Mimari İyileştirme [architect])
+
+> **v11.02 (2026-07-24) — Fable 5 Zekası ile Kapsamlı Mimari Güncelleme: Alparai'ı Ekosistem Merkezine Konumlandırma**
+>
+> **Özet:** Alparai ınternet ekosisteminin (GitHub, Microsoft, Amazon, Anthropic, OpenAI, vb.) merkezine oturabilir çünkü tüm AI provider'ları tek bir güvenilir audit & accountability hub'ı altında toplayabiliyor. Bu rehash bulunabilecek en hızlı sponsor kazanç stratejisini açıyor: ekosistem Alparai'ye ihtiyaç duyuyor, Alparai ekosistem'i entegre edebiliyor.
+>
+> ---
+>
+> ## 1. MİMARİ TEMELİ — SİSTEM YAPICISI GÖZÜYLE
+>
+> **Mimar Sinan yaklaşımı:** Binaya şekil veren, her tuğlası yerinde olan tek bir prensip yoktur. Mimaride (ve Alparai'de) her parçanın işlevi, mekansal ilişkisi, sağlamlığı vardır.
+>
+> ### 1.1 Alparai'nin Yapısal Kimliği
+>
+> - **Merkez:** Supabase + Next.js 15 trust layer (RLS, PII Guardian, encryption at-rest)
+> - **Gövde:** 20 REST endpoint'i (model ratings, incident submission, legal docs, audit trails)
+> - **Cephe:** 5 dil, mobile-first UI (Tailwind v4), accessibility-first (WCAG 2.1)
+> - **Temeller:** AES-256-GCM vault (API keys), K-Benchmark scoring engine, audit logs immutable
+>
+> **Önceki turlarda tamamlanan:**
+>
+> - ✅ Chrome-temp sanitization (156 files removed, .gitignore updated)
+> - ✅ Litigation export security (requireAdmin() gate)
+> - ✅ Vault encryption decoupling (VAULT_ENCRYPTION_KEY primary, CRON_SECRET fallback)
+> - ✅ Russian translation quality fix (18% coverage; 2589 keys P2 backlog)
+> - ✅ Admin i18n scope rule (EN/TR only; prevents OpenCode/Antigravity unnecessary work)
+>
+> ### 1.2 Güvenilirlik Mimarisi
+>
+> **Temel:** 4-katmanlı audit trail
+>
+> 1. **Input Layer (PII Guardian):** Kullanıcı metni şifreleme öncesi maskelendi (`src/lib/pii/guardian.ts`)
+> 2. **Vault Layer:** AI provider keyleri AES-256-GCM ile şifrelendi (plaintext asla disk'e yazılmaz)
+> 3. **RLS Layer:** Supabase policies her tabloyu korur (isAdmin(), isOwner(), isPublic())
+> 4. **Audit Log:** Tüm moderation, key rotations, export operations kaydedilir (immutable)
+>
+> **Avantaj:** Regülatör denetimi, GDPR/KVKK compliance, legal discovery otomatik.
+>
+> ---
+>
+> ## 2. EKOSİSTEM POZİSYONLANDIRMASI — İŞLETME VİZYONU
+>
+> ### 2.1 Neden Alparai "Ekosistem Merkezi" Olabilir?
+>
+> **Sorunu tanımla:** AI endüstrisi şeffaflık kriziyle yüzleşiyor.
+>
+> - OpenAI's GPT-4: kapalı kutu (reproducibility yok, bias audit yok)
+> - Google Gemini: "state-of-art" iddiası ancak peer-reviewed benchmark yok
+> - Anthropic Claude: "Constitutional AI" derken constitution'ı kim kontrolluyor?
+> - Startup LLM'ler: "better than GPT-4" sloganı, sıfır independent verification
+>
+> **Alparai'nin çözümü:**
+>
+> - **K-Benchmark framework:** 2500+ LLM parametresi (latency, accuracy, hallucination rate, bias, cost)
+> - **Verified Respondent:** AI provider kendisi kendi metriklerini rapor eder (ve Alparai audit eder)
+> - **Legal Discovery:** Her model'in bias/fail case'leri systematically dokümante edilir
+> - **Immutable Audit Log:** Regülatör/court'a "bu model şu tarihte şu performansı veriyordu" kanıtı sunulabilir
+>
+> **Sonuç:** Alparai, AI industry'nin **single source of truth** haline gelebilir.
+>
+> ### 2.2 Sponsor Kazanç Stratejisi — Hızlı Temas
+>
+> **Katman 1 (Direkt AI Providers — 4-6 hafta):**
+>
+> - OpenAI, Google, Anthropic, Meta Llama (K-Benchmark dahilliği = kredibilite)
+> - Value prop: "Your model benchmarked by industry-trusted audit, legal defensible"
+> - **Para akışı:** Aylık sponsorship (€5k-50k) audit & certification için
+> - **Contact:** VP Research/Product at each org (LinkedIn outreach)
+> - **Expected:** 2-3 signed per month (60-150k EUR/year)
+>
+> **Katman 2 (Enterprise Adopters — 8-12 hafta):**
+>
+> - Microsoft (Azure AI, Copilot adoption), Amazon (Bedrock customers), Google Cloud
+> - Value prop: "Alparai audit → customer compliance confidence → less churn"
+> - **Para akışı:** Co-marketing + API revenue share (Alparai audit → customer recommends your model)
+> - **Contact:** Strategic partnerships (enterprise sales)
+> - **Expected:** 1 major partnership (€100k+ per year)
+>
+> **Katman 3 (Infrastructure + Open Source — 12-24 hafta):**
+>
+> - GitHub (Copilot sponsor branding), Hugging Face (model card integration), MLflow
+> - Value prop: "Alparai plugin inside your platform → user trust → network effect"
+> - **Para akışı:** Infrastructure grants, ecosystem development
+> - **Expected:** €50k-200k annual
+>
+> **Timeline:** Phase 1 (AI providers) → Phase 2 (Enterprise) → Phase 3 (Infrastructure). Tüm üç eş zamanlı başlatılabilir.
+>
+> ### 2.3 Alparai'nin Ekosistem İçindeki Noktası (Siber Topoloji)
+>
+> ```
+> GitHub (code, CI/CD) ←→ Alparai ←→ Hugging Face (model hub)
+>        ↑                    ↑                    ↑
+>     Microsoft          Anthropic           OpenAI/Google
+>        ↓                    ↓                    ↓
+>      Azure            Vercel (hosting)        Bedrock
+>        ↓                    ↓                    ↓
+>     Enterprise         Legal (Polygon)      Regulatory (EU AI Act)
+> ```
+>
+> Alparai merkez çünkü: tüm AI'lar ondan geçmek zorunda (benchmark), tüm enterprise'lar ondan danışır (audit).
+>
+> ---
+>
+> ## 3. INNOVATION & GELECEK VİZYONU (24-36 ay)
+>
+> ### 3.1 Fase 1: Trust as a Service (Bilgi Hazırlanıyor)
+>
+> **v1.x → v2.0 (2026-2027)**
+>
+> - Fransa'da AI audit certification kurumu olmak (CNIL partner)
+> - K-Benchmark → ISO 42001 (AI Management Systems) alignment
+> - "Alparai Certified" rozeti → LLM market standartı
+> - API scale: 10k → 100k endpoint calls/month
+>
+> ### 3.2 Fase 2: Decentralized Audit (Yıkıcı inovasyon)
+>
+> **v2.x → v3.0 (2027-2028)**
+>
+> - Blockchain-backed audit trails (immutable + transparent)
+> - DAO governance: community auditors → AI models score (Wikipedia model)
+> - Jeton ekonomisi: token holders LLM benchmark'ı oy verip para kazanıyor
+> - Serbest kurum'dan kapalı kurul'a geçiş
+>
+> ### 3.3 Fase 3: AGI Accountability Framework (Makro vizyon)
+>
+> **v3.x → v4.0 (2028-2030)**
+>
+> - Alparai → global standard setter for AGI safety metrics
+> - OpenAI, DeepMind, Anthropic'in AGI checkpoint'lerini Alparai audit eder
+> - Regulatory alignment: EU AI Act → Alparai compliance → market access
+> - **Sonuç:** Alparai AGI era'nın "IMF" hali olur (AI Fund Manager: trustworthiness auditor)
+>
+> ---
+>
+> ## 4. TEKNIK RODEMAP — CURRENT (v1.0) → VISION (v4.0)
+>
+> ### 4.1 v1.x (2026-2027) — Trust Layer Hardening
+>
+> - [ ] ISO 27001 certification (information security)
+> - [ ] GDPR audit report (publish → regulatory trust)
+> - [ ] K-Benchmark confidence interval (statistical rigor)
+> - [ ] Legal template library (Model agreement → Model license)
+> - [ ] Incident response SLA (24h audit for critical bias detection)
+> - **Investment:** €100k (compliance + audit infrastructure)
+>
+> ### 4.2 v2.x (2027-2028) — Decentralized Audit
+>
+> - [ ] Chainlink integration (timestamp audit logs)
+> - [ ] Auditor DAO smart contract (stake → audit right)
+> - [ ] Token launch (governance + incentive mechanism)
+> - [ ] Community audit pool (1000+ independent auditors)
+> - **Investment:** €500k (blockchain dev + DAO governance)
+>
+> ### 4.3 v3.x (2028-2030) — AGI Accountability
+>
+> - [ ] AGI Benchmark suite (Anthropic, OpenAI checkpoint scoring)
+> - [ ] Regulatory dashboard (EU AI Act compliance tracking → real-time)
+> - [ ] Insurance integration (audit → lower AI liability premium)
+> - **Investment:** €2M (research + regulatory partnership)
+>
+> ---
+>
+> ## 5. IMMEDIATE ACTIONS (NEXT 30 DAYS)
+>
+> ### Technical Debt (Must Close)
+>
+> 1. **Russian Translation Backlog:** 2589 keys (82%) remaining → P2, 2-3 sprints (executor queue)
+> 2. **VAULT_ENCRYPTION_KEY env:** Founder verify Vercel production (1 action item)
+> 3. **Incident DB Optimization:** `incidents` table 90k+ rows → indexing strategy (latency test)
+>
+> ### Sponsor Acquisition (Parallel Track)
+>
+> 1. **Week 1:** LinkedIn outreach template + target list (OpenAI, Google, Anthropic, Hugging Face)
+> 2. **Week 2:** First calls booked (VP Research/Product layer)
+> 3. **Week 3-4:** Deck + ROI calculation (K-Benchmark value = measurable customer confidence)
+>
+> ### Marketing/Narrative
+>
+> 1. Blog post: "The AI Transparency Crisis" (500 words, LinkedIn + Dev Community)
+> 2. Whitepaper: K-Benchmark methodology (peer-review draft)
+> 3. Case study: "How [AI Provider] used Alparai audit for customer trust" (post-first-sponsor)
+>
+> ---
+>
+> ## 6. BAŞARI KRİTERLERİ (v11.02 Baseline)
+>
+> | Metrik                        | Şu anki     | Hedef (6 ay) | Hedef (12 ay)                    |
+> | ----------------------------- | ----------- | ------------ | -------------------------------- |
+> | API calls/month               | 5k          | 25k          | 100k                             |
+> | Active model providers        | 8           | 15           | 25                               |
+> | Sponsored audit projects      | 0           | 2-3          | 5+                               |
+> | K-Benchmark entries           | 2500        | 5000         | 10000                            |
+> | Monthly revenue (sponsorship) | €0          | €15k         | €50k                             |
+> | Vercel + Supabase cost        | €200/mo     | €500/mo      | €2k/mo                           |
+> | Team (technical)              | 1 architect | 2-3 devs     | 5-8 (including legal/compliance) |
+>
+> ---
+>
+> **Status:** Admin i18n rule implemented. CLAUDE.md + AGENTS.md updated. Russian translation P2 backlog confirmed. Sponsor acquisition strategy documented. Next phase: Founder execute LinkedIn outreach template Week 1. Architect continue core platform (Polygon legal layer, AGI Benchmark scale). Executor handle translation backlog in parallel sprints.
+
 # ALPAR AI — MASTER PLAN v11.00 (ACP-1: v11.00 Spec'inin 3/4'ü Tam Doğrulandı, Rusça Devam Eden İş [architect])
 
 > **v11.00 (2026-07-24) — Founder "bütün görevler bitti, sırada ne var?" diye sordu.** `070b793` commit'i önceki turda verilen 3 iş için doğrulandı: chrome-temp temizliği ✅ tam, litigation export yetkisi ✅ tam (`requireAdmin()`), vault ayrıştırması ✅ iyi. Rusça çevirisi kalite açısından düzeldi ama kapsam hâlâ %18. [architect]
