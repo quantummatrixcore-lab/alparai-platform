@@ -115,6 +115,7 @@ Startup'lar genellikle tek hendekle başlar. ALPAR AI'ın dokuz hendek katmanı 
 | W5  | **GitHub for Startups**   | Enterprise free | Slopsquatting feed → GitHub Security Advisory entegrasyonu     |
 | W6  | **Supabase for Startups** | Pro plan        | RLS mimari showcase + AB veri yerleşimi case study             |
 | W7  | **OpenAI Startups**       | $2.5K-25K       | Bağımsız güven katmanı — OpenAI'ın çıkarına                    |
+| W8  | **NVIDIA Inception**      | $100K+ krediler | H100 GPU kapasitesi, VC ağı (Capital Connect), Güven Rozeti    |
 
 ### Tier 2 — Türkiye Ulusal Kaynaklar [₺5.9M+]
 
@@ -218,6 +219,7 @@ Bu kurallar ALPAR AI'ın yapısal bütünlüğünü korur. Hiçbir executor, spr
 | F7  | T5 Teknopark giriş başvurusu             | 1 gün  | %100 vergi muafiyeti      |
 | F8  | LinkedIn — L1-L8 bağlantı istekleri      | 15 dk  | Danışma kurulu genişletme |
 | F9  | M1-M7 Advisory Board mailleri            | 30 dk  | 7 küresel uzman daveti    |
+| F10 | W8 NVIDIA Inception Programı başvurusu   | 15 dk  | GPU Kredileri + VC ağı    |
 
 ---
 
