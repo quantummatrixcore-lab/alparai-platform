@@ -30,6 +30,7 @@ export default defineConfig({
         env: {
           NEXT_PUBLIC_SUPABASE_URL: "https://mock-supabase.supabase.co",
           NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock-anon-key",
+          SUPABASE_SERVICE_ROLE_KEY: "mock-service-role-key-for-playwright",
           IS_PLAYWRIGHT_TEST: "true",
           IP_SALT: process.env.IP_SALT ?? "test-salt-must-be-at-least-16-chars",
           NEXT_PUBLIC_APP_URL: "http://127.0.0.1:3000",
