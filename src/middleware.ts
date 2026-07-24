@@ -94,5 +94,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next|_vercel|auth/callback|.*\\..*).*)"],
+  matcher: ["/((?!_next|_vercel|auth/callback|.*\\..*).*)", "/api/((?!health|cron|webhook).*)"],
 };

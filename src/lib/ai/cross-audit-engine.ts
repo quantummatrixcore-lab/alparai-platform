@@ -36,6 +36,7 @@ import {
 import { maskPII } from "@/lib/pii/guardian";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { selectModelTier, type ModelTier } from "@/lib/audit/model-router";
+import { Redis } from "@upstash/redis";
 import { logger } from "@/lib/utils/logger";
 import type { Database } from "@/types/database";
 
@@ -44,8 +45,6 @@ const CACHE_TTL_SECONDS = 3600; // 1 hour
 function getRedis() {
   if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null;
   try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { Redis } = require("@upstash/redis");
     return new Redis({
       url: process.env.UPSTASH_REDIS_REST_URL,
       token: process.env.UPSTASH_REDIS_REST_TOKEN,
@@ -570,12 +569,12 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
       if (cached && typeof cached === "object" && "truthScore" in cached) {
         const totalLatencyMs = Math.round(performance.now() - startTime);
         logger.info("[CrossAudit] Cache hit — skipping LLM calls", { incidentId, cacheKey });
+        const cachedResult = cached as TruthScoreResult;
 
-        // Log telemetry with cache_hit = true and cost_usd = 0
         try {
           await admin.from("cross_audit_runs").insert({
             incident_id: incidentId,
-            model: cached.supremeCourtModel ?? "cache",
+            model: cachedResult.supremeCourtModel ?? "cache",
             tokens_in: 0,
             tokens_out: 0,
             cost_usd: 0,
@@ -590,7 +589,7 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
           );
         }
 
-        return { ...cached, totalLatencyMs };
+        return { ...cachedResult, totalLatencyMs };
       }
     } catch (err) {
       logger.warn("[CrossAudit] Redis cache read failed, proceeding without cache", {

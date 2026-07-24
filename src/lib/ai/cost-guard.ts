@@ -24,16 +24,6 @@ export async function isCostKillSwitchActive(): Promise<boolean> {
 }
 
 export async function getDailyCost(): Promise<number> {
-  if (process.env.MOCK_DAILY_COST !== undefined) {
-    return Number(process.env.MOCK_DAILY_COST);
-  }
-  if (
-    typeof globalThis !== "undefined" &&
-    (globalThis as Record<string, unknown>).__MOCK_DAILY_COST !== undefined
-  ) {
-    return (globalThis as Record<string, unknown>).__MOCK_DAILY_COST as number;
-  }
-
   try {
     const { createAdminClient } = await import("@/lib/supabase/admin");
     const admin = createAdminClient();
