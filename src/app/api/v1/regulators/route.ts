@@ -5,13 +5,27 @@ import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { headers } from "next/headers";
 import { hashIp } from "@/lib/utils/hash";
 
-const VALID_AUTHORITIES = ["eu-ai-office", "uk-aisi", "us-aisi"] as const;
+const VALID_AUTHORITIES = [
+  "eu-ai-office",
+  "uk-aisi",
+  "us-aisi",
+  "tubitak-yze",
+  "j-aisi",
+  "sg-imda",
+  "ca-aisi",
+  "oecd-ai",
+] as const;
 type Authority = (typeof VALID_AUTHORITIES)[number];
 
 const AUTHORITY_LABELS: Record<Authority, string> = {
   "eu-ai-office": "EU AI Office (EU AI Act Article 73)",
   "uk-aisi": "UK AI Safety Institute",
   "us-aisi": "US AI Safety Institute (NIST)",
+  "tubitak-yze": "TÜBİTAK Yapay Zeka Enstitüsü (TR Ulusal YZ Stratejisi)",
+  "j-aisi": "Japan AI Safety Institute (J-AISI)",
+  "sg-imda": "Singapore AI Verify Foundation (IMDA)",
+  "ca-aisi": "Canadian AI Safety Institute (AIDA)",
+  "oecd-ai": "OECD AI Policy Observatory (OECD.AI)",
 };
 
 export async function GET(request: Request) {
