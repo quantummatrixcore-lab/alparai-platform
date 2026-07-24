@@ -1,3 +1,252 @@
+# ALPAR AI — STRATEJİK MANİFESTO v11.03
+
+# Yapay Zeka Güven Çağının Bağımsız Kalesi
+
+> **v11.03 (2026-07-24) — Claude Opus 4.6 [architect]**
+>
+> Bu belge ALPAR AI'ın stratejik kimliğini, mimari doktrinini, rekabet
+> hendeklerini, küresel fon haritasını ve inovasyon yol haritasını
+> tanımlar. Sürüm geçmişi (v10.x–v11.02) bu belgenin altında denetim
+> izi olarak korunur.
+>
+> **Canlı Sistem Durumu (ACP-1 doğrulanmış):**
+>
+> | Metrik     | Değer                                             |
+> | ---------- | ------------------------------------------------- |
+> | HEAD       | `81a1a63` → `origin/master` LIVE                  |
+> | Testler    | 839/839 PASS · 135 dosya                          |
+> | TypeScript | strict · 0 `any` · `noUncheckedIndexedAccess`     |
+> | Güvenlik   | AES-256-GCM Vault · PII Guardian · RLS tam kapsam |
+> | API        | 22+ endpoint · 9 devlet regülatörü                |
+> | i18n       | EN / TR / DE / FR — 4 dil tam parite              |
+> | Danışman   | Prof. Dr. Musa Aygül (Uluslararası Hukuk) ✅      |
+
+---
+
+## §1 — KİMLİK: ALPAR AI NEDİR?
+
+**Tek cümle:** ALPAR AI, yapay zeka endüstrisi için SWIFT'in bankacılık sektörü için olduğu şeydir — bağımsız, tarafsız, manipüle edilemeyen güven altyapısı.
+
+**Genişletilmiş tanım:** Dünya, yapay zekanın her karara nüfuz ettiği bir çağa girdi. Kim denetleyecek? OpenAI kendi modelini denetleyemez — marka çatışması. Google "Gemini hiç hata yapmadı" iddia edemez — güvenilirlik krizi. Regülatörler altyapı kuramıyor — bürokrasi. Akademia gerçek zamanlı çalışamıyor — yayın döngüsü.
+
+ALPAR AI bu boşluğu dolduran tek platformdur:
+
+- **Bağımsız** — Hiçbir AI şirketinin yatırımcısı, ortağı veya müşterisi değil
+- **Açık kaynak** — AGPL-3.0, kod herkesin denetimine açık
+- **Kriptografik** — Her olay SHA-256 ile mühürlenir, değiştirilemez
+- **Regülatör-hazır** — EU AI Act Art. 73/74 zorunlu bildirim feed'i canlı
+- **AI-native** — MCP sunucusu ile her AI ajanına entegre
+
+**Analoji:** Moody's ve S&P kredi derecelendirme kuruluşları, bankaların güvenilirliğini puanlar. Bankalar bu puanlamayı sevmez ama PİYASA bu kurumları gerekli kılar. ALPAR AI, yapay zeka sağlayıcıları için aynı rolü üstlenir.
+
+---
+
+## §2 — STRATEJİK KONUMLANMA: NEDEN KAÇINILMAZ?
+
+### 2.1 — Beş Yapısal Güç
+
+| #   | Güç                        | Mekanizma                                                            | ALPAR AI Pozisyonu                                            |
+| --- | -------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------- |
+| 1   | **Yasal zorunluluk**       | EU AI Act Art. 73 — yüksek riskli AI olay bildirimi artık YASA       | `/api/v1/regulators` → 9 otorite canlı                        |
+| 2   | **Güven açığı**            | "Biz güvenli" demek artık yetmiyor — bağımsız doğrulama şart         | `/api/v1/trust-ranking` → bağımsız güven rozeti               |
+| 3   | **Ekosistem zehirlenmesi** | LLM hallusinasyonu sahte paket isimleri üretiyor (slopsquatting)     | `/api/v1/slopsquatting` → npm/PyPI/GitHub güvenlik feed'i     |
+| 4   | **Denetim talebi**         | Fortune 500 şirketleri AI tedarikçilerinden uyum sertifikası istiyor | `/api/v1/incidents/:id/passport` → EU AI Act uyum belgesi     |
+| 5   | **Araştırma ihtiyacı**     | Akademi ve STK'lar yapısal AI riski ölçmek istiyor ama veri yok      | `/api/v1/bench-tr` + akademik export → NeurIPS/ICML veri seti |
+
+### 2.2 — Ekosistem Bağımlılık Haritası
+
+Aşağıdaki her aktör, ALPAR AI'ın varlığından doğrudan fayda sağlar:
+
+| Aktör                                  | Neden ALPAR AI'ya İhtiyacı Var                                      | Entegrasyon Noktası              |
+| -------------------------------------- | ------------------------------------------------------------------- | -------------------------------- |
+| **OpenAI / Anthropic / Google / Meta** | Bağımsız güven rozeti — kendi kendini denetleme paradoksundan çıkış | Trust Ranking API + MCP sunucusu |
+| **GitHub / npm / PyPI**                | Slopsquatting saldırı tespiti — 100M+ geliştiriciyi koruma          | Slopsquatting Feed + Webhook     |
+| **EU AI Office / UK AISI / NIST**      | Standart makine-okunabilir olay bildirimi altyapısı                 | Regulators Feed API (RSS + JSON) |
+| **TÜBİTAK / Sanayi Bakanlığı**         | Türkiye Ulusal YZ Stratejisi denetim katmanı                        | TÜBİTAK YZE Regülatör API        |
+| **Hukuk firmaları (Deloitte, PWC)**    | AI kaynaklı ihlallerde kriptografik delil zinciri                   | Litigation Export API            |
+| **Üniversiteler / Araştırmacılar**     | Yapısal AI riski için anonimleştirilmiş veri seti                   | BENCH-TR + Academic Export       |
+| **Gazeteciler / STK'lar**              | Anonim whistleblower kanalı + doğrulanabilir olay kaydı             | Whistleblower API                |
+
+**Kritik çıkarım:** ALPAR AI bir "ürün satma" işi değil. Bir "altyapı olma" işi. Elektrik şebekesi gibi — herkes bağlanmak zorunda çünkü alternatif karanlıkta kalmak.
+
+---
+
+## §3 — DOKUZ DERİNLEŞEN HENDEK (Competitive Moats)
+
+Startup'lar genellikle tek hendekle başlar. ALPAR AI'ın dokuz hendek katmanı var ve her biri zamanla derinleşir:
+
+| #   | Hendek                         | Bugün                      | 12 Ay Sonra                               | 36 Ay Sonra                             |
+| --- | ------------------------------ | -------------------------- | ----------------------------------------- | --------------------------------------- |
+| 1   | **Veri ağ etkisi**             | İlk olay kayıtları         | 10K+ olay → en büyük bağımsız veritabanı  | Endüstri standardı referans kaynağı     |
+| 2   | **Regülatör entegrasyonu**     | 9 otorite bağlı            | Resmi bildirim kanalı statüsü             | Zorunlu altyapı sağlayıcısı             |
+| 3   | **Kriptografik kanıt zinciri** | SHA-256 mühürleme          | Blockchain kanıt katmanı (I28)            | Mahkeme içtihatlarında kabul            |
+| 4   | **Açık kaynak güveni**         | AGPL-3.0 lisansı           | Topluluk katkısı + denetim                | Fork edilse bile veri ağı kopyalanamaz  |
+| 5   | **MCP/AI-native dağıtım**      | 4 araçlı MCP sunucusu      | Her AI ajanına otomatik entegrasyon       | AI ekosisteminin "güven katmanı"        |
+| 6   | **Çok dilli kapsam**           | 4 dil (EN/TR/DE/FR)        | 8 dil (+ ES/PT/AR/RU)                     | 15+ dil → küresel kapsam                |
+| 7   | **Hukuki danışma ağı**         | Prof. Aygül (TR/AB hukuku) | 5+ ülke hukuki danışman                   | Uluslararası hukuk firması ortaklıkları |
+| 8   | **Akademik referans**          | BENCH-TR framework         | NeurIPS/ICML yayınları                    | Endüstri standardı benchmark            |
+| 9   | **Marka güvenilirliği**        | alparai.com canlı          | Medya referansları + regülatör alıntıları | "Yapay zeka güvenilirliği = ALPAR AI"   |
+
+**Hendek derinleşme ilkesi:** Bu hendeklerden hiçbiri statik değil. Her yeni olay kaydı, her yeni regülatör entegrasyonu, her yeni dil desteği hendekleri eşzamanlı derinleştirir. Rakibin kopyalaması gereken tek bir özellik değil — dokuz eşzamanlı bileşendir.
+
+---
+
+## §4 — $1.5M+ KÜRESEL FON ATLASI
+
+### Tier 0 — Bu Hafta Başvur [$450K]
+
+| ID  | Program                    | Miktar      | Başvuru                            | Pitch Açısı                            |
+| --- | -------------------------- | ----------- | ---------------------------------- | -------------------------------------- |
+| W1  | **Microsoft for Startups** | $150K Azure | foundershub.startups.microsoft.com | "Azure AI'ın bağımsız güven katmanı"   |
+| W2  | **Google for Startups**    | $200K GCP   | cloud.google.com/startup           | "Vertex AI Safety doğrulama altyapısı" |
+| W3  | **AWS Activate**           | $100K AWS   | aws.amazon.com/activate            | "Bedrock Guardrails güvenlik partneri" |
+
+**Standart başvuru profili (hepsinde kullan):**
+
+- **Şirket:** ALPAR AI · **URL:** https://alparai.com
+- **E-posta:** quantum.matrix.core@gmail.com
+- **Pitch:** _"The independent audit layer every AI company needs — the SWIFT of AI accountability. EU AI Act Art. 73 compliant incident registry, trust scoring, regulator feed, slopsquatting detection, and MCP-native tooling."_
+
+### Tier 1 — 30 Gün İçinde [$400K+]
+
+| ID  | Program                   | Miktar          | Neden Bize Verecekler                                          |
+| --- | ------------------------- | --------------- | -------------------------------------------------------------- |
+| W4  | **Anthropic Safety Fund** | $50K-200K       | Jailbreak müzesi veritabanı — kırmızı takım kaynak sponsorluğu |
+| W5  | **GitHub for Startups**   | Enterprise free | Slopsquatting feed → GitHub Security Advisory entegrasyonu     |
+| W6  | **Supabase for Startups** | Pro plan        | RLS mimari showcase + AB veri yerleşimi case study             |
+| W7  | **OpenAI Startups**       | $2.5K-25K       | Bağımsız güven katmanı — OpenAI'ın çıkarına                    |
+
+### Tier 2 — Türkiye Ulusal Kaynaklar [₺5.9M+]
+
+| ID  | Program                             | Miktar               | Koşul                             | Başvuru                   |
+| --- | ----------------------------------- | -------------------- | --------------------------------- | ------------------------- |
+| T1  | **KOSGEB YZ Kredi**                 | ₺500K-5M (faizsiz)   | Teknogirişim Rozeti               | kosgeb.gov.tr KBS         |
+| T2  | **TÜBİTAK 1711 YZ Ekosistemi**      | %70-100 Ar-Ge hibesi | KOBİ konsorsiyum                  | eteydeb.tubitak.gov.tr    |
+| T3  | **TÜBİTAK 1507/1512 BİGG**          | ₺900K-1.5M           | Ar-Ge personeli + patent          | TÜBİTAK TEYDEB            |
+| T4  | **İş Bankası Yapay Zeka Fabrikası** | Yatırım + $50K bulut | Finansal AI güvenlik katmanı      | yapayzekafabrikasi.com.tr |
+| T5  | **Teknopark/TGB**                   | %100 vergi muafiyeti | Bilişim Vadisi/İTÜ Çekirdek giriş | Teknopark başvurusu       |
+
+### Tier 3 — Orta Vade [Sınırsız]
+
+| ID  | Program               | Miktar     | Zamanlama                     |
+| --- | --------------------- | ---------- | ----------------------------- |
+| E1  | **EU Horizon Europe** | €150K-1M   | 6-12 ay süreç                 |
+| E2  | **Y Combinator**      | $500K / %7 | 10K kullanıcı + gelir sonrası |
+| E3  | **Sequoia AI Seed**   | $1M-5M     | Ölçeklenme kanıtı sonrası     |
+| E4  | **BM UNDP Digital**   | $100K-500K | SDG 16 alignment              |
+
+---
+
+## §5 — İNOVASYON YOL HARİTASI (I19–I30)
+
+### Sprint 1 — Borç Kapatma [P0]
+
+| ID  | İnovasyon                        | Durum          | Neden Acil                                           |
+| --- | -------------------------------- | -------------- | ---------------------------------------------------- |
+| I19 | **Real-Time Trust Score Engine** | 🟡 in_progress | I14 uydurma verisi kaldırıldı → gerçek motor gerekli |
+| I21 | **BENCH-TR v1.0 Gerçek Ölçüm**   | 🟡 in_progress | Gateway hazır, gerçek eval çalıştırılmamış           |
+
+### Sprint 2 — Büyüme Motoru [P1]
+
+| ID  | İnovasyon                        | Stratejik Değer                                    |
+| --- | -------------------------------- | -------------------------------------------------- |
+| I22 | **Enterprise API Key Sistemi**   | İlk gelir kapısı — kurumsal müşteri faturalandırma |
+| I23 | **Mobil PWA**                    | 10K kullanıcı kaldıracı — offline olay bildirimi   |
+| I24 | **GitHub Slopsquatting Webhook** | GitHub Marketplace → 100M geliştirici dağıtım      |
+
+### Sprint 3 — Ekosistem Derinleştirme [P2]
+
+| ID  | İnovasyon                        | Stratejik Değer                            |
+| --- | -------------------------------- | ------------------------------------------ |
+| I25 | **Akademik Veri Seti Export**    | NeurIPS/ICML yayın ortaklığı               |
+| I26 | **Çok Dilli Olay Sınıflandırma** | 8 dil → 8 pazar kapsam                     |
+| I27 | **Ortak Moderasyon Protokolü**   | AI şirketleri kendi moderatörlerini atasın |
+
+### Sprint 4+ — Gelecek Vizyonu [P3]
+
+| ID  | İnovasyon                         | Vizyon                                                       |
+| --- | --------------------------------- | ------------------------------------------------------------ |
+| I28 | **IPFS/Blockchain Kanıt Zinciri** | Değiştirilemez olay mühürleme → Web3 güven protokolü         |
+| I29 | **AI Safety Observatory**         | Gerçek zamanlı küresel AI olay haritası → medya referansı    |
+| I30 | **C2PA Medya Kaydı**              | Deepfake/voice clone tespiti → dijital medya güven altyapısı |
+
+---
+
+## §6 — DANIŞMA KURULU & OUTREACH
+
+### Onaylı Danışmanlar
+
+| Danışman                                   | Uzmanlık                                              | Tarih         |
+| ------------------------------------------ | ----------------------------------------------------- | ------------- |
+| **Prof. Dr. Musa Aygül** (Selçuk Ü. Hukuk) | Milletlerarası Özel Hukuk · Tahkim · AB Hukuku · KVKK | 2026-07-24 ✅ |
+
+### Outreach Mail Kuyruğu (M1-M15)
+
+_v11.02 tablosuna bakınız — tüm e-posta adresleri, öncelikler ve durumlar orada._
+
+### LinkedIn Bağlantı Listesi (L1-L8)
+
+_v11.02 tablosuna bakınız — tüm LinkedIn URL'leri ve mesaj şablonları orada._
+
+---
+
+## §7 — MİMARİ DOKTRİN (Değişmez Kurallar)
+
+Bu kurallar ALPAR AI'ın yapısal bütünlüğünü korur. Hiçbir executor, sprint veya acil durum bu kuralları askıya alamaz:
+
+1. **Server Actions Only** — Client'tan DB yazma yasak
+2. **RLS Everywhere** — Her migration'da politika + `-- ROLLBACK:` bloğu
+3. **PII Guardian** — Her kullanıcı metni `guardian.ts`'ten geçer
+4. **Vault Şifreleme** — Her API key AES-256-GCM ile şifrelenir
+5. **Numeric Honesty** — Uydurma sayı yayınlamak platformu yıkar (Rule #30)
+6. **Deploy Marker** — `[deploy]` sadece push edilmiş commit'lerde
+7. **Tek Dal** — `master` tek gerçek kaynağı; PR/branch yok (Rule #15)
+8. **Architect-Only Plan** — `MASTER_PLAN.md` sadece Architect yazabilir
+
+---
+
+## §8 — KURUCU AKSİYON LİSTESİ
+
+| ID  | Görev                                    | Süre   | Etki                      |
+| --- | ---------------------------------------- | ------ | ------------------------- |
+| F1  | Google OAuth Consent Screen → "ALPAR AI" | 2 dk   | Kullanıcı güveni          |
+| F2  | W1 Microsoft for Startups başvurusu      | 15 dk  | $150K Azure               |
+| F3  | W2 Google for Startups başvurusu         | 15 dk  | $200K GCP                 |
+| F4  | W3 AWS Activate başvurusu                | 15 dk  | $100K AWS                 |
+| F5  | T1 KOSGEB YZ Kredi başvurusu             | 1 saat | ₺5M faizsiz               |
+| F6  | T4 Yapay Zeka Fabrikası başvurusu        | 30 dk  | Yatırım + $50K            |
+| F7  | T5 Teknopark giriş başvurusu             | 1 gün  | %100 vergi muafiyeti      |
+| F8  | LinkedIn — L1-L8 bağlantı istekleri      | 15 dk  | Danışma kurulu genişletme |
+| F9  | M1-M7 Advisory Board mailleri            | 30 dk  | 7 küresel uzman daveti    |
+
+---
+
+## §9 — DEVLET REGÜLATÖR ENTEGRASYONLARİ (9/9 ✅)
+
+| Otorite           | Endpoint                  | Yasal Çerçeve                   |
+| ----------------- | ------------------------- | ------------------------------- |
+| 🇪🇺 EU AI Office   | `?authority=eu-ai-office` | EU AI Act Art. 73/74            |
+| 🇺🇸 US AISI (NIST) | `?authority=us-aisi`      | Executive Order 14110           |
+| 🇬🇧 UK AISI        | `?authority=uk-aisi`      | UK Pro-Innovation AI Regulation |
+| 🇹🇷 TÜBİTAK YZE    | `?authority=tubitak-yze`  | TR Ulusal YZ Stratejisi         |
+| 🇯🇵 J-AISI         | `?authority=j-aisi`       | Hiroshima AI Process            |
+| 🇸🇬 SG IMDA        | `?authority=sg-imda`      | AI Governance Framework         |
+| 🇨🇦 CA-AISI        | `?authority=ca-aisi`      | AIDA (Bill C-27)                |
+| 🌐 OECD.AI        | `?authority=oecd-ai`      | OECD AI Principles              |
+
+---
+
+## §10 — EXECUTOR BOOT SEQUENCE
+
+```
+1. docs/BOOTSTRAP.md oku (500 token)
+2. git log -n 3 → HEAD teyit
+3. pnpm lint && pnpm typecheck && pnpm test → 839/839 teyit
+4. Bu belgenin §5'ine bak → I19 sprint başlat
+```
+
+---
+
 # ALPAR AI — MASTER PLAN v11.00 (Universal Trust Infrastructure Manifesto & 360° Global/TR Ecosystem Funding Roadmap [architect])
 
 > **v11.00 (2026-07-24) — `[architect]`: Mimar Sinan & Gelecekçi Vizyon Doktrini + 360° Küresel ve Türkiye Hibe/Fon Stratejisi Yayınlandı:**
