@@ -1,3 +1,22 @@
+# ALPAR AI — MASTER PLAN v11.00 (ACP-1: v11.00 Spec'inin 3/4'ü Tam Doğrulandı, Rusça Devam Eden İş [architect])
+
+> **v11.00 (2026-07-24) — Founder "bütün görevler bitti, sırada ne var?" diye sordu.** `070b793` commit'i önceki turda verilen 3 iş için doğrulandı: chrome-temp temizliği ✅ tam, litigation export yetkisi ✅ tam (`requireAdmin()`), vault ayrıştırması ✅ iyi. Rusça çevirisi kalite açısından düzeldi ama kapsam hâlâ %18. [architect]
+>
+> **ACP-1 Doğrulama Tablosu:**
+>
+> | İş                                       | Sonuç                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+> | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+> | Chrome tarayıcı profili temizliği        | ✅ Tam — 156 dosya git'ten kaldırıldı, `.gitignore`'a `chrome-temp/` eklendi                                                                                                                                                                                                                                                                                                                                                            |
+> | Hukuki belge (litigation export) yetkisi | ✅ Tam — `requireUser()` → `requireAdmin()`, artık sadece admin/CEO erişebiliyor                                                                                                                                                                                                                                                                                                                                                        |
+> | Şifreleme anahtarı ayrıştırma            | ✅ İyi — `VAULT_ENCRYPTION_KEY` (yeni, ayrı env değişkeni) öncelikli, sadece o yoksa eski `CRON_SECRET`'a düşüyor. **Açık soru:** `VAULT_ENCRYPTION_KEY` Vercel'de gerçekten ayarlı mı? Founder teyit etmeli — ayarlıysa iş tam bitmiş sayılır                                                                                                                                                                                          |
+> | Rusça çeviri                             | ⚠️ Kalite sorunu (önceki turdaki "Заголовок"/"Описание" placeholder hatası) **düzeldi** — spot-check örnekleri artık doğru, doğal Rusça (`about_methodology_committee.title` → "Научно-методический комитет" gibi). Ama kapsam ölçüldü: 3142 anahtardan sadece **553'ü (%17.6) gerçekten farklı/çevrilmiş**, 2589'u (%82.4) hâlâ İngilizce ile birebir aynı — yani çevrilmemiş. Executor'ın kendi raporu ("~17% coverage") doğru çıktı. |
+>
+> **Sonuç:** Bu bir hata değil — büyük bir çeviri işinin ilk aşaması, dürüst raporlanmış. Executor kuyruğunda P2 (acil değil, devam eden iş) olarak kalıyor.
+>
+> **Founder'a tek hızlı kontrol:** Vercel ortam değişkenlerinde `VAULT_ENCRYPTION_KEY` var mı bak — yoksa executor'a eklettir, kod zaten hazır ve bekliyor.
+>
+> **Status:** Önceki turun 3 P0/P1 işi tamamlandı. Rusça devam eden iş olarak P2'de. Rule #36 clean, ACP-3 additive.
+
 # ALPAR AI — MASTER PLAN v10.99 (Admin Sidebar Localization & Api-Docs Grid Overflow Fixed [architect])
 
 > **v10.99 (2026-07-24) — `[deploy]`: Admin Sidebar Dil Çevirileri ve Api-Docs Sağ Kolon Taşıma/Taşma Hataları Çözüldü:**
