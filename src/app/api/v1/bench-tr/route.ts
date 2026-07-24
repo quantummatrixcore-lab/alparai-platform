@@ -36,8 +36,8 @@ export async function GET(request: Request) {
   const limit = Math.min(Number(searchParams.get("limit") ?? "20"), 50);
 
   const supabase = createAdminClient();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let query = (supabase.from("bench_tr_evaluations" as never) as any)
+  let query = supabase
+    .from("bench_tr_evaluations")
     .select(
       "id, model_name, provider_slug, tr_grammar_score, tr_bias_score, tr_factuality_pct, eval_dataset_ver, created_at",
     )

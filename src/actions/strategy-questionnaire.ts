@@ -49,8 +49,7 @@ export async function runQuestionnaire(modelIds?: string[]): Promise<{
       return { ok: false, error: "No models selected." };
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const supabase = createAdminClient() as any;
+    const supabase = createAdminClient();
 
     const { data: run, error: runError } = await supabase
       .from("strategic_runs")
@@ -93,8 +92,7 @@ export async function runQuestionnaire(modelIds?: string[]): Promise<{
           const latencyMs = Math.round(performance.now() - startTime);
 
           if (result.ok) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            await (supabase as any).from("strategic_answers").insert({
+            await supabase.from("strategic_answers").insert({
               run_id: runId,
               model_id: model.id,
               model_name: modelLabel,
@@ -106,8 +104,7 @@ export async function runQuestionnaire(modelIds?: string[]): Promise<{
               tokens_used: result.data.usage?.totalTokens || 0,
             });
           } else {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            await (supabase as any).from("strategic_answers").insert({
+            await supabase.from("strategic_answers").insert({
               run_id: runId,
               model_id: model.id,
               model_name: modelLabel,
@@ -120,8 +117,7 @@ export async function runQuestionnaire(modelIds?: string[]): Promise<{
           }
         } catch (err) {
           const latencyMs = Math.round(performance.now() - startTime);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          await (supabase as any).from("strategic_answers").insert({
+          await supabase.from("strategic_answers").insert({
             run_id: runId,
             model_id: model.id,
             model_name: modelLabel,
@@ -139,8 +135,7 @@ export async function runQuestionnaire(modelIds?: string[]): Promise<{
       }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase as any)
+    await supabase
       .from("strategic_runs")
       .update({
         status: "completed",
@@ -161,8 +156,7 @@ export async function getQuestionnaireRuns() {
   await requireAdmin();
   const supabase = createAdminClient();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: runs } = await (supabase as any)
+  const { data: runs } = await supabase
     .from("strategic_runs")
     .select("*")
     .order("started_at", { ascending: false })
@@ -183,8 +177,7 @@ export async function getQuestionnaireRunAnswers(runId: string) {
   await requireAdmin();
   const supabase = createAdminClient();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: answers } = await (supabase as any)
+  const { data: answers } = await supabase
     .from("strategic_answers")
     .select("*")
     .eq("run_id", runId)
@@ -211,9 +204,7 @@ export async function exportRunToMarkdown(runId: string): Promise<{ ok: boolean;
     await requireAdmin();
     const supabase = createAdminClient();
 
-    // 1. Fetch run details
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: run, error: runErr } = await (supabase as any)
+    const { data: run, error: runErr } = await supabase
       .from("strategic_runs")
       .select("*")
       .eq("id", runId)
@@ -223,9 +214,7 @@ export async function exportRunToMarkdown(runId: string): Promise<{ ok: boolean;
       return { ok: false, error: runErr?.message || "Run not found" };
     }
 
-    // 2. Fetch all answers for this run
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: answers, error: answersErr } = await (supabase as any)
+    const { data: answers, error: answersErr } = await supabase
       .from("strategic_answers")
       .select("*")
       .eq("run_id", runId)
@@ -278,7 +267,8 @@ export async function exportRunToMarkdown(runId: string): Promise<{ ok: boolean;
     }
 
     // 5. Append/Insert the Markdown content
-    const targetIndicator = "<!-- COPY ONLY UP TO THIS LINE when sending to a new model. Do not include the Responses section below. -->";
+    const targetIndicator =
+      "<!-- COPY ONLY UP TO THIS LINE when sending to a new model. Do not include the Responses section below. -->";
     const indicatorIndex = content.indexOf(targetIndicator);
 
     if (indicatorIndex === -1) {
@@ -286,11 +276,11 @@ export async function exportRunToMarkdown(runId: string): Promise<{ ok: boolean;
     }
 
     const insertPosition = indicatorIndex + targetIndicator.length;
-    
+
     // We check if "## Responses — v2.0 questions" is already in the file after the indicator
     const postIndicatorContent = content.substring(insertPosition);
     const headerTitle = "## Responses — v2.0 questions";
-    
+
     let updatedContent = "";
     if (!postIndicatorContent.includes(headerTitle)) {
       updatedContent =
@@ -302,11 +292,7 @@ export async function exportRunToMarkdown(runId: string): Promise<{ ok: boolean;
       // Insert right after the headerTitle and its following line breaks/separator
       const headerIndex = content.indexOf(headerTitle);
       const insertAt = headerIndex + headerTitle.length;
-      updatedContent =
-        content.substring(0, insertAt) +
-        `\n` +
-        runMd +
-        content.substring(insertAt);
+      updatedContent = content.substring(0, insertAt) + `\n` + runMd + content.substring(insertAt);
     }
 
     // 6. Write it back to disk
@@ -319,4 +305,3 @@ export async function exportRunToMarkdown(runId: string): Promise<{ ok: boolean;
     return { ok: false, error: err instanceof Error ? err.message : "Unknown error" };
   }
 }
-

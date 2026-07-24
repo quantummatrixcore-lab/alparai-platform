@@ -1,6 +1,6 @@
 import "server-only";
 import { NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import { maskPII } from "@/lib/pii/guardian";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { headers } from "next/headers";
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     .update(`${ipHash}:${lab_name ?? "unknown"}:${Date.now()}`)
     .digest("hex");
 
-  const supabase = createAdminClient();
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("whistleblower_submissions")
     .insert({

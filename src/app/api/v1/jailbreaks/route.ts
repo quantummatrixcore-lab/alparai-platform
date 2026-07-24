@@ -53,8 +53,8 @@ export async function GET(request: Request) {
   }
 
   const supabase = createAdminClient();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let query = (supabase.from("jailbreak_samples" as never) as any)
+  let query = supabase
+    .from("jailbreak_samples")
     .select(
       "id, title, technique, severity, prompt_masked, target_model, reproducible, mitigation, created_at",
     )

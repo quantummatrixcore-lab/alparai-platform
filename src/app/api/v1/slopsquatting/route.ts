@@ -28,8 +28,8 @@ export async function GET(request: Request) {
   const confirmedReal = searchParams.get("confirmed_real");
 
   const supabase = createAdminClient();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let query = (supabase.from("slopsquatting_reports" as never) as any)
+  let query = supabase
+    .from("slopsquatting_reports")
     .select(
       "id, package_name, ecosystem, first_seen_at, confirmed_real, source_url, hallucinated_by_model_id",
     )
@@ -93,8 +93,8 @@ export async function POST(request: Request) {
   const maskedPackageName = maskPII(String(package_name)).masked;
   const supabase = createAdminClient();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = (await (supabase.from("slopsquatting_reports" as never) as any)
+  const { data, error } = (await supabase
+    .from("slopsquatting_reports")
     .insert({
       package_name: maskedPackageName,
       ecosystem: String(ecosystem),

@@ -127,9 +127,8 @@ export async function runBenchTrEvaluationAction(): Promise<BenchTrResult> {
     }
   }
 
-  // Update I15 status in strategy_innovations
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await (adminClient.from("strategy_innovations" as never) as any)
+  await adminClient
+    .from("strategy_innovations")
     .update({ status: "done", updated_at: new Date().toISOString() })
     .ilike("title", "I15 —%");
 

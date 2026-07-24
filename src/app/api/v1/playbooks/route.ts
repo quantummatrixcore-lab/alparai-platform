@@ -46,8 +46,8 @@ export async function GET(request: Request) {
   }
 
   const supabase = createAdminClient();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let query = (supabase.from("vertical_playbooks" as never) as any)
+  let query = supabase
+    .from("vertical_playbooks")
     .select("id, sector, title, framework, summary, checklist, created_at, updated_at")
     .order("created_at", { ascending: false })
     .limit(limit);
