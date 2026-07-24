@@ -7,6 +7,14 @@ import { notFound } from "next/navigation";
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type Locale } from "@/lib/constants";
 import type { AbstractIntlMessages } from "next-intl";
 
+const localeMessages: Record<Locale, () => Promise<{ default: AbstractIntlMessages }>> = {
+  en: () => import("../../messages/en.json"),
+  tr: () => import("../../messages/tr.json"),
+  de: () => import("../../messages/de.json"),
+  fr: () => import("../../messages/fr.json"),
+  ru: () => import("../../messages/ru.json"),
+};
+
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
   if (!locale || !SUPPORTED_LOCALES.includes(locale as Locale)) {
@@ -15,15 +23,8 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
   let messages: AbstractIntlMessages;
   try {
-    if (locale === "tr") {
-      messages = (await import("../../messages/tr.json")).default as AbstractIntlMessages;
-    } else if (locale === "de") {
-      messages = (await import("../../messages/de.json")).default as AbstractIntlMessages;
-    } else if (locale === "fr") {
-      messages = (await import("../../messages/fr.json")).default as AbstractIntlMessages;
-    } else {
-      messages = (await import("../../messages/en.json")).default as AbstractIntlMessages;
-    }
+    const loader = localeMessages[locale as Locale] ?? localeMessages[DEFAULT_LOCALE];
+    messages = (await loader()).default;
   } catch {
     notFound();
   }

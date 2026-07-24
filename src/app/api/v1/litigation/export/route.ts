@@ -1,14 +1,14 @@
 import "server-only";
 import { NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/server";
-import { requireUser } from "@/lib/auth/session";
+import { requireAdmin } from "@/lib/auth/session";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { headers } from "next/headers";
 import { hashIp } from "@/lib/utils/hash";
 import { createHash } from "crypto";
 
 export async function GET(request: Request) {
-  await requireUser();
+  await requireAdmin();
 
   const hdrs = await headers();
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";

@@ -3,9 +3,9 @@ import { createCipheriv, createDecipheriv, randomBytes, scryptSync } from "crypt
 const ALGORITHM = "aes-256-gcm";
 
 function getKey(): Buffer {
-  const secret = process.env.CRON_SECRET;
+  const secret = process.env.VAULT_ENCRYPTION_KEY || process.env.CRON_SECRET;
   if (!secret) {
-    throw new Error("CRON_SECRET env var is required for vault encryption");
+    throw new Error("VAULT_ENCRYPTION_KEY env var is required for vault encryption");
   }
   return scryptSync(secret, "alpar-salt-vault-v1", 32);
 }
