@@ -1,3 +1,32 @@
+# ALPAR AI — MASTER PLAN v11.04 (NVIDIA NIM Entegrasyonu Kullanılmıyor — Ücretsiz Kapasite Atıl [architect])
+
+> **v11.04 (2026-07-24) — Founder sordu: "NVIDIA API'miz zaten ekli, build.nvidia.com'da bir sürü ücretsiz kaynak var, neden kullanmıyoruz?" Haiku subagent ile koda bakıldı; adaptör hazır ama fiilen devre dışı bırakılmış. [architect]**
+>
+> **Zemin (koddan doğrulandı):**
+>
+> | Bileşen                       | Durum                                                                                                                          | Kanıt                                                                                      |
+> | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+> | `NvidiaNgcAdapter`            | ✅ Tam yazılmış — `https://integrate.api.nvidia.com/v1`, OpenAI SDK uyumlu, hata yönetimi tam                                  | `src/lib/ai/adapters/nvidia-ngc.ts`                                                        |
+> | Gateway kaydı                 | ✅ `openrouter-gateway.ts`'de `adapters.nvidia` olarak kayıtlı                                                                 | `src/lib/ai/openrouter-gateway.ts:110`                                                     |
+> | Ana model zincirleri          | ❌ `FREE_TRIAGE_MODELS`, `TRIAGE_SLOT_1/2/3_CHAIN` — hiçbirinde NVIDIA yok                                                     | aynı dosya                                                                                 |
+> | `ai_providers` tablosu        | ❌ **Silinmiş** — `nvidia` slug'ı, incident referansı olmayan sağlayıcılar temizlenirken kaldırılmış                           | `supabase/migrations/20260610000000_provider_curation.sql:5-9`                             |
+> | `.env.example`                | ❌ `NVIDIA_NGC_API_KEY` hiç dokümante edilmemiş — Founder'ın anahtarı resmi kanaldan tanımlanamıyor                            | `.env.example`                                                                             |
+> | Tek canlı kullanım            | ⚠️ Sadece cross-audit "deep tier" fallback'inde (`meta/llama-3.1-70b-instruct`, `google/gemma-2-27b-it`) — niş, ana akış değil | `src/lib/audit/model-router.ts`, çağıran: `cross-audit-engine.ts`, `/api/cron/retro-audit` |
+> | Questionnaire'daki "nemotron" | ⚠️ Var ama **OpenRouter üzerinden** yönlendiriliyor, doğrudan NVIDIA adaptörü değil (`nvidia/nemotron-3-ultra-550b-a55b:free`) | `src/actions/strategy-questionnaire.ts`                                                    |
+>
+> **Sonuç:** Kurulum eksik değil, adaptör çalışıyor — ama (a) veritabanından silinmiş, (b) hiçbir ana iş akışına (triage, questionnaire, K-Benchmark hesaplama) dahil edilmemiş, (c) env değişkeni dokümante değil. Founder'ın ücretsiz NIM kapasitesi (build.nvidia.com/models — Llama, Mistral, DeepSeek vb. hosted, rate-limit'li ama ücretsiz) şu an **hiç kullanılmıyor**.
+>
+> **İş kalemleri (N-serisi):**
+>
+> - **N-1:** `NVIDIA_NGC_API_KEY`'i `.env.example`'a ekle, dokümante et.
+> - **N-2:** `ai_providers` tablosuna NVIDIA'yı yeniden ekle (migration ile, curation script'inin bir daha silmemesi için exception kuralıyla).
+> - **N-3:** `FREE_TRIAGE_MODELS` / `TRIAGE_SLOT_*_CHAIN` zincirlerine NVIDIA NIM ücretsiz modellerini (Llama 3.1, Mistral, DeepSeek — build.nvidia.com/models'ta free-tier olanlar) ekle. Maliyet avantajı: mevcut chain'ler ağırlıkla Google Gemini + OpenRouter + Cohere'e dayanıyor; NVIDIA free-tier bunlara ücretsiz bir alternatif/yedek katman ekler.
+> - **N-4:** K-Benchmark düzeltmesi (v11.03 K-FIX-3) ile birleştirilebilir — K6-K12 için gerçek değerlendirme hattı kurulurken NVIDIA'nın ücretsiz kapasitesi ek-değerlendirici (extra evaluator) olarak kullanılabilir, maliyetsiz çoklu-model çapraz doğrulama sağlar.
+>
+> **Öncelik:** P1 — maliyet optimizasyonu + K-Benchmark güvenilirliğine katkı sağlıyor ama P0 (K-FIX-1/2/4) sonrasına planlanmalı; K-Benchmark'ın kendisi ölçüm yapmıyorken ona "ücretsiz ek değerlendirici" eklemek krizi büyütmez ama önceliği değiştirmez.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.03 (P0 K-Benchmark Bütünlük Krizi + Operasyonel Sponsor Hattı + Model Yönlendirme Kuralı [architect])
 
 > **v11.03 (2026-07-24) — Kod tabanlı zemin doğrulaması.** Founder'ın 360° stratejik güncelleme talebi üzerine yapılan tarama, sponsor stratejisinin dayandığı temel iddianın kodda karşılığı olmadığını ortaya çıkardı. Bu giriş önce o krizi, sonra doğrulanmış envanteri, sonra operasyonel sponsor hattını tanımlar. [architect]
