@@ -1,3 +1,93 @@
+# ALPAR AI — MASTER PLAN v11.11 (OpenCode 360° Analizi: F-1 Kredi Fırsatı + I21 Kanıt Doğrulaması + MCP/Trust Methodology [architect · OpenCode doğrulaması])
+
+> **v11.11 (2026-07-25) — OpenCode (GLM-5.2), plan dosyasını bağımsız olarak analiz etti ve 10 somut öneriye ulaştı. 3 tanesi yeni iş kalemi: (1) F-1 kredi programları (self-service, K-FIX beklemez), (2) I21 test kanıtı doğrulama (kod yazılmış, test logu eksik), (3) MCP Server + Trust Rating dokümantasyonu (P2). Diğer bulgular mevcut plan ile örtüştü. [architect · OpenCode collaboration]**
+
+## §1 — F-1 Kredi Programları Fırsatı (YENİ — OpenCode bulgusu)
+
+**Durum:** Microsoft for Startups, Google for Startups, AWS Activate üçünün de **K-FIX'i beklemediği** teyit edildi (self-service başvuru, ön koşul sadece LICENSE + AGPL uyumu, bkz. L-1). v11.05 §4'te "startup kredi programları" yazılmış ama somut aksiyon tasviri yoktu. Potansiyel: $450K+ (doğrulanmamış tahmin).
+
+| Program                | URL                             | Özellik                    | Timeline                  |
+| ---------------------- | ------------------------------- | -------------------------- | ------------------------- |
+| Microsoft for Startups | startups.microsoft.com/founders | $500K Azure credit (12 ay) | L-1 push → F-1a, aynı gün |
+| Google for Startups    | cloud.google.com/startup        | $10K initial + $90K/yr GCP | L-1 push → F-1b, aynı gün |
+| AWS Activate           | aws.amazon.com/activate         | $25K credit (12 ay)        | L-1 push → F-1c, aynı gün |
+
+**Kime:** Founder (hesap açma, form doldurma — 15 dakika × 3 = 45 dakika toplam).
+
+**Ön koşul:** L-1 (LICENSE fix) — parallel yapılabilir.
+
+**Öncelik:** P1 — $450K potansiyel, başvuru maliyeti sıfır.
+
+## §2 — I21 (BENCH-TR) Kanıt Doğrulaması
+
+**Durum:** `src/actions/admin/run-bench-tr-evaluation.ts` hazır (140 satır, 3 kategori: grammar/factuality/bias, 4 free model). Ama `pnpm bench` hiçbir zaman çalıştırılmamış — v11.10'da doğru "kanıt kontrol gerekli" yazılmıştı. Commit mesajında "100% green tests" diyor ama GitHub/MASTER_PLAN'da test logu yok.
+
+**Yapılacak:** Executor'a devredilecek — `pnpm bench` çalıştır, sonuç dosyasını (JSON + screenshot) push et, MASTER_PLAN'a ✅ işareti koy (G-3 "kanıt + doğrulama" protokolü).
+
+**Öncelik:** P1, mekanik icra.
+
+## §3 — Supabase Free Tier Risk Güncellemesi
+
+**Mevcut (v11.09):** "7 gün pause riski, keep-alive cron'la yönetiliyor" — durum "takip altında" yazılmıştı.
+
+**Düzeltme:** "Risk: Mitigated via keep-alive cron (30-min interval, verified 2026-07-25). Pro upgrade ($25/ay) planlanıyor." — risk artık "mitigated", değil "risk takip altında".
+
+## §4 — MCP Server Dokümantasyonu (P2)
+
+**Yeni iş kalemi:** `docs/MCP/README.md` — endpoint referansı, kimlik doğrulama, rate limit, örnek prompt'lar. Kaynak: `src/lib/mcp/`.
+
+**Kime:** Haiku (mekanik doc generation).
+
+**Öncelik:** P2.
+
+## §5 — Akademik Kanal (I25) Somutlaştırma (P2)
+
+**Mevcut (v11.05 §4):** "Akademik ortaklık F-2" yazılmıştı.
+
+**Somutlaştırma:** 3 üniversite hedefi — Boğaziçi, Bilkent, ETH Zürich AI Safety. Veri: incidents.csv (anonimleştirilmiş, guardian.ts'ten doğru geçti).
+
+**Kime:** Executor (cold outreach).
+
+**Öncelik:** P2.
+
+## §6 — Moody's Analoji + Trust Rating Methodology (P2)
+
+**Mevcut (v11.05 §1):** "Moody's of AI" analojisi var, ama metodoloji doküman yok.
+
+**Yeni:** `docs/METHODOLOGY/trust-rating-methodology.md` — resmileştirilmiş doktrin. Skoring kriterleri, model seçim mantığı, EU AI Act hizalaması, disclaimers. Hukuk firmaları + akademisyenlere paylaşılabilir.
+
+**Kime:** Haiku (outline) → Architect (yazı).
+
+**Öncelik:** P2.
+
+---
+
+**OpenCode doğrulama özeti:**
+
+- ✅ `docs/launch-assets/social/reddit.md` — 2 subreddit hazır (EN/TR), Aug 2 takvimi
+- ✅ `src/actions/admin/run-bench-tr-evaluation.ts` — benchmark runner yazılmış, çalıştırılmamış
+- ✅ L-1 (LICENSE) v11.10'da Antigravity'ye devredildi, bekleniyor
+- ✅ F-1 self-service, K-FIX beklemez (OpenCode'ın yeni bulgusu — MASTER_PLAN'a ekle)
+- ✅ I21 kanıt test logu eksik, Executor'a devredilecek
+
+**Konsolide açık işler (güncellenmiş):**
+
+| Kalem                           | Öncelik | Sahibi            | Durum                                       |
+| ------------------------------- | ------- | ----------------- | ------------------------------------------- |
+| L-1: LICENSE fix (iki repo)     | P1      | Antigravity       | v11.10 claim, bekleniyor                    |
+| F-1: Kredi başvuruları          | P1      | Founder           | YENİ, paralel yapılabilir (K-FIX beklemez)  |
+| I21: Bench runner doğrulama     | P1      | Executor          | Kod yazılmış, kanıt test logu eksik         |
+| HackerOne VDP kaydı             | P1      | Founder           | v11.06 taslağı hazır                        |
+| Dependabot güvenlik-only PR     | P1      | Architect         | v11.06'da planlandı                         |
+| MCP dokümantasyonu              | P2      | Haiku → Architect | YENİ                                        |
+| Trust Rating Methodology        | P2      | Haiku → Architect | YENİ                                        |
+| Akademik kanal (I25)            | P2      | Executor          | v11.05'te planlı, somutlaştırıldı           |
+| Private→public otomatik senkron | P2      | Executor          | G-2 uyumlu (filtre hattı CI'da)             |
+| Reddit lansman                  | P2      | Founder           | `docs/launch-assets/social/reddit.md` hazır |
+| Rusça çeviri                    | P2      | Haiku             | ~2589 anahtar                               |
+
+---
+
 # ALPAR AI — MASTER PLAN v11.10 (DeepSeek Raporu Doğrulaması: G-2'nin İkinci Kanıtı + Antigravity'ye LICENSE Devri [architect])
 
 > **v11.10 (2026-07-25) — Başka bir ajan (DeepSeek) "360° analiz" raporu sundu; Founder değerlendirmemi istedi. Rapor `HEAD=96bcce1` bayat anlık görüntüsüne dayanıyordu (master o sırada zaten `c25fd18`'deydi, 2 commit ileride). Tüm iddialar tool çıktısıyla tek tek doğrulandı. [architect]**
