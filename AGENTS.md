@@ -65,6 +65,8 @@ Delegate discovery to Haiku. An expensive model must never scan the codebase dir
 | Mechanical execution once a plan is approved: repo setup, file export/copy, secret-pattern scans, git plumbing | **Haiku**                                      |
 | Architecture decisions, strategy, security analysis, MASTER_PLAN authoring, multi-step reasoning               | **Opus 5 / Fable 5**                           |
 
+**TOM (Token Optimization Engine) — MASTER_PLAN doctrine entries:** Haiku drafts → Sonnet writes the full content → Opus reviews only (approve, or a diff-sized patch on architecture/governance/security grounds). A full rewrite at the Opus stage voids the savings the pipeline exists for and is a G-4 violation (MASTER_PLAN v11.13): if Opus's output runs >30% longer than Sonnet's, it is recorded as a covert rewrite.
+
 ## MASTER_PLAN Evidence Rule
 
 Every number written into `docs/MASTER_PLAN.md` cites its source (file path, table name, or measurement). Unmeasured values are written as "ölçülmedi"; projections are tagged `[tahmin — doğrulanmamış]`. Unsourced figures are a defect.

@@ -1,3 +1,42 @@
+# ALPAR AI — MASTER PLAN v11.13 (TOM — Token Optimization Engine: Haiku Draft → Sonnet Write → Opus Light Review + G-4 Guardrail [architect])
+
+> 🇹🇷 ÖZET (Founder için): "TOM" (Token Optimizasyon Motoru) fikrinizi kurala dönüştürdük: Haiku ilk taslağı yapar, Sonnet asıl içeriği yazar, Opus **sadece hafif onay/küçük düzeltme** yapar — baştan yeniden yazmaz. Bu sıralamayla tahmini tasarruf **%20-25** (varsayımlara dayalı hesap, ölçülmedi). Ama kritik bir şart var: tasarruf **sadece** Opus hafif kaldığı sürece geçerli. Eğer Opus "madem baktım, baştan yazayım" derse tasarruf sıfırlanır, hatta maliyet artar — çünkü Sonnet aşaması boşa gitmiş olur. Bu yüzden bir guardrail kuralı ekledik (**G-4**): Opus'un çıktısı Sonnet'inkinden %30'dan fazla uzunsa, bu "gizli yeniden yazma" sayılır ve kural ihlali olarak not edilir. Ayrıca bu kural CLAUDE.md ve AGENTS.md'deki model yönlendirme tablolarına da işlendi.
+
+## Cost Model (assumption-based, [tahmin — doğrulanmamış])
+
+**Stated assumptions (none of these are measured in this session):**
+
+- Context read (N) ≈ output written (M) for a typical MASTER_PLAN doctrine entry.
+- Price ratio: Opus ≈ 5× Sonnet per token. This reflects general knowledge of Anthropic's historical tier spacing; no verified per-token price for `claude-haiku-4-5` / `claude-sonnet-5` / `claude-opus-5` was retrieved in this session.
+- Opus "light review" output ≈ 10-15% of M (a patch-sized diff, not a rewrite).
+- Haiku's cost is treated as negligible in both models — it is present in the baseline too (Rule #9 already routes discovery to Haiku), so it cancels out of the comparison.
+
+**Comparison:**
+
+| Pipeline                                        | Cost expression                       | Units |
+| ----------------------------------------------- | ------------------------------------- | ----- |
+| Baseline (Haiku discovery + Opus writes it all) | `C_opus × (N + M)` = `5 × 2M`         | 10M   |
+| TOM (Haiku draft + Sonnet writes + Opus review) | `1 × 2M` + `5 × 1.15M` = `2M + 5.75M` | 7.75M |
+
+**Estimated savings ≈ 1 − 7.75/10 = ~22.5%.** Sensitivity: at a 5%-of-M Opus review the estimate rises to ~27%; at 40% it falls to ~10%. **Central estimate: 20-25%** `[tahmin — doğrulanmamış]`.
+
+## Why This Needs to Be a Rule, Not a Suggestion
+
+The savings figure is **entirely contingent on stage 3 staying light**. If Opus performs a full rewrite instead of a review, the Sonnet stage becomes pure added cost and total consumption exceeds the two-stage baseline — TOM inverts into a loss. This is the same class of problem as G-1/G-2: a process that only holds if the boundary is enforced rather than assumed.
+
+## TOM — The Rule
+
+1. **Stage 1 · Haiku** — discovery and first draft: grep/file/git verification plus raw text. Cheap, unlimited iteration.
+2. **Stage 2 · Sonnet** — reads Haiku's draft, writes the full content: verification, house style, doctrine consistency. This is where the main work happens.
+3. **Stage 3 · Opus** — reads Sonnet's output and **only** approves it or applies a **diff-sized** correction on architecture, governance, or security-boundary grounds. Full rewrites are prohibited; a rewrite voids the savings assumption this rule is built on.
+4. **G-4 · Rewrite Guardrail** — if Opus's output is materially longer than Sonnet's (>30%), treat it as a covert rewrite: a TOM violation, recorded as such in the next entry. Joins G-1 (single-writer external action) and G-2 (security-boundary protocol) as a standing governance rule.
+
+## Verification Status
+
+The 20-25% figure is a **model, not a measurement**. Real validation requires several TOM rounds with the Opus-output/Sonnet-output length ratio recorded each time. Until then this entry's number carries the `[tahmin — doğrulanmamış]` tag, per Rule #10.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.12 (Bilingual Entry Format: Token Economy Without Losing Founder Readability [architect])
 
 > 🇹🇷 ÖZET (Founder için): Token tasarrufu için MASTER_PLAN'ı tamamen İngilizce'ye çevirmeyi önerdiniz. Ölçtük: dosya 646KB/2991 satır, Türkçe'den İngilizce'ye geçiş tahmini %30-35 token tasarrufu sağlar (doğrulanmamış tahmin). Ama siz İngilizce bilmediğinizi belirttiğiniz için, dosyayı tamamen İngilizce yaparsak onu artık kendiniz okuyamazsınız — her seferinde bir ajana çevirtmeniz gerekir, bu da güven riski yaratır. Bunun yerine hibrit format seçtiniz: **bundan sonraki her yeni giriş İngilizce gövdeyle yazılır, ama başında sizin okuyabileceğiniz kısa bir Türkçe özet olur** (tam da bu girişte gördüğünüz gibi). Geçmiş girişler (v1-v11.11) Türkçe kalıyor — değiştirilmiyor, silinmiyor. Aşağıdaki İngilizce bölüm bu kararın teknik gerekçesini ve gerçekçi tasarruf oranını anlatıyor.
