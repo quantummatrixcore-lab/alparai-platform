@@ -1,3 +1,65 @@
+# ALPAR AI — MASTER PLAN v11.06 (GitHub / Reddit / HackerOne Görünürlük Stratejisi — Zemin Beklenenden Sağlam [architect])
+
+> **v11.06 (2026-07-24) — Founder: "github, reddit, hackerone vs. gibi sitelerde strateji oluşturup aksiyon almak lazım." Haiku taraması yapıldı; bu cephe K-Benchmark/sponsor cephesinin aksine zaten büyük ölçüde hazır çıktı. [architect]**
+>
+> ## Zemin (doğrulanmış)
+>
+> | Varlık                            | Durum                                                                          |
+> | --------------------------------- | ------------------------------------------------------------------------------ |
+> | `docs/SECURITY.md`                | ✅ Tam — 48 saat onay + 7 gün kritik yama SLA'sı, PII/RLS/rate-limit detayları |
+> | `public/.well-known/security.txt` | ✅ Var — `security@alparai.com`, policy URL, 2027-07-12'ye kadar geçerli       |
+> | `README.md`                       | ✅ Güçlü — rozetler, net değer önermesi, mimari diyagram                       |
+> | `CONTRIBUTING.md`                 | ✅ Var — kurulum, kod stili, Conventional Commits                              |
+> | `.github/workflows/security.yml`  | ✅ Aktif — pnpm audit + Gitleaks + Semgrep + Trivy, push/PR + haftalık         |
+> | `.github/dependabot.yml`          | ⚠️ Var ama **kasıtlı devre dışı** ("email spam reduction")                     |
+> | Bug bounty programı               | ❌ Yok — yalnızca e-posta disclosure; HackerOne/Bugcrowd kaydı yok             |
+> | Public roadmap                    | ❌ Sadece admin'de (`/admin/strategy/roadmap/`)                                |
+> | GitHub topics/description         | ❌ Ayarlanmamış                                                                |
+> | "Good first issue" kuralı         | ❌ Dokümante değil                                                             |
+> | Blog (`/blog`)                    | ✅ Gerçek, canlı içerik — paylaşılabilir malzeme mevcut                        |
+>
+> **Sonuç:** Sıfırdan yazmaya gerek yok. `SECURITY.md` + `security.txt` zaten HackerOne'ın ücretsiz "disclosure-only" katmanına başvuruya hazır düzeyde. Eksik olan tek şey programı fiilen açmak ve duyurmak.
+>
+> ## Kapsam Ayrımı — kim ne yapabilir
+>
+> | Aksiyon                                                          | Kim                                                                                 |
+> | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+> | GitHub repo topics/description güncellemesi                      | Ajan yapabilir (API erişimi var) — **ayrı teyit ile**, dışarıdan görünür değişiklik |
+> | Dependabot config düzenlemesi (spam azalt, security update koru) | Ajan hazırlar, PR olarak sunar                                                      |
+> | HackerOne hesap açma + program kaydı                             | **Founder** — hesap/ticari karar, ajan API erişimi yok                              |
+> | Reddit'te marka sesiyle paylaşım                                 | **Founder** — marka tonu + topluluk kuralları insan yargısı gerektirir              |
+> | HackerOne program taslağı (scope, disclosure-only tier)          | Ajan hazırlar, Founder yayınlar                                                     |
+> | Reddit gönderi taslağı + hedef subreddit listesi                 | Ajan hazırlar, Founder paylaşır                                                     |
+>
+> ## HackerOne Program Taslağı (Founder'ın kopyala-yapıştır kaydedebileceği)
+>
+> - **Tier:** Disclosure-only (ücretsiz, ödül gerektirmez) — HackerOne'ın "VDP" (Vulnerability Disclosure Program) katmanı
+> - **Kapsam:** `alparai.com`, `api.alparai.com`
+> - **Kapsam dışı:** DoS/DDoS, sosyal mühendislik, fiziksel erişim, spam/rate-limit testleri
+> - **SLA:** `docs/SECURITY.md`'de zaten yazılı — 48 saat onay, 7 gün kritik yama
+> - **İletişim:** `security@alparai.com` (zaten `security.txt`'de yayınlı)
+>
+> ## Reddit İçerik Stratejisi (taslak)
+>
+> İlk gönderi ürün tanıtımı **değil** — güvenlik topluluğuna teknik katkı çerçevesinde olmalı (spam algılanmama için):
+>
+> | Subreddit         | Açı                                                                                                                    |
+> | ----------------- | ---------------------------------------------------------------------------------------------------------------------- |
+> | r/netsec          | "AGPL AI-accountability altyapısı + açık disclosure policy/security.txt" — teknik, ürün değil                          |
+> | r/opensource      | AGPL-3.0 lisans + mimari (RLS, PII Guardian, audit trail) tanıtımı                                                     |
+> | r/artificial      | K-Benchmark'ın kırık olduğu itiraf edilerek "AI ölçümünde şeffaflık zor" tartışması — dürüstlük kredibilite kazandırır |
+> | r/MachineLearning | Blog'daki teknik içerikten pay (gerçek, canlı yazılar var)                                                             |
+>
+> ## Dependabot Yeniden Etkinleştirme Önerisi
+>
+> Mevcut config "email spam" gerekçesiyle kapatılmış. Öneri: yalnızca `security-updates` grubu açık kalsın, rutin versiyon güncellemeleri haftalık batch'e alınsın — spam azalır, güvenlik yaması kaçmaz. Ayrı bir PR olarak sunulacak (bu commit'e dahil değil).
+>
+> ## Öncelik
+>
+> P1 — bağımsız, K-FIX'i beklemez (v11.05 §3 Dalga 1 ile örtüşüyor: GitHub zaten oradaydı, bu giriş onu somutlaştırdı). Founder aksiyonu: HackerOne kaydı + Reddit paylaşımı zamanı geldiğinde.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.05 (UZUN VADELİ DOKTRİN 2026-2030: Kimlik, Ufuk, Ekosistem, Kaynak, Yönetişim [architect · Fable 5 tek atış])
 
 > **v11.05 (2026-07-24) — Fable 5 tek atış: kalıcı stratejik doktrin.** Founder'ın 7 maddelik 360° talebi önce mühendislenmiş prompt'a çevrildi (§0), sonra o prompt'un disipliniyle uzun vadeli doktrin yazıldı. Zemin: v11.03-v11.04'te Haiku taramalarıyla doğrulanmış kod gerçekleri. Bu turda yeni tarama yapılmadı (Kural #9); tek dosya düzenlendi (token disiplini). [architect]
