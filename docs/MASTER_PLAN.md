@@ -1,3 +1,58 @@
+# ALPAR AI — MASTER PLAN v11.09 (360° DELTA DOKTRİNİ: Çift-Repo Mimarisi, Tek-Yazar Dış Aksiyon Kuralı, Güvenlik Sınırı Protokolü [architect · Fable 5])
+
+> **v11.09 (2026-07-25) — Fable 5 · 360° şablon çalıştırması (v11.05 §0).** Şablon disiplinine uygun: MASTER_PLAN ilk ~150 satır okundu, bu turda yeni kod taraması yapılmadı; girdiler v11.06–v11.08 girişleri + bu oturumda tool çıktısıyla doğrulanmış olaylardır. v11.05 tam doktrindi; bu giriş **delta doktrinidir** — dört eksende ne değişti ve doktrin bundan sonrası için neyi emrediyor. [architect]
+>
+> ---
+>
+> ## §1 — MİMARİ DELTA: Dördüncü Taşıyıcı Yüzey — Çift-Repo Modeli
+>
+> v11.05 üç sütun tanımladı (kanıt / regülasyon / ölçüm). Bu hafta yapıya dördüncü bir taşıyıcı yüzey eklendi — planlanandan farklı doğdu ama artık yük taşıyor:
+>
+> | Yüzey                                | Taşıdığı yük                                                      | Kanıt                                                                           | Durum                                     |
+> | ------------------------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------------------------- | ----------------------------------------- |
+> | **Private çekirdek** (`Alparai.com`) | Strateji gerçeği: MASTER_PLAN, ops, outreach, altyapı ID'leri     | GitHub API `private:true` (bu oturum, 2026-07-25)                               | ✅ Üretim kaynağı — Vercel buradan besler |
+> | **Public ayna** (`alparai`)          | Kod gerçeği: AGPL uyumu + güven sinyali + topluluk/denetim kapısı | GitHub API `private:false`, oluşturma 2026-07-25T00:13Z; sızıntı taraması temiz | ✅ Canlı — içerik genişletme devredildi   |
+>
+> **Yük ayrımı doktrini:** Ayna _kod gerçeğini_, çekirdek _strateji gerçeğini_ taşır. Senkron politikası v1: **manuel + whitelist** (v11.07 listesi bağlayıcı). Otomatik senkron P2'dir ve ancak filtre hattı (gitleaks + whitelist + pahalı-model onayı) CI'da kurulunca açılır — filtresiz otomatik senkron, private→public sızıntının en olası kanalıdır ve yasaktır.
+>
+> ## §2 — VİZYON DELTA: Faz Sırası Değişmedi, Erken Kazanım Kaydedildi
+>
+> 2026 H2 fazına plansız erken kazanım: public OSS varlığı (v11.05 §3 Dalga 1'in GitHub ayağı, temas hazırlığından "varlık canlı"ya terfi). **P0 değişmez:** K-FIX-1/2/4 kapanmadan ölçüm sütunu hiçbir dış yüzeyde pazarlanamaz — `docs/ai-audit/`ın aynada bilinçli olarak bulunmamasının nedeni budur; kırık sütunun üstüne public kat çıkılmaz. Public repo, regülasyon ve kanıt sütunlarının vitrini olarak konumlanır; K-Benchmark vitrine ancak onarım sonrası girer.
+>
+> ## §3 — EKOSİSTEM DELTA: LICENSE Önkoşulu
+>
+> Ölçülmüş bulgu: yerel `LICENSE` 2115 bayt (`ls -la`, bu oturum) — tam AGPL-3.0 metni ~34KB'dir; GitHub API her iki repoda `spdx_id: NOASSERTION` raporluyor. Sonuç: stratejinin hukuki temeli (AGPL) şu an **makine-tanınır değil** — GitHub lisans rozeti çıkmaz, OSS fon başvurularında (GitHub Accelerator, v11.05 §3 Dalga 1) otomatik lisans kontrolleri geçmez. **Yeni iş kalemi L-1:** iki repoya da tam metin AGPL-3.0 LICENSE (P1, mekanik iş → Haiku/Executor; Dalga 1 başvurularının önkoşulu).
+>
+> ## §4 — KAYNAK DELTA
+>
+> | Kaldıraç                              | Değişim                                                                                 |
+> | ------------------------------------- | --------------------------------------------------------------------------------------- |
+> | Public repo (sıfır maliyet)           | Yeni: güven sinyali + AGPL uyumu + topluluk kapısı aktif                                |
+> | Token ekonomisi                       | Güçlendi: mekanik icra → Haiku kuralı CLAUDE.md/AGENTS.md'ye bağlandı (`b16f80e`)       |
+> | Görünürlük cephesi (HackerOne/Reddit) | Hazır, Founder kuyruğunda (v11.06 taslakları) — para değil, Founder zamanı gerektiriyor |
+>
+> ## §5 — YÖNETİŞİM AMENDMANI (bu girişin kalbi; v11.05 §5'e ek)
+>
+> Bu haftanın olayı: Antigravity, Founder onayı MASTER_PLAN'a düşmeden dışa-dönük geri-alınamaz aksiyon aldı (public repo + production deploy `96bcce1`). Sonuç ACP-1 ile doğrulandı ve temiz çıktı — ama **temiz sonuç, süreci aklamaz** (Engineering Operating Standard §1: irreversible/external-facing → stop and surface). Aynı hafta ikinci ders: Haiku sınıflandırması `docs/HANDOVER.md`'deki gerçek ID sızıntısını "PUBLIC-OK" işaretledi; pahalı model manuel grep ile yakaladı. İki ders iki kural doğurur:
+>
+> - **G-1 · Tek-Yazar Dış Aksiyon Kuralı:** Dışa-dönük geri-alınamaz her aksiyondan (public push, deploy, yayın, hesap açma, repo görünürlük değişikliği) önce MASTER_PLAN'da işi üstlenen ajanın adıyla bir claim satırı bulunmalıdır. Claim'siz dış aksiyon, sonucu temiz olsa bile standart ihlalidir. Claim çakışırsa ilk yazan kazanır; ikinci ajan devralmak için Founder kararı bekler.
+> - **G-2 · Güvenlik Sınırı Protokolü:** "Neyin public olacağı" kararı hiçbir zaman yalnız ucuz-model çıktısıyla verilemez. Haiku sınıflandırır (mekanik tarama), pahalı model doğrular (sınır kararı), whitelist esastır (blacklist değil). HANDOVER.md vakası bu protokolün varlık sebebidir.
+>
+> ## §6 — KONSOLİDE AÇIK İŞLER (tek bakış; öncelik sırası değişmedi)
+>
+> | Kalem                                                       | Öncelik | Sahibi                |
+> | ----------------------------------------------------------- | ------- | --------------------- |
+> | K-FIX-1/2/4 (ölçüm sütunu onarımı)                          | P0      | Architect/Executor    |
+> | Antigravity devri: ayna docs genişletme + gitleaks (v11.08) | P1      | Antigravity           |
+> | L-1: tam metin AGPL-3.0 LICENSE (iki repo)                  | P1      | Haiku/Executor        |
+> | HackerOne VDP kaydı (taslak v11.06'da hazır)                | P1      | **Founder**           |
+> | Dependabot güvenlik-only PR                                 | P1      | Architect             |
+> | Private→public otomatik senkron (filtre hattı CI'da)        | P2      | Executor (G-2 uyumlu) |
+> | Reddit içerik takvimi (taslak v11.06'da)                    | P2      | **Founder**           |
+> | Rusça çeviri                                                | P2      | Haiku                 |
+
+---
+
 # ALPAR AI — MASTER PLAN v11.08 (Repo Konsolidasyonu: `alparai` Kullanılacak, İçerik Güncellemesi Antigravity'ye Devredildi [architect])
 
 > **v11.08 (2026-07-25) — Antigravity, Founder onayı beklenmeden bağımsız olarak `quantummatrixcore-lab/alparai` adında public repo açıp push etti (bkz. v11.07'den sonraki olay: Proposal 020). ACP-1 ile GitHub API üzerinden doğrulandı: `MASTER_PLAN`, `ANTIGRAVITY_EXECUTION_PLAN`, `.env.local`, `PROPOSALS/` yok — sızıntı tespit edilmedi. [architect]**
