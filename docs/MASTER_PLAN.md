@@ -1,3 +1,20 @@
+# ALPAR AI — MASTER PLAN v11.14 (TOM v1.1 — Stage 3 = Opus 5 / Fable 5; First Live Stage-3 Review Executed [architect · Fable 5])
+
+> 🇹🇷 ÖZET (Founder için): "Fable 5 TOM güncelle" dediniz — bu tur, TOM'un 3. aşamasının **ilk canlı çalıştırmasıdır**: v11.13'ü Sonnet yazmıştı, Fable 5 şimdi onu inceledi ve sadece küçük düzeltmeler yaptı (kural gereği baştan yazmadı). İki düzeltme: (1) TOM'un 3. aşaması artık yalnız "Opus" değil, "**Opus 5 / Fable 5**" — zaten Kural #9 tablosu üst katmanı böyle tanımlıyordu, TOM buna hizalandı. (2) Maliyet modelinde iki küçük ihmal bulundu ama birbirini kısmen dengeledikleri için %20-25 tasarruf bandı geçerli kaldı. Ayrıca G-4 kuralının ilk gerçek ölçümü yapıldı: bu girişin uzunluğu, Sonnet'in girişinin ~%41'i — %130 ihlal eşiğinin çok altında, TOM disiplini bu turda tutmuştur.
+
+## Stage-3 Review of v11.13 (findings; the entry itself stands unrewritten — ACP-3)
+
+1. **Amendment — Stage 3 roster:** "Opus" → "**Opus 5 / Fable 5**". Rule #9's top tier already reads "Opus 5 / Fable 5", and this project's own doctrine entries (v11.05, v11.09) were written by Fable 5. TOM now matches the existing hierarchy instead of narrowing it.
+2. **Cost model check — two offsetting omissions, band unchanged:**
+   - The model prices all tokens flat; real pricing is asymmetric (output costs more than input). Stage 3's token mass is mostly _input_ (reading Sonnet's text), while the baseline's `M` is Opus _output_ — so the model likely **understates** TOM's savings.
+   - Stage 3 also needs some slice of original context N (not just Sonnet's M), which **adds** cost.
+   - Net: effects partially cancel. The **20-25% band stands** `[tahmin — doğrulanmamış]`; uncertainty is wider than v11.13 implied, in both directions.
+3. **First G-4 measurement (this entry):** v11.13 body = 37 lines; this v11.14 entry = 15 lines (both measured post-format, `awk` on file) → ratio **~0.41**, far under the 1.30 violation threshold. First recorded data point that Stage 3 can stay diff-sized in practice.
+
+**Routing tables:** the TOM line in `CLAUDE.md` and `AGENTS.md` updated to name "Opus 5 / Fable 5" as the Stage-3 reviewer (same commit).
+
+---
+
 # ALPAR AI — MASTER PLAN v11.13 (TOM — Token Optimization Engine: Haiku Draft → Sonnet Write → Opus Light Review + G-4 Guardrail [architect])
 
 > 🇹🇷 ÖZET (Founder için): "TOM" (Token Optimizasyon Motoru) fikrinizi kurala dönüştürdük: Haiku ilk taslağı yapar, Sonnet asıl içeriği yazar, Opus **sadece hafif onay/küçük düzeltme** yapar — baştan yeniden yazmaz. Bu sıralamayla tahmini tasarruf **%20-25** (varsayımlara dayalı hesap, ölçülmedi). Ama kritik bir şart var: tasarruf **sadece** Opus hafif kaldığı sürece geçerli. Eğer Opus "madem baktım, baştan yazayım" derse tasarruf sıfırlanır, hatta maliyet artar — çünkü Sonnet aşaması boşa gitmiş olur. Bu yüzden bir guardrail kuralı ekledik (**G-4**): Opus'un çıktısı Sonnet'inkinden %30'dan fazla uzunsa, bu "gizli yeniden yazma" sayılır ve kural ihlali olarak not edilir. Ayrıca bu kural CLAUDE.md ve AGENTS.md'deki model yönlendirme tablolarına da işlendi.
