@@ -1,3 +1,24 @@
+# ALPAR AI — MASTER PLAN v11.20 (Branch Deletion Safety & Context Blindness [architect])
+
+> 🇹🇷 ÖZET (Founder için): Branch temizliği yaparken çok tehlikeli bir hatadan kıl payı dönüldü. Ajan (veya önceki tur), `claude/strategy-brief-review-i93xcv` branch'ini "eski deneme, silinebilir" olarak işaretledi. Hâlbuki bu branch **şu an üzerinde çalıştığımız aktif branch'ti**; silinseydi tüm işler (v11.19 dahil) kaybolacaktı. Ayrıca `claude/pensive-rubin-r4hb0k` branch'inde henüz master'a geçmemiş gerçek özellik kodları (onboarding wizard vb.) tespit edildi. Bu girişle yeni bir kural (doctrine) ekliyoruz: Ajanlar, bulundukları aktif branch'i (oturum bağlamını) asla silmeyi öneremez ve içerik kontrolü (`git log`) yapılmadan hiçbir branch körü körüne silinemez.
+
+## Context Blindness in Branch Deletion
+
+During a branch hygiene review, an agent recommended deleting `claude/strategy-brief-review-i93xcv` and `claude/pensive-rubin-r4hb0k` as "stale AI experiments". This advice contained a critical error that would have caused significant data loss:
+1. `claude/strategy-brief-review-i93xcv` was the **active branch for the current session**. Deleting it would have destroyed all unmerged work, including recently pushed MASTER_PLAN doctrine updates. The agent lacked awareness of its own active Git context.
+2. `claude/pensive-rubin-r4hb0k` contained real, unmerged feature code (onboarding wizard, Founding Reporter badges, strategy DB migrations from 2026-06-24). Categorizing it as an "experiment" based solely on the branch name, without verifying its diff against `master`, risked silent loss of functional work.
+
+## New Operational Constraints
+
+1. **Active Branch Immunity:** Agents must never recommend deleting or attempt to delete the branch they are currently operating on. The output of `git branch --show-current` must be explicitly excluded from any cleanup lists.
+2. **Content Verification Before Deletion:** Before categorizing any branch (especially AI-generated ones) as "stale" or "safe to delete", agents must verify whether it contains unmerged functional code (`git log origin/master..<branch>`). Branch names are not sufficient evidence of their value.
+
+**TOM round record:** Stage 2 (Sonnet) drafted this body (approx. 20 lines).
+
+**Files touched:** this entry only — doctrine update, no code changes.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.19 (Branch Hygiene Round — Push-Delete Is Blocked, and a Self-Correction [architect])
 
 > 🇹🇷 ÖZET (Founder için): Önceki turda size "9 eski Dependabot branch'inden 6'sını sildim, GitHub API ile doğruladım" dedim — **bu yanlıştı ve şimdi düzeltiyorum.** Gerçek şu: bu oturumun (ve devredilen Haiku alt-ajanının) uzak depoda `git push --delete` yetkisi hiç yoktu, ikinci denemede sunucu net bir `HTTP 403` döndürdü. 9'dan 4'e düşüş benim silmemden değil, aynı anda depo üzerinde çalışan başka bir aktörden kaynaklandı — ben yanlışlıkla bunu kendi başarım sandım. Kalan 3 eski branch (`framer-motion-12.40.0`, `lint-staged-17.0.7`, `resend-6.12.4`) hiçbirinin master'a birleşmesi doğru olmaz, çünkü hepsi daha düşük sürüm öneriyor. **Sizden istenen:** bu 3 branch'i GitHub web arayüzünden (Branches sekmesi) elle silmeniz, ve mümkünse repo ayarlarında "Automatically delete head branches" seçeneğini açmanız — böylece bu birikim tekrar oluşmaz.
