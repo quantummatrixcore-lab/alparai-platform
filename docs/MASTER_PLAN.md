@@ -1,3 +1,42 @@
+# ALPAR AI — MASTER PLAN v11.20 (External Advice Verified — Almost Deleted This Session's Own Active Branch [architect])
+
+> 🇹🇷 ÖZET (Founder için): Farklı bir dış AI/araçtan aldığınız tavsiye, `master` ve `archive/main-legacy` dışındaki tüm branch'lerin "gereksiz" olduğunu söyleyip 4 branch için doğrudan GitHub silme linki vermişti — bu tavsiye kontrol edilmeden uygulanmadı, her branch tek tek git ve GitHub API ile doğrulandı. Sonuç ciddiydi: önerilen 4 branch'ten biri olan `claude/strategy-brief-review-i93xcv`, aslında bu oturumun kendi aktif çalışma branch'iydi ve az önce push edilen v11.19 kaydı dahil tüm oturum çalışmasını içeriyordu — link takip edilip silinseydi bu çalışma kaybolacaktı. `claude/pensive-rubin-r4hb0k` gerçek özellik kodu içeriyor ve silinmeden önce içerik incelemesi gerekiyor, bu yüzden silinmedi. `dependabot/npm_and_yarn/production-dependencies-90aedca244` için dış tavsiye doğru çıktı — bu branch aslında bayat, ve önceki v11.19 kaydındaki "güncel, bayat değil" ifadesi burada düzeltiliyor. Son branch, `release-please--branches--master--components--alparai-web`, muhtemelen release-please'in kendi bayat iç durumu ve silinmesi düşük riskli görünüyor ama tam doğrulanmadı. **Ana ders:** dış bir araçtan gelen "şunu sil / bunu değiştir" tavsiyesi, bu oturumun kendi bağlamını göremediği için, tek tek doğrulanmadan asla uygulanmamalı veya size iletilmemeli.
+
+## What Happened
+
+The Founder pasted advice from a different, external AI/tool that had looked at the repo's branch list and recommended deleting every branch except `master` and `archive/main-legacy`, with direct GitHub UI delete links for 4 named branches. This was not applied or forwarded as-is — each branch was independently verified against this session's own git and GitHub API state before any recommendation was made.
+
+## Verification Table — External Claim vs. Verified Reality
+
+| Branch                                                       | External claim       | Verified reality                                                                                                                                                                                                                                                                                                                                                    |
+| ------------------------------------------------------------ | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `claude/strategy-brief-review-i93xcv`                        | Delete — unnecessary | **Wrong and dangerous.** Not merged into master (`git merge-base --is-ancestor` = false). This is this session's own active working branch, holding all session work including the just-pushed v11.19 commit `2e43e1d`.                                                                                                                                             |
+| `claude/pensive-rubin-r4hb0k`                                | Delete — unnecessary | **Unclear.** Not merged into master. Last commit `97dbf923` (2026-06-24): "feat: implement onboarding wizard, Founding Reporter badges, and strategy database migrations" — real feature code. Git history alone cannot show abandoned vs. pending; needs content review.                                                                                           |
+| `dependabot/npm_and_yarn/production-dependencies-90aedca244` | Delete — unnecessary | **Correct.** 67 commits behind master (`git rev-list --left-right --count`). Proposes `"version": "1.0.0"` vs. master's `1.1.0`, and `lucide-react ^1.25.0` vs. master's deliberately-chosen `^0.577.0` — same unvetted-major-jump pattern as the 9 branches in v11.19.                                                                                             |
+| `release-please--branches--master--components--alparai-web`  | Delete — unnecessary | **Likely correct.** Last commit "chore(master): release 1.0.0" (2026-06-06); master already shipped 1.1.0 (commit `29b7e27`). Looks like release-please's own stale state, typically self-regenerated. No open PR found (`mcp__github__list_pull_requests` state=open returned empty) — not independently confirmed against release-please's live automation state. |
+
+## The Near-Miss
+
+Had the external advice been followed without verification, `claude/strategy-brief-review-i93xcv` would have been deleted via the direct link the external tool provided — destroying this session's own active work, including the v11.19 entry pushed earlier this session (`2e43e1d`). The external tool had no visibility into this session's context and could not have known this was the working branch.
+
+## Correction to v11.19
+
+v11.19's Open Items (line 34) stated `dependabot/npm_and_yarn/production-dependencies-90aedca244` was "current, not stale, leave it alone." That was wrong. The version/commit-distance evidence above (67 commits behind, `1.0.0` vs. `1.1.0`, unvetted `lucide-react` major jump) shows it follows the identical stale pattern as the earlier 9 branches. This entry corrects that claim per ACP-3 (addition only — v11.19 itself is left unedited).
+
+## Doctrine Note
+
+Same failure class as the v11.10/v11.11 DeepSeek verification rounds: an external agent operating on a stale or context-blind snapshot produces confident but potentially dangerous recommendations. Rule going forward — any "delete X / change Y" recommendation from an external source must be independently verified against this session's own git/GitHub API state, one item at a time, before acting on it or relaying it to the Founder — especially when a target could plausibly be this session's own active branch.
+
+## Open Items (Founder Action Required)
+
+1. Do **not** delete `claude/pensive-rubin-r4hb0k` until its content is reviewed for whether it was superseded elsewhere or is still needed.
+2. `claude/strategy-brief-review-i93xcv` must never be deleted while this session is active — it is this session's own working branch.
+3. Founder may delete `dependabot/npm_and_yarn/production-dependencies-90aedca244` and `release-please--branches--master--components--alparai-web` via the GitHub web UI if desired — agents still cannot push-delete in this environment (v11.19).
+
+**Files touched:** this entry only — no code changes, no branches modified by this session.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.19 (Branch Hygiene Round — Push-Delete Is Blocked, and a Self-Correction [architect])
 
 > 🇹🇷 ÖZET (Founder için): Önceki turda size "9 eski Dependabot branch'inden 6'sını sildim, GitHub API ile doğruladım" dedim — **bu yanlıştı ve şimdi düzeltiyorum.** Gerçek şu: bu oturumun (ve devredilen Haiku alt-ajanının) uzak depoda `git push --delete` yetkisi hiç yoktu, ikinci denemede sunucu net bir `HTTP 403` döndürdü. 9'dan 4'e düşüş benim silmemden değil, aynı anda depo üzerinde çalışan başka bir aktörden kaynaklandı — ben yanlışlıkla bunu kendi başarım sandım. Kalan 3 eski branch (`framer-motion-12.40.0`, `lint-staged-17.0.7`, `resend-6.12.4`) hiçbirinin master'a birleşmesi doğru olmaz, çünkü hepsi daha düşük sürüm öneriyor. **Sizden istenen:** bu 3 branch'i GitHub web arayüzünden (Branches sekmesi) elle silmeniz, ve mümkünse repo ayarlarında "Automatically delete head branches" seçeneğini açmanız — böylece bu birikim tekrar oluşmaz.
