@@ -44,7 +44,7 @@ pnpm db:migrate       # supabase migration up
    | Mechanical execution once a plan is approved: repo setup, file export/copy, secret-pattern scans, git plumbing | **Haiku**                                      |
    | Architecture decisions, strategy, security analysis, MASTER_PLAN authoring, multi-step reasoning               | **Opus 5 / Fable 5**                           |
 
-   **TOM (Token Optimization Engine) — MASTER_PLAN doctrine entries:** Haiku drafts → Sonnet writes the full content → Opus 5 / Fable 5 reviews only (approve or diff-sized patch on architecture/governance/security grounds). Full rewrites at the review stage are prohibited — see G-4 in MASTER_PLAN v11.13 (amended v11.14).
+   **TOM (Token Optimization Engine) — MASTER_PLAN doctrine entries:** Haiku drafts → Sonnet writes the full content → Opus 5 / Fable 5 reviews only (approve or diff-sized patch on architecture/governance/security grounds). Full rewrites at the review stage are prohibited — see G-4 in MASTER_PLAN v11.13 (amended v11.14). Stage-3 output is also hard-capped at ~1000 tokens regardless of the Sonnet body's length (G-4b, MASTER_PLAN v11.15).
 
 10. **No unsourced numbers in `docs/MASTER_PLAN.md`** — every figure cites a file path, table name, or measurement. If unmeasured, write "ölçülmedi". Projections must be tagged `[tahmin — doğrulanmamış]`.
 

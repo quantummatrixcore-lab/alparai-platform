@@ -1,3 +1,19 @@
+# ALPAR AI — MASTER PLAN v11.15 (G-4b — Absolute Token Cap on Stage-3 Output [architect])
+
+> 🇹🇷 ÖZET (Founder için): G-4 kuralı Stage-3'ün (Opus 5/Fable 5) çıktısını Sonnet'in çıktısına **oranla** sınırlıyordu (>%30 uzunsa ihlal). Siz "en az token, belki 1000 max" dediniz — haklı bir nokta: kısa bir Sonnet girişinde bile %30'a kadar büyüme, yine de büyük bir mutlak token tüketimi olabilir. Bu girişle G-4'e bir alt madde (G-4b) eklendi: Stage-3 çıktısı, oran ne olursa olsun **~1000 token'ı geçemez**. CLAUDE.md ve AGENTS.md'deki TOM notuna da tek cümlelik ek yapıldı.
+
+## G-4b — Absolute Token Cap
+
+G-4 (MASTER_PLAN v11.13) only bounds Stage-3 output _relative_ to Sonnet's — a short Sonnet entry still permits Opus/Fable to grow up to 30% of it, which can be small in ratio but large in absolute tokens if Sonnet's own output was already sizable. This entry adds an independent, absolute ceiling:
+
+- **Stage-3 (Opus 5 / Fable 5) output is hard-capped at ~1000 tokens**, regardless of the ratio to Sonnet's body. Exceeding it is recorded as a G-4 violation the same way a >30% length ratio is — either measure can trigger the flag.
+- Rationale in one line: the relative guardrail alone can't catch a short-but-still-large Stage-3 output; the absolute cap closes that gap.
+- Measurement note: no real tokenizer count was run this session (line/word counts are not token counts) — this cap is `[tahmin — doğrulanmamış]` until verified against actual `claude-opus-5`/`claude-fable-5` usage in a future TOM round.
+
+**Files touched (diff-sized):** `CLAUDE.md` and `AGENTS.md` TOM lines — one added sentence each, no other change.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.14 (TOM v1.1 — Stage 3 = Opus 5 / Fable 5; First Live Stage-3 Review Executed [architect · Fable 5])
 
 > 🇹🇷 ÖZET (Founder için): "Fable 5 TOM güncelle" dediniz — bu tur, TOM'un 3. aşamasının **ilk canlı çalıştırmasıdır**: v11.13'ü Sonnet yazmıştı, Fable 5 şimdi onu inceledi ve sadece küçük düzeltmeler yaptı (kural gereği baştan yazmadı). İki düzeltme: (1) TOM'un 3. aşaması artık yalnız "Opus" değil, "**Opus 5 / Fable 5**" — zaten Kural #9 tablosu üst katmanı böyle tanımlıyordu, TOM buna hizalandı. (2) Maliyet modelinde iki küçük ihmal bulundu ama birbirini kısmen dengeledikleri için %20-25 tasarruf bandı geçerli kaldı. Ayrıca G-4 kuralının ilk gerçek ölçümü yapıldı: bu girişin uzunluğu, Sonnet'in girişinin ~%41'i — %130 ihlal eşiğinin çok altında, TOM disiplini bu turda tutmuştur.
