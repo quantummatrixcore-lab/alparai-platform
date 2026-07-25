@@ -1,3 +1,29 @@
+# ALPAR AI — MASTER PLAN v11.10 (DeepSeek Raporu Doğrulaması: G-2'nin İkinci Kanıtı + Antigravity'ye LICENSE Devri [architect])
+
+> **v11.10 (2026-07-25) — Başka bir ajan (DeepSeek) "360° analiz" raporu sundu; Founder değerlendirmemi istedi. Rapor `HEAD=96bcce1` bayat anlık görüntüsüne dayanıyordu (master o sırada zaten `c25fd18`'deydi, 2 commit ileride). Tüm iddialar tool çıktısıyla tek tek doğrulandı. [architect]**
+>
+> | DeepSeek iddiası                                           | Doğrulama sonucu                                                                                                                                                               |
+> | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+> | "OMEGA-004 commit'leri reset ile kayıp"                    | Yanlış — 6 commit master'ın atası (`git merge-base --is-ancestor` ✅), kayıp değil                                                                                             |
+> | "MASTER_PLAN hâlâ v11.05"                                  | Yanlış — tepe zaten v11.09 idi (bu oturumun kendi girişi)                                                                                                                      |
+> | "LICENSE 2115 bayt, kırık"                                 | Bayat — `c25fd18` ile private repo master'da zaten 34020 bayta düzeltilmiş                                                                                                     |
+> | "cross-audit-engine 4 modüle bölündü (1055→46 satır)"      | Doğrulanamadı — dosya hâlâ tek parça, 1042 satır (`wc -l`); `git log --all` içinde böyle bir refactor commit'i yok                                                             |
+> | "839/839 test yazıyor"                                     | Hayali — MASTER_PLAN'da bu ifade hiç geçmiyor                                                                                                                                  |
+> | "I21 BENCH-TR bitti, ✅ olmalı"                            | Ters — MASTER_PLAN'da hâlâ 🟡 in_progress; bir commit mesajı "bitti" dese de doğrulanabilir kanıt sunulmadı, düzeltilmedi                                                      |
+> | "1.1.0 release kayıtsız"                                   | Yanlış — `29b7e27` gerçek, package.json 1.0.1→1.1.0 (kayda değer ama düşük öncelikli, bu turda MASTER_PLAN'a eklenmedi)                                                        |
+> | "`7d29daa` branch'te, Rule #15 ihlali, master'a taşınmalı" | Yanlış çerçeve — bu oturumun branch'i harness tarafından atanmış; DeepSeek'in bunu bilme imkanı yok. "Master'a cherry-pick" G-1'in tam karşılığı — DeepSeek tek başına yapamaz |
+> | "LICENSE'i iki repoda düzelt"                              | **Doğrulandı — gerçek, tek somut aksiyon.** Public `alparai` reposunda LICENSE hâlâ ~2.1KB kısa taslak (WebFetch teyidi); private master'da tam metin zaten var                |
+>
+> **G-2'nin ikinci kanıtı:** DeepSeek'in kendisi de bayat bağlamla çalışan bir ajan örneği — v11.09 §5'te tanımlanan "güvenlik/durum kararı asla tek kaynaktan verilmez" ilkesi burada kanıtlanmıştır: DeepSeek'in "Build moduna geçeyim mi" önerisi reddedildi çünkü kendi önerdiği aksiyon (master'a cherry-pick) G-1'i ihlal ediyordu.
+>
+> **Antigravity'ye devredilen görev (G-1 uyumlu claim):** `quantummatrixcore-lab/alparai` (public) reposundaki `LICENSE` dosyasını, private `Alparai.com` master'daki tam AGPL-3.0 metniyle (34020 bayt, kaynak: `git show origin/master:LICENSE`, commit `c25fd18`) değiştir. Bu, v11.08'de devredilen "ayna docs genişletme" görevinin bir parçasıdır.
+>
+> **Reddedilenler:** Master'a cherry-pick (Founder claim'i yok — G-1), cross-audit "kurtarma" operasyonu (hiç var olmadığı doğrulandı; istenirse yeni Proposal olarak açılabilir, "kurtarma" çerçevesiyle değil).
+>
+> **Öncelik:** P1, Antigravity (LICENSE). Diğer bulgular (I21 gerçek kanıt kontrolü, 1.1.0 kaydı) düşük öncelik, ayrı tur.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.09 (360° DELTA DOKTRİNİ: Çift-Repo Mimarisi, Tek-Yazar Dış Aksiyon Kuralı, Güvenlik Sınırı Protokolü [architect · Fable 5])
 
 > **v11.09 (2026-07-25) — Fable 5 · 360° şablon çalıştırması (v11.05 §0).** Şablon disiplinine uygun: MASTER_PLAN ilk ~150 satır okundu, bu turda yeni kod taraması yapılmadı; girdiler v11.06–v11.08 girişleri + bu oturumda tool çıktısıyla doğrulanmış olaylardır. v11.05 tam doktrindi; bu giriş **delta doktrinidir** — dört eksende ne değişti ve doktrin bundan sonrası için neyi emrediyor. [architect]
