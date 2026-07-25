@@ -22,7 +22,7 @@ pnpm db:migrate       # supabase migration up
 - **Server Actions** for mutations — never `supabase.from().insert()` from the client.
 - **RLS** — every table has policies. Admin client only for moderation/audit.
 - **PII Guardian** — every user free-text is masked before insert (`src/lib/pii/guardian.ts`).
-- **i18n** — `messages/{en,tr}.json`. Use `useTranslations("namespace")` / `getTranslations({locale, namespace})`.
+- **i18n** — `messages/{en,tr}.json`. Use `useTranslations("namespace")` / `getTranslations({locale, namespace})`. **Admin panels (authorization-gated): EN/TR only** — no DE/FR/RU needed for `/admin/*` routes. Public-facing pages (`/insights`, `/community`, `/documentation`) require all 5 languages.
 - **Tailwind v4** — design tokens in `src/app/globals.css` (`@theme inline`). No `tailwind.config.ts`.
 
 ## Standing Rules
@@ -35,6 +35,18 @@ pnpm db:migrate       # supabase migration up
 6. Never expose `SUPABASE_SERVICE_ROLE_KEY` to the browser.
 7. Run `pnpm lint && pnpm typecheck` after every change.
 8. The Engineering Operating Standard in `AGENTS.md` is binding — read it.
+9. **Model routing (token economy)** — delegate discovery to Haiku; never scan the codebase directly with an expensive model:
+
+   | Work type                                                                                                      | Model                                          |
+   | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+   | Code search, file location, inventory, grep/glob discovery, "where is X defined"                               | **Haiku** (Explore subagent, `model: "haiku"`) |
+   | Routine/mechanical: translation fill-in, formatting, repetitive edits                                          | **Haiku**                                      |
+   | Mechanical execution once a plan is approved: repo setup, file export/copy, secret-pattern scans, git plumbing | **Haiku**                                      |
+   | Architecture decisions, strategy, security analysis, MASTER_PLAN authoring, multi-step reasoning               | **Opus 5 / Fable 5**                           |
+
+   **TOM (Token Optimization Engine) — MASTER_PLAN doctrine entries:** Haiku drafts → Sonnet writes the full content → Opus 5 / Fable 5 reviews only (approve or diff-sized patch on architecture/governance/security grounds). Full rewrites at the review stage are prohibited — see G-4 in MASTER_PLAN v11.13 (amended v11.14).
+
+10. **No unsourced numbers in `docs/MASTER_PLAN.md`** — every figure cites a file path, table name, or measurement. If unmeasured, write "ölçülmedi". Projections must be tagged `[tahmin — doğrulanmamış]`.
 
 ## File Map
 
