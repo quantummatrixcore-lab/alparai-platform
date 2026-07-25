@@ -1,3 +1,23 @@
+# ALPAR AI — MASTER PLAN v11.18 (Strategy Brief §5 — Three Concrete Moves [architect])
+
+> 🇹🇷 ÖZET (Founder için): `docs/CLAUDE_STRATEGY_BRIEF.md` dosyasının kendi son satırındaki talep ("§5 Stratejik Zorluklar'ı incele, 3 somut aksiyon ver") bu turda çalıştırıldı. Üç aksiyon: (1) **Verified Respondent'ı cold-start motoruna çevir** — kullanıcı teşviki ve sağlayıcı onboarding'i ayrı huniler değil, aynı huni; (2) **gelir modelinde Option A'yı (enterprise API) seç**, çünkü B ve C henüz sahip olmadığımız sağlayıcı iyi niyetine/standart kredibilitesine bağlı; (3) **sağlayıcı başına bir amiral gemisi vaka** belgele (Case #001 modelini OpenAI/Anthropic/Google/xAI için tekrarla), kalabalık hacmini bekleme. Bu bir analiz turu — kod değişmedi, yalnız bu kayıt yazıldı. **Founder kararı bekleniyor:** hangisinden başlanacak (mimari öneri: 1 numara, sıfır maliyetli ve en hızlı test edilebilir).
+
+## Strategy Brief §5 — Advisory Round
+
+`docs/CLAUDE_STRATEGY_BRIEF.md` §5 lists four open challenges (cold start, Verified Respondent onboarding, revenue model A/B/C, EU AI Act positioning). This entry records the advisory answer so it persists as doctrine rather than living only in session history (G-1 discipline). No code was scanned or changed — the brief is self-contained context by design.
+
+**Move 1 — Verified Respondent as the cold-start engine, not a separate sales motion.** Challenges 1 and 2 are one funnel, not two. When a report crosses a severity threshold, auto-notify the provider's public trust/safety contact with a "Claim & Respond" flow and a pre-drafted public response template. Providers respond to protect score visibility, not out of goodwill; free, low-friction claiming removes the legal-team sales cycle entirely (no contract, just a login). The first provider reply is itself the growth artifact — the most shareable output the platform can produce.
+
+**Move 2 — Option A (enterprise API) is the wedge; fund it with the regulatory framing.** Option B (paid provider SaaS) needs provider goodwill that does not yet exist; Option C (ALPAR-certified models) needs standards credibility not yet earned — and the measurement pillar is still the standing P0 (K-FIX), so certification cannot be sold ahead of it. Option A monetizes existing data with zero provider cooperation. Package the EU AI Act Art. 73 incident-logging angle (challenge 4) explicitly as the underwriting hook, and price against insurance/breach data feeds rather than SaaS comparables.
+
+**Move 3 — Instrument one flagship case per provider instead of waiting for crowd volume.** Case #001 (Grok/passport, brief §2) worked because it was concrete and fully evidenced, not because of user volume. Founder-sourced, fully documented flagship incidents for OpenAI, Anthropic, Google and xAI within ~60 days would give the Trust Score leaderboard day-one credibility, give journalists something citable, and seed the Move-2 API dataset — one motion covering three problems.
+
+**Open decision (Founder):** sequencing. Architect recommendation is Move 1 first — zero marginal cost, fastest to falsify, and it feeds Moves 2 and 3 with data. Moves 2 and 3 are Founder-gated (commercial positioning, personal sourcing) and are not agent-executable.
+
+**Files touched:** this entry only — advisory round, no code changes.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.17 (G-4c — Absolute Token Cap on Opus 5, Set at 5000 [architect])
 
 > 🇹🇷 ÖZET (Founder için): v11.16'da Fable 5'e ~1000 token'lık sert tavan (G-4b) koymuştuk, Opus 5'in ayrı bir mutlak tavanı yoktu. Siz **Opus 5 için 5000 token sınırı** istediniz. Bu girişle G-4c eklendi: Opus 5'in Stage-3 çıktısı, G-4'ün oransal kuralına (Sonnet'in %30'undan fazla olamaz) ek olarak **~5000 token'ı da geçemez**. İki reviewer'ın artık ayrı, farklı büyüklükte mutlak tavanları var: Fable 5 ≈ 1000, Opus 5 ≈ 5000 — Opus 5'in daha karmaşık/kapsamlı mimari incelemeler için kullanılması beklendiğinden daha geniş bir tavan tanımlandı.
