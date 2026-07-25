@@ -1,3 +1,19 @@
+# ALPAR AI — MASTER PLAN v11.07 (Yeni Public OSS Repo Hazırlığı: Whitelist Kararı + Yetki Engeli [architect])
+
+> **v11.07 (2026-07-25) — Founder: "GitHub'da yeni public repo lazım, mevcut olmaz." GitHub API doğruladı: mevcut repo `private:true`. AGPL-3.0 yükümlülüğü + `docs/MASTER_PLAN.md`'nin sponsor/K-Benchmark itiraflarını içermesi nedeniyle mevcut repoyu public'e çevirmek yerine temiz yeni repo (`alparai-oss`) kararlaştırıldı. [architect]**
+>
+> **Kapsam kararı (whitelist, blacklist değil):** İlk taramada `docs/` klasöründe ~60 dosya olduğu, bunların çoğunun iç strateji/ops/outreach malzemesi olduğu görüldü (Haiku sınıflandırması + manuel doğrulama). Blacklist yaklaşımı (tek tek eleme) risklidir — nitekim Haiku'nun ilk sınıflandırması `docs/HANDOVER.md`'yi "PUBLIC-OK" işaretledi, oysa dosya gerçek OAuth Client ID + Vercel/Supabase proje ID'lerini içeriyordu (manuel grep ile yakalandı). Bunun yerine **whitelist** uygulandı: sadece aşağıdakiler public repoya girer, geri kalan `docs/` içeriği (~40 dosya: outreach taslakları, fon/sponsor listeleri, ops runbook'ları, rotasyon prosedürleri, iç denetim kayıtları) **v1'de dışarıda kalır.**
+>
+> **Public repoya giren `docs/` whitelist'i:** `SECURITY.md`, `ARCHITECTURE.md`, `KVKK.md`, `API.md`, `API_AUDITOR.md`, `EU_AI_ACT_TAXONOMY.md`, `OECD_TAXONOMY_MAP.md`, `DATA_RETENTION.md`, `NEUTRALITY.md`, `risk-api-openapi.yaml`, `DEPLOYMENT.md`, `AGENT_CAPABILITIES.md`, `AI_ANALYSIS_INTEGRATION_GUIDE.md`, `AI_ANALYSIS_PROTOCOL.md`, `AUTOPILOT.md`, `OPS_SUPPLY_CHAIN.md`, `adr/`. Ayrıca `AGENTS.md`'nin sansürlenmiş versiyonu (Infrastructure/Google OAuth/Postmortem/Pending-actions bölümleri çıkarılmış, geri kalan konvansiyonlar korunmuş).
+>
+> **Bilinçli olarak dışarıda bırakılanlar (v1):** `docs/MASTER_PLAN.md`, `AGENTS.md`'nin altyapı bölümü, `docs/HANDOVER.md` (gerçek ID'ler — Haiku'nun kaçırdığı), `docs/ai-audit/` (K-Benchmark bütünlük krizi ile örtüşme riski, v11.03 P0 kapanmadan yayınlanmaz), tüm outreach/fon taslakları (`L2/L4/N2/N3/N5/N6/STARTUP_ECOSYSTEM_GRANTS_CATALOG`), tüm `OPS_*` runbook'ları (rotasyon/kurtarma/kaos), `PROPOSALS/`, `METHODOLOGY_AUDITS/`, `ARCHIVE/`, iç yol haritası/sprint planları.
+>
+> **Durum: BLOKE — GitHub App'in repo oluşturma izni yok.** `mcp__github__create_repository` çağrısı `403 Resource not accessible by integration` döndürdü. Bu bir platform yetki sınırı; ajan bunu aşamaz. İçerik tamamen hazır ve taranmış (1118 dosya, sır/ID kalıntısı temiz — 3 kod dosyasındaki Supabase/Vercel ID'leri zaten `NEXT_PUBLIC_*` üzerinden tarayıcıda görünür durumda, düşük risk, koda dokunulmadı). **Founder'dan bekleyen tek adım:** `alparai-oss` adıyla boş bir public repo açması (veya GitHub App'e Administration: Read&write izni eklemesi) — açıldığı an içerik push edilir.
+>
+> **Öncelik:** P1, bağımsız. Sonraki adım Founder'ın elinde.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.06 (GitHub / Reddit / HackerOne Görünürlük Stratejisi — Zemin Beklenenden Sağlam [architect])
 
 > **v11.06 (2026-07-24) — Founder: "github, reddit, hackerone vs. gibi sitelerde strateji oluşturup aksiyon almak lazım." Haiku taraması yapıldı; bu cephe K-Benchmark/sponsor cephesinin aksine zaten büyük ölçüde hazır çıktı. [architect]**
