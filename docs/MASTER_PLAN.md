@@ -1,3 +1,46 @@
+# ALPAR AI — MASTER PLAN v11.12 (Bilingual Entry Format: Token Economy Without Losing Founder Readability [architect])
+
+> 🇹🇷 ÖZET (Founder için): Token tasarrufu için MASTER_PLAN'ı tamamen İngilizce'ye çevirmeyi önerdiniz. Ölçtük: dosya 646KB/2991 satır, Türkçe'den İngilizce'ye geçiş tahmini %30-35 token tasarrufu sağlar (doğrulanmamış tahmin). Ama siz İngilizce bilmediğinizi belirttiğiniz için, dosyayı tamamen İngilizce yaparsak onu artık kendiniz okuyamazsınız — her seferinde bir ajana çevirtmeniz gerekir, bu da güven riski yaratır. Bunun yerine hibrit format seçtiniz: **bundan sonraki her yeni giriş İngilizce gövdeyle yazılır, ama başında sizin okuyabileceğiniz kısa bir Türkçe özet olur** (tam da bu girişte gördüğünüz gibi). Geçmiş girişler (v1-v11.11) Türkçe kalıyor — değiştirilmiyor, silinmiyor. Aşağıdaki İngilizce bölüm bu kararın teknik gerekçesini ve gerçekçi tasarruf oranını anlatıyor.
+
+## Token Economics Analysis
+
+**Measured baseline:** `docs/MASTER_PLAN.md` is currently 646,456 bytes / 2,991 lines (`wc -c -l`, this session).
+
+**Estimated tokenization overhead (Turkish vs. English):** Turkish is agglutinative and uses accented characters (ı, ğ, ş, ç, ö, ü) that fragment more often in BPE tokenizers trained predominantly on English/Latin-script corpora. Estimated ratio: ~2.8-3.2 chars/token (Turkish) vs. ~4.0 chars/token (English). This implies a **%30-35 token reduction if translated** `[tahmin — doğrulanmamış, gerçek tokenizer ile ölçülmedi]` — this has not been measured with the actual Claude tokenizer against this file; it is a directional estimate based on known multilingual BPE behavior, not a verified number.
+
+**The blocker:** The Founder stated in a prior session ("tr yaz ben engilizce bilmiyorum") that they do not read English. MASTER_PLAN is the binding strategic doctrine the Founder personally reads to make decisions (AGENTS.md: "the Founder cannot audit code, so the system's integrity rests entirely on agents"). A full English translation would sever the Founder's direct access to this document — every future read would require an agent to translate it back, introducing latency and a trust-chain risk (a translation error the Founder cannot independently catch).
+
+**Decision (Founder-approved):** Hybrid format. New entries write the body in English (token-dense) with a short Turkish executive summary (2-4 sentences) at the top, addressed directly to the Founder.
+
+## Scope Decision — No Retroactive Translation
+
+The existing 2,991 lines (v1 through v11.11) **will not be translated**. Three reasons:
+
+1. **ACP-3 conflict:** the "past entries are never deleted" principle isn't just about deletion — rewriting historical text (translation changes the literal words) conflicts with the same append-only, immutable-record philosophy this project already applies to `audit_log`.
+2. **Citation integrity:** other agent sessions (DeepSeek verification pass, Antigravity handoff notes) already quoted these entries **verbatim in Turkish**. Translating them would break the match between those quotes and their original source.
+3. **Real savings come from future growth, not the fixed past:** the bulk of this file's eventual size is what gets appended going forward, not the already-written history.
+
+**Realistic savings expectation:**
+
+- Immediate savings on the existing 646KB: **0%** (no retroactive translation).
+- Future entries (v11.12 onward): English body + small Turkish summary overhead nets an estimated **~20-25% savings per entry** `[tahmin — doğrulanmamış]`, compounding as the file grows.
+
+## New Template (this entry itself is the first example)
+
+```
+> **vX.XX (date) — [English title] [architect]**
+>
+> 🇹🇷 ÖZET (Founder için): [2-4 sentence Turkish summary — what changed, what was
+>   decided, who does what next]
+>
+> [English body: full analysis, tables, evidence, technical detail — every entry
+>   from this point forward follows this format]
+```
+
+This becomes MASTER_PLAN's own house style (the same self-defining mechanism as v11.05 §0's "360° template") — CLAUDE.md/AGENTS.md do not need to change, since they already just say "current style"; the format is defined inside MASTER_PLAN itself.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.11 (OpenCode 360° Analizi: F-1 Kredi Fırsatı + I21 Kanıt Doğrulaması + MCP/Trust Methodology [architect · OpenCode doğrulaması])
 
 > **v11.11 (2026-07-25) — OpenCode (GLM-5.2), plan dosyasını bağımsız olarak analiz etti ve 10 somut öneriye ulaştı. 3 tanesi yeni iş kalemi: (1) F-1 kredi programları (self-service, K-FIX beklemez), (2) I21 test kanıtı doğrulama (kod yazılmış, test logu eksik), (3) MCP Server + Trust Rating dokümantasyonu (P2). Diğer bulgular mevcut plan ile örtüştü. [architect · OpenCode collaboration]**
