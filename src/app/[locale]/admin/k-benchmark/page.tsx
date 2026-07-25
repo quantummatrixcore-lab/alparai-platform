@@ -4,6 +4,18 @@ import { createServerClient } from "@/lib/supabase/server";
 import { Star } from "@phosphor-icons/react/dist/ssr";
 import { Award, BarChart3 } from "lucide-react";
 import { MetricCard } from "@/components/admin/metric-card";
+import { BenchTrRunButton } from "@/components/admin/bench-tr-run-button";
+
+interface BenchTrRow {
+  id: string;
+  model_name: string;
+  provider_slug: string;
+  tr_grammar_score: number;
+  tr_bias_score: number;
+  tr_factuality_pct: number;
+  eval_dataset_ver: string;
+  created_at: string;
+}
 
 export default async function KBenchmarkPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -19,6 +31,22 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
 
   if (error) {
     console.error("Error fetching k_model_scores:", error);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const benchTrQuery = (supabase.from("bench_tr_evaluations" as never) as any)
+    .select(
+      "id, model_name, provider_slug, tr_grammar_score, tr_bias_score, tr_factuality_pct, eval_dataset_ver, created_at",
+    )
+    .order("created_at", { ascending: false })
+    .limit(20);
+  const { data: benchTrRows, error: benchTrError } = (await benchTrQuery) as {
+    data: BenchTrRow[] | null;
+    error: { message: string } | null;
+  };
+
+  if (benchTrError) {
+    console.error("Error fetching bench_tr_evaluations:", benchTrError);
   }
 
   return (
@@ -109,6 +137,62 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
               )}
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-black tracking-tight text-white">{t("benchtr_title")}</h2>
+            <p className="text-fg-secondary mt-1 text-sm">{t("benchtr_subtitle")}</p>
+          </div>
+          <BenchTrRunButton />
+        </div>
+
+        <div className="bg-bg-secondary/40 overflow-hidden rounded-xl border border-white/5 backdrop-blur-xl">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm text-white">
+              <thead className="text-fg-muted bg-white/5 text-xs font-bold uppercase">
+                <tr>
+                  <th className="px-6 py-4">{t("benchtr_th_model")}</th>
+                  <th className="px-6 py-4">{t("benchtr_th_grammar")}</th>
+                  <th className="px-6 py-4">{t("benchtr_th_bias")}</th>
+                  <th className="px-6 py-4">{t("benchtr_th_factuality")}</th>
+                  <th className="px-6 py-4">{t("kbench_th_evaluated")}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {benchTrRows?.map((row) => (
+                  <tr key={row.id} className="transition-colors hover:bg-white/5">
+                    <td className="px-6 py-4 font-mono text-xs text-white">
+                      {row.model_name}
+                      <br />
+                      <span className="text-fg-muted">{row.provider_slug}</span>
+                    </td>
+                    <td className="text-brand-400 px-6 py-4 font-mono text-sm font-bold">
+                      {row.tr_grammar_score}
+                    </td>
+                    <td className="text-brand-400 px-6 py-4 font-mono text-sm font-bold">
+                      {row.tr_bias_score}
+                    </td>
+                    <td className="text-brand-400 px-6 py-4 font-mono text-sm font-bold">
+                      {row.tr_factuality_pct}
+                    </td>
+                    <td className="text-fg-muted px-6 py-4 font-mono text-xs">
+                      {new Date(row.created_at).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))}
+                {(!benchTrRows || benchTrRows.length === 0) && (
+                  <tr>
+                    <td colSpan={5} className="text-fg-muted px-6 py-8 text-center italic">
+                      {t("benchtr_empty")}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

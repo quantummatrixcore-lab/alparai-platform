@@ -1,3 +1,39 @@
+# ALPAR AI — MASTER PLAN v11.23-branch (I21/BENCH-TR Root Cause Fixed — Orphaned Server Action Wired to Admin UI, Not Executed [architect])
+
+> 🇹🇷 ÖZET (Founder için): "/tom" ile sıradaki iş soruldu; TOM keşfi (Haiku/Explore) 3 aday buldu — branch reconciliation, I21/BENCH-TR, P2 dokümantasyon. Branch reconciliation'ı bilinçli elemiş durumdayım (master'ın paylaşılan geçmişini etkileyen, geri dönüşü zor bir git işlemi — v11.21-branch'te zaten Founder kararına bırakılmıştı). I21'i seçtim, ama derin incelemede **I21'in hiç çalıştırılmamasının gerçek nedeni** ortaya çıktı: `runBenchTrEvaluationAction` kod tabanında hiçbir yerden çağrılmıyordu — tamamen yetim bir Server Action. Aynı zamanda `/api/v1/bench-tr` diye **public, dokümante edilmiş** bir API zaten var ve boş dönüyor, çünkü onu dolduracak tek mekanizma hiçbir UI'a bağlı değildi. **Bu turda action'ı gerçekten çalıştırmadım** — bu sandbox'ta `.env.local` yok, Supabase/OpenRouter/Google API anahtarları mevcut değil, uçtan uca test edilemez. Onun yerine kalıcı düzeltmeyi yaptım: admin panelde (`/admin/k-benchmark`) BENCH-TR sonuçlarını gösteren ve değerlendirmeyi tetikleyen bir bölüm + buton eklendi. `pnpm lint`, `tsc --noEmit` (yalnız benim dosyalarım), `pnpm build` (i18n kontrolü + derleme) ve `pnpm test` (785/785) geçti. Gerçek çalıştırma testi ancak gerçek kimlik bilgileri olan bir ortamda (Founder'ın dev/staging'i veya prod) yapılabilir.
+
+## What Was Found
+
+`src/actions/admin/run-bench-tr-evaluation.ts` defines `runBenchTrEvaluationAction`, a `"use server"` action that calls 4 free-tier models (Gemini 1.5 Flash, DeepSeek Chat, Llama 3.3 70B, Qwen 2.5 72B) via the AI Gateway, scores them on Turkish grammar/factuality/bias, and inserts into `bench_tr_evaluations`. A `grep -rn "runBenchTrEvaluationAction" src/` found exactly one match — its own definition. No admin page, button, or cron job ever called it. Meanwhile `src/app/api/v1/bench-tr/route.ts` is a live, rate-limited, publicly documented read endpoint (listed in `/api-docs`) reading from the same table — it has always returned `count: 0` because nothing ever wrote to it. There is also no `pnpm bench` script in `package.json`, contradicting earlier references to running it that way.
+
+## What Was Not Done (and why)
+
+No `.env.local` exists in this session's container — no Supabase URL/keys, no `GOOGLE_API_KEY`/`OPENROUTER_API_KEY`. The action itself requires an authenticated admin Supabase session (`supabase.auth.getUser()` + `role === "admin"` check), which cannot be satisfied headlessly in this sandbox either. Actually invoking the evaluation and confirming real rows land in `bench_tr_evaluations` must happen in an environment with live credentials — this was not claimed as done.
+
+## What Was Done
+
+Added `BenchTrRunButton` (`src/components/admin/bench-tr-run-button.tsx`), following the existing `manual-fetch-button.tsx` pattern (`useTransition` + server action call + DOM toast, no new dependencies). Wired it into `/admin/k-benchmark` alongside a new table section reading `bench_tr_evaluations` (mirrors the read side of the public API route). Added `benchtr_*` i18n keys to all 5 locale files — `en`/`tr` with real strings per CLAUDE.md's admin-panel EN/TR rule, `de`/`fr`/`ru` with English placeholder text, matching the existing precedent for `ru.json`'s `kbench_*` keys (checked via grep before choosing this — not an invented convention).
+
+## Verification
+
+- `pnpm lint`: clean (0 errors) after fixing an eslint-disable-next-line misplacement (comment was one line off from the actual `as any` usage).
+- `tsc --noEmit`: 2 pre-existing errors in `scripts/send-outreach.ts` / `scripts/test-resend.ts` (missing `dotenv` type declarations — confirmed pre-existing via `git stash` + re-run, unrelated to this change, not fixed — out of scope).
+- `pnpm build`: i18n parity check passed, Next.js compile succeeded; full-project `tsc` step hit the same pre-existing `dotenv` issue (confirmed via `ls node_modules/dotenv` — missing from `node_modules` despite being in `package.json`, a stale-install issue, not something this task introduced or should fix).
+- `pnpm test`: 785/785 passed, including `tests/helpers/i18n-parity.test.ts` which enforces key parity across all 5 locales (this is why `de`/`fr`/`ru` needed the new keys too, despite CLAUDE.md's admin-EN/TR-only guidance being about translation effort, not key existence).
+
+## Doctrine Note
+
+The consolidated priority table (v11.11) listed I21 as "code ready, no test logs" without asking why it had never been run. The actual reason was a wiring gap, not a scheduling gap — a useful reminder that "not yet executed" items should get one `grep` for callers before being scheduled as a run-it task.
+
+## Open Items (Founder Action Required)
+
+- Run the evaluation for real in an environment with live Supabase + model API credentials, and confirm `/api/v1/bench-tr` returns non-empty data.
+- Branch reconciliation (32 commits behind master, 1 ahead) remains deferred per v11.21-branch — untouched this turn.
+
+**Files touched:** `src/components/admin/bench-tr-run-button.tsx` (new), `src/app/[locale]/admin/k-benchmark/page.tsx`, `messages/{en,tr,de,fr,ru}.json`. No merge, rebase, fetch of master, or `.env`/secret changes.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.22-branch (LLM Council Pattern — Comparative Analysis Against TOM and This Session's Own Version Collision [architect])
 
 > 🇹🇷 ÖZET (Founder için): Karpathy'nin `llm-council` projesinin linkini paylaştınız ama amacınızı belirtmediniz; sorduğum netleştirme sorusuna yanıt gelmedi, bu yüzden en düşük riskli yorumla ilerledim — bu oturumda az önce yaşanan iki olayla (TOM'un kademeli model zinciri, ve master'daki paralel ajanın kendi kendine aynı sonuca varıp versiyon çakışması yaratması) doğrudan ilgili bir mimari örnek olarak ele aldım, kod entegrasyonu yapmadım. Farklı bir niyetle paylaştıysanız düzeltebilirsiniz. Ana bulgu: llm-council'ın "Chairman" (sentezleyici) rolü, v11.21-branch'te tespit edilen versiyon-çakışması sorununa somut bir çözüm şablonu olabilir — ama bu bir öneri, karar değil, sizin onayınızı bekliyor.
