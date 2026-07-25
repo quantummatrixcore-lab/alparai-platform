@@ -1,3 +1,32 @@
+# ALPAR AI — MASTER PLAN v11.21 (Branch Renaming, Protection Rules, and Harness Dependencies [architect])
+
+> 🇹🇷 ÖZET (Founder için): Branch isimlerine emoji ekleyerek veya branch'leri yeniden adlandırarak (rename) kilitlemeye çalışmak teknik olarak hatalı ve tehlikelidir. Git'te "yeniden adlandırma", aslında yeni bir ref yaratıp eskisini silmektir ve bizim ajan ortamımızda "silme" işlemi (HTTP 403) engellenmiştir. Ayrıca Dependabot gibi araçlar kendi adlandırdıkları branch'leri tam eşleşmeyle ararlar. En önemlisi, şu an aktif olan `claude/strategy-brief-review-i93xcv` branch'i yeniden adlandırılırsa, mevcut ajan harness'ı (altyapısı) push hedefini kaybeder ve işler askıda kalır. Doğru kilit mekanizması GitHub UI üzerinden (Settings → Branches) **Branch Protection Rule** eklemektir.
+
+## Branch Protection vs. Renaming
+
+A proposal was made to add prefix emojis to branch names to "lock" them, or to rename them to better signify their status. This is architecturally unsound for several reasons:
+
+1. **The Nature of Git Rename:** Git does not rename branches in place on a remote. A rename is a local operation followed by pushing a new ref and deleting the old ref (`git push origin :old-branch`). Since `git push --delete` is blocked (`HTTP 403`) in this execution environment (verified in v11.19), agent-driven branch renaming is impossible.
+2. **Harness Dependency:** The branch `claude/strategy-brief-review-i93xcv` is the active session branch. The agent harness explicitly targets this ref for pushing commits. If the branch is renamed from the GitHub UI, the harness will lose its upstream target, potentially causing the loss of ongoing work. It must **not** be renamed.
+3. **Automated Tooling Breakage:** Tools like Dependabot and Release-Please rely on strict string matching for their branch names. Modifying them (e.g., adding an emoji prefix) breaks their tracking, causing them to abandon the branch and create duplicates on their next run.
+
+## The Correct Locking Mechanism
+
+The proper way to lock a branch against deletion or force-pushes is through GitHub's native **Branch Protection Rules**.
+
+| Branch | Action Required | Reason |
+|---|---|---|
+| `claude/strategy-brief-review-i93xcv` | **DO NOT RENAME**. Add Branch Protection Rule via GitHub UI. | Harness relies on exact name. Needs protection from accidental deletion. |
+| `claude/pensive-rubin-r4hb0k` | Safe to rename by Founder via GitHub UI (`feature/onboarding-wizard-founding-badges`). | Contains unmerged feature code from 2026-06-24. Needs content review. |
+
+**New Constraint (Binding):** Agents must never attempt to rename remote branches, nor recommend renaming active session branches. Branch protection is strictly a Founder-gated GitHub UI operation.
+
+**TOM round record:** Stage 1 (Architect) drafted this body.
+
+**Files touched:** this entry only — doctrine update, no code changes.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.20 (Branch Deletion Safety & Context Blindness [architect])
 
 > 🇹🇷 ÖZET (Founder için): Branch temizliği yaparken çok tehlikeli bir hatadan kıl payı dönüldü. Ajan (veya önceki tur), `claude/strategy-brief-review-i93xcv` branch'ini "eski deneme, silinebilir" olarak işaretledi. Hâlbuki bu branch **şu an üzerinde çalıştığımız aktif branch'ti**; silinseydi tüm işler (v11.19 dahil) kaybolacaktı. Ayrıca `claude/pensive-rubin-r4hb0k` branch'inde henüz master'a geçmemiş gerçek özellik kodları (onboarding wizard vb.) tespit edildi. Bu girişle yeni bir kural (doctrine) ekliyoruz: Ajanlar, bulundukları aktif branch'i (oturum bağlamını) asla silmeyi öneremez ve içerik kontrolü (`git log`) yapılmadan hiçbir branch körü körüne silinemez.
