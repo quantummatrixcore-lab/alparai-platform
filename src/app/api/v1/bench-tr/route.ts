@@ -1,6 +1,7 @@
 import "server-only";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdmin } from "@/lib/auth/session";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { headers } from "next/headers";
 import { hashIp } from "@/lib/utils/hash";
@@ -17,6 +18,7 @@ interface BenchTrRow {
 }
 
 export async function GET(request: Request) {
+  await requireAdmin();
   const hdrs = await headers();
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   const ipHash = hashIp(ip);
@@ -34,8 +36,8 @@ export async function GET(request: Request) {
   const limit = Math.min(Number(searchParams.get("limit") ?? "20"), 50);
 
   const supabase = createAdminClient();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let query = (supabase.from("bench_tr_evaluations" as never) as any)
+  let query = supabase
+    .from("bench_tr_evaluations")
     .select(
       "id, model_name, provider_slug, tr_grammar_score, tr_bias_score, tr_factuality_pct, eval_dataset_ver, created_at",
     )

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { isSafeUrl } from "../lib/security/ssrf";
+import { isSafeUrl } from "@/lib/security/ssrf";
 import dns from "dns";
 
 vi.mock("dns", () => {

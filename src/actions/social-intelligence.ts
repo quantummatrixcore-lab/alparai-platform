@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { resolveApiKey } from "@/lib/ai/api-keys";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { fetchWithSsrfGuard } from "@/lib/security/ssrf";
+import { logger } from "@/lib/utils/logger";
 
 export interface FetchContentResponse {
   ok: boolean;
@@ -118,7 +119,7 @@ export async function fetchContentFromUrl(url: string): Promise<FetchContentResp
       };
     }
   } catch (err: unknown) {
-    console.error("fetchContentFromUrl error:", err);
+    logger.error("fetchContentFromUrl error:", undefined, err instanceof Error ? err : undefined);
     return {
       ok: false,
       error: err instanceof Error ? err.message : "Failed to fetch content from the URL.",
@@ -236,7 +237,11 @@ ${contextText}
 
     throw new Error("Invalid response format from Gemini");
   } catch (err: unknown) {
-    console.error("generateStrategicResponse error:", err);
+    logger.error(
+      "generateStrategicResponse error:",
+      undefined,
+      err instanceof Error ? err : undefined,
+    );
     return {
       ok: false,
       error: err instanceof Error ? err.message : "Failed to generate strategic response.",

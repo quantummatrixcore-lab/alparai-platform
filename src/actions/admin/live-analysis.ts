@@ -1,6 +1,7 @@
 "use server";
 
 import OpenAI from "openai";
+import { logger } from "@/lib/utils/logger";
 
 export async function runLiveSystemAnalysis() {
   const apiKey = process.env.OPENAI_API_KEY;
@@ -37,7 +38,7 @@ export async function runLiveSystemAnalysis() {
     const parsed = JSON.parse(rawText);
     return { success: true, data: parsed };
   } catch (err: unknown) {
-    console.error("Live Analysis Error:", err);
+    logger.error("Live Analysis Error:", undefined, err instanceof Error ? err : undefined);
     return {
       success: false,
       error: err instanceof Error ? err.message : "Bilinmeyen bir hata oluştu.",

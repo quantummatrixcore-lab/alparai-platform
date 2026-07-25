@@ -9,7 +9,7 @@ import { resolveApiKey } from "../api-keys";
 
 export class GoogleAdapter implements ProviderAdapter {
   isConfigured(): boolean {
-    return true; // Configurable via DB at runtime
+    return !!(process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY);
   }
 
   async call(request: GatewayRequest): Promise<GatewayResult> {

@@ -1,6 +1,7 @@
 import "server-only";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdmin } from "@/lib/auth/session";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { headers } from "next/headers";
 import { hashIp } from "@/lib/utils/hash";
@@ -27,6 +28,7 @@ interface JailbreakRow {
 }
 
 export async function GET(request: Request) {
+  await requireAdmin();
   const hdrs = await headers();
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   const ipHash = hashIp(ip);
@@ -51,8 +53,8 @@ export async function GET(request: Request) {
   }
 
   const supabase = createAdminClient();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let query = (supabase.from("jailbreak_samples" as never) as any)
+  let query = supabase
+    .from("jailbreak_samples")
     .select(
       "id, title, technique, severity, prompt_masked, target_model, reproducible, mitigation, created_at",
     )

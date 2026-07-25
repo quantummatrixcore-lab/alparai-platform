@@ -2987,38 +2987,53 @@ export type Database = {
       }
       strategic_answers: {
         Row: {
-          answer: string
-          cost_usd: number | null
-          created_at: string | null
-          id: string
-          latency_ms: number | null
-          model_name: string
-          question_id: string
-        }
+          id: string;
+          run_id: string;
+          model_id: string;
+          model_name: string;
+          question_index: number;
+          question_id: string;
+          section: string;
+          answer_text: string | null;
+          error_message: string | null;
+          latency_ms: number | null;
+          tokens_used: number | null;
+          created_at: string;
+        };
         Insert: {
-          answer: string
-          cost_usd?: number | null
-          created_at?: string | null
-          id?: string
-          latency_ms?: number | null
-          model_name: string
-          question_id: string
-        }
+          id?: string;
+          run_id: string;
+          model_id: string;
+          model_name: string;
+          question_index: number;
+          question_id: string;
+          section: string;
+          answer_text?: string | null;
+          error_message?: string | null;
+          latency_ms?: number | null;
+          tokens_used?: number | null;
+          created_at?: string;
+        };
         Update: {
-          answer?: string
-          cost_usd?: number | null
-          created_at?: string | null
-          id?: string
-          latency_ms?: number | null
-          model_name?: string
-          question_id?: string
-        }
+          id?: string;
+          run_id?: string;
+          model_id?: string;
+          model_name?: string;
+          question_index?: number;
+          question_id?: string;
+          section?: string;
+          answer_text?: string | null;
+          error_message?: string | null;
+          latency_ms?: number | null;
+          tokens_used?: number | null;
+          created_at?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "strategic_answers_question_id_fkey"
-            columns: ["question_id"]
+            foreignKeyName: "strategic_answers_run_id_fkey"
+            columns: ["run_id"]
             isOneToOne: false
-            referencedRelation: "strategic_questions"
+            referencedRelation: "strategic_runs"
             referencedColumns: ["id"]
           },
         ]
@@ -3043,6 +3058,39 @@ export type Database = {
           section?: string
         }
         Relationships: []
+      }
+      strategic_runs: {
+        Row: {
+          id: string;
+          status: string;
+          model_ids: string[];
+          total_questions: number;
+          total_answers: number;
+          started_at: string;
+          completed_at: string | null;
+          created_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          status?: string;
+          model_ids: string[];
+          total_questions?: number;
+          total_answers?: number;
+          started_at?: string;
+          completed_at?: string | null;
+          created_by?: string | null;
+        };
+        Update: {
+          id?: string;
+          status?: string;
+          model_ids?: string[];
+          total_questions?: number;
+          total_answers?: number;
+          started_at?: string;
+          completed_at?: string | null;
+          created_by?: string | null;
+        };
+        Relationships: [];
       }
       strategy_innovations: {
         Row: {
@@ -4008,6 +4056,177 @@ export type Database = {
           submitted_at?: string
         }
         Relationships: []
+      }
+      vendor_trust_rankings: {
+        Row: {
+          id: string;
+          provider_slug: string;
+          provider_name: string;
+          composite_score: number;
+          incident_penalty: number;
+          response_rate_bonus: number;
+          ranking_tier: string;
+          last_evaluated_at: string;
+        };
+        Insert: {
+          id?: string;
+          provider_slug: string;
+          provider_name: string;
+          composite_score?: number;
+          incident_penalty?: number;
+          response_rate_bonus?: number;
+          ranking_tier: string;
+          last_evaluated_at?: string;
+        };
+        Update: {
+          id?: string;
+          provider_slug?: string;
+          provider_name?: string;
+          composite_score?: number;
+          incident_penalty?: number;
+          response_rate_bonus?: number;
+          ranking_tier?: string;
+          last_evaluated_at?: string;
+        };
+        Relationships: [];
+      }
+      slopsquatting_reports: {
+        Row: {
+          id: string;
+          package_name: string;
+          ecosystem: string;
+          hallucinated_by_model_id: string | null;
+          first_seen_at: string;
+          confirmed_real: boolean;
+          source_url: string | null;
+          reporter_ip_hash: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          package_name: string;
+          ecosystem: string;
+          hallucinated_by_model_id?: string | null;
+          first_seen_at?: string;
+          confirmed_real?: boolean;
+          source_url?: string | null;
+          reporter_ip_hash?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          package_name?: string;
+          ecosystem?: string;
+          hallucinated_by_model_id?: string | null;
+          first_seen_at?: string;
+          confirmed_real?: boolean;
+          source_url?: string | null;
+          reporter_ip_hash?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      }
+      vertical_playbooks: {
+        Row: {
+          id: string;
+          sector: string;
+          title: string;
+          framework: string;
+          summary: string;
+          checklist: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          sector: string;
+          title: string;
+          framework: string;
+          summary: string;
+          checklist?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          sector?: string;
+          title?: string;
+          framework?: string;
+          summary?: string;
+          checklist?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      }
+      jailbreak_samples: {
+        Row: {
+          id: string;
+          title: string;
+          technique: string;
+          severity: string;
+          prompt_masked: string;
+          target_model: string;
+          reproducible: boolean;
+          mitigation: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          technique: string;
+          severity: string;
+          prompt_masked: string;
+          target_model: string;
+          reproducible?: boolean;
+          mitigation?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          technique?: string;
+          severity?: string;
+          prompt_masked?: string;
+          target_model?: string;
+          reproducible?: boolean;
+          mitigation?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      }
+      bench_tr_evaluations: {
+        Row: {
+          id: string;
+          model_name: string;
+          provider_slug: string;
+          tr_grammar_score: number;
+          tr_bias_score: number;
+          tr_factuality_pct: number;
+          eval_dataset_ver: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          model_name: string;
+          provider_slug: string;
+          tr_grammar_score: number;
+          tr_bias_score: number;
+          tr_factuality_pct: number;
+          eval_dataset_ver?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          model_name?: string;
+          provider_slug?: string;
+          tr_grammar_score?: number;
+          tr_bias_score?: number;
+          tr_factuality_pct?: number;
+          eval_dataset_ver?: string;
+          created_at?: string;
+        };
+        Relationships: [];
       }
     }
     Views: {

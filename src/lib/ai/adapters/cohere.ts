@@ -9,7 +9,7 @@ import { resolveApiKey } from "../api-keys";
 
 export class CohereAdapter implements ProviderAdapter {
   isConfigured(): boolean {
-    return true; // Configurable via DB at runtime
+    return !!process.env.COHERE_API_KEY;
   }
 
   async call(request: GatewayRequest): Promise<GatewayResult> {

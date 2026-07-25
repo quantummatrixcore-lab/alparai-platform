@@ -2,6 +2,7 @@
 
 import { requireAdmin } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logger } from "@/lib/utils/logger";
 
 export interface RealProvider {
   id: string;
@@ -52,7 +53,9 @@ export async function getApiTelemetryData(): Promise<ApiTelemetryData> {
       dailySpend = Number(costRes.data.toFixed(2));
     }
   } catch (err) {
-    console.warn("[ApiManagement] Cost RPC query error:", err);
+    logger.warn("[ApiManagement] Cost RPC query error:", {
+      error: err instanceof Error ? err.message : String(err),
+    });
   }
 
   // Real provider env key checks (Zero fabrication)

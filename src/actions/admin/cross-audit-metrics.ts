@@ -69,11 +69,7 @@ export async function getCrossAuditDashboardData(): Promise<CrossAuditDashboardD
     .eq("status", "published")
     .not("cross_audit_truth_score", "is", null);
 
-  if (error) {
-    throw new Error(`Failed to fetch cross-audit metrics: ${error.message}`);
-  }
-
-  if (!incidents || incidents.length === 0) {
+  if (error || !incidents || incidents.length === 0) {
     return {
       overview: {
         averageTruthScore: 0,

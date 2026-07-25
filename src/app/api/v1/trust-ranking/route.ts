@@ -1,6 +1,7 @@
 import "server-only";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdmin } from "@/lib/auth/session";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { headers } from "next/headers";
 import { hashIp } from "@/lib/utils/hash";
@@ -17,6 +18,7 @@ interface TrustRankingRow {
 }
 
 export async function GET(request: Request) {
+  await requireAdmin();
   const hdrs = await headers();
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   const ipHash = hashIp(ip);
@@ -33,8 +35,8 @@ export async function GET(request: Request) {
   const limit = Math.min(Number(searchParams.get("limit") ?? "20"), 50);
 
   const supabase = createAdminClient();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = (await (supabase.from("vendor_trust_rankings" as never) as any)
+  const { data, error } = (await supabase
+    .from("vendor_trust_rankings")
     .select(
       "id, provider_slug, provider_name, composite_score, incident_penalty, response_rate_bonus, ranking_tier, last_evaluated_at",
     )

@@ -23,28 +23,34 @@ export function createMockSupabaseClient() {
     gte: mockGte,
   }));
 
-  const innerEq = vi.fn().mockReturnValue({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mockQueryChain: any = {
     single: mockSingle,
     maybeSingle: mockMaybeSingle,
-    gt: mockGt,
     limit: mockLimit,
-  });
-
-  const outerEq = vi.fn().mockReturnValue({
-    single: mockSingle,
-    maybeSingle: mockMaybeSingle,
-    eq: innerEq,
     gt: mockGt,
     gte: mockGte,
-    limit: mockLimit,
+    then: vi.fn().mockImplementation((onfulfilled) => {
+      return mockMaybeSingle().then(onfulfilled);
+    }),
+  };
+
+  const mockNot = vi.fn().mockImplementation(() => mockQueryChain);
+  const mockIs = vi.fn().mockImplementation(() => mockQueryChain);
+  mockQueryChain.not = mockNot;
+  mockQueryChain.is = mockIs;
+  mockQueryChain.eq = vi.fn().mockImplementation(() => mockQueryChain);
+
+  const innerEq = vi.fn().mockReturnValue(mockQueryChain);
+
+  const outerEq = vi.fn().mockReturnValue({
+    ...mockQueryChain,
+    eq: innerEq,
   });
 
   const mockSelect = vi.fn().mockReturnValue({
-    single: mockSingle,
-    maybeSingle: mockMaybeSingle,
+    ...mockQueryChain,
     eq: outerEq,
-    gt: mockGt,
-    limit: mockLimit,
   });
 
   const mockInsertSelectSingle = vi.fn().mockResolvedValue({ data: null, error: null });
@@ -64,13 +70,11 @@ export function createMockSupabaseClient() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mockUpdateChain = {} as any;
   const mockUpdateEq = vi.fn().mockImplementation(() => mockUpdateChain);
-  const mockUpdate = vi.fn().mockImplementation(() => ({
-    eq: mockUpdateEq,
-    in: vi.fn().mockImplementation(() => mockUpdateChain),
-  }));
+  const mockUpdate = vi.fn().mockImplementation(() => mockUpdateChain);
 
-  mockUpdateChain.eq = vi.fn().mockImplementation(() => mockUpdateChain);
+  mockUpdateChain.eq = mockUpdateEq;
   mockUpdateChain.in = vi.fn().mockImplementation(() => mockUpdateChain);
+  mockUpdateChain.or = vi.fn().mockImplementation(() => mockUpdateChain);
   mockUpdateChain.select = vi.fn().mockImplementation(() => mockUpdateChain);
   mockUpdateChain.then = vi.fn().mockImplementation((onfulfilled) => {
     if (typeof onfulfilled === "function") {
