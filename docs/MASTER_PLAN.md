@@ -1,3 +1,52 @@
+# ALPAR AI — MASTER PLAN v11.17 (G-4c — Absolute Token Cap on Opus 5, Set at 5000 [architect])
+
+> 🇹🇷 ÖZET (Founder için): v11.16'da Fable 5'e ~1000 token'lık sert tavan (G-4b) koymuştuk, Opus 5'in ayrı bir mutlak tavanı yoktu. Siz **Opus 5 için 5000 token sınırı** istediniz. Bu girişle G-4c eklendi: Opus 5'in Stage-3 çıktısı, G-4'ün oransal kuralına (Sonnet'in %30'undan fazla olamaz) ek olarak **~5000 token'ı da geçemez**. İki reviewer'ın artık ayrı, farklı büyüklükte mutlak tavanları var: Fable 5 ≈ 1000, Opus 5 ≈ 5000 — Opus 5'in daha karmaşık/kapsamlı mimari incelemeler için kullanılması beklendiğinden daha geniş bir tavan tanımlandı.
+
+## G-4c — Absolute Token Cap on Opus 5
+
+v11.16 split the Stage-3 roster into Opus 5 and Fable 5 as separate reviewers but left Opus 5 without an absolute ceiling — only G-4's relative (>30%) guardrail applied to it. This entry closes that gap:
+
+- **Opus 5's Stage-3 output is hard-capped at ~5000 tokens**, independent of the ratio to Sonnet's body — the same class of guardrail as G-4b, at a different ceiling.
+- The two Stage-3 reviewers now carry distinct absolute caps: **Fable 5 ≈ 1000 tokens (G-4b, v11.15/v11.16)**, **Opus 5 ≈ 5000 tokens (G-4c, this entry)**. Neither cap changes G-4's shared relative rule (>30% longer than Sonnet's output = violation for either reviewer).
+- Measurement note: not a measured figure — no real tokenizer count was run this session. `[tahmin — doğrulanmamış]` until verified against actual `claude-opus-5` usage in a future TOM round, same caveat as G-4b.
+
+**Files touched (diff-sized):** `CLAUDE.md` and `AGENTS.md` TOM lines — Opus 5's cap added alongside Fable 5's existing one.
+
+---
+
+# ALPAR AI — MASTER PLAN v11.16 (Stage-3 Roster Split — G-4b Applies to Fable 5 Only [architect])
+
+> 🇹🇷 ÖZET (Founder için): v11.15'te Stage-3'ü "Opus 5 / Fable 5" tek bir rol gibi yazmıştık; siz ikisinin ayrılmasını istediniz. Bu girişle Stage-3'te iki ayrı, birbirinin yerine geçmeyen seçenek var: **Opus 5** ve **Fable 5**. ~1000 token'lık sert tavan (G-4b) artık yalnızca **Fable 5** için geçerli. Opus 5 kullanıldığında sadece G-4'ün oransal kuralı (Sonnet'in %30'undan fazla uzamaması) geçerli, ayrı bir mutlak tavanı yok — istenirse ayrı bir tur onunla da tanımlanabilir.
+
+## Stage-3 Roster Split
+
+v11.15's G-4b named the reviewer as a combined "Opus 5 / Fable 5" role. This entry separates them into two distinct, non-interchangeable Stage-3 options:
+
+- **Opus 5** — Stage-3 reviewer, governed by G-4's relative guardrail only (>30% longer than Sonnet's output = violation). No absolute token cap defined for Opus 5 in this entry.
+- **Fable 5** — Stage-3 reviewer, governed by G-4 **and** G-4b: output additionally hard-capped at **~1000 tokens**, independent of the ratio to Sonnet's body. This is the cap v11.15 introduced; it now applies specifically to Fable 5, not to Opus 5.
+
+Rationale in one line: the two models are not equivalent — treating them as a single label obscured which guardrail applies to which. Splitting them lets each reviewer's cap be tuned independently later without re-litigating the other.
+
+**Files touched (diff-sized):** `CLAUDE.md` and `AGENTS.md` TOM lines updated to attribute the ~1000-token cap to Fable 5 specifically.
+
+---
+
+# ALPAR AI — MASTER PLAN v11.15 (G-4b — Absolute Token Cap on Stage-3 Output [architect])
+
+> 🇹🇷 ÖZET (Founder için): G-4 kuralı Stage-3'ün (Opus 5/Fable 5) çıktısını Sonnet'in çıktısına **oranla** sınırlıyordu (>%30 uzunsa ihlal). Siz "en az token, belki 1000 max" dediniz — haklı bir nokta: kısa bir Sonnet girişinde bile %30'a kadar büyüme, yine de büyük bir mutlak token tüketimi olabilir. Bu girişle G-4'e bir alt madde (G-4b) eklendi: Stage-3 çıktısı, oran ne olursa olsun **~1000 token'ı geçemez**. CLAUDE.md ve AGENTS.md'deki TOM notuna da tek cümlelik ek yapıldı.
+
+## G-4b — Absolute Token Cap
+
+G-4 (MASTER_PLAN v11.13) only bounds Stage-3 output _relative_ to Sonnet's — a short Sonnet entry still permits Opus/Fable to grow up to 30% of it, which can be small in ratio but large in absolute tokens if Sonnet's own output was already sizable. This entry adds an independent, absolute ceiling:
+
+- **Stage-3 (Opus 5 / Fable 5) output is hard-capped at ~1000 tokens**, regardless of the ratio to Sonnet's body. Exceeding it is recorded as a G-4 violation the same way a >30% length ratio is — either measure can trigger the flag.
+- Rationale in one line: the relative guardrail alone can't catch a short-but-still-large Stage-3 output; the absolute cap closes that gap.
+- Measurement note: no real tokenizer count was run this session (line/word counts are not token counts) — this cap is `[tahmin — doğrulanmamış]` until verified against actual `claude-opus-5`/`claude-fable-5` usage in a future TOM round.
+
+**Files touched (diff-sized):** `CLAUDE.md` and `AGENTS.md` TOM lines — one added sentence each, no other change.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.14 (TOM v1.1 — Stage 3 = Opus 5 / Fable 5; First Live Stage-3 Review Executed [architect · Fable 5])
 
 > 🇹🇷 ÖZET (Founder için): "Fable 5 TOM güncelle" dediniz — bu tur, TOM'un 3. aşamasının **ilk canlı çalıştırmasıdır**: v11.13'ü Sonnet yazmıştı, Fable 5 şimdi onu inceledi ve sadece küçük düzeltmeler yaptı (kural gereği baştan yazmadı). İki düzeltme: (1) TOM'un 3. aşaması artık yalnız "Opus" değil, "**Opus 5 / Fable 5**" — zaten Kural #9 tablosu üst katmanı böyle tanımlıyordu, TOM buna hizalandı. (2) Maliyet modelinde iki küçük ihmal bulundu ama birbirini kısmen dengeledikleri için %20-25 tasarruf bandı geçerli kaldı. Ayrıca G-4 kuralının ilk gerçek ölçümü yapıldı: bu girişin uzunluğu, Sonnet'in girişinin ~%41'i — %130 ihlal eşiğinin çok altında, TOM disiplini bu turda tutmuştur.
