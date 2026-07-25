@@ -58,11 +58,12 @@ pnpm db:migrate       # supabase migration up
 
 Delegate discovery to Haiku. An expensive model must never scan the codebase directly — it dispatches a Haiku subagent and works from the returned summary.
 
-| Work type                                                                                        | Model                                          |
-| ------------------------------------------------------------------------------------------------ | ---------------------------------------------- |
-| Code search, file location, inventory, grep/glob discovery, "where is X defined"                 | **Haiku** (Explore subagent, `model: "haiku"`) |
-| Routine/mechanical: translation fill-in, formatting, repetitive edits                            | **Haiku**                                      |
-| Architecture decisions, strategy, security analysis, MASTER_PLAN authoring, multi-step reasoning | **Opus 5 / Fable 5**                           |
+| Work type                                                                                                      | Model                                          |
+| -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| Code search, file location, inventory, grep/glob discovery, "where is X defined"                               | **Haiku** (Explore subagent, `model: "haiku"`) |
+| Routine/mechanical: translation fill-in, formatting, repetitive edits                                          | **Haiku**                                      |
+| Mechanical execution once a plan is approved: repo setup, file export/copy, secret-pattern scans, git plumbing | **Haiku**                                      |
+| Architecture decisions, strategy, security analysis, MASTER_PLAN authoring, multi-step reasoning               | **Opus 5 / Fable 5**                           |
 
 ## MASTER_PLAN Evidence Rule
 
