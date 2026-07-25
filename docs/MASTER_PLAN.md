@@ -1,3 +1,19 @@
+# ALPAR AI — MASTER PLAN v11.17 (G-4c — Absolute Token Cap on Opus 5, Set at 5000 [architect])
+
+> 🇹🇷 ÖZET (Founder için): v11.16'da Fable 5'e ~1000 token'lık sert tavan (G-4b) koymuştuk, Opus 5'in ayrı bir mutlak tavanı yoktu. Siz **Opus 5 için 5000 token sınırı** istediniz. Bu girişle G-4c eklendi: Opus 5'in Stage-3 çıktısı, G-4'ün oransal kuralına (Sonnet'in %30'undan fazla olamaz) ek olarak **~5000 token'ı da geçemez**. İki reviewer'ın artık ayrı, farklı büyüklükte mutlak tavanları var: Fable 5 ≈ 1000, Opus 5 ≈ 5000 — Opus 5'in daha karmaşık/kapsamlı mimari incelemeler için kullanılması beklendiğinden daha geniş bir tavan tanımlandı.
+
+## G-4c — Absolute Token Cap on Opus 5
+
+v11.16 split the Stage-3 roster into Opus 5 and Fable 5 as separate reviewers but left Opus 5 without an absolute ceiling — only G-4's relative (>30%) guardrail applied to it. This entry closes that gap:
+
+- **Opus 5's Stage-3 output is hard-capped at ~5000 tokens**, independent of the ratio to Sonnet's body — the same class of guardrail as G-4b, at a different ceiling.
+- The two Stage-3 reviewers now carry distinct absolute caps: **Fable 5 ≈ 1000 tokens (G-4b, v11.15/v11.16)**, **Opus 5 ≈ 5000 tokens (G-4c, this entry)**. Neither cap changes G-4's shared relative rule (>30% longer than Sonnet's output = violation for either reviewer).
+- Measurement note: not a measured figure — no real tokenizer count was run this session. `[tahmin — doğrulanmamış]` until verified against actual `claude-opus-5` usage in a future TOM round, same caveat as G-4b.
+
+**Files touched (diff-sized):** `CLAUDE.md` and `AGENTS.md` TOM lines — Opus 5's cap added alongside Fable 5's existing one.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.16 (Stage-3 Roster Split — G-4b Applies to Fable 5 Only [architect])
 
 > 🇹🇷 ÖZET (Founder için): v11.15'te Stage-3'ü "Opus 5 / Fable 5" tek bir rol gibi yazmıştık; siz ikisinin ayrılmasını istediniz. Bu girişle Stage-3'te iki ayrı, birbirinin yerine geçmeyen seçenek var: **Opus 5** ve **Fable 5**. ~1000 token'lık sert tavan (G-4b) artık yalnızca **Fable 5** için geçerli. Opus 5 kullanıldığında sadece G-4'ün oransal kuralı (Sonnet'in %30'undan fazla uzamaması) geçerli, ayrı bir mutlak tavanı yok — istenirse ayrı bir tur onunla da tanımlanabilir.
