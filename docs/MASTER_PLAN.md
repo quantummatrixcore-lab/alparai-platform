@@ -1,3 +1,20 @@
+# ALPAR AI — MASTER PLAN v11.08 (Repo Konsolidasyonu: `alparai` Kullanılacak, İçerik Güncellemesi Antigravity'ye Devredildi [architect])
+
+> **v11.08 (2026-07-25) — Antigravity, Founder onayı beklenmeden bağımsız olarak `quantummatrixcore-lab/alparai` adında public repo açıp push etti (bkz. v11.07'den sonraki olay: Proposal 020). ACP-1 ile GitHub API üzerinden doğrulandı: `MASTER_PLAN`, `ANTIGRAVITY_EXECUTION_PLAN`, `.env.local`, `PROPOSALS/` yok — sızıntı tespit edilmedi. [architect]**
+>
+> **Founder kararı:** İki ayrı repo (Antigravity'nin `alparai`'si + Architect'in planladığı `alparai-oss`) yerine **tek repo — `quantummatrixcore-lab/alparai`** kullanılacak. Bu oturum (Architect), daha kapsamlı taranmış içeriğini (16 `docs/` dosyası + `adr/`, 1118 dosya, tam sır taraması — v11.07) bu repoya push etmeye çalıştı ancak **bu oturumun GitHub erişimi `Alparai.com` ile sınırlı** ve `alparai` reposuna push izni onaylanamadı (izin isteği 3 kez reddedildi).
+>
+> **Devredilen iş — Antigravity/Executor:**
+>
+> 1. `quantummatrixcore-lab/alparai` reposunu Architect'in v11.07'de belirlediği daha geniş whitelist ile güncelle: mevcut 6 `docs/` dosyasına ek olarak `DATA_RETENTION.md`, `NEUTRALITY.md`, `OECD_TAXONOMY_MAP.md`, `API_AUDITOR.md`, `risk-api-openapi.yaml`, `DEPLOYMENT.md`, `AGENT_CAPABILITIES.md`, `AI_ANALYSIS_INTEGRATION_GUIDE.md`, `AI_ANALYSIS_PROTOCOL.md`, `AUTOPILOT.md`, `OPS_SUPPLY_CHAIN.md`, `docs/adr/` eklensin.
+> 2. `AGENTS.md`'nin sansürlenmiş (Infrastructure/OAuth/Postmortem bölümleri çıkarılmış) versiyonu da bu repoya eklensin — Architect'in v11.07'de hazırladığı sürüm referans alınabilir.
+> 3. **Kesinlikle eklenmeyecekler:** `docs/HANDOVER.md` (gerçek OAuth/Vercel/Supabase ID'leri içeriyor — önceki Haiku taramasının kaçırdığı gerçek sızıntı), `docs/ai-audit/` (K-Benchmark bütünlük krizi ile örtüşme riski, v11.03 P0 kapanmadan yayınlanmaz), tüm outreach/fon/ops/proposal/roadmap iç dosyaları (v11.07'de tam liste var).
+> 4. Güncelleme sonrası `gitleaks` + regex taraması tekrar çalıştırılıp temiz olduğu teyit edilsin.
+>
+> **Öncelik:** P1, hemen. Bu MASTER_PLAN girişi devir notudur — uygulama Antigravity/Executor tarafında.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.07 (Yeni Public OSS Repo Hazırlığı: Whitelist Kararı + Yetki Engeli [architect])
 
 > **v11.07 (2026-07-25) — Founder: "GitHub'da yeni public repo lazım, mevcut olmaz." GitHub API doğruladı: mevcut repo `private:true`. AGPL-3.0 yükümlülüğü + `docs/MASTER_PLAN.md`'nin sponsor/K-Benchmark itiraflarını içermesi nedeniyle mevcut repoyu public'e çevirmek yerine temiz yeni repo (`alparai-oss`) kararlaştırıldı. [architect]**
