@@ -1,3 +1,26 @@
+# ALPAR AI — MASTER PLAN v11.22-branch (LLM Council Pattern — Comparative Analysis Against TOM and This Session's Own Version Collision [architect])
+
+> 🇹🇷 ÖZET (Founder için): Karpathy'nin `llm-council` projesinin linkini paylaştınız ama amacınızı belirtmediniz; sorduğum netleştirme sorusuna yanıt gelmedi, bu yüzden en düşük riskli yorumla ilerledim — bu oturumda az önce yaşanan iki olayla (TOM'un kademeli model zinciri, ve master'daki paralel ajanın kendi kendine aynı sonuca varıp versiyon çakışması yaratması) doğrudan ilgili bir mimari örnek olarak ele aldım, kod entegrasyonu yapmadım. Farklı bir niyetle paylaştıysanız düzeltebilirsiniz. Ana bulgu: llm-council'ın "Chairman" (sentezleyici) rolü, v11.21-branch'te tespit edilen versiyon-çakışması sorununa somut bir çözüm şablonu olabilir — ama bu bir öneri, karar değil, sizin onayınızı bekliyor.
+
+## Proje Özeti (WebFetch ile doğrulandı)
+
+`karpathy/llm-council`: FastAPI backend + React frontend, OpenRouter üzerinden 3 aşamalı bir boru hattı çalıştırır — (1) konsey üyelerine (varsayılan: GPT-5.1, Gemini 3 Pro, Claude Sonnet 4.5, Grok 4) aynı soru paralel gönderilir, (2) her model diğerlerinin yanıtını **anonimleştirilmiş** halde değerlendirip sıralar (marka önyargısını önlemek için), (3) belirlenmiş bir "Chairman" model tüm yanıtları tek bir sentezde birleştirir. Yaratıcısı bunu resmi olmayan, "büyük ölçüde vibe-coded" bir hafta sonu deneyi olarak tanımlıyor — üretim disiplini iddiası yok.
+
+## Comparative Analysis
+
+1. **Structural difference from TOM.** `llm-council` is **parallel + peer-review** (N models answer the same prompt simultaneously, then rank each other's anonymized output). TOM (v11.13–v11.17) is **sequential + tiered escalation** (Haiku discovery → Sonnet authors → Opus 5/Fable 5 approves or diff-sized-patches, each stage inheriting the prior stage's output, never running concurrently). The anonymization step in `llm-council` has no TOM analog because TOM has exactly one author per stage — approval, not a vote.
+2. **This session's own version collision is the inverse of the problem `llm-council` solves.** `llm-council` exists to merge multiple models' **independent answers to the same question** by design — a deliberate consensus mechanism with peer review and chairman synthesis. The v11.21-branch collision was the opposite: an **unintended** convergence, where two uncoordinated agents wrote to the same MASTER_PLAN sequence and collided on version numbers despite reaching compatible conclusions. `llm-council`'s Chairman role is precisely what was missing in that incident — a single point of authority reconciling divergent version numbers.
+3. **Concrete doctrine proposal (a suggestion, not a decision).** The chairman-synthesis idea from `llm-council` could serve as a template for MASTER_PLAN's still-open multi-agent reconciliation question (left open in v11.21-branch): conflicting entries across branches could be merged in a single "chairman" pass — plausibly Opus 5/Fable 5, i.e. TOM's own Stage 3 — before either side keeps incrementing version numbers independently. This is a candidate answer to the open item "should version numbering get a branch-qualifier convention," not a ruling.
+
+## Open Items (Founder Decision Required)
+
+- Whether to adopt a chairman-synthesis reconciliation pattern for cross-branch MASTER_PLAN collisions, or a different mechanism.
+- Whether the original link was meant as something other than an architecture comparison — no response was received to the clarifying question asked before this entry was written.
+
+**Files touched:** this entry only, prepended to `docs/MASTER_PLAN.md`. No merge, rebase, fetch of master, or code changes performed this turn — consistent with the still-deferred reconciliation from v11.21-branch.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.21-branch (Version Collision Detected — Parallel Agent Wrote Its Own v11.20/v11.21 Directly on Master, Reconciliation Deferred [architect])
 
 > 🇹🇷 ÖZET (Founder için): Bu oturum sadece `claude/strategy-brief-review-i93xcv` branch'ine push edebilirken, `master`'a push yetkisi olan başka bir aktör bu branch'i (v11.19'a kadar, `2e97b5d` merge commit'i ile) `master`'a birleştirmiş ve ardından doğrudan `master` üzerine iki kayıt daha eklemiş — ilginç olan şu ki, o aktör bu oturumla neredeyse aynı sonuçlara ulaşmış: bu branch'in silinmemesi gerektiği, `claude/pensive-rubin-r4hb0k` branch'inin incelenmesi gerektiği, ve branch adı değiştirmenin silme gerektirdiği için GitHub Branch Protection Rules kullanılması gerektiği. Sorun şu: her iki taraf da kendi kaydını "v11.20" olarak adlandırmış ve içerikleri farklı — bu yüzden bu kayıt çakışmayı önlemek için "v11.21-branch" olarak adlandırıldı, çünkü düz "v11.21" zaten master'da farklı bir içerikle var. **Üretim ortamına yapılan Claim & Respond + NVIDIA NIM entegrasyonu deploy'u doğrudan sizden teyit edildi ve sorunlu değil.** Sizin talimatınız üzerine bu turda hiçbir merge/rebase/uzlaştırma işlemi yapılmadı — bu branch kasıtlı olarak `master`'dan ayrık halde bırakıldı, karar sizi bekliyor.
