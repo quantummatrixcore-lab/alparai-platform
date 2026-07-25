@@ -1,3 +1,20 @@
+# ALPAR AI — MASTER PLAN v11.16 (Stage-3 Roster Split — G-4b Applies to Fable 5 Only [architect])
+
+> 🇹🇷 ÖZET (Founder için): v11.15'te Stage-3'ü "Opus 5 / Fable 5" tek bir rol gibi yazmıştık; siz ikisinin ayrılmasını istediniz. Bu girişle Stage-3'te iki ayrı, birbirinin yerine geçmeyen seçenek var: **Opus 5** ve **Fable 5**. ~1000 token'lık sert tavan (G-4b) artık yalnızca **Fable 5** için geçerli. Opus 5 kullanıldığında sadece G-4'ün oransal kuralı (Sonnet'in %30'undan fazla uzamaması) geçerli, ayrı bir mutlak tavanı yok — istenirse ayrı bir tur onunla da tanımlanabilir.
+
+## Stage-3 Roster Split
+
+v11.15's G-4b named the reviewer as a combined "Opus 5 / Fable 5" role. This entry separates them into two distinct, non-interchangeable Stage-3 options:
+
+- **Opus 5** — Stage-3 reviewer, governed by G-4's relative guardrail only (>30% longer than Sonnet's output = violation). No absolute token cap defined for Opus 5 in this entry.
+- **Fable 5** — Stage-3 reviewer, governed by G-4 **and** G-4b: output additionally hard-capped at **~1000 tokens**, independent of the ratio to Sonnet's body. This is the cap v11.15 introduced; it now applies specifically to Fable 5, not to Opus 5.
+
+Rationale in one line: the two models are not equivalent — treating them as a single label obscured which guardrail applies to which. Splitting them lets each reviewer's cap be tuned independently later without re-litigating the other.
+
+**Files touched (diff-sized):** `CLAUDE.md` and `AGENTS.md` TOM lines updated to attribute the ~1000-token cap to Fable 5 specifically.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.15 (G-4b — Absolute Token Cap on Stage-3 Output [architect])
 
 > 🇹🇷 ÖZET (Founder için): G-4 kuralı Stage-3'ün (Opus 5/Fable 5) çıktısını Sonnet'in çıktısına **oranla** sınırlıyordu (>%30 uzunsa ihlal). Siz "en az token, belki 1000 max" dediniz — haklı bir nokta: kısa bir Sonnet girişinde bile %30'a kadar büyüme, yine de büyük bir mutlak token tüketimi olabilir. Bu girişle G-4'e bir alt madde (G-4b) eklendi: Stage-3 çıktısı, oran ne olursa olsun **~1000 token'ı geçemez**. CLAUDE.md ve AGENTS.md'deki TOM notuna da tek cümlelik ek yapıldı.
