@@ -1,3 +1,36 @@
+# ALPAR AI — MASTER PLAN v11.21-branch (Version Collision Detected — Parallel Agent Wrote Its Own v11.20/v11.21 Directly on Master, Reconciliation Deferred [architect])
+
+> 🇹🇷 ÖZET (Founder için): Bu oturum sadece `claude/strategy-brief-review-i93xcv` branch'ine push edebilirken, `master`'a push yetkisi olan başka bir aktör bu branch'i (v11.19'a kadar, `2e97b5d` merge commit'i ile) `master`'a birleştirmiş ve ardından doğrudan `master` üzerine iki kayıt daha eklemiş — ilginç olan şu ki, o aktör bu oturumla neredeyse aynı sonuçlara ulaşmış: bu branch'in silinmemesi gerektiği, `claude/pensive-rubin-r4hb0k` branch'inin incelenmesi gerektiği, ve branch adı değiştirmenin silme gerektirdiği için GitHub Branch Protection Rules kullanılması gerektiği. Sorun şu: her iki taraf da kendi kaydını "v11.20" olarak adlandırmış ve içerikleri farklı — bu yüzden bu kayıt çakışmayı önlemek için "v11.21-branch" olarak adlandırıldı, çünkü düz "v11.21" zaten master'da farklı bir içerikle var. **Üretim ortamına yapılan Claim & Respond + NVIDIA NIM entegrasyonu deploy'u doğrudan sizden teyit edildi ve sorunlu değil.** Sizin talimatınız üzerine bu turda hiçbir merge/rebase/uzlaştırma işlemi yapılmadı — bu branch kasıtlı olarak `master`'dan ayrık halde bırakıldı, karar sizi bekliyor.
+
+## What Was Found
+
+Another actor with push access to `master` (this session only has push access to `claude/strategy-brief-review-i93xcv`, per v11.19) merged this branch's history through commit `2e43e1d` (this branch's own v11.19) into `master` via merge commit `2e97b5d`. That actor then added two commits directly on `master`: `082f0cf` ("v11.20 on branch deletion safety and context blindness") and `299e453` ("[deploy] add v11.21 on branch renaming and protection rules"). Reading both showed convergent, not conflicting, content: both independently concluded that `claude/strategy-brief-review-i93xcv` is the active session branch and must not be deleted or renamed, that `claude/pensive-rubin-r4hb0k` holds unmerged feature code needing review, that branch renaming requires a delete blocked by `HTTP 403`, and that GitHub Branch Protection Rules — not naming conventions — are the correct locking mechanism. Two independent agents reached the same analysis from the same underlying facts.
+
+## The Collision Itself
+
+Two `v11.20` entries now exist with different content: this branch's own `4c3e405` and master's `082f0cf`. This very entry had to be relabeled `v11.21-branch` specifically to avoid colliding with master's real `v11.21` (`299e453`), which also has different content from anything on this branch. MASTER_PLAN version numbers are, as of this measurement, **no longer a reliable single sequence across branches** — they are branch-local until reconciled.
+
+## Production Deployment Status — Founder-Confirmed, Not a Violation
+
+Commit `fcdc688` on `master` (`feat(strategy): implement Claim & Respond auto-trigger (Action 1) and NVIDIA NIM free-tier integration (N-1..N-3) [deploy]`) implements Action 1 from this session's own v11.18 strategy-brief recommendation. The `[deploy]` tag is an established project convention, observed on this commit and on `299e453`, that triggers a Vercel production deployment since Vercel watches `master` — this session did not invent that mechanism. **The Founder was asked directly whether this production deployment was authorized and confirmed yes.** This is explicitly not flagged as a G-1 (unauthorized single-writer external action) violation.
+
+## Reconciliation Explicitly Deferred
+
+Per direct Founder instruction, no merge, rebase, or reconciliation was performed this turn — only findings were recorded. `git merge-base --is-ancestor claude/strategy-brief-review-i93xcv origin/master` returned false; `git rev-list --left-right --count origin/master...claude/strategy-brief-review-i93xcv` returned `32  1` — master carries 32 commits this branch lacks, this branch carries 1 commit (its own v11.20, `4c3e405`) master lacks. This branch remains at its own tip, untouched, diverged from master, until the Founder decides how to proceed.
+
+## Doctrine Note
+
+Two agents independently converging on the same correct analysis from the same facts is a healthy signal — cross-validation, the opposite of the v11.10/v11.11 DeepSeek and v11.20 external-advice cases, where an outside actor's context-blind conclusions were wrong. Here the underlying analysis was right on both sides. But convergence still produced an operational problem the doctrine did not previously anticipate: colliding version numbers with no shared sequence. Open question for the Founder, not a decision made here — future multi-agent parallel work against the same MASTER_PLAN sequence likely needs an explicit reconciliation step before either side keeps incrementing version numbers independently.
+
+## Open Items (Founder Action Required)
+
+- Decide when and how to reconcile `claude/strategy-brief-review-i93xcv` with `master` (32 commits behind, 1 commit ahead, per measurement above).
+- Decide whether MASTER_PLAN versioning needs a branch-qualifier convention going forward, given this entry's `v11.21-branch` label was itself a workaround, not a standing rule.
+
+**Files touched:** this entry only — no merge, rebase, fetch of master, or code changes performed this turn.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.20 (External Advice Verified — Almost Deleted This Session's Own Active Branch [architect])
 
 > 🇹🇷 ÖZET (Founder için): Farklı bir dış AI/araçtan aldığınız tavsiye, `master` ve `archive/main-legacy` dışındaki tüm branch'lerin "gereksiz" olduğunu söyleyip 4 branch için doğrudan GitHub silme linki vermişti — bu tavsiye kontrol edilmeden uygulanmadı, her branch tek tek git ve GitHub API ile doğrulandı. Sonuç ciddiydi: önerilen 4 branch'ten biri olan `claude/strategy-brief-review-i93xcv`, aslında bu oturumun kendi aktif çalışma branch'iydi ve az önce push edilen v11.19 kaydı dahil tüm oturum çalışmasını içeriyordu — link takip edilip silinseydi bu çalışma kaybolacaktı. `claude/pensive-rubin-r4hb0k` gerçek özellik kodu içeriyor ve silinmeden önce içerik incelemesi gerekiyor, bu yüzden silinmedi. `dependabot/npm_and_yarn/production-dependencies-90aedca244` için dış tavsiye doğru çıktı — bu branch aslında bayat, ve önceki v11.19 kaydındaki "güncel, bayat değil" ifadesi burada düzeltiliyor. Son branch, `release-please--branches--master--components--alparai-web`, muhtemelen release-please'in kendi bayat iç durumu ve silinmesi düşük riskli görünüyor ama tam doğrulanmadı. **Ana ders:** dış bir araçtan gelen "şunu sil / bunu değiştir" tavsiyesi, bu oturumun kendi bağlamını göremediği için, tek tek doğrulanmadan asla uygulanmamalı veya size iletilmemeli.
