@@ -44,7 +44,6 @@ import {
   Building2,
   Calculator,
   Zap,
-  Send,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
@@ -217,12 +216,6 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       active: pathname.startsWith("/admin/users"),
     },
     {
-      href: "/admin/experts",
-      label: t("nav_experts") || "Domain Experts",
-      icon: Users,
-      active: pathname.startsWith("/admin/experts"),
-    },
-    {
       href: "/admin/dsar",
       label: t("nav_dsar") || "DSAR Queue",
       icon: Lock,
@@ -254,12 +247,6 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       label: t("social_media_hub") || "Social Publisher",
       icon: Share2,
       active: pathname.startsWith("/admin/social"),
-    },
-    {
-      href: "/admin/outreach",
-      label: t("nav_outreach") || "Outreach Hub",
-      icon: Send,
-      active: pathname.startsWith("/admin/outreach"),
     },
     {
       href: "/admin/marketing",
