@@ -60,7 +60,6 @@ export function LanguageSwitcher({ className }: { className?: string }) {
     }
     // Explicitly update NEXT_LOCALE cookie so middleware & SSR pick up the new language immediately
     if (typeof document !== "undefined") {
-      // eslint-disable-next-line react-hooks/immutability
       document.cookie = `NEXT_LOCALE=${code}; path=/; max-age=31536000; SameSite=Lax`;
     }
 
@@ -72,10 +71,8 @@ export function LanguageSwitcher({ className }: { className?: string }) {
         const segments = currentPath.split("/").filter(Boolean);
         if (segments.length > 0 && LOCALE_OPTIONS.some((o) => o.code === segments[0])) {
           segments[0] = code;
-          // eslint-disable-next-line react-hooks/immutability
           window.location.href = "/" + segments.join("/") + window.location.search;
         } else {
-          // eslint-disable-next-line react-hooks/immutability
           window.location.href = `/${code}${currentPath}${window.location.search}`;
         }
       }
@@ -83,39 +80,53 @@ export function LanguageSwitcher({ className }: { className?: string }) {
     setOpen(false);
   }
 
+  function handleClick() {
+    if (isAdmin) {
+      const nextLocale: Locale = locale === "tr" ? "en" : "tr";
+      handleSelect(nextLocale);
+    } else {
+      setOpen((prev) => !prev);
+    }
+  }
+
   return (
     <div ref={ref} className={cn("relative", className)}>
       <button
         type="button"
-        onClick={() => setOpen(!open)}
+        onClick={handleClick}
+        title={isAdmin ? `Switch to ${locale === "tr" ? "English" : "Türkçe"}` : "Select language"}
         className={cn(
           "inline-flex items-center gap-1.5 rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5 py-1.5",
           "text-fg-secondary text-xs font-medium transition-all duration-200",
           "hover:text-fg-primary hover:border-white/[0.15] hover:bg-white/[0.06]",
           "focus-visible:ring-brand-500/50 focus-visible:ring-2 focus-visible:outline-none",
-          open && "text-fg-primary border-white/[0.15] bg-white/[0.06]",
+          open && !isAdmin && "text-fg-primary border-white/[0.15] bg-white/[0.06]",
         )}
-        aria-expanded={open}
-        aria-label="Select language"
+        aria-expanded={isAdmin ? undefined : open}
+        aria-label={
+          isAdmin ? `Switch to ${locale === "tr" ? "English" : "Türkçe"}` : "Select language"
+        }
       >
         <Globe className="h-3.5 w-3.5 shrink-0 opacity-60" />
         <span className="hidden sm:inline">{current.flag}</span>
         <span className="font-semibold tracking-wider uppercase">{current.code}</span>
-        <svg
-          className={cn(
-            "h-3 w-3 shrink-0 opacity-50 transition-transform duration-200",
-            open && "rotate-180",
-          )}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
+        {!isAdmin && (
+          <svg
+            className={cn(
+              "h-3 w-3 shrink-0 opacity-50 transition-transform duration-200",
+              open && "rotate-180",
+            )}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        )}
       </button>
 
-      {open && (
+      {!isAdmin && open && (
         <div
           className={cn(
             "absolute top-full right-0 z-50 mt-1.5 min-w-[180px] overflow-hidden rounded-xl",
