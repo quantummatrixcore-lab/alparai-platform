@@ -109,10 +109,23 @@
     "typescript": "^6.0.3",
     "vitest": "^3.2.0"
   },
+  "resolutions": {
+    "form-data": "^4.0.6",
+    "postcss": "^8.5.18",
+    "vite": "^6.4.3",
+    "js-yaml": "^4.3.0",
+    "shell-quote": "^1.9.0",
+    "brace-expansion": "^1.1.16",
+    "sharp": "^0.35.3"
+  },
   "overrides": {
     "form-data": "^4.0.6",
-    "postcss": "^8.5.10",
-    "vite": "^6.4.3"
+    "postcss": "^8.5.18",
+    "vite": "^6.4.3",
+    "js-yaml": "^4.3.0",
+    "shell-quote": "^1.9.0",
+    "brace-expansion": "^1.1.16",
+    "sharp": "^0.35.3"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [

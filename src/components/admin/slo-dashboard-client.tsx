@@ -56,7 +56,7 @@ export function SloDashboardClient({
     return () => {
       cancelled = true;
     };
-  }, [initialDora.current]);
+  }, [initialDora]);
 
   const totalBudget = initialSlos.reduce((a, s) => a + s.errorBudget.total, 0);
   const usedBudget = initialSlos.reduce(
