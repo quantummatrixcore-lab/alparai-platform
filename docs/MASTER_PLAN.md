@@ -1,3 +1,39 @@
+# ALPAR AI — MASTER PLAN v11.39 (Phase Transition — Backlog Complete → OpenCode Execution Queue) [architect]
+
+> 🇹🇷 ÖZET (Founder için): Founder Backlog %100 kapandı (v11.38). Proje artık **OpenCode yürütme kuyruğuna** (O1-O7) geçiyor. Öncelik sırası: O1 (countdown kaldır, CTA), O2 (sidebar i18n), O3 (admin i18n tam kapsamı). GitHub Dependabot **25 güvenlik açığı** (19 yüksek, 6 orta) raporluyor — Antigravity `pnpm audit` ile P0 olarak ele alacak.
+
+## Durum
+
+| Metrik | Değer | Kaynak |
+| --- | --- | --- |
+| Founder Backlog | 10/10 ✅ | v11.38 |
+| HEAD | `1292814` | `git log -1 --oneline` |
+| Test | 877/877 PASS | `pnpm test` |
+| Build | ✅ | `pnpm build` |
+| Dependabot | 25 vuln (19H/6M) | GitHub push response |
+
+## Aktif Kuyruk (O1–O7, öncelik sırasıyla)
+
+| # | Öğe | Öncelik | Durum |
+| --- | --- | --- | --- |
+| O1 | Homepage countdown kaldır + doğrudan CTA | P0 | ⬜ |
+| O2 | Sidebar etiketleri i18n + Türkçe ters-hata | P0 | ⬜ |
+| O3 | Admin i18n kalan 17+ bileşen | P1 | ⬜ |
+| O4 | Admin IA + görsel revizyon | P1 | ⬜ |
+| O5 | DE + FR public route'lar | P1 | ⬜ |
+| O6 | Playwright E2E kapsam | P1 | ⬜ |
+| O7 | Production smoke-test kanıt | P0 | ⬜ |
+
+## Güvenlik Borcu — P0
+
+GitHub Dependabot 25 güvenlik açığı bildirdi (son push çıktısı: `remote: GitHub found 25 vulnerabilities`). Antigravity `pnpm audit --fix` çalıştırıp breaking change'siz düzeltmeleri uygulayacak, kalan açıklar için `pnpm audit` çıktısını raporlayacak.
+
+## Handoff
+
+Antigravity/OpenCode: (1) Dependabot P0 — `pnpm audit --fix` → commit → push; (2) O1 → O2 → O3 sırasıyla autopilot; (3) her commit `pnpm lint && pnpm typecheck && pnpm test` yeşil. Bu girişte kod değişikliği yok (ACP-7).
+
+---
+
 # ALPAR AI — MASTER PLAN v11.38 (TOM — Founder Backlog 100% Completed & Verified) [architect]
 
 > 🇹🇷 ÖZET (Founder için): HackerOne ve Reddit hesap açılışlarının Founder tarafından başarıyla tamamlanmasıyla (Reddit: `Potential_Can2214`, HackerOne: `opportunities/all`) **Founder Backlog %100 (10/10)** seviyesine ulaştı! Tüm yazılımsal, mimari ve dış entegrasyon süreçleri eksiksiz tamamlanmış, testler (%100 yeşil) ve derleme aşaması doğrulanmıştır. Proje tamamen yayına ve operasyona hazırdır.
