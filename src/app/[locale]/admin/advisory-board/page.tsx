@@ -38,7 +38,7 @@ export default async function AdvisoryBoardPage({
         <MetricCard
           title="Advisory Board Members"
           value={members?.length ?? 0}
-          icon={Users}
+          icon={<Users className="h-4 w-4" />}
           trend="neutral"
           trendLabel="Rule §21 bound"
           accentColor="#6366f1"
@@ -48,7 +48,7 @@ export default async function AdvisoryBoardPage({
         <MetricCard
           title="Governance Status"
           value="ACTIVE"
-          icon={Shield}
+          icon={<Shield className="h-4 w-4" />}
           trend="up"
           trendLabel="Compliant"
           accentColor="#10b981"

@@ -62,7 +62,7 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
         <MetricCard
           title="Total Models Rated"
           value={scores?.length ?? 0}
-          icon={Award}
+          icon={<Award className="h-4 w-4" />}
           trend="up"
           trendLabel="Live ratings"
           accentColor="#f59e0b"
@@ -76,7 +76,7 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
               ? `${(scores.reduce((a, s) => a + (s.score ?? 0), 0) / scores.length).toFixed(1)}`
               : "—"
           }
-          icon={BarChart3}
+          icon={<BarChart3 className="h-4 w-4" />}
           trend="up"
           trendLabel="Independent audit"
           accentColor="#6366f1"

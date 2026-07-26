@@ -26,7 +26,7 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
         <MetricCard
           title="Funnel Conversion"
           value="—"
-          icon={TrendingUp}
+          icon={<TrendingUp className="h-4 w-4" />}
           trend="neutral"
           trendLabel="Instrumentation pending"
           accentColor="#6366f1"
@@ -43,7 +43,7 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
         <MetricCard
           title="Organic Reach"
           value="—"
-          icon={Globe}
+          icon={<Globe className="h-4 w-4" />}
           trend="neutral"
           trendLabel="Not yet tracked"
           accentColor="#f59e0b"
@@ -51,7 +51,7 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
         <MetricCard
           title="Activated Users"
           value="—"
-          icon={Users}
+          icon={<Users className="h-4 w-4" />}
           trend="neutral"
           trendLabel="Coming soon"
           accentColor="#10b981"

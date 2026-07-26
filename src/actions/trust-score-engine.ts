@@ -2,8 +2,9 @@
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logger } from "@/lib/utils/logger";
-import { calculateRankingTier } from "@/lib/utils/ranking-tier";
-export type { RankingTier } from "@/lib/utils/ranking-tier";
+import { calculateRankingTier, type RankingTier } from "@/lib/ranking/calculate-tier";
+
+export type { RankingTier };
 
 export interface TrustEngineResult {
   ok: boolean;

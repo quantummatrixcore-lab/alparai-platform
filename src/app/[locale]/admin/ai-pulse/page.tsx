@@ -61,7 +61,7 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
         <MetricCard
           title="GPT-4o P95 Latency"
           value="340ms"
-          icon={Cpu}
+          icon={<Cpu className="h-4 w-4" />}
           trend="neutral"
           trendLabel="Stable"
           accentColor="#10b981"
@@ -78,7 +78,7 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
         <MetricCard
           title="Claude 3.5 Sonnet Latency"
           value="210ms"
-          icon={Cpu}
+          icon={<Cpu className="h-4 w-4" />}
           trend="down"
           trendLabel="Improving"
           accentColor="#6366f1"
@@ -95,7 +95,7 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
         <MetricCard
           title="Gemini 1.5 Flash Latency"
           value="180ms"
-          icon={Cpu}
+          icon={<Cpu className="h-4 w-4" />}
           trend="down"
           trendLabel="Fastest"
           accentColor="#f59e0b"

@@ -50,7 +50,7 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
             <MetricCard
               title="Total DSAR Requests"
               value={requests?.length ?? 0}
-              icon={FileText}
+              icon={<FileText className="h-4 w-4" />}
               trend="neutral"
               trendLabel="30-day SLA"
               accentColor="#a855f7"
@@ -60,7 +60,7 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
             <MetricCard
               title="Pending Review"
               value={pending.length}
-              icon={Clock}
+              icon={<Clock className="h-4 w-4" />}
               trend={pending.length > 0 ? "up" : "neutral"}
               trendLabel="Awaiting action"
               accentColor="#f59e0b"
@@ -68,7 +68,7 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
             <MetricCard
               title="SLA Urgent (<7 days)"
               value={urgent.length}
-              icon={AlertTriangle}
+              icon={<AlertTriangle className="h-4 w-4" />}
               trend={urgent.length > 0 ? "down" : "neutral"}
               trendLabel={urgent.length > 0 ? "Action required" : "All on track"}
               accentColor={urgent.length > 0 ? "#ef4444" : "#10b981"}

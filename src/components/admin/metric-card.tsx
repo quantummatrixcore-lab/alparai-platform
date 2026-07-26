@@ -1,9 +1,6 @@
-"use client";
-
 import React from "react";
-import type { LucideIcon } from "lucide-react";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
-import { LineChart, Line, BarChart, Bar, ResponsiveContainer, Tooltip } from "recharts";
+import { MetricCardChart } from "./metric-card-chart";
 
 interface SparkPoint {
   value: number;
@@ -13,7 +10,7 @@ interface MetricCardProps {
   title: string;
   value: string | number;
   subtitle?: string;
-  icon: LucideIcon;
+  icon: React.ReactNode;
   trend?: "up" | "down" | "neutral";
   trendLabel?: string;
   sparkData?: SparkPoint[];
@@ -27,7 +24,7 @@ export function MetricCard({
   title,
   value,
   subtitle,
-  icon: Icon,
+  icon,
   trend,
   trendLabel,
   sparkData,
@@ -44,7 +41,9 @@ export function MetricCard({
     <div className="rounded-xl border border-white/10 bg-zinc-900/80 p-4 transition-all hover:border-white/20">
       <div className="flex items-center justify-between text-xs text-zinc-400">
         <span>{title}</span>
-        <Icon className="h-4 w-4" style={{ color: accentColor }} />
+        <span className="h-4 w-4" style={{ color: accentColor }}>
+          {icon}
+        </span>
       </div>
 
       <div className="mt-2 flex items-baseline justify-between">
@@ -56,31 +55,7 @@ export function MetricCard({
 
       {sparkData && sparkData.length > 1 && (
         <div className="mt-3 h-10">
-          <ResponsiveContainer width="100%" height="100%">
-            {chartType === "bar" ? (
-              <BarChart data={sparkData}>
-                <Bar dataKey="value" fill={accentColor} radius={[2, 2, 0, 0]} />
-                <Tooltip
-                  contentStyle={{ background: "#18181b", border: "none", fontSize: 10 }}
-                  cursor={false}
-                />
-              </BarChart>
-            ) : (
-              <LineChart data={sparkData}>
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  stroke={accentColor}
-                  strokeWidth={1.5}
-                  dot={false}
-                />
-                <Tooltip
-                  contentStyle={{ background: "#18181b", border: "none", fontSize: 10 }}
-                  cursor={false}
-                />
-              </LineChart>
-            )}
-          </ResponsiveContainer>
+          <MetricCardChart sparkData={sparkData} chartType={chartType} accentColor={accentColor} />
         </div>
       )}
 

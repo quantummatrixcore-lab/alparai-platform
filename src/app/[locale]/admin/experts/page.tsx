@@ -47,7 +47,7 @@ export default async function AdminExpertsPage({
         <MetricCard
           title="Expert Applications"
           value={applications.length}
-          icon={Award}
+          icon={<Award className="h-4 w-4" />}
           trend="up"
           trendLabel="Total received"
           accentColor="#f59e0b"
@@ -57,7 +57,7 @@ export default async function AdminExpertsPage({
         <MetricCard
           title="Approved Experts"
           value={approved.length}
-          icon={CheckCircle2}
+          icon={<CheckCircle2 className="h-4 w-4" />}
           trend={approved.length > 0 ? "up" : "neutral"}
           trendLabel="Verified panel"
           accentColor="#10b981"
@@ -65,7 +65,7 @@ export default async function AdminExpertsPage({
         <MetricCard
           title="Pending Review"
           value={pending.length}
-          icon={Clock}
+          icon={<Clock className="h-4 w-4" />}
           trend={pending.length > 0 ? "up" : "neutral"}
           trendLabel="Awaiting decision"
           accentColor="#6366f1"
