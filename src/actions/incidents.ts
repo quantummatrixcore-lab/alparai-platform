@@ -29,6 +29,7 @@ import {
   getProviderAlertEmail,
 } from "@/emails/templates";
 import { translateIncidentToTR } from "@/actions/translations";
+import { triggerClaimAndRespondAlert } from "@/lib/notifications/claim-and-respond";
 import type { Database } from "@/types/database";
 
 export interface SubmitIncidentState {
@@ -378,6 +379,18 @@ const runSubmitWork = async (
   await translateIncidentToTR(incidentId).catch((err) => {
     logger.error("Failed to auto-translate incident", { incidentId, err });
   });
+
+  try {
+    await triggerClaimAndRespondAlert({
+      incidentId,
+      providerId: providerIsCustom ? null : raw.provider_id || null,
+      modelId: isCustomValue(raw.model_id) ? null : raw.model_id || null,
+      title: raw.title,
+      severity: (raw.severity as "low" | "medium" | "high" | "critical") || "medium",
+    });
+  } catch (claimErr) {
+    logger.warn("Failed to trigger Claim & Respond alert", { incidentId, error: claimErr });
+  }
 
   return { kind: "success", value: { id: incidentId } };
 };

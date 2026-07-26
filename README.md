@@ -8,6 +8,7 @@
 [![Security](https://github.com/quantummatrixcore-lab/Alparai.com/actions/workflows/security.yml/badge.svg)](https://github.com/quantummatrixcore-lab/Alparai.com/actions/workflows/security.yml)
 [![Deploy](https://github.com/quantummatrixcore-lab/Alparai.com/actions/workflows/deploy.yml/badge.svg)](https://github.com/quantummatrixcore-lab/Alparai.com/actions/workflows/deploy.yml)
 [![AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](./LICENSE)
+[![HackerOne VDP](https://img.shields.io/badge/HackerOne-VDP-purple.svg)](./docs/outreach/hackerone_strategy.md)
 
 ---
 

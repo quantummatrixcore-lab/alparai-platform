@@ -8,7 +8,7 @@ const REQUEST_TIMEOUT_MS = 60_000;
 
 export class VertexGeminiAdapter {
   isConfigured(): boolean {
-    return true;
+    return !!process.env.VERTEX_API_KEY;
   }
 
   async generateJson(

@@ -11,7 +11,7 @@ import { resolveApiKey } from "../api-keys";
 
 export class NvidiaNgcAdapter implements ProviderAdapter {
   isConfigured(): boolean {
-    return true; // Configurable via DB/env at runtime
+    return !!process.env.NVIDIA_NGC_API_KEY;
   }
 
   async call(request: GatewayRequest): Promise<GatewayResult> {

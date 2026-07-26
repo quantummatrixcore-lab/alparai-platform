@@ -255,6 +255,11 @@ describe("OpenRouter API Gateway", () => {
         status: 200,
         ok: true,
         json: async () => ({
+          choices: [
+            {
+              message: { content: "flash-fallback" },
+            },
+          ],
           candidates: [
             {
               content: {
@@ -262,11 +267,7 @@ describe("OpenRouter API Gateway", () => {
               },
             },
           ],
-          usageMetadata: {
-            promptTokenCount: 5,
-            candidatesTokenCount: 10,
-            totalTokenCount: 15,
-          },
+          usage: { prompt_tokens: 5, completion_tokens: 10, total_tokens: 15 },
         }),
       }) as any;
 
@@ -300,6 +301,11 @@ describe("OpenRouter API Gateway", () => {
         status: 200,
         ok: true,
         json: async () => ({
+          choices: [
+            {
+              message: { content: "free-fallback" },
+            },
+          ],
           candidates: [
             {
               content: {
@@ -307,11 +313,7 @@ describe("OpenRouter API Gateway", () => {
               },
             },
           ],
-          usageMetadata: {
-            promptTokenCount: 5,
-            candidatesTokenCount: 10,
-            totalTokenCount: 15,
-          },
+          usage: { prompt_tokens: 5, completion_tokens: 10, total_tokens: 15 },
         }),
       }) as any;
 

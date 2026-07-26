@@ -3,6 +3,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/auth/session";
 import { getRedisInstance } from "@/lib/utils/rate-limit";
+import { logger } from "@/lib/utils/logger";
 
 export interface Observe360Telemetry {
   incidents: {
@@ -74,7 +75,9 @@ export async function getObserve360Telemetry(): Promise<Observe360Telemetry> {
       }
     }
   } catch (err) {
-    console.warn("[Observe360] Redis cache miss or error:", err);
+    logger.warn("[Observe360] Redis cache miss or error:", {
+      error: err instanceof Error ? err.message : String(err),
+    });
   }
 
   const db = createAdminClient();
@@ -211,7 +214,9 @@ export async function getObserve360Telemetry(): Promise<Observe360Telemetry> {
       await redis.set(cacheKey, JSON.stringify(telemetry), { ex: 30 });
     }
   } catch (err) {
-    console.warn("[Observe360] Failed to cache telemetry:", err);
+    logger.warn("[Observe360] Failed to cache telemetry:", {
+      error: err instanceof Error ? err.message : String(err),
+    });
   }
 
   return telemetry;

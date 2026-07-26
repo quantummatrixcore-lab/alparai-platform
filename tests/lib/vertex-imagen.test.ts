@@ -36,7 +36,9 @@ describe("VertexImagenAdapter", () => {
   });
 
   it("should return true for isConfigured", () => {
+    process.env.VERTEX_API_KEY = "test-key";
     expect(adapter.isConfigured()).toBe(true);
+    delete process.env.VERTEX_API_KEY;
   });
 
   it("should return error when API key is missing", async () => {

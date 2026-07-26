@@ -9,7 +9,7 @@ const REQUEST_TIMEOUT_MS = 180_000; // Video generation can take up to 3 minutes
 
 export class VertexVeoAdapter {
   isConfigured(): boolean {
-    return true;
+    return !!process.env.VERTEX_API_KEY;
   }
 
   /**

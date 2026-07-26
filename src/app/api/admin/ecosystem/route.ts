@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdmin } from "@/lib/auth/session";
 import { logger } from "@/lib/utils/logger";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  await requireAdmin();
   try {
     const supabase = createAdminClient();
 

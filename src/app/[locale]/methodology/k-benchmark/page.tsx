@@ -26,9 +26,7 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
       <Section>
         <h2 className="text-fg-primary mb-4 text-2xl font-semibold">{t("categoriesTitle")}</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {(
-            ["safety", "truthfulness", "fairness", "privacy", "robustness", "transparency"] as const
-          ).map((cat) => (
+          {(["K5", "K6", "K7", "K8", "K9", "K10", "K11", "K12"] as const).map((cat) => (
             <Card key={cat}>
               <CardHeader>
                 <CardTitle className="text-base">{t(`cat_${cat}_title`)}</CardTitle>

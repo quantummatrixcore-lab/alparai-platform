@@ -2,6 +2,14 @@ import { describe, it, expect, vi } from "vitest";
 import { GET, POST } from "@/app/api/mcp/route";
 import { NextRequest } from "next/server";
 
+vi.mock("@/lib/auth/session", () => ({
+  requireAdmin: vi.fn().mockResolvedValue({
+    id: "admin-1",
+    email: "admin@test.com",
+    role: "admin",
+  }),
+}));
+
 vi.mock("@/lib/supabase/admin", () => ({
   createAdminClient: () => ({
     from: (_table: string) => ({

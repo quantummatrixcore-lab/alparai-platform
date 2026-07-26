@@ -223,7 +223,30 @@ export const dsarDownloadResponseSchema = z.union([
   z.string(), // CSV format is plain string
 ]);
 
-// 12. GET /api/v1/auditor/k-benchmark
+// 12. GET /api/v1/auditor
+export const auditorRootResponseSchema = z.object({
+  service: z.string(),
+  version: z.string(),
+  status: z.string(),
+  grid: z.object({
+    active_engines: z.number(),
+    fast_route_cache: z.boolean(),
+    zero_latency: z.boolean(),
+  }),
+  stats: z.object({
+    total_incidents: z.number(),
+    k_benchmark_evaluations: z.number(),
+    monitored_models: z.number(),
+  }),
+  endpoints: z.object({
+    audit_logs: z.string(),
+    k_benchmark: z.string(),
+    methodology: z.string(),
+  }),
+  timestamp: z.string(),
+});
+
+// 12b. GET /api/v1/auditor/k-benchmark
 export const auditorBenchmarkResponseSchema = z.object({
   data: z.array(
     z.object({

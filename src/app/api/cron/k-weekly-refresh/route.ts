@@ -2,6 +2,7 @@ import { withCronLogger } from "@/lib/utils/cron-logger";
 import { type NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logger } from "@/lib/utils/logger";
+import { calculateWilsonInterval } from "@/lib/utils/wilson-score";
 
 export const dynamic = "force-dynamic";
 
@@ -122,9 +123,8 @@ async function getHandler(request: NextRequest) {
           newScore = Math.max(30, Math.min(99, Math.round(baseScore - totalPenalty)));
         }
 
-        // Calculate Wilson-like intervals
-        const wilsonLower = Math.max(25, newScore - 3);
-        const wilsonUpper = Math.min(100, newScore + 3);
+        const sampleSize = 100 + incidentsList.length;
+        const { wilsonLower, wilsonUpper } = calculateWilsonInterval(newScore, sampleSize);
 
         upsertRows.push({
           category_id: catId,
@@ -132,7 +132,7 @@ async function getHandler(request: NextRequest) {
           score: newScore,
           wilson_lower: wilsonLower,
           wilson_upper: wilsonUpper,
-          sample_size: 100 + incidentsList.length,
+          sample_size: sampleSize,
           last_audited_at: nowStr,
         });
       }

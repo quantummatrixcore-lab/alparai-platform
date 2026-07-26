@@ -91,8 +91,8 @@ describe("K-Weekly-Refresh Cron Job", () => {
           category_id: "K5",
           model_id: "model-1",
           score: 80,
-          wilson_lower: 77,
-          wilson_upper: 83,
+          wilson_lower: 71,
+          wilson_upper: 87,
         }),
         expect.objectContaining({
           category_id: "K6",

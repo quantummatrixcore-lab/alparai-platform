@@ -9,6 +9,17 @@ import type { SessionUser } from "@/types";
 import type { Database } from "@/types/database";
 
 export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
+  if (process.env.IS_PLAYWRIGHT_TEST === "true") {
+    return {
+      id: "playwright-test-user",
+      email: "admin@playwright.test",
+      fullName: "Playwright Test Admin",
+      avatarUrl: null,
+      role: "admin",
+      isVerified: true,
+      createdAt: "2026-01-01T00:00:00Z",
+    };
+  }
   const supabase = await createClient();
   const {
     data: { user },

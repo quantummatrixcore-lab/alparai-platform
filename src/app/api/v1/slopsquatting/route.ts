@@ -1,6 +1,7 @@
 import "server-only";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdmin } from "@/lib/auth/session";
 import { maskPII } from "@/lib/pii/guardian";
 import { headers } from "next/headers";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
@@ -20,14 +21,15 @@ interface SlopsquattingRow {
 }
 
 export async function GET(request: Request) {
+  await requireAdmin();
   const { searchParams } = new URL(request.url);
   const ecosystem = searchParams.get("ecosystem");
   const limit = Math.min(Number(searchParams.get("limit") ?? "20"), 100);
   const confirmedReal = searchParams.get("confirmed_real");
 
   const supabase = createAdminClient();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let query = (supabase.from("slopsquatting_reports" as never) as any)
+  let query = supabase
+    .from("slopsquatting_reports")
     .select(
       "id, package_name, ecosystem, first_seen_at, confirmed_real, source_url, hallucinated_by_model_id",
     )
@@ -56,6 +58,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  await requireAdmin();
   const hdrs = await headers();
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   const ipHash = hashIp(ip);
@@ -90,8 +93,8 @@ export async function POST(request: Request) {
   const maskedPackageName = maskPII(String(package_name)).masked;
   const supabase = createAdminClient();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = (await (supabase.from("slopsquatting_reports" as never) as any)
+  const { data, error } = (await supabase
+    .from("slopsquatting_reports")
     .insert({
       package_name: maskedPackageName,
       ecosystem: String(ecosystem),

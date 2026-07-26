@@ -65,8 +65,7 @@ async function logAdminLogin(
       });
 
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        await (supabase as any).from("admin_login_events").insert({
+        await supabase.from("admin_login_events").insert({
           user_id: userId,
           ip_hash: ipHash,
         });

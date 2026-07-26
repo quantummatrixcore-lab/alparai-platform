@@ -4,6 +4,7 @@ import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logger } from "@/lib/utils/logger";
 import { callModel, type GatewayModel } from "@/lib/ai/openrouter-gateway";
+import { recalculateTrustScoresAction } from "@/actions/trust-score-engine";
 
 export interface BenchTrResult {
   ok: boolean;
@@ -127,11 +128,12 @@ export async function runBenchTrEvaluationAction(): Promise<BenchTrResult> {
     }
   }
 
-  // Update I15 status in strategy_innovations
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await (adminClient.from("strategy_innovations" as never) as any)
+  await adminClient
+    .from("strategy_innovations")
     .update({ status: "done", updated_at: new Date().toISOString() })
-    .ilike("title", "I15 —%");
+    .or("title.ilike.%I15%,title.ilike.%I21%");
+
+  await recalculateTrustScoresAction();
 
   return {
     ok: true,
