@@ -1,3 +1,38 @@
+# ALPAR AI — MASTER PLAN v11.32 (Admin Panel Reconciliation — Root Cause Analysis, Professionalized: Deploy Gate + Sidebar Duplicates + Antigravity Parallel Round Verified)
+
+> 🇹🇷 ÖZET (Founder için): "Yarısı oluyor yarısı olmuyor" şikayetinin iki ayrı kök nedeni vardı, ikisi de bu turda kapandı: (1) önceki merge commit'inde `[deploy]` etiketi eksikti, bu yüzden Vercel build'i sessizce atlamıştı — kod master'daydı ama hiç production'a inmemişti; boş bir `[deploy]` commit'iyle build tetiklendi. (2) Sidebar'daki merge çözümü hem eski hem yeni versiyonları bırakmış — `/admin/experts` ve `/admin/outreach` ikişer kez listeleniyordu; duplikatlar silindi. Bu iki düzeltme push edilirken Antigravity paralel olarak 7 commit daha push etti (Mission Control dashboard, admin route'larına EN/TR dil kısıtlaması, dil değiştirici düzeltmesi, ecosystem onay akışı düzeltmeleri) — hepsi `git merge` ile birleştirildi, çakışma çıkmadı. Bu giriş, v11.31'in terse özetini değiştirmez (append-only, ACP-3) — aynı turun kanıtlı, tablo biçiminde genişletilmiş halidir.
+
+## Kök Neden Analizi
+
+| #   | Sorun                                                                                                                       | Kanıt                                                                                                 | Düzeltme (commit)                                                    |
+| --- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| 1   | Deploy gate: merge commit mesajında `[deploy]` yoktu → `scripts/deploy-gate.mjs` build'i sessizce iptal etti (exit 0)       | `git log` — `bf5003c` mesajı `[deploy]` içermiyor; `vercel.json`'daki `ignoreCommand` bunu doğruluyor | `d427ad0` (boş commit, `[deploy]` etiketli)                          |
+| 2   | Sidebar'da iki çift giriş: `/admin/experts` (governanceItems + growthItems), `/admin/outreach` (growthItems içinde iki kez) | Explore ajanı doğrulaması: satır 220-223 ve 277-280 (experts), 247-250 ve 259-262 (outreach)          | `e05e1b3` — duplikat blok + kullanılmayan `Send` import'u kaldırıldı |
+
+Bu iki sorun "bazı değişiklikler görünüyor bazıları görünmüyor" hissini iki farklı şekilde yaratmıştı: (1) hiç deploy olmamış kod tamamen görünmez kalıyordu, (2) deploy olan kodda ise sidebar UI'ı çift girişlerle kafa karıştırıcıydı — fonksiyonel olarak kırık değildi ama "bozuk" izlenimi veriyordu.
+
+## Bu Turda Doğrulanmış Diğer Değişiklikler (Antigravity, paralel push — `d427ad0..343325c`)
+
+| Commit    | İçerik                                                                                                                                                                                                                    |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ff12088` | Dil değiştirici geçiş animasyonu düzeltmesi + 38 admin route'unun tamamı kilit açıldı                                                                                                                                     |
+| `40199f0` | Mission Control dashboard — 20+ widget, master plan yüzdesi, founder görevleri, SLO paneli, hızlı navigasyon grid'i (`admin-hq-dashboard.tsx`, `/admin/page.tsx`'e bağlı — doğrulandı, import satır 7 + render satır 116) |
+| `8c8ee63` | `/admin/*` route'ları için EN/TR dil kısıtlaması zorunlu kılındı (CLAUDE.md kuralıyla uyumlu — admin panelleri EN/TR yeter)                                                                                               |
+| `c244dab` | Ana sayfa/public route'lar (5 dil) ile admin route'ları (EN/TR) arasındaki ayrımı netleştiren doküman notu                                                                                                                |
+| `a0345e6` | Admin dil değiştirici tek-tıkla toggle'a çevrildi (dropdown kaldırıldı)                                                                                                                                                   |
+| `3852e73` | Ecosystem onay butonları düzeltildi + AI auto-publish → `ecosystem_news` akışı                                                                                                                                            |
+| `343325c` | `ecosystem.ts`'te next-intl cache invalidation için doğru dinamik route segmenti kullanımı                                                                                                                                |
+
+## Sıradaki İş (Antigravity/OpenCode'a — Claude yalnız bu girişi yazdı, kod dokunmadı)
+
+- **P0 — Uçtan uca doğrulama:** `pnpm build && pnpm lint && pnpm test` çalıştırılıp yeşil olduğu teyit edilsin; bu turda iki ayrı ajan/oturum paralel push yaptığı için hâlâ görülmemiş bir entegrasyon hatası riski var.
+- **P0 — Canlı kontrol:** `/admin` panelinde Mission Control dashboard'un yüklendiği, sidebar'da her linkin yalnız bir kez göründüğü, dil değiştirmenin admin route'larında yalnız EN/TR sunduğu tarayıcıda teyit edilsin.
+- **P1:** Ecosystem onay kuyruğundaki (`approval-queue.tsx`) auto-publish akışının, önceki turda düzeltilen PII masking mantığıyla (external-verifier.ts) hâlâ tutarlı çalıştığı doğrulansın.
+
+**Doğrulanmadı (bu turda ölçülmedi):** Yukarıdaki 7 commit'in gerçek tarayıcı testi — bu oturum yalnız git/dosya seviyesinde doğrulama yaptı, canlı ortamda tıklama testi yapılmadı.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.31 (Admin Panel Reconciliation: Deploy Gate Fix + Sidebar Cleanup + New Admin Dashboard)
 
 > 🇹🇷 ÖZET (Founder için): Deploy gate sorunu çözüldü (merge commit'e `[deploy]` etiketi eklenerek Vercel build'i tetiklendi). Admin sidebar'daki çift girişler (experts, outreach) temizlendi. Antigravity paralel olarak yeni admin dashboard bileşeni (`admin-hq-dashboard.tsx`), ecosystem actions refactor'ı, ve tüm locale mesaj dosyaları güncellemesi yaptı. Sonraki aşamada: yeni dashboard'u admin layout'a bağlamak, doğrulanmamış özellikleri kontrol etmek, ve production deploy etmek — bütün işler Antigravity/OpenCode'a bırakılıyor (Claude yalnız bu girişi yazıyor).
