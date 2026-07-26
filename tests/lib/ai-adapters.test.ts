@@ -236,7 +236,9 @@ describe("AI Adapters", () => {
     const adapter = new GoogleAdapter();
 
     it("should return true for isConfigured", () => {
+      process.env.GOOGLE_API_KEY = "test-key";
       expect(adapter.isConfigured()).toBe(true);
+      delete process.env.GOOGLE_API_KEY;
     });
 
     it("should return no_api_key error when API key is missing", async () => {

@@ -1,5 +1,3 @@
-"use server";
-
 export { moderateIncident, bulkApproveIncidents, bulkRejectIncidents } from "./admin/moderation";
 export type { ModerationResult } from "./admin/moderation";
 
