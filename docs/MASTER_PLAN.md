@@ -1,3 +1,52 @@
+# ALPAR AI — MASTER PLAN v11.35 (TOM Stage-3 — Opus 5 İncelemesi + Backlog Mutabakatı)
+
+> 🇹🇷 ÖZET (Founder için): TOM'un 3. aşaması (Opus 5 incelemesi) bu turda yapıldı — v11.34'te "beklemede" bırakılmıştı. Bu arada Antigravity Founder Cockpit'i gerçekten shipped etti (`96bb9b7`, `92186d0`, merge `a38cd3f`): LinkedIn/hibe/platform tabloları, sayfaları, action'ları ve parser düzeltmesi canlı. Backlog tablosu bu yüzden ters yönde bozulmuştu — dashboard biten işi 0% gösteriyordu; dürüst sayı artık **4/9 ≈ %44**. İnceleme üç bulgu üretti: (A) LinkedIn seed'inde uydurma kişi YOK, spesifikasyona uygun — geçti. (B) Hibe onay akışı tek adımlı kalmış: "yapıldı" ile "onaylandı" ayrımı yok, yani Founder'ın açıkça istediği onay mekanizması fiilen çalışmıyor — kusur. (C) Seed edilen hibe programları katalogdaki 9 program değil, farklı 6 program; üstelik `apply_url` ve `prepared_content_ref` hiç yazılmamış, yani rakamların kaynağı yok (Kural #10) ve hazır başvuru metinleri boşta kalmış — kusur. B ve C Antigravity'ye devredildi.
+
+## TOM Pipeline Status
+
+| Aşama | Sorumlu    | Çıktı                                                                                 | Durum    |
+| ----- | ---------- | ------------------------------------------------------------------------------------- | -------- |
+| 1     | Haiku      | v11.33 taslağı (commit `2c8ca78`)                                                     | ✅ tamam |
+| 2     | Sonnet     | v11.34 — profesyonel tam içerik (commit `0fbdcd1`)                                    | ✅ tamam |
+| 3     | **Opus 5** | v11.35 — bu giriş; karar: **kusurlarla birlikte onay** (rewrite yok, G-4/G-4c uyumlu) | ✅ tamam |
+
+Bu turda keşif Haiku'ya devredildi (G-5). Opus 5 yalnız yük taşıyan iddiaları (yetkilendirme, kaynak gösterimi, uydurma veri riski) kendi doğruladı — bu doğrulama Haiku'nun iki değerlendirmesini çürüttü ve incelemenin katma değeri budur.
+
+## Stage-3 Bulguları (bu oturumda doğrulandı)
+
+| #   | Bulgu                                                                | Kanıt                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Karar    |
+| --- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| A   | **Uydurma kişi yok** — seed spesifikasyona uygun                     | `supabase/migrations/20260818000001_seed_founder_backlog.sql`: v11.33'ün izin verdiği tam 7 gerçek isim (Chowdhury, Cattell, Solaiman, Ovadya, Miessler, Jernite, McGregor); kalan 43 satır `- TBD n` / `Placeholder Contact n` etiketli. Haiku "13 gerçek isim" raporlamıştı — 6 açıklayıcı TBD satırını yanlış saymış                                                                                                                                                                                       | ✅ GEÇTİ |
+| B   | **Hibe onay akışı tek adımlı — Founder'ın açık talebi karşılanmadı** | `src/actions/admin/grants.ts:22-42` — yalnız `updateGrantStatus` var; `status==='approved'` olduğunda `approved_by/approved_at` yazıyor. `completed_by/completed_at` yazan hiçbir action yok. Kolonlar şemada var ama ölü; herhangi bir moderatör doğrudan `approved`'a atlayabiliyor. v11.33 §Madde-3'teki submit≠approve ayrımı (`moderateIncident` iki adımlı modeli) fiilen yok                                                                                                                           | ❌ KUSUR |
+| C   | **Seed edilen hibeler katalogdaki programlar değil ve kaynaksız**    | Seed edilen: OpenAI Cybersecurity, Mozilla Technology Fund, NSF SaTC, Anthropic AI Safety, Tübitak 1507, KOSGEB (6 satır). Spesifikasyondaki (`docs/STARTUP_ECOSYSTEM_GRANTS_CATALOG.md`): Google/Microsoft/AWS/Anthropic/NVIDIA/OpenAI Researcher/GitHub/Vercel/Supabase (9 satır). INSERT sütun listesinde `apply_url` ve `prepared_content_ref` hiç yok → tutarların kaynağı gösterilmemiş (Kural #10) ve `docs/APPLICATIONS/002-big-tech-grants.md`'deki hazır portal cevapları hiçbir satıra bağlanmamış | ❌ KUSUR |
+
+## Founder Backlog (canlı veri kaynağı — Mission Control "Plan Completion" metriği)
+
+<!-- FOUNDER_BACKLOG_START -->
+
+| #   | Priority | Item                                                                              | Description                                                                                                                                                                                        | Status       |
+| --- | -------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| 1   | P0       | [Antigravity] Public incident auto-publishing — mainstream connector              | Allowlist 8 alan adına çıktı ve `vercel.json` cron'u saatlik (`0 * * * *`) oldu — ikisi de shipped. Kalan tek iş: `src/lib/connectors/` altına Google News RSS connector                           | 🔄 pending   |
+| 2   | P1       | [Antigravity] Founder Cockpit — LinkedIn contacts table + admin page              | Tablo + `/admin/linkedin` + `src/actions/admin/linkedin.ts` canlı; seed uydurma içermiyor (Bulgu A)                                                                                                | ✅ completed |
+| 3   | P1       | [Antigravity] Grant applications — iki adımlı onay akışını tamamla                | Tablo/sayfa canlı ama submit adımı yok (Bulgu B). Kabul kriteri: `completed_by/completed_at` yazan ayrı bir "Mark Submitted" action + approve/reject'in `role IN ('admin','ceo')` ile sınırlanması | 🔄 pending   |
+| 4   | P1       | [Antigravity] Founder Cockpit — platform signups table + admin page               | Tablo + `/admin/platforms` + `src/actions/admin/platforms.ts` canlı                                                                                                                                | ✅ completed |
+| 5   | P1       | [Antigravity] Outreach queue — `/admin/outreach`'i gerçek kuyruk görünümüne çevir | Hiç ellenmedi: sayfa hâlâ statik iki-şablon; `outreach-queue-list.tsx` ve `src/app/api/cron/outreach/route.ts` yok. `company` kolonu eklendi                                                       | 🔄 pending   |
+| 6   | P1       | [Antigravity] Fix `parseMasterPlan()` false-completion bug                        | `src/lib/utils/markdown-parser.ts` artık `FOUNDER_BACKLOG_START/END` arasını okuyor                                                                                                                | ✅ completed |
+| 7   | P2       | [Antigravity] NVIDIA admin-entered key → `NVIDIA_NGC_API_KEY` env path            | `src/lib/ai/adapters/nvidia-ngc.ts` içinde `resolveApiKey` ile bağlı                                                                                                                               | ✅ completed |
+| 8   | P2       | [Antigravity] Visual-layer rollout to remaining flat-table admin pages            | Yeni 3 liste (grants/linkedin/platforms) MetricCard + lucide kullanıyor, recharts grafiği yok                                                                                                      | 🔄 pending   |
+| 9   | P2       | [Founder] Create HackerOne + Reddit accounts                                      | Taslaklar hazır (v11.06, `docs/OUTREACH/reddit_launch_post.md`); insan hesap sahipliği gerekiyor                                                                                                   | 🔄 pending   |
+| 10  | P1       | [Antigravity] Grant seed verisini katalogla eşitle                                | Bulgu C: 9 katalog programını `apply_url` + gerçek tutarlarla seed et, MS/Google/AWS satırlarına `prepared_content_ref='docs/APPLICATIONS/002-big-tech-grants.md'` bağla                           | 🔄 pending   |
+
+<!-- FOUNDER_BACKLOG_END -->
+
+4/10 tamamlandı: **%40**. (v11.34'te 0/9 = %0 yazıyordu; Antigravity'nin shipped ettiği iş metriğe yansımamıştı. Bulgu C yeni bir satır olarak eklendiği için payda 9→10 oldu.)
+
+## Handoff
+
+Bulgu B, Bulgu C ve backlog #1/#5/#8 Antigravity/OpenCode'a devredildi — hepsi mevcut çalışan desenleri kopyalıyor, yeni mimari yok. Bu turda mimar tarafından hiçbir kod dosyası değiştirilmedi (G-6); yalnız `docs/MASTER_PLAN.md` güncellendi.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.34 (TOM Stage-2 — Professional Expansion of v11.33: Founder Cockpit Spec as Evidence Tables)
 
 > 🇹🇷 ÖZET (Founder için): `/TOM` komutuyla istenen profesyonelleştirme turu. v11.33'ün içeriği doğru ve eksiksizdi (Haiku katmanında yazılmıştı) — bu giriş yeni bir bulgu eklemiyor, sadece TOM doktrininin 2. aşamasını (Sonnet: tam içerik yazımı) uyguluyor: uzun paragraflar → kanıt/spesifikasyon tabloları, v11.32'nin v11.31 üzerinde yaptığı aynı profesyonelleştirme deseniyle (append-only, ACP-3). Founder Backlog tablosunun canlı kopyası (dashboard'un okuduğu `FOUNDER_BACKLOG_START/END` markerları) artık burada; v11.33'teki eski kopya "tarihsel, yerini bu tabloya bıraktı" notuyla korunuyor — silinmedi. TOM Aşama 3 (Opus 5 / Fable 5 incelemesi) bu turda yapılmadı, aşağıdaki tabloda açıkça "beklemede" olarak işaretlendi.
@@ -10,9 +59,9 @@
 | 2     | Sonnet         | v11.34 — bu giriş, tam profesyonel içerik             | ✅ tamam     |
 | 3     | Opus 5/Fable 5 | Mimari/güvenlik/yönetişim incelemesi, onay veya patch | 🔄 beklemede |
 
-## Founder Backlog (canlı veri kaynağı — Mission Control "Plan Completion" metriği)
+## Founder Backlog (v11.35'in canlı kopyasıyla değiştirildi — tarihsel kayıt, artık parse edilmiyor)
 
-<!-- FOUNDER_BACKLOG_START -->
+<!-- FOUNDER_BACKLOG_SUPERSEDED_BY_v11.35_START -->
 
 | #   | Priority | Item                                                                                               | Description                                                                                                | Status     |
 | --- | -------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------- |
@@ -26,9 +75,9 @@
 | 8   | P2       | [Antigravity] Visual-layer rollout to remaining flat-table admin pages                             | recharts/lucide patterns exist, underused                                                                  | 🔄 pending |
 | 9   | P2       | [Founder] Create HackerOne + Reddit accounts                                                       | Drafts ready (MASTER_PLAN v11.06, `docs/OUTREACH/reddit_launch_post.md`); requires human account ownership | 🔄 pending |
 
-<!-- FOUNDER_BACKLOG_END -->
+<!-- FOUNDER_BACKLOG_SUPERSEDED_BY_v11.35_END -->
 
-0/9 tamamlandı: **%0** — v11.33'te ölçülen ~%90 yanlış rakamının yerini alan dürüst taban çizgisi (bkz. Madde #1 aşağıda).
+0/9 tamamlandı: **%0** — v11.33'te ölçülen ~%90 yanlış rakamının yerini alan dürüst taban çizgisi (bkz. Madde #1 aşağıda). **v11.35 notu:** bu %0 yazıldığı an doğruydu ama Antigravity'nin shipped ettiği işi yansıtmıyordu; canlı sayı artık v11.35'in tablosunda (4/10).
 
 ## Madde #1 — False-Completion Root Cause and Fix
 
