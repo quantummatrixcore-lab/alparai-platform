@@ -12,14 +12,27 @@ export interface PlanItem {
   owner?: string;
 }
 
+const BACKLOG_START = "<!-- FOUNDER_BACKLOG_START -->";
+const BACKLOG_END = "<!-- FOUNDER_BACKLOG_END -->";
+
 export function parseMasterPlan(): PlanItem[] {
   try {
     const filePath = path.join(process.cwd(), "docs", "MASTER_PLAN.md");
     const content = fs.readFileSync(filePath, "utf-8");
     const lines = content.split("\n");
+
+    const startIdx = lines.findIndex((l) => l.includes(BACKLOG_START));
+    const endIdx = lines.findIndex((l) => l.includes(BACKLOG_END));
+
+    if (startIdx === -1 || endIdx === -1 || endIdx <= startIdx) {
+      logger.error("parseMasterPlan: FOUNDER_BACKLOG markers not found — returning empty list");
+      return [];
+    }
+
+    const backlogLines = lines.slice(startIdx + 1, endIdx);
     const items: PlanItem[] = [];
 
-    for (const line of lines) {
+    for (const line of backlogLines) {
       if (!line.trim().startsWith("|") || line.includes("---") || line.includes("Item ID")) {
         continue;
       }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import "../helpers/setup";
 import { createMockSupabaseClient, createTestUser } from "../helpers/supabase-mock";
@@ -83,73 +82,20 @@ function buildFormData(overrides: Record<string, string> = {}): FormData {
 }
 
 describe("submitIncident Age Gate Integration", () => {
-  it("should record age gate self-declaration to age_declarations table", async () => {
-    // 1. Mock supabase.from("incidents").insert(...) to return a valid incident ID
-    mockSupabase.from.mockImplementation((table: string): any => {
-      if (table === "incidents") {
-        return {
-          insert: vi.fn().mockReturnValue({
-            select: vi.fn().mockReturnValue({
-              single: vi.fn().mockResolvedValue({ data: { id: "inc-1" }, error: null }),
-            }),
-          }),
-        };
-      }
-      return {
-        select: mockSupabase._mocks.mockSelect,
-        insert: mockSupabase._mocks.mockInsert,
-      };
-    });
-
-    // 2. Mock rpc check for duplicate incident
-    mockSupabase.rpc.mockReturnValue({
-      maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
-    });
-
-    // 3. Mock admin client for age declarations
-    mockAdminClient.from.mockImplementation((table: string): any => {
-      if (table === "submission_attempts") {
-        return {
-          insert: vi.fn().mockResolvedValue({ error: null }),
-          select: vi.fn().mockReturnThis(),
-          eq: vi.fn().mockReturnThis(),
-          gte: vi.fn().mockResolvedValue({ count: 1 }),
-        };
-      }
-      if (table === "age_declarations") {
-        return {
-          insert: vi.fn().mockResolvedValue({ error: null }),
-        };
-      }
-      if (table === "autopilot_runs") {
-        return {
-          upsert: vi.fn().mockReturnThis(),
-          select: vi.fn().mockReturnThis(),
-          single: vi.fn().mockResolvedValue({
-            data: {
-              id: "run-123",
-              status: "completed",
-              attempts: 1,
-              result_id: "inc-1",
-              idempotency_key: "key-1",
-            },
-            error: null,
-          }),
-        };
-      }
-      return {
-        select: mockAdminClient._mocks.mockSelect,
-        insert: mockAdminClient._mocks.mockInsert,
-        update: mockAdminClient._mocks.mockUpdate,
-        delete: mockAdminClient._mocks.mockDelete,
-        upsert: mockAdminClient._mocks.mockUpsert,
-      };
-    });
-
+  it("should record age gate self-declaration to age_declarations table via submit_incident_atomic", async () => {
     const fd = buildFormData({ consent_age: "on" });
     const res = await submitIncident({ ok: false }, fd);
 
     expect(res.ok).toBe(true);
-    expect(mockAdminClient.from).toHaveBeenCalledWith("age_declarations");
+    expect(mockSupabase.rpc).toHaveBeenCalledWith(
+      "submit_incident_atomic",
+      expect.objectContaining({
+        payload: expect.objectContaining({
+          age_consent: true,
+          coppa_consent: true,
+          uk_osa_consent: true,
+        }),
+      }),
+    );
   });
 });

@@ -258,7 +258,7 @@ https://alparai.com`,
 
 export async function autoModerateIncidentAction(
   incidentId: string,
-): Promise<{ ok: boolean; score?: number; status?: string }> {
+): Promise<{ ok: boolean; score?: number; status?: string; error?: string }> {
   const result = await withAutopilot<{ score: number; status: string }>(
     autoModerateIncidentPolicy,
     [incidentId],
@@ -296,5 +296,5 @@ export async function autoModerateIncidentAction(
     );
   }
 
-  return { ok: false };
+  return { ok: false, error: result.kind === "exhausted" ? result.error : result.kind };
 }
