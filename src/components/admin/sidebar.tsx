@@ -44,6 +44,7 @@ import {
   Building2,
   Calculator,
   Zap,
+  Send,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
@@ -210,6 +211,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       active: pathname.startsWith("/admin/users"),
     },
     {
+      href: "/admin/experts",
+      label: t("nav_experts") || "Domain Experts",
+      icon: Users,
+      active: pathname.startsWith("/admin/experts"),
+    },
+    {
       href: "/admin/dsar",
       label: t("nav_dsar") || "DSAR Queue",
       icon: Lock,
@@ -237,10 +244,22 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       active: pathname.startsWith("/admin/social"),
     },
     {
+      href: "/admin/outreach",
+      label: t("nav_outreach") || "Outreach Hub",
+      icon: Send,
+      active: pathname.startsWith("/admin/outreach"),
+    },
+    {
       href: "/admin/marketing",
       label: t("nav_marketing") || "Marketing Pipeline",
       icon: TrendingUp,
       active: pathname.startsWith("/admin/marketing"),
+    },
+    {
+      href: "/admin/investors",
+      label: t("nav_investors") || "Investor Relations",
+      icon: DollarSign,
+      active: pathname.startsWith("/admin/investors"),
     },
     {
       href: "/admin/launch-signal",
@@ -262,6 +281,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       label: t("nav_billing") || "Cost & Limits",
       icon: DollarSign,
       active: pathname.startsWith("/admin/billing"),
+    },
+    {
+      href: "/admin/finance",
+      label: t("nav_finance") || "Financial Overview",
+      icon: DollarSign,
+      active: pathname.startsWith("/admin/finance"),
     },
     {
       href: "/admin/resources",

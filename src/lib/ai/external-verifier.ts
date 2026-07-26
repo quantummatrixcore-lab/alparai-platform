@@ -139,13 +139,18 @@ export async function publishVerifiedItem(params: {
 }): Promise<{ success: boolean; incidentId?: string }> {
   const admin = createAdminClient();
 
+  const { masked: titleMasked, categories: titleCats } = maskPII(params.title);
+  const { masked: bodyMasked, categories: bodyCats } = maskPII(params.body);
+  const piiCats = Array.from(new Set([...titleCats, ...bodyCats]));
+  const containsPii = piiCats.length > 0;
+
   const { data: incident, error: insertError } = await admin
     .from("incidents")
     .insert({
-      title: params.title,
-      title_masked: params.title,
-      description: params.body,
-      description_masked: params.body,
+      title: titleMasked,
+      title_masked: titleMasked,
+      description: bodyMasked,
+      description_masked: bodyMasked,
       category: params.category as Database["public"]["Enums"]["incident_category"],
       severity: params.severity as Database["public"]["Enums"]["incident_severity"],
       source_url: params.externalUrl,
@@ -155,8 +160,8 @@ export async function publishVerifiedItem(params: {
       language: "en",
       is_anonymous: true,
       is_expert: false,
-      contains_pii: false,
-      pii_categories: [],
+      contains_pii: containsPii,
+      pii_categories: piiCats,
       status: "published",
       processing_stage: "pending",
       cross_audit_truth_score: params.plausibilityScore,
