@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useTransition } from "react";
+import React, { useState, useTransition } from "react";
 import { approveQueueItem, rejectQueueItem } from "@/actions/ecosystem";
-import { Clock, Check, X, ExternalLink } from "lucide-react";
+import { Clock, Check, X, ExternalLink, Loader2 } from "lucide-react";
 import type { Database } from "@/types/database";
 
 type QueueItem = Database["public"]["Tables"]["external_incidents_queue"]["Row"];
@@ -27,15 +27,34 @@ function SourceBadge({ source }: { source: string }) {
   );
 }
 
-export function ApprovalQueue({ items }: { items: QueueItem[] }) {
-  const [isPending, startTransition] = useTransition();
+export function ApprovalQueue({ items: initialItems }: { items: QueueItem[] }) {
+  const [items, setItems] = useState(initialItems);
+  const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
+  const [, startTransition] = useTransition();
+
+  const removeItem = (id: string) => {
+    setItems((prev) => prev.filter((i) => i.id !== id));
+    setPendingIds((prev) => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+  };
 
   const handleApprove = (id: string) => {
-    startTransition(() => approveQueueItem(id));
+    setPendingIds((prev) => new Set(prev).add(id));
+    startTransition(async () => {
+      await approveQueueItem(id);
+      removeItem(id);
+    });
   };
 
   const handleReject = (id: string) => {
-    startTransition(() => rejectQueueItem(id));
+    setPendingIds((prev) => new Set(prev).add(id));
+    startTransition(async () => {
+      await rejectQueueItem(id);
+      removeItem(id);
+    });
   };
 
   return (
@@ -74,60 +93,75 @@ export function ApprovalQueue({ items }: { items: QueueItem[] }) {
           </div>
         ) : (
           <div className="divide-y divide-white/5">
-            {items.map((item) => (
-              <div
-                key={item.id}
-                className="group flex flex-col justify-between gap-4 p-5 transition-colors hover:bg-white/[0.02] sm:flex-row sm:items-center"
-              >
-                <div className="min-w-0 flex-1">
-                  <div className="mb-2 flex flex-wrap items-center gap-2">
-                    <SourceBadge source={item.source || "crawl"} />
-                    <span className="font-mono text-[10px] text-zinc-500">
-                      {item.created_at ? new Date(item.created_at).toLocaleDateString() : "Recent"}
-                    </span>
+            {items.map((item) => {
+              const isItemPending = pendingIds.has(item.id);
+              return (
+                <div
+                  key={item.id}
+                  className={`group flex flex-col justify-between gap-4 p-5 transition-all sm:flex-row sm:items-center ${
+                    isItemPending ? "pointer-events-none opacity-50" : "hover:bg-white/[0.02]"
+                  }`}
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-2 flex flex-wrap items-center gap-2">
+                      <SourceBadge source={item.source || "crawl"} />
+                      <span className="font-mono text-[10px] text-zinc-500">
+                        {item.created_at
+                          ? new Date(item.created_at).toLocaleDateString()
+                          : "Recent"}
+                      </span>
+                    </div>
+
+                    {item.external_url ? (
+                      <a
+                        href={item.external_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/link hover:text-brand-300 flex items-center gap-1.5 text-sm font-bold text-white transition-colors"
+                      >
+                        <span className="line-clamp-1">{item.title}</span>
+                        <ExternalLink className="h-3.5 w-3.5 shrink-0 opacity-60 transition-opacity group-hover/link:opacity-100" />
+                      </a>
+                    ) : (
+                      <h4 className="line-clamp-1 text-sm font-bold text-white">{item.title}</h4>
+                    )}
+
+                    {item.body && (
+                      <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-zinc-400">
+                        {item.body}
+                      </p>
+                    )}
                   </div>
 
-                  {item.external_url ? (
-                    <a
-                      href={item.external_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group/link hover:text-brand-300 flex items-center gap-1.5 text-sm font-bold text-white transition-colors"
+                  <div className="flex shrink-0 items-center space-x-2">
+                    <button
+                      onClick={() => handleApprove(item.id)}
+                      disabled={isItemPending}
+                      className="flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-400 transition-colors hover:border-emerald-500/50 hover:bg-emerald-500/20 disabled:opacity-40"
                     >
-                      <span className="line-clamp-1">{item.title}</span>
-                      <ExternalLink className="h-3.5 w-3.5 shrink-0 opacity-60 transition-opacity group-hover/link:opacity-100" />
-                    </a>
-                  ) : (
-                    <h4 className="line-clamp-1 text-sm font-bold text-white">{item.title}</h4>
-                  )}
-
-                  {item.body && (
-                    <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-zinc-400">
-                      {item.body}
-                    </p>
-                  )}
+                      {isItemPending ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <Check className="h-3.5 w-3.5" />
+                      )}
+                      <span>Approve</span>
+                    </button>
+                    <button
+                      onClick={() => handleReject(item.id)}
+                      disabled={isItemPending}
+                      className="flex items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-bold text-rose-400 transition-colors hover:border-rose-500/50 hover:bg-rose-500/20 disabled:opacity-40"
+                    >
+                      {isItemPending ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <X className="h-3.5 w-3.5" />
+                      )}
+                      <span>Reject</span>
+                    </button>
+                  </div>
                 </div>
-
-                <div className="flex shrink-0 items-center space-x-2">
-                  <button
-                    onClick={() => handleApprove(item.id)}
-                    disabled={isPending}
-                    className="flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-400 transition-colors hover:border-emerald-500/50 hover:bg-emerald-500/20 disabled:opacity-40"
-                  >
-                    <Check className="h-3.5 w-3.5" />
-                    <span>Approve</span>
-                  </button>
-                  <button
-                    onClick={() => handleReject(item.id)}
-                    disabled={isPending}
-                    className="flex items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-bold text-rose-400 transition-colors hover:border-rose-500/50 hover:bg-rose-500/20 disabled:opacity-40"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                    <span>Reject</span>
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

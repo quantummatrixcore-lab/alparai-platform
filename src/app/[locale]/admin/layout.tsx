@@ -14,6 +14,9 @@ export default async function AdminLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  if (locale !== "en" && locale !== "tr") {
+    redirect("/en/admin");
+  }
   setRequestLocale(locale);
 
   const user = await getCurrentUser();
