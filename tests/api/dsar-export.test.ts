@@ -66,12 +66,10 @@ describe("DSAR Export API Endpoint", () => {
       if (table === "incidents") {
         return {
           select: vi.fn().mockReturnThis(),
-          eq: vi
-            .fn()
-            .mockResolvedValue({
-              data: [{ id: "inc-123", title_masked: "Test Title" }],
-              error: null,
-            }),
+          eq: vi.fn().mockResolvedValue({
+            data: [{ id: "inc-123", title_masked: "Test Title" }],
+            error: null,
+          }),
         };
       }
       // default fallback for comments, votes, expert_applications

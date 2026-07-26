@@ -28,7 +28,10 @@ export async function isAuthorizedAuditor(request: Request): Promise<boolean> {
     .eq("client_type", "external")
     .maybeSingle();
 
-  if (dbKey && (dbKey.tier === "enterprise" || dbKey.tier === "auditor" || dbKey.tier === "developer")) {
+  if (
+    dbKey &&
+    (dbKey.tier === "enterprise" || dbKey.tier === "auditor" || dbKey.tier === "developer")
+  ) {
     return true;
   }
 

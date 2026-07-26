@@ -47,7 +47,10 @@ export async function findDuplicateIncident(
     const db = admin as unknown as {
       from: (table: string) => {
         select: (cols: string) => {
-          order: (col: string, opts: { ascending: boolean }) => {
+          order: (
+            col: string,
+            opts: { ascending: boolean },
+          ) => {
             limit: (n: number) => Promise<{ data: IncidentItem[] | null }>;
           };
         };

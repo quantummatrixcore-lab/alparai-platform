@@ -40,7 +40,7 @@ export default async function GrantsAdminPage({
       </div>
 
       <AdminSectionCard title="Active Grants">
-        <GrantsList initialGrants={grants || []} />
+        <GrantsList initialGrants={grants || []} userRole={user.role} />
       </AdminSectionCard>
     </div>
   );

@@ -81,20 +81,23 @@ export function CronsDashboardClient() {
       <AdminSectionCard title="Supabase pg_cron Active Schedules">
         <div className="divide-y divide-white/10 p-6">
           {jobs.map((job) => (
-            <div key={job.name} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 first:pt-0 last:pb-0">
+            <div
+              key={job.name}
+              className="flex flex-col justify-between gap-4 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center"
+            >
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4 text-emerald-400" />
                   <span className="font-mono text-sm font-bold text-white">{job.name}</span>
-                  <span className="rounded border border-white/10 bg-white/5 px-2 py-0.5 font-mono text-[10px] text-fg-muted">
+                  <span className="text-fg-muted rounded border border-white/10 bg-white/5 px-2 py-0.5 font-mono text-[10px]">
                     {job.schedule}
                   </span>
-                  <span className="rounded bg-emerald-500/20 px-2 py-0.5 font-mono text-[9px] uppercase font-bold text-emerald-400">
+                  <span className="rounded bg-emerald-500/20 px-2 py-0.5 font-mono text-[9px] font-bold text-emerald-400 uppercase">
                     {job.status}
                   </span>
                 </div>
-                <p className="text-xs text-fg-muted">{job.target}</p>
-                <p className="text-[10px] text-fg-muted font-mono">Last Run: {job.lastRun}</p>
+                <p className="text-fg-muted text-xs">{job.target}</p>
+                <p className="text-fg-muted font-mono text-[10px]">Last Run: {job.lastRun}</p>
               </div>
 
               <button
@@ -112,12 +115,14 @@ export function CronsDashboardClient() {
       </AdminSectionCard>
 
       <AdminSectionCard title="Cron Topology Map">
-        <div className="p-6 text-xs text-fg-muted space-y-3">
-          <div className="flex items-center gap-2 text-white font-semibold">
+        <div className="text-fg-muted space-y-3 p-6 text-xs">
+          <div className="flex items-center gap-2 font-semibold text-white">
             <Network className="h-4 w-4 text-cyan-400" /> Re-homed to Supabase pg_cron
           </div>
           <p className="text-[11px]">
-            Vercel `crons: []` disabled in `vercel.json` to avoid Vercel hobby limits. Schedules execute natively inside Supabase PostgreSQL `pg_cron` extension with timingSafeEqual secret authorization.
+            Vercel `crons: []` disabled in `vercel.json` to avoid Vercel hobby limits. Schedules
+            execute natively inside Supabase PostgreSQL `pg_cron` extension with timingSafeEqual
+            secret authorization.
           </p>
         </div>
       </AdminSectionCard>

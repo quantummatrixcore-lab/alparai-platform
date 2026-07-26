@@ -4,8 +4,9 @@ import * as React from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Shield, Lock, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Shield, Lock, AlertCircle, CheckCircle2, KeyRound } from "lucide-react";
 import { submitWhistleblowerAction } from "@/actions/whistleblower";
+import { encryptZeroKnowledge } from "@/lib/crypto/client-crypto";
 
 export function WhistleblowerForm() {
   const t = useTranslations("whistleblower");
@@ -19,6 +20,7 @@ export function WhistleblowerForm() {
   >("idle");
   const [displayContent, setDisplayContent] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
+  const [keyFragment, setKeyFragment] = React.useState<string>("");
   const CATEGORIES = [
     { id: "safety", label: tCat("safety") },
     { id: "privacy", label: tCat("privacy") },
@@ -28,40 +30,37 @@ export function WhistleblowerForm() {
   ];
 
   React.useEffect(() => {
-    setDisplayContent(content);
-  }, [content]);
+    if (status === "idle" || status === "error") setDisplayContent(content);
+  }, [content, status]);
 
-  // A premium scrambling micro-animation to simulate AES/asymmetric encryption visually
-  const runVisualEncryption = () => {
-    return new Promise<string>((resolve) => {
-      let ticks = 0;
-      const original = content;
-      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-
-      const interval = setInterval(() => {
-        ticks++;
-        const scrambled = original
-          .split("")
-          .map((ch, idx) => {
-            if (ch === "\n") return "\n";
-            if (idx < (ticks / 15) * original.length) {
-              // already "encrypted" (simulated base64/hex output format)
-              return chars.charAt((idx * 7 + ticks) % chars.length);
-            }
-            return ch; // normal character
-          })
-          .join("");
-
-        setDisplayContent(scrambled);
-
-        if (ticks >= 20) {
-          clearInterval(interval);
-          // Return actual mocked encrypted string
-          const dummyEncrypted = "ENC$" + btoa(unescape(encodeURIComponent(original)));
-          resolve(dummyEncrypted);
-        }
-      }, 50);
-    });
+  /**
+   * Visual scramble micro-animation runs in parallel with the REAL AES-GCM
+   * encryption in `encryptZeroKnowledge()`. The animation is purely cosmetic
+   * (no security claim). The actual security comes from Web Crypto AES-GCM,
+   * never from this display string.
+   *
+   * Replaces the previous `btoa()` placeholder which was NOT encryption.
+   */
+  const runVisualEncryption = (realEncryptedPromise: Promise<string>) => {
+    let ticks = 0;
+    const original = content;
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    const interval = setInterval(() => {
+      ticks++;
+      const scrambled = original
+        .split("")
+        .map((ch, idx) => {
+          if (ch === "\n") return "\n";
+          if (idx < (ticks / 15) * original.length) {
+            return chars.charAt((idx * 7 + ticks) % chars.length);
+          }
+          return ch;
+        })
+        .join("");
+      setDisplayContent(scrambled);
+      if (ticks >= 20) clearInterval(interval);
+    }, 50);
+    return realEncryptedPromise.finally(() => clearInterval(interval));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -70,29 +69,39 @@ export function WhistleblowerForm() {
 
     setStatus("encrypting");
     setErrorMessage("");
+    setKeyFragment("");
 
-    const encrypted = await runVisualEncryption();
-
-    setStatus("submitting");
     try {
-      const res = await submitWhistleblowerAction({
-        encryptedContent: encrypted,
-        category,
-        providerHint: providerHint.trim() || null,
-      });
+      const encryptionPromise = encryptZeroKnowledge(content);
+      const encrypted = await runVisualEncryption(encryptionPromise.then((r) => r.ciphertext));
+      const result = await encryptionPromise;
+      setKeyFragment(result.keyFragment);
 
-      if (res.ok) {
-        setStatus("success");
-        setContent("");
-        setProviderHint("");
-      } else {
+      setStatus("submitting");
+      try {
+        const res = await submitWhistleblowerAction({
+          encryptedContent: encrypted,
+          category,
+          providerHint: providerHint.trim() || null,
+        });
+
+        if (res.ok) {
+          setStatus("success");
+          setContent("");
+          setProviderHint("");
+        } else {
+          setStatus("error");
+          setErrorMessage(res.error || "Submission failed");
+          setDisplayContent(content);
+        }
+      } catch (_err) {
         setStatus("error");
-        setErrorMessage(res.error || "Submission failed");
+        setErrorMessage(t("networkError"));
         setDisplayContent(content);
       }
     } catch (_err) {
       setStatus("error");
-      setErrorMessage("An unexpected network error occurred");
+      setErrorMessage(t("encryptionError"));
       setDisplayContent(content);
     }
   };
@@ -105,6 +114,31 @@ export function WhistleblowerForm() {
         </div>
         <h3 className="text-fg-primary text-xl font-bold">{t("successTitle")}</h3>
         <p className="text-fg-muted max-w-md text-sm">{t("success")}</p>
+
+        {keyFragment && (
+          <div className="border-warning-500/30 bg-warning-500/5 w-full max-w-xl space-y-3 rounded-lg border p-4 text-left">
+            <div className="flex items-center gap-2">
+              <KeyRound className="text-warning-500 h-5 w-5" />
+              <p className="text-fg-primary text-sm font-bold">{t("yourRecoveryKey")}</p>
+            </div>
+            <p className="text-fg-muted text-xs leading-relaxed">{t("recoveryKeyNotice")}</p>
+            <code className="bg-bg-secondary border-border-subtle text-fg-primary block overflow-x-auto rounded-md border p-3 font-mono text-xs">
+              {keyFragment}
+            </code>
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof navigator !== "undefined" && navigator.clipboard) {
+                  navigator.clipboard.writeText(keyFragment).catch(() => {});
+                }
+              }}
+              className="text-fg-secondary hover:text-fg-primary text-xs font-semibold underline-offset-2 hover:underline"
+            >
+              {t("copyRecoveryKey")}
+            </button>
+          </div>
+        )}
+
         <Button onClick={() => setStatus("idle")} variant="outline" className="mt-4">
           {t("submitAnother")}
         </Button>

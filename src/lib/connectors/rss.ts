@@ -1,4 +1,8 @@
 import { logger } from "@/lib/utils/logger";
+// @ts-expect-error google-news-url-decoder does not have types
+import { GoogleDecoder } from "google-news-url-decoder";
+
+const decoder = new GoogleDecoder();
 
 function cleanCdata(str: string): string {
   if (!str) return "";
@@ -89,7 +93,7 @@ export async function fetchRSSFeed(
       const descMatch = item.match(/<description>([\s\S]*?)<\/description>/);
 
       const title = decodeHtmlEntities(cleanCdata(titleMatch ? titleMatch[1] || "" : ""));
-      const link = cleanCdata(linkMatch ? linkMatch[1] || "" : "");
+      let link = cleanCdata(linkMatch ? linkMatch[1] || "" : "");
       const desc = decodeHtmlEntities(cleanCdata(descMatch ? descMatch[1] || "" : ""));
 
       // Only check if it contains AI keywords
@@ -108,6 +112,19 @@ export async function fetchRSSFeed(
       ].some((kw) => lowerTitle.includes(kw) || lowerDesc.includes(kw));
 
       if (link && title && hasKeywords) {
+        if (link.includes("news.google.com")) {
+          try {
+            const decoded = await decoder.decode(link);
+            if (decoded.status && decoded.decoded_url) {
+              link = decoded.decoded_url;
+            }
+          } catch (e) {
+            logger.warn(
+              `Failed to decode Google News URL: ${link}`,
+              e instanceof Error ? { error: e.message } : undefined,
+            );
+          }
+        }
         results.push({
           title: `[${sourceName}] ${title}`,
           body: desc || "No description provided.",

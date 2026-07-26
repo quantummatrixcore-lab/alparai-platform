@@ -15,11 +15,7 @@ export type BreakerState = "closed" | "open" | "half_open";
 export type BackoffStrategy = "exponential" | "linear" | "fixed";
 
 export type ExhaustionAction =
-  | "silent_log"
-  | "toast_warn"
-  | "email_fallback"
-  | "escalate_admin"
-  | "throw";
+  "silent_log" | "toast_warn" | "email_fallback" | "escalate_admin" | "throw";
 
 export interface RetryConfig {
   attempts: number;

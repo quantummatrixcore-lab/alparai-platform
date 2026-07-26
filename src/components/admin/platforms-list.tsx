@@ -7,6 +7,15 @@ import { MetricCard } from "@/components/admin/metric-card";
 import { ExternalLink, CheckCircle2, User, Globe, FileText } from "lucide-react";
 import { updatePlatformStatus } from "@/actions/admin/platforms";
 import { toast } from "sonner";
+import {
+  BarChart,
+  Bar,
+  Cell,
+  XAxis,
+  YAxis,
+  Tooltip as RechartsTooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 interface PlatformSignup {
   id: string;
@@ -64,6 +73,94 @@ export function PlatformsList({ initialPlatforms }: { initialPlatforms: Platform
           icon={<CheckCircle2 className="h-4 w-4 text-emerald-400" />}
         />
       </div>
+
+      {stats.total > 0 && (
+        <Card className="border-white/10 bg-black/40 p-4">
+          <h4 className="mb-4 text-sm font-semibold text-white">Platform Signup Status</h4>
+          <div className="h-32 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={[
+                  {
+                    name: "Not Started",
+                    value: initialPlatforms.filter((p) => p.status === "not_started").length,
+                    color: "#94a3b8",
+                  },
+                  {
+                    name: "Account Created",
+                    value: initialPlatforms.filter((p) => p.status === "account_created").length,
+                    color: "#fbbf24",
+                  },
+                  {
+                    name: "Profile Complete",
+                    value: initialPlatforms.filter((p) => p.status === "profile_complete").length,
+                    color: "#60a5fa",
+                  },
+                  {
+                    name: "Active",
+                    value: initialPlatforms.filter((p) => p.status === "active").length,
+                    color: "#34d399",
+                  },
+                ]}
+                layout="vertical"
+                margin={{ left: 20, right: 20, top: 10, bottom: 10 }}
+              >
+                <XAxis
+                  type="number"
+                  stroke="#94a3b8"
+                  fontSize={10}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  stroke="#94a3b8"
+                  fontSize={10}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <RechartsTooltip
+                  cursor={{ fill: "rgba(255,255,255,0.05)" }}
+                  contentStyle={{
+                    background: "#0f172a",
+                    borderColor: "rgba(255,255,255,0.1)",
+                    borderRadius: "8px",
+                  }}
+                  itemStyle={{ color: "#fff", fontSize: "11px" }}
+                  labelStyle={{ display: "none" }}
+                />
+                <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={14}>
+                  {[
+                    {
+                      name: "Not Started",
+                      value: initialPlatforms.filter((p) => p.status === "not_started").length,
+                      color: "#94a3b8",
+                    },
+                    {
+                      name: "Account Created",
+                      value: initialPlatforms.filter((p) => p.status === "account_created").length,
+                      color: "#fbbf24",
+                    },
+                    {
+                      name: "Profile Complete",
+                      value: initialPlatforms.filter((p) => p.status === "profile_complete").length,
+                      color: "#60a5fa",
+                    },
+                    {
+                      name: "Active",
+                      value: initialPlatforms.filter((p) => p.status === "active").length,
+                      color: "#34d399",
+                    },
+                  ].map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+      )}
 
       <div className="flex space-x-2 overflow-x-auto border-b border-white/10 pb-2">
         {(["all", "not_started", "account_created", "profile_complete", "active"] as const).map(

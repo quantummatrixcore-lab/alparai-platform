@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Activity,
   Search,
@@ -16,9 +16,7 @@ import {
   ArrowRight,
   AlertTriangle,
   FileCode,
-  Sparkles,
 } from "lucide-react";
-import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -69,191 +67,6 @@ const ENTITY_TYPES = [
   { value: "takedown_requests", label: "Takedown Request" },
   { value: "finance", label: "Billing" },
   { value: "system", label: "System" },
-];
-
-const PREDEFINED_HIGH_FIDELITY_MOCK_LOGS: AuditLogItem[] = [
-  {
-    id: "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
-    created_at: new Date(Date.now() - 1000 * 60 * 2).toISOString(),
-    action: "incident.approve",
-    entity_type: "incident",
-    entity_id: "8c92b512-44a3-4b6a-93f5-742a73efbb1d",
-    before_data: { status: "pending_review", approved: false, reviewed_by: null },
-    after_data: {
-      status: "published",
-      approved: true,
-      reviewed_by: "triage.lead@alparai.com",
-      published_at: new Date().toISOString(),
-    },
-    users: {
-      email: "triage@alparai.com",
-      full_name: "Kıdemli Moderasyon Başdenetçisi",
-      role: "moderator",
-    },
-    ip_hash: "192.168.1.42 (Frankfurt, DE)",
-  },
-  {
-    id: "b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e",
-    created_at: new Date("2026-07-22T14:30:00Z").toISOString(),
-    action: "security.api_key_rotated",
-    entity_type: "api_keys",
-    entity_id: "f3b89e21-098d-42ef-8cb6-9d1419e0018c",
-    before_data: { provider: "supabase", key_hint: "sbp_1b9...", status: "active" },
-    after_data: {
-      provider: "supabase",
-      key_hint: "sbp_5f2...",
-      status: "active",
-      rotated_at: "2026-07-22T14:30:00Z",
-    },
-    users: {
-      email: "system-security@alparai.com",
-      full_name: "ALPAR AI Sistem Güvenlik Yetkilisi",
-      role: "admin",
-    },
-    ip_hash: "82.146.42.11 (Istanbul, TR)",
-  },
-  {
-    id: "c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f",
-    created_at: new Date(Date.now() - 1000 * 60 * 28).toISOString(),
-    action: "user.ban",
-    entity_type: "users",
-    entity_id: "721da2f5-b6d4-4f9e-990e-1144a3efbb1d",
-    before_data: { email: "spammer.user@gmail.com", is_verified: false, is_banned: false },
-    after_data: {
-      email: "spammer.user@gmail.com",
-      is_verified: false,
-      is_banned: true,
-      ban_reason: "repeated false reporting",
-      banned_at: new Date().toISOString(),
-    },
-    users: {
-      email: "admin.moderator@alparai.com",
-      full_name: "Cem Bölükbaşı",
-      role: "admin",
-    },
-    ip_hash: "109.228.12.87 (Dublin, IE)",
-  },
-  {
-    id: "d4e5f6a7-b8c9-0d1e-2f3a-4b5c6d7e8f9a",
-    created_at: new Date(Date.now() - 1000 * 60 * 42).toISOString(),
-    action: "incident.redact_pii",
-    entity_type: "incident",
-    entity_id: "5c83d522-83b3-40fa-98ff-83f124efcc2a",
-    before_data: {
-      title: "Spam Incident report with phone +905321112233 and email ercum@matrix.com",
-    },
-    after_data: {
-      title: "Spam Incident report with phone [MASKED_PHONE] and email [MASKED_EMAIL]",
-      redacted_by: "guardian.ts",
-    },
-    users: null, // SYSTEM Action
-    ip_hash: "127.0.0.1 (Localhost / PII Guardian)",
-  },
-  {
-    id: "e5f6a7b8-c9d0-1e2f-3a4b-5c6d7e8f9a0b",
-    created_at: new Date(Date.now() - 1000 * 60 * 90).toISOString(),
-    action: "model.benchmark_run",
-    entity_type: "system",
-    entity_id: "c464ad22-83f1-419b-ab09-efb234190cde",
-    before_data: { test_suite: "MMLU", last_score: 0.812 },
-    after_data: { test_suite: "MMLU", current_score: 0.835, evaluation_status: "passed" },
-    users: null, // SYSTEM Autopilot
-    ip_hash: "20.198.42.1 (Vercel Edge Cron)",
-  },
-  {
-    id: "f6a7b8c9-d0e1-2f3a-4b5c-6d7e8f9a0b1c",
-    created_at: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
-    action: "takedown.accept",
-    entity_type: "takedown_requests",
-    entity_id: "8c7283ef-4f10-90ba-acde-901b23effbc8",
-    before_data: { status: "received", incident_id: "193fa2b1-d3cb-4f01-92b1-91a9fbc183a1" },
-    after_data: {
-      status: "accepted",
-      processed_at: new Date().toISOString(),
-      incident_status: "takedown",
-      sla_met: true,
-    },
-    users: {
-      email: "ceo@alparai.com",
-      full_name: "Alpar Arslan",
-      role: "ceo",
-    },
-    ip_hash: "82.146.42.11 (Istanbul, TR)",
-  },
-  {
-    id: "g7b8c9d0-e1f2-3a4b-5c6d-7e8f9a0b1c2d",
-    created_at: new Date(Date.now() - 1000 * 60 * 320).toISOString(),
-    action: "billing.subscription_updated",
-    entity_type: "finance",
-    entity_id: "a1a89b3f-1100-4b9b-9c2b-abff918cdeff",
-    before_data: { tier: "free", active_subs: 140 },
-    after_data: {
-      tier: "enterprise",
-      company: "Anthropic PBC",
-      monthly_value_usd: 5000,
-      seats: 120,
-    },
-    users: {
-      email: "ceo@alparai.com",
-      full_name: "Alpar Arslan",
-      role: "ceo",
-    },
-    ip_hash: "82.146.42.11 (Istanbul, TR)",
-  },
-];
-
-const NEW_LIVE_EVENTS_POOL = [
-  {
-    action: "incident.publish",
-    entity_type: "incident",
-    users: {
-      email: "moderator@alparai.com",
-      full_name: "Platform Moderasyon Yöneticisi",
-      role: "moderator",
-    },
-    before_data: { status: "pending_review", published: false },
-    after_data: { status: "published", published: true },
-    ip_hash: "46.101.99.12 (Amsterdam, NL)",
-  },
-  {
-    action: "security.ip_whitelist_added",
-    entity_type: "api_keys",
-    users: {
-      email: "security@alparai.com",
-      full_name: "Sistem Güvenlik Başdenetçisi",
-      role: "admin",
-    },
-    before_data: { allowed_ips: ["12.34.56.78"] },
-    after_data: {
-      allowed_ips: ["12.34.56.78", "82.146.42.11"],
-      ip_added_at: new Date().toISOString(),
-    },
-    ip_hash: "82.146.42.11 (Istanbul, TR)",
-  },
-  {
-    action: "autopilot.triage_override",
-    entity_type: "system",
-    users: null,
-    before_data: { automated_verdict: "reject", trust_score: 0.2 },
-    after_data: {
-      automated_verdict: "escalate",
-      trust_score: 0.8,
-      reason: "high severity bias match",
-    },
-    ip_hash: "20.198.42.1 (Vercel Edge Cron)",
-  },
-  {
-    action: "user.role_assign",
-    entity_type: "users",
-    users: { email: "admin@alparai.com", full_name: "Sistem Yönetim Operatörü", role: "admin" },
-    before_data: { email: "new.hire@alparai.com", role: "user" },
-    after_data: {
-      email: "new.hire@alparai.com",
-      role: "moderator",
-      assigned_by: "Sistem Yönetim Operatörü",
-    },
-    ip_hash: "109.228.12.87 (Dublin, IE)",
-  },
 ];
 
 function AuditDetailPanel({ log, onClose }: { log: AuditLogItem; onClose: () => void }) {
@@ -380,62 +193,11 @@ function AuditDetailPanel({ log, onClose }: { log: AuditLogItem; onClose: () => 
 
 export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
   const t = useTranslations("admin");
-  // Merge real logs (if any) with high-fidelity mock logs to ensure a rich list.
-  const [logs, setLogs] = useState<AuditLogItem[]>(() => {
-    const combined = [...initialLogs];
-    // Map missing users to mock properties or ensure format matching
-    const normalizedInitial = combined.map((log) => ({
-      ...log,
-      ip_hash: log.ip_hash || "8f3b2d1c (Frankfurt, DE)",
-    }));
-
-    // Add mock logs that aren't already represented (to have at least 10 entries)
-    const needed = Math.max(0, 12 - normalizedInitial.length);
-    const addedMocks = PREDEFINED_HIGH_FIDELITY_MOCK_LOGS.slice(0, needed);
-
-    // Sort combined list by date desc
-    return [...normalizedInitial, ...addedMocks].sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-    );
-  });
-
+  const [logs] = useState<AuditLogItem[]>(initialLogs);
   const [search, setSearch] = useState("");
   const [filterAction, setFilterAction] = useState("all");
   const [filterEntity, setFilterEntity] = useState("all");
   const [selectedLog, setSelectedLog] = useState<AuditLogItem | null>(null);
-  const [isLive, setIsLive] = useState(false);
-
-  // Live simulator logic
-  useEffect(() => {
-    if (!isLive) return;
-
-    const interval = setInterval(() => {
-      // Pick a random event from the live events pool
-      const baseEvent =
-        NEW_LIVE_EVENTS_POOL[Math.floor(Math.random() * NEW_LIVE_EVENTS_POOL.length)];
-      if (!baseEvent) return;
-
-      const newEvent: AuditLogItem = {
-        id: crypto.randomUUID(),
-        created_at: new Date().toISOString(),
-        action: baseEvent.action,
-        entity_type: baseEvent.entity_type,
-        entity_id: crypto.randomUUID(),
-        before_data: baseEvent.before_data,
-        after_data: baseEvent.after_data,
-        users: baseEvent.users,
-        ip_hash: baseEvent.ip_hash,
-      };
-
-      setLogs((prev) => [newEvent, ...prev]);
-      toast.info(`New Audit Log: ${newEvent.action}`, {
-        description: `${newEvent.users ? newEvent.users.full_name : "SYSTEM"} executed ${newEvent.action}`,
-        icon: <Sparkles className="text-brand-400 h-4 w-4" />,
-      });
-    }, 10000); // Trigger every 10 seconds
-
-    return () => clearInterval(interval);
-  }, [isLive]);
 
   // Statistics calculation
   const totalCount = logs.length;
@@ -500,14 +262,6 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
 
   return (
     <div className="space-y-6">
-      {isLive && (
-        <div className="flex items-center justify-between rounded-lg border border-amber-500/20 bg-amber-500/10 px-4 py-2 text-xs font-medium text-amber-400">
-          <span>Realtime Live Feed Simulator</span>
-          <span className="rounded bg-amber-500/20 px-2 py-0.5 font-mono text-[10px] uppercase">
-            SIMULATION MODE
-          </span>
-        </div>
-      )}
       <div className="grid gap-3 sm:grid-cols-4">
         <MetricWidget
           icon={Activity}
@@ -524,25 +278,17 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
           label={t("audit_autopilot_runs") || "Autopilot Runs"}
           value={systemCount}
         />
-        <button
-          type="button"
-          onClick={() => setIsLive(!isLive)}
-          className="bg-bg-secondary border-border-subtle hover:border-brand-500/30 flex items-center gap-4 rounded-xl border p-4 text-left transition-all duration-200 active:scale-[0.98]"
-        >
-          <div
-            className={`flex h-10 w-10 items-center justify-center rounded-lg ${isLive ? "animate-pulse bg-emerald-500/10 text-emerald-400" : "text-fg-muted bg-neutral-800"}`}
-          >
-            <Terminal className="h-5 w-5" strokeWidth={1.5} />
+        <div className="flex items-center justify-between rounded-xl border border-white/5 bg-neutral-950/40 p-4">
+          <div className="flex items-center gap-4">
+            <Terminal className="text-fg-muted h-5 w-5" strokeWidth={1.5} />
+            <div>
+              <p className="text-fg-muted text-xs font-medium">Real-time Feed</p>
+              <p className="text-fg-primary text-sm font-bold">
+                {totalCount > 0 ? t("audit_active") || "Active" : t("audit_no_data") || "No Data"}
+              </p>
+            </div>
           </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-fg-muted truncate text-xs font-medium">
-              {t("audit_live_stream") || "Live Stream"}
-            </p>
-            <p className="text-fg-primary truncate text-sm font-bold">
-              {isLive ? t("audit_active") || "Active" : t("audit_paused") || "Paused"}
-            </p>
-          </div>
-        </button>
+        </div>
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -692,7 +438,11 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
                   <tr>
                     <td colSpan={6} className="text-fg-muted p-16 text-center">
                       <Shield className="text-fg-muted/30 mx-auto mb-3 h-8 w-8" />
-                      No matching audit logs found. Try adjusting your filters.
+                      {totalCount === 0
+                        ? t("audit_empty_state") ||
+                          "No audit logs found. Actions will appear here as they occur."
+                        : t("audit_no_match") ||
+                          "No matching audit logs found. Try adjusting your filters."}
                     </td>
                   </tr>
                 )}

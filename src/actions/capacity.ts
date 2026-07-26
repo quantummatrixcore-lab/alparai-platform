@@ -69,9 +69,15 @@ export async function getLiveCapacityMetrics(): Promise<CapacityMetrics> {
   }
 
   // 3. Row Counts
-  const { count: incidentsCount } = await db.from("incidents").select("*", { count: "exact", head: true });
-  const { count: kScoresCount } = await db.from("k_model_scores").select("*", { count: "exact", head: true });
-  const { count: queueCount } = await db.from("external_incidents_queue").select("*", { count: "exact", head: true });
+  const { count: incidentsCount } = await db
+    .from("incidents")
+    .select("*", { count: "exact", head: true });
+  const { count: kScoresCount } = await db
+    .from("k_model_scores")
+    .select("*", { count: "exact", head: true });
+  const { count: queueCount } = await db
+    .from("external_incidents_queue")
+    .select("*", { count: "exact", head: true });
 
   // 4. Resend Monthly Emails Sent
   const { count: emailsSent } = await db
@@ -81,10 +87,10 @@ export async function getLiveCapacityMetrics(): Promise<CapacityMetrics> {
 
   // 5. AI Gateway Cost via RPC
   const { data: dailyCost, error: dailyCostErr } = await db.rpc("get_ai_gateway_costs", {
-    time_interval: "24 hours"
+    time_interval: "24 hours",
   });
   const { data: monthlyCost, error: monthlyCostErr } = await db.rpc("get_ai_gateway_costs", {
-    time_interval: "30 days"
+    time_interval: "30 days",
   });
 
   const dailyUsedCost = !dailyCostErr && dailyCost ? Number(dailyCost) : 0;
@@ -134,9 +140,9 @@ export async function getLiveCapacityMetrics(): Promise<CapacityMetrics> {
     },
     aiGateway: {
       dailyUsed: dailyUsedCost,
-      dailyLimit: 10.00,
+      dailyLimit: 10.0,
       monthlyUsed: monthlyUsedCost,
-      monthlyLimit: 30.00,
+      monthlyLimit: 30.0,
     },
   };
 }

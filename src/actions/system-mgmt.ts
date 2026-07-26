@@ -18,7 +18,10 @@ export async function getFeatureFlagsAction(): Promise<FeatureFlagItem[]> {
   const db = admin as unknown as {
     from: (table: string) => {
       select: (cols: string) => {
-        order: (col: string, opts: { ascending: boolean }) => Promise<{ data: FeatureFlagItem[] | null }>;
+        order: (
+          col: string,
+          opts: { ascending: boolean },
+        ) => Promise<{ data: FeatureFlagItem[] | null }>;
       };
     };
   };
@@ -30,11 +33,41 @@ export async function getFeatureFlagsAction(): Promise<FeatureFlagItem[]> {
 
   // Default fallback flags if table not seeded
   return [
-    { id: "1", key: "ai_cross_audit", description: "Enable multi-model LLM consensus audit engine", enabled: true, updated_at: new Date().toISOString() },
-    { id: "2", key: "geo_jsonld_injection", description: "Inject Schema.org ClaimReview JSON-LD into incident pages", enabled: true, updated_at: new Date().toISOString() },
-    { id: "3", key: "upstash_redis_cache", description: "Use Upstash Redis for ~0ms edge feature flag caching", enabled: true, updated_at: new Date().toISOString() },
-    { id: "4", key: "public_read_api", description: "Expose public read-only API and dataset export", enabled: true, updated_at: new Date().toISOString() },
-    { id: "5", key: "auto_translate_tr", description: "Machine-translate submitted incidents to Turkish", enabled: true, updated_at: new Date().toISOString() },
+    {
+      id: "1",
+      key: "ai_cross_audit",
+      description: "Enable multi-model LLM consensus audit engine",
+      enabled: true,
+      updated_at: new Date().toISOString(),
+    },
+    {
+      id: "2",
+      key: "geo_jsonld_injection",
+      description: "Inject Schema.org ClaimReview JSON-LD into incident pages",
+      enabled: true,
+      updated_at: new Date().toISOString(),
+    },
+    {
+      id: "3",
+      key: "upstash_redis_cache",
+      description: "Use Upstash Redis for ~0ms edge feature flag caching",
+      enabled: true,
+      updated_at: new Date().toISOString(),
+    },
+    {
+      id: "4",
+      key: "public_read_api",
+      description: "Expose public read-only API and dataset export",
+      enabled: true,
+      updated_at: new Date().toISOString(),
+    },
+    {
+      id: "5",
+      key: "auto_translate_tr",
+      description: "Machine-translate submitted incidents to Turkish",
+      enabled: true,
+      updated_at: new Date().toISOString(),
+    },
   ];
 }
 

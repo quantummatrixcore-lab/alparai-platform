@@ -16,7 +16,7 @@ describe("Auditor API Endpoints", () => {
   beforeEach(() => {
     vi.stubEnv("AUDITOR_API_KEY", "auditor-secret-key");
     vi.clearAllMocks();
-    
+
     // Provide a safe default mock that returns empty datasets
     mockFrom.mockReturnValue({
       select: vi.fn().mockReturnThis(),

@@ -162,7 +162,9 @@ export async function importIncidents(
         published_at: shouldAutoPublish ? new Date().toISOString() : null,
         processing_stage: shouldAutoPublish ? ("completed" as const) : ("pending_review" as const),
         ai_moderation_score: shouldAutoPublish ? 100 : null,
-        moderator_notes: shouldAutoPublish ? "Auto-published via Proposal 014 Zero-Intervention Pipeline" : null,
+        moderator_notes: shouldAutoPublish
+          ? "Auto-published via Proposal 014 Zero-Intervention Pipeline"
+          : null,
         is_anonymous: true,
         incident_source: source,
         import_external_id: row.externalId,

@@ -7,12 +7,10 @@ const mockSelect = vi.fn().mockImplementation(() => ({
     limit: vi.fn().mockResolvedValue({ data: [], error: null }),
   })),
   gte: vi.fn().mockImplementation(() => ({
-    order: vi
-      .fn()
-      .mockResolvedValue({
-        data: [{ metric_date: "2026-07-22", deployment_frequency: 2 }],
-        error: null,
-      }),
+    order: vi.fn().mockResolvedValue({
+      data: [{ metric_date: "2026-07-22", deployment_frequency: 2 }],
+      error: null,
+    }),
   })),
 }));
 

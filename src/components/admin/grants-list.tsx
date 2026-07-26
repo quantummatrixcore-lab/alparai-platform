@@ -5,8 +5,17 @@ import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { MetricCard } from "@/components/admin/metric-card";
 import { ExternalLink, CheckCircle2, DollarSign, Building2, Send, FileText } from "lucide-react";
-import { updateGrantStatus } from "@/actions/admin/grants";
+import { updateGrantStatus, markGrantSubmitted } from "@/actions/admin/grants";
 import { toast } from "sonner";
+import {
+  BarChart,
+  Bar,
+  Cell,
+  XAxis,
+  YAxis,
+  Tooltip as RechartsTooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 interface GrantApplication {
   id: string;
@@ -26,10 +35,29 @@ interface GrantApplication {
   created_at: string;
 }
 
-export function GrantsList({ initialGrants }: { initialGrants: GrantApplication[] }) {
+export function GrantsList({
+  initialGrants,
+  userRole,
+}: {
+  initialGrants: GrantApplication[];
+  userRole?: string;
+}) {
   const t = useTranslations("admin");
   const [filter, setFilter] = useState<string>("all");
   const [isPending, startTransition] = useTransition();
+
+  const isAdmin = userRole === "admin" || userRole === "ceo";
+
+  const handleMarkSubmitted = (id: string) => {
+    startTransition(async () => {
+      const result = await markGrantSubmitted(id);
+      if (result.success) {
+        toast.success(t("status_updated") || "Status updated");
+      } else {
+        toast.error(result.error || "Failed to update status");
+      }
+    });
+  };
 
   const handleUpdateStatus = (id: string, status: GrantApplication["status"], phase: number) => {
     startTransition(async () => {
@@ -78,6 +106,60 @@ export function GrantsList({ initialGrants }: { initialGrants: GrantApplication[
           icon={<CheckCircle2 className="h-4 w-4 text-emerald-400" />}
         />
       </div>
+
+      {stats.total > 0 && (
+        <Card className="border-white/10 bg-black/40 p-4">
+          <h4 className="mb-4 text-sm font-semibold text-white">Application Pipeline Status</h4>
+          <div className="h-32 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={[
+                  { name: "Drafting", value: stats.drafting, color: "#fbbf24" },
+                  { name: "Submitted", value: stats.submitted, color: "#60a5fa" },
+                  { name: "Approved", value: stats.approved, color: "#34d399" },
+                ]}
+                layout="vertical"
+                margin={{ left: 20, right: 20, top: 10, bottom: 10 }}
+              >
+                <XAxis
+                  type="number"
+                  stroke="#94a3b8"
+                  fontSize={10}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  stroke="#94a3b8"
+                  fontSize={10}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <RechartsTooltip
+                  cursor={{ fill: "rgba(255,255,255,0.05)" }}
+                  contentStyle={{
+                    background: "#0f172a",
+                    borderColor: "rgba(255,255,255,0.1)",
+                    borderRadius: "8px",
+                  }}
+                  itemStyle={{ color: "#fff", fontSize: "11px" }}
+                  labelStyle={{ display: "none" }}
+                />
+                <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={16}>
+                  {[
+                    { name: "Drafting", value: stats.drafting, color: "#fbbf24" },
+                    { name: "Submitted", value: stats.submitted, color: "#60a5fa" },
+                    { name: "Approved", value: stats.approved, color: "#34d399" },
+                  ].map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+      )}
 
       <div className="flex space-x-2 overflow-x-auto border-b border-white/10 pb-2">
         {(
@@ -151,6 +233,17 @@ export function GrantsList({ initialGrants }: { initialGrants: GrantApplication[
                   </a>
                 )}
 
+                {(grant.status === "not_started" || grant.status === "drafting") && (
+                  <button
+                    disabled={isPending}
+                    onClick={() => handleMarkSubmitted(grant.id)}
+                    className="flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    <Send className="h-3.5 w-3.5" />
+                    Mark Submitted
+                  </button>
+                )}
+
                 <div className="flex overflow-hidden rounded-md border border-white/10 bg-black/50">
                   <select
                     disabled={isPending}
@@ -167,9 +260,15 @@ export function GrantsList({ initialGrants }: { initialGrants: GrantApplication[
                     <option value="not_started">Not Started</option>
                     <option value="drafting">Drafting</option>
                     <option value="submitted_pending_review">Submitted</option>
-                    <option value="approved">Approved</option>
-                    <option value="rejected">Rejected</option>
-                    <option value="accepted_by_program">Accepted By Program</option>
+                    <option value="approved" disabled={!isAdmin}>
+                      Approved {!isAdmin ? " (Admin only)" : ""}
+                    </option>
+                    <option value="rejected" disabled={!isAdmin}>
+                      Rejected {!isAdmin ? " (Admin only)" : ""}
+                    </option>
+                    <option value="accepted_by_program" disabled={!isAdmin}>
+                      Accepted By Program {!isAdmin ? " (Admin only)" : ""}
+                    </option>
                   </select>
                 </div>
               </div>

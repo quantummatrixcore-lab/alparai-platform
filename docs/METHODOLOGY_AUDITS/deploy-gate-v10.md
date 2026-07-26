@@ -1,11 +1,13 @@
 # Deploy Gate Audit Report (v10)
 
-This document provides evidence and validation for **Item 116: Deploy Gate**. The deploy gate restricts Vercel production and preview builds to trigger *only* when the triggering commit message contains the `[deploy]` marker. This conserves Vercel build time and guarantees that intermediate development commits do not deploy automatically.
+This document provides evidence and validation for **Item 116: Deploy Gate**. The deploy gate restricts Vercel production and preview builds to trigger _only_ when the triggering commit message contains the `[deploy]` marker. This conserves Vercel build time and guarantees that intermediate development commits do not deploy automatically.
 
 ## Implementation Details
+
 The deploy gate is implemented via the `ignoreCommand` hook in `vercel.json` pointing to a unified Node.js script `scripts/deploy-gate.mjs` for cross-platform compatibility:
 
 ### vercel.json
+
 ```json
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
@@ -16,6 +18,7 @@ The deploy gate is implemented via the `ignoreCommand` hook in `vercel.json` poi
 ```
 
 ### scripts/deploy-gate.mjs
+
 ```javascript
 import { execSync } from "child_process";
 
@@ -47,6 +50,7 @@ if (commitMsg.includes("[deploy]")) {
 ## Local Verification Output
 
 ### 1. Skipped Build Simulation (No `[deploy]` in message)
+
 ```powershell
 $env:VERCEL_GIT_COMMIT_MESSAGE="docs: add Claude Opus 4.6 responses to strategic questionnaire"
 node scripts/deploy-gate.mjs
@@ -54,15 +58,18 @@ echo "Exit code: $LASTEXITCODE"
 ```
 
 **Output:**
+
 ```
 Deploy Gate: Inspecting commit message...
 Commit message: "docs: add Claude Opus 4.6 responses to strategic questionnaire"
 ✕ Commit message does not contain '[deploy]'. Ignoring build.
 Exit code: 0
 ```
-*(Exit code `0` tells Vercel to cancel/ignore the build step).*
+
+_(Exit code `0` tells Vercel to cancel/ignore the build step)._
 
 ### 2. Allowed Build Simulation (`[deploy]` present in message)
+
 ```powershell
 $env:VERCEL_GIT_COMMIT_MESSAGE="docs: add [deploy] flag"
 node scripts/deploy-gate.mjs
@@ -70,13 +77,15 @@ echo "Exit code: $LASTEXITCODE"
 ```
 
 **Output:**
+
 ```
 Deploy Gate: Inspecting commit message...
 Commit message: "docs: add [deploy] flag"
 ✓ Commit message contains '[deploy]'. Proceeding with build.
 Exit code: 1
 ```
-*(Exit code `1` tells Vercel to proceed with the build step).*
+
+_(Exit code `1` tells Vercel to proceed with the build step)._
 
 ---
 

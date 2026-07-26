@@ -28,11 +28,12 @@ export function SettingsDashboardClient() {
           <div className="space-y-6 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <span className="font-bold text-white text-sm flex items-center gap-2">
+                <span className="flex items-center gap-2 text-sm font-bold text-white">
                   <Shield className="h-4 w-4 text-emerald-400" /> PII Guardian Sanitization
                 </span>
-                <p className="text-xs text-fg-muted mt-0.5">
-                  Mask emails, phone numbers, and TC Identity numbers before database insertion (`src/lib/pii/guardian.ts`).
+                <p className="text-fg-muted mt-0.5 text-xs">
+                  Mask emails, phone numbers, and TC Identity numbers before database insertion
+                  (`src/lib/pii/guardian.ts`).
                 </p>
               </div>
               <input
@@ -45,11 +46,12 @@ export function SettingsDashboardClient() {
 
             <div className="flex items-center justify-between border-t border-white/10 pt-4">
               <div>
-                <span className="font-bold text-white text-sm flex items-center gap-2">
+                <span className="flex items-center gap-2 text-sm font-bold text-white">
                   <Lock className="h-4 w-4 text-cyan-400" /> SSRF Policy Strict Allowlist
                 </span>
-                <p className="text-xs text-fg-muted mt-0.5">
-                  Enforce HTTPS-only and block internal IP addresses (169.254.169.254, 127.0.0.1) on external fetches.
+                <p className="text-fg-muted mt-0.5 text-xs">
+                  Enforce HTTPS-only and block internal IP addresses (169.254.169.254, 127.0.0.1) on
+                  external fetches.
                 </p>
               </div>
               <input
@@ -62,11 +64,12 @@ export function SettingsDashboardClient() {
 
             <div className="flex items-center justify-between border-t border-white/10 pt-4">
               <div>
-                <span className="font-bold text-white text-sm flex items-center gap-2">
+                <span className="flex items-center gap-2 text-sm font-bold text-white">
                   <Server className="h-4 w-4 text-purple-400" /> Public Read-Only Incidents API
                 </span>
-                <p className="text-xs text-fg-muted mt-0.5">
-                  Expose `/api/public/incidents`, `/api/public/incidents.csv`, and `/api/public/dataset.json`.
+                <p className="text-fg-muted mt-0.5 text-xs">
+                  Expose `/api/public/incidents`, `/api/public/incidents.csv`, and
+                  `/api/public/dataset.json`.
                 </p>
               </div>
               <input
@@ -82,14 +85,16 @@ export function SettingsDashboardClient() {
         <AdminSectionCard title="Rate Limiting & Operational Ceilings">
           <div className="space-y-4 p-6">
             <div>
-              <label className="block text-xs font-semibold text-fg-muted mb-1">
+              <label className="text-fg-muted mb-1 block text-xs font-semibold">
                 Global Rate Limit (Requests / minute / IP)
               </label>
               <input
                 type="number"
                 value={settings.rateLimitRequestsPerMin}
-                onChange={(e) => setSettings({ ...settings, rateLimitRequestsPerMin: Number(e.target.value) })}
-                className="w-full max-w-xs rounded border border-white/10 bg-black/40 px-3 py-2 text-xs text-fg-primary focus:outline-none focus:border-emerald-500 font-mono"
+                onChange={(e) =>
+                  setSettings({ ...settings, rateLimitRequestsPerMin: Number(e.target.value) })
+                }
+                className="text-fg-primary w-full max-w-xs rounded border border-white/10 bg-black/40 px-3 py-2 font-mono text-xs focus:border-emerald-500 focus:outline-none"
               />
             </div>
           </div>
@@ -104,7 +109,7 @@ export function SettingsDashboardClient() {
           </button>
 
           {saved && (
-            <span className="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+            <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-400">
               <CheckCircle2 className="h-4 w-4" /> System settings updated successfully
             </span>
           )}

@@ -26,7 +26,7 @@ paths:
                   description: Description of the incident or system behavior to evaluate.
                   example: "A resume filtering software is systematically giving lower scores to female applicants."
       responses:
-        '200':
+        "200":
           description: Successful evaluation
           content:
             application/json:
@@ -54,13 +54,13 @@ paths:
                   reasoning:
                     type: string
                     description: Step-by-step reasoning behind the risk categorization.
-        '400':
+        "400":
           description: Invalid request parameters or malformed JSON body
-        '401':
+        "401":
           description: Missing, invalid, or expired API Key
-        '429':
+        "429":
           description: Rate limit exceeded
-        '500':
+        "500":
           description: Internal server error
 components:
   securitySchemes:

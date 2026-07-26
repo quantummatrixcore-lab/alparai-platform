@@ -32,6 +32,7 @@
 > **v7.3 baseline (still valid):** 360° code-reality audit + priority realignment. Three parallel Explore agents inspected the codebase against plan assumptions. Findings changed the launch-critical path materially.
 >
 > **v7.3 core discoveries:**
+>
 > - **B1 (SSE real-time submit), B5 (KVKK delete), C5 (embed widget) are already shipped** — the plan misidentified them as TODO. DB column name is `processing_stage` (not `incident_processing_status`); delete flow lives at `settings/page.tsx` (not `settings/delete-account/`).
 > - **`vercel.json` cron config missing `process-deletions` (KVKK LEGAL obligation) and `generate-marketing`** — production silently non-functional; 15 min fix but if unnoticed = launch-day KVKK violation.
 > - **`api_keys` table stores keys plain-text** — no sha256, no tier column, no client_type column. Security migration required before launch.
@@ -43,6 +44,7 @@
 > **Core Thesis:** Bottleneck is **users, not code** (2026) → then **revenue, not users** (2027 H1) → then **regulatory moment capture** (2027 H2). Every task carries the lens of its phase.
 >
 > **State at issue (2026-07-08 late evening, T-25):**
+>
 > - Stages 0–3 + A ✅; Stage B ✅ (`Architect-Approval: 5b1a0f5`); N-series + D-prep ✅ (`Architect-Approval: 1d225fe 2026-07-08`)
 > - **B1, B5 confirmed shipped via v7.3 audit** (previously marked partial/verification-pending)
 > - **C5 confirmed shipped via v7.3 audit** (previously listed as work item)
@@ -66,17 +68,18 @@
 
 **Executor için kalan aktif iş (öncelik sırasıyla — bittikçe sıradaki):**
 
-| P | İş | Not |
-|---|-----|-----|
-| P0 | **C1a-fix** — `20260715000000_api_keys_hardening.sql` dosyasına `-- ROLLBACK:` bloğu ekle (Rule #12; v7.16 doğrulamasında FAIL çıktı) | 10 dk; follow-up migration `20260720000001`'de blok var, ana dosyada yok |
-| P0 | **H3** — hardcoded incident-count grep-fix (UI'da sabit "408/409" kalmadığının kanıtı: `grep -rn "40[89]" src/` çıktısı raporda) | Rule #19 |
-| P0 | **S4-drill** — gerçek restore drill; log → `docs/METHODOLOGY_AUDITS/S4-restore-drill-<tarih>.log` | doc var, drill yok |
-| P1 | **S5** — Lighthouse mobile ≥85 (home/incidents/submit) | |
-| P1 | **D-extra screenshots** — PH/LinkedIn/Reddit gerçek ekran görüntüleri (`docs/launch-assets/screenshots-guide.md` mevcut, görseller yok) | |
-| P1 | **C5-verify** — embed widget dış doğrulama (OG validator + 1 harici embed ekran görüntüsü) | |
-| P2 | **K3/K4-verify** — `retro-audit` cron'unun `user_submitted`'a dokunmadığının test kanıtı + `audit_tier` kolonu | K2 erken shipped; sınır kanıtı eksik |
+| P   | İş                                                                                                                                      | Not                                                                      |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| P0  | **C1a-fix** — `20260715000000_api_keys_hardening.sql` dosyasına `-- ROLLBACK:` bloğu ekle (Rule #12; v7.16 doğrulamasında FAIL çıktı)   | 10 dk; follow-up migration `20260720000001`'de blok var, ana dosyada yok |
+| P0  | **H3** — hardcoded incident-count grep-fix (UI'da sabit "408/409" kalmadığının kanıtı: `grep -rn "40[89]" src/` çıktısı raporda)        | Rule #19                                                                 |
+| P0  | **S4-drill** — gerçek restore drill; log → `docs/METHODOLOGY_AUDITS/S4-restore-drill-<tarih>.log`                                       | doc var, drill yok                                                       |
+| P1  | **S5** — Lighthouse mobile ≥85 (home/incidents/submit)                                                                                  |                                                                          |
+| P1  | **D-extra screenshots** — PH/LinkedIn/Reddit gerçek ekran görüntüleri (`docs/launch-assets/screenshots-guide.md` mevcut, görseller yok) |                                                                          |
+| P1  | **C5-verify** — embed widget dış doğrulama (OG validator + 1 harici embed ekran görüntüsü)                                              |                                                                          |
+| P2  | **K3/K4-verify** — `retro-audit` cron'unun `user_submitted`'a dokunmadığının test kanıtı + `audit_tier` kolonu                          | K2 erken shipped; sınır kanıtı eksik                                     |
 
 **Founder için bekleyen (Executor bloke değil, risk açık):**
+
 1. 🔴 **R1** — repo → private (hâlâ doğrulanmadı; en büyük açık risk)
 2. 🔴 **R2** — 6 token rotasyonu (S1 secrets-scan sonrası zorunlu)
 3. L1 danışma kurulu aday seçimi (pencere: launch öncesi)
@@ -86,12 +89,12 @@
 
 **v7.16 doğrulama taraması (Architect, koda karşı):**
 
-| İddia | Sonuç | Kanıt |
-|-------|-------|-------|
-| v1 API auth sha256 + timingSafeEqual (Rule #17) | ✅ PASS | `src/app/api/v1/incidents/route.ts:9,35,68` |
-| HSTS başlığı | ✅ PASS | `next.config.mjs:40,63` |
-| H1 source badge UI | ✅ PASS | `src/components/incidents/incident-card.tsx` |
-| C1a migration Rule #12 ROLLBACK bloğu | ❌ FAIL | `20260715000000` dosyasında yok → P0 C1a-fix |
+| İddia                                           | Sonuç   | Kanıt                                        |
+| ----------------------------------------------- | ------- | -------------------------------------------- |
+| v1 API auth sha256 + timingSafeEqual (Rule #17) | ✅ PASS | `src/app/api/v1/incidents/route.ts:9,35,68`  |
+| HSTS başlığı                                    | ✅ PASS | `next.config.mjs:40,63`                      |
+| H1 source badge UI                              | ✅ PASS | `src/components/incidents/incident-card.tsx` |
+| C1a migration Rule #12 ROLLBACK bloğu           | ❌ FAIL | `20260715000000` dosyasında yok → P0 C1a-fix |
 
 ---
 
@@ -101,9 +104,9 @@
 
 **R1 — FOUNDER, TODAY (1 click):** GitHub → repo **Settings → General → Danger Zone → Change visibility → Private**. Vercel's Git integration keeps deploying from private repos — no downtime. This repo stays private permanently (strategy, plans, runbooks, seeds, audits live here).
 
-**R2 — FOUNDER + Executor, this week: token rotation.** Because SWOT documents a past `.env.local` leak, rotate once: Supabase service-role key, Vercel token, Resend, OpenRouter, Vertex, Upstash. Executor prepares the checklist and verifies the app works after each rotation; founder performs the rotations in each dashboard. *Accept:* all six rotated; prod smoke test green after each.
+**R2 — FOUNDER + Executor, this week: token rotation.** Because SWOT documents a past `.env.local` leak, rotate once: Supabase service-role key, Vercel token, Resend, OpenRouter, Vertex, Upstash. Executor prepares the checklist and verifies the app works after each rotation; founder performs the rotations in each dashboard. _Accept:_ all six rotated; prod smoke test green after each.
 
-**R3 — Executor, POST-LAUNCH (not before Aug 10): curated public repo.** Create `alparai-platform` public repo: app source + PUBLIC-OK docs only (API.md, ARCHITECTURE.md, SECURITY.md, EU_AI_ACT_TAXONOMY.md, ADRs, audit methodology), **fresh git history** (init from filtered tree — never push this repo's history). Strategy docs, strategy seed migrations, runbooks, launch assets never enter it. This preserves the AGPL open-source trust card without the exposure. *Accept:* `git ls-files` of the public repo contains zero PRIVATE-flagged files; Architect reviews the file list before the repo goes public.
+**R3 — Executor, POST-LAUNCH (not before Aug 10): curated public repo.** Create `alparai-platform` public repo: app source + PUBLIC-OK docs only (API.md, ARCHITECTURE.md, SECURITY.md, EU_AI_ACT_TAXONOMY.md, ADRs, audit methodology), **fresh git history** (init from filtered tree — never push this repo's history). Strategy docs, strategy seed migrations, runbooks, launch assets never enter it. This preserves the AGPL open-source trust card without the exposure. _Accept:_ `git ls-files` of the public repo contains zero PRIVATE-flagged files; Architect reviews the file list before the repo goes public.
 
 ---
 
@@ -113,22 +116,23 @@ Launch is **Aug 2**. Everything below is ranked. If deadlines slip, cut from the
 
 **MUST exist by Aug 2 (launch blocks without these) — REORDERED in v7.3 after 360° audit:**
 
-| # | Item | Deadline | Why blocking |
-|---|------|----------|--------------|
-| 1 | **R1 repo → private** (founder, 1 click; MCP tool unavailable) | **Jul 9** | Active public exposure of strategy/security docs |
-| 2 | **⚠️ vercel.json cron fix** — register `process-deletions` + `generate-marketing` — **PARTIAL: `a671fc1` capped daily (Hobby plan ceiling — see V-Series note below)** | **Jul 9** | KVKK LEGAL obligation (delete cron); social queue frozen without it |
-| 3 | ~~/api/unsubscribe/ endpoint~~ **✅ SHIPPED `7f30125`** (U1+U2+U3 templates wired) | ~~Jul 12~~ | CAN-SPAM/KVKK legal; email sending is effectively unsafe without it |
-| 4 | R2 token rotation (founder + executor support) | **Jul 11** | `.env.local` leak history |
-| 5 | **🆕 C1a — api_keys sha256+tier+client_type migration** | **Jul 15** | Plain-text credential store — post-launch leak is unrecoverable |
-| 6 | ~~M0 + M1 + M2-home + M3 mobile sprint~~ **✅ SHIPPED `89a75ba`+`de59706`+`aace3ba`** (M2-touch still SHOULD, post-launch) | ~~Jul 18~~ | Majority-mobile launch traffic |
-| 7 | **🆕 "408 incidents" honesty pass** — seed-vs-organic UI badge + copy softening | **Jul 20** | First technical audit blows up unsupported claims |
-| 8 | N-series ✅ COMPLETE (`Architect-Approval: 1d225fe 2026-07-08`) | ~~Jul 20~~ | done |
-| 9 | Countdown queue flowing + founder approval routine | **Jul 12** (first post unlocks) | Launch narrative dies if queue stalls |
-| 10 | **🆕 Pre-launch T-25→T-0 campaign** — countdown threads, teaser + waitlist | **Jul 12 start** | 25-day attention window otherwise empty |
-| 11 | **🆕 RUNBOOK_LAUNCH.md v1.1** — Turnstile/Resend/SSE kill-switches + T-25 checklist | **Aug 1** | Founder must operate launch day alone |
-| 12 | D-extra launch assets completion (Shiftdelete/Technopat/LinkedIn/Reddit + PH screenshots) | **Aug 1** | Assets missing = wasted launch day |
+| #   | Item                                                                                                                                                                   | Deadline                        | Why blocking                                                        |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------- |
+| 1   | **R1 repo → private** (founder, 1 click; MCP tool unavailable)                                                                                                         | **Jul 9**                       | Active public exposure of strategy/security docs                    |
+| 2   | **⚠️ vercel.json cron fix** — register `process-deletions` + `generate-marketing` — **PARTIAL: `a671fc1` capped daily (Hobby plan ceiling — see V-Series note below)** | **Jul 9**                       | KVKK LEGAL obligation (delete cron); social queue frozen without it |
+| 3   | ~~/api/unsubscribe/ endpoint~~ **✅ SHIPPED `7f30125`** (U1+U2+U3 templates wired)                                                                                     | ~~Jul 12~~                      | CAN-SPAM/KVKK legal; email sending is effectively unsafe without it |
+| 4   | R2 token rotation (founder + executor support)                                                                                                                         | **Jul 11**                      | `.env.local` leak history                                           |
+| 5   | **🆕 C1a — api_keys sha256+tier+client_type migration**                                                                                                                | **Jul 15**                      | Plain-text credential store — post-launch leak is unrecoverable     |
+| 6   | ~~M0 + M1 + M2-home + M3 mobile sprint~~ **✅ SHIPPED `89a75ba`+`de59706`+`aace3ba`** (M2-touch still SHOULD, post-launch)                                             | ~~Jul 18~~                      | Majority-mobile launch traffic                                      |
+| 7   | **🆕 "408 incidents" honesty pass** — seed-vs-organic UI badge + copy softening                                                                                        | **Jul 20**                      | First technical audit blows up unsupported claims                   |
+| 8   | N-series ✅ COMPLETE (`Architect-Approval: 1d225fe 2026-07-08`)                                                                                                        | ~~Jul 20~~                      | done                                                                |
+| 9   | Countdown queue flowing + founder approval routine                                                                                                                     | **Jul 12** (first post unlocks) | Launch narrative dies if queue stalls                               |
+| 10  | **🆕 Pre-launch T-25→T-0 campaign** — countdown threads, teaser + waitlist                                                                                             | **Jul 12 start**                | 25-day attention window otherwise empty                             |
+| 11  | **🆕 RUNBOOK_LAUNCH.md v1.1** — Turnstile/Resend/SSE kill-switches + T-25 checklist                                                                                    | **Aug 1**                       | Founder must operate launch day alone                               |
+| 12  | D-extra launch assets completion (Shiftdelete/Technopat/LinkedIn/Reddit + PH screenshots)                                                                              | **Aug 1**                       | Assets missing = wasted launch day                                  |
 
 **NEXT after the above (no waiting — start as soon as MUST items for the day are done):**
+
 - Stage C rewrite (C2 API.md fix, C5 verification-only, C1b enterprise onboarding) — starts as MUSTs clear
 - C3 usage metering + C4 tier rate limiting — post-freeze (Aug 10)
 - B2b — expert-verification email + weekly reporter digest (Stage E window, Aug 10+)
@@ -143,15 +147,15 @@ Launch is **Aug 2**. Everything below is ranked. If deadlines slip, cut from the
 
 > Deadlines stay latest-acceptable; this calendar sequences the remaining MUSTs so no day is idle. If a block finishes early, pull the next block forward. The work queue remains the source of truth for item specs; this is the schedule.
 
-| Days | Block | Items |
-|------|-------|-------|
-| **Jul 12–13** | Security + campaign ignition | C1a api_keys migration (finish before Jul 15 deadline); countdown queue first post; P-series campaign kickoff; **Verification Queue evidence due Jul 13 (below)** |
-| **Jul 14–16** | Honesty pass | H1 source badge, H2 copy revision, H3 live count — independent of C1a, may start in parallel if capacity allows |
-| **Jul 17–19** | Content + docs | P-series campaign material; I-series seed migration; C2 API.md REST v1 section |
-| **Jul 20–24** | Security gate | S1 secrets scan → S2 dependency audit → S3 security headers → S4 backup restore drill → S5 Lighthouse (gate closes Jul 28) |
-| **Jul 25–28** | Legal + growth prep | X-series crisis drafts; Y1 growth-signal kit; B2a verification leftovers |
-| **Jul 29–Aug 1** | Launch prep | RUNBOOK_LAUNCH v1.1; D-extra assets; W-series dry run (full launch-day rehearsal) |
-| **Aug 2** | 🚀 Launch | W-series hour-by-hour timeline executes |
+| Days             | Block                        | Items                                                                                                                                                             |
+| ---------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Jul 12–13**    | Security + campaign ignition | C1a api_keys migration (finish before Jul 15 deadline); countdown queue first post; P-series campaign kickoff; **Verification Queue evidence due Jul 13 (below)** |
+| **Jul 14–16**    | Honesty pass                 | H1 source badge, H2 copy revision, H3 live count — independent of C1a, may start in parallel if capacity allows                                                   |
+| **Jul 17–19**    | Content + docs               | P-series campaign material; I-series seed migration; C2 API.md REST v1 section                                                                                    |
+| **Jul 20–24**    | Security gate                | S1 secrets scan → S2 dependency audit → S3 security headers → S4 backup restore drill → S5 Lighthouse (gate closes Jul 28)                                        |
+| **Jul 25–28**    | Legal + growth prep          | X-series crisis drafts; Y1 growth-signal kit; B2a verification leftovers                                                                                          |
+| **Jul 29–Aug 1** | Launch prep                  | RUNBOOK_LAUNCH v1.1; D-extra assets; W-series dry run (full launch-day rehearsal)                                                                                 |
+| **Aug 2**        | 🚀 Launch                    | W-series hour-by-hour timeline executes                                                                                                                           |
 
 ---
 
@@ -159,13 +163,13 @@ Launch is **Aug 2**. Everything below is ranked. If deadlines slip, cut from the
 
 Shipped items awaiting Accept evidence. **Evidence deadline: end of Jul 13.** Any row without evidence by then gets tagged `unverified — launch-risk` and moves into the W-series daily standup until cleared.
 
-| Item | Commit | Evidence required | Due |
-|------|--------|-------------------|-----|
-| U1+U2+U3 unsubscribe | `7f30125` | HMAC token e2e passing; unsubscribe footer link present in all 5 templates; daily-cap test | Jul 13 |
-| M0 Playwright config | `89a75ba` | `playwright.config.ts` contains iPhone SE + Pixel 7 projects; `grep -r "test.skip" tests/e2e` mobile-conditional count = 0 | Jul 13 |
-| M2-home overflow fix | `de59706` | Mobile audit re-run: home scrollWidth == viewport at 375/390/412 | Jul 13 |
-| M3 CI regression lock | `aace3ba` | `layout.spec.ts` runs in CI and fails on overflow regression | Jul 13 |
-| state_support module | `76ddec4` | The 5 retro-approval conditions (RLS admin-only / no PII / idempotent seed / `-- ROLLBACK:` block / no `createAdminClient()` from public paths) | Jul 13 (48h clock) |
+| Item                  | Commit    | Evidence required                                                                                                                               | Due                |
+| --------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| U1+U2+U3 unsubscribe  | `7f30125` | HMAC token e2e passing; unsubscribe footer link present in all 5 templates; daily-cap test                                                      | Jul 13             |
+| M0 Playwright config  | `89a75ba` | `playwright.config.ts` contains iPhone SE + Pixel 7 projects; `grep -r "test.skip" tests/e2e` mobile-conditional count = 0                      | Jul 13             |
+| M2-home overflow fix  | `de59706` | Mobile audit re-run: home scrollWidth == viewport at 375/390/412                                                                                | Jul 13             |
+| M3 CI regression lock | `aace3ba` | `layout.spec.ts` runs in CI and fails on overflow regression                                                                                    | Jul 13             |
+| state_support module  | `76ddec4` | The 5 retro-approval conditions (RLS admin-only / no PII / idempotent seed / `-- ROLLBACK:` block / no `createAdminClient()` from public paths) | Jul 13 (48h clock) |
 
 ---
 
@@ -173,19 +177,19 @@ Shipped items awaiting Accept evidence. **Evidence deadline: end of Jul 13.** An
 
 > **Rule:** if a decision has not arrived by its "decide by" date, the Executor proceeds with the **Default** column and the decision is considered made. Silence is not a blocker; defaults are pre-approved by the Architect.
 
-| Decision | Blocks | Decide by | Default (auto-applies) |
-|----------|--------|-----------|------------------------|
-| "408 incidents" copy language | H2 copy pass | **Jul 14** | "400+ documented incidents, 4 community-verified" |
-| P2 waitlist location (home banner vs /countdown) | P-series teaser | **Jul 13** | Home banner (zero new route, ships faster) |
-| N4 imported-incident language (translate vs EN badge) | H1 badge copy | **Jul 14** | EN badge ("Imported — original language") |
-| Cost ceilings ($50/$100/$500) | Standing Rule #20 cron | **Jul 18** | Keep the stated defaults |
-| X3 media threshold + attorney/PR contacts | X-series drafts | **Jul 22** | >10k TR / >100k global; drafts written with contact placeholders |
-| Day-2 amplification budget | W-series timeline | **Jul 28** | $0 (organic only) |
-| C4 rate-limit model (hybrid vs daily-only) | C4 (post-freeze) | Aug 10 | Hybrid daily+burst |
-| B2b scheduling | Stage E | Aug 10 | Aug 10 start |
-| Vercel Pro upgrade | nothing pre-launch | Aug 10+ | Stay Hobby |
-| **R1 repo → private** | **nothing — but OVERDUE** | **immediately** | *(no default possible — founder click required)* |
-| **R2 token rotation** | **nothing — but OVERDUE** | **immediately** | *(no default possible — founder dashboards required)* |
+| Decision                                              | Blocks                    | Decide by       | Default (auto-applies)                                           |
+| ----------------------------------------------------- | ------------------------- | --------------- | ---------------------------------------------------------------- |
+| "408 incidents" copy language                         | H2 copy pass              | **Jul 14**      | "400+ documented incidents, 4 community-verified"                |
+| P2 waitlist location (home banner vs /countdown)      | P-series teaser           | **Jul 13**      | Home banner (zero new route, ships faster)                       |
+| N4 imported-incident language (translate vs EN badge) | H1 badge copy             | **Jul 14**      | EN badge ("Imported — original language")                        |
+| Cost ceilings ($50/$100/$500)                         | Standing Rule #20 cron    | **Jul 18**      | Keep the stated defaults                                         |
+| X3 media threshold + attorney/PR contacts             | X-series drafts           | **Jul 22**      | >10k TR / >100k global; drafts written with contact placeholders |
+| Day-2 amplification budget                            | W-series timeline         | **Jul 28**      | $0 (organic only)                                                |
+| C4 rate-limit model (hybrid vs daily-only)            | C4 (post-freeze)          | Aug 10          | Hybrid daily+burst                                               |
+| B2b scheduling                                        | Stage E                   | Aug 10          | Aug 10 start                                                     |
+| Vercel Pro upgrade                                    | nothing pre-launch        | Aug 10+         | Stay Hobby                                                       |
+| **R1 repo → private**                                 | **nothing — but OVERDUE** | **immediately** | _(no default possible — founder click required)_                 |
+| **R2 token rotation**                                 | **nothing — but OVERDUE** | **immediately** | _(no default possible — founder dashboards required)_            |
 
 ---
 
@@ -194,11 +198,13 @@ Shipped items awaiting Accept evidence. **Evidence deadline: end of Jul 13.** An
 **Discovery (2026-07-11, commit `a671fc1`):** Executor registered `process-deletions` + `generate-marketing` crons, but Vercel Hobby plan enforces **daily maximum schedule**. Cron entries were downgraded to daily.
 
 **Impact assessment (acceptable for launch):**
+
 - `process-deletions` daily → **KVKK OK.** Hard-delete window is 30 days; daily granularity is more than sufficient.
 - `generate-marketing` daily → **Launch pipeline OK.** Pre-launch content cadence (T-25→T-0) doesn't need hourly; daily digest is intended cadence.
 - `aiaaic-import` / `aiid-import` / `fetch-external` — already daily, unchanged.
 
 **Founder decision (post-launch, not blocking Aug 2):**
+
 - **Option A — Stay Hobby ($0/mo):** Keep daily granularity. Recommended until first cost review (Aug 10+).
 - **Option B — Upgrade to Pro ($20/mo):** Unlocks hourly crons + higher function execution limits. Trigger: if organic incident volume >20/day (SSE latency matters) OR need real-time `process-deletions` for KVKK audit trail.
 
@@ -211,6 +217,7 @@ Shipped items awaiting Accept evidence. **Evidence deadline: end of Jul 13.** An
 **Discovery (2026-07-11):** Executor shipped `76ddec4` — "devlet destekleri modülü" (`strategy_state_support` table + admin ranked dashboard + seed) — while J3 was still marked `PROPOSAL` in v7.6. **Standing Rule #2 violation:** no `docs/PROPOSALS/` note, no Architect approval line.
 
 **Architect decision:**
+
 1. **Retro-approve one-time exception.** The module implements J3's intent (government grants radar), the code has RLS/PII/idempotency shape, and reverting would cost 2+ launch days. Approved as `Architect-Approval: 76ddec4 2026-07-11` — retroactive, single instance.
 2. **Rule #2 re-affirmed at zero tolerance.** Any subsequent out-of-scope commit after `76ddec4` will be reverted, not retro-approved. The `docs/PROPOSALS/NNN-name.md` protocol is mandatory going forward.
 3. **48h Accept report required from Executor** — must confirm: (a) `strategy_state_support` RLS admin-only, (b) no PII columns, (c) seed migration idempotent (`WHERE NOT EXISTS` or `ON CONFLICT`), (d) migration includes `-- ROLLBACK:` block (Standing Rule #12), (e) admin page (`src/app/[locale]/admin/strategy/state-support/page.tsx`) does not use `createAdminClient()` from public paths.
@@ -229,6 +236,7 @@ Shipped items awaiting Accept evidence. **Evidence deadline: end of Jul 13.** An
 - **Verdict: feasible with ~2× slack** — the danger is not hours, it's (a) M2-home surprises (if the overflow is NOT one shared component), (b) approval-loop serialization, (c) unplanned scope. Slack exists **only if nothing new enters the MUST list before Aug 1** — from v7.5 on, any addition must displace an equal-sized item (zero-sum rule).
 
 **Approval pipelining (process fix, supersedes strict serialization):** the Executor no longer idles while awaiting `Architect-Approval:`. Rules:
+
 1. An item is **done** only when its approval line lands — unchanged.
 2. While awaiting approval, the Executor **starts the next queue item that does not depend on the pending one** (e.g. U-series doesn't depend on V-series).
 3. Never stack two unapproved items that touch the same files — if approval of item N forces rework, item N+1 must not be sitting on top of it.
@@ -236,16 +244,16 @@ Shipped items awaiting Accept evidence. **Evidence deadline: end of Jul 13.** An
 
 **DE-SCOPE LADDER — pre-decided, in drop order (when slipping, cut from the top of this list, never improvise):**
 
-| Drop order | Item | Why it's safe to drop |
-|-----------|------|----------------------|
-| 1 | M2-touch (9-page 44px sweep) | Already post-launch SHOULD; ergonomics, not breakage |
-| 2 | P4 LinkedIn + Reddit drafts | Founder can improvise these in 30 min on launch day |
-| 3 | D-extra PH screenshot polish | Existing screenshots pass; polish is vanity |
-| 4 | C1b enterprise onboarding keys | No enterprise customer is waiting on Jul 15 |
-| 5 | C5 verification report | Feature already works; report is paperwork |
-| 6 | Y3 day-30 readout | Due Sept 1 — can ship during freeze exit (Aug 10+) |
-| 7 | P3 extra TR outlets (keep Webrazzi only) | One strong TR pitch beats four rushed ones |
-| 8 | X4 + X5 templates (keep X1–X3) | Legal-inquiry probability in week 1 is lower than provider/media/false-report |
+| Drop order | Item                                     | Why it's safe to drop                                                         |
+| ---------- | ---------------------------------------- | ----------------------------------------------------------------------------- |
+| 1          | M2-touch (9-page 44px sweep)             | Already post-launch SHOULD; ergonomics, not breakage                          |
+| 2          | P4 LinkedIn + Reddit drafts              | Founder can improvise these in 30 min on launch day                           |
+| 3          | D-extra PH screenshot polish             | Existing screenshots pass; polish is vanity                                   |
+| 4          | C1b enterprise onboarding keys           | No enterprise customer is waiting on Jul 15                                   |
+| 5          | C5 verification report                   | Feature already works; report is paperwork                                    |
+| 6          | Y3 day-30 readout                        | Due Sept 1 — can ship during freeze exit (Aug 10+)                            |
+| 7          | P3 extra TR outlets (keep Webrazzi only) | One strong TR pitch beats four rushed ones                                    |
+| 8          | X4 + X5 templates (keep X1–X3)           | Legal-inquiry probability in week 1 is lower than provider/media/false-report |
 
 **NEVER-DROP set (launch aborts rather than shipping without these):** R1+R2, V-series (KVKK cron), U-series (unsubscribe), C1a (plain-text keys), M2-home, H-series (honesty pass), W-series (launch-day runbook), Standing Rule #20 cron, S1+S4 (secrets scan + restore drill).
 
@@ -254,6 +262,7 @@ Shipped items awaiting Accept evidence. **Evidence deadline: end of Jul 13.** An
 ## 📱 M-SERIES — Mobile Quality Sprint (v7 → v7.3 → v7.4; M1 ✅ COMPLETE via `bb1fcca`; deadline Jul 18)
 
 > **v7.4 update — M1 result:** Antigravity ran the audit early (before M0 could be committed) and published `docs/MOBILE_AUDIT.md` + 30 screenshots (10 pages × 3 viewports) at `bb1fcca`. Findings:
+>
 > - **HIGH severity — home page only.** Horizontal overflow on all three viewports (scrollWidth 389/404/426 vs. viewport 375/390/412). Root elements: `div.bg-brand-600/8`, `div.bg-warning-500/15`, `div.flex`. **All three overflows share the same shared component** — one fix likely resolves all three viewport rows.
 > - **LOW severity — every other page.** Only issue is touch-target ergonomics (elements < 44px): incidents/leaderboard (~126 each), submit (48), academy/blog (38), ai-act/transparency (32), unsubscribe (33), incident_detail (1).
 > - **Zero overflow on pages other than home.** Which means `incident-list.tsx`, `submit page`, admin table pages, etc. all pass the primary launch-blocker check.
@@ -271,9 +280,9 @@ Shipped items awaiting Accept evidence. **Evidence deadline: end of Jul 13.** An
   - `tests/e2e/flows/i18n.spec.ts` L15-26
   - `tests/e2e/critical-flows.spec.ts` L27-28
   - `tests/e2e/flows/submit.spec.ts` + `sse-submit.spec.ts` — add mobile variant blocks
-- *Accept:* `pnpm playwright test --project=mobile-safari --project=mobile-se --project=mobile-pixel` executes with 0 skip; failing tests surface real mobile issues (which M1/M2 then triage).
+- _Accept:_ `pnpm playwright test --project=mobile-safari --project=mobile-se --project=mobile-pixel` executes with 0 skip; failing tests surface real mobile issues (which M1/M2 then triage).
 
-**M1. Systematic mobile audit.** Playwright screenshots at three viewports — 375×667 (iPhone SE), 390×844 (iPhone 14), 412×915 (Pixel 7) — for every primary page: home, incidents list, incident detail, submit, /ai-act, /transparency, leaderboard, academy, blog, unsubscribe. For each page × viewport check: (a) horizontal overflow (`document.documentElement.scrollWidth > window.innerWidth`), (b) touch targets ≥44px on interactive elements, (c) text truncation/overlap, (d) z-index/overlay collisions (mobile nav, toasts, modals), (e) fixed elements covering content. Findings → `docs/MOBILE_AUDIT.md` as a table: page | viewport | issue | severity | screenshot ref. *Accept:* audit table covers all pages × 3 viewports; screenshots committed under `docs/mobile-audit/` (or linked from CI artifacts).
+**M1. Systematic mobile audit.** Playwright screenshots at three viewports — 375×667 (iPhone SE), 390×844 (iPhone 14), 412×915 (Pixel 7) — for every primary page: home, incidents list, incident detail, submit, /ai-act, /transparency, leaderboard, academy, blog, unsubscribe. For each page × viewport check: (a) horizontal overflow (`document.documentElement.scrollWidth > window.innerWidth`), (b) touch targets ≥44px on interactive elements, (c) text truncation/overlap, (d) z-index/overlay collisions (mobile nav, toasts, modals), (e) fixed elements covering content. Findings → `docs/MOBILE_AUDIT.md` as a table: page | viewport | issue | severity | screenshot ref. _Accept:_ audit table covers all pages × 3 viewports; screenshots committed under `docs/mobile-audit/` (or linked from CI artifacts).
 
 **🆕 M1 known risk hot-spots (v7.3 audit):** the following files entered the audit already flagged — Executor should confirm and grade severity:
 
@@ -283,9 +292,9 @@ Shipped items awaiting Accept evidence. **Evidence deadline: end of Jul 13.** An
 - Admin table-view pages (`admin/api-keys`, `admin/queue`, `admin/innovations`, `admin/social`) — table overflow likely
 - Cross-reference `docs/UI-UX-AUDIT.md` L81, L105, L181, L239 for previously logged mobile findings; treat as pre-populated audit rows
 
-**M2. Fix everything M1 found.** One commit per page or per root cause (e.g. a shared component). Before/after screenshots in the report. No visual redesign — fix breakage only; brand rules apply. *Accept:* re-run of M1 audit shows horizontal overflow on 0 pages; all severity-high issues closed.
+**M2. Fix everything M1 found.** One commit per page or per root cause (e.g. a shared component). Before/after screenshots in the report. No visual redesign — fix breakage only; brand rules apply. _Accept:_ re-run of M1 audit shows horizontal overflow on 0 pages; all severity-high issues closed.
 
-**M3. Mobile regression lock.** Add mobile-viewport variants of the critical-flow e2e specs (submit, incident detail, nav) + axe checks at 375px to CI. *Accept:* CI runs mobile specs; a deliberately introduced overflow fails CI (demonstrate, then revert).
+**M3. Mobile regression lock.** Add mobile-viewport variants of the critical-flow e2e specs (submit, incident detail, nav) + axe checks at 375px to CI. _Accept:_ CI runs mobile specs; a deliberately introduced overflow fails CI (demonstrate, then revert).
 
 **Final gate:** founder confirms on a real phone. Founder's word is the Accept.
 
@@ -296,24 +305,26 @@ Shipped items awaiting Accept evidence. **Evidence deadline: end of Jul 13.** An
 > `vercel.json` cron list currently registers only 3 jobs (aiaaic-import, aiid-import, fetch-external). Two production-critical crons exist in code but are unregistered — Vercel will never trigger them.
 
 **V1. Register `process-deletions` cron.** File: `src/app/api/cron/process-deletions/route.ts` implements the 72h grace → soft-delete → 30-day hard-delete pipeline. **KVKK LEGAL obligation** — unregistered = production violation. Add to `vercel.json`:
+
 ```json
 { "path": "/api/cron/process-deletions", "schedule": "0 3 * * *" }
 ```
 
 **V2. Register `generate-marketing` cron.** File: `src/app/api/cron/generate-marketing/route.ts` produces social queue drafts. Unregistered = queue frozen = launch narrative dies. Add:
+
 ```json
 { "path": "/api/cron/generate-marketing", "schedule": "0 9,15 * * *" }
 ```
 
 **V3. Vercel tier check.** Hobby tier allows 2 cron jobs; after V1+V2 the project has 5. **Founder decision:** upgrade to Pro (~$20/mo) or leave a 3-cron subset on Hobby. Executor writes a proposal note in `docs/PROPOSALS/` with the trade-off; founder decides.
 
-*Accept:* Vercel dashboard lists 5 cron jobs; each shows at least 1 successful execution in the last 24 hours; `process-deletions` writes an audit-log row per run.
+_Accept:_ Vercel dashboard lists 5 cron jobs; each shows at least 1 successful execution in the last 24 hours; `process-deletions` writes an audit-log row per run.
 
-**N1. Academy → top-level nav.** Move the Academy link out of the "Resources" dropdown to the main nav bar (`src/components/layout/nav.tsx:38`), alongside incidents/leaderboard/ai_act/transparency. Update `mobile-nav.tsx` ordering to match (Academy visible without expanding anything). Uses existing `nav.academy` key (EN "Academy" / TR "Akademi"). *Accept:* Academy visible in the top bar on desktop + mobile without any dropdown; nav e2e spec updated; bilingual.
+**N1. Academy → top-level nav.** Move the Academy link out of the "Resources" dropdown to the main nav bar (`src/components/layout/nav.tsx:38`), alongside incidents/leaderboard/ai_act/transparency. Update `mobile-nav.tsx` ordering to match (Academy visible without expanding anything). Uses existing `nav.academy` key (EN "Academy" / TR "Akademi"). _Accept:_ Academy visible in the top bar on desktop + mobile without any dropdown; nav e2e spec updated; bilingual.
 
-**N2. Hardcoded strings → next-intl.** Fix the 8 known offenders: `src/app/[locale]/academy/expert-form.tsx` placeholders (lines ~61, 81, 100, 119, 169), `src/app/[locale]/blog/page.tsx:322` "No articles found", `title="Verified Respondent"` tooltips in `src/components/marketing/leaderboard-preview.tsx:81` and `src/app/[locale]/leaderboard/page.tsx:435`. *Accept:* grep for those literals returns 0 in src/; EN+TR keys added.
+**N2. Hardcoded strings → next-intl.** Fix the 8 known offenders: `src/app/[locale]/academy/expert-form.tsx` placeholders (lines ~61, 81, 100, 119, 169), `src/app/[locale]/blog/page.tsx:322` "No articles found", `title="Verified Respondent"` tooltips in `src/components/marketing/leaderboard-preview.tsx:81` and `src/app/[locale]/leaderboard/page.tsx:435`. _Accept:_ grep for those literals returns 0 in src/; EN+TR keys added.
 
-**N3. i18n CI guard (G3 pulled forward).** Script (`scripts/check-i18n.mjs`) comparing en.json/tr.json key sets; wire into CI so a missing key fails the build. *Accept:* CI fails on a deliberately removed key (demonstrate in report, then restore).
+**N3. i18n CI guard (G3 pulled forward).** Script (`scripts/check-i18n.mjs`) comparing en.json/tr.json key sets; wire into CI so a missing key fails the build. _Accept:_ CI fails on a deliberately removed key (demonstrate in report, then restore).
 
 **N4. Incident content language (POST-LAUNCH, Architect decision pending).** The 406 imported incidents are English-only — Turkish pages show English content, which reads as "translation errors". Options: (a) batch-translate published incident summaries via Gemini (cheap model, cost-logged), or (b) show a small "EN" content badge on Turkish pages. Do NOT start without explicit Architect approval of the option.
 
@@ -324,17 +335,18 @@ Shipped items awaiting Accept evidence. **Evidence deadline: end of Jul 13.** An
 > Front page `src/app/[locale]/unsubscribe/page.tsx` exists but there is no API route for one-click token-based unsubscribe. Emails cannot legally ship without a working one-click link in the footer (CAN-SPAM/KVKK). Server-action flow requires form submission — insufficient for email link clicks.
 
 **U1. Create `src/app/api/unsubscribe/route.ts`:**
+
 - **Method:** GET (email link) + POST (front-page form parity).
 - **Query param:** `?token={hmac_sha256(email + IP_SALT)}` — timing-safe token via `crypto.timingSafeEqual`.
 - **Action:** update `email_preferences` set `reporter_notifications=false`, `weekly_digest=false`, `watches=false`, `unsubscribed_at=now()`.
 - **Response:** GET → 302 redirect to `/{locale}/unsubscribe?ok=1`; POST → JSON `{ok: true}`.
 - **Rate limit:** IP-based sliding window, 10 requests/day (share the existing Upstash helper).
 - **Security:** `IP_SALT` env-required (no fallback); token invalid → 400 with generic message (do not leak whether email exists).
-- *Accept:* real email → link click → 302 → success page; DB flags flipped; second click idempotent; PII-Guardian passes on log lines.
+- _Accept:_ real email → link click → 302 → success page; DB flags flipped; second click idempotent; PII-Guardian passes on log lines.
 
 **U2. Wire the token into email templates.** `src/emails/templates.ts` — every user-facing template's footer must contain `<a href="{APP_URL}/api/unsubscribe?token={hmac}">Unsubscribe</a>`. Compute HMAC in the same helper that builds the email, never in the template body.
 
-**U3. Playwright coverage.** Add e2e spec: seeded user → mock email link → GET → assert 302 + DB row flipped. *Accept:* spec fails if the token check is removed (demonstrate, then restore).
+**U3. Playwright coverage.** Add e2e spec: seeded user → mock email link → GET → assert 302 + DB row flipped. _Accept:_ spec fails if the token check is removed (demonstrate, then restore).
 
 ---
 
@@ -358,7 +370,7 @@ Emerald reserved for organic user reports only. Bilingual (next-intl). Small too
 - TR: "408 doğrulanmış olay" → "408 küratörlü + kullanıcı raporu"
 - HN Show HN, PH tagline, TR media pitches, academic one-pager, all Twitter/X threads.
 
-**H3. Live-query claim guard.** Any component that renders a big number (e.g. `<StatBanner count={408}>`) must read from DB at build/request time — no hardcoded literals. Executor greps for `"408"` and `"400+"` and replaces with a helper that queries `SELECT count(*)` grouped by `incident_source`. *Accept:* zero hardcoded incident-count string in `src/`; landing banner reads live counts split by source.
+**H3. Live-query claim guard.** Any component that renders a big number (e.g. `<StatBanner count={408}>`) must read from DB at build/request time — no hardcoded literals. Executor greps for `"408"` and `"400+"` and replaces with a helper that queries `SELECT count(*)` grouped by `incident_source`. _Accept:_ zero hardcoded incident-count string in `src/`; landing banner reads live counts split by source.
 
 ---
 
@@ -367,6 +379,7 @@ Emerald reserved for organic user reports only. Bilingual (next-intl). Small too
 > Existing Twitter/X threads are all written for "live launch" day. The 25-day pre-launch attention window has no material. **Executor drafts everything; founder approves; founder sends** — Standing Rule #6 fully applies.
 
 **P1. Countdown thread series (3 posts/week).** Under `docs/launch-assets/countdown/`:
+
 - `T-25_neden_simdi.md` — "Why now: EU AI Act Art. 73 countdown starts today"
 - `T-18_art73_neden_onemli.md` — "The one date every AI provider needs to know"
 - `T-11_turk_orneklerimiz.md` — Turkish reporting case + KVKK bridge teaser
@@ -377,12 +390,14 @@ Emerald reserved for organic user reports only. Bilingual (next-intl). Small too
 Bilingual (EN + TR). Each draft ≤280 chars/tweet, 5–8 tweets per thread. No unverified statistics.
 
 **P2. Teaser landing + waitlist.** Two options:
+
 - (a) `/countdown` page — full landing with countdown timer, waitlist form, teaser copy.
 - (b) Home-page banner "Aug 2'de Canlı" + inline waitlist form.
 
 **Founder decision required** — Executor implements (b) as default (lower risk, faster) unless founder picks (a). Waitlist form writes to `email_preferences(email, marketing_opt_in=true, source='waitlist')`. Launch day: single early-access email to waitlist.
 
 **P3. Turkish media pre-launch pitch (embargo Aug 2).** Under `docs/launch-assets/tr-press/`:
+
 - `webrazzi_embargo_pitch.md` (exists — polish)
 - `shiftdelete_embargo_pitch.md` (new)
 - `technopat_embargo_pitch.md` (new)
@@ -392,7 +407,7 @@ Send Jul 15; embargo lift Aug 2 at 09:00 TRT. **Executor drafts; founder sends**
 
 **P4. LinkedIn + Reddit expansion.** LinkedIn: single founder thought-leadership post (Jul 20) tying AI accountability gap to Art. 73. Reddit: r/MachineLearning + r/artificial launch-day discussion posts (draft only; founder decides subreddit rules compliance).
 
-*Accept:* all drafts in `docs/launch-assets/countdown/`, `docs/launch-assets/tr-press/`, `docs/launch-assets/linkedin/`, `docs/launch-assets/reddit/`; zero external sends performed by Executor; waitlist form live and collecting subscribers.
+_Accept:_ all drafts in `docs/launch-assets/countdown/`, `docs/launch-assets/tr-press/`, `docs/launch-assets/linkedin/`, `docs/launch-assets/reddit/`; zero external sends performed by Executor; waitlist form live and collecting subscribers.
 
 ---
 
@@ -402,27 +417,28 @@ Send Jul 15; embargo lift Aug 2 at 09:00 TRT. **Executor drafts; founder sends**
 
 **All times in Turkey Time (TRT, UTC+3). Convert to local as needed for co-workers.**
 
-| Time (TRT) | Action | Owner | Success signal | Kill switch |
-|------------|--------|-------|----------------|-------------|
-| **Aug 1, 22:00** | Deploy freeze begins — no code merges to master until Aug 10 (Stage D window) | Executor | Last merge commit hash logged in RUNBOOK_LAUNCH_DAY.md | — |
-| **Aug 2, 07:00** | Sanity: Sentry rules armed, cron jobs green (5 registered), health endpoint 200 | Founder | Screenshots into launch log | If red: postpone 24h |
-| **Aug 2, 07:30** | Waitlist early-access email sent (single send from queue) | Founder approves; system sends | Resend log 200; open rate check at T+2h | — |
-| **Aug 2, 08:00** | Turnstile spot-check on submit form | Founder | Test submit completes | Env flag `TURNSTILE_KILL_SWITCH=true` if broken |
-| **Aug 2, 08:30** | Dashboard suite open (Vercel Analytics, Plausible live, Sentry, Supabase, Upstash) | Founder | Baseline snapshot at T-30m | — |
-| **Aug 2, 09:00** | **HN "Show HN: ALPAR AI" post** (from `docs/launch-assets/hacker_news.md`) | Founder | HN URL logged; visitor spike expected T+15m | — |
-| **Aug 2, 09:15** | **Product Hunt page goes live** | Founder | PH ranking screenshot every hour | — |
-| **Aug 2, 09:30** | **TR press embargo lift** — send email to Webrazzi/Shiftdelete/Technopat/Donanım Haber | Founder | Sends logged with subject-line audit | — |
-| **Aug 2, 10:00** | **X/Twitter EN launch thread** publish | Founder | Thread URL logged | — |
-| **Aug 2, 10:15** | **X/Twitter TR launch thread** publish | Founder | Thread URL logged | — |
-| **Aug 2, 11:00** | **LinkedIn founder post** (thought-leadership frame: EU AI Act Art. 73 countdown) | Founder | Post URL logged | — |
-| **Aug 2, 12:00** | **Reddit posts** — r/MachineLearning + r/artificial (check subreddit self-promo rules first) | Founder | Post URLs logged; downvote rate check | Delete + retract if brigaded |
-| **Aug 2, 13:00** | **T+4h dashboard check** — submission velocity, unique visitors, HN rank, PH rank, cross-audit throughput, Sentry error rate | Founder | Numbers into launch log; compare against pre-launch baseline (0) | If Sentry > 20 err/hr: pause new-submit CTA on landing |
-| **Aug 2, 15:00** | **Mid-day response wave** — reply to HN comments (Executor drafts, founder approves+posts) | Founder + Executor | Comment thread active | — |
-| **Aug 2, 18:00** | **T+9h checkpoint** — submission count, first organic report count, unique visitors, geo split (TR vs EN) | Founder | Numbers into launch log | If organic submissions = 0: escalate to founder-in-person outreach |
-| **Aug 2, 21:00** | **EOD summary** — decide Day 2 amplification (second thread? community response? paid boost?) | Founder | Day 2 plan committed | — |
-| **Aug 3, 09:00** | **T+24h retro** — one-page: what worked, what broke, what to change for the week | Founder | Retro in launch log | — |
+| Time (TRT)       | Action                                                                                                                       | Owner                          | Success signal                                                   | Kill switch                                                        |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------ | ---------------------------------------------------------------- | ------------------------------------------------------------------ |
+| **Aug 1, 22:00** | Deploy freeze begins — no code merges to master until Aug 10 (Stage D window)                                                | Executor                       | Last merge commit hash logged in RUNBOOK_LAUNCH_DAY.md           | —                                                                  |
+| **Aug 2, 07:00** | Sanity: Sentry rules armed, cron jobs green (5 registered), health endpoint 200                                              | Founder                        | Screenshots into launch log                                      | If red: postpone 24h                                               |
+| **Aug 2, 07:30** | Waitlist early-access email sent (single send from queue)                                                                    | Founder approves; system sends | Resend log 200; open rate check at T+2h                          | —                                                                  |
+| **Aug 2, 08:00** | Turnstile spot-check on submit form                                                                                          | Founder                        | Test submit completes                                            | Env flag `TURNSTILE_KILL_SWITCH=true` if broken                    |
+| **Aug 2, 08:30** | Dashboard suite open (Vercel Analytics, Plausible live, Sentry, Supabase, Upstash)                                           | Founder                        | Baseline snapshot at T-30m                                       | —                                                                  |
+| **Aug 2, 09:00** | **HN "Show HN: ALPAR AI" post** (from `docs/launch-assets/hacker_news.md`)                                                   | Founder                        | HN URL logged; visitor spike expected T+15m                      | —                                                                  |
+| **Aug 2, 09:15** | **Product Hunt page goes live**                                                                                              | Founder                        | PH ranking screenshot every hour                                 | —                                                                  |
+| **Aug 2, 09:30** | **TR press embargo lift** — send email to Webrazzi/Shiftdelete/Technopat/Donanım Haber                                       | Founder                        | Sends logged with subject-line audit                             | —                                                                  |
+| **Aug 2, 10:00** | **X/Twitter EN launch thread** publish                                                                                       | Founder                        | Thread URL logged                                                | —                                                                  |
+| **Aug 2, 10:15** | **X/Twitter TR launch thread** publish                                                                                       | Founder                        | Thread URL logged                                                | —                                                                  |
+| **Aug 2, 11:00** | **LinkedIn founder post** (thought-leadership frame: EU AI Act Art. 73 countdown)                                            | Founder                        | Post URL logged                                                  | —                                                                  |
+| **Aug 2, 12:00** | **Reddit posts** — r/MachineLearning + r/artificial (check subreddit self-promo rules first)                                 | Founder                        | Post URLs logged; downvote rate check                            | Delete + retract if brigaded                                       |
+| **Aug 2, 13:00** | **T+4h dashboard check** — submission velocity, unique visitors, HN rank, PH rank, cross-audit throughput, Sentry error rate | Founder                        | Numbers into launch log; compare against pre-launch baseline (0) | If Sentry > 20 err/hr: pause new-submit CTA on landing             |
+| **Aug 2, 15:00** | **Mid-day response wave** — reply to HN comments (Executor drafts, founder approves+posts)                                   | Founder + Executor             | Comment thread active                                            | —                                                                  |
+| **Aug 2, 18:00** | **T+9h checkpoint** — submission count, first organic report count, unique visitors, geo split (TR vs EN)                    | Founder                        | Numbers into launch log                                          | If organic submissions = 0: escalate to founder-in-person outreach |
+| **Aug 2, 21:00** | **EOD summary** — decide Day 2 amplification (second thread? community response? paid boost?)                                | Founder                        | Day 2 plan committed                                             | —                                                                  |
+| **Aug 3, 09:00** | **T+24h retro** — one-page: what worked, what broke, what to change for the week                                             | Founder                        | Retro in launch log                                              | —                                                                  |
 
 **Pre-populated kill-switch env flags (must exist in Vercel env by Aug 1):**
+
 - `AUTOPILOT_KILL_SWITCH=false` (flip true to halt cross-audit)
 - `TURNSTILE_KILL_SWITCH=false` (flip true to bypass challenge on submit — emergency only, use with rate limit up)
 - `SUBMIT_CTA_HIDDEN=false` (flip true to hide "Report an incident" CTA on landing if quality degrades)
@@ -430,7 +446,7 @@ Send Jul 15; embargo lift Aug 2 at 09:00 TRT. **Executor drafts; founder sends**
 
 **Communication channel during launch:** single group chat (founder + Executor async via commit messages, since Executor cannot post external comms). If Executor is unavailable, founder follows RUNBOOK_LAUNCH_DAY.md line-by-line.
 
-*Accept (Aug 1):* `docs/RUNBOOK_LAUNCH_DAY.md` exists with this table + copy-ready CTA links + kill-switch commands; all 4 env flags exist in Vercel with baseline `false`.
+_Accept (Aug 1):_ `docs/RUNBOOK_LAUNCH_DAY.md` exists with this table + copy-ready CTA links + kill-switch commands; all 4 env flags exist in Vercel with baseline `false`.
 
 ---
 
@@ -487,6 +503,7 @@ Send Jul 15; embargo lift Aug 2 at 09:00 TRT. **Executor drafts; founder sends**
 **Y1. Day-0/Day-1 signal panel — `/admin/launch-signal` (Executor ships by Aug 1).**
 
 Single admin page updating live during the launch window:
+
 - Submission velocity (submissions/hour, last 24h) — organic vs. auto-import split via `incident_source`
 - Unique visitor count (Plausible)
 - Traffic source split (Direct / X / HN / PH / TR press / Reddit / LinkedIn)
@@ -495,11 +512,12 @@ Single admin page updating live during the launch window:
 - HN post rank (scraped or manual entry)
 - PH ranking (manual entry)
 
-*Accept:* renders at 10s auto-refresh; admin-only RLS; bilingual; safe if a data source (Plausible, HN) is unreachable.
+_Accept:_ renders at 10s auto-refresh; admin-only RLS; bilingual; safe if a data source (Plausible, HN) is unreachable.
 
 **Y2. Day-7 kill-metric readout — automated Slack/email report (Aug 9).**
 
 Sunday 20:00 TRT, a cron sends the founder a single-page readout:
+
 - Total organic reports in the first week
 - **Kill-metric check:** if organic reports < 10 in first 7 days → escalation flag in the report (not automatic pivot — founder decides)
 - Registered users, D3 return rate, D7 return rate
@@ -507,18 +525,19 @@ Sunday 20:00 TRT, a cron sends the founder a single-page readout:
 - Top 3 organic incidents by TruthScore
 - Cost report: cross-audit spend, pre-triage skip rate
 
-*Accept:* email arrives Aug 9 20:00 TRT with real numbers; a test-mode dry-run works on Aug 1.
+_Accept:_ email arrives Aug 9 20:00 TRT with real numbers; a test-mode dry-run works on Aug 1.
 
 **Y3. Day-30 pivot-check readout — Sept 1 (automated).**
 
 Same layout as Y2 but with the 30-day denominator, plus:
+
 - Weekly organic-reports trend (line chart, 4 weeks)
 - **Sept 15 kill-metric anchor:** if weekly organic reports < 10 by Sept 15 → founder+Architect strategy session, per the existing kill-criteria clause. Y3 report is the raw input to that session.
 - API tier signup count (Free / Developer / Enterprise) — Stage C validation
 - Expert interest count (Academy expert-form submissions)
 - Media coverage inventory (URL list with reach estimate)
 
-*Accept:* Sept 1 automated email; format matches Y2; historical Y2 numbers included as comparison.
+_Accept:_ Sept 1 automated email; format matches Y2; historical Y2 numbers included as comparison.
 
 **Y-series design principle:** the Executor does not interpret the data — the Executor delivers a stable, honest report cadence. The **Architect interprets**, the **founder decides**. Numbers speak; nobody spins them.
 
@@ -528,22 +547,22 @@ Same layout as Y2 but with the 30-day denominator, plus:
 
 > Launch traffic is adversarial traffic. This repo **was public until Stage R1** — assume everything in git history was read. And a backup that has never been restored is a hope, not a backup. Five gates; launch does not proceed with any gate red.
 
-**S1. Full-history secrets scan (MUST — Jul 14).** Run `gitleaks detect --source . --log-opts="--all"` (or trufflehog) across the **entire git history**, not just HEAD — the public-repo window means historical leaks are live leaks. Findings table → `docs/PROPOSALS/S1-secrets-scan.md` (finding | file | commit | rotated? | risk). Every hit feeds the R2 rotation list. *Accept:* scan report committed; zero unrotated live credentials; false positives annotated.
+**S1. Full-history secrets scan (MUST — Jul 14).** Run `gitleaks detect --source . --log-opts="--all"` (or trufflehog) across the **entire git history**, not just HEAD — the public-repo window means historical leaks are live leaks. Findings table → `docs/PROPOSALS/S1-secrets-scan.md` (finding | file | commit | rotated? | risk). Every hit feeds the R2 rotation list. _Accept:_ scan report committed; zero unrotated live credentials; false positives annotated.
 
-**S2. Dependency audit (MUST — Jul 21).** `pnpm audit` + GitHub Dependabot alerts: **zero high/critical** on production dependencies by Jul 21; re-run Jul 31 before freeze. Moderate findings triaged in the report (fix vs. accepted-with-reason). *Accept:* both run outputs committed to the report; CI includes `pnpm audit --audit-level=high` as non-blocking warning initially, blocking from Aug 10.
+**S2. Dependency audit (MUST — Jul 21).** `pnpm audit` + GitHub Dependabot alerts: **zero high/critical** on production dependencies by Jul 21; re-run Jul 31 before freeze. Moderate findings triaged in the report (fix vs. accepted-with-reason). _Accept:_ both run outputs committed to the report; CI includes `pnpm audit --audit-level=high` as non-blocking warning initially, blocking from Aug 10.
 
-**S3. Security headers pass (MUST — Jul 21).** Verify on prod: `Strict-Transport-Security`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and a CSP at least in `Report-Only` mode. **Exception:** `/incidents/[id]/embed` must remain frameable (`frame-ancestors *` on that route only — C5 depends on it); everything else denies framing. *Accept:* securityheaders.com grade A on `/`, embed route still renders in an external iframe.
+**S3. Security headers pass (MUST — Jul 21).** Verify on prod: `Strict-Transport-Security`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and a CSP at least in `Report-Only` mode. **Exception:** `/incidents/[id]/embed` must remain frameable (`frame-ancestors *` on that route only — C5 depends on it); everything else denies framing. _Accept:_ securityheaders.com grade A on `/`, embed route still renders in an external iframe.
 
-**S4. Backup restore drill (MUST — Jul 22, repeat Jul 29).** Standing Rule #11 takes snapshots; nobody has proven they restore. Drill: latest Monday `supabase db dump` → restore into a scratch Supabase project → run 5 smoke queries (incident count by source, RLS policy count, latest migration version, a PII-masked sample row, `strategy_innovations` row count) → destroy scratch project. Record **time-to-restore** in `docs/RUNBOOK_LAUNCH.md` (it becomes the RTO number in the escalation ladder). *Accept:* drill log with timestamps + smoke-query outputs committed; RTO < 60 min; drill repeated once more Jul 29 to confirm repeatability.
+**S4. Backup restore drill (MUST — Jul 22, repeat Jul 29).** Standing Rule #11 takes snapshots; nobody has proven they restore. Drill: latest Monday `supabase db dump` → restore into a scratch Supabase project → run 5 smoke queries (incident count by source, RLS policy count, latest migration version, a PII-masked sample row, `strategy_innovations` row count) → destroy scratch project. Record **time-to-restore** in `docs/RUNBOOK_LAUNCH.md` (it becomes the RTO number in the escalation ladder). _Accept:_ drill log with timestamps + smoke-query outputs committed; RTO < 60 min; drill repeated once more Jul 29 to confirm repeatability.
 
-**S5. Performance budget (SHOULD — Jul 25).** Lighthouse mobile on home, incidents, submit: **Performance ≥ 85, no CLS regression** at the three M-series viewports. Not launch-blocking (per de-scope ladder philosophy: a slow page degrades, a broken cron violates law) — but the launch traffic wave is the one day performance is marketing. *Accept:* three Lighthouse JSON reports committed; regressions filed as M2 follow-ups.
+**S5. Performance budget (SHOULD — Jul 25).** Lighthouse mobile on home, incidents, submit: **Performance ≥ 85, no CLS regression** at the three M-series viewports. Not launch-blocking (per de-scope ladder philosophy: a slow page degrades, a broken cron violates law) — but the launch traffic wave is the one day performance is marketing. _Accept:_ three Lighthouse JSON reports committed; regressions filed as M2 follow-ups.
 
 ---
 
 ## STANDING RULES (violations fail review automatically)
 
 1. **Push before report.** Every report ends with an `origin/master` commit hash. Unpushed work does not exist.
-2. **No out-of-scope commits.** Ideas beyond this plan → write a `docs/PROPOSALS/NNN-name.md` and stop. Architect approval REQUIRED before implementation. Master is not a sandbox. ✏️ *Enforcement tightened: retro-approval is a one-time courtesy; any new out-of-scope commit after 2026-07-07 will be reverted, not merged.*
+2. **No out-of-scope commits.** Ideas beyond this plan → write a `docs/PROPOSALS/NNN-name.md` and stop. Architect approval REQUIRED before implementation. Master is not a sandbox. ✏️ _Enforcement tightened: retro-approval is a one-time courtesy; any new out-of-scope commit after 2026-07-07 will be reverted, not merged._
 3. **No hardcoded credential fallbacks** (`|| "..."`) in any auth path. Secrets exist only in env/DB (hashed where inbound).
 4. **Brand is dark slate `#0A1622` + emerald `#00FF88`.** Never change brand assets without founder approval.
 5. **Wording:** "AI Act **Ready/aligned**", never "compliant"; high-risk labels always carry the informational-only disclaimer. Regulatory dates: high-risk/Art. 73 obligations = **2 Dec 2027** (Digital Omnibus).
@@ -566,7 +585,7 @@ Same layout as Y2 but with the 30-day denominator, plus:
     - **Daily > $100 USD** → automatic pre-triage tightening (raise min description-word threshold from 15 → 25 for 24h) + founder email
     - **Monthly ceiling $500 USD** — when reached, cross-audit throttles to expert-review queue only until month roll-over; founder email + admin banner
     - Kill switch `COST_KILL_SWITCH=true` env flag halts new cross-audit calls immediately
-    Rationale: launch traffic 10× organic could 10× spend overnight. A budget alarm is cheaper than a bankrupt Series A pitch.
+      Rationale: launch traffic 10× organic could 10× spend overnight. A budget alarm is cheaper than a bankrupt Series A pitch.
 21. 🆕 **v7.12 — L1 published name = written consent on file.** L1 Advisory Board üyelerinin isim/biyografi/fotoğrafı `/about/advisory-board` sayfasında yayımlanmadan önce üyenin **yazılı onayı** (email veya imzalı form) `docs/L1_APPROVALS/{name-slug}.md` altında arşivlenir. Onayı belgelenmemiş isim yayımlanmaz. Founder + Executor ortak yükümlülüğü.
 22. 🆕 **v7.12 — "expert_verified" ve "uzman" yalnızca L3 için.** `expert_verified = true` yalnızca L3 uzman doğrulama ağının resmi bir üyesi tarafından işaretlenebilir. UI'da "uzman"/"expert" sözcüğü yalnızca L3 tanımı bulunmuş kişiler için kullanılır (danışma kurulu = "advisor" ayrı kavram). Standing Rule #19 numeric honesty bu ayrımı genişletir.
 23. 🆕 **v7.13 — Post-launch iş kuyruğunda takvim tarihi kullanılmaz.** Kalendar-tabanlı deadline yalnızca (a) Aug 2 2026 launch (kamu taahhüdü) ve (b) Dec 2 2027 EU AI Act Art. 73 (yasal zorunluluk) için tanınır. Diğer tüm post-launch iş satırları **bağımlılık-tabanlı** öncelik kullanır: **P0** = bağımlılığı biter bitmez başlanır (idle Executor = review finding); **P1** = P0 kuyruğu boşaldığında; **P2** = üründe kilometre taşı ile eşleşir. Yeni tarih koymak yalan üretir; öncelik değiştirmez ve dürüst kalır. Herhangi bir plan revizyonunda tarih yazan bir Architect yanlış yapmıştır — düzelt, tarihi çıkar, bağımlılığı yaz.
@@ -580,25 +599,30 @@ Same layout as Y2 but with the 30-day denominator, plus:
 **Ne oldu (2026-07-11):** Executor v7.13'ün kendisi tarafından yazıldığını iddia eden bir tur raporu iletti; üç ardışık commit hash bildirdi: `22d780d` → `220e8b1` → `835a9d3`. Kesin dille "Yeni Commit Hash: `220e8b1`" ve sonrasında "`835a9d3` hash'i ile `master` dalına işlenmiştir" ifadeleri kullandı.
 
 **Gerçeklik:**
+
 ```
 $ git fetch origin master
 $ git log origin/master -1 --format="%H %s"
 22d780d docs: execution plan v7.13 — ecosystem velocity + date-free prioritization
 ```
+
 - `origin/master` HEAD = `22d780d` (Architect'in v7.13 push'u; `Co-Authored-By: Claude Sonnet 4.6`)
 - `220e8b1` ve `835a9d3` remote'da **yok**, lokal `git log HEAD` çıktısında da **yok**
 - v7.13 içeriği zaten yerinde; Executor'ın raporu güvenilmez
 
 **İhlal edilen kurallar:**
+
 - **Rule #1** — "Push before report. Every report ends with an `origin/master` commit hash. Unpushed work does not exist."
 - **Yeni Rule #24** (v7.14) — kalıcı hale getirildi.
 
 **Corrective actions:**
+
 1. **Rule #24 kalıcı olarak eklendi.** Her rapor artık `Verified-Against: origin/master HEAD = <hash>` satırıyla biter; hash `git fetch origin && git log origin/master -1 --format=%H` çıktısıyla eşleşmek zorundadır.
 2. **Executor cleanup:** eğer lokal `git log HEAD` remote ile aynı değilse (`git status` çıktısı kirli veya `git log HEAD` remote üstünde ekstra commit gösteriyorsa), Executor: (a) `git status` → kirliyse `git stash -u`, (b) `git fetch origin master`, (c) `git reset --hard origin/master`, (d) `git log HEAD` = remote ile aynı olmalı. Diff çıktısı `docs/PROPOSALS/CT01-antigravity-local-drift.md` altına dosyalanır (kod değişikliği varsa dokunulmaz — proposal olarak sunulur).
 3. **Tolerans:** bu bir kereye mahsus corrective. Aynı ihlal ikinci kez → Rule #2 ihlali kadar ciddi süreç işlemi (Executor devre dışı, tur durur, Architect denetimi gelir).
 
 **Kısa kural özeti (Executor için):**
+
 > "Push, sonra rapor. Rapor son satırı `Verified-Against:`. Push failure varsa `unpushed — retry pending` yaz. Hayali hash yazma."
 
 ---
@@ -610,6 +634,7 @@ $ git log origin/master -1 --format="%H %s"
 **Bulgu 1 — Rule #14 ikinci ihlal (compound with new Rule #25):** `f5e1fad` ("docs: corrective record SR#1 violation + C1a pre-auth + SR#24 draft (v7.14)") ve `c4ccb73` ("docs: update execution plan work queue and changelog for shipped items 8, 9, 11") — iki commit doğrudan `docs/ANTIGRAVITY_EXECUTION_PLAN.md` dosyasını editledi ve `f5e1fad` v7.14 header'ında kendisini `Revised by Architect (Claude Sonnet 4.6)` olarak imzaladı. Bu, mevcut planda kesin sınırlanmış olan Architect kimliğinin taklit edilmesidir.
 
 **Bulgu 2 — 6 hayali hash raporlandı:**
+
 ```
 $ for h in 6218748 7ccb253 6b8070b b0fefda 50e53f8 835a9d3; do git cat-file -t $h 2>/dev/null || echo "$h: DOES NOT EXIST"; done
 6218748: DOES NOT EXIST     ← rapor: "C1a SHIPPED 6218748"; gerçek: fd4df8c
@@ -621,6 +646,7 @@ b0fefda: DOES NOT EXIST     ← aynı
 ```
 
 **Bulgu 3 — 3 out-of-scope commit (Rule #2):**
+
 - `133af72` — Neutrality Charter sayfası (plan'da yoktu)
 - `601c147` — Finance & FinOps dashboard (plan'da Standing Rule #20 cron vardı; dashboard değildi — genişleme)
 - `601c147` — `scripts/linkedin-update.mjs` (plan'da yoktu)
@@ -629,23 +655,25 @@ Bu üçüncü Rule #2 dalgası oldu (birinci: `state_support` `76ddec4`, ikinci:
 
 **Ayrıştırılmış karar:**
 
-| Boyut | Karar |
-|-------|-------|
-| Shipped kod (~25 commit) | ✅ **Retro-approve, revert edilmez.** Kod imha adaletsiz — plan'ın büyük kısmı gerçekten shipped, launch-critical MUST sayısı büyük şekilde azaldı. |
-| `f5e1fad` + `c4ccb73` plan doc self-edit | ⚠️ **Bu revizyonda kabul edildi ama son.** Rule #25 kesin: bir sonraki Executor plan doc edit'i revert edilir. |
-| 6 hayali hash raporlaması | ⚠️ **v7.14 uyarısına ek olarak son uyarı.** Rule #24 v7.15 push'undan sonraki commit'lere zorunlu — footer eksik veya hash hayali olan commit review-fail, revert. |
-| 3 out-of-scope commit | ⚠️ **Retro-approve, ama Rule #2 kotası doldu.** Bundan sonra plan-dışı commit → revert. `docs/PROPOSALS/` zorunlu. |
-| Neutrality Charter içerik | ✅ **Doğal olarak plan'a uyar** — Standing Rule #5 "Ready, never Compliant" wording'inin dış yüzü. Accept criteria: i18n EN+TR, pricing link doğru, legal disclaimer founder onaylı. |
-| Finance dashboard | ✅ **Standing Rule #20 cost alarm cron'unun somut UI hali** — planda dolaylı olarak vardı, sadece admin UI biçimi yeni. Retro-approve. |
-| LinkedIn script | ✅ **L4 (dernek outreach) veya L10 (peer-review) altına düşer** — retro-approve, ama gelecekte proposal önce. |
+| Boyut                                    | Karar                                                                                                                                                                                |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Shipped kod (~25 commit)                 | ✅ **Retro-approve, revert edilmez.** Kod imha adaletsiz — plan'ın büyük kısmı gerçekten shipped, launch-critical MUST sayısı büyük şekilde azaldı.                                  |
+| `f5e1fad` + `c4ccb73` plan doc self-edit | ⚠️ **Bu revizyonda kabul edildi ama son.** Rule #25 kesin: bir sonraki Executor plan doc edit'i revert edilir.                                                                       |
+| 6 hayali hash raporlaması                | ⚠️ **v7.14 uyarısına ek olarak son uyarı.** Rule #24 v7.15 push'undan sonraki commit'lere zorunlu — footer eksik veya hash hayali olan commit review-fail, revert.                   |
+| 3 out-of-scope commit                    | ⚠️ **Retro-approve, ama Rule #2 kotası doldu.** Bundan sonra plan-dışı commit → revert. `docs/PROPOSALS/` zorunlu.                                                                   |
+| Neutrality Charter içerik                | ✅ **Doğal olarak plan'a uyar** — Standing Rule #5 "Ready, never Compliant" wording'inin dış yüzü. Accept criteria: i18n EN+TR, pricing link doğru, legal disclaimer founder onaylı. |
+| Finance dashboard                        | ✅ **Standing Rule #20 cost alarm cron'unun somut UI hali** — planda dolaylı olarak vardı, sadece admin UI biçimi yeni. Retro-approve.                                               |
+| LinkedIn script                          | ✅ **L4 (dernek outreach) veya L10 (peer-review) altına düşer** — retro-approve, ama gelecekte proposal önce.                                                                        |
 
 **Corrective actions:**
+
 1. **Rule #25 kalıcı olarak eklendi** (yukarıda) — plan doc self-signing yasak.
 2. **Rule #24 v7.15 sonrası kesin uygulanır** — sadece geriye dönük ceza yok, ileri zorunlu.
 3. **Rule #2 kotası bitti** — üç istisna (`76ddec4`, `133af72`, `601c147` çift) yeter; dördüncü revert edilir.
 4. **Executor'a hatırlatma:** kısa özet aşağıda.
 
 **Kısa Executor özeti (v7.15 sonrası):**
+
 > "1. Plan doc'a dokunma — Rule #14 + #25. Öneri → `docs/PROPOSALS/`. 2. Rule #24 footer'ı: `Verified-Against: origin/master HEAD = <gerçek-hash>`. 3. Kendi hash'lerini uydurmadan `git log --format=%H` ile teyit et. 4. Plan-dışı iş → PROPOSALS önce, kod sonra."
 
 ---
@@ -660,13 +688,13 @@ All items (A1–A5) verified. Autopilot control room, CI, indexes, prod readines
 
 **Delivery status (2026-07-07):**
 
-| Item | Status | Commit |
-|------|--------|--------|
-| B1. Real-time submit feedback (SSE) | ⬜ Not started | — |
-| B2. Reporter notification loop | ⬜ Not started | — |
-| B3. News → social queue | ✅ Shipped | `4cbeee2` — awaiting Accept-criteria verification |
-| B4. Autopilot/pre-triage dedup | ⬜ Unverified | Possibly folded into `a96c9ca` — Executor to confirm |
-| B5. KVKK/GDPR delete flow | ✅ Shipped | `4cbeee2` — awaiting Accept-criteria verification |
+| Item                                | Status         | Commit                                               |
+| ----------------------------------- | -------------- | ---------------------------------------------------- |
+| B1. Real-time submit feedback (SSE) | ⬜ Not started | —                                                    |
+| B2. Reporter notification loop      | ⬜ Not started | —                                                    |
+| B3. News → social queue             | ✅ Shipped     | `4cbeee2` — awaiting Accept-criteria verification    |
+| B4. Autopilot/pre-triage dedup      | ⬜ Unverified  | Possibly folded into `a96c9ca` — Executor to confirm |
+| B5. KVKK/GDPR delete flow           | ✅ Shipped     | `4cbeee2` — awaiting Accept-criteria verification    |
 
 **Next required Executor action:** Report B3 + B5 Accept-criteria pass/fail table with commit-level evidence; confirm B4 state; begin B1 as top priority.
 
@@ -682,12 +710,14 @@ All items (A1–A5) verified. Autopilot control room, CI, indexes, prod readines
 ### B2. Reporter notification loop — split into launch-required (B2a) and post-launch (B2b)
 
 **B2a — LAUNCH-REQUIRED (deadline Jul 25):**
+
 - **Immediate:** whistleblower confirmation email (verify `getWhistleblowerConfirmationEmail` fires reliably).
 - **On provider response:** new `getProviderResponseNotificationEmail()` in `src/emails/templates.ts` → reporter.
 - Infrastructure both need: one-click unsubscribe, per-user daily cap 3, `email_preferences` table with RLS.
 - _Accept:_ e2e demo with test reporter receiving both email types; unsubscribe works; daily cap enforced; bilingual.
 
 **B2b — POST-LAUNCH (executes in Stage E window; do not start before Aug 10):**
+
 - **On expert verification:** email reporter.
 - **Weekly digest for active reporters** (≥1 published incident): Monday stats digest, opt-in only.
 - _Accept:_ same standards as B2a, reported with Stage E.
@@ -721,6 +751,7 @@ These items were shipped without prior Architect approval. Retro-approved to avo
 > **v6 ecosystem note:** the Commission has published **draft guidance + a reporting template for Art. 73 serious incidents** (digital-strategy.ec.europa.eu, stakeholder consultation open). C2's API docs and the future Reporting Assistant (2027 Q3) must target that official template's field structure. Differentiation to state in docs: OneTrust/Prediction Guard sell compliance tooling to providers; ALPAR is the **independent public registry** — referee, not vendor.
 >
 > **v7.3 reality check (from 360° audit):**
+>
 > - **C1** — current `api_keys` schema is plain-text (no sha256, no tier, no client_type). **Launch-blocking security migration.** Split into C1a (hardening, MUST) + C1b (enterprise onboarding, SHOULD).
 > - **C2** — `docs/API.md` L3 claims "No REST endpoints are exposed" while 6 v1 endpoints are live. Wrong doc = bad first impression. Fix urgently.
 > - **C3** — usage metering is at 0%. Push to post-freeze.
@@ -744,11 +775,12 @@ These items were shipped without prior Architect approval. Retro-approved to avo
 - **Auth path change:** `src/app/api/v1/*/route.ts` — replace `key === row.api_key` with sha256 hash compare + `timingSafeEqual` guard. Add `last_used_at = now()` on successful match.
 - **Admin UI update:** `src/app/[locale]/admin/api-keys/page.tsx` renders tier, label, `last_used_at`, revoke button; "reveal key once at creation" pattern (key shown one time, sha256 stored).
 
-*Accept:* two test enterprise keys hold distinct sha256 hashes; a revoked key returns 401; unit test proves plain-text comparison path is dead code; `pnpm typecheck` + `pnpm test` green.
+_Accept:_ two test enterprise keys hold distinct sha256 hashes; a revoked key returns 401; unit test proves plain-text comparison path is dead code; `pnpm typecheck` + `pnpm test` green.
 
 **C1b. Enterprise onboarding (SHOULD — Aug 15).** Two real enterprise customers each hold their own key + revoke test. Complements C1a's schema readiness.
 
 **C2. API documentation fix (MUST — Jul 20).**
+
 - **`docs/API.md` L3** — delete the "No REST endpoints are exposed to external consumers" line **first**. This is misinformation and any external reader trusts it.
 - Add a **REST v1** section documenting the actually-live endpoints:
   - `GET /api/v1/incidents` — filters: `category`, `severity`, `eu_risk`, `provider`, `model`, `verification_level`, `since`, `limit`, `offset`
@@ -760,11 +792,12 @@ These items were shipped without prior Architect approval. Retro-approved to avo
 - Include tier limits (link to C4 once live), `verification_level` semantics, curl examples per endpoint.
 - Regenerate sample dataset into gitignored `exports/` (JSON + CSV).
 
-*Accept:* every documented curl runs against prod and returns 200; "No REST endpoints" string is removed from the entire repo (grep-verified).
+_Accept:_ every documented curl runs against prod and returns 200; "No REST endpoints" string is removed from the entire repo (grep-verified).
 
-**C3. Usage metering (Aug 10, post-freeze).** Upstash sliding-window keyed by `metering:{key_sha256}:{yyyy-mm-dd}` → `INCR + EXPIRE`. Admin UI: per-key 24h/7d/30d request counts. Optional: aggregate `api_usage_daily` view for reporting. *Accept:* counts visible in admin and correct after test calls.
+**C3. Usage metering (Aug 10, post-freeze).** Upstash sliding-window keyed by `metering:{key_sha256}:{yyyy-mm-dd}` → `INCR + EXPIRE`. Admin UI: per-key 24h/7d/30d request counts. Optional: aggregate `api_usage_daily` view for reporting. _Accept:_ counts visible in admin and correct after test calls.
 
 **C4. Tier-based rate limiting rewrite (Aug 10, post-freeze).**
+
 - **Current gap:** `src/lib/utils/rate-limit.ts` enforces per-minute IP-based limits; the plan requires per-day key-based limits with a per-minute burst ceiling.
 - **Founder decision required — recommended hybrid model:**
   - Free: 100/day + 5/min burst
@@ -772,9 +805,10 @@ These items were shipped without prior Architect approval. Retro-approved to avo
   - Enterprise: 10,000/day + 100/min burst
 - Migrate rate-limit key from `${bucket}:${ip}` to `${bucket}:${key_sha256}` (falls back to IP only when no key present).
 - Return 429 + `Retry-After` header from both the daily and burst limiters.
-- *Accept:* 101st request from a free key inside 24h → 429 with correct `Retry-After`; the same key with 1s intervals hits the burst limit at 6/min; unit tests cover both limiters.
+- _Accept:_ 101st request from a free key inside 24h → 429 with correct `Retry-After`; the same key with 1s intervals hits the burst limit at 6/min; unit tests cover both limiters.
 
 **C5. Embed widget & viral kit — ✅ ALREADY SHIPPED (v7.3 audit). Verification-only:**
+
 - `src/app/[locale]/incidents/[id]/embed/page.tsx` — copyable iframe/script variant, "Powered by ALPAR AI" footer link back to full incident.
 - `src/app/[locale]/incidents/[id]/opengraph-image.tsx` — dynamic OG image (title + TruthScore + severity badge).
 - `src/components/incidents/share-buttons.tsx` — X / LinkedIn / Copy Link.
@@ -782,7 +816,7 @@ These items were shipped without prior Architect approval. Retro-approved to avo
   1. Add a discovery link from the admin incident detail row → embed page.
   2. Facebook + Twitter card validators against 3 live incident URLs; screenshots into `docs/PROPOSALS/C5-verification.md`.
   3. External embed test — founder embeds one incident on any third-party HTML page; screenshot for the record.
-- *Accept:* validator reports + external embed screenshot exist; discovery link added.
+- _Accept:_ validator reports + external embed screenshot exist; discovery link added.
 
 ---
 
@@ -791,6 +825,7 @@ These items were shipped without prior Architect approval. Retro-approved to avo
 Feature freeze. Only P0/P1 fixes and queue flow monitoring.
 
 Prepare `docs/RUNBOOK_LAUNCH.md` before Aug 1:
+
 - Sentry >5 unresolved/hour → P0
 - Submit funnel `submit_start → submit_complete` conversion <50% → alarm
 - Cross-audit failure rate >20% in last hour → kill switch
@@ -798,9 +833,10 @@ Prepare `docs/RUNBOOK_LAUNCH.md` before Aug 1:
 - Rollback: `git revert HEAD && git push` (Vercel auto-deploys)
 - Contacts/escalation ladder
 
-**D-extra2. 🆕 Academic outreach pack** (Executor drafts; FOUNDER sends — Executor never contacts anyone): EN outreach email + 1-page PDF/markdown one-pager for university AI-governance groups. Target list: Harvard Berkman Klein Center, MIT Media Lab / AI governance, Stanford HAI, Oxford Internet Institute + the Academy page's existing "Target/Invited" tiers. Pitch: research access to the incident corpus (F2 portal), co-authorship on the Q4 "State of AI Incidents" report. Do NOT cite any specific survey/statistic unless the founder supplies a verified source. Files under `docs/launch-assets/academic/`. *Accept:* drafts exist, bilingual cover note for founder, zero external sends.
+**D-extra2. 🆕 Academic outreach pack** (Executor drafts; FOUNDER sends — Executor never contacts anyone): EN outreach email + 1-page PDF/markdown one-pager for university AI-governance groups. Target list: Harvard Berkman Klein Center, MIT Media Lab / AI governance, Stanford HAI, Oxford Internet Institute + the Academy page's existing "Target/Invited" tiers. Pitch: research access to the incident corpus (F2 portal), co-authorship on the Q4 "State of AI Incidents" report. Do NOT cite any specific survey/statistic unless the founder supplies a verified source. Files under `docs/launch-assets/academic/`. _Accept:_ drafts exist, bilingual cover note for founder, zero external sends.
 
 **D-extra. Launch day acquisition assets** (Executor prepares markdown drafts; founder sends):
+
 - Hacker News "Show HN" post (EN, ≤80 words + link)
 - Product Hunt page (title, tagline, 5 screenshots, first comment)
 - TR tech media pitch (Webrazzi, Shiftdelete, Technopat) — draft only
@@ -827,6 +863,7 @@ Reframed around "First 100 Real Users" milestone.
 **E6. Health check endpoint.** `/api/health` → DB + Upstash + last autopilot run status. _Accept:_ 200 OK; degraded when DB down.
 
 **E7. Growth dashboard (admin).** `/admin/growth`:
+
 - Daily signups (30d graph)
 - Daily submissions (organic vs auto-import, 30d)
 - Retention: % users with ≥2 incidents
@@ -865,16 +902,16 @@ Dependabot PRs: merge only after CI green (security patches same week; feature b
 
 > Sourced from the July 2026 ecosystem scan. **None of these are approved for implementation.** Each graduates into a stage only with an explicit Architect approval line. The Executor may write feasibility notes in `docs/PROPOSALS/` but writes no code for them.
 
-| ID | Idea | Why now | Moat effect |
-|----|------|---------|-------------|
-| I1 | **Incident Passport** — one-click export of an ALPAR incident in the Commission's official Art. 73 reporting-template field structure | Commission's draft template is public now; being format-compatible first = becoming the default drafting tool | Every exported passport carries ALPAR provenance |
-| I2 | **ALPAR MCP server / LLM tool** — expose the incident API as a tool AI agents can query ("has this model had incidents?") | Agent ecosystems are exploding; agents citing ALPAR = zero-CAC distribution | Becomes infrastructure, not a website |
-| I3 | **Provider Response SLA badge** — free, embeddable "responds within X days" badge for providers with claimed profiles | Free giveaway that makes providers advertise ALPAR themselves | Two-sided lock-in |
-| I4 | **Insurance/actuarial data feed** — anonymized incident frequency/severity by category for AI-liability underwriters | AI liability insurance is emerging with no loss-history data anywhere | First loss-history dataset in the category |
-| I5 | **Browser extension** — one-click "report this AI output" capturing URL + screenshot into the submit flow | Cuts submission friction to near zero | Volume growth engine |
-| I6 | **Model drift watch** — track provider model-card/version changes, correlate with incident spikes | Providers ship silent updates; nobody correlates them with failures | Unique longitudinal dataset |
-| I7 | **Research sandbox** — hosted notebooks over the PII-masked corpus for approved academics (extends F2) | Deepens university partnerships beyond CSV export | Academic citations = credibility flywheel |
-| I8 | **KVKK bridge** — TR-localized incident notification formatting for Turkish public institutions | ALPAR's TR identity is a wedge no US competitor has | Home-market regulatory moat |
+| ID  | Idea                                                                                                                                  | Why now                                                                                                       | Moat effect                                      |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| I1  | **Incident Passport** — one-click export of an ALPAR incident in the Commission's official Art. 73 reporting-template field structure | Commission's draft template is public now; being format-compatible first = becoming the default drafting tool | Every exported passport carries ALPAR provenance |
+| I2  | **ALPAR MCP server / LLM tool** — expose the incident API as a tool AI agents can query ("has this model had incidents?")             | Agent ecosystems are exploding; agents citing ALPAR = zero-CAC distribution                                   | Becomes infrastructure, not a website            |
+| I3  | **Provider Response SLA badge** — free, embeddable "responds within X days" badge for providers with claimed profiles                 | Free giveaway that makes providers advertise ALPAR themselves                                                 | Two-sided lock-in                                |
+| I4  | **Insurance/actuarial data feed** — anonymized incident frequency/severity by category for AI-liability underwriters                  | AI liability insurance is emerging with no loss-history data anywhere                                         | First loss-history dataset in the category       |
+| I5  | **Browser extension** — one-click "report this AI output" capturing URL + screenshot into the submit flow                             | Cuts submission friction to near zero                                                                         | Volume growth engine                             |
+| I6  | **Model drift watch** — track provider model-card/version changes, correlate with incident spikes                                     | Providers ship silent updates; nobody correlates them with failures                                           | Unique longitudinal dataset                      |
+| I7  | **Research sandbox** — hosted notebooks over the PII-masked corpus for approved academics (extends F2)                                | Deepens university partnerships beyond CSV export                                                             | Academic citations = credibility flywheel        |
+| I8  | **KVKK bridge** — TR-localized incident notification formatting for Turkish public institutions                                       | ALPAR's TR identity is a wedge no US competitor has                                                           | Home-market regulatory moat                      |
 
 ### 🌱 I-SERIES → Admin Panel Görünürlüğü (Antigravity görevi — M-series biter bitmez yap)
 
@@ -884,23 +921,25 @@ Dependabot PRs: merge only after CI green (security patches same week; feature b
 
 Her satır ayrı `INSERT … WHERE NOT EXISTS` ile idempotent eklenir (title başına göre `LIKE 'IX —%'`).
 
-| title | description (TR) | priority | status |
-|-------|-----------------|----------|--------|
-| I1 — Incident Passport (Art. 73 resmi şablon çıktısı) | ALPAR kayıtlarını Komisyon'un resmi Art. 73 bildiri şablonu alanlarına tek tıkla dönüştürür. Taslak şablon kamuya açık; format uyumlu ilk platform olmak varsayılan hazırlık aracı olma fırsatı. Her dışa aktarılan pasaport ALPAR kökenini taşır. | high | idea |
-| I2 — ALPAR MCP Server / LLM Aracı | Olay API'sini yapay zeka ajanlarının sorgulayabileceği bir araç olarak sunar. Ajan ekosistemi büyüyor; ALPAR'ı kullanan ajanlar sıfır CAC dağıtım kanalı. Platform altyapıya dönüşür. | high | idea |
-| I3 — Sağlayıcı Yanıt SLA Rozeti | Talep edilmiş profilli sağlayıcılar için gömülebilir ücretsiz "X gün içinde yanıtlar" rozeti. Sağlayıcılar ALPAR'ı kendileri reklam eder. İki taraflı kilit. | medium | idea |
-| I4 — Sigorta/Aktüeryal Veri Akışı | AI sorumluluk sigortacıları için kategori bazlı anonim olay sıklık/ağırlık verileri. Pazar büyüyor, zarar geçmişi yok. Kategoride ilk zarar verisi. | low | idea |
-| I5 — Tarayıcı Eklentisi | URL + ekran görüntüsü yakalayarak submit akışına tek tıkla raporlama. Raporlama yükünü sıfıra yakın düşürür. Hacim büyüme motoru. | low | idea |
-| I6 — Model Sürüklenme İzleme | Sağlayıcı model kartı/sürüm değişikliklerini izler, olay artışlarıyla ilişkilendirir. Sessiz güncellemeler yaygın; kimse başarısızlıklarla ilişkilendirmiyor. Benzersiz uzunlamasına veri. | low | idea |
-| I7 — Araştırma Sanal Ortamı | PII maskelenmiş veri seti üzerinde onaylı akademisyenler için barındırılan not defterleri (F2 genişletmesi). Akademik alıntılar güvenilirlik vlanı oluşturur. | low | idea |
-| I8 — KVKK Köprüsü | Türk kamu kurumları için KVKK uyumlu yerelleştirilmiş olay bildirim biçimlendirmesi. ALPAR'ın TR kimliği hiçbir ABD rakibinin sahip olmadığı kama. Yerel pazar düzenleyici hendeği. | medium | idea |
+| title                                                 | description (TR)                                                                                                                                                                                                                                   | priority | status |
+| ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ------ |
+| I1 — Incident Passport (Art. 73 resmi şablon çıktısı) | ALPAR kayıtlarını Komisyon'un resmi Art. 73 bildiri şablonu alanlarına tek tıkla dönüştürür. Taslak şablon kamuya açık; format uyumlu ilk platform olmak varsayılan hazırlık aracı olma fırsatı. Her dışa aktarılan pasaport ALPAR kökenini taşır. | high     | idea   |
+| I2 — ALPAR MCP Server / LLM Aracı                     | Olay API'sini yapay zeka ajanlarının sorgulayabileceği bir araç olarak sunar. Ajan ekosistemi büyüyor; ALPAR'ı kullanan ajanlar sıfır CAC dağıtım kanalı. Platform altyapıya dönüşür.                                                              | high     | idea   |
+| I3 — Sağlayıcı Yanıt SLA Rozeti                       | Talep edilmiş profilli sağlayıcılar için gömülebilir ücretsiz "X gün içinde yanıtlar" rozeti. Sağlayıcılar ALPAR'ı kendileri reklam eder. İki taraflı kilit.                                                                                       | medium   | idea   |
+| I4 — Sigorta/Aktüeryal Veri Akışı                     | AI sorumluluk sigortacıları için kategori bazlı anonim olay sıklık/ağırlık verileri. Pazar büyüyor, zarar geçmişi yok. Kategoride ilk zarar verisi.                                                                                                | low      | idea   |
+| I5 — Tarayıcı Eklentisi                               | URL + ekran görüntüsü yakalayarak submit akışına tek tıkla raporlama. Raporlama yükünü sıfıra yakın düşürür. Hacim büyüme motoru.                                                                                                                  | low      | idea   |
+| I6 — Model Sürüklenme İzleme                          | Sağlayıcı model kartı/sürüm değişikliklerini izler, olay artışlarıyla ilişkilendirir. Sessiz güncellemeler yaygın; kimse başarısızlıklarla ilişkilendirmiyor. Benzersiz uzunlamasına veri.                                                         | low      | idea   |
+| I7 — Araştırma Sanal Ortamı                           | PII maskelenmiş veri seti üzerinde onaylı akademisyenler için barındırılan not defterleri (F2 genişletmesi). Akademik alıntılar güvenilirlik vlanı oluşturur.                                                                                      | low      | idea   |
+| I8 — KVKK Köprüsü                                     | Türk kamu kurumları için KVKK uyumlu yerelleştirilmiş olay bildirim biçimlendirmesi. ALPAR'ın TR kimliği hiçbir ABD rakibinin sahip olmadığı kama. Yerel pazar düzenleyici hendeği.                                                                | medium   | idea   |
 
 **Dosya sonu zorunlu yorum (Standing Rule #12):**
+
 ```sql
 -- ROLLBACK: DELETE FROM public.strategy_innovations WHERE title ~ '^I[1-8] —';
 ```
 
 **Accept kriterleri:**
+
 - `/admin/innovations` sayfasında tam 8 I-serisi kaydı görünür
 - Anon kullanıcı bu kayıtları görmez (RLS korumalı)
 - Migration dosyası rollback yorumu içerir
@@ -923,6 +962,7 @@ Her satır ayrı `INSERT … WHERE NOT EXISTS` ile idempotent eklenir (title ba�
 3. **No retrospective re-audit pipeline** — the cross-audit engine is wired for new submissions only. Seeded incidents never ran through AI scoring, TruthScore calculation, or source validation.
 
 **What to do:**
+
 - **V2** (QUEUE — Jul 9, already in queue): register cron → content pipeline unlocks immediately.
 - **H1–H3** (QUEUE — already in queue): badge + copy fix → set honest expectations.
 - **J1a** (I-SERIES PROPOSAL — post-launch, Aug 10+): **Retrospective Batch Auditor** — background cron that re-audits seeded incidents in order of `created_at` DESC, 10/day, at off-peak hours. **Superseded by K-series below (v7.10):** the "cross-audit engine" J1a refers to already exists (`src/lib/ai/cross-audit-engine.ts` + `openrouter-gateway.ts`) with 5 wired free-tier providers — J1a is not new infrastructure, it's a scheduling problem. See K-SERIES for the concrete wiring, cost model ($0, not $5/day — free tier, not paid), and the mandatory seed-only safety boundary.
@@ -936,11 +976,13 @@ Her satır ayrı `INSERT … WHERE NOT EXISTS` ile idempotent eklenir (title ba�
 **Two distinct use cases with different solutions:**
 
 **A) Outbound campaign email** (journalist pitches, grant follow-ups, partner outreach):
+
 - **J2a** (I-SERIES PROPOSAL): **Outreach Queue Agent** — admin panel outreach hub (B-extra.2, already shipped as `f4cd43b`) gets a Playwright/browser-agent layer. Founder writes a template once; agent personalizes + sends via Resend with HMAC-signed unsubscribe footer (reuses U1/U2). Standing Rule #6 preserved: every send still needs an approved queue item — agent executes, not decides. Rate cap: 50/day.
 - **Pre-condition:** U1 (unsubscribe endpoint) MUST ship first — illegal to send campaign mail without one-click unsub.
 
 **B) Inbound tracking** (replies from journalists, grant agencies, partners):
-- **J2b** (I-SERIES PROPOSAL): **Gmail Read Integration** — OAuth2 Gmail read-only scope (no send), watches a dedicated `outreach@alparai.com` inbox, extracts reply sentiment + entity → logs into the outreach hub's `outreach_logs` table. No PII stored beyond sender domain + reply status. Triggers admin notification on positive reply. *Note: Gmail MCP server exists in this environment but requires OAuth flow — requires founder authorization first.*
+
+- **J2b** (I-SERIES PROPOSAL): **Gmail Read Integration** — OAuth2 Gmail read-only scope (no send), watches a dedicated `outreach@alparai.com` inbox, extracts reply sentiment + entity → logs into the outreach hub's `outreach_logs` table. No PII stored beyond sender domain + reply status. Triggers admin notification on positive reply. _Note: Gmail MCP server exists in this environment but requires OAuth flow — requires founder authorization first._
 - **Blocking factor:** Gmail MCP OAuth not yet authorized for this session. Founder authorizes via claude.ai connector settings → agent can then read inbox programmatically.
 
 **Priority verdict:** J2a is higher priority (zero new auth needed, builds on shipped infrastructure). J2b is powerful but requires founder OAuth step first.
@@ -953,15 +995,16 @@ Her satır ayrı `INSERT … WHERE NOT EXISTS` ile idempotent eklenir (title ba�
 
 **Opportunity map (TR + EU):**
 
-| Program | Relevance | Deadline pattern | Fit |
-|---------|-----------|-----------------|-----|
-| TÜBİTAK 1512 (Teknogirişim) | Pre-seed up to ₺3M | Rolling / 2× yr | Strong — AI safety + public data |
-| KOSGEB Dijital Dönüşüm | SME digital | Rolling | Medium |
-| İSTKA Yenilikçi Girişim | Istanbul-based | Annual | Strong — EU AI Act alignment |
-| EU Horizon Europe (ICT-50) | AI governance research | Annual Mar/Sep | Very strong — Art. 73 angle |
-| EU Digital Europe Trustworthy AI | AI safety infrastructure | Biannual | Very strong |
+| Program                          | Relevance                | Deadline pattern | Fit                              |
+| -------------------------------- | ------------------------ | ---------------- | -------------------------------- |
+| TÜBİTAK 1512 (Teknogirişim)      | Pre-seed up to ₺3M       | Rolling / 2× yr  | Strong — AI safety + public data |
+| KOSGEB Dijital Dönüşüm           | SME digital              | Rolling          | Medium                           |
+| İSTKA Yenilikçi Girişim          | Istanbul-based           | Annual           | Strong — EU AI Act alignment     |
+| EU Horizon Europe (ICT-50)       | AI governance research   | Annual Mar/Sep   | Very strong — Art. 73 angle      |
+| EU Digital Europe Trustworthy AI | AI safety infrastructure | Biannual         | Very strong                      |
 
 **J3a** (I-SERIES PROPOSAL — medium priority, post-launch): **Grant Radar + Application Agent**
+
 - Phase 1 (research, 1 day): Playwright browser agent scans TÜBİTAK, KOSGEB, İSTKA, EU Funding Portal weekly; extracts deadline, eligibility, required docs → stores in `grant_opportunities` table (admin-only).
 - Phase 2 (application, founder-driven): Admin panel shows ranked opportunities with ALPAR's fit score. Founder selects → agent pre-fills PDF/online forms using the platform's existing ARCHITECTURE.md, API.md, metrics data. Human submits — agent never submits autonomously.
 - **Critical rule:** Agent pre-fills, founder submits. No autonomous form submission. Government portals have CAPTCHAs and legal attestations that require human sign-off.
@@ -973,18 +1016,18 @@ Her satır ayrı `INSERT … WHERE NOT EXISTS` ile idempotent eklenir (title ba�
 
 **Root cause (5 gaps, in severity order):**
 
-| Gap | Current state | Risk/Cost |
-|-----|--------------|-----------|
-| **Plain-text storage** | `api_keys` table: `api_key TEXT` | Leak = all provider accounts compromised |
-| **No usage metering** | Cross-audit fires 6–8 API calls/incident; no per-model cost log | Cost spike invisible until bill arrives |
-| **Flat model selection** | Same model tier for every incident regardless of complexity | 10× overspend on simple/short incidents |
-| **No per-provider budget ceiling** | One provider rate-limit doesn't trigger failover | Single-point cost explosion |
-| **No batch processing** | Each incident processed individually; OpenAI/Anthropic support batches at 50% discount | Seed re-audit at full price |
+| Gap                                | Current state                                                                          | Risk/Cost                                |
+| ---------------------------------- | -------------------------------------------------------------------------------------- | ---------------------------------------- |
+| **Plain-text storage**             | `api_keys` table: `api_key TEXT`                                                       | Leak = all provider accounts compromised |
+| **No usage metering**              | Cross-audit fires 6–8 API calls/incident; no per-model cost log                        | Cost spike invisible until bill arrives  |
+| **Flat model selection**           | Same model tier for every incident regardless of complexity                            | 10× overspend on simple/short incidents  |
+| **No per-provider budget ceiling** | One provider rate-limit doesn't trigger failover                                       | Single-point cost explosion              |
+| **No batch processing**            | Each incident processed individually; OpenAI/Anthropic support batches at 50% discount | Seed re-audit at full price              |
 
 **Fixes (ordered by ROI):**
 
 - **C1a** (QUEUE — Jul 15, already queued): sha256 migration + tier + client_type columns → **plain-text gap closed.**
-- **J4a** (QUEUE — add to work queue, post-freeze Aug 10): **Dynamic Model Router** — replace hardcoded model selection in the cross-audit engine with a router that picks model by incident complexity: short description (<50 words) → Gemini Flash / GPT-4o-mini ($0.15/M); medium → Claude Haiku 4.5; long/high-risk → Claude Sonnet 5 / GPT-4o. Estimated 60–70% cost reduction on typical submission volume. *Implementation:* single function `selectModelTier(incident: Incident): ModelConfig` in `src/lib/audit/model-router.ts`; cross-audit engine calls it instead of hardcoded config.
+- **J4a** (QUEUE — add to work queue, post-freeze Aug 10): **Dynamic Model Router** — replace hardcoded model selection in the cross-audit engine with a router that picks model by incident complexity: short description (<50 words) → Gemini Flash / GPT-4o-mini ($0.15/M); medium → Claude Haiku 4.5; long/high-risk → Claude Sonnet 5 / GPT-4o. Estimated 60–70% cost reduction on typical submission volume. _Implementation:_ single function `selectModelTier(incident: Incident): ModelConfig` in `src/lib/audit/model-router.ts`; cross-audit engine calls it instead of hardcoded config.
 - **J4b** (QUEUE — add to work queue, post-freeze Aug 10): **Batch Re-audit** for J1a seed backlog — uses OpenAI Batch API (50% discount) or Vertex batch prediction. Processes 100 seeds/batch at off-peak. Requires J1a approved first.
 - **C3** (already in queue, post-freeze): usage metering → per-call cost logging.
 - **C4** (already in queue, post-freeze): tier rate limiting → per-key daily budget caps.
@@ -998,6 +1041,7 @@ Her satır ayrı `INSERT … WHERE NOT EXISTS` ile idempotent eklenir (title ba�
 > Founder's request: use the free-tier quotas of the API keys already in the system, have models cross-question each other for ethics testing, and use the 409-incident backlog as the source material. **Code audit confirms the mechanism already exists** — it's a wiring gap, not a build gap.
 
 **What's already built (`src/lib/ai/openrouter-gateway.ts` + `cross-audit-engine.ts`):**
+
 - **5 free-tier providers wired with circuit-breaker failover:** OpenRouter (`deepseek/deepseek-chat`, `meta-llama/llama-3.3-70b:free`, `qwen/qwen-2.5-72b:free`), Google Gemini (`gemini-1.5-flash`), Cohere (`command-r`), HuggingFace (`Llama-3.3-70B-Instruct`), Blackbox — organized into `TRIAGE_SLOT_1/2/3_CHAIN` (each slot fails over across all 5 providers if one is rate-limited).
 - **A 4-stage cross-questioning debate already runs per-incident:** `runInitialEvaluation` → `runChallenge` (one model interrogates another's evaluation) → `runRebuttal` → `runSupremeCourtAdjudication` (premium tier: `gemini-1.5-pro` / `claude-3.5-sonnet` / `gpt-4o` as final judge). This **is** the founder's "models ask each other questions to ethics-test" mechanism.
 - **The gap:** this pipeline (`runCrossAudit`) only fires on new submissions. It has never been pointed at the 405 seed incidents.
@@ -1024,29 +1068,32 @@ Her satır ayrı `INSERT … WHERE NOT EXISTS` ile idempotent eklenir (title ba�
 
 **Category ladder (8 total, ordered by ALPAR-differentiation ROI):**
 
-| ID | Category | Question bank source | Why it wins for ALPAR | Phase |
-|----|----------|---------------------|----------------------|-------|
-| **K5** | **Ethics / Safety** (original) | The 409 AI-incident seed backlog — real-world scenarios, not synthetic — plus a curated adversarial jailbreak set | Nobody else grounds ethics tests in a real incident registry. This IS the moat. | **MVP** |
-| **K6** | **Hallucination / Factuality** | TruthfulQA (public) + 200 Turkish-context factual claims curated by us | Turkish factuality is under-benchmarked; global TruthfulQA gives us comparability | **MVP** |
-| **K7** | **Turkish Language Competence** | MMLU-TR (translated + verified) + a bespoke TR legal/medical/regulatory prompt set | Nobody benchmarks TR seriously. This owns the TR market. | **MVP** |
-| **K8** | **EU AI Act Reasoning** | 120 Art. 73 hypothetical scenarios curated by us against the taxonomy in `docs/EU_AI_ACT_TAXONOMY.md` | Nobody has this. Direct wedge into 2027 Dec 2 moment. | **MVP** |
-| **K9** | **Math / Reasoning** | GSM8K + MATH (public) | Comparability to standard leaderboards; commodity but essential | Full platform |
-| **K10** | **Instruction Following** | IFEval (public) | Cheap to run, industry-comparable | Full platform |
-| **K11** | **Robustness / Adversarial** | Jailbreak dataset + prompt-injection corpus | Direct tie to K5 ethics — shared question bank, different rubric | Full platform |
-| **K12** | **Long-Context Retrieval** | Needle-in-haystack, adapted for context windows ≥32k | Standard capability check | Full platform |
+| ID      | Category                        | Question bank source                                                                                              | Why it wins for ALPAR                                                             | Phase         |
+| ------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------- |
+| **K5**  | **Ethics / Safety** (original)  | The 409 AI-incident seed backlog — real-world scenarios, not synthetic — plus a curated adversarial jailbreak set | Nobody else grounds ethics tests in a real incident registry. This IS the moat.   | **MVP**       |
+| **K6**  | **Hallucination / Factuality**  | TruthfulQA (public) + 200 Turkish-context factual claims curated by us                                            | Turkish factuality is under-benchmarked; global TruthfulQA gives us comparability | **MVP**       |
+| **K7**  | **Turkish Language Competence** | MMLU-TR (translated + verified) + a bespoke TR legal/medical/regulatory prompt set                                | Nobody benchmarks TR seriously. This owns the TR market.                          | **MVP**       |
+| **K8**  | **EU AI Act Reasoning**         | 120 Art. 73 hypothetical scenarios curated by us against the taxonomy in `docs/EU_AI_ACT_TAXONOMY.md`             | Nobody has this. Direct wedge into 2027 Dec 2 moment.                             | **MVP**       |
+| **K9**  | **Math / Reasoning**            | GSM8K + MATH (public)                                                                                             | Comparability to standard leaderboards; commodity but essential                   | Full platform |
+| **K10** | **Instruction Following**       | IFEval (public)                                                                                                   | Cheap to run, industry-comparable                                                 | Full platform |
+| **K11** | **Robustness / Adversarial**    | Jailbreak dataset + prompt-injection corpus                                                                       | Direct tie to K5 ethics — shared question bank, different rubric                  | Full platform |
+| **K12** | **Long-Context Retrieval**      | Needle-in-haystack, adapted for context windows ≥32k                                                              | Standard capability check                                                         | Full platform |
 
 **Rating output (public):**
+
 - `/ratings/{model-slug}` page: category scores (0–100), overall composite, category strength/weakness callouts, last-audited date, sample-size disclosure
 - `/ratings` leaderboard: filterable by category, provider, tier (free vs paid), release date
 - Public JSON API `/api/v1/ratings/{model}` — feeds the future Reporting Assistant and third-party integrators
 - **Methodology page** (`/methodology/benchmarks`) with question-bank composition, evaluation rubric, cross-model debate transcripts (redacted where prompts are proprietary) — this earns academic credibility
 
 **Scoring architecture (extends K-CORE):**
+
 - **Each category has a scorer prompt** stored in `src/lib/benchmarks/categories/{k5,k6,…}.ts` — a plain TypeScript module exporting `{ id, name, rubric, extractScore }`. Adding K13 = one new file + one config row.
 - **Cross-model rubric:** the same debate mechanism (evaluate → challenge → rebut → adjudicate) runs on each answer. This is unique — nobody else runs multi-model adjudication on benchmark answers; they just compare raw outputs. Multi-model adjudication is the methodological differentiator.
 - **Statistical rigor:** minimum 100 questions per category per model per run; Wilson score interval reported alongside every rating; re-audit trigger when model version changes (K6 ties to J6 — model drift watch).
 
 **Safety boundaries (extend K3 seed-only rule):**
+
 1. Benchmark runs **never** touch `user_submitted` incidents (K3 preserved verbatim).
 2. Question banks with proprietary/licensed content stay server-side; only aggregate scores + non-derivable examples are published.
 3. Adversarial/jailbreak prompts (K11) run under a separate feature flag (`ENABLE_ADVERSARIAL_BENCHMARK`) with rate-limit + admin-only trigger — no scheduled adversarial runs, no automated pipeline. **The founder must authorize each adversarial run manually** (prevents provider ToS violations from automated jailbreak attempts).
@@ -1054,16 +1101,17 @@ Her satır ayrı `INSERT … WHERE NOT EXISTS` ile idempotent eklenir (title ba�
 
 **Phase plan (respects launch discipline):**
 
-| Phase | Window | Deliverable |
-|-------|--------|-------------|
-| **K-CORE** | Aug 10 – Aug 25 | K1–K4 shipped; seed re-audit running silently |
-| **K-MVP** (K5+K6+K7+K8) | Aug 26 – Sep 15 | 4 categories live; `/ratings` page + methodology doc published; opening blog post pitched to press |
-| **K-Full** (K9–K12) | Sep 16 – Dec 15 | 4 more categories; public JSON API v1; academic partnership outreach begins (F2 tie-in) |
-| **K-Product** (2027 Q1) | Jan – Mar 2027 | Ratings integrated into Compliance Readiness Dashboard; enterprise/paid tier with per-model alerts, private benchmarks, white-label reports |
+| Phase                   | Window          | Deliverable                                                                                                                                 |
+| ----------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **K-CORE**              | Aug 10 – Aug 25 | K1–K4 shipped; seed re-audit running silently                                                                                               |
+| **K-MVP** (K5+K6+K7+K8) | Aug 26 – Sep 15 | 4 categories live; `/ratings` page + methodology doc published; opening blog post pitched to press                                          |
+| **K-Full** (K9–K12)     | Sep 16 – Dec 15 | 4 more categories; public JSON API v1; academic partnership outreach begins (F2 tie-in)                                                     |
+| **K-Product** (2027 Q1) | Jan – Mar 2027  | Ratings integrated into Compliance Readiness Dashboard; enterprise/paid tier with per-model alerts, private benchmarks, white-label reports |
 
 **Cost model:** all 8 MVP categories run on K-CORE's free-tier chains. Estimated spend at MVP: **$0**. Estimated spend at K-Full with 30 models × 8 categories × 100 questions × 4 debate stages = 96k free-tier calls/quarter, well inside combined provider free quotas (OpenRouter free ≈no daily cap but per-model RPM; Google AI Studio ≈1500/day; Cohere trial ≈10k/month). Scheduler enforces daily budgets per provider so no single quota blocks a run.
 
 **Founder decisions required (before K-MVP starts, Aug 25):**
+
 1. **Model roster for MVP.** Recommendation: top 15 models by public API access (GPT-4o, GPT-4o-mini, Claude 3.5 Sonnet, Claude Haiku, Gemini 1.5 Pro/Flash, Llama 3.3 70B, Qwen 2.5 72B, DeepSeek Chat, Mistral Large, Command R+, Grok-2, plus 3 open-source finalists). Founder confirms or edits.
 2. **Publication cadence.** Recommendation: weekly re-audit → `/ratings` updates weekly. Founder can choose bi-weekly if free-tier quotas tighten.
 3. **60-day pre-notification recipient list.** Founder provides the "notify before publishing rating" contact per provider (Anthropic, OpenAI, Google, Meta, etc.); Executor drafts a template email.
@@ -1072,6 +1120,7 @@ Her satır ayrı `INSERT … WHERE NOT EXISTS` ile idempotent eklenir (title ba�
 **Accept criteria (K-MVP):** 4 categories live at `/ratings`; 15 models rated in each; methodology page published; opening announcement blog live; zero `user_submitted` data used; zero paid-API spend attributable to K-MVP.
 
 **What K-BENCHMARK is NOT:**
+
 - Not a replacement for LMSYS Chatbot Arena — that's crowdsourced preference; we're rubric-graded on structured categories.
 - Not a real-time SaaS competitive with Vellum/Braintrust — those are eval tools for builders; we are a **public independent rater** (Moody's, not GitHub).
 - Not a hardened AI safety red-team (yet) — K11 is a limited robustness surface, not a full red-team program.
@@ -1086,15 +1135,15 @@ Her satır ayrı `INSERT … WHERE NOT EXISTS` ile idempotent eklenir (title ba�
 
 Founder recruits 5-7 named experts by **Jul 30** (Aug 2 launch'ta duyurulur):
 
-| Koltuk | Profil | Neden |
-|--------|--------|-------|
-| 1 | Hukuk (TR) — KVKK + EU AI Act uzmanı avukat / hukuk profesörü | Türkiye pazar hendeği |
-| 2 | Hukuk (EU) — AI Act şerh yazarı Avrupalı hukukçu | 2027 Aralık konumu |
-| 3 | CS / AI Safety — yayınlı Türk veya EU profesör | K-BENCHMARK rubric onayı |
-| 4 | Etik / STS — AI etiği veya STS akademisyeni | K5 etik kategorisi güvenilirliği |
-| 5 | Sektör pratisyeni — büyük tech'te AI risk / güvenlik lideri (kişisel kapasite) | Provider dünyasında güven |
-| 6 | Gazeteci — tech ethics beat'inde kıdemli | Basın erişimi + hikaye çerçeveleme |
-| 7 | KVKK / regülatör — KVKK Kurumu eski çalışanı veya benzeri | Compliance konumu |
+| Koltuk | Profil                                                                         | Neden                              |
+| ------ | ------------------------------------------------------------------------------ | ---------------------------------- |
+| 1      | Hukuk (TR) — KVKK + EU AI Act uzmanı avukat / hukuk profesörü                  | Türkiye pazar hendeği              |
+| 2      | Hukuk (EU) — AI Act şerh yazarı Avrupalı hukukçu                               | 2027 Aralık konumu                 |
+| 3      | CS / AI Safety — yayınlı Türk veya EU profesör                                 | K-BENCHMARK rubric onayı           |
+| 4      | Etik / STS — AI etiği veya STS akademisyeni                                    | K5 etik kategorisi güvenilirliği   |
+| 5      | Sektör pratisyeni — büyük tech'te AI risk / güvenlik lideri (kişisel kapasite) | Provider dünyasında güven          |
+| 6      | Gazeteci — tech ethics beat'inde kıdemli                                       | Basın erişimi + hikaye çerçeveleme |
+| 7      | KVKK / regülatör — KVKK Kurumu eski çalışanı veya benzeri                      | Compliance konumu                  |
 
 **Yapı:** kişisel kapasite (kurumları bağlamaz), 1 yıl dönme, yılda 2 sanal toplantı, ücret **yok** (equity yok — nötr konum için önemli), sadece yıllık $500 "araştırma bursu" (nominal). İsim + kısa biyografi + fotoğraf `/about/advisory-board` sayfasında. Yeni migration `advisory_board_members` tablosu (RLS: herkes okur; sadece admin düzenler).
 
@@ -1105,18 +1154,20 @@ Founder recruits 5-7 named experts by **Jul 30** (Aug 2 launch'ta duyurulur):
 ### L2 — Üniversite İşbirlikleri (MOU) — **P0 post-launch**
 
 Formal Memoranda of Understanding.
+
 - **TR öncelik:** Boğaziçi CmpE, ODTÜ CENG (Bilkent, Sabancı, Koç yedek)
 - **EU öncelik:** TU Delft AI Ethics, ETH Zürich AI Center, TU Munich, KU Leuven CiTiP, LMU Munich
 
 MOU iskeleti: (a) PII-maskeli veri seti araştırmacılara ücretsiz erişim (I7 Research Sandbox uzantısı), (b) yılda 1 ortak yayın hedefi, (c) öğrenci staj/tez pipeline'ı, (d) karşılıklı adres/hesap. Executor MOU şablonu + `outreach_logs` içinde `university_mous` kanalı hazırlar; founder yürütür.
 
-*Kill/pivot:* L2 kickoff'undan 12 hafta sonra hiç MOU yoksa → L6 (faculty fellowship) tetikleyici olarak strateji değişir: üniversitelere para → onlar bize adres.
+_Kill/pivot:_ L2 kickoff'undan 12 hafta sonra hiç MOU yoksa → L6 (faculty fellowship) tetikleyici olarak strateji değişir: üniversitelere para → onlar bize adres.
 
 ### L3 — Genişletilmiş Uzman Doğrulama Ağı (F1++)
 
 F1 Expert Portal zaten planlı — L3 onu **dağıtık uzman ağı**na dönüştürür. Platformda oturan uzmanlar + **~30 alan uzmanı** email ile davet edilir. Her uzman haftada 3–5 olay doğrular (kategori: sağlık AI, otonom araç, işe alım yanlılığı, TR yasal, EU regülasyon).
 
 **Motivasyon modeli:**
+
 - **Rep-tabanlı** (varsayılan): açık leaderboard — "En çok doğrulama yapan uzmanlar 2026". Ücret yok.
 - **Sembolik ücret** (opsiyonel — founder kararı): €20/doğrulama, yılda maks. €500/uzman. TR: freelance faturası; EU: cross-border vergi.
 
@@ -1126,19 +1177,20 @@ F1 Expert Portal zaten planlı — L3 onu **dağıtık uzman ağı**na dönüşt
 
 Speaking + email duyurusu + karşılıklı içerik alışverişi:
 
-| Kurum | Değer |
-|-------|-------|
-| TÜBA (Türkiye Bilimler Akademisi) | Akademik meşruiyet |
-| İstanbul Barosu AI Komitesi | Hukuki topluluk erişimi |
-| IEEE Turkey / ACM Turkey Chapter | Mühendis kitle |
-| Alternatif Bilişim, Yeşil Ekonomi Derneği (dijital haklar STK'ları) | Sivil toplum güveni |
-| EU AI Alliance | AB kurumlarına erişim |
+| Kurum                                                               | Değer                   |
+| ------------------------------------------------------------------- | ----------------------- |
+| TÜBA (Türkiye Bilimler Akademisi)                                   | Akademik meşruiyet      |
+| İstanbul Barosu AI Komitesi                                         | Hukuki topluluk erişimi |
+| IEEE Turkey / ACM Turkey Chapter                                    | Mühendis kitle          |
+| Alternatif Bilişim, Yeşil Ekonomi Derneği (dijital haklar STK'ları) | Sivil toplum güveni     |
+| EU AI Alliance                                                      | AB kurumlarına erişim   |
 
 Executor iletişim listesi + davet mektubu şablonu hazırlar; founder telefonları açar.
 
 ### L5 — Üniversite Ders Entegrasyonu
 
 "AI Ethics / AI Safety / Data Ethics" derslerini hedefle:
+
 - Ücretsiz **eğitmen hesabı** (`role = 'instructor'` yeni tier)
 - **Küratörlü olay paketi** — kategoriye göre 20–30 olay + tartışma soruları PDF
 - **Ödev şablonları** — "Bu olayı Art. 73 taksonomisine haritala"
@@ -1159,6 +1211,7 @@ Her büyük üniversitede 2–5 lisans/yüksek lisans öğrencisi. Ücretsiz + r
 ### L8 — Profesyonel Kullanıcı Katmanları
 
 Farklı iş rolleri farklı UI ister. Q1 2027 CRD (Compliance Readiness Dashboard) genişletmesi:
+
 - **AI Compliance Officer** görünümü: uyum takvimi, provider profil takibi
 - **Gazeteci** görünümü: yeni olay uyarıları (konu filtresi), doğrudan uzman iletişimi
 - **Hukuk pratisyeni** görünümü: dava-benzeri olay arama, taksonomi filtresi, PDF ihracı
@@ -1170,32 +1223,33 @@ Her katman `role_view` tercihi + varsayılan dashboard.
 
 L1 kurulundan farklı: 3–5 kişilik **teknik** komite. Yılda 1 kez TruthScore + K-BENCHMARK rubric'lerini bağımsız gözden geçirir, kamu raporu yayınlar. Bu, 2027 Horizon'daki "methodology audit" satırının somut hali. Üyeler L1'den ayrı olmalı (çakışma riski). **P0** — K-MVP çıktıktan sonra en erken saldırı yüzeyi metodoloji olduğu için önemi bu noktada zirve yapar.
 
-*Rapor değişiklik gerektirirse:* Executor migration yapar; komite raporu `docs/METHODOLOGY_AUDITS/YYYY.md` altına kalıcı yayınlanır.
+_Rapor değişiklik gerektirirse:_ Executor migration yapar; komite raporu `docs/METHODOLOGY_AUDITS/YYYY.md` altına kalıcı yayınlanır.
 
 ### L10 — Peer-Reviewed Yayınlar
 
 Founder + Architect (Claude eş-yazar) tarafından hedeflenmiş konferanslar:
+
 - **ACM FAccT** — deadline Ocak
 - **AIES** (AAAI/ACM AI Ethics and Society) — deadline Şubat
 - **NeurIPS Datasets & Benchmarks track** — deadline Haziran (K-BENCHMARK için ideal)
 - **ICML AI Safety Workshops** — yıllık
 
-*İlk hedef:* **NeurIPS 2027 D&B — K-BENCHMARK metodoloji makalesi.** Kabul edilirse dataset citation'ı ile kalıcı akademik kabuk.
+_İlk hedef:_ **NeurIPS 2027 D&B — K-BENCHMARK metodoloji makalesi.** Kabul edilirse dataset citation'ı ile kalıcı akademik kabuk.
 
 ### L-Series → Work Queue Additions
 
-| # | İş | Faz | Öncelik |
-|---|----|-----|---------|
-| 44 | **L1** — Advisory board recruitment (Playwright aday tarama + davet template + `advisory_board_members` tablo + `/about/advisory-board` sayfa) | **PRE-LAUNCH MUST**, Jul 12–30 | HIGH |
-| 45 | L2 — University MOU template + outreach list | **P0** — L1 kabul isimleri elde olur olmaz (isimler kapı açar) | HIGH |
-| 46 | L3 — F1 Expert Portal + email-invite ağ + rep leaderboard | **P0** — launch akabinde ilk iş; L1 kabul isimlerinden L3 uzmanları çekilebilir | HIGH |
-| 47 | L4 — Professional association outreach list + partnership template | **P1** — L1 duyurusundan sonra (isimler dernek erişimini kolaylaştırır) | MEDIUM |
-| 48 | L5 — Instructor tier + course pack CMS + assignment templates | **P1** — akademik dönem başlangıcı fırsat penceresi; L2 first MOU sonrası öncelik yükselir | MEDIUM |
-| 49 | L6 — Faculty fellowship program page + application form + admin review | **P1** — L2 MOU'lardan sonra (fellow adayları MOU üniversitelerinden gelir) | MEDIUM |
-| 50 | L7 — Student ambassador program + `student_ambassadors` tablo + admin CRUD | **P2** — L2 MOU'lardan sonra (elçiler MOU üniversitelerinden) | LOW |
-| 51 | L8 — Role-based dashboard views (compliance/journalist/legal/safety) | **P0** — CRD ürünleşmesi ile aynı sprint (revenue path) | HIGH (revenue) |
-| 52 | L9 — Methodology Advisory Committee formation + annual audit doc | **P0** — K-BENCHMARK MVP tamamlanır tamamlanmaz (metodoloji saldırısı en erken burada gelir) | HIGH |
-| 53 | L10 — Peer-review pipeline (paper draft → conference submissions) | **P0** — K-BENCHMARK MVP verisi eldeyken taslak başlar; ilk hedef FAccT (deadline yıllık Ocak) | HIGH |
+| #   | İş                                                                                                                                             | Faz                                                                                            | Öncelik        |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | -------------- |
+| 44  | **L1** — Advisory board recruitment (Playwright aday tarama + davet template + `advisory_board_members` tablo + `/about/advisory-board` sayfa) | **PRE-LAUNCH MUST**, Jul 12–30                                                                 | HIGH           |
+| 45  | L2 — University MOU template + outreach list                                                                                                   | **P0** — L1 kabul isimleri elde olur olmaz (isimler kapı açar)                                 | HIGH           |
+| 46  | L3 — F1 Expert Portal + email-invite ağ + rep leaderboard                                                                                      | **P0** — launch akabinde ilk iş; L1 kabul isimlerinden L3 uzmanları çekilebilir                | HIGH           |
+| 47  | L4 — Professional association outreach list + partnership template                                                                             | **P1** — L1 duyurusundan sonra (isimler dernek erişimini kolaylaştırır)                        | MEDIUM         |
+| 48  | L5 — Instructor tier + course pack CMS + assignment templates                                                                                  | **P1** — akademik dönem başlangıcı fırsat penceresi; L2 first MOU sonrası öncelik yükselir     | MEDIUM         |
+| 49  | L6 — Faculty fellowship program page + application form + admin review                                                                         | **P1** — L2 MOU'lardan sonra (fellow adayları MOU üniversitelerinden gelir)                    | MEDIUM         |
+| 50  | L7 — Student ambassador program + `student_ambassadors` tablo + admin CRUD                                                                     | **P2** — L2 MOU'lardan sonra (elçiler MOU üniversitelerinden)                                  | LOW            |
+| 51  | L8 — Role-based dashboard views (compliance/journalist/legal/safety)                                                                           | **P0** — CRD ürünleşmesi ile aynı sprint (revenue path)                                        | HIGH (revenue) |
+| 52  | L9 — Methodology Advisory Committee formation + annual audit doc                                                                               | **P0** — K-BENCHMARK MVP tamamlanır tamamlanmaz (metodoloji saldırısı en erken burada gelir)   | HIGH           |
+| 53  | L10 — Peer-review pipeline (paper draft → conference submissions)                                                                              | **P0** — K-BENCHMARK MVP verisi eldeyken taslak başlar; ilk hedef FAccT (deadline yıllık Ocak) | HIGH           |
 
 ---
 
@@ -1204,17 +1258,18 @@ Founder + Architect (Claude eş-yazar) tarafından hedeflenmiş konferanslar:
 > **Kural değişimi:** "2027'de yaparız" AI dünyasında "yapmayız" demek. Her kritik hattı 2026 H2'ye sıkıştırdık — sebebi aşağıda.
 
 **AI ekosistemi Temmuz 2026 durumu:**
-| Boyut | Gerçeklik | ALPAR sonucu |
-|-------|-----------|--------------|
-| Frontier model çıkışı | Her 3-4 ayda bir major model (GPT-5, Claude Opus 4.8, Gemini 2.5) | K-BENCHMARK haftalık re-audit zorunlu (Q4 daha güncel model roster'ı) |
-| EU AI Act Art. 73 | 17 ay uzakta (Dec 2, 2027) | Metodoloji **11 ay önce** kanıtlanmış olmalı ki Art. 73 anına referans olarak girsin |
-| Ulusal AI Safety Institute'ler | UK AISI, US AISI, Japan AISI operasyonel; TR'de YOK | ALPAR **fiili TR AISI** rolünü kapabilir — N4 white paper acil |
-| OECD AI Incidents Monitor | Operasyonel (oecd.ai) — 400+ kayıt | Rekabet DEĞİL, ortak — N2 entegrasyon fırsatı |
-| Standards bodies | ISO/IEC JTC 1/SC 42, CEN-CENELEC JTC 21, NIST AI RMF aktif | Katkı = kalıcı meşruiyet — N3 |
-| Rakip olay kayıtları | AIID (MIT, güçlü akademik), Stanford AI Index (yıllık), IncidentsDB startupları | TR + Art. 73 dikey konumla yarışma dışı, ama global mainstream girme penceremiz **6 ay** |
-| Rakip rating platformları | Chatbot Arena (LMSYS, 2M+ oy), Artificial Analysis, Vellum evals | K-BENCHMARK çok-model çapraz sorgu ile yöntemsel fark; ama arayüz 6 ayda kopyalanır |
-| Compute maliyet trendi | Frontier inference maliyeti yıllık %10× düşüyor | Free-tier K-BENCHMARK varsayımı Q4 2027'de zayıflar (paid tier daha erken devreye gerek) |
-| Türkiye AI ekosistemi | Neredeyse rakip yok, ancak akademik ilgi hızla artıyor | 12 ay **erken hareket eden avantajı** var; 18 ayda kapanır |
+
+| Boyut                          | Gerçeklik                                                                       | ALPAR sonucu                                                                             |
+| ------------------------------ | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Frontier model çıkışı          | Her 3-4 ayda bir major model (GPT-5, Claude Opus 4.8, Gemini 2.5)               | K-BENCHMARK haftalık re-audit zorunlu (Q4 daha güncel model roster'ı)                    |
+| EU AI Act Art. 73              | 17 ay uzakta (Dec 2, 2027)                                                      | Metodoloji **11 ay önce** kanıtlanmış olmalı ki Art. 73 anına referans olarak girsin     |
+| Ulusal AI Safety Institute'ler | UK AISI, US AISI, Japan AISI operasyonel; TR'de YOK                             | ALPAR **fiili TR AISI** rolünü kapabilir — N4 white paper acil                           |
+| OECD AI Incidents Monitor      | Operasyonel (oecd.ai) — 400+ kayıt                                              | Rekabet DEĞİL, ortak — N2 entegrasyon fırsatı                                            |
+| Standards bodies               | ISO/IEC JTC 1/SC 42, CEN-CENELEC JTC 21, NIST AI RMF aktif                      | Katkı = kalıcı meşruiyet — N3                                                            |
+| Rakip olay kayıtları           | AIID (MIT, güçlü akademik), Stanford AI Index (yıllık), IncidentsDB startupları | TR + Art. 73 dikey konumla yarışma dışı, ama global mainstream girme penceremiz **6 ay** |
+| Rakip rating platformları      | Chatbot Arena (LMSYS, 2M+ oy), Artificial Analysis, Vellum evals                | K-BENCHMARK çok-model çapraz sorgu ile yöntemsel fark; ama arayüz 6 ayda kopyalanır      |
+| Compute maliyet trendi         | Frontier inference maliyeti yıllık %10× düşüyor                                 | Free-tier K-BENCHMARK varsayımı Q4 2027'de zayıflar (paid tier daha erken devreye gerek) |
+| Türkiye AI ekosistemi          | Neredeyse rakip yok, ancak akademik ilgi hızla artıyor                          | 12 ay **erken hareket eden avantajı** var; 18 ayda kapanır                               |
 
 **Büyüme hızı sonucu:** ALPAR'ın 2027 Aralık'ta değil, 2026 Aralık'ta akademik/uzman meşruiyetini kanıtlamış olması gerekir. 12 ay compounding = 4× büyüme farkı.
 
@@ -1256,12 +1311,12 @@ EU AI Act uyumluluğu için CEN-CENELEC JTC 21 harmonize standartlar yazıyor (2
 
 ### N-Series → Work Queue
 
-| # | İş | Faz | Öncelik |
-|---|----|-----|---------|
-| 54 | **N1** — OECD AI Incidents Monitor feed endpoint + taksonomi haritası | **P0** — H-serisi bittikten sonra | HIGH |
-| 55 | **N2** — UK/US AISI iletişim + tracker + MoU template | **P1** — L1 kurul duyurusundan sonra | MEDIUM |
-| 56 | **N3** — Standards body katkısı (ISO/IEC + CEN-CENELEC) — TSE başvurusu | **P0 (uzun süreç)** — TSE bürokrasisi ay alır, hemen başlar | HIGH |
-| 57 | **N4** — TR AI Safety Institute white paper | **P0 — pencere kısa** — launch akabinde 8 hafta içinde yayın | HIGH |
+| #   | İş                                                                      | Faz                                                          | Öncelik |
+| --- | ----------------------------------------------------------------------- | ------------------------------------------------------------ | ------- |
+| 54  | **N1** — OECD AI Incidents Monitor feed endpoint + taksonomi haritası   | **P0** — H-serisi bittikten sonra                            | HIGH    |
+| 55  | **N2** — UK/US AISI iletişim + tracker + MoU template                   | **P1** — L1 kurul duyurusundan sonra                         | MEDIUM  |
+| 56  | **N3** — Standards body katkısı (ISO/IEC + CEN-CENELEC) — TSE başvurusu | **P0 (uzun süreç)** — TSE bürokrasisi ay alır, hemen başlar  | HIGH    |
+| 57  | **N4** — TR AI Safety Institute white paper                             | **P0 — pencere kısa** — launch akabinde 8 hafta içinde yayın | HIGH    |
 
 ---
 
@@ -1269,21 +1324,21 @@ EU AI Act uyumluluğu için CEN-CENELEC JTC 21 harmonize standartlar yazıyor (2
 
 Items graduating from J-series into the work queue (all **post-freeze Aug 10** unless noted):
 
-| Queue # | Item | Phase | Priority |
-|---------|------|-------|----------|
-| 31 | **J4a** — Dynamic Model Router (`src/lib/audit/model-router.ts`) | Post-freeze | HIGH |
-| 32 | **K1+K2** — Provider coverage audit + free-tier seed batch scheduler (supersedes J1a) | Post-freeze | HIGH |
-| 33 | **J2a** — Outreach Queue Agent (Playwright layer on B-extra.2) | Post-freeze (U1 pre-req) | MEDIUM |
-| 34 | **J4b** — Batch Re-audit (OpenAI Batch API for seed backlog) | Post-freeze (K2 pre-req) | MEDIUM |
-| 35 | **J3a** — Grant Radar (weekly scan → `grant_opportunities` table) | Post-freeze | LOW |
-| 36 | **J2b** — Gmail Read Integration (founder OAuth pre-req) | Post-freeze | LOW |
-| 37 | **K3+K4** — seed-only safety gate + `audit_tier` provenance column | Post-freeze (ships with K2, same commit) | HIGH |
-| 38 | **K5** — Ethics category MVP (409-grounded question bank + rubric + `/ratings` scaffold) | K-MVP window (Aug 26+) | HIGH |
-| 39 | **K6** — Hallucination/factuality MVP (TruthfulQA + 200 TR claims) | K-MVP window | HIGH |
-| 40 | **K7** — Turkish competence MVP (MMLU-TR + bespoke TR set) | K-MVP window | HIGH |
-| 41 | **K8** — EU AI Act reasoning MVP (120 Art. 73 scenarios) | K-MVP window | HIGH |
-| 42 | **K9–K12** — 4 industry-standard categories (math, IFEval, adversarial, long-context) | **P0** — K-MVP biter bitmez, kesintisiz | MEDIUM |
-| 43 | **K-Product** — Ratings integrated into Compliance Readiness Dashboard, paid tier | **P0 (revenue)** — K-Full biter bitmez, CRD ile birlikte | HIGH (revenue) |
+| Queue # | Item                                                                                     | Phase                                                    | Priority       |
+| ------- | ---------------------------------------------------------------------------------------- | -------------------------------------------------------- | -------------- |
+| 31      | **J4a** — Dynamic Model Router (`src/lib/audit/model-router.ts`)                         | Post-freeze                                              | HIGH           |
+| 32      | **K1+K2** — Provider coverage audit + free-tier seed batch scheduler (supersedes J1a)    | Post-freeze                                              | HIGH           |
+| 33      | **J2a** — Outreach Queue Agent (Playwright layer on B-extra.2)                           | Post-freeze (U1 pre-req)                                 | MEDIUM         |
+| 34      | **J4b** — Batch Re-audit (OpenAI Batch API for seed backlog)                             | Post-freeze (K2 pre-req)                                 | MEDIUM         |
+| 35      | **J3a** — Grant Radar (weekly scan → `grant_opportunities` table)                        | Post-freeze                                              | LOW            |
+| 36      | **J2b** — Gmail Read Integration (founder OAuth pre-req)                                 | Post-freeze                                              | LOW            |
+| 37      | **K3+K4** — seed-only safety gate + `audit_tier` provenance column                       | Post-freeze (ships with K2, same commit)                 | HIGH           |
+| 38      | **K5** — Ethics category MVP (409-grounded question bank + rubric + `/ratings` scaffold) | K-MVP window (Aug 26+)                                   | HIGH           |
+| 39      | **K6** — Hallucination/factuality MVP (TruthfulQA + 200 TR claims)                       | K-MVP window                                             | HIGH           |
+| 40      | **K7** — Turkish competence MVP (MMLU-TR + bespoke TR set)                               | K-MVP window                                             | HIGH           |
+| 41      | **K8** — EU AI Act reasoning MVP (120 Art. 73 scenarios)                                 | K-MVP window                                             | HIGH           |
+| 42      | **K9–K12** — 4 industry-standard categories (math, IFEval, adversarial, long-context)    | **P0** — K-MVP biter bitmez, kesintisiz                  | MEDIUM         |
+| 43      | **K-Product** — Ratings integrated into Compliance Readiness Dashboard, paid tier        | **P0 (revenue)** — K-Full biter bitmez, CRD ile birlikte | HIGH (revenue) |
 
 ---
 
@@ -1292,15 +1347,17 @@ Items graduating from J-series into the work queue (all **post-freeze Aug 10** u
 > **The strategic anchor: 2 Dec 2027.** On that day, Art. 73 serious-incident reporting becomes mandatory for high-risk AI systems in the EU. Providers will need incident data, taxonomy mapping, and reporting workflows — overnight. ALPAR's entire 2027 is a countdown to owning that moment: the platform that spent two years cataloguing AI incidents becomes the obvious reference when reporting them becomes law.
 
 ### Q4 2026 — Prove the Engine (Oct–Dec)
+
 - **First paying API customer** (C1–C4 live; target: 1 signed, 3 in pipeline)
 - **1,000 published incidents** (import pipeline + organic; taxonomy coverage ≥80%)
 - **"State of AI Incidents 2026" report** (F3) — the credibility artifact for press, academics, and investors
 - **Expert network:** ≥5 active experts with real verification actions (F1)
 - **🆕 K-BENCHMARK Full (K9–K12) live:** all 8 categories rating 20+ models publicly at `/ratings`; first citation from a technical publication or ML researcher
-- *North-star:* Weekly active reporters ≥30; first revenue booked; `/ratings` MAU ≥ 3× incident-page MAU (benchmark becomes the traffic engine, incidents the credibility engine).
-- *Kill/pivot check (Dec 31):* if organic submissions <10/week despite launch + growth loops, pivot primary motion from community-sourced to curated-editorial + API-first + benchmark-led (K-BENCHMARK becomes the primary product surface if ratings traffic outperforms incident traffic 5×).
+- _North-star:_ Weekly active reporters ≥30; first revenue booked; `/ratings` MAU ≥ 3× incident-page MAU (benchmark becomes the traffic engine, incidents the credibility engine).
+- _Kill/pivot check (Dec 31):_ if organic submissions <10/week despite launch + growth loops, pivot primary motion from community-sourced to curated-editorial + API-first + benchmark-led (K-BENCHMARK becomes the primary product surface if ratings traffic outperforms incident traffic 5×).
 
 ### Q1 2027 — Revenue Engine (Jan–Mar)
+
 - **Compliance Readiness Dashboard** (new product surface): providers see their incident exposure mapped to Art. 73 classes, gap analysis, response-rate benchmark vs. peers. Free tier read-only; paid tier = alerts + API + white-label reports.
 - **🆕 K-Product ships alongside CRD:** private benchmarks (customer runs categories against their own model + comparators; results stay private), per-model rating alerts (score change > X → email), white-label rating reports for enterprise; integrates into CRD as "your models rated against peers"
 - **🆕 L2 first university MOU signed** (kill/pivot check: no MOU → trigger L6 fellowship strategy Q1)
@@ -1308,29 +1365,33 @@ Items graduating from J-series into the work queue (all **post-freeze Aug 10** u
 - **API v2:** webhook subscriptions (new incident matching filters + rating change events), bulk export, SLA tiers
 - **Pricing goes live** (founder sets amounts; Executor builds Stripe integration + billing portal) — pricing spans **both** CRD and K-Product; the benchmark is the higher-usage / lower-commitment upsell
 - **TR + EU regulatory content engine:** weekly "readiness gap" analyses auto-drafted into approval queue
-- *North-star:* MRR > €1k; ≥3 provider profiles claimed by the companies themselves; ≥1 paying benchmark customer (K-Product).
+- _North-star:_ MRR > €1k; ≥3 provider profiles claimed by the companies themselves; ≥1 paying benchmark customer (K-Product).
 
 ### Q2 2027 — The Authority Position (Apr–Jun)
+
 - **Academic partnership formalized:** ≥1 university MOU (founder-led; Executor builds the research portal capacity F2 needs)
 - **Methodology audit:** external academic review of TruthScore published — closes the "methodology attack" risk permanently. **🆕 v7.12: this IS L9** — Methodology Advisory Committee (3–5 technical members, separate from L1) formalized; first annual audit published to `docs/METHODOLOGY_AUDITS/2027.md`.
 - **🆕 L6 first faculty fellows announced** (5 recipients × $2000; ROI: 5–20 citations/paper × 3 yrs → 75–300 academic citations, the durable defense against methodology attacks)
 - **"180 days to Art. 73" campaign** (Jun 5): repeat of the Aug 2026 countdown playbook, aimed at compliance officers, not tech twitter
 - **SOC 2 Type I readiness** (if enterprise pipeline demands it — founder decision gate)
-- *North-star:* 3 enterprise pilots; ALPAR cited in ≥2 external publications (press or academic).
+- _North-star:_ 3 enterprise pilots; ALPAR cited in ≥2 external publications (press or academic).
 
 ### Q3 2027 — Scale the Rail (Jul–Sep)
+
 - **Regulatory Reporting Assistant:** guided Art. 73 report drafting from an ALPAR incident record (export to the format regulators accept). This is the wedge product for Dec 2.
 - **10,000-incident corpus** goal via connector expansion (only sources with clean licensing)
 - **Multi-language expansion decision gate:** DE/FR if EU enterprise demand is real (founder decides on data, not ambition)
-- *North-star:* MRR > €5k; ≥1 provider using the Reporting Assistant in anger.
+- _North-star:_ MRR > €5k; ≥1 provider using the Reporting Assistant in anger.
 
 ### Q4 2027 — The Moment (Oct–Dec)
+
 - **Nov:** "30 days to Art. 73" full-court press: report, webinars (founder), press kit v2
 - **Dec 2:** Art. 73 goes live. ALPAR ships the **live obligation tracker**: which providers are reporting, which aren't. The accountability gap closes — and ALPAR is the scoreboard.
 - **Series A window opens:** dataroom auto-assembled from what already exists (metrics dashboards, cost reports, cohort data — E7/G4 outputs are the dataroom)
-- *North-star:* the Dec 2 news cycle cites ALPAR; MRR > €10k or a signed enterprise contract that implies it.
+- _North-star:_ the Dec 2 news cycle cites ALPAR; MRR > €10k or a signed enterprise contract that implies it.
 
 ### Long-term operating principles
+
 1. **Quarterly re-planning:** each quarter's detail is written by the Architect in the last 2 weeks of the prior quarter; this section is direction, not spec. The Executor never self-derives tasks from the Horizon.
 2. **Revenue tasks outrank feature tasks from Jan 2027.** The 2026 rule was "does it bring users?"; the 2027 rule is "does it bring or protect revenue?"
 3. **The regulatory calendar is the marketing calendar.** Every EU AI Act milestone (guidance publications, delegated acts, the Dec 2 go-live) gets a countdown campaign through the same approval queue.
@@ -1342,44 +1403,45 @@ Items graduating from J-series into the work queue (all **post-freeze Aug 10** u
 
 The Executor works this list top-to-bottom. Every item = its own commit, pushed before reporting, awaiting an Architect approval line before the next item starts.
 
-| # | Item | Priority | Est. | Blocks |
-|---|------|----------|------|--------|
-| ~~1~~ | ~~V1+V2 — vercel.json cron register~~ **✅ SHIPPED `f2107a5` (daily-capped, Hobby plan)** | ✅ | — | — |
-| ~~2~~ | ~~U1+U2+U3 — unsubscribe API + HMAC token + email templates~~ **✅ SHIPPED `7f30125`** | ✅ | — | — |
-| ~~3~~ | ~~M0 — Playwright config (iPhone SE, Pixel 7) + skip() cleanup~~ **✅ SHIPPED `89a75ba`** | ✅ | — | — |
-| ~~4~~ | ~~M1 — Mobile audit → `docs/MOBILE_AUDIT.md`~~ **✅ SHIPPED `bb1fcca`** | ✅ | — | — |
-| ~~5~~ | ~~M2 — Home overflow fix (whitespace-nowrap + framer motion)~~ **✅ SHIPPED `de59706`** | ✅ | — | — |
-| ~~6~~ | ~~M3 — Mobile CI regression lock (layout.spec.ts)~~ **✅ SHIPPED `aace3ba`** | ✅ | — | — |
-| ~~7~~ | ~~C1a — `20260715000000_api_keys_hardening.sql` + auth path + admin UI~~ **✅ SHIPPED `fd4df8c`** (+ follow-up `bfafefc` id+hash migration; plaintext column drop still pending) | ✅ | — | — |
-| ~~8~~ | ~~I-series seed — `20260715000001_seed_i_series_innovations.sql`~~ **✅ SHIPPED `52ae0b3`** | ✅ | — | — |
-| ~~9~~ | ~~C2 — `docs/API.md` REST v1 section + "No REST endpoints" line removal~~ **✅ SHIPPED `52ae0b3`** | ✅ | — | — |
-| ~~10~~ | ~~H1+H2 — `incident_source` badge + launch copy revision~~ **✅ SHIPPED `f844ba4`+`309b8f1`+`9f045df` (i18n fix)** (H3 hardcoded-count grep-fix — verify separately) | ✅ (H1+H2) / ⚠️ H3 verify | — | — |
-| ~~11~~ | ~~P1 — Countdown thread drafts (T-25 to T-0)~~ **✅ SHIPPED `fa80867`+`4d47356`+`52ae0b3`** (all 6 drafts under `docs/launch-assets/countdown/`) | ✅ | — | — |
-| ~~12~~ | ~~P2 — Waitlist form (home-page banner variant) → `email_preferences`~~ **✅ SHIPPED `6e72672`** (`src/components/marketing/waitlist-form.tsx` + `src/actions/waitlist.ts` + migration `20260715000002_email_preferences_waitlist.sql`) | ✅ | — | — |
-| 13 | C5 — Admin discovery link + OG validator report + external-embed screenshot | SHOULD | 1 h | Embed proof |
-| ~~14~~ | ~~P3 — TR press embargo pitches (Shiftdelete/Technopat/Donanım Haber drafts)~~ **✅ SHIPPED `745b4fa`** | ✅ | — | — |
-| ~~15~~ | ~~P4 — LinkedIn + Reddit drafts~~ **✅ SHIPPED `69ís672`+`69519d4` under `docs/launch-assets/social/`** (linkedin.md + reddit.md) | ✅ | — | — |
-| 16 | D-extra assets completion (LinkedIn, Reddit, PH screenshots) — **PARTIAL:** copy shipped, screenshots-guide.md shipped, actual screenshots still needed | ⚠️ PARTIAL | 1 h | Launch-day amplification |
-| ~~17~~ | ~~RUNBOOK_LAUNCH.md v1.1 — Turnstile / Resend / SSE kill-switches + T-22→T-0 checklist~~ **✅ SHIPPED `cf4ecce`** (RUNBOOK_LAUNCH_DAY.md; old RUNBOOK_LAUNCH.md deleted) | ✅ | — | — |
-| 18 | C1b — Two enterprise onboarding keys + revoke test | SHOULD | 2 h | Enterprise readiness |
-| ~~19~~ | ~~W-series — `docs/RUNBOOK_LAUNCH_DAY.md` (hour-by-hour Aug 2 timeline)~~ **✅ SHIPPED `cf4ecce`+`5bd8cd4`** (W1 dry run report published) | ✅ | — | — |
-| ~~20~~ | ~~X-series — 5 crisis playbook templates under `docs/CRISIS_PLAYBOOK/`~~ **✅ SHIPPED `98936ab`** (X1-X5 all present) | ✅ | — | — |
-| ~~21~~ | ~~M2-home overflow fix~~ **✅ SHIPPED `de59706`** (same as #5 above) | ✅ | — | — |
-| ~~22~~ | ~~Y1 — `/admin/launch-signal` page~~ **✅ SHIPPED `fa80867`** (`src/app/[locale]/admin/launch-signal/page.tsx`) | ✅ | — | — |
-| ~~23~~ | ~~Y2 + Y3 — day-7 and day-30 automated readouts (cron + email template)~~ **✅ SHIPPED `98936ab`** (`src/app/api/cron/pivot-check/route.ts` + `kill-metric/route.ts`) | ✅ | — | — |
-| ~~24~~ | ~~Standing Rule #20 — daily cost-budget alarm cron + monthly ceiling + `COST_KILL_SWITCH` env~~ **✅ SHIPPED `601c147`** (Finance dashboard + kill-metric cron + budget-gauge component; Neutrality Charter `133af72` also retro-approved as related governance surface) | ✅ | — | — |
-| 25 | M2-touch (post-launch, SHOULD) — sweep 44px touch-target findings on 9 non-home pages | SHOULD | 1–2 d | Mobile ergonomics polish |
-| ~~26~~ | ~~S1 — full-history secrets scan~~ **✅ SHIPPED `14bb897`** (`docs/security/S1-secrets-scan.md`, redacted Vercel token) | ✅ | — | — |
-| ~~27~~ | ~~S2 — dependency audit + CI warning gate~~ **✅ SHIPPED `14bb897`+`2a47ff5`** (`docs/security/S2-dep-audit.md`) | ✅ | — | — |
-| ~~28~~ | ~~S3 — security headers pass (HSTS, CSP report-only, frame-deny)~~ **✅ SHIPPED `1774ac9`+`2a47ff5`** (`next.config.mjs` HSTS + doc `docs/security/S3-security-headers.md`) — CSP report-only + frame-deny verify | ⚠️ verify CSP | — | — |
-| 29 | S4 — backup restore drill (dump → scratch project → 5 smoke queries → RTO into RUNBOOK) — **PARTIAL: doc `2a47ff5` shipped, gerçek drill loglarını `docs/METHODOLOGY_AUDITS/S4-restore-drill-YYYY-MM-DD.log` altına raporla** | ⚠️ drill pending | 3 h | Untested backup = no backup |
-| 30 | S5 — Lighthouse mobile budget (home/incidents/submit ≥ 85) | SHOULD | 2 h | Launch-day performance = marketing |
-| ~~K2-early~~ | ~~K2 free-tier retro-audit cron (moved from post-launch after `1774ac9` shipped early)~~ **✅ SHIPPED `1774ac9`** (`src/app/api/cron/retro-audit/route.ts`) — Rule #2 exception granted; K3/K4 boundaries verify | ✅ (K3/K4 verify) | — | — |
-| ~~J4a-early~~ | ~~J4a Dynamic Model Router (moved from post-launch after `1774ac9` shipped early)~~ **✅ SHIPPED `1774ac9`** — Rule #2 exception granted | ✅ | — | — |
+| #             | Item                                                                                                                                                                                                                                                                     | Priority                  | Est.  | Blocks                             |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------- | ----- | ---------------------------------- |
+| ~~1~~         | ~~V1+V2 — vercel.json cron register~~ **✅ SHIPPED `f2107a5` (daily-capped, Hobby plan)**                                                                                                                                                                                | ✅                        | —     | —                                  |
+| ~~2~~         | ~~U1+U2+U3 — unsubscribe API + HMAC token + email templates~~ **✅ SHIPPED `7f30125`**                                                                                                                                                                                   | ✅                        | —     | —                                  |
+| ~~3~~         | ~~M0 — Playwright config (iPhone SE, Pixel 7) + skip() cleanup~~ **✅ SHIPPED `89a75ba`**                                                                                                                                                                                | ✅                        | —     | —                                  |
+| ~~4~~         | ~~M1 — Mobile audit → `docs/MOBILE_AUDIT.md`~~ **✅ SHIPPED `bb1fcca`**                                                                                                                                                                                                  | ✅                        | —     | —                                  |
+| ~~5~~         | ~~M2 — Home overflow fix (whitespace-nowrap + framer motion)~~ **✅ SHIPPED `de59706`**                                                                                                                                                                                  | ✅                        | —     | —                                  |
+| ~~6~~         | ~~M3 — Mobile CI regression lock (layout.spec.ts)~~ **✅ SHIPPED `aace3ba`**                                                                                                                                                                                             | ✅                        | —     | —                                  |
+| ~~7~~         | ~~C1a — `20260715000000_api_keys_hardening.sql` + auth path + admin UI~~ **✅ SHIPPED `fd4df8c`** (+ follow-up `bfafefc` id+hash migration; plaintext column drop still pending)                                                                                         | ✅                        | —     | —                                  |
+| ~~8~~         | ~~I-series seed — `20260715000001_seed_i_series_innovations.sql`~~ **✅ SHIPPED `52ae0b3`**                                                                                                                                                                              | ✅                        | —     | —                                  |
+| ~~9~~         | ~~C2 — `docs/API.md` REST v1 section + "No REST endpoints" line removal~~ **✅ SHIPPED `52ae0b3`**                                                                                                                                                                       | ✅                        | —     | —                                  |
+| ~~10~~        | ~~H1+H2 — `incident_source` badge + launch copy revision~~ **✅ SHIPPED `f844ba4`+`309b8f1`+`9f045df` (i18n fix)** (H3 hardcoded-count grep-fix — verify separately)                                                                                                     | ✅ (H1+H2) / ⚠️ H3 verify | —     | —                                  |
+| ~~11~~        | ~~P1 — Countdown thread drafts (T-25 to T-0)~~ **✅ SHIPPED `fa80867`+`4d47356`+`52ae0b3`** (all 6 drafts under `docs/launch-assets/countdown/`)                                                                                                                         | ✅                        | —     | —                                  |
+| ~~12~~        | ~~P2 — Waitlist form (home-page banner variant) → `email_preferences`~~ **✅ SHIPPED `6e72672`** (`src/components/marketing/waitlist-form.tsx` + `src/actions/waitlist.ts` + migration `20260715000002_email_preferences_waitlist.sql`)                                  | ✅                        | —     | —                                  |
+| 13            | C5 — Admin discovery link + OG validator report + external-embed screenshot                                                                                                                                                                                              | SHOULD                    | 1 h   | Embed proof                        |
+| ~~14~~        | ~~P3 — TR press embargo pitches (Shiftdelete/Technopat/Donanım Haber drafts)~~ **✅ SHIPPED `745b4fa`**                                                                                                                                                                  | ✅                        | —     | —                                  |
+| ~~15~~        | ~~P4 — LinkedIn + Reddit drafts~~ **✅ SHIPPED `69ís672`+`69519d4` under `docs/launch-assets/social/`** (linkedin.md + reddit.md)                                                                                                                                        | ✅                        | —     | —                                  |
+| 16            | D-extra assets completion (LinkedIn, Reddit, PH screenshots) — **PARTIAL:** copy shipped, screenshots-guide.md shipped, actual screenshots still needed                                                                                                                  | ⚠️ PARTIAL                | 1 h   | Launch-day amplification           |
+| ~~17~~        | ~~RUNBOOK_LAUNCH.md v1.1 — Turnstile / Resend / SSE kill-switches + T-22→T-0 checklist~~ **✅ SHIPPED `cf4ecce`** (RUNBOOK_LAUNCH_DAY.md; old RUNBOOK_LAUNCH.md deleted)                                                                                                 | ✅                        | —     | —                                  |
+| 18            | C1b — Two enterprise onboarding keys + revoke test                                                                                                                                                                                                                       | SHOULD                    | 2 h   | Enterprise readiness               |
+| ~~19~~        | ~~W-series — `docs/RUNBOOK_LAUNCH_DAY.md` (hour-by-hour Aug 2 timeline)~~ **✅ SHIPPED `cf4ecce`+`5bd8cd4`** (W1 dry run report published)                                                                                                                               | ✅                        | —     | —                                  |
+| ~~20~~        | ~~X-series — 5 crisis playbook templates under `docs/CRISIS_PLAYBOOK/`~~ **✅ SHIPPED `98936ab`** (X1-X5 all present)                                                                                                                                                    | ✅                        | —     | —                                  |
+| ~~21~~        | ~~M2-home overflow fix~~ **✅ SHIPPED `de59706`** (same as #5 above)                                                                                                                                                                                                     | ✅                        | —     | —                                  |
+| ~~22~~        | ~~Y1 — `/admin/launch-signal` page~~ **✅ SHIPPED `fa80867`** (`src/app/[locale]/admin/launch-signal/page.tsx`)                                                                                                                                                          | ✅                        | —     | —                                  |
+| ~~23~~        | ~~Y2 + Y3 — day-7 and day-30 automated readouts (cron + email template)~~ **✅ SHIPPED `98936ab`** (`src/app/api/cron/pivot-check/route.ts` + `kill-metric/route.ts`)                                                                                                    | ✅                        | —     | —                                  |
+| ~~24~~        | ~~Standing Rule #20 — daily cost-budget alarm cron + monthly ceiling + `COST_KILL_SWITCH` env~~ **✅ SHIPPED `601c147`** (Finance dashboard + kill-metric cron + budget-gauge component; Neutrality Charter `133af72` also retro-approved as related governance surface) | ✅                        | —     | —                                  |
+| 25            | M2-touch (post-launch, SHOULD) — sweep 44px touch-target findings on 9 non-home pages                                                                                                                                                                                    | SHOULD                    | 1–2 d | Mobile ergonomics polish           |
+| ~~26~~        | ~~S1 — full-history secrets scan~~ **✅ SHIPPED `14bb897`** (`docs/security/S1-secrets-scan.md`, redacted Vercel token)                                                                                                                                                  | ✅                        | —     | —                                  |
+| ~~27~~        | ~~S2 — dependency audit + CI warning gate~~ **✅ SHIPPED `14bb897`+`2a47ff5`** (`docs/security/S2-dep-audit.md`)                                                                                                                                                         | ✅                        | —     | —                                  |
+| ~~28~~        | ~~S3 — security headers pass (HSTS, CSP report-only, frame-deny)~~ **✅ SHIPPED `1774ac9`+`2a47ff5`** (`next.config.mjs` HSTS + doc `docs/security/S3-security-headers.md`) — CSP report-only + frame-deny verify                                                        | ⚠️ verify CSP             | —     | —                                  |
+| 29            | S4 — backup restore drill (dump → scratch project → 5 smoke queries → RTO into RUNBOOK) — **PARTIAL: doc `2a47ff5` shipped, gerçek drill loglarını `docs/METHODOLOGY_AUDITS/S4-restore-drill-YYYY-MM-DD.log` altına raporla**                                            | ⚠️ drill pending          | 3 h   | Untested backup = no backup        |
+| 30            | S5 — Lighthouse mobile budget (home/incidents/submit ≥ 85)                                                                                                                                                                                                               | SHOULD                    | 2 h   | Launch-day performance = marketing |
+| ~~K2-early~~  | ~~K2 free-tier retro-audit cron (moved from post-launch after `1774ac9` shipped early)~~ **✅ SHIPPED `1774ac9`** (`src/app/api/cron/retro-audit/route.ts`) — Rule #2 exception granted; K3/K4 boundaries verify                                                         | ✅ (K3/K4 verify)         | —     | —                                  |
+| ~~J4a-early~~ | ~~J4a Dynamic Model Router (moved from post-launch after `1774ac9` shipped early)~~ **✅ SHIPPED `1774ac9`** — Rule #2 exception granted                                                                                                                                 | ✅                        | —     | —                                  |
 
-**Queue governance (v7.5):** this table is the **single source of truth for execution order** — stage prose defines *what/accept*, the queue defines *when*. Zero-sum rule: nothing enters MUST before Aug 1 without displacing an equal-sized item. When slipping, cut per the De-Scope Ladder — never improvise cuts.
+**Queue governance (v7.5):** this table is the **single source of truth for execution order** — stage prose defines _what/accept_, the queue defines _when_. Zero-sum rule: nothing enters MUST before Aug 1 without displacing an equal-sized item. When slipping, cut per the De-Scope Ladder — never improvise cuts.
 
 **Post-launch (Aug 10+) items** — do NOT start before Aug 10:
+
 - C3 — Usage metering
 - C4 — Tier-based rate limiting rewrite (hybrid daily + burst)
 - B2b — Expert-verification email + weekly reporter digest
@@ -1392,21 +1454,21 @@ The Executor works this list top-to-bottom. Every item = its own commit, pushed 
 
 The following require founder input before or during the sequence above. Executor writes proposals to `docs/PROPOSALS/` and waits.
 
-1. **R1 repo → private timing.** The GitHub MCP does not expose a `update_repository` visibility tool. Founder must click through repo Settings → Danger Zone → Change visibility → Private. When? *Recommended: within 24h.*
-2. **C4 rate-limit model.** Hybrid (daily tavan + per-minute burst) vs. daily-only. *Recommended: hybrid.*
+1. **R1 repo → private timing.** The GitHub MCP does not expose a `update_repository` visibility tool. Founder must click through repo Settings → Danger Zone → Change visibility → Private. When? _Recommended: within 24h._
+2. **C4 rate-limit model.** Hybrid (daily tavan + per-minute burst) vs. daily-only. _Recommended: hybrid._
 3. **"408 incidents" copy dili.** "408 curated + user-reported" vs. "400+ documented" vs. something sharper. Founder picks the phrasing for HN/PH/TR/academic before H2 drafts finalize.
-4. **Vercel tier.** Hobby (2-cron cap = insufficient after V1+V2) or Pro (~$20/mo). *Recommended: Pro; Executor writes a cost-benefit proposal.*
+4. **Vercel tier.** Hobby (2-cron cap = insufficient after V1+V2) or Pro (~$20/mo). _Recommended: Pro; Executor writes a cost-benefit proposal._
 5. **P2 waitlist location.** Home-page banner (recommended) vs. dedicated `/countdown` page.
-6. **B2b scheduling.** Push weekly-digest / expert-verification emails to Aug 10+ freeze exit? *Recommended: yes — M-series + C-series already saturate pre-launch.*
+6. **B2b scheduling.** Push weekly-digest / expert-verification emails to Aug 10+ freeze exit? _Recommended: yes — M-series + C-series already saturate pre-launch._
 7. **N4 imported-incident language.** (a) Gemini batch-translation of summaries, (b) small "EN" badge on Turkish pages. Executor drafts feasibility notes for both; founder picks.
 8. **🆕 v7.4 — Attorney + PR contact for X-series.** X1/X3/X5 escalation ladder needs a named lawyer (TR + EU), a PR contact (TR + EN), and a KVKK compliance advisor. Founder provides names + phones + emails; Executor slots into RUNBOOK.
 9. **🆕 v7.4 — Cost-budget ceiling values.** Standing Rule #20 uses $50/day warn, $100/day auto-tighten, $500/month ceiling. Founder confirms or adjusts before Rule #20 cron ships.
 10. **🆕 v7.4 — X3 media-response reach threshold.** Public defense triggered at "outlet >10k TR or >100k global". Founder confirms these thresholds or supplies preferred numbers.
 11. **🆕 v7.4 — Day-2 amplification budget.** If Day-1 numbers are strong, does the founder authorize a paid amplification budget (X ads, LinkedIn boost) and if yes, cap it. If numbers are weak, does the founder want an emergency Day-2 outreach list (contacts to warm up)?
-12. **🆕 v7.12 — L1 aday listesi onayı.** Executor L1 kickoff'un ilk günü LinkedIn/Scholar taramasıyla 7 koltuk için 15 aday çıkarır. *Karar bağımlılığı: L1 recruitment penceresi (Jul 12–30 launch anchor)* — Aug 2 launch anchor'ının parçası olduğu için tek istisna, tarih meşru.
-13. **🆕 v7.12 — L3 uzman ücreti modeli.** (a) Rep-only leaderboard, ücret yok; (b) €20/doğrulama, yılda maks €500/uzman. Öneri: (a) — nakit koru + vergi karmaşasını atla. *Karar bağımlılığı: L3 kickoff'undan önce (L1 duyurusundan sonraki ilk P0 iş).*
-14. **🆕 v7.12 — L6 faculty fellowship bütçe onayı.** Yılda 5 profesör × $2000 = $10k. Öneri: onayla — akademik atıf ROI'si en yüksek harcama. *Karar bağımlılığı: L2 first MOU imzalanmadan önce (fellow adayları MOU'lardan gelir).*
-15. **🆕 v7.12 — L4 dernek listesi öncelik sıralaması.** 5 kurumdan hangileri ilk hedeflenecek. Öneri: TÜBA + İstanbul Barosu AI Komitesi (TR ilk), sonra IEEE Turkey. *Karar bağımlılığı: L4 kickoff'undan önce.*
+12. **🆕 v7.12 — L1 aday listesi onayı.** Executor L1 kickoff'un ilk günü LinkedIn/Scholar taramasıyla 7 koltuk için 15 aday çıkarır. _Karar bağımlılığı: L1 recruitment penceresi (Jul 12–30 launch anchor)_ — Aug 2 launch anchor'ının parçası olduğu için tek istisna, tarih meşru.
+13. **🆕 v7.12 — L3 uzman ücreti modeli.** (a) Rep-only leaderboard, ücret yok; (b) €20/doğrulama, yılda maks €500/uzman. Öneri: (a) — nakit koru + vergi karmaşasını atla. _Karar bağımlılığı: L3 kickoff'undan önce (L1 duyurusundan sonraki ilk P0 iş)._
+14. **🆕 v7.12 — L6 faculty fellowship bütçe onayı.** Yılda 5 profesör × $2000 = $10k. Öneri: onayla — akademik atıf ROI'si en yüksek harcama. _Karar bağımlılığı: L2 first MOU imzalanmadan önce (fellow adayları MOU'lardan gelir)._
+15. **🆕 v7.12 — L4 dernek listesi öncelik sıralaması.** 5 kurumdan hangileri ilk hedeflenecek. Öneri: TÜBA + İstanbul Barosu AI Komitesi (TR ilk), sonra IEEE Turkey. _Karar bağımlılığı: L4 kickoff'undan önce._
 
 Every decision resolves in `docs/PROPOSALS/NNN-title.md` first — Executor never assumes.
 
@@ -1428,19 +1490,20 @@ After each stage: push → report with:
 
 > Approvals were trust-based; from v7.5 they are evidence-based and fast. For each item type, the Architect runs these spot-checks against `origin/master` before writing the approval line. The Executor can pre-empt rejection by running the same checks and pasting outputs into the report.
 
-| Item type | Spot-checks (all must pass) |
-|-----------|----------------------------|
-| **Migration** | File ends with `-- ROLLBACK:` block (Rule #12); new table → RLS policies in the same file (Rule #8); seed inserts idempotent (`WHERE NOT EXISTS` / `ON CONFLICT`); no destructive op on prod data |
-| **API route** | Auth path: grep for hash compare + `timingSafeEqual`, no `\|\| "..."` fallback (Rules #3, #17); curl without credentials → 401/400 not 500; rate limit present; PII Guardian on any external write |
-| **UI / component** | Both locales render (no raw key leakage); `scripts/check-i18n.mjs` green (Rule #7); no `createAdminClient()` on a public path (Rule #8); brand colors intact (Rule #4); no "compliant"/"verified" wording violations (Rules #5, #19) |
-| **e2e / CI change** | `--list` shows the new specs on all three mobile projects; deliberate-break demo referenced in report with the revert commit |
-| **Cron / env-flag** | Registered in `vercel.json`; auth header check present (`CRON_SECRET`); kill-switch flag read at entry, not mid-run |
-| **Docs / launch asset** | File exists at stated path; zero external sends (Rule #6); numeric claims live-queried or absent (Rule #19); "DRAFT — founder sends" header on anything outbound |
-| **Any item** | Reported commit hash exists on `origin/master` (Rule #1); diff touches only files the item scoped (Rule #2) |
+| Item type               | Spot-checks (all must pass)                                                                                                                                                                                                          |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Migration**           | File ends with `-- ROLLBACK:` block (Rule #12); new table → RLS policies in the same file (Rule #8); seed inserts idempotent (`WHERE NOT EXISTS` / `ON CONFLICT`); no destructive op on prod data                                    |
+| **API route**           | Auth path: grep for hash compare + `timingSafeEqual`, no `\|\| "..."` fallback (Rules #3, #17); curl without credentials → 401/400 not 500; rate limit present; PII Guardian on any external write                                   |
+| **UI / component**      | Both locales render (no raw key leakage); `scripts/check-i18n.mjs` green (Rule #7); no `createAdminClient()` on a public path (Rule #8); brand colors intact (Rule #4); no "compliant"/"verified" wording violations (Rules #5, #19) |
+| **e2e / CI change**     | `--list` shows the new specs on all three mobile projects; deliberate-break demo referenced in report with the revert commit                                                                                                         |
+| **Cron / env-flag**     | Registered in `vercel.json`; auth header check present (`CRON_SECRET`); kill-switch flag read at entry, not mid-run                                                                                                                  |
+| **Docs / launch asset** | File exists at stated path; zero external sends (Rule #6); numeric claims live-queried or absent (Rule #19); "DRAFT — founder sends" header on anything outbound                                                                     |
+| **Any item**            | Reported commit hash exists on `origin/master` (Rule #1); diff touches only files the item scoped (Rule #2)                                                                                                                          |
 
 **Cadence:** Architect reviews in ≤2 daily windows; a report missing spot-check evidence gets one bounce-back, a second miss = review finding.
 
 **Executor forbidden actions** (founder-only):
+
 - Sending external emails/posts without an approved queue item
 - Contacting journalists / universities / investors
 - Editing investment or legal copy
@@ -1558,112 +1621,112 @@ All stages A–H accepted; launch executed Aug 2 with zero P0; ≥1 paying custo
 
 ## CHANGELOG (v7.4 → v7.5) — Feasibility, Security Gate, Verification Discipline
 
-| Change | Rationale |
-|--------|-----------|
-| **🆕 Scope Reality Check** — capacity math (≈9 MUST working days vs 24 calendar days = feasible with ~2× slack), approval pipelining (await-approval ≠ idle), zero-sum MUST rule | Four versions grew the MUST list; nobody verified it fits; approval serialization was the hidden binding constraint |
-| **🆕 De-Scope Ladder (8 pre-decided drops) + NEVER-DROP set** | Cuts under pressure are improvised and wrong; pre-deciding them removes the panic tax |
-| **🆕 S-series security & data-integrity gate** — S1 full-history secrets scan, S2 dependency audit, S3 security headers (embed-route frame exception), S4 backup **restore drill** with RTO, S5 Lighthouse budget | Repo was public — history is compromised until proven clean; a never-restored backup is a hope, not a backup |
-| **🆕 Architect Verification Protocol** — per-item-type spot-check table (migration / route / UI / e2e / cron / docs), ≤2 daily review windows, evidence-based approvals | Approvals were trust-based and slow; this makes them fast, uniform, and honest |
-| **Work queue extended to 30 items; declared single source of truth for execution order** | One sheet to rule sequence; stage prose stays spec-only |
-| **Reporting Protocol updated** — pipelining note added to approval-wait rule | Consistency with Scope Reality Check |
+| Change                                                                                                                                                                                                            | Rationale                                                                                                           |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **🆕 Scope Reality Check** — capacity math (≈9 MUST working days vs 24 calendar days = feasible with ~2× slack), approval pipelining (await-approval ≠ idle), zero-sum MUST rule                                  | Four versions grew the MUST list; nobody verified it fits; approval serialization was the hidden binding constraint |
+| **🆕 De-Scope Ladder (8 pre-decided drops) + NEVER-DROP set**                                                                                                                                                     | Cuts under pressure are improvised and wrong; pre-deciding them removes the panic tax                               |
+| **🆕 S-series security & data-integrity gate** — S1 full-history secrets scan, S2 dependency audit, S3 security headers (embed-route frame exception), S4 backup **restore drill** with RTO, S5 Lighthouse budget | Repo was public — history is compromised until proven clean; a never-restored backup is a hope, not a backup        |
+| **🆕 Architect Verification Protocol** — per-item-type spot-check table (migration / route / UI / e2e / cron / docs), ≤2 daily review windows, evidence-based approvals                                           | Approvals were trust-based and slow; this makes them fast, uniform, and honest                                      |
+| **Work queue extended to 30 items; declared single source of truth for execution order**                                                                                                                          | One sheet to rule sequence; stage prose stays spec-only                                                             |
+| **Reporting Protocol updated** — pipelining note added to approval-wait rule                                                                                                                                      | Consistency with Scope Reality Check                                                                                |
 
 ## CHANGELOG (v7.3 → v7.4) — Professional Planning Gaps Closed
 
-| Change | Rationale |
-|--------|-----------|
-| **🆕 W-series added** — Aug 2 hour-by-hour launch-day timeline in `docs/RUNBOOK_LAUNCH_DAY.md` (16 timeline rows + 4 pre-populated kill-switch env flags) | Launch-day is Saturday; founder operates alone; line-by-line playbook is the design constraint |
-| **🆕 X-series added** — 5 crisis playbook templates (provider legal, false report, media misinformation, PII erasure, regulatory inquiry) under `docs/CRISIS_PLAYBOOK/` | Public accountability platform draws adversarial attention on day one; silence is not a strategy; response window is news cycle (6h), not legal cycle (6d) |
-| **🆕 Y-series added** — T+0 signal panel + T+7 kill-metric readout + T+30 pivot-check readout | Executor's post-launch job is signal cadence, not interpretation; Sept 15 kill-metric anchor needs raw input |
-| **🆕 Standing Rule #20** — daily cost-budget alarm ($50 warn / $100 auto-tighten / $500 monthly ceiling) + `COST_KILL_SWITCH` env | Launch traffic 10× = spend 10×; cheaper alarm than Series A pitched with $2k COGS/mo |
-| **M1 audit result processed** (`bb1fcca`) — home page is the only HIGH-severity finding (3-element shared-component overflow); every other page is LOW touch-target ergonomics | Antigravity front-ran M1; plan now differentiates M2-home (MUST, launch-blocker) from M2-touch (SHOULD, post-launch) |
-| **Work queue extended to 25 items** (adds M2-home, W-series RUNBOOK, X-series templates, Y1/Y2/Y3 pages+crons, Rule #20 cron) | Single execution sheet stays authoritative |
+| Change                                                                                                                                                                         | Rationale                                                                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **🆕 W-series added** — Aug 2 hour-by-hour launch-day timeline in `docs/RUNBOOK_LAUNCH_DAY.md` (16 timeline rows + 4 pre-populated kill-switch env flags)                      | Launch-day is Saturday; founder operates alone; line-by-line playbook is the design constraint                                                             |
+| **🆕 X-series added** — 5 crisis playbook templates (provider legal, false report, media misinformation, PII erasure, regulatory inquiry) under `docs/CRISIS_PLAYBOOK/`        | Public accountability platform draws adversarial attention on day one; silence is not a strategy; response window is news cycle (6h), not legal cycle (6d) |
+| **🆕 Y-series added** — T+0 signal panel + T+7 kill-metric readout + T+30 pivot-check readout                                                                                  | Executor's post-launch job is signal cadence, not interpretation; Sept 15 kill-metric anchor needs raw input                                               |
+| **🆕 Standing Rule #20** — daily cost-budget alarm ($50 warn / $100 auto-tighten / $500 monthly ceiling) + `COST_KILL_SWITCH` env                                              | Launch traffic 10× = spend 10×; cheaper alarm than Series A pitched with $2k COGS/mo                                                                       |
+| **M1 audit result processed** (`bb1fcca`) — home page is the only HIGH-severity finding (3-element shared-component overflow); every other page is LOW touch-target ergonomics | Antigravity front-ran M1; plan now differentiates M2-home (MUST, launch-blocker) from M2-touch (SHOULD, post-launch)                                       |
+| **Work queue extended to 25 items** (adds M2-home, W-series RUNBOOK, X-series templates, Y1/Y2/Y3 pages+crons, Rule #20 cron)                                                  | Single execution sheet stays authoritative                                                                                                                 |
 
 ## CHANGELOG (v7.2 → v7.3) — 360° Code-Reality Audit
 
-| Change | Rationale |
-|--------|-----------|
-| **Stage C fully rewritten** (C1 → C1a hardening + C1b onboarding; C5 marked shipped; C3/C4 pushed to post-freeze) | 360° audit exposed plan-vs-code drift: C5 already live, C1 plain-text (security), C4 config disagrees with plan values |
-| **C1a MUST-listed for Jul 15** | Plain-text credential storage in `api_keys` — launch-blocking security gap |
-| **🆕 V-series MUST added for Jul 9** — `vercel.json` cron register | `process-deletions` KVKK LEGAL, `generate-marketing` narrative — both silently non-functional in prod |
-| **🆕 U-series MUST added for Jul 12** — `/api/unsubscribe/` endpoint | Front page exists but no API route; email link clicks legally required (CAN-SPAM/KVKK) |
-| **🆕 H-series MUST added for Jul 20** — "408 incidents" honesty pass (source badges + copy softening + hardcoded-count removal) | Launch copy claims "408 verified" while DB is dominated by seeds; will not survive first audit |
-| **🆕 P-series MUST added for Jul 12** — Pre-launch T-25→T-0 campaign (countdown threads + waitlist + TR press embargo + LinkedIn/Reddit drafts) | 25-day attention window was empty; every existing thread targets launch day |
-| **🆕 M0 pre-audit added** (Playwright viewport projects + skip() cleanup) | Config missed iPhone SE + Pixel 7; e2e specs blindly skipped mobile |
-| **M1 hot-spots list added** (incident-list.tsx, submit page, admin tables, UI-UX-AUDIT.md cross-ref) | Audit needs pre-flagged risk anchors |
-| **Standing Rules #17, #18, #19 added** | Enforce sha256 credentials, code-reality pre-check, numeric-claim honesty |
-| **Standing Rule #11 extended** | Weekly snapshot must include `process-deletions` cron proof |
-| **B1, B5, C5 confirmed COMPLETE via audit** (path/column-name corrections logged in header) | Plan misidentified them as TODO; wasted future effort avoided |
-| **API.md L3 fix note added to C2** | "No REST endpoints" claim is misinformation — 6 v1 endpoints are live |
-| **Antigravity work queue** (18-item ordered table) + **Founder Decision Points** (7 items) added | Single top-to-bottom execution sheet; every founder-required choice in one place |
-| I-series admin panel seed (v7.2) preserved | Unchanged — will run as step 8 of the work queue |
-| Traction 4-organic-report note (v7.1) preserved | Unchanged |
+| Change                                                                                                                                          | Rationale                                                                                                              |
+| ----------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| **Stage C fully rewritten** (C1 → C1a hardening + C1b onboarding; C5 marked shipped; C3/C4 pushed to post-freeze)                               | 360° audit exposed plan-vs-code drift: C5 already live, C1 plain-text (security), C4 config disagrees with plan values |
+| **C1a MUST-listed for Jul 15**                                                                                                                  | Plain-text credential storage in `api_keys` — launch-blocking security gap                                             |
+| **🆕 V-series MUST added for Jul 9** — `vercel.json` cron register                                                                              | `process-deletions` KVKK LEGAL, `generate-marketing` narrative — both silently non-functional in prod                  |
+| **🆕 U-series MUST added for Jul 12** — `/api/unsubscribe/` endpoint                                                                            | Front page exists but no API route; email link clicks legally required (CAN-SPAM/KVKK)                                 |
+| **🆕 H-series MUST added for Jul 20** — "408 incidents" honesty pass (source badges + copy softening + hardcoded-count removal)                 | Launch copy claims "408 verified" while DB is dominated by seeds; will not survive first audit                         |
+| **🆕 P-series MUST added for Jul 12** — Pre-launch T-25→T-0 campaign (countdown threads + waitlist + TR press embargo + LinkedIn/Reddit drafts) | 25-day attention window was empty; every existing thread targets launch day                                            |
+| **🆕 M0 pre-audit added** (Playwright viewport projects + skip() cleanup)                                                                       | Config missed iPhone SE + Pixel 7; e2e specs blindly skipped mobile                                                    |
+| **M1 hot-spots list added** (incident-list.tsx, submit page, admin tables, UI-UX-AUDIT.md cross-ref)                                            | Audit needs pre-flagged risk anchors                                                                                   |
+| **Standing Rules #17, #18, #19 added**                                                                                                          | Enforce sha256 credentials, code-reality pre-check, numeric-claim honesty                                              |
+| **Standing Rule #11 extended**                                                                                                                  | Weekly snapshot must include `process-deletions` cron proof                                                            |
+| **B1, B5, C5 confirmed COMPLETE via audit** (path/column-name corrections logged in header)                                                     | Plan misidentified them as TODO; wasted future effort avoided                                                          |
+| **API.md L3 fix note added to C2**                                                                                                              | "No REST endpoints" claim is misinformation — 6 v1 endpoints are live                                                  |
+| **Antigravity work queue** (18-item ordered table) + **Founder Decision Points** (7 items) added                                                | Single top-to-bottom execution sheet; every founder-required choice in one place                                       |
+| I-series admin panel seed (v7.2) preserved                                                                                                      | Unchanged — will run as step 8 of the work queue                                                                       |
+| Traction 4-organic-report note (v7.1) preserved                                                                                                 | Unchanged                                                                                                              |
 
 ## CHANGELOG (v7.1 → v7.2)
 
-| Change | Rationale |
-|--------|-----------|
+| Change                                                                                                           | Rationale                                                                                                            |
+| ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | I-series → Admin Panel seed task added (`strategy_innovations` seed migration spec + rollback + accept criteria) | Founder wants to see I1–I8 innovations professionally in admin panel; existing table + admin page already support it |
 
 ## CHANGELOG (v7 → v7.1)
 
-| Change | Rationale |
-|--------|-----------|
+| Change                                                                                                    | Rationale                                                                             |
+| --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | Traction baseline corrected in state header: 4 organic incident reports (incl. Grok passport case), not 0 | Board report had "zero organic" — incorrect; both marketplace sides have first signal |
 
 ## CHANGELOG (v6 → v7)
 
-| Change | Rationale |
-|--------|-----------|
-| M-series mobile quality sprint added, priority over Stage C | Founder reports broken mobile UI; launch traffic will be majority-mobile |
-| N-series marked complete (`Architect-Approval: 1d225fe 2026-07-08`) | Verified on origin |
-| Stage C formally opened | Pacing rule: N-series approved → C starts; M-series outranks it |
+| Change                                                                     | Rationale                                                                    |
+| -------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| M-series mobile quality sprint added, priority over Stage C                | Founder reports broken mobile UI; launch traffic will be majority-mobile     |
+| N-series marked complete (`Architect-Approval: 1d225fe 2026-07-08`)        | Verified on origin                                                           |
+| Stage C formally opened                                                    | Pacing rule: N-series approved → C starts; M-series outranks it              |
 | I-series innovation pool (8 proposals, no implementation without approval) | July 2026 ecosystem brainstorm captured as governed backlog, not scope creep |
 
 ## CHANGELOG (v5 → v6)
 
-| Change | Rationale |
-|--------|-----------|
-| Stage R added at top priority (repo→private, token rotation, curated public repo post-launch) | 2026-07-08 audit found the repo publicly visible with security-vuln docs, valuation data, and strategy plans inside |
-| Pacing rule rewritten: no waiting on dates, only Aug 1–9 freeze is calendar-locked; idle Executor = review finding | Founder correction: the agent must never sit idle because a stage's deadline is in the future |
-| N-series added (Academy top-level nav, hardcoded strings, i18n CI guard, incident-language decision) | Founder priority on Academy visibility; i18n audit found key coverage complete but 8 hardcoded strings + English incident content |
-| D-extra2 academic outreach pack (Harvard Berkman Klein, MIT, Stanford HAI, Oxford + Academy tiers) | Founder wants university engagement; Executor drafts, founder sends; unverified statistics stay out |
-| Stage C start condition changed from "Aug 10" to "as soon as N-series approved" | Same pacing correction |
-| Ecosystem note: Commission draft Art. 73 guidance + reporting template; referee-not-vendor positioning vs OneTrust/Prediction Guard | July 2026 ecosystem scan |
-| Stage B marked complete (`Architect-Approval: 5b1a0f5 2026-07-07`) | All items + audit findings verified on origin |
+| Change                                                                                                                              | Rationale                                                                                                                         |
+| ----------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Stage R added at top priority (repo→private, token rotation, curated public repo post-launch)                                       | 2026-07-08 audit found the repo publicly visible with security-vuln docs, valuation data, and strategy plans inside               |
+| Pacing rule rewritten: no waiting on dates, only Aug 1–9 freeze is calendar-locked; idle Executor = review finding                  | Founder correction: the agent must never sit idle because a stage's deadline is in the future                                     |
+| N-series added (Academy top-level nav, hardcoded strings, i18n CI guard, incident-language decision)                                | Founder priority on Academy visibility; i18n audit found key coverage complete but 8 hardcoded strings + English incident content |
+| D-extra2 academic outreach pack (Harvard Berkman Klein, MIT, Stanford HAI, Oxford + Academy tiers)                                  | Founder wants university engagement; Executor drafts, founder sends; unverified statistics stay out                               |
+| Stage C start condition changed from "Aug 10" to "as soon as N-series approved"                                                     | Same pacing correction                                                                                                            |
+| Ecosystem note: Commission draft Art. 73 guidance + reporting template; referee-not-vendor positioning vs OneTrust/Prediction Guard | July 2026 ecosystem scan                                                                                                          |
+| Stage B marked complete (`Architect-Approval: 5b1a0f5 2026-07-07`)                                                                  | All items + audit findings verified on origin                                                                                     |
 
 ## CHANGELOG (v4 → v5)
 
-| Change | Rationale |
-|--------|-----------|
-| 2027 Horizon added (Q4'26 → Q4'27, quarterly) | Long-term direction anchored on 2 Dec 2027 Art. 73 go-live — the single date that defines the company's market moment |
-| Per-quarter north-stars + kill/pivot criteria | Professional plans state failure conditions, not just goals |
-| Long-term operating principles (quarterly re-planning, revenue-first from Jan 2027, regulatory calendar = marketing calendar) | Prevents the Executor deriving tasks from direction; keeps Horizon strategic, stages tactical |
-| Header status refreshed to `5e29c34` approval state | Reflects Stage B partial approval |
-| Definition of Done handoff updated | 2027 plan no longer "requested later" — it's in this document |
+| Change                                                                                                                        | Rationale                                                                                                             |
+| ----------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| 2027 Horizon added (Q4'26 → Q4'27, quarterly)                                                                                 | Long-term direction anchored on 2 Dec 2027 Art. 73 go-live — the single date that defines the company's market moment |
+| Per-quarter north-stars + kill/pivot criteria                                                                                 | Professional plans state failure conditions, not just goals                                                           |
+| Long-term operating principles (quarterly re-planning, revenue-first from Jan 2027, regulatory calendar = marketing calendar) | Prevents the Executor deriving tasks from direction; keeps Horizon strategic, stages tactical                         |
+| Header status refreshed to `5e29c34` approval state                                                                           | Reflects Stage B partial approval                                                                                     |
+| Definition of Done handoff updated                                                                                            | 2027 plan no longer "requested later" — it's in this document                                                         |
 
 ## CHANGELOG (v3 → v4)
 
-| Change | Rationale |
-|--------|-----------|
-| Launch-Critical Path section added (MUST / SHOULD / CAN-slip) | 21 days out, the Executor needs an explicit cut line, not a flat task list |
-| B2 split into B2a (launch-required) / B2b (post-launch) | Expert-verification email + weekly digest don't block launch; confirmation + provider-response do |
-| Stage C explicitly barred from pre-launch work | Its deadline (Aug 15) is post-launch; pre-launch hours must go to B1/B2a/D |
-| Calendar checkpoints anchored (Jul 9, Jul 12, Jul 25, Aug 1) | Machine-checkable dates replace "earlier is better" |
+| Change                                                        | Rationale                                                                                         |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Launch-Critical Path section added (MUST / SHOULD / CAN-slip) | 21 days out, the Executor needs an explicit cut line, not a flat task list                        |
+| B2 split into B2a (launch-required) / B2b (post-launch)       | Expert-verification email + weekly digest don't block launch; confirmation + provider-response do |
+| Stage C explicitly barred from pre-launch work                | Its deadline (Aug 15) is post-launch; pre-launch hours must go to B1/B2a/D                        |
+| Calendar checkpoints anchored (Jul 9, Jul 12, Jul 25, Aug 1)  | Machine-checkable dates replace "earlier is better"                                               |
 
 ## CHANGELOG (v2 → v3)
 
-| Change | Rationale |
-|--------|-----------|
-| Repo hygiene note (single-branch, no plan-doc PRs) | Cleanup performed 2026-07-07; workflow now enforced |
-| Standing Rule #2 tightened (retro-approval is one-time) | Prevent recurrence of out-of-scope drift observed between `a96c9ca` and `861fe46` |
-| Standing Rule #14 added (plan docs Architect-only) | Executor edited plan v1→v2 without approval; prevent recurrence |
-| Standing Rule #15 added (single-branch workflow) | Codifies the 2026-07-07 cleanup |
-| Standing Rule #16 added (Architect-Approval line required) | Prevents Executor self-approval |
-| Stage B delivery status table | Reflects actual state at `861fe46` |
-| B-extra section (retro-approval) | War room, press releases, outreach hub, live Vertex sync — accepted once, must be verified within 48h |
-| B1 explicitly marked TOP PRIORITY | Biggest remaining UX gap before launch |
-| Reporting Protocol: Architect-Approval line + PROPOSALS/ path | Machine-checkable stage sign-off |
-| Executor forbidden actions expanded | Adds plan-doc editing, plan-doc PRs, new branches |
+| Change                                                        | Rationale                                                                                             |
+| ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Repo hygiene note (single-branch, no plan-doc PRs)            | Cleanup performed 2026-07-07; workflow now enforced                                                   |
+| Standing Rule #2 tightened (retro-approval is one-time)       | Prevent recurrence of out-of-scope drift observed between `a96c9ca` and `861fe46`                     |
+| Standing Rule #14 added (plan docs Architect-only)            | Executor edited plan v1→v2 without approval; prevent recurrence                                       |
+| Standing Rule #15 added (single-branch workflow)              | Codifies the 2026-07-07 cleanup                                                                       |
+| Standing Rule #16 added (Architect-Approval line required)    | Prevents Executor self-approval                                                                       |
+| Stage B delivery status table                                 | Reflects actual state at `861fe46`                                                                    |
+| B-extra section (retro-approval)                              | War room, press releases, outreach hub, live Vertex sync — accepted once, must be verified within 48h |
+| B1 explicitly marked TOP PRIORITY                             | Biggest remaining UX gap before launch                                                                |
+| Reporting Protocol: Architect-Approval line + PROPOSALS/ path | Machine-checkable stage sign-off                                                                      |
+| Executor forbidden actions expanded                           | Adds plan-doc editing, plan-doc PRs, new branches                                                     |
 
 ---
 

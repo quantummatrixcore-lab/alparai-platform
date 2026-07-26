@@ -364,9 +364,12 @@ export default async function StrategyOverviewPage({
                     Module 05
                   </span>
                 </div>
-                <h2 className="text-lg font-bold text-white">{t("strategy_questionnaire") || "Strategic Questionnaire"}</h2>
+                <h2 className="text-lg font-bold text-white">
+                  {t("strategy_questionnaire") || "Strategic Questionnaire"}
+                </h2>
                 <p className="text-fg-muted mt-2 text-xs">
-                  {t("strategy_questionnaire_desc") || "Compare model evaluations, latencies, and costs on platform strategy."}
+                  {t("strategy_questionnaire_desc") ||
+                    "Compare model evaluations, latencies, and costs on platform strategy."}
                 </p>
                 <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-2 text-center text-xs">
                   <span className="text-fg-muted block text-[9px] font-bold tracking-wider uppercase">

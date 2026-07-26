@@ -10,17 +10,21 @@
 
 - **Criterion:** `/incidents` shows ≥ 100 records
 - **Test Command (Database Count):**
+
   ```sql
   SELECT COUNT(*) FROM incidents WHERE status = 'published';
   ```
 
   - **Output:** `411` incidents published. (Passes ≥ 100 requirement).
+
 - **Test Command (Authorized API Request):**
+
   ```bash
   curl -s -L -H "Authorization: Bearer <API_KEY>" https://www.alparai.com/api/v1/incidents | jq '.meta.count'
   ```
 
   - **Output:** `20` (Free tier pagination limit).
+
 - **API Status:** Public request returned `401 Unauthorized` as designed for `/api/v1/incidents` without a valid `Bearer` token. Checked with test API key and verified data is returned correctly.
 - **Evidence Page View:** [incidents.png](incidents.png) (Captured via `chrome-devtools-mcp`)
 
@@ -30,11 +34,13 @@
 
 - **Criterion:** `/leaderboard` is not empty
 - **Test Command:**
+
   ```bash
   curl -s -L https://www.alparai.com/api/v1/leaderboard | jq 'length'
   ```
 
   - **Output:** `2` (Passes > 0 requirement).
+
 - **API Status:** Publicly accessible, rate-limited, no auth required. Returns JSON array of providers sorted by trust score.
 - **Evidence Page View:** [leaderboard.png](leaderboard.png) (Captured via `chrome-devtools-mcp`)
 
@@ -44,6 +50,7 @@
 
 - **Criterion:** `/legal/imprint` returns 200 + jurisdiction content is visible
 - **Test Command:**
+
   ```bash
   curl -sI -L https://alparai.com/legal/imprint | grep -i HTTP
   ```
@@ -54,6 +61,7 @@
     HTTP/1.1 307 Temporary Redirect (/legal/imprint -> /en/legal/imprint)
     HTTP/1.1 200 OK
     ```
+
 - **Rendering Verification:** Imprint / Imprint (Legal Disclaimer) page loaded successfully. Jurisdiction content (e.g., German/Turkish jurisdiction details, registrar info) is fully rendered on screen.
 - **Evidence Page View:** [imprint.png](imprint.png) (Captured via `chrome-devtools-mcp`)
 

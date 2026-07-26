@@ -111,7 +111,11 @@ export function QuestionnaireClient({
     try {
       const res = await exportRunToMarkdown(runId);
       if (res.ok) {
-        toast.success(isTurkish ? "Rapor başarıyla markdown dosyasına eklendi!" : "Report successfully appended to markdown file!");
+        toast.success(
+          isTurkish
+            ? "Rapor başarıyla markdown dosyasına eklendi!"
+            : "Report successfully appended to markdown file!",
+        );
       } else {
         toast.error(`${i18n.error}: ${res.error || "Unknown"}`);
       }
@@ -133,7 +137,7 @@ export function QuestionnaireClient({
           .toLowerCase()
           .replace(/[^a-z0-9\s]/g, "")
           .split(/\s+/)
-          .filter(Boolean)
+          .filter(Boolean),
       );
     };
 
@@ -279,7 +283,11 @@ export function QuestionnaireClient({
                       className="bg-bg-secondary hover:bg-bg-tertiary border-border-subtle inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-bold text-white transition-all disabled:opacity-50"
                     >
                       <ClipboardList className="h-3.5 w-3.5" />
-                      {exporting === run.id ? (isTurkish ? "Dışa Aktarılıyor..." : "Exporting...") : i18n.exportMd}
+                      {exporting === run.id
+                        ? isTurkish
+                          ? "Dışa Aktarılıyor..."
+                          : "Exporting..."
+                        : i18n.exportMd}
                     </button>
                   )}
                   <Badge
@@ -343,18 +351,24 @@ export function QuestionnaireClient({
                                 variant="outline"
                                 className={
                                   level === "high"
-                                    ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-[9px] font-bold"
+                                    ? "border-emerald-500/20 bg-emerald-500/10 text-[9px] font-bold text-emerald-400"
                                     : level === "medium"
-                                      ? "border-amber-500/20 bg-amber-500/10 text-amber-400 text-[9px] font-bold"
-                                      : "border-blue-500/20 bg-blue-500/10 text-blue-400 text-[9px] font-bold"
+                                      ? "border-amber-500/20 bg-amber-500/10 text-[9px] font-bold text-amber-400"
+                                      : "border-blue-500/20 bg-blue-500/10 text-[9px] font-bold text-blue-400"
                                 }
                               >
                                 {isTurkish ? "Fikir Birliği: " : "Agreement: "}
                                 {level === "high"
-                                  ? (isTurkish ? "Yüksek" : "High")
+                                  ? isTurkish
+                                    ? "Yüksek"
+                                    : "High"
                                   : level === "medium"
-                                    ? (isTurkish ? "Orta" : "Medium")
-                                    : (isTurkish ? "Bölünmüş / Düşük" : "Split / Low")}
+                                    ? isTurkish
+                                      ? "Orta"
+                                      : "Medium"
+                                    : isTurkish
+                                      ? "Bölünmüş / Düşük"
+                                      : "Split / Low"}
                               </Badge>
                             );
                           })()}

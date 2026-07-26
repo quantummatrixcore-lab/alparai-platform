@@ -1,6 +1,7 @@
 # Screen 10: DSAR Requests & Privacy Logs (`/admin/dsar`)
 
 ## 1. Overview
+
 The privacy, GDPR, and KVKK compliance dashboard. It lists all Data Subject Access Requests (DSARs), data deletions, account cancellations, and audit trails.
 
 - **English Title:** Privacy & DSAR Logs
@@ -9,6 +10,7 @@ The privacy, GDPR, and KVKK compliance dashboard. It lists all Data Subject Acce
 ---
 
 ## 2. Page Layout (12-Column Grid)
+
 - **Header Section (Span 12):** `AdminPageHeader` showing compliance status badges (`GDPR Compliant`, `KVKK Compliant` in emerald).
 - **Top Row (Span 4 each):** 3 metrics:
   1. Open DSAR Requests (Count, amber warning color)
@@ -24,6 +26,7 @@ The privacy, GDPR, and KVKK compliance dashboard. It lists all Data Subject Acce
 ---
 
 ## 3. UI Specifications & Styling
+
 - **SLA Countdown Timer:** Displays remaining time (e.g. `24d 12h left` in amber, or `OVERDUE` in blinking Crimson `#FF3B30`).
 - **Trigger Deletion Button:** Crimson background (`#FF3B30`) with white text. Emits a red glow on hover. Requires double-click confirmation.
 - **Typography:**

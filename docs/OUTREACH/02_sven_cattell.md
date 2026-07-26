@@ -6,7 +6,7 @@
 
 Dear Sven,
 
-I’m reaching out from ALPAR AI, an open-source trust and accountability platform for AI systems. 
+I’m reaching out from ALPAR AI, an open-source trust and accountability platform for AI systems.
 
 Your work founding the AI Village at DEF CON and fostering crowdsourced security for AI models aligns directly with our mission. ALPAR AI acts as a public incident registry and rating system for production AI models, bridging security researchers, bug hunters, and model developers.
 

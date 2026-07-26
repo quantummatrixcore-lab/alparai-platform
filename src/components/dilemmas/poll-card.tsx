@@ -187,7 +187,7 @@ export function PollCard({ poll }: { poll: Poll }) {
                     size="sm"
                     variant="ghost"
                     onClick={handleRetryTurnstile}
-                    className="text-brand-400 hover:text-brand-300 text-xs font-bold underline animate-pulse"
+                    className="text-brand-400 hover:text-brand-300 animate-pulse text-xs font-bold underline"
                   >
                     {t("retryVerification")}
                   </Button>

@@ -1,6 +1,7 @@
 # Screen 5: User Roles & RBAC Management (`/admin/users`)
 
 ## 1. Overview
+
 User directory and access control panel, enabling administrators to search users, modify system roles, assign advisor badges, and audit user permissions.
 
 - **English Title:** User Directory & Roles
@@ -9,6 +10,7 @@ User directory and access control panel, enabling administrators to search users
 ---
 
 ## 2. Page Layout (12-Column Grid)
+
 - **Header Section (Span 12):** `AdminPageHeader` with an integrated email search input.
 - **Top Row (Span 4 each):** 3 metrics:
   1. Total Registered Users (Total count)
@@ -24,6 +26,7 @@ User directory and access control panel, enabling administrators to search users
 ---
 
 ## 3. UI Specifications & Styling
+
 - **Role Dropdown:** Custom styled `<select>` element with a dark background (`#060A0F`), emerald border on hover, and custom arrow icon.
 - **Badge Chips:** Small pills with low opacity fills:
   - `Pioneer`: background `rgba(0, 210, 255, 0.1)`, text `#00D2FF`.

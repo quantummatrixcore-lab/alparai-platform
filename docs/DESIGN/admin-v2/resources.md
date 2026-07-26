@@ -1,6 +1,7 @@
 # Screen 7: Third-Party Catalog & Capacity (`/admin/resources`)
 
 ## 1. Overview
+
 The primary vendor index and database health console. It contains the live capacity gauges (limits vs current usage %) and the static 15-entry vendor catalog.
 
 - **English Title:** Platform Resources & Vendors
@@ -9,6 +10,7 @@ The primary vendor index and database health console. It contains the live capac
 ---
 
 ## 2. Page Layout (12-Column Grid)
+
 - **Header Section (Span 12):** `AdminPageHeader` showing system health status (operational/warning/degraded).
 - **Top Row (Span 12 Bento Grid):** Live Capacity Dashboard Gauges (one bar per resource):
   - **Supabase DB size:** used MB / 500 MB (Free limit)
@@ -25,6 +27,7 @@ The primary vendor index and database health console. It contains the live capac
 ---
 
 ## 3. UI Specifications & Styling
+
 - **Capacity Gauges:** Linear progress bars (`h-2 rounded-fullbg-bg-tertiary`):
   - Fill color is `#00FF88` (Emerald) if <60%.
   - Fill color is `#FFD000` (Amber) if 60% - 80%.

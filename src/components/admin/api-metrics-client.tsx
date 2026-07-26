@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import {
   AreaChart,
   Area,
@@ -14,102 +13,35 @@ import { Gauge } from "@/components/admin/premium/gauge";
 import { AnimatedCounter } from "@/components/admin/premium/animated-counter";
 import { StatusPill } from "@/components/admin/premium/status-pill";
 import { AdminSectionCard } from "@/components/admin/admin-design-kit";
+import { useTranslations } from "next-intl";
 
-export function ApiMetricsClient() {
-  const [metrics, setMetrics] = useState({
-    requests24h: 12847,
-    avgLatency: 142,
-    errorRate: 0.12,
-    p99Latency: 389,
-  });
+interface ApiMetricsProps {
+  metrics?: {
+    requests24h: number;
+    avgLatency: number;
+    errorRate: number;
+    p99Latency: number;
+  };
+  trafficData?: { hour: string; requests: number; errors: number }[];
+  endpoints?: {
+    name: string;
+    method: string;
+    status: "healthy" | "warning" | "critical";
+    latency: string;
+    rps: string;
+    uptime: number;
+  }[];
+}
 
-  const [trafficData, setTrafficData] = useState<
-    { hour: string; requests: number; errors: number }[]
-  >([]);
-
-  useEffect(() => {
-    const hours = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, "0")}:00`);
-    const initial = hours.map((hour) => ({
-      hour,
-      requests: Math.floor(Math.random() * 800) + 200,
-      errors: Math.floor(Math.random() * 5),
-    }));
-    setTrafficData(initial);
-
-    const interval = setInterval(() => {
-      setTrafficData((prev) => {
-        const next = [...prev];
-        const lastIdx = next.length - 1;
-        const last = next[lastIdx];
-        if (last) {
-          next[lastIdx] = {
-            ...last,
-            requests: Math.max(50, last.requests + Math.floor(Math.random() * 100) - 50),
-            errors: Math.max(0, last.errors + Math.floor(Math.random() * 3) - 1),
-          };
-        }
-        return next;
-      });
-      setMetrics((m) => ({
-        ...m,
-        requests24h: m.requests24h + Math.floor(Math.random() * 50),
-        avgLatency: Math.max(80, Math.min(300, m.avgLatency + Math.floor(Math.random() * 20) - 10)),
-        errorRate: Math.max(0, Math.min(2, m.errorRate + Math.random() * 0.05 - 0.025)),
-      }));
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const endpoints = [
-    {
-      name: "POST /api/incidents",
-      method: "POST",
-      status: "healthy" as const,
-      latency: "89ms",
-      rps: "42/s",
-      uptime: 99.99,
-    },
-    {
-      name: "GET /api/providers",
-      method: "GET",
-      status: "healthy" as const,
-      latency: "34ms",
-      rps: "128/s",
-      uptime: 100,
-    },
-    {
-      name: "POST /api/auth/callback",
-      method: "POST",
-      status: "healthy" as const,
-      latency: "210ms",
-      rps: "8/s",
-      uptime: 99.95,
-    },
-    {
-      name: "GET /api/moderation/queue",
-      method: "GET",
-      status: "warning" as const,
-      latency: "456ms",
-      rps: "3/s",
-      uptime: 99.8,
-    },
-    {
-      name: "POST /api/webhooks/stripe",
-      method: "POST",
-      status: "healthy" as const,
-      latency: "178ms",
-      rps: "1/s",
-      uptime: 99.99,
-    },
-  ];
+export function ApiMetricsClient({
+  metrics = { requests24h: 0, avgLatency: 0, errorRate: 0, p99Latency: 0 },
+  trafficData = [],
+  endpoints = [],
+}: ApiMetricsProps) {
+  const t = useTranslations("admin");
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between rounded-lg border border-amber-500/20 bg-amber-500/10 px-4 py-2 text-xs font-medium text-amber-400">
-        <span>API Telemetry Stream</span>
-        <span className="rounded bg-amber-500/20 px-2 py-0.5 font-mono text-[10px] uppercase">SIMULATION MODE — Synthetic Ticker</span>
-      </div>
       {/* Metric Gauges */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <AdminSectionCard>
@@ -120,7 +52,7 @@ export function ApiMetricsClient() {
               sublabel="/ 20K"
             />
             <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
-              Requests (24h)
+              {t("api_requests_24h") || "Requests (24h)"}
             </span>
             <AnimatedCounter value={metrics.requests24h} className="text-xl text-white" />
           </div>
@@ -134,7 +66,7 @@ export function ApiMetricsClient() {
               variant={metrics.avgLatency < 200 ? "success" : "warning"}
             />
             <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
-              Avg Latency
+              {t("api_avg_latency") || "Avg Latency"}
             </span>
             <AnimatedCounter
               value={metrics.avgLatency}
@@ -149,15 +81,17 @@ export function ApiMetricsClient() {
               value={Math.max(0, 100 - metrics.errorRate * 50)}
               size="md"
               sublabel="%"
-              variant={metrics.errorRate < 0.5 ? "success" : "danger"}
+              variant={
+                metrics.errorRate < 0.5 ? "success" : metrics.errorRate < 1 ? "warning" : "danger"
+              }
             />
             <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
-              Error Rate
+              {t("api_error_rate") || "Error Rate"}
             </span>
             <AnimatedCounter
               value={metrics.errorRate}
-              decimals={2}
               suffix="%"
+              decimals={2}
               className="text-xl text-white"
             />
           </div>
@@ -171,7 +105,7 @@ export function ApiMetricsClient() {
               variant={metrics.p99Latency < 500 ? "success" : "warning"}
             />
             <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
-              P99 Latency
+              {t("api_p99_latency") || "P99 Latency"}
             </span>
             <AnimatedCounter
               value={metrics.p99Latency}
@@ -183,89 +117,116 @@ export function ApiMetricsClient() {
       </div>
 
       {/* Traffic Chart */}
-      <AdminSectionCard title="Traffic Overview (24h)">
-        <div className="p-6">
-          <div className="h-64 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={trafficData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorReqs" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.2} />
-                    <stop offset="95%" stopColor="#06b6d4" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="colorErrors" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#e63946" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#e63946" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke="rgba(255,255,255,0.05)"
-                  vertical={false}
-                />
-                <XAxis
-                  dataKey="hour"
-                  stroke="rgba(255,255,255,0.2)"
-                  tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 10 }}
-                  tickLine={false}
-                  axisLine={false}
-                  interval={3}
-                />
-                <YAxis
-                  stroke="rgba(255,255,255,0.2)"
-                  tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 10 }}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#0E1622",
-                    borderColor: "rgba(255,255,255,0.1)",
-                    borderRadius: "8px",
-                  }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="requests"
-                  stroke="#06b6d4"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#colorReqs)"
-                />
-                <Area
-                  type="monotone"
-                  dataKey="errors"
-                  stroke="#e63946"
-                  strokeWidth={1.5}
-                  fillOpacity={1}
-                  fill="url(#colorErrors)"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="mt-4 flex items-center gap-6 text-xs">
-            <span className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-cyan-500" /> Requests
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-rose-500" /> Errors
-            </span>
-          </div>
+      <AdminSectionCard title={t("api_traffic_overview") || "Traffic Overview (24h)"}>
+        <div className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={trafficData}>
+              <defs>
+                <linearGradient id="requestsGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#a855f7" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#a855f7" stopOpacity={0} />
+                </linearGradient>
+                <linearGradient id="errorsGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
+              <XAxis
+                dataKey="hour"
+                tick={{ fill: "#71717a", fontSize: 10 }}
+                axisLine={{ stroke: "#ffffff10" }}
+                tickLine={false}
+              />
+              <YAxis tick={{ fill: "#71717a", fontSize: 10 }} axisLine={false} tickLine={false} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#18181b",
+                  border: "1px solid #27272a",
+                  borderRadius: "8px",
+                }}
+                labelStyle={{ color: "#fafafa" }}
+              />
+              <Area
+                type="monotone"
+                dataKey="requests"
+                stroke="#a855f7"
+                strokeWidth={2}
+                fillOpacity={1}
+                fill="url(#requestsGradient)"
+              />
+              <Area
+                type="monotone"
+                dataKey="errors"
+                stroke="#ef4444"
+                strokeWidth={2}
+                fillOpacity={1}
+                fill="url(#errorsGradient)"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="mt-4 flex gap-6 text-sm">
+          <span className="flex items-center gap-2 text-purple-400">
+            <span className="h-3 w-3 rounded-full bg-purple-500" />
+            {t("api_requests") || "Requests"}
+          </span>
+          <span className="flex items-center gap-2 text-red-400">
+            <span className="h-3 w-3 rounded-full bg-red-500" />
+            {t("api_errors") || "Errors"}
+          </span>
         </div>
       </AdminSectionCard>
 
-      {/* Endpoints Status */}
-      <AdminSectionCard title="Endpoint Health">
-        <div className="space-y-2 p-4">
-          {endpoints.map((ep) => (
-            <StatusPill
-              key={ep.name}
-              name={ep.name}
-              status={ep.status}
-              uptime={ep.uptime}
-              latency={ep.latency}
-            />
-          ))}
+      {/* Endpoint Health Table */}
+      <AdminSectionCard title={t("api_endpoint_health") || "Endpoint Health"}>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="text-fg-muted border-b border-white/5 bg-neutral-950/20 text-xs font-semibold tracking-wider uppercase">
+                <th className="p-4">{t("api_endpoint") || "Endpoint"}</th>
+                <th className="p-4">{t("api_method") || "Method"}</th>
+                <th className="p-4">{t("api_status") || "Status"}</th>
+                <th className="p-4">{t("api_latency") || "Latency"}</th>
+                <th className="p-4">{t("api_rps") || "RPS"}</th>
+                <th className="p-4 text-right">{t("api_uptime") || "Uptime"}</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {endpoints.map((ep, i) => (
+                <tr key={i} className="transition-colors hover:bg-white/[0.02]">
+                  <td className="p-4 font-mono text-white">{ep.name}</td>
+                  <td className="p-4">
+                    <span className="inline-flex items-center gap-1 rounded border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-medium">
+                      {ep.method}
+                    </span>
+                  </td>
+                  <td className="p-4">
+                    <StatusPill
+                      name={ep.name}
+                      status={
+                        ep.status === "healthy"
+                          ? "healthy"
+                          : ep.status === "warning"
+                            ? "warning"
+                            : "danger"
+                      }
+                    />
+                  </td>
+                  <td className="p-4 font-mono text-white">{ep.latency}</td>
+                  <td className="text-fg-muted p-4 font-mono">{ep.rps}</td>
+                  <td className="text-fg-muted p-4 text-right font-mono">{ep.uptime}%</td>
+                </tr>
+              ))}
+              {endpoints.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="text-fg-muted p-16 text-center">
+                    {t("api_no_endpoints") || "No endpoint data available"}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </AdminSectionCard>
     </div>

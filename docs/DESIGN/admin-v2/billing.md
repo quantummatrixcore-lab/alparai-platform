@@ -1,6 +1,7 @@
 # Screen 6: Billing & API Usage (`/admin/billing`)
 
 ## 1. Overview
+
 Financial control panel for monitoring live API usage, monthly subscription costs, model invocation token counts, and overall platform R&D spend.
 
 - **English Title:** Costs & Usage Dashboard
@@ -9,6 +10,7 @@ Financial control panel for monitoring live API usage, monthly subscription cost
 ---
 
 ## 2. Page Layout (12-Column Grid)
+
 - **Header Section (Span 12):** `AdminPageHeader` showing billing cycle indicators and export buttons.
 - **Top Row (Span 3 each):** 4 metric indicators:
   1. Monthly Spend (Estimated USD, emerald colored)
@@ -23,6 +25,7 @@ Financial control panel for monitoring live API usage, monthly subscription cost
 ---
 
 ## 3. UI Specifications & Styling
+
 - **Spend Value:** Mono Data (Size 28px, Color `#00FF88` with a subtle glow).
 - **Stacked Bar Chart:** Colors use the brand gradient scheme:
   - OpenRouter: `#a855f7` (Neon Purple)

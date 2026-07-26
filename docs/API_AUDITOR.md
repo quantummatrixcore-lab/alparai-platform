@@ -17,9 +17,11 @@ Authorization: Bearer <auditor_api_key>
 ## Endpoints
 
 ### 1. GET `/api/v1/auditor/k-benchmark`
+
 Returns raw K-BENCHMARK scores for all audited AI models.
 
 **Response (200 OK)**:
+
 ```json
 {
   "data": [
@@ -36,9 +38,11 @@ Returns raw K-BENCHMARK scores for all audited AI models.
 ```
 
 ### 2. GET `/api/v1/auditor/methodology`
+
 Returns the complete methodology version history.
 
 **Response (200 OK)**:
+
 ```json
 {
   "data": [
@@ -52,9 +56,11 @@ Returns the complete methodology version history.
 ```
 
 ### 3. GET `/api/v1/auditor/audit-logs`
+
 Returns the 100 most recent system audit logs.
 
 **Response (200 OK)**:
+
 ```json
 {
   "data": [

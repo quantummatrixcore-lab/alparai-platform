@@ -110,8 +110,7 @@ export default async function AIActTrackerPage({
 
   const mappedIncidents: IncidentListItem[] = toIncidentListItems(rawIncidents).map((item) => {
     const rawRow = rawIncidents.find((r: Record<string, unknown>) => r.id === item.id) as
-      | Record<string, unknown>
-      | undefined;
+      Record<string, unknown> | undefined;
     const providerId = rawRow?.ai_provider_id as string | null;
     const provider = providerId ? providerMap.get(providerId) : null;
     return {

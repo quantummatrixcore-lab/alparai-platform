@@ -7,6 +7,15 @@ import { MetricCard } from "@/components/admin/metric-card";
 import { CheckCircle2, MessageSquare, Linkedin, UserPlus, FileText } from "lucide-react";
 import { updateLinkedinContactStatus } from "@/actions/admin/linkedin";
 import { toast } from "sonner";
+import {
+  BarChart,
+  Bar,
+  Cell,
+  XAxis,
+  YAxis,
+  Tooltip as RechartsTooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 interface LinkedinContact {
   id: string;
@@ -75,6 +84,86 @@ export function LinkedinContactsList({ initialContacts }: { initialContacts: Lin
           icon={<CheckCircle2 className="h-4 w-4 text-violet-400" />}
         />
       </div>
+
+      {stats.total > 0 && (
+        <Card className="border-white/10 bg-black/40 p-4">
+          <h4 className="mb-4 text-sm font-semibold text-white">Outreach Pipeline Status</h4>
+          <div className="h-32 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={[
+                  {
+                    name: "To Add",
+                    value: initialContacts.filter((c) => c.status === "to_add").length,
+                    color: "#94a3b8",
+                  },
+                  {
+                    name: "Added",
+                    value: initialContacts.filter((c) => c.status === "added").length,
+                    color: "#34d399",
+                  },
+                  {
+                    name: "Messaged",
+                    value: initialContacts.filter((c) => c.status === "messaged").length,
+                    color: "#60a5fa",
+                  },
+                  { name: "Responded", value: stats.responded, color: "#a78bfa" },
+                ]}
+                layout="vertical"
+                margin={{ left: 20, right: 20, top: 10, bottom: 10 }}
+              >
+                <XAxis
+                  type="number"
+                  stroke="#94a3b8"
+                  fontSize={10}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  stroke="#94a3b8"
+                  fontSize={10}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <RechartsTooltip
+                  cursor={{ fill: "rgba(255,255,255,0.05)" }}
+                  contentStyle={{
+                    background: "#0f172a",
+                    borderColor: "rgba(255,255,255,0.1)",
+                    borderRadius: "8px",
+                  }}
+                  itemStyle={{ color: "#fff", fontSize: "11px" }}
+                  labelStyle={{ display: "none" }}
+                />
+                <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={14}>
+                  {[
+                    {
+                      name: "To Add",
+                      value: initialContacts.filter((c) => c.status === "to_add").length,
+                      color: "#94a3b8",
+                    },
+                    {
+                      name: "Added",
+                      value: initialContacts.filter((c) => c.status === "added").length,
+                      color: "#34d399",
+                    },
+                    {
+                      name: "Messaged",
+                      value: initialContacts.filter((c) => c.status === "messaged").length,
+                      color: "#60a5fa",
+                    },
+                    { name: "Responded", value: stats.responded, color: "#a78bfa" },
+                  ].map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+      )}
 
       <div className="flex space-x-2 border-b border-white/10 pb-2">
         {(["all", "to_add", "added", "messaged", "responded"] as const).map((tab) => (

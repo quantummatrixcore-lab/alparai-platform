@@ -30,9 +30,7 @@ export async function GET(request: Request) {
     from: (table: string) => {
       select: (cols: string) => {
         eq?: (col: string, val: unknown) => unknown;
-        limit: (
-          n: number,
-        ) => Promise<{
+        limit: (n: number) => Promise<{
           data: Array<{
             id: string;
             cited_url: string;

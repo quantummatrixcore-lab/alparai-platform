@@ -1,6 +1,7 @@
 # Screen 1: Admin Overview Dashboard (`/admin`)
 
 ## 1. Overview
+
 The primary landing dashboard for system operators, presenting a 360-degree overview of platform telemetry, security alerts, moderation SLA status, and recent audits.
 
 - **English Title:** Control Center / Admin Dashboard
@@ -9,6 +10,7 @@ The primary landing dashboard for system operators, presenting a 360-degree over
 ---
 
 ## 2. Page Layout (12-Column Grid)
+
 - **Header Section (Span 12):** `AdminPageHeader` component with page title, current timezone timestamp, and refresh trigger.
 - **Top Row (Span 3 each — 4 columns total):** 4 `StatCard` indicators.
   1. Incident Volume (Total + trend sparkline)
@@ -23,6 +25,7 @@ The primary landing dashboard for system operators, presenting a 360-degree over
 ---
 
 ## 3. UI Specifications & Styling
+
 - **Background Fill:** `#060A0F`
 - **Cards Fill:** `#0E1622` (frosted glass) with border `1px solid rgba(255, 255, 255, 0.05)`.
 - **Chart Accent:** Area fill uses gradient from `#00FF88` (opacity 0.3) fading to transparent. Stroke is `#00FF88` with width `1.5px`.

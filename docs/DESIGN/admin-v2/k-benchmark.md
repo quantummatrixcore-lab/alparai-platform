@@ -1,6 +1,7 @@
 # Screen 9: K-Benchmark Matrix (`/admin/k-benchmark`)
 
 ## 1. Overview
+
 The trust-matrix management console, mapping global LLMs against key accountability scores (Hallucination Rate, PII Protection, Regulatory compliance).
 
 - **English Title:** K-Benchmark Configuration
@@ -9,6 +10,7 @@ The trust-matrix management console, mapping global LLMs against key accountabil
 ---
 
 ## 2. Page Layout (12-Column Grid)
+
 - **Header Section (Span 12):** `AdminPageHeader` showing options to trigger a benchmark rerun or import new benchmark data files.
 - **Top Row (Span 4 each):** 3 metrics:
   1. Benchmarked Models (Count)
@@ -25,6 +27,7 @@ The trust-matrix management console, mapping global LLMs against key accountabil
 ---
 
 ## 3. UI Specifications & Styling
+
 - **Score Cell Heatmap:** Subtle background color intensity maps to score value:
   - Excellent: 90%+ has a faint `#00FF88` (Emerald) background tint.
   - Caution: 60%-79% has a faint `#FFD000` (Amber) background tint.

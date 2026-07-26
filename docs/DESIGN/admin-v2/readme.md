@@ -7,6 +7,7 @@ This document establishes the official visual design specs and system tokens for
 ## 1. Core Visual Tokens
 
 ### Colors
+
 - **Obsidian Dark (Primary BG):** `#060A0F` — Absolute deep slate-black background.
 - **Slate Gray (Card Fills / Secondary BG):** `#0E1622` — Frosted glass container fill (60% opacity with backdrop-blur).
 - **Emerald Neon (Primary Brand Accent):** `#00FF88` — High-luminous accent for key CTAs, active status, and positive trend highlights.
@@ -18,6 +19,7 @@ This document establishes the official visual design specs and system tokens for
 - **Text Muted (Low Emphasis):** `#6B7280` (Cool Gray 500) — Telemetry labels, system timestamps.
 
 ### Typography (Space Grotesk)
+
 - **Display Bold:** `font-family: 'Space Grotesk', sans-serif; font-weight: 700;`
 - **Mono Data:** `font-family: 'Space Grotesk', monospace; font-weight: 500;` (used for numeric logs and telemetry to emulate monospaced alignment).
 
@@ -26,6 +28,7 @@ This document establishes the official visual design specs and system tokens for
 ## 2. Layout & Bento Grid Architecture
 
 All screens conform to a modular **12-column grid** on Desktop, transitioning to a single-column stack on Mobile:
+
 - **Gutters:** 24px (1.5rem)
 - **Radius:** Softly Technical (`0.5rem` / `rounded-lg` for containers, `0.25rem` / `rounded-sm` for buttons and input fields).
 - **Elevation:** Depth is achieved via `backdrop-filter: blur(20px)` and a `1px` border of `rgba(255, 255, 255, 0.05)` rather than drop shadows.

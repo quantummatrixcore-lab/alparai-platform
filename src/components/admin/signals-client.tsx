@@ -180,7 +180,9 @@ export function SignalsClient() {
     <div className="space-y-8">
       <div className="flex items-center justify-between rounded-lg border border-amber-500/20 bg-amber-500/10 px-4 py-2 text-xs font-medium text-amber-400">
         <span>Signal Telemetry Stream</span>
-        <span className="rounded bg-amber-500/20 px-2 py-0.5 font-mono text-[10px] uppercase">SIMULATION MODE — Realtime Jitter</span>
+        <span className="rounded bg-amber-500/20 px-2 py-0.5 font-mono text-[10px] uppercase">
+          SIMULATION MODE — Realtime Jitter
+        </span>
       </div>
       {/* Overall Signal Status */}
       <AdminSectionCard title="Signal Overview">

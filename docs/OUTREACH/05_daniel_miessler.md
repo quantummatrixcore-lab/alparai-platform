@@ -8,7 +8,7 @@ Dear Daniel,
 
 I'm reaching out from ALPAR AI, an open-source AI accountability and incident registry platform.
 
-Following your work on AI security and InfoSec governance in *Unsupervised Learning*, we would be thrilled to invite you to join ALPAR AI's **Methodology Advisory Board**.
+Following your work on AI security and InfoSec governance in _Unsupervised Learning_, we would be thrilled to invite you to join ALPAR AI's **Methodology Advisory Board**.
 
 ALPAR AI provides public safety grades, vulnerability intake, and compliance tracking for AI models. Your practical InfoSec mindset would be crucial in shaping how we log, categorize, and score real-world AI security breaches.
 

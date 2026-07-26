@@ -39,11 +39,7 @@ export function RoadmapTodosClient({ initialTodos, isReadOnly, locale }: TodosCl
 
   const handleDelete = async (id: string) => {
     if (isReadOnly) return;
-    if (
-      !confirm(
-        t("are_you_sure_you_want_to_delete_this_tas"),
-      )
-    ) {
+    if (!confirm(t("are_you_sure_you_want_to_delete_this_tas"))) {
       return;
     }
     try {
@@ -100,9 +96,7 @@ export function RoadmapTodosClient({ initialTodos, isReadOnly, locale }: TodosCl
   return (
     <div className="mt-12 space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-white">
-          {t("roadmap_tasks")}
-        </h2>
+        <h2 className="text-xl font-bold text-white">{t("roadmap_tasks")}</h2>
         {!isReadOnly && !isAdding && (
           <button
             onClick={() => setIsAdding(true)}
@@ -221,9 +215,7 @@ export function RoadmapTodosClient({ initialTodos, isReadOnly, locale }: TodosCl
           );
         })}
         {todos.length === 0 && (
-          <p className="text-fg-muted py-8 text-center text-sm italic">
-            {t("no_tasks_added_yet")}
-          </p>
+          <p className="text-fg-muted py-8 text-center text-sm italic">{t("no_tasks_added_yet")}</p>
         )}
       </div>
     </div>
