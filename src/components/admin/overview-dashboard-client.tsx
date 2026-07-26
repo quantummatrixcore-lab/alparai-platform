@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import {
   AreaChart,
@@ -20,6 +19,7 @@ import { AdminSectionCard } from "@/components/admin/admin-design-kit";
 import { Gauge } from "@/components/admin/premium/gauge";
 import { LivePulseRing } from "@/components/admin/premium/live-pulse-ring";
 import { AnimatedCounter } from "@/components/admin/premium/animated-counter";
+import { Observe360Dashboard } from "@/components/admin/observe-360-dashboard";
 import Link from "next/link";
 
 interface IncidentItem {
@@ -32,79 +32,31 @@ interface IncidentItem {
   status: string;
 }
 
+interface AutopilotLogItem {
+  time: string;
+  type: string;
+  text: string;
+  status: string;
+}
+
 interface OverviewDashboardClientProps {
   queue: IncidentItem[];
   locale: string;
+  initialLogs?: AutopilotLogItem[];
+  initialChartData?: { day: string; count: number }[];
+  systemHealth?: number;
+  uptime?: number;
 }
 
-import { Observe360Dashboard } from "@/components/admin/observe-360-dashboard";
-
-export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClientProps) {
+export function OverviewDashboardClient({
+  queue,
+  locale,
+  initialLogs = [],
+  initialChartData = [],
+  systemHealth,
+  uptime,
+}: OverviewDashboardClientProps) {
   const t = useTranslations("admin");
-  const [logs, setLogs] = useState<{ time: string; type: string; text: string; status: string }[]>(
-    [],
-  );
-  const [chartData, setChartData] = useState<{ day: string; count: number }[]>([]);
-  const [systemHealth, setSystemHealth] = useState(87);
-  const [uptime, setUptime] = useState(99.97);
-
-  useEffect(() => {
-    const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    setChartData(days.map((day) => ({ day, count: Math.floor(Math.random() * 20) + 5 })));
-
-    const interval = setInterval(() => {
-      setChartData((prev) => {
-        const next = [...prev];
-        const last = next[next.length - 1];
-        if (last) {
-          next[next.length - 1] = {
-            ...last,
-            count: Math.max(1, last.count + Math.floor(Math.random() * 5) - 2),
-          };
-        }
-        return next;
-      });
-      setSystemHealth((h) => Math.min(100, Math.max(60, h + Math.floor(Math.random() * 5) - 2)));
-      setUptime((u) => Math.min(100, Math.max(99, u + Math.random() * 0.02 - 0.01)));
-    }, 8000);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const types = ["PII", "TRIAGE", "SECURITY", "CRON", "OUTREACH"];
-    const messages = [
-      "Analyzed news queue, found 0 duplicates",
-      "Retried Turnstile verification challenge",
-      "Dispatched PII masking audit report",
-      "Refreshed Model Benchmark scoring metadata",
-      "SLA alarm check: all items within threshold",
-      "Database retention sweep completed",
-      "Incident auto-classified as low severity",
-      "Webhook compliance warning dispatched",
-    ];
-    setLogs(
-      Array.from({ length: 5 }, (_, i) => ({
-        time: new Date(Date.now() - i * 120000).toLocaleTimeString(locale, {
-          hour12: false,
-        }),
-        type: types[i % types.length] || "SYSTEM",
-        text: messages[i % messages.length] || "Idle",
-        status: i % 3 === 0 ? "warning" : "success",
-      })),
-    );
-    const interval = setInterval(() => {
-      setLogs((prev) => [
-        {
-          time: new Date().toLocaleTimeString(locale, { hour12: false }),
-          type: types[Math.floor(Math.random() * types.length)] || "SYSTEM",
-          text: messages[Math.floor(Math.random() * messages.length)] || "Idle",
-          status: Math.random() > 0.85 ? "warning" : "success",
-        },
-        ...prev.slice(0, 7),
-      ]);
-    }, 12000);
-    return () => clearInterval(interval);
-  }, [locale]);
 
   const getSeverityBadgeVariant = (severity: string) => {
     switch (severity) {
@@ -121,89 +73,103 @@ export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClie
   return (
     <div className="space-y-8">
       <Observe360Dashboard />
-      <div className="flex items-center justify-between rounded-lg border border-amber-500/20 bg-amber-500/10 px-4 py-2 text-xs font-medium text-amber-400">
-        <span>Overview System Telemetry</span>
-        <span className="rounded bg-amber-500/20 px-2 py-0.5 font-mono text-[10px] uppercase">
-          SIMULATION MODE — Realtime Event Stream
-        </span>
-      </div>
-      <div className="grid gap-6 sm:grid-cols-3">
-        <AdminSectionCard>
-          <div className="flex flex-col items-center gap-3 p-2">
-            <Gauge value={systemHealth} size="lg" sublabel="%" />
-            <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
-              {t("system_health") || "System Health"}
-            </span>
-          </div>
-        </AdminSectionCard>
-        <AdminSectionCard>
-          <div className="flex flex-col items-center gap-3 p-2">
-            <Gauge value={uptime} size="lg" sublabel="%" variant="success" />
-            <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
-              {t("uptime_30d") || "Uptime (30d)"}
-            </span>
-          </div>
-        </AdminSectionCard>
-        <AdminSectionCard>
-          <div className="flex flex-col items-center gap-3 p-2">
-            <div className="flex items-center gap-3">
-              <LivePulseRing status="healthy" size="lg" />
-              <AnimatedCounter value={queue.length} className="text-3xl text-white" />
+
+      {/* System Health Gauges — only render if real data */}
+      {(systemHealth !== undefined || uptime !== undefined) && (
+        <div className="grid gap-6 sm:grid-cols-3">
+          {systemHealth !== undefined && (
+            <AdminSectionCard>
+              <div className="flex flex-col items-center gap-3 p-2">
+                <Gauge value={systemHealth} size="lg" sublabel="%" />
+                <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
+                  {t("system_health") || "System Health"}
+                </span>
+              </div>
+            </AdminSectionCard>
+          )}
+          {uptime !== undefined && (
+            <AdminSectionCard>
+              <div className="flex flex-col items-center gap-3 p-2">
+                <Gauge value={uptime} size="lg" sublabel="%" variant="success" />
+                <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
+                  {t("uptime_30d") || "Uptime (30d)"}
+                </span>
+              </div>
+            </AdminSectionCard>
+          )}
+          <AdminSectionCard>
+            <div className="flex flex-col items-center gap-3 p-2">
+              <div className="flex items-center gap-3">
+                <LivePulseRing status="healthy" size="lg" />
+                <AnimatedCounter value={queue.length} className="text-3xl text-white" />
+              </div>
+              <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
+                {t("pending_reviews") || "Pending Reviews"}
+              </span>
             </div>
-            <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
-              {t("pending_reviews") || "Pending Reviews"}
-            </span>
-          </div>
-        </AdminSectionCard>
-      </div>
+          </AdminSectionCard>
+        </div>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <AdminSectionCard title={t("incident_timeline") || "Incident Triage Timeline"}>
             <div className="p-6">
-              <div className="h-64 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <defs>
-                      <AreaGradient id="colorIncident" from={CHART_COLORS.accent.emerald} />
-                    </defs>
-                    <CartesianGrid
-                      strokeDasharray="3 3"
-                      stroke={CHART_COLORS.neutrals.grid}
-                      vertical={false}
-                    />
-                    <XAxis
-                      dataKey="day"
-                      stroke={CHART_COLORS.neutrals.line}
-                      tick={{ fill: CHART_COLORS.neutrals.fill, fontSize: 11 }}
-                      tickLine={false}
-                      axisLine={false}
-                    />
-                    <YAxis
-                      stroke={CHART_COLORS.neutrals.line}
-                      tick={{ fill: CHART_COLORS.neutrals.fill, fontSize: 11 }}
-                      tickLine={false}
-                      axisLine={false}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "#0E1622",
-                        borderColor: CHART_COLORS.neutrals.grid,
-                        borderRadius: "8px",
-                      }}
-                      itemStyle={{ color: CHART_COLORS.accent.emerald }}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="count"
-                      stroke={CHART_COLORS.accent.emerald}
-                      strokeWidth={2}
-                      fillOpacity={1}
-                      fill="url(#colorIncident)"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
+              {initialChartData.length === 0 ? (
+                <div className="flex h-64 flex-col items-center justify-center gap-2 text-center">
+                  <CheckCircle className="h-8 w-8 text-emerald-500/30" />
+                  <p className="text-fg-muted text-sm">
+                    {t("timeline_no_data") || "No incident timeline data available yet."}
+                  </p>
+                </div>
+              ) : (
+                <div className="h-64 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart
+                      data={initialChartData}
+                      margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                    >
+                      <defs>
+                        <AreaGradient id="colorIncident" from={CHART_COLORS.accent.emerald} />
+                      </defs>
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke={CHART_COLORS.neutrals.grid}
+                        vertical={false}
+                      />
+                      <XAxis
+                        dataKey="day"
+                        stroke={CHART_COLORS.neutrals.line}
+                        tick={{ fill: CHART_COLORS.neutrals.fill, fontSize: 11 }}
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <YAxis
+                        stroke={CHART_COLORS.neutrals.line}
+                        tick={{ fill: CHART_COLORS.neutrals.fill, fontSize: 11 }}
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#0E1622",
+                          borderColor: CHART_COLORS.neutrals.grid,
+                          borderRadius: "8px",
+                        }}
+                        itemStyle={{ color: CHART_COLORS.accent.emerald }}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="count"
+                        stroke={CHART_COLORS.accent.emerald}
+                        strokeWidth={2}
+                        fillOpacity={1}
+                        fill="url(#colorIncident)"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
             </div>
           </AdminSectionCard>
         </div>
@@ -219,28 +185,37 @@ export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClie
                 <LivePulseRing status="healthy" size="sm" label="ONLINE" />
               </div>
 
-              <div className="text-fg-secondary flex-1 space-y-2.5 overflow-y-auto pr-1 font-mono text-[11px]">
-                {logs.map((log, i) => (
-                  <div
-                    key={i}
-                    className="flex items-start gap-2 border-b border-white/[0.02] pb-1.5 last:border-0"
-                  >
-                    <span className="text-fg-muted shrink-0">{log.time}</span>
-                    <span
-                      className={`shrink-0 rounded px-1 text-[9px] font-semibold tracking-wider uppercase ${
-                        log.status === "warning"
-                          ? "border border-amber-500/20 bg-amber-500/10 text-amber-400"
-                          : "border border-purple-500/20 bg-purple-500/10 text-purple-300"
-                      }`}
+              {initialLogs.length === 0 ? (
+                <div className="flex flex-1 flex-col items-center justify-center gap-2 text-center">
+                  <Cpu className="h-6 w-6 text-purple-400/40" />
+                  <p className="text-fg-muted text-xs">
+                    {t("autopilot_no_logs") || "No autopilot logs available."}
+                  </p>
+                </div>
+              ) : (
+                <div className="text-fg-secondary flex-1 space-y-2.5 overflow-y-auto pr-1 font-mono text-[11px]">
+                  {initialLogs.map((log, i) => (
+                    <div
+                      key={i}
+                      className="flex items-start gap-2 border-b border-white/[0.02] pb-1.5 last:border-0"
                     >
-                      {log.type}
-                    </span>
-                    <span className="text-fg-secondary truncate" title={log.text}>
-                      {log.text}
-                    </span>
-                  </div>
-                ))}
-              </div>
+                      <span className="text-fg-muted shrink-0">{log.time}</span>
+                      <span
+                        className={`shrink-0 rounded px-1 text-[9px] font-semibold tracking-wider uppercase ${
+                          log.status === "warning"
+                            ? "border border-amber-500/20 bg-amber-500/10 text-amber-400"
+                            : "border border-purple-500/20 bg-purple-500/10 text-purple-300"
+                        }`}
+                      >
+                        {log.type}
+                      </span>
+                      <span className="text-fg-secondary truncate" title={log.text}>
+                        {log.text}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </AdminSectionCard>
         </div>
@@ -273,7 +248,7 @@ export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClie
                     })}
                   </td>
                   <td className="max-w-sm truncate p-4 font-medium text-white">
-                    {row.title_masked || "Masked Incident Report"}
+                    {row.title_masked || t("masked_incident_default") || "Masked Incident Report"}
                   </td>
                   <td className="p-4">
                     <Badge variant="outline" className="text-[10px]">
@@ -288,7 +263,7 @@ export function OverviewDashboardClient({ queue, locale }: OverviewDashboardClie
                   <td className="p-4 pr-6 text-right">
                     <Link href={`/${locale}/admin/moderation?id=${row.id}`}>
                       <Button size="sm" variant="outline" className="h-8 px-2.5 text-[11px]">
-                        Triage
+                        {t("triage") || "Triage"}
                         <ArrowRight className="ml-1 h-3.5 w-3.5" />
                       </Button>
                     </Link>

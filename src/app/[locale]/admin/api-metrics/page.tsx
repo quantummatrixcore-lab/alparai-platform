@@ -15,7 +15,7 @@ export default async function ApiMetricsPage({ params }: { params: Promise<{ loc
         <p className="text-fg-secondary mt-2">{t("api_metrics_subtitle")}</p>
       </div>
 
-      <ApiMetricsClient />
+      <ApiMetricsClient metrics={undefined} trafficData={[]} endpoints={[]} />
     </div>
   );
 }

@@ -725,37 +725,43 @@ export async function submitIncident(
                       err instanceof Error ? err : undefined,
                     );
                     const adminClient = createAdminClient();
-                    await adminClient
-                      .from("incidents")
-                      .update({
-                        processing_stage: "failed",
-                        moderator_notes: `[DLQ] Async cross-audit pipeline failed: ${err instanceof Error ? err.message : String(err)}`,
-                      })
-                      .eq("id", incidentId);
+                    if (adminClient) {
+                      await adminClient
+                        .from("incidents")
+                        .update({
+                          processing_stage: "failed",
+                          moderator_notes: `[DLQ] Async cross-audit pipeline failed: ${err instanceof Error ? err.message : String(err)}`,
+                        })
+                        .eq("id", incidentId);
+                    }
                   });
                 });
               } else {
                 logger.error("Auto-moderation completed with non-ok result", { incidentId });
                 const adminClient = createAdminClient();
-                await adminClient
-                  .from("incidents")
-                  .update({
-                    processing_stage: "failed",
-                    moderator_notes: `[DLQ] Auto-moderation completed with error: ${res.error ?? "Unknown error"}`,
-                  })
-                  .eq("id", incidentId);
+                if (adminClient) {
+                  await adminClient
+                    .from("incidents")
+                    .update({
+                      processing_stage: "failed",
+                      moderator_notes: `[DLQ] Auto-moderation completed with error: ${res.error ?? "Unknown error"}`,
+                    })
+                    .eq("id", incidentId);
+                }
               }
             })
             .catch(async (err) => {
               logger.error("Async auto-moderation failed", err);
               const adminClient = createAdminClient();
-              await adminClient
-                .from("incidents")
-                .update({
-                  processing_stage: "failed",
-                  moderator_notes: `[DLQ] Async auto-moderation failed: ${err instanceof Error ? err.message : String(err)}`,
-                })
-                .eq("id", incidentId);
+              if (adminClient) {
+                await adminClient
+                  .from("incidents")
+                  .update({
+                    processing_stage: "failed",
+                    moderator_notes: `[DLQ] Async auto-moderation failed: ${err instanceof Error ? err.message : String(err)}`,
+                  })
+                  .eq("id", incidentId);
+              }
             });
         });
       }
@@ -782,13 +788,15 @@ export async function submitIncident(
           .then(async (res) => {
             if (!res.ok) {
               const adminClient = createAdminClient();
-              await adminClient
-                .from("incidents")
-                .update({
-                  processing_stage: "failed",
-                  moderator_notes: `[DLQ] Auto-moderation for replay completed with error: ${res.error ?? "Unknown error"}`,
-                })
-                .eq("id", replayId);
+              if (adminClient) {
+                await adminClient
+                  .from("incidents")
+                  .update({
+                    processing_stage: "failed",
+                    moderator_notes: `[DLQ] Auto-moderation for replay completed with error: ${res.error ?? "Unknown error"}`,
+                  })
+                  .eq("id", replayId);
+              }
             }
           })
           .catch(async (err) => {
@@ -798,13 +806,15 @@ export async function submitIncident(
               err instanceof Error ? err : undefined,
             );
             const adminClient = createAdminClient();
-            await adminClient
-              .from("incidents")
-              .update({
-                processing_stage: "failed",
-                moderator_notes: `[DLQ] Async auto-moderation for replay failed: ${err instanceof Error ? err.message : String(err)}`,
-              })
-              .eq("id", replayId);
+            if (adminClient) {
+              await adminClient
+                .from("incidents")
+                .update({
+                  processing_stage: "failed",
+                  moderator_notes: `[DLQ] Async auto-moderation for replay failed: ${err instanceof Error ? err.message : String(err)}`,
+                })
+                .eq("id", replayId);
+            }
           });
       });
     }

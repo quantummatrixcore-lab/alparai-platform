@@ -19,7 +19,7 @@ export default async function SloDashboardPage({
         <p className="text-fg-secondary mt-2">{t("slo_dashboard_subtitle")}</p>
       </div>
 
-      <SloDashboardClient />
+      <SloDashboardClient initialSlos={[]} initialDora={{}} />
     </div>
   );
 }

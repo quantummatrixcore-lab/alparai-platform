@@ -15,7 +15,7 @@ export default async function SignalsPage({ params }: { params: Promise<{ locale
         <p className="text-fg-secondary mt-2">{t("signals_subtitle")}</p>
       </div>
 
-      <SignalsClient />
+      <SignalsClient initialSignals={[]} />
     </div>
   );
 }
