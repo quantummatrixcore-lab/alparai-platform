@@ -53,7 +53,28 @@ export function LanguageSwitcher({ className }: { className?: string }) {
       setOpen(false);
       return;
     }
-    router.replace(pathname, { locale: code });
+    // Explicitly update NEXT_LOCALE cookie so middleware & SSR pick up the new language immediately
+    if (typeof document !== "undefined") {
+      // eslint-disable-next-line react-hooks/immutability
+      document.cookie = `NEXT_LOCALE=${code}; path=/; max-age=31536000; SameSite=Lax`;
+    }
+
+    try {
+      router.replace(pathname, { locale: code });
+    } catch {
+      if (typeof window !== "undefined") {
+        const currentPath = window.location.pathname;
+        const segments = currentPath.split("/").filter(Boolean);
+        if (segments.length > 0 && LOCALE_OPTIONS.some((o) => o.code === segments[0])) {
+          segments[0] = code;
+          // eslint-disable-next-line react-hooks/immutability
+          window.location.href = "/" + segments.join("/") + window.location.search;
+        } else {
+          // eslint-disable-next-line react-hooks/immutability
+          window.location.href = `/${code}${currentPath}${window.location.search}`;
+        }
+      }
+    }
     setOpen(false);
   }
 
