@@ -101,9 +101,14 @@ describe("submitIncident Sybil Detection", () => {
       };
     });
 
-    // 2. Mock rpc check for duplicate incident
-    mockSupabase.rpc.mockReturnValue({
-      maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+    // 2. Mock rpc check for duplicate incident and atomic submission
+    mockSupabase.rpc.mockImplementation((fnName: string) => {
+      if (fnName === "submit_incident_atomic") {
+        return Promise.resolve({ data: { id: "inc-1" }, error: null });
+      }
+      return {
+        maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+      };
     });
 
     // 3. Mock admin client to return high fingerprint count and successfully persist run

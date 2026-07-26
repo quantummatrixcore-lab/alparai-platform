@@ -4799,6 +4799,10 @@ export type Database = {
       }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
+      submit_incident_atomic: {
+        Args: { payload: Json }
+        Returns: { id: string }
+      }
     }
     Enums: {
       evidence_kind:

@@ -155,9 +155,12 @@ export function GrantsList({ initialGrants }: { initialGrants: GrantApplication[
                   <select
                     disabled={isPending}
                     value={grant.status}
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     onChange={(e) =>
-                      handleUpdateStatus(grant.id, e.target.value as any, grant.phase)
+                      handleUpdateStatus(
+                        grant.id,
+                        e.target.value as GrantApplication["status"],
+                        grant.phase,
+                      )
                     }
                     className="cursor-pointer bg-transparent px-3 py-1.5 text-sm text-white outline-none hover:bg-white/5"
                   >

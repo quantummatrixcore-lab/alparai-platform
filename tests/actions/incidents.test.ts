@@ -194,11 +194,16 @@ describe("submitIncident", () => {
   });
 
   it("flags incident as possible duplicate if similarity score > 0.7", async () => {
-    mockSupabase.rpc = vi.fn().mockReturnValue({
-      maybeSingle: vi.fn().mockResolvedValue({
-        data: { similarity_score: 0.85, incident_id: "other-inc-id" },
-        error: null,
-      }),
+    mockSupabase.rpc = vi.fn().mockImplementation((fnName: string) => {
+      if (fnName === "submit_incident_atomic") {
+        return Promise.resolve({ data: { id: "inc-123" }, error: null });
+      }
+      return {
+        maybeSingle: vi.fn().mockResolvedValue({
+          data: { similarity_score: 0.85, incident_id: "other-inc-id" },
+          error: null,
+        }),
+      };
     });
 
     const result = await submitIncident({ ok: false }, buildFormData());
@@ -249,16 +254,12 @@ describe("submitIncident", () => {
   });
 
   it("returns error when database insert fails", async () => {
-    mockSupabase.from.mockReturnValue({
-      insert: vi.fn().mockReturnValue({
-        select: vi.fn().mockReturnValue({
-          single: vi.fn().mockResolvedValue({ data: null, error: { message: "DB error" } }),
-        }),
-      }),
-      select: vi.fn().mockReturnValue({
-        single: vi.fn().mockResolvedValue({ data: null, error: null }),
-      }),
-    } as ReturnType<typeof mockSupabase.from>);
+    mockSupabase.rpc.mockImplementation((fnName: string) => {
+      if (fnName === "submit_incident_atomic") {
+        return Promise.resolve({ data: null, error: { message: "DB error" } });
+      }
+      return Promise.resolve({ data: null, error: null });
+    });
     const result = await submitIncident({ ok: false }, buildFormData());
     expect(result.ok).toBe(false);
     expect(result.formError).toContain("Failed");

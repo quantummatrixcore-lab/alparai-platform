@@ -45,14 +45,6 @@ export interface SubmitIncidentState {
   };
 }
 
-const CONSENT_LABELS: Record<string, string> = {
-  consent_truth: "submission_truthfulness",
-  consent_age: "age_18_plus",
-  consent_terms: "terms_of_service",
-  consent_coppa: "coppa_thirteen_plus",
-  consent_uk_osa: "uk_osa_eighteen_plus",
-};
-
 async function resolveLocale(): Promise<"en" | "tr"> {
   try {
     const loc = await getLocale();
@@ -109,7 +101,7 @@ const runSubmitWork = async (
   data: SubmitWorkInput,
 ): Promise<AttemptOutcome<{ id: string }>> => {
   void ctx;
-  const { user, ip, raw } = data;
+  const { user, raw } = data;
   const maskedTitle = maskPII(raw.title);
   const maskedDescription = maskPII(raw.description);
   const containsPii =
@@ -137,7 +129,7 @@ const runSubmitWork = async (
   let isPossibleDuplicate = false;
   try {
     const { data: dupData } = await supabase
-      .rpc("check_incident_duplicate", { title_to_check: maskedTitle.masked })
+      .rpc("check_incident_duplicate", { title_to_check: raw.title })
       .maybeSingle();
 
     if (dupData && (dupData as unknown as { similarity_score: number }).similarity_score > 0.7) {
@@ -149,14 +141,14 @@ const runSubmitWork = async (
     });
   }
 
-  const incidentInsert: Database["public"]["Tables"]["incidents"]["Insert"] = {
+  const payload = {
     user_id: user?.id ?? null,
     title: maskedTitle.masked,
     title_masked: maskedTitle.masked,
     description: maskedDescription.masked,
     description_masked: maskedDescription.masked,
-    category: raw.category as Database["public"]["Enums"]["incident_category"],
-    severity: raw.severity as Database["public"]["Enums"]["incident_severity"],
+    category: raw.category,
+    severity: raw.severity,
     ai_provider_id: providerIsCustom ? null : raw.provider_id || null,
     ai_model_id: modelIsCustom ? null : raw.model_id || null,
     provider_custom_name: providerIsCustom ? providerCustom || null : null,
@@ -166,7 +158,6 @@ const runSubmitWork = async (
     is_anonymous: raw.is_anonymous,
     is_expert: raw.is_expert,
     expert_fix: raw.expert_fix || null,
-    location_country: null,
     source_url: raw.source_url,
     is_possible_duplicate: isPossibleDuplicate,
     ip_hash: hashIp(data.ip),
@@ -176,41 +167,21 @@ const runSubmitWork = async (
       ...maskedTitle.detections.map((d) => d.type),
       ...maskedDescription.detections.map((d) => d.type),
     ].filter((v, i, a) => a.indexOf(v) === i),
-    status: "pending_review",
     anonymous_email_hash: raw.anonymous_email
       ? createHash("sha256").update(raw.anonymous_email.toLowerCase()).digest("hex")
       : null,
+    age_consent: raw.consents.age,
+    coppa_consent: raw.consents.coppa,
+    uk_osa_consent: raw.consents.ukOsa,
   };
-  const { data: incident, error } = await supabase
-    .from("incidents")
-    .insert(incidentInsert)
-    .select("id")
-    .single();
 
-  if (error || !incident) {
-    return { kind: "retryable", error: error?.message ?? "incident_insert_failed" };
+  const { data: rpcRes, error: rpcErr } = await supabase.rpc("submit_incident_atomic", { payload });
+
+  if (rpcErr || !rpcRes) {
+    return { kind: "retryable", error: rpcErr?.message ?? "incident_insert_failed" };
   }
 
-  const incidentId = incident.id;
-
-  try {
-    const admin = createAdminClient();
-    const ipHash = hashIp(data.ip || "127.0.0.1") || "";
-    await admin.from("submission_attempts").insert({ ip_hash: ipHash });
-
-    await admin.from("age_declarations").insert({
-      user_id: user?.id ?? null,
-      incident_id: incidentId,
-      declared_over_18: raw.consents.age,
-      coppa_thirteen_plus: raw.consents.coppa,
-      uk_osa_eighteen_plus: raw.consents.ukOsa,
-      ip_hash: ipHash,
-    });
-  } catch (e) {
-    logger.warn("Failed to log submission attempt or age declaration", {
-      error: e instanceof Error ? e.message : String(e),
-    });
-  }
+  const incidentId = (rpcRes as unknown as { id: string }).id;
 
   if (providerIsCustom && providerCustom) {
     const admin = createAdminClient();
@@ -254,23 +225,6 @@ const runSubmitWork = async (
         }
       }
     }
-  }
-
-  const consentLogEntries: Database["public"]["Tables"]["consent_log"]["Insert"][] = Object.entries(
-    CONSENT_LABELS,
-  ).map(([, dbKey]) => ({
-    user_id: user?.id ?? null,
-    consent_type: dbKey,
-    consent_text_snapshot: `Accepted on ${new Date().toISOString()} for incident ${incidentId}`,
-    related_entity_type: "incident",
-    related_entity_id: incidentId,
-    granted: true,
-    ip_hash: hashIp(ip),
-  }));
-
-  const consentRes = await supabase.from("consent_log").insert(consentLogEntries);
-  if (consentRes.error) {
-    return { kind: "retryable", error: `consent_log_insert_failed: ${consentRes.error.message}` };
   }
 
   // Send email notifications via Resend
@@ -761,23 +715,47 @@ export async function submitIncident(
       } else {
         import("@/actions/autopilot-moderate").then(({ autoModerateIncidentAction }) => {
           autoModerateIncidentAction(incidentId)
-            .then((res) => {
+            .then(async (res) => {
               if (res.ok) {
                 import("@/lib/ai/cross-audit-engine").then(({ runCrossAudit }) => {
-                  runCrossAudit(incidentId).catch((err) => {
+                  runCrossAudit(incidentId).catch(async (err) => {
                     logger.error(
                       "[CrossAudit] Async cross-audit pipeline failed",
                       { incidentId },
                       err instanceof Error ? err : undefined,
                     );
+                    const adminClient = createAdminClient();
+                    await adminClient
+                      .from("incidents")
+                      .update({
+                        processing_stage: "failed",
+                        moderator_notes: `[DLQ] Async cross-audit pipeline failed: ${err instanceof Error ? err.message : String(err)}`,
+                      })
+                      .eq("id", incidentId);
                   });
                 });
               } else {
                 logger.error("Auto-moderation completed with non-ok result", { incidentId });
+                const adminClient = createAdminClient();
+                await adminClient
+                  .from("incidents")
+                  .update({
+                    processing_stage: "failed",
+                    moderator_notes: `[DLQ] Auto-moderation completed with error: ${res.error ?? "Unknown error"}`,
+                  })
+                  .eq("id", incidentId);
               }
             })
-            .catch((err) => {
+            .catch(async (err) => {
               logger.error("Async auto-moderation failed", err);
+              const adminClient = createAdminClient();
+              await adminClient
+                .from("incidents")
+                .update({
+                  processing_stage: "failed",
+                  moderator_notes: `[DLQ] Async auto-moderation failed: ${err instanceof Error ? err.message : String(err)}`,
+                })
+                .eq("id", incidentId);
             });
         });
       }
@@ -800,13 +778,34 @@ export async function submitIncident(
       typeof result.value === "string" ? result.value : (result.value as { id?: string })?.id;
     if (replayId) {
       import("@/actions/autopilot-moderate").then(({ autoModerateIncidentAction }) => {
-        autoModerateIncidentAction(replayId).catch((err) => {
-          logger.error(
-            "Async auto-moderation for replay failed",
-            undefined,
-            err instanceof Error ? err : undefined,
-          );
-        });
+        autoModerateIncidentAction(replayId)
+          .then(async (res) => {
+            if (!res.ok) {
+              const adminClient = createAdminClient();
+              await adminClient
+                .from("incidents")
+                .update({
+                  processing_stage: "failed",
+                  moderator_notes: `[DLQ] Auto-moderation for replay completed with error: ${res.error ?? "Unknown error"}`,
+                })
+                .eq("id", replayId);
+            }
+          })
+          .catch(async (err) => {
+            logger.error(
+              "Async auto-moderation for replay failed",
+              undefined,
+              err instanceof Error ? err : undefined,
+            );
+            const adminClient = createAdminClient();
+            await adminClient
+              .from("incidents")
+              .update({
+                processing_stage: "failed",
+                moderator_notes: `[DLQ] Async auto-moderation for replay failed: ${err instanceof Error ? err.message : String(err)}`,
+              })
+              .eq("id", replayId);
+          });
       });
     }
     return {

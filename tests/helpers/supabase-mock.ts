@@ -105,9 +105,13 @@ export function createMockSupabaseClient() {
       delete: mockDelete,
       upsert: mockUpsert,
     }),
-    rpc: vi.fn().mockReturnValue({
-      maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
-      single: vi.fn().mockResolvedValue({ data: null, error: null }),
+    rpc: vi.fn().mockImplementation((fnName: string) => {
+      const defaultData = fnName === "submit_incident_atomic" ? { id: "inc-123" } : null;
+      const res = { data: defaultData, error: null };
+      return Object.assign(Promise.resolve(res), {
+        maybeSingle: vi.fn().mockResolvedValue(res),
+        single: vi.fn().mockResolvedValue(res),
+      });
     }),
     auth: {
       getUser: vi.fn().mockResolvedValue({ data: { user: null }, error: null }),
