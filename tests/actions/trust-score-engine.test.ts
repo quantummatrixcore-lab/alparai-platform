@@ -8,7 +8,8 @@ vi.hoisted(() => {
 });
 
 import { createAdminClient } from "@/lib/supabase/admin";
-import { calculateRankingTier, recalculateTrustScoresAction } from "@/actions/trust-score-engine";
+import { recalculateTrustScoresAction } from "@/actions/trust-score-engine";
+import { calculateRankingTier } from "@/lib/ranking/calculate-tier";
 
 describe("Trust Score Engine (I19)", () => {
   beforeEach(() => {

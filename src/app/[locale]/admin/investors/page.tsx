@@ -59,7 +59,7 @@ export default async function AdminInvestorsPage({
         <MetricCard
           title="Investor Applications"
           value={applications.length}
-          icon={TrendingUp}
+          icon={<TrendingUp className="h-4 w-4" />}
           trend="up"
           trendLabel="Pipeline"
           accentColor="#10b981"
@@ -69,7 +69,7 @@ export default async function AdminInvestorsPage({
         <MetricCard
           title="Approved Investors"
           value={approved.length}
-          icon={DollarSign}
+          icon={<DollarSign className="h-4 w-4" />}
           trend={approved.length > 0 ? "up" : "neutral"}
           trendLabel="High intent"
           accentColor="#f59e0b"
@@ -77,7 +77,7 @@ export default async function AdminInvestorsPage({
         <MetricCard
           title="Pending Review"
           value={pendingApps.length}
-          icon={Clock}
+          icon={<Clock className="h-4 w-4" />}
           trend={pendingApps.length > 0 ? "up" : "neutral"}
           trendLabel="Awaiting contact"
           accentColor="#6366f1"

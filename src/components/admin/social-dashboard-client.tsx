@@ -34,12 +34,7 @@ export interface SocialPost {
   platform: "linkedin" | "x" | "instagram" | "facebook" | "whatsapp";
   status: "draft" | "scheduled" | "published" | "archived";
   content_type:
-    | "manifesto"
-    | "case_study"
-    | "weekly_report"
-    | "incident_spotlight"
-    | "thread"
-    | "poll";
+    "manifesto" | "case_study" | "weekly_report" | "incident_spotlight" | "thread" | "poll";
   title: string;
   body_text: string;
   image_prompt: string | null;
@@ -72,22 +67,11 @@ export interface SocialTemplate {
   name: string;
   platform: "linkedin" | "x" | "instagram" | "all";
   content_type:
-    | "manifesto"
-    | "case_study"
-    | "weekly_report"
-    | "incident_spotlight"
-    | "thread"
-    | "poll";
+    "manifesto" | "case_study" | "weekly_report" | "incident_spotlight" | "thread" | "poll";
   template_body: string;
   example_output: string | null;
   psychology_hook:
-    | "fear"
-    | "authority"
-    | "social_proof"
-    | "urgency"
-    | "scarcity"
-    | "reciprocity"
-    | "unity";
+    "fear" | "authority" | "social_proof" | "urgency" | "scarcity" | "reciprocity" | "unity";
   created_at: string;
 }
 
@@ -631,8 +615,10 @@ export function SocialDashboardClient({
                 {tAdmin("pendingApprovalQueue", { defaultValue: "Pending Approval Queue" })}
               </h2>
               <span className="bg-brand-500/10 text-brand-400 rounded-full px-2.5 py-0.5 text-xs font-bold">
-                {posts.filter((p) => p.status === "draft").length}{" "}
-                {tAdmin("itemsPending", { defaultValue: "pending" })}
+                {tAdmin("itemsPending", {
+                  count: posts.filter((p) => p.status === "draft").length,
+                  defaultValue: "items pending review",
+                })}
               </span>
             </div>
 

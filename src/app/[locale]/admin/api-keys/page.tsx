@@ -122,7 +122,7 @@ export default async function AdminApiKeysPage({
         <MetricCard
           title="Connected APIs"
           value={apiProviders.filter((p) => p.status === "connected").length}
-          icon={CheckCircle2}
+          icon={<CheckCircle2 className="h-4 w-4" />}
           trend="up"
           trendLabel="All systems go"
           accentColor="#10b981"
@@ -132,7 +132,7 @@ export default async function AdminApiKeysPage({
         <MetricCard
           title="Avg. API Health"
           value={`${Math.round(apiProviders.reduce((a, p) => a + p.health, 0) / apiProviders.length)}%`}
-          icon={Activity}
+          icon={<Activity className="h-4 w-4" />}
           trend="up"
           trendLabel="7-day avg"
           accentColor="#6366f1"
@@ -149,7 +149,7 @@ export default async function AdminApiKeysPage({
         <MetricCard
           title="Daily API Cost"
           value="$0.16"
-          icon={DollarSign}
+          icon={<DollarSign className="h-4 w-4" />}
           trend="down"
           trendLabel="vs last week"
           accentColor="#f59e0b"

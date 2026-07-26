@@ -64,6 +64,7 @@ export async function GET() {
           headers: {
             Authorization: `Bearer ${vercelToken}`,
           },
+          signal: AbortSignal.timeout(3000),
         });
         if (res.ok) {
           const data = await res.json();

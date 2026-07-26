@@ -71,7 +71,11 @@ export async function middleware(request: NextRequest) {
 
   let intlResponse: NextResponse;
   try {
-    intlResponse = intlMiddleware(requestWithId);
+    if (pathname.startsWith("/api/")) {
+      intlResponse = NextResponse.next({ request: requestWithId });
+    } else {
+      intlResponse = intlMiddleware(requestWithId);
+    }
   } catch (err) {
     logger.error(
       "[middleware] intlMiddleware threw",

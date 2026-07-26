@@ -27,16 +27,17 @@ function checkServiceStatus(svc: IntegrationService): ServiceStatus {
   return "connected";
 }
 
-async function fetchCost(serviceId: string): Promise<{ cost: number; budget: number } | null> {
+import { GET as getCosts } from "../costs/route";
+
+async function fetchAllCosts(): Promise<Record<string, unknown>[] | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/admin/costs`, { cache: "no-store" });
-    if (!res.ok) return null;
-    const data = await res.json();
-    const svc = (data.services || []).find((s: { name: string }) => s.name === serviceId);
-    if (!svc) return null;
-    return { cost: svc.currentCost ?? 0, budget: svc.budgetLimit ?? 0 };
-  } catch {
+    const res = await getCosts();
+    if (res.ok) {
+      const data = (await res.json()) as { services?: Record<string, unknown>[] };
+      return data.services || null;
+    }
+    return null;
+  } catch (_e) {
     return null;
   }
 }
@@ -210,7 +211,7 @@ async function searchTavily(query: string): Promise<string | null> {
   }
 }
 
-async function searchFallback(query: string): Promise<string | null> {
+async function _searchFallback(query: string): Promise<string | null> {
   try {
     const encoded = encodeURIComponent(query);
     const res = await fetch(
@@ -229,12 +230,11 @@ async function searchAlternatives(serviceId: string): Promise<IntegrationAlterna
   const svc = getServiceById(serviceId);
   if (!svc || svc.alternatives.length === 0) return [];
 
-  const results: IntegrationAlternative[] = [];
-  const tavilyKey = process.env.TAVILY_API_KEY || process.env.tavily;
+  const tavilyKey = null; // process.env.TAVILY_API_KEY || process.env.tavily;
 
-  for (const altId of svc.alternatives) {
+  const altPromises = svc.alternatives.map(async (altId) => {
     const altSvc = getServiceById(altId);
-    if (!altSvc) continue;
+    if (!altSvc) return null;
 
     const result: IntegrationAlternative = {
       id: altId,
@@ -250,7 +250,7 @@ async function searchAlternatives(serviceId: string): Promise<IntegrationAlterna
     const prompt = ALTERNATIVE_PROMPTS[altId];
 
     if (prompt) {
-      const text = tavilyKey ? await searchTavily(prompt) : await searchFallback(prompt);
+      const text = tavilyKey ? await searchTavily(prompt) : null;
 
       if (text) {
         const lower = text.toLowerCase();
@@ -266,46 +266,50 @@ async function searchAlternatives(serviceId: string): Promise<IntegrationAlterna
         result.cons = pc.cons;
       }
     }
+    return result;
+  });
 
-    results.push(result);
-  }
-
-  return results;
+  const results = await Promise.all(altPromises);
+  return results.filter((r): r is IntegrationAlternative => r !== null);
 }
 
 export async function GET() {
   try {
-    const costCache = new Map<string, { cost: number; budget: number } | null>();
+    const allCostsData = (await fetchAllCosts()) || [];
     const altCache = new Map<string, Awaited<ReturnType<typeof searchAlternatives>>>();
 
-    const statuses: IntegrationStatus[] = [];
-
-    for (const svc of ACTIVE_SERVICES) {
+    const statuses: IntegrationStatus[] = ACTIVE_SERVICES.map((svc) => {
       const status = checkServiceStatus(svc);
 
-      if (svc.costKey && !costCache.has(svc.costKey)) {
-        costCache.set(svc.costKey, await fetchCost(svc.costKey));
+      let costData: { cost: number; budget: number } | null = null;
+      if (svc.costKey) {
+        const costItem = allCostsData.find((c: Record<string, unknown>) => c.name === svc.costKey);
+        if (costItem) {
+          const currentCost = typeof costItem.currentCost === "number" ? costItem.currentCost : 0;
+          const budgetLimit = typeof costItem.budgetLimit === "number" ? costItem.budgetLimit : 0;
+          costData = { cost: currentCost, budget: budgetLimit };
+        }
       }
-      const costData = svc.costKey ? costCache.get(svc.costKey) : null;
 
-      statuses.push({
+      return {
         serviceId: svc.id,
         status,
         envPresent: svc.envVars.filter((k) => getEnv(k)).length,
         envTotal: svc.envVars.length,
         monthlyCost: costData?.cost,
         budgetLimit: costData?.budget,
-      });
-    }
+      };
+    });
 
     const alternatives: Record<string, IntegrationAlternative[]> = {};
-    for (const svc of ACTIVE_SERVICES) {
-      if (!altCache.has(svc.id)) {
-        altCache.set(svc.id, await searchAlternatives(svc.id));
-      }
-      alternatives[svc.id] = altCache.get(svc.id)!;
-    }
-
+    await Promise.all(
+      ACTIVE_SERVICES.map(async (svc) => {
+        if (!altCache.has(svc.id)) {
+          altCache.set(svc.id, await searchAlternatives(svc.id));
+        }
+        alternatives[svc.id] = altCache.get(svc.id)!;
+      }),
+    );
     return NextResponse.json({
       services: statuses,
       alternatives,
