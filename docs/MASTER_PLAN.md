@@ -1,3 +1,17 @@
+# ALPAR AI — MASTER PLAN v11.36 (TOM — Fable 5 Denetim Turu: Delta Yok)
+
+> 🇹🇷 ÖZET: `/tom` çağrıldı (Fable 5, G-4b ~1000 token tavanı). Keşif tamamen Haiku'ya devredildi (G-5). Sonuç: v11.35'ten (`fe8ab87`) bu yana **origin/master'da yeni commit yok**; Bulgu B (tek adımlı hibe onayı), Bulgu C (kaynaksız hibe seed'i) ve backlog #1/#5/#8 Haiku tarafından tek tek yeniden doğrulandı — hepsi hâlâ açık. Backlog tablosu ve %40 metriği v11.35'te güncel ve doğru; taşınmadı (canlı `FOUNDER_BACKLOG` markerları aşağıda, v11.35'te). Değişen durum olmadığından bu giriş kasıtlı olarak minimaldir: yeni spesifikasyon yok, Antigravity/OpenCode'un bekleyen işleri v11.35 Handoff'unda tanımlı ve geçerli. Mimar hiçbir kod dosyasına dokunmadı (G-6).
+
+| Doğrulama (Haiku)                                  | Sonuç       |
+| -------------------------------------------------- | ----------- |
+| `git log fe8ab87..origin/master`                   | boş         |
+| grants.ts submit adımı (`completed_by`)            | hâlâ yok    |
+| hibe seed düzeltme migration'ı                     | hâlâ yok    |
+| `/admin/outreach` gerçek kuyruk görünümü           | hâlâ statik |
+| yeni connector (google-news vb.) / grants recharts | hâlâ yok    |
+
+---
+
 # ALPAR AI — MASTER PLAN v11.35 (TOM Stage-3 — Opus 5 İncelemesi + Backlog Mutabakatı)
 
 > 🇹🇷 ÖZET (Founder için): TOM'un 3. aşaması (Opus 5 incelemesi) bu turda yapıldı — v11.34'te "beklemede" bırakılmıştı. Bu arada Antigravity Founder Cockpit'i gerçekten shipped etti (`96bb9b7`, `92186d0`, merge `a38cd3f`): LinkedIn/hibe/platform tabloları, sayfaları, action'ları ve parser düzeltmesi canlı. Backlog tablosu bu yüzden ters yönde bozulmuştu — dashboard biten işi 0% gösteriyordu; dürüst sayı artık **4/9 ≈ %44**. İnceleme üç bulgu üretti: (A) LinkedIn seed'inde uydurma kişi YOK, spesifikasyona uygun — geçti. (B) Hibe onay akışı tek adımlı kalmış: "yapıldı" ile "onaylandı" ayrımı yok, yani Founder'ın açıkça istediği onay mekanizması fiilen çalışmıyor — kusur. (C) Seed edilen hibe programları katalogdaki 9 program değil, farklı 6 program; üstelik `apply_url` ve `prepared_content_ref` hiç yazılmamış, yani rakamların kaynağı yok (Kural #10) ve hazır başvuru metinleri boşta kalmış — kusur. B ve C Antigravity'ye devredildi.
