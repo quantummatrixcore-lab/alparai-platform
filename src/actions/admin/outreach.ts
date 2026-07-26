@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { requireModerator } from "@/lib/auth/session";
 import { revalidatePath } from "next/cache";
 import { logger } from "@/lib/utils/logger";
+import type { Json } from "@/types/database";
 
 interface UnsafeClient {
   from: (table: string) => {
@@ -136,7 +137,7 @@ export async function createOutreachItem(input: z.infer<typeof createItemSchema>
       action: "CREATE_OUTREACH_ITEM",
       entity_type: "outreach_queue",
       entity_id: data.id,
-      after_data: parsed.data as unknown as Record<string, unknown>,
+      after_data: parsed.data as unknown as Json,
     });
 
     revalidatePath("/admin/outreach");
