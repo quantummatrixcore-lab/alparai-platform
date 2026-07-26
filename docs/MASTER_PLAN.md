@@ -1,3 +1,35 @@
+# ALPAR AI — MASTER PLAN v11.31 (Admin Panel Reconciliation: Deploy Gate Fix + Sidebar Cleanup + New Admin Dashboard)
+
+> 🇹🇷 ÖZET (Founder için): Deploy gate sorunu çözüldü (merge commit'e `[deploy]` etiketi eklenerek Vercel build'i tetiklendi). Admin sidebar'daki çift girişler (experts, outreach) temizlendi. Antigravity paralel olarak yeni admin dashboard bileşeni (`admin-hq-dashboard.tsx`), ecosystem actions refactor'ı, ve tüm locale mesaj dosyaları güncellemesi yaptı. Sonraki aşamada: yeni dashboard'u admin layout'a bağlamak, doğrulanmamış özellikleri kontrol etmek, ve production deploy etmek — bütün işler Antigravity/OpenCode'a bırakılıyor (Claude yalnız bu girişi yazıyor).
+
+## What Changed This Round
+
+1. **Deploy Gate (Claude):** Merge commit'in `[deploy]` etiketi eksikliğini tespit → boş bir commit push'ladı → Vercel build başladı
+2. **Sidebar Duplicates (Claude):** `/admin/experts` ve `/admin/outreach` çift girişlerini tespit → `Send` import'u kaldırarak silinmiş (commit `e05e1b3`)
+3. **Parallel Work (Antigravity):**
+   - Yeni `admin-hq-dashboard.tsx` bileşeni (709 satır, veri görselleştirme)
+   - `ecosystem.ts` actions refactor'ı (120+ satır değişim)
+   - `approval-queue.tsx` güncelleme (146 satır)
+   - Tüm 5 locale mesaj dosyalarında çeviri/anahtar güncellemeleri
+
+## Next Steps (For Antigravity/OpenCode)
+
+**P0 (Bu turda yaşanan):**
+
+- Dashboard component'ini `/admin/dashboard` route'una bağla
+- Ecosystem actions'ı verification pipeline ile uyumlu test et
+- Tüm locale mesaj dosyalarındaki yeni anahtarları doğrula (parity check)
+- `pnpm build && pnpm lint && pnpm test` — tüm testler yeşil mi kontrol et
+
+**P1 (Varsa kalan):**
+
+- Language switcher değişikliklerini (middleware/layout) production'da test et
+- External verifier'a eklenen yeni `publishVerifiedItem` parametreleri (line 21 değişim) ile consistency kontrol et
+
+**Doğrulama:** `/admin` panelde dashboard'un load olduğu, sidebar'ın temiz olduğu (çift girişler yok), ecosystem queue'daki items'ların dashboard'da görüldüğü teyit edilsin.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.30 (G-5 — Total Delegation to Haiku Made Binding; Claude Scoped to MASTER_PLAN Authorship [architect])
 
 > 🇹🇷 ÖZET (Founder için): Bu turda bir bağlayıcı yeni kural getirdiniz: **G-5**. Pahalı model oturumları (Opus 5 / Fable 5) tüm alt çalışmayı — dosya okuma/yazma, keşif, araştırma, grep — Haiku'ya devretmek zorundadır; pahalı model yalnız Haiku çıktısını gözden geçirir ve fark boyutunda düzeltme veya onay verir. Ayrıca, Claude (herhangi bir tier) artık yalnızca MASTER_PLAN yazarlığına kapsam çıkılıyor; tüm uygulama Antigravity ve OpenCode'a aittir. Gerekçe token ekonomisidir: pahalı modelin dosya okuması, girdi tokenını en pahalı katmanda harcar; aynı okumayı Haiku yapıp özetlediğinde pahalı model yalnız özeti okur. **Tasarruf oranı bu turda ölçülmedi** — G-4'ün oransal ölçümü gibi, gerçek rakam ancak birkaç G-5 turu sonrası karşılaştırmayla çıkar. Bu tur, G-5 altında yürütülen ilk turdur.
