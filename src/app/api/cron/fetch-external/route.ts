@@ -15,6 +15,10 @@ const TRUSTED_ALLOWLIST = [
   "404media.co",
   "lastweekinai.substack.com",
   "theregister.com",
+  "arstechnica.com",
+  "theverge.com",
+  "wired.com",
+  "venturebeat.com",
 ];
 
 function getDomain(url: string) {
@@ -53,6 +57,10 @@ async function getHandler(request: Request) {
     { name: "404 Media", url: "https://www.404media.co/rss/" },
     { name: "Import AI", url: "https://importai.substack.com/feed" },
     { name: "The Register", url: "https://www.theregister.com/headlines.atom" },
+    {
+      name: "Google News AI",
+      url: "https://news.google.com/rss/search?q=artificial+intelligence+when:24h&hl=en-US&gl=US&ceid=US:en",
+    },
   ];
 
   const allFetched: Array<{

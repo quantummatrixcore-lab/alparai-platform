@@ -243,6 +243,24 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       active: pathname.startsWith("/admin/outreach"),
     },
     {
+      href: "/admin/linkedin",
+      label: t("nav_linkedin") || "LinkedIn Targets",
+      icon: Users,
+      active: pathname.startsWith("/admin/linkedin"),
+    },
+    {
+      href: "/admin/grants",
+      label: t("nav_grants") || "Grant Cockpit",
+      icon: Building2,
+      active: pathname.startsWith("/admin/grants"),
+    },
+    {
+      href: "/admin/platforms",
+      label: t("nav_platforms") || "Platform Accounts",
+      icon: Globe,
+      active: pathname.startsWith("/admin/platforms"),
+    },
+    {
       href: "/admin/social",
       label: t("social_media_hub") || "Social Publisher",
       icon: Share2,
