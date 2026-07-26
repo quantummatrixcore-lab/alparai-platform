@@ -180,6 +180,27 @@ export async function publishVerifiedItem(params: {
     return { success: false };
   }
 
+  const { error: ecosystemError } = await admin.from("ecosystem_news").insert({
+    title_en: titleMasked,
+    title_tr: titleMasked,
+    summary_en: bodyMasked,
+    summary_tr: bodyMasked,
+    category: params.category,
+    severity: params.severity,
+    source: params.source,
+    url: params.externalUrl,
+    status: "accepted",
+    is_active: true,
+    published_at: new Date().toISOString(),
+  });
+
+  if (ecosystemError) {
+    logger.warn("[ExternalVerifier] ecosystem_news insert skipped (likely duplicate)", {
+      externalUrl: params.externalUrl,
+      error: ecosystemError.message,
+    });
+  }
+
   logger.info("[ExternalVerifier] AI-verified incident auto-published", {
     incidentId: incident.id,
     source: params.source,
