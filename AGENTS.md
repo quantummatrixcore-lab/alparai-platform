@@ -98,7 +98,7 @@ Note: `/admin/master-plan` parses this file at runtime via `parseMasterPlan()` (
 - **Hosting**: Vercel project `prj_REYJORnuYOT4tk28iMXnKZBCGkjL` (alparai-com) → `alparai.com` + `www.alparai.com`, region `fra1`. Duplicate `alparai-web` (`prj_mitn2MvIGMedCkJb7dw2fjDZkkqJ`) is unused — safe to delete.
 - **Supabase**: project `alparai-prod` (`ref: azszpzyvxjduhemkjsdh`), region `eu-west-1`, FREE plan. Old `alparai-db` (`ojwtxkwsglbxdkqoliaq`) was lost — paused >90 days, unrecoverable.
 - **i18n**: ALL legal page body content must use `getTranslations({locale, namespace: "legal"})` / `t("key")`. Hardcoded English is a bug.
-- **i18n scope rule:** Admin panels (`/admin/*` routes) require **EN/TR translations only**. Public-facing pages (`/insights`, `/community`, `/documentation`) require **all 5 languages (EN, TR, DE, FR, RU)**. This prevents unnecessary translation workload on admin-only interfaces.
+- **i18n scope rule:** Public-facing pages (homepage `/`, `/insights`, `/community`, `/documentation`, etc.) support **all 5 languages (EN, TR, DE, FR, RU)**. Admin panels (`/admin/*` routes) strictly support **EN/TR translations only**. This prevents unnecessary translation workload on admin-only interfaces.
 
 ## Google OAuth Configuration
 
