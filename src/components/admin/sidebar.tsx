@@ -159,6 +159,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
 
   const strategyItems = [
     {
+      href: "/admin/master-plan",
+      label: t("nav_masterPlan") || "Master Plan",
+      icon: FileText,
+      active: pathname.startsWith("/admin/master-plan"),
+    },
+    {
       href: "/admin/strategy",
       label: t("strategy_overview"),
       icon: Target,
@@ -231,6 +237,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
 
   const growthItems = [
     {
+      href: "/admin/outreach",
+      label: t("nav_outreach") || "Outreach Campaigns",
+      icon: Share2,
+      active: pathname.startsWith("/admin/outreach"),
+    },
+    {
       href: "/admin/social",
       label: t("social_media_hub") || "Social Publisher",
       icon: Share2,
@@ -241,6 +253,18 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       label: t("nav_marketing") || "Marketing Pipeline",
       icon: TrendingUp,
       active: pathname.startsWith("/admin/marketing"),
+    },
+    {
+      href: "/admin/investors",
+      label: t("nav_investors") || "Investor Applications",
+      icon: Building2,
+      active: pathname.startsWith("/admin/investors"),
+    },
+    {
+      href: "/admin/experts",
+      label: t("nav_experts") || "Expert Network",
+      icon: Users,
+      active: pathname.startsWith("/admin/experts"),
     },
     {
       href: "/admin/launch-signal",
