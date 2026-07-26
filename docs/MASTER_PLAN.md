@@ -1,3 +1,34 @@
+# ALPAR AI — MASTER PLAN v11.30 (G-5 — Total Delegation to Haiku Made Binding; Claude Scoped to MASTER_PLAN Authorship [architect])
+
+> 🇹🇷 ÖZET (Founder için): Bu turda bir bağlayıcı yeni kural getirdiniz: **G-5**. Pahalı model oturumları (Opus 5 / Fable 5) tüm alt çalışmayı — dosya okuma/yazma, keşif, araştırma, grep — Haiku'ya devretmek zorundadır; pahalı model yalnız Haiku çıktısını gözden geçirir ve fark boyutunda düzeltme veya onay verir. Ayrıca, Claude (herhangi bir tier) artık yalnızca MASTER_PLAN yazarlığına kapsam çıkılıyor; tüm uygulama Antigravity ve OpenCode'a aittir. Gerekçe token ekonomisidir: pahalı modelin dosya okuması, girdi tokenını en pahalı katmanda harcar; aynı okumayı Haiku yapıp özetlediğinde pahalı model yalnız özeti okur. **Tasarruf oranı bu turda ölçülmedi** — G-4'ün oransal ölçümü gibi, gerçek rakam ancak birkaç G-5 turu sonrası karşılaştırmayla çıkar. Bu tur, G-5 altında yürütülen ilk turdur.
+
+## The Rule (G-5)
+
+1. Expensive-model sessions (Opus 5 / Fable 5) must delegate all sub-work — file reads, writes, research, discovery, grep, and pattern matching — to Haiku.
+2. The expensive model reads Haiku's output (summaries, findings, code excerpts) and reviews it, then approves, rejects, or proposes a diff-sized patch only.
+3. Claude of any tier (including Haiku) is scoped to `docs/MASTER_PLAN.md` authorship and governance docs. All code implementation, repo operations, and feature development belong to Antigravity and OpenCode.
+4. This is a binding order, not a preference. Violations are recorded in the TOM round record of the next MASTER_PLAN entry.
+
+## Why
+
+The G-4 family (G-4, G-4b, G-4c) governs _how much_ an expensive-model reviewer may output. G-5 governs _who does the work_ — it routes discovery, reading, and writing to Haiku first, so expensive models only synthesize, review, and approve. The mechanism is that a file read charged at the expensive tier's input rate becomes, under G-5, a Haiku-tier read plus a much smaller expensive-tier read of Haiku's summary. **The actual saving ratio was not measured this round** and is deliberately left unquantified until several G-5 rounds can be compared — the same discipline G-4 applied to its own estimate. The rule exists because this project's maintenance rests on agents that never invent and never overstate; routing all discovery to a cost-constrained model enforces precision over volume.
+
+## Scope Boundary
+
+- **Claude (any tier):** Authors `docs/MASTER_PLAN.md`, records findings, synthesizes architecture decisions. No implementation.
+- **Antigravity & OpenCode:** Write, test, commit, merge all code. Measure and report on implementation. Own the backlog and the deploy queue.
+- **Haiku:** Discovers files, runs grep, reads code, writes code under explicit plan, executes mechanical tasks, reports findings to expensive models.
+
+## Open Items
+
+P1 and P2 items from v11.28 (NVIDIA key-path measurement, grants cockpit, LinkedIn tracking, visual-layer rollout) remain unchanged and still belong to Antigravity/OpenCode. v11.29's three P0 items (P0-0 masking, P0-a unblocking, P0-b reconnection) were committed and pushed to `claude/strategy-brief-review-i93xcv` at the end of that round, together with a merge of the two commits Antigravity had pushed in parallel; they are no longer uncommitted, and independent verification (`pnpm lint` / `tsc` / `build` / `test`) still belongs to Antigravity/OpenCode. This entry records the governance rule only; no code or migration changes.
+
+**Files touched:** `docs/MASTER_PLAN.md`, `CLAUDE.md`, `AGENTS.md`.
+
+**TOM round record:** Stage 1+2 by Haiku (this entry itself — the first delegation round executed under G-5). Stage 3 review by Opus 5: three diff-sized patches applied — two unsourced token-saving figures removed as Standing Rule #10 violations (replaced with "ölçülmedi"), and one factual correction to Open Items (v11.29 P0 work was already committed and pushed, not awaiting commit). No rewrite; G-4 and G-4c respected.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.29 (P0-0/P0-a/P0-b Executed — Founder-Authorized Direct Implementation, Role Rule Suspended for This Round) [architect]
 
 > 🇹🇷 ÖZET (Founder için): v11.28'de teşhis edilen üç öncelikli kalemi (P0-0, P0-a, P0-b) bu turda **doğrudan uyguladım** — v11.25/27'deki "yalnız MASTER_PLAN yaz" kuralı, sizin bu turdaki açık talimatınızla ("gerekli güncellemeleri profesyonel olarak yap" + "sonnet olarak gerekli güncellemeleri yap") bu iş kalemi için askıya alındı, ihlal değil. Üç dosya değişti (çalışma ağacında, henüz commit edilmedi): (1) `external-verifier.ts` — PII maskeleme artık gerçekten çalışıyor, `contains_pii`/`pii_categories` sabit kodlanmış değil, gerçek tespitten geliyor. (2) `fetch-external/route.ts` — tek-sağlayıcı (OpenRouter) kapısı kaldırıldı, doğrulama artık her öğe için denenir (`callWithFailover` zaten çok-sağlayıcılı); atlanan/başarısız doğrulamalar artık JSON yanıtında sayılıyor. (3) `sidebar.tsx` — master-plan, outreach, investors, experts linkleri geri eklendi. Haiku ajanı diff'leri bağımsız doğruladı (3/3 doğru), yalnız 3 çeviri anahtarı eksik bulundu — ikinci bir Haiku ajanı şu an bunu düzeltiyor (arka planda). **Commit henüz yapılmadı** — kod dosyalarının gözden geçirilip commit edilmesi Antigravity/OpenCode'a bırakıldı (v11.25 kuralı burada geçerli kalıyor: mimar kod commit etmez).
