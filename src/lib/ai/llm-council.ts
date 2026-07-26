@@ -61,9 +61,7 @@ const DEFAULT_LABELS = ["Response A", "Response B", "Response C", "Response D", 
 /**
  * Executes a 3-Stage LLM Council Deliberation process on a given prompt.
  */
-export async function runLLMCouncil(
-  options: CouncilRunOptions,
-): Promise<CouncilSynthesisResult> {
+export async function runLLMCouncil(options: CouncilRunOptions): Promise<CouncilSynthesisResult> {
   const sanitizedPrompt = maskPII(options.prompt).masked;
   const systemPrompt = options.systemPrompt
     ? maskPII(options.systemPrompt).masked
@@ -222,7 +220,9 @@ Respond in JSON format with the following structure:
   attemptedChains.push(chairmanResult.attemptedModels);
 
   if (!chairmanResult.ok || !chairmanResult.data.content) {
-    logger.warn("[LLMCouncil] Stage 3 Chairman primary response failed, falling back to best Stage 1 opinion.");
+    logger.warn(
+      "[LLMCouncil] Stage 3 Chairman primary response failed, falling back to best Stage 1 opinion.",
+    );
     const topOpinion = opinions[0]!;
     return {
       ok: true,

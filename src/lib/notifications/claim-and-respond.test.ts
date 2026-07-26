@@ -6,7 +6,8 @@ vi.mock("@/lib/supabase/admin", () => ({
     from: () => ({
       select: () => ({
         eq: () => ({
-          maybeSingle: () => Promise.resolve({ data: { name: "OpenAI", contact_email: "safety@openai.com" } }),
+          maybeSingle: () =>
+            Promise.resolve({ data: { name: "OpenAI", contact_email: "safety@openai.com" } }),
         }),
       }),
       insert: () => ({

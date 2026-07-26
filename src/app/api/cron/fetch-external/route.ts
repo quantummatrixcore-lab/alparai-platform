@@ -4,7 +4,6 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { fetchRedditPosts } from "@/lib/connectors/reddit";
 import { fetchHNStories } from "@/lib/connectors/hackernews";
 import { fetchRSSFeed } from "@/lib/connectors/rss";
-import { isGatewayConfigured } from "@/lib/ai/openrouter-gateway";
 import { verifyExternalItem, publishVerifiedItem } from "@/lib/ai/external-verifier";
 import { logger } from "@/lib/utils/logger";
 
@@ -137,9 +136,9 @@ async function getHandler(request: Request) {
   }
 
   // --- Process negative/detection items into external_incidents_queue ---
-  const aiAvailable = isGatewayConfigured();
   let insertedCount = 0;
   let aiPublishedCount = 0;
+  let verificationSkippedCount = 0;
 
   for (const item of allFetched) {
     const isTrusted = TRUSTED_ALLOWLIST.includes(getDomain(item.external_url));
@@ -148,17 +147,18 @@ async function getHandler(request: Request) {
 
     if (isTrusted) {
       status = "published";
-    } else if (aiAvailable) {
+    } else {
       try {
         verdict = await verifyExternalItem(item.title, item.body);
         if (verdict.approved) {
           status = "accepted";
         }
       } catch (err) {
-        logger.error("[FetchExternal] AI verification failed", {
+        logger.error("[FetchExternal] AI verification threw exception", {
           url: item.external_url,
           error: err instanceof Error ? err.message : String(err),
         });
+        verificationSkippedCount++;
       }
     }
 
@@ -211,6 +211,7 @@ async function getHandler(request: Request) {
     positive_inserted: positiveInserted,
     inserted_or_updated: insertedCount,
     ai_verified_published: aiPublishedCount,
+    verification_skipped_or_failed: verificationSkippedCount,
   });
 }
 

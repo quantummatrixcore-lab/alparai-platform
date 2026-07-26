@@ -25,33 +25,63 @@ describe("LLM Council Deliberation Engine", () => {
     mockCall
       .mockResolvedValueOnce({
         ok: true,
-        data: { content: "Model A response on safety.", model: "gemini-1.5-flash", usage: mockUsage, latencyMs: 120 },
+        data: {
+          content: "Model A response on safety.",
+          model: "gemini-1.5-flash",
+          usage: mockUsage,
+          latencyMs: 120,
+        },
         attemptedModels: ["google:gemini-1.5-flash"],
       })
       .mockResolvedValueOnce({
         ok: true,
-        data: { content: "Model B response on safety.", model: "llama-3.1-70b", usage: mockUsage, latencyMs: 150 },
+        data: {
+          content: "Model B response on safety.",
+          model: "llama-3.1-70b",
+          usage: mockUsage,
+          latencyMs: 150,
+        },
         attemptedModels: ["nvidia:meta/llama-3.1-70b-instruct"],
       })
       .mockResolvedValueOnce({
         ok: true,
-        data: { content: "Model C response on safety.", model: "deepseek-chat", usage: mockUsage, latencyMs: 180 },
+        data: {
+          content: "Model C response on safety.",
+          model: "deepseek-chat",
+          usage: mockUsage,
+          latencyMs: 180,
+        },
         attemptedModels: ["openrouter:deepseek/deepseek-chat"],
       })
       // Stage 2: 3 peer reviews
       .mockResolvedValueOnce({
         ok: true,
-        data: { content: "Review A: Response A is sound.", model: "gemini-1.5-flash", usage: mockUsage, latencyMs: 100 },
+        data: {
+          content: "Review A: Response A is sound.",
+          model: "gemini-1.5-flash",
+          usage: mockUsage,
+          latencyMs: 100,
+        },
         attemptedModels: ["google:gemini-1.5-flash"],
       })
       .mockResolvedValueOnce({
         ok: true,
-        data: { content: "Review B: Response B is thorough.", model: "llama-3.1-70b", usage: mockUsage, latencyMs: 110 },
+        data: {
+          content: "Review B: Response B is thorough.",
+          model: "llama-3.1-70b",
+          usage: mockUsage,
+          latencyMs: 110,
+        },
         attemptedModels: ["nvidia:meta/llama-3.1-70b-instruct"],
       })
       .mockResolvedValueOnce({
         ok: true,
-        data: { content: "Review C: Response C agrees.", model: "deepseek-chat", usage: mockUsage, latencyMs: 130 },
+        data: {
+          content: "Review C: Response C agrees.",
+          model: "deepseek-chat",
+          usage: mockUsage,
+          latencyMs: 130,
+        },
         attemptedModels: ["openrouter:deepseek/deepseek-chat"],
       })
       // Stage 3: Chairman Synthesis

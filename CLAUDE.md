@@ -46,6 +46,8 @@ pnpm db:migrate       # supabase migration up
 
    **TOM (Token Optimization Engine) — MASTER_PLAN doctrine entries:** Haiku drafts → Sonnet writes the full content → Stage-3 review by **Opus 5 or Fable 5** (approve or diff-sized patch on architecture/governance/security grounds; not a shared label — the two are separate reviewer options with different guardrails, MASTER_PLAN v11.16). Full rewrites at the review stage are prohibited — see G-4 in MASTER_PLAN v11.13 (amended v11.14): >30% longer than Sonnet's output = violation, applies to both. **Fable 5 additionally hard-caps its output at ~1000 tokens** regardless of that ratio (G-4b, MASTER_PLAN v11.15/v11.16); **Opus 5 is hard-capped at ~5000 tokens** (G-4c, MASTER_PLAN v11.17).
 
+   **G-5 (binding):** Expensive-model sessions (Opus 5 / Fable 5) must delegate all sub-work — file reads, writes, research, discovery, grep — to Haiku; the expensive model reviews Haiku output and approves or patches at diff size only. Claude of any tier is scoped to MASTER_PLAN authorship; all implementation belongs to Antigravity and OpenCode.
+
 10. **No unsourced numbers in `docs/MASTER_PLAN.md`** — every figure cites a file path, table name, or measurement. If unmeasured, write "ölçülmedi". Projections must be tagged `[tahmin — doğrulanmamış]`.
 
 ## File Map

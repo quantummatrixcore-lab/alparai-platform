@@ -21,7 +21,10 @@ export async function triggerClaimAndRespondAlert(
 ): Promise<{ triggered: boolean; alertId?: string; reason?: string }> {
   // Only trigger automatically for high or critical incidents
   if (input.severity !== "high" && input.severity !== "critical") {
-    return { triggered: false, reason: "Severity below trigger threshold (requires high or critical)" };
+    return {
+      triggered: false,
+      reason: "Severity below trigger threshold (requires high or critical)",
+    };
   }
 
   const supabase = createAdminClient();
@@ -47,18 +50,22 @@ export async function triggerClaimAndRespondAlert(
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://alparai.com";
     const claimUrl = `${appUrl}/en/incidents/${input.incidentId}?claim=true`;
 
-    logger.info(`[ClaimAndRespond] Alert generated for ${providerName} on Incident ${input.incidentId}`, {
-      incidentId: input.incidentId,
-      severity: input.severity,
-      providerEmail: providerEmail ?? "simulated-trust-and-safety@provider.com",
-      claimUrl,
-    });
+    logger.info(
+      `[ClaimAndRespond] Alert generated for ${providerName} on Incident ${input.incidentId}`,
+      {
+        incidentId: input.incidentId,
+        severity: input.severity,
+        providerEmail: providerEmail ?? "simulated-trust-and-safety@provider.com",
+        claimUrl,
+      },
+    );
 
     // 2. Queue into outreach queue table for record keeping
     const { data: queued, error: queueErr } = await supabase
       .from("outreach_queue")
       .insert({
-        recipient_email: providerEmail ?? `safety@${providerName.toLowerCase().replace(/[^a-z0-9]/g, "")}.com`,
+        recipient_email:
+          providerEmail ?? `safety@${providerName.toLowerCase().replace(/[^a-z0-9]/g, "")}.com`,
         recipient_name: providerName,
         subject: `[ALPAR AI Alert] High-Severity Incident Reported: "${input.title.slice(0, 60)}"`,
         template_type: "provider_ts_contact",
@@ -69,8 +76,13 @@ export async function triggerClaimAndRespondAlert(
       .maybeSingle();
 
     if (queueErr) {
-      logger.warn(`[ClaimAndRespond] Could not insert into outreach_queue`, { error: queueErr.message });
-      return { triggered: true, reason: "Alert generated and logged, outreach queue insert bypassed" };
+      logger.warn(`[ClaimAndRespond] Could not insert into outreach_queue`, {
+        error: queueErr.message,
+      });
+      return {
+        triggered: true,
+        reason: "Alert generated and logged, outreach queue insert bypassed",
+      };
     }
 
     return {
@@ -78,7 +90,11 @@ export async function triggerClaimAndRespondAlert(
       alertId: queued?.id,
     };
   } catch (err) {
-    logger.error(`[ClaimAndRespond] Failed to trigger alert`, {}, err instanceof Error ? err : undefined);
+    logger.error(
+      `[ClaimAndRespond] Failed to trigger alert`,
+      {},
+      err instanceof Error ? err : undefined,
+    );
     return { triggered: false, reason: err instanceof Error ? err.message : "Unknown error" };
   }
 }
