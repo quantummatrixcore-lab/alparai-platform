@@ -19,6 +19,13 @@ export async function middleware(request: NextRequest) {
   requestHeaders.set("x-pathname", request.nextUrl.pathname);
 
   const { pathname } = request.nextUrl;
+  const unsupportedAdminLocaleMatch = pathname.match(/^\/(de|fr|ru)(\/admin|\/admin\/.*)$/);
+  if (unsupportedAdminLocaleMatch) {
+    const pref = request.cookies.get("NEXT_LOCALE")?.value === "tr" ? "tr" : "en";
+    const target = pathname.replace(/^\/(de|fr|ru)/, `/${pref}`);
+    return NextResponse.redirect(new URL(target + request.nextUrl.search, request.url));
+  }
+
   const isAdminPath = pathname.startsWith("/admin") || /^\/[a-z]{2}\/admin(\/|$)/.test(pathname);
 
   if (process.env.IS_PLAYWRIGHT_TEST === "true" && isAdminPath && !pathname.startsWith("/api/")) {

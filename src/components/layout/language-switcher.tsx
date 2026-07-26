@@ -28,7 +28,12 @@ export function LanguageSwitcher({ className }: { className?: string }) {
   const [open, setOpen] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const current = LOCALE_OPTIONS.find((o) => o.code === locale) ?? LOCALE_OPTIONS[0]!;
+  const isAdmin = pathname.startsWith("/admin");
+  const availableOptions = isAdmin
+    ? LOCALE_OPTIONS.filter((o) => o.code === "en" || o.code === "tr")
+    : LOCALE_OPTIONS;
+
+  const current = availableOptions.find((o) => o.code === locale) ?? availableOptions[0]!;
 
   React.useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -120,7 +125,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
           style={{ animation: "fadeIn 0.15s ease-out" }}
         >
           <div className="p-1">
-            {LOCALE_OPTIONS.map((opt) => (
+            {availableOptions.map((opt) => (
               <button
                 key={opt.code}
                 type="button"
