@@ -48,6 +48,8 @@ pnpm db:migrate       # supabase migration up
 
    **G-5 (binding):** Expensive-model sessions (Opus 5 / Fable 5) must delegate all sub-work — file reads, writes, research, discovery, grep — to Haiku; the expensive model reviews Haiku output and approves or patches at diff size only. Claude of any tier is scoped to MASTER_PLAN authorship; all implementation belongs to Antigravity and OpenCode.
 
+   **G-6 (binding, hardened after repeated recurrence — MASTER_PLAN v11.33):** No Claude session, any tier, may call `Write`/`Edit` or any mutating `git`/`pnpm`/`npm` command against any repo path other than the three governance/doctrine files (`docs/MASTER_PLAN.md`, `CLAUDE.md`, `AGENTS.md`) — no application code, migrations, config, or content files. Every fix or feature — however small — is written into MASTER_PLAN.md as a specification (exact file paths, exact schema/code) for Antigravity/OpenCode to implement. If a session catches itself mid-violation, it must stop, revert (`git checkout`/`rm`), and log the violation and correction as its own MASTER_PLAN section.
+
 10. **No unsourced numbers in `docs/MASTER_PLAN.md`** — every figure cites a file path, table name, or measurement. If unmeasured, write "ölçülmedi". Projections must be tagged `[tahmin — doğrulanmamış]`.
 
 ## File Map
