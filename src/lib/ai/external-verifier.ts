@@ -139,9 +139,11 @@ export async function publishVerifiedItem(params: {
 }): Promise<{ success: boolean; incidentId?: string }> {
   const admin = createAdminClient();
 
-  const { masked: titleMasked, categories: titleCats } = maskPII(params.title);
-  const { masked: bodyMasked, categories: bodyCats } = maskPII(params.body);
-  const piiCats = Array.from(new Set([...titleCats, ...bodyCats]));
+  const { masked: titleMasked, detections: titleDetections } = maskPII(params.title);
+  const { masked: bodyMasked, detections: bodyDetections } = maskPII(params.body);
+  const piiCats = Array.from(
+    new Set([...titleDetections.map((d) => d.type), ...bodyDetections.map((d) => d.type)]),
+  );
   const containsPii = piiCats.length > 0;
 
   const { data: incident, error: insertError } = await admin
