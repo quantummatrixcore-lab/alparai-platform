@@ -45,7 +45,7 @@ export async function approveQueueItem(id: string): Promise<void> {
     .update({ status: "published", updated_at: new Date().toISOString() })
     .eq("id", id);
 
-  revalidatePath("/admin/ecosystem");
+  revalidatePath("/[locale]/admin/ecosystem", "page");
 }
 
 export async function rejectQueueItem(id: string): Promise<void> {
@@ -56,7 +56,7 @@ export async function rejectQueueItem(id: string): Promise<void> {
     .update({ status: "rejected", updated_at: new Date().toISOString() })
     .eq("id", id);
 
-  revalidatePath("/admin/ecosystem");
+  revalidatePath("/[locale]/admin/ecosystem", "page");
 }
 
 export async function archiveEcosystemNews(id: string): Promise<void> {
@@ -64,7 +64,7 @@ export async function archiveEcosystemNews(id: string): Promise<void> {
 
   await supabase.from("ecosystem_news").update({ is_active: false }).eq("id", id);
 
-  revalidatePath("/admin/ecosystem");
+  revalidatePath("/[locale]/admin/ecosystem", "page");
 }
 
 export async function updateEcosystemCategory(id: string, category: string): Promise<void> {
@@ -72,7 +72,7 @@ export async function updateEcosystemCategory(id: string, category: string): Pro
 
   await supabase.from("ecosystem_news").update({ category }).eq("id", id);
 
-  revalidatePath("/admin/ecosystem");
+  revalidatePath("/[locale]/admin/ecosystem", "page");
 }
 
 export async function triggerExternalFetch(): Promise<{ success: boolean; message: string }> {
@@ -92,7 +92,7 @@ export async function triggerExternalFetch(): Promise<{ success: boolean; messag
     }
 
     const data = await res.json();
-    revalidatePath("/admin/ecosystem");
+    revalidatePath("/[locale]/admin/ecosystem", "page");
     return {
       success: true,
       message: `Done: ${data.total_fetched || 0} incidents, ${data.positive_inserted || 0} positive, ${data.ai_verified_published || 0} auto-published`,
