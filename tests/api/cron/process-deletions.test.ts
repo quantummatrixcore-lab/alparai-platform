@@ -35,6 +35,8 @@ function makeMockAdmin(overrides: Record<string, unknown> = {}) {
   return client;
 }
 
+import { GET } from "@/app/api/cron/process-deletions/route";
+
 describe("B5 — KVKK/GDPR Delete Flow Cron Chain", () => {
   let mockAdmin: ReturnType<typeof makeMockAdmin>;
 
@@ -53,7 +55,6 @@ describe("B5 — KVKK/GDPR Delete Flow Cron Chain", () => {
     mockAdmin._mocks.mockLte.mockResolvedValueOnce({ data: [], error: null });
 
     // GET request with dev env (no auth needed)
-    const { GET } = await import("@/app/api/cron/process-deletions/route");
     const req = new Request("http://localhost/api/cron/process-deletions");
     await GET(req as never);
 
