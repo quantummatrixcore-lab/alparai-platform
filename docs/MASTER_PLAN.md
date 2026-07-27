@@ -1,3 +1,20 @@
+# ALPAR AI — MASTER PLAN v11.41 (TOM — Fable 5: Otopilot Raporu Doğrulandı, Karışık Sonuç)
+
+> 🇹🇷 ÖZET: OpenCode'un "O1-O3 bitti + 0 vulnerability + tüm testler yeşil" raporu koddan doğrulandı, prosedan değil. **O1 doğru** (countdown yok, `/submit`+`/leaderboard` CTA'ları gerçek). **O3 doğru** (5 admin bileşeni `useTranslations("admin")`'e geçmiş, anahtarlar en/tr.json'da var, parity test admin.* için de/fr'yi doğru dışlıyor). **O2 abartılmış**: `alert-banner.tsx` temiz ama `sidebar.tsx`'te hâlâ 7 sert kodlanmış İngilizce fallback var (`nav_group_operations/intelligence/strategy/governance/growth/system` + genel "Overview"); `verified-respondent-toggle.tsx`'te de 1 küçük fallback (`error_saving_changes`) kalmış. **"0 Vulnerability" iddiası kanıtsız**: son turdan bu yana `package.json`/`pnpm-lock.yaml`'da hiçbir değişiklik yok — gerçek bir `pnpm audit --fix` lockfile'ı değiştirirdi. v11.40'taki "12/25 çözüldü, kalan ölçülmedi" durumu aynen geçerli.
+
+| Kalem                           | Durum         | Kanıt                                                                                                             |
+| ------------------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------- |
+| O1 Homepage CTA                 | ✅ doğru      | `hero-section.tsx` — countdown yok, `/submit`+`/leaderboard` linkleri var                                         |
+| O2 Sidebar/alert-banner i18n    | ⚠️ abartılmış | `sidebar.tsx`: 7 fallback string kaldı; `verified-respondent-toggle.tsx`: `error_saving_changes` fallback'i kaldı |
+| O3 Admin bileşen i18n refaktörü | ✅ doğru      | 5 bileşen + en/tr.json anahtarları doğrulandı                                                                     |
+| Dependabot "0 vulnerability"    | ❌ kanıtsız   | lockfile'da hiç değişiklik yok; gerçek sayı hâlâ ölçülmedi                                                        |
+
+**Handoff (Antigravity):** (a) sidebar'daki 7 `||` fallback'ini kaldır — `nav_group_*` anahtarları muhtemelen zaten mevcut, sadece fallback'i sil; (b) `error_saving_changes`'i `messages/{en,tr}.json` admin namespace'ine ekle, fallback'i kaldır; (c) gerçek `pnpm audit` çalıştır ve lockfile diff'iyle birlikte gerçek sayıyı raporla — sayı olmadan "0 vulnerability" iddiası kabul edilmiyor.
+
+Mimar bu turda hiçbir kod dosyasına dokunmadı (G-6); yalnız `docs/MASTER_PLAN.md`.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.40 (TOM — Fable 5: "Hepsi Bitti" İddiası Doğrulandı, Sıradaki İş)
 
 > 🇹🇷 ÖZET: Founder "bütün görevler bitti, sırada ne var?" dedi — bu iddia koddan doğrulandı, prosedan değil (Haiku, read-only `git show`). Sonuç: **cockpit backlog'u (1-8, 10) gerçekten 10/10** — `markGrantSubmitted()`, katalog-doğru grant seed'i (`20260819100000_seed_grants_catalog.sql`), server-side outreach kuyruğu, recharts görsel katmanı hepsi kodda mevcut, sadece iddia değil. **İstisna: #9** (HackerOne/Reddit hesapları) — insan eylemi, koddan doğrulanamaz; tablo ✅ diyor, buraya "insan beyanı, kod-doğrulaması yok" notu düşülüyor (Truth Protocol — "doğrulandı" ile "doğrulanamadı" ayrı tutulur).
