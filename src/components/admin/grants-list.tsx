@@ -86,22 +86,22 @@ export function GrantsList({
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         <MetricCard
-          title="Total Grants"
+          title={t("grants_total")}
           value={stats.total}
           icon={<Building2 className="h-4 w-4 text-sky-400" />}
         />
         <MetricCard
-          title="Drafting"
+          title={t("grants_drafting")}
           value={stats.drafting}
           icon={<FileText className="h-4 w-4 text-amber-400" />}
         />
         <MetricCard
-          title="Submitted"
+          title={t("grants_submitted")}
           value={stats.submitted}
           icon={<Send className="h-4 w-4 text-blue-400" />}
         />
         <MetricCard
-          title="Approved"
+          title={t("grants_approved")}
           value={stats.approved}
           icon={<CheckCircle2 className="h-4 w-4 text-emerald-400" />}
         />
@@ -109,14 +109,18 @@ export function GrantsList({
 
       {stats.total > 0 && (
         <Card className="border-white/10 bg-black/40 p-4">
-          <h4 className="mb-4 text-sm font-semibold text-white">Application Pipeline Status</h4>
+          <h4 className="mb-4 text-sm font-semibold text-white">{t("grants_pipeline_status")}</h4>
           <div className="h-32 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={[
-                  { name: "Drafting", value: stats.drafting, color: "#fbbf24" },
-                  { name: "Submitted", value: stats.submitted, color: "#60a5fa" },
-                  { name: "Approved", value: stats.approved, color: "#34d399" },
+                  { name: t("grants_status_drafting"), value: stats.drafting, color: "#fbbf24" },
+                  {
+                    name: t("grants_status_submitted_pending_review"),
+                    value: stats.submitted,
+                    color: "#60a5fa",
+                  },
+                  { name: t("grants_status_approved"), value: stats.approved, color: "#34d399" },
                 ]}
                 layout="vertical"
                 margin={{ left: 20, right: 20, top: 10, bottom: 10 }}
@@ -148,9 +152,13 @@ export function GrantsList({
                 />
                 <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={16}>
                   {[
-                    { name: "Drafting", value: stats.drafting, color: "#fbbf24" },
-                    { name: "Submitted", value: stats.submitted, color: "#60a5fa" },
-                    { name: "Approved", value: stats.approved, color: "#34d399" },
+                    { name: t("grants_status_drafting"), value: stats.drafting, color: "#fbbf24" },
+                    {
+                      name: t("grants_status_submitted_pending_review"),
+                      value: stats.submitted,
+                      color: "#60a5fa",
+                    },
+                    { name: t("grants_status_approved"), value: stats.approved, color: "#34d399" },
                   ].map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
@@ -181,7 +189,7 @@ export function GrantsList({
             }`}
           >
             {tab === "all"
-              ? "All"
+              ? t("grants_status_all")
               : tab
                   .split("_")
                   .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
@@ -193,7 +201,7 @@ export function GrantsList({
       <div className="space-y-4">
         {filtered.length === 0 ? (
           <div className="text-fg-muted rounded-xl border border-white/10 bg-black/20 py-12 text-center">
-            No grant applications found.
+            {t("grants_no_data")}
           </div>
         ) : (
           filtered.map((grant) => (
@@ -205,7 +213,7 @@ export function GrantsList({
                 <div className="flex items-center gap-2">
                   <h3 className="font-semibold text-white">{grant.program_name}</h3>
                   <span className="text-fg-muted rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-xs">
-                    Phase {grant.phase}
+                    {t("grants_phase")} {grant.phase}
                   </span>
                   {grant.funding_amount && (
                     <span className="flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-xs text-emerald-400">
@@ -213,7 +221,9 @@ export function GrantsList({
                     </span>
                   )}
                 </div>
-                <p className="text-fg-muted mt-1 text-sm">{grant.category || "General Grant"}</p>
+                <p className="text-fg-muted mt-1 text-sm">
+                  {grant.category || t("grants_general")}
+                </p>
                 {grant.notes && (
                   <p className="text-fg-muted/70 mt-2 flex items-center gap-1 text-xs">
                     <FileText className="h-3 w-3" /> {grant.notes}
@@ -240,7 +250,7 @@ export function GrantsList({
                     className="flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
                   >
                     <Send className="h-3.5 w-3.5" />
-                    Mark Submitted
+                    {t("grants_mark_submitted")}
                   </button>
                 )}
 
@@ -257,17 +267,20 @@ export function GrantsList({
                     }
                     className="cursor-pointer bg-transparent px-3 py-1.5 text-sm text-white outline-none hover:bg-white/5"
                   >
-                    <option value="not_started">Not Started</option>
-                    <option value="drafting">Drafting</option>
-                    <option value="submitted_pending_review">Submitted</option>
+                    <option value="not_started">{t("grants_status_not_started")}</option>
+                    <option value="drafting">{t("grants_status_drafting")}</option>
+                    <option value="submitted_pending_review">
+                      {t("grants_status_submitted_pending_review")}
+                    </option>
                     <option value="approved" disabled={!isAdmin}>
-                      Approved {!isAdmin ? " (Admin only)" : ""}
+                      {t("grants_status_approved")} {!isAdmin ? t("grants_admin_only") : ""}
                     </option>
                     <option value="rejected" disabled={!isAdmin}>
-                      Rejected {!isAdmin ? " (Admin only)" : ""}
+                      {t("grants_status_rejected")} {!isAdmin ? t("grants_admin_only") : ""}
                     </option>
                     <option value="accepted_by_program" disabled={!isAdmin}>
-                      Accepted By Program {!isAdmin ? " (Admin only)" : ""}
+                      {t("grants_status_accepted_by_program")}{" "}
+                      {!isAdmin ? t("grants_admin_only") : ""}
                     </option>
                   </select>
                 </div>

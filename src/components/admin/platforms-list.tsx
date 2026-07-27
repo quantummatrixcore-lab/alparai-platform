@@ -58,17 +58,17 @@ export function PlatformsList({ initialPlatforms }: { initialPlatforms: Platform
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <MetricCard
-          title="Total Platforms"
+          title={t("platforms_total")}
           value={stats.total}
           icon={<Globe className="h-4 w-4 text-pink-400" />}
         />
         <MetricCard
-          title="In Progress"
+          title={t("platforms_in_progress")}
           value={stats.in_progress}
           icon={<User className="h-4 w-4 text-amber-400" />}
         />
         <MetricCard
-          title="Active & Completed"
+          title={t("platforms_active_completed")}
           value={stats.active}
           icon={<CheckCircle2 className="h-4 w-4 text-emerald-400" />}
         />
@@ -76,28 +76,30 @@ export function PlatformsList({ initialPlatforms }: { initialPlatforms: Platform
 
       {stats.total > 0 && (
         <Card className="border-white/10 bg-black/40 p-4">
-          <h4 className="mb-4 text-sm font-semibold text-white">Platform Signup Status</h4>
+          <h4 className="mb-4 text-sm font-semibold text-white">
+            {t("platforms_pipeline_status")}
+          </h4>
           <div className="h-32 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={[
                   {
-                    name: "Not Started",
+                    name: t("platforms_status_not_started"),
                     value: initialPlatforms.filter((p) => p.status === "not_started").length,
                     color: "#94a3b8",
                   },
                   {
-                    name: "Account Created",
+                    name: t("platforms_status_account_created"),
                     value: initialPlatforms.filter((p) => p.status === "account_created").length,
                     color: "#fbbf24",
                   },
                   {
-                    name: "Profile Complete",
+                    name: t("platforms_status_profile_complete"),
                     value: initialPlatforms.filter((p) => p.status === "profile_complete").length,
                     color: "#60a5fa",
                   },
                   {
-                    name: "Active",
+                    name: t("platforms_status_active"),
                     value: initialPlatforms.filter((p) => p.status === "active").length,
                     color: "#34d399",
                   },
@@ -133,22 +135,22 @@ export function PlatformsList({ initialPlatforms }: { initialPlatforms: Platform
                 <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={14}>
                   {[
                     {
-                      name: "Not Started",
+                      name: t("platforms_status_not_started"),
                       value: initialPlatforms.filter((p) => p.status === "not_started").length,
                       color: "#94a3b8",
                     },
                     {
-                      name: "Account Created",
+                      name: t("platforms_status_account_created"),
                       value: initialPlatforms.filter((p) => p.status === "account_created").length,
                       color: "#fbbf24",
                     },
                     {
-                      name: "Profile Complete",
+                      name: t("platforms_status_profile_complete"),
                       value: initialPlatforms.filter((p) => p.status === "profile_complete").length,
                       color: "#60a5fa",
                     },
                     {
-                      name: "Active",
+                      name: t("platforms_status_active"),
                       value: initialPlatforms.filter((p) => p.status === "active").length,
                       color: "#34d399",
                     },
@@ -173,7 +175,7 @@ export function PlatformsList({ initialPlatforms }: { initialPlatforms: Platform
               }`}
             >
               {tab === "all"
-                ? "All"
+                ? t("platforms_status_all")
                 : tab
                     .split("_")
                     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
@@ -186,7 +188,7 @@ export function PlatformsList({ initialPlatforms }: { initialPlatforms: Platform
       <div className="space-y-4">
         {filtered.length === 0 ? (
           <div className="text-fg-muted rounded-xl border border-white/10 bg-black/20 py-12 text-center">
-            No platforms found.
+            {t("platforms_no_data")}
           </div>
         ) : (
           filtered.map((platform) => (
@@ -230,10 +232,12 @@ export function PlatformsList({ initialPlatforms }: { initialPlatforms: Platform
                     onChange={(e) => handleUpdateStatus(platform.id, e.target.value as any)}
                     className="cursor-pointer bg-transparent px-3 py-1.5 text-sm text-white outline-none hover:bg-white/5"
                   >
-                    <option value="not_started">Not Started</option>
-                    <option value="account_created">Account Created</option>
-                    <option value="profile_complete">Profile Complete</option>
-                    <option value="active">Active</option>
+                    <option value="not_started">{t("platforms_status_not_started")}</option>
+                    <option value="account_created">{t("platforms_status_account_created")}</option>
+                    <option value="profile_complete">
+                      {t("platforms_status_profile_complete")}
+                    </option>
+                    <option value="active">{t("platforms_status_active")}</option>
                   </select>
                 </div>
               </div>

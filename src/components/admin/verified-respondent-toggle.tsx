@@ -8,6 +8,7 @@ import { Modal } from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
 import { ShieldCheck, ShieldAlert, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface VerifiedRespondentToggleProps {
   providerId: string;
@@ -22,27 +23,24 @@ export function VerifiedRespondentToggle({
   contactEmail,
   providerName,
 }: VerifiedRespondentToggleProps) {
+  const t = useTranslations("admin");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState(contactEmail || "");
 
   const handleToggle = async () => {
     if (isVerified) {
-      if (
-        confirm(
-          `Are you sure you want to revoke the Verified Respondent status for ${providerName}?`,
-        )
-      ) {
+      if (confirm(t("verified_revoke_confirm", { providerName }))) {
         setLoading(true);
         try {
           const res = await toggleVerifiedRespondent(providerId, false);
           if (res.ok) {
-            toast.success("Verified Respondent status revoked successfully.");
+            toast.success(t("verified_status_revoked"));
           } else {
-            toast.error(res.error || "Failed to revoke status.");
+            toast.error(res.error || t("verified_status_revoke_failed"));
           }
         } catch {
-          toast.error("An unexpected error occurred.");
+          toast.error(t("error_saving_changes") || "An error occurred.");
         } finally {
           setLoading(false);
         }
@@ -59,12 +57,12 @@ export function VerifiedRespondentToggle({
     try {
       const res = await toggleVerifiedRespondent(providerId, true, email);
       if (res.ok) {
-        toast.success("Verified Respondent status granted successfully.");
+        toast.success(t("verified_status_granted"));
       } else {
-        toast.error(res.error || "Failed to grant status.");
+        toast.error(res.error || t("verified_status_grant_failed"));
       }
     } catch {
-      toast.error("An unexpected error occurred.");
+      toast.error(t("error_saving_changes") || "An error occurred.");
     } finally {
       setLoading(false);
     }
@@ -86,7 +84,7 @@ export function VerifiedRespondentToggle({
             ) : (
               <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
             )}
-            <span>Verified</span>
+            <span>{t("verified_label")}</span>
           </Button>
         ) : (
           <Button
@@ -101,7 +99,7 @@ export function VerifiedRespondentToggle({
             ) : (
               <ShieldAlert className="h-3.5 w-3.5 shrink-0" />
             )}
-            <span>Unverified</span>
+            <span>{t("unverified_label")}</span>
           </Button>
         )}
       </div>
@@ -109,33 +107,30 @@ export function VerifiedRespondentToggle({
       <Modal
         open={open}
         onOpenChange={setOpen}
-        title="Verify AI Provider"
-        description={`Set Verified Respondent status for ${providerName}`}
+        title={t("verify_modal_title")}
+        description={t("verify_modal_desc", { providerName })}
       >
         <form onSubmit={handleConfirmVerify} className="space-y-4 pt-4">
           <div className="space-y-2">
             <label className="text-fg-primary block text-sm font-medium">
-              Respondent Contact Email (Optional)
+              {t("verify_modal_email_label")}
             </label>
             <Input
               type="email"
-              placeholder="e.g. contact@provider.com"
+              placeholder={t("verify_modal_email_placeholder")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="bg-bg-tertiary"
             />
-            <p className="text-fg-muted text-[11px]">
-              This email will receive notifications when new incidents involving this provider are
-              reported.
-            </p>
+            <p className="text-fg-muted text-[11px]">{t("verify_modal_email_hint")}</p>
           </div>
 
           <div className="flex justify-end gap-3 pt-2">
             <Button type="button" variant="ghost" onClick={() => setOpen(false)} disabled={loading}>
-              Cancel
+              {t("cancel") || "Cancel"}
             </Button>
             <Button type="submit" variant="primary" disabled={loading}>
-              Confirm Verification
+              {t("verify_modal_confirm_btn")}
             </Button>
           </div>
         </form>

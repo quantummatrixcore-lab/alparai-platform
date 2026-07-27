@@ -67,19 +67,19 @@ export function LinkedinContactsList({ initialContacts }: { initialContacts: Lin
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-        <MetricCard title="Total Targets" value={stats.total} icon={<UsersIcon />} />
+        <MetricCard title={t("linkedin_total_targets")} value={stats.total} icon={<UsersIcon />} />
         <MetricCard
-          title="Added"
+          title={t("linkedin_added")}
           value={stats.added}
           icon={<UserPlus className="h-4 w-4 text-emerald-400" />}
         />
         <MetricCard
-          title="Messaged"
+          title={t("linkedin_messaged")}
           value={stats.messaged}
           icon={<MessageSquare className="h-4 w-4 text-blue-400" />}
         />
         <MetricCard
-          title="Responded"
+          title={t("linkedin_responded")}
           value={stats.responded}
           icon={<CheckCircle2 className="h-4 w-4 text-violet-400" />}
         />
@@ -87,27 +87,31 @@ export function LinkedinContactsList({ initialContacts }: { initialContacts: Lin
 
       {stats.total > 0 && (
         <Card className="border-white/10 bg-black/40 p-4">
-          <h4 className="mb-4 text-sm font-semibold text-white">Outreach Pipeline Status</h4>
+          <h4 className="mb-4 text-sm font-semibold text-white">{t("linkedin_pipeline_status")}</h4>
           <div className="h-32 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={[
                   {
-                    name: "To Add",
+                    name: t("linkedin_status_to_add"),
                     value: initialContacts.filter((c) => c.status === "to_add").length,
                     color: "#94a3b8",
                   },
                   {
-                    name: "Added",
+                    name: t("linkedin_status_added"),
                     value: initialContacts.filter((c) => c.status === "added").length,
                     color: "#34d399",
                   },
                   {
-                    name: "Messaged",
+                    name: t("linkedin_status_messaged"),
                     value: initialContacts.filter((c) => c.status === "messaged").length,
                     color: "#60a5fa",
                   },
-                  { name: "Responded", value: stats.responded, color: "#a78bfa" },
+                  {
+                    name: t("linkedin_status_responded"),
+                    value: stats.responded,
+                    color: "#a78bfa",
+                  },
                 ]}
                 layout="vertical"
                 margin={{ left: 20, right: 20, top: 10, bottom: 10 }}
@@ -140,21 +144,25 @@ export function LinkedinContactsList({ initialContacts }: { initialContacts: Lin
                 <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={14}>
                   {[
                     {
-                      name: "To Add",
+                      name: t("linkedin_status_to_add"),
                       value: initialContacts.filter((c) => c.status === "to_add").length,
                       color: "#94a3b8",
                     },
                     {
-                      name: "Added",
+                      name: t("linkedin_status_added"),
                       value: initialContacts.filter((c) => c.status === "added").length,
                       color: "#34d399",
                     },
                     {
-                      name: "Messaged",
+                      name: t("linkedin_status_messaged"),
                       value: initialContacts.filter((c) => c.status === "messaged").length,
                       color: "#60a5fa",
                     },
-                    { name: "Responded", value: stats.responded, color: "#a78bfa" },
+                    {
+                      name: t("linkedin_status_responded"),
+                      value: stats.responded,
+                      color: "#a78bfa",
+                    },
                   ].map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
@@ -174,7 +182,9 @@ export function LinkedinContactsList({ initialContacts }: { initialContacts: Lin
               filter === tab ? "bg-white/10 text-white" : "text-fg-muted hover:text-white"
             }`}
           >
-            {tab.charAt(0).toUpperCase() + tab.slice(1).replace("_", " ")}
+            {tab === "all"
+              ? t("linkedin_status_all")
+              : tab.charAt(0).toUpperCase() + tab.slice(1).replace("_", " ")}
           </button>
         ))}
       </div>
@@ -182,7 +192,7 @@ export function LinkedinContactsList({ initialContacts }: { initialContacts: Lin
       <div className="space-y-4">
         {filtered.length === 0 ? (
           <div className="text-fg-muted rounded-xl border border-white/10 bg-black/20 py-12 text-center">
-            No contacts found in this category.
+            {t("linkedin_no_data")}
           </div>
         ) : (
           filtered.map((contact) => (
@@ -194,7 +204,7 @@ export function LinkedinContactsList({ initialContacts }: { initialContacts: Lin
                 <div className="flex items-center gap-2">
                   <h3 className="font-semibold text-white">{contact.full_name}</h3>
                   <span className="text-fg-muted rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-xs">
-                    {contact.category || "Uncategorized"}
+                    {contact.category || t("linkedin_uncategorized")}
                   </span>
                   {contact.priority === 1 && (
                     <span className="rounded-full border border-red-500/20 bg-red-500/10 px-2 py-0.5 text-xs text-red-400">
@@ -203,7 +213,7 @@ export function LinkedinContactsList({ initialContacts }: { initialContacts: Lin
                   )}
                 </div>
                 <p className="text-fg-muted mt-1 text-sm">
-                  {contact.title} {contact.company && `at ${contact.company}`}
+                  {contact.title} {contact.company && `${t("linkedin_at")} ${contact.company}`}
                 </p>
                 {contact.notes && (
                   <p className="text-fg-muted/70 mt-2 flex items-center gap-1 text-xs">
@@ -230,28 +240,28 @@ export function LinkedinContactsList({ initialContacts }: { initialContacts: Lin
                     onClick={() => handleUpdateStatus(contact.id, "to_add")}
                     className={`px-3 py-1.5 text-xs font-medium ${contact.status === "to_add" ? "bg-white/10 text-white" : "text-fg-muted hover:bg-white/5 hover:text-white"}`}
                   >
-                    To Add
+                    {t("linkedin_status_to_add")}
                   </button>
                   <button
                     disabled={isPending || contact.status === "added"}
                     onClick={() => handleUpdateStatus(contact.id, "added")}
                     className={`border-l border-white/10 px-3 py-1.5 text-xs font-medium ${contact.status === "added" ? "bg-emerald-500/20 text-emerald-400" : "text-fg-muted hover:bg-white/5 hover:text-white"}`}
                   >
-                    Added
+                    {t("linkedin_status_added")}
                   </button>
                   <button
                     disabled={isPending || contact.status === "messaged"}
                     onClick={() => handleUpdateStatus(contact.id, "messaged")}
                     className={`border-l border-white/10 px-3 py-1.5 text-xs font-medium ${contact.status === "messaged" ? "bg-blue-500/20 text-blue-400" : "text-fg-muted hover:bg-white/5 hover:text-white"}`}
                   >
-                    Messaged
+                    {t("linkedin_status_messaged")}
                   </button>
                   <button
                     disabled={isPending || contact.status === "responded"}
                     onClick={() => handleUpdateStatus(contact.id, "responded")}
                     className={`border-l border-white/10 px-3 py-1.5 text-xs font-medium ${contact.status === "responded" ? "bg-violet-500/20 text-violet-400" : "text-fg-muted hover:bg-white/5 hover:text-white"}`}
                   >
-                    Responded
+                    {t("linkedin_status_responded")}
                   </button>
                 </div>
               </div>

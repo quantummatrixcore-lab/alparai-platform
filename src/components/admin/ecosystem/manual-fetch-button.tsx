@@ -3,8 +3,10 @@
 import React, { useTransition } from "react";
 import { triggerExternalFetch } from "@/actions/ecosystem";
 import { RefreshCw } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function ManualFetchButton() {
+  const t = useTranslations("admin");
   const [isPending, startTransition] = useTransition();
 
   const handleFetch = () => {
@@ -37,7 +39,7 @@ export function ManualFetchButton() {
         className="border-brand-500/30 from-brand-500/20 via-brand-500/10 text-brand-300 shadow-brand-500/10 hover:border-brand-500/50 hover:bg-brand-500/25 relative inline-flex items-center gap-2 rounded-xl border bg-gradient-to-r to-transparent px-4 py-2.5 text-xs font-bold tracking-wider uppercase shadow-lg backdrop-blur-md transition-all hover:text-white disabled:opacity-40"
       >
         <RefreshCw className={`text-brand-400 h-4 w-4 ${isPending ? "animate-spin" : ""}`} />
-        <span>{isPending ? "Syncing Feed..." : "Trigger AI Crawler"}</span>
+        <span>{isPending ? t("syncing_feed") : t("trigger_ai_crawler")}</span>
       </button>
 
       <div

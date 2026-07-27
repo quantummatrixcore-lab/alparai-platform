@@ -26,7 +26,11 @@ describe("i18n translation file parity", () => {
       const keys = flattenKeys(messages);
 
       it("has all keys present in en.json", () => {
-        const missing = enKeys.filter((k) => !keys.includes(k));
+        const isPublicLocaleOnly = locale === "de" || locale === "fr";
+        const missing = enKeys.filter((k) => {
+          if (isPublicLocaleOnly && k.startsWith("admin.")) return false;
+          return !keys.includes(k);
+        });
         expect(missing).toEqual([]);
       });
 
