@@ -1,3 +1,31 @@
+# ALPAR AI — MASTER PLAN v11.68 (TOM — v11.67'nin Sidebar Regresyonu Kapandı, Küçük Bir Fallback Kalıntısı Var)
+
+> 🇹🇷 ÖZET: v11.67'de bulunan sidebar regresyonu (`cross-audit-dashboard` ve `ecosystem`'in yanlış "alias" öncülüyle orphan bırakılması) commit `bfd28fc`'de **gerçekten ve doğru şekilde** düzeltildi. Ancak düzeltme, bu zincirde iki kez kapatılmış olan `||` fallback anti-pattern'ini üç yeni satırda tekrar getirdi.
+
+## Doğrulama Tablosu
+
+| Kalem                          | Durum                        | Kanıt                                                                                                                                                                                                              |
+| ------------------------------ | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `/admin/cross-audit-dashboard` | ✅ Geri eklendi              | Kendi anahtarı `nav_cross_audit_dashboard` ile                                                                                                                                                                     |
+| `/admin/analysis`              | ✅ Doğru yeniden etiketlendi | Yeni, ayrı anahtar `nav_audit_analysis` ("Audit Archive") — artık cross-audit-dashboard'ın anahtarını çalmıyor                                                                                                     |
+| `/admin/ecosystem`             | ✅ Geri eklendi              | `nav_ecosystem` ile                                                                                                                                                                                                |
+| i18n anahtarları               | ✅ Gerçek                    | `messages/en.json`+`tr.json`'da EN/TR değerleri farklı ve doğru                                                                                                                                                    |
+| Test istisna listesi           | ✅ Doğru güncellendi         | İki route artık sidebar'da olduğu için istisnalardan çıkarılmış                                                                                                                                                    |
+| Diffstat                       | ✅ Cerrahi                   | 4 dosya, 17 ekleme/5 silme                                                                                                                                                                                         |
+| `\|\|` fallback deseni         | ⚠️ **Yeniden ortaya çıktı**  | Üç satırda da: `t("nav_ecosystem") \|\| "Ecosystem Hub"` vb. — v11.41 ve v11.60/61'de kapatılan aynı defect sınıfı. Anahtarlar gerçekten var olduğu için çalışma zamanında zararsız, ama kural ihlali tekrarlanmış |
+
+## Antigravity İçin Küçük Görev
+
+Üç satırdaki `||` fallback'lerini kaldırın — çıplak `t("nav_cross_audit_dashboard")`, `t("nav_audit_analysis")`, `t("nav_ecosystem")`, önceki kapanışlarla (6eee43c, cdad908) aynı yöntem.
+
+## Hâlâ Açık (v11.67'den)
+
+`ecosystem`↔`import` "merge" iddiası doğrulanmadı; `billing`/`finance` ve `outreach`/`social` çakışmaları ele alınmadı; P0-P3 yol haritasının sidebar dışındaki kalemleri henüz başlamadı.
+
+Mimar bu turda yalnızca `docs/MASTER_PLAN.md`'ye dokundu.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.67 (STRATEJİ — Founder Büyüme Yol Haritası + Sidebar Regresyon Düzeltmesi)
 
 > 🇹🇷 Bu giriş bir doğrulama turu değil, Founder'ın doğrudan talebiyle yazılan bir **strateji ve önceliklendirme dokümanı**. Founder haklı: son ~20 giriş verify→düzelt→yeniden-doğrula döngüsüydü — gerçek hataları yakaladı (güvenlik regresyonu, P0 async bug) ama bu bir büyüme stratejisi değil. Bu giriş üç şey yapıyor: (1) Founder'ın altı somut talebine tek tek cevap veriyor, (2) yazılırken içeri giren yeni bir sidebar "temizlik" commit'inin aslında **regresyon** olduğunu tespit edip düzeltme spesifikasyonu veriyor, (3) kanıta dayalı, önceliklendirilmiş bir yol haritası (P0-P3) sunuyor.
