@@ -1,3 +1,11 @@
+# ALPAR AI — MASTER PLAN v11.42 (TOM — Fable 5: Delta Yok)
+
+> 🇹🇷 ÖZET: `/tom`. Tek Haiku kontrolü: `abd713f`'ten bu yana origin/master'da **yeni commit yok**. v11.41'in üç bulgusu (sidebar'da 7 fallback, `verified-respondent-toggle.tsx`'te 1 fallback, kanıtsız "0 vulnerability" iddiası) hâlâ açık ve devredilmiş durumda; yeniden doğrulama gerekmedi çünkü kod değişmedi. O4-O7 dokunulmamış. Yeni spesifikasyon yok — v11.41'in handoff'u geçerliliğini koruyor.
+
+Mimar bu turda hiçbir kod dosyasına dokunmadı (G-6); yalnız `docs/MASTER_PLAN.md`.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.41 (TOM — Fable 5: Otopilot Raporu Doğrulandı, Karışık Sonuç)
 
 > 🇹🇷 ÖZET: OpenCode'un "O1-O3 bitti + 0 vulnerability + tüm testler yeşil" raporu koddan doğrulandı, prosedan değil. **O1 doğru** (countdown yok, `/submit`+`/leaderboard` CTA'ları gerçek). **O3 doğru** (5 admin bileşeni `useTranslations("admin")`'e geçmiş, anahtarlar en/tr.json'da var, parity test admin.* için de/fr'yi doğru dışlıyor). **O2 abartılmış**: `alert-banner.tsx` temiz ama `sidebar.tsx`'te hâlâ 7 sert kodlanmış İngilizce fallback var (`nav_group_operations/intelligence/strategy/governance/growth/system` + genel "Overview"); `verified-respondent-toggle.tsx`'te de 1 küçük fallback (`error_saving_changes`) kalmış. **"0 Vulnerability" iddiası kanıtsız**: son turdan bu yana `package.json`/`pnpm-lock.yaml`'da hiçbir değişiklik yok — gerçek bir `pnpm audit --fix` lockfile'ı değiştirirdi. v11.40'taki "12/25 çözüldü, kalan ölçülmedi" durumu aynen geçerli.
