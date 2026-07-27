@@ -1,3 +1,11 @@
+# ALPAR AI — MASTER PLAN v11.52 (TOM — Delta Yok)
+
+> 🇹🇷 ÖZET: `git fetch origin master` → `e6efd93`'ten (v11.51) bu yana **yeni commit yok**. Kullanıcının paylaştığı "senkron doğrulandı" raporu zaten doğrulanmış olan aynı commit'i tekrar ediyor, yeni iş değil. Açık tek kalem değişmedi: Dependabot 21 (v11.49).
+
+Mimar bu turda yalnızca `docs/MASTER_PLAN.md`'ye dokundu.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.51 (TOM — f154b76 Doğrulandı: Advisory-Board Kalan 2 String Kapandı)
 
 > 🇹🇷 ÖZET: v11.50'nin tek devir maddesi — `advisory-board/page.tsx`'teki `value="ACTIVE"` ve `badge="§21 OK"` — commit `f154b76`'da kapandı. Haiku pass (read-only `git show`/`git diff`): her iki string `t("advisory_status_active")`/`t("advisory_badge_ok")` ile değiştirildi, `messages/en.json`+`tr.json`'a doğru çeviriyle (`"AKTİF"`, `"§21 TAMAM"`) eklendi. 3 dosya, 6 ekleme/2 silme — cerrahi. Tüm dosya yeniden tarandı, başka hardcoded string bulunamadı.
