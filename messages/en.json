@@ -1983,7 +1983,22 @@
     "api_keys_connected": "Connected APIs",
     "api_keys_avg_health": "Avg. API Health",
     "api_keys_daily_cost": "Daily API Cost",
-    "dsar_sla_urgent": "SLA Urgent (<7 days)"
+    "dsar_sla_urgent": "SLA Urgent (<7 days)",
+    "dsar_trend_sla": "30-day SLA",
+    "dsar_trend_awaiting": "Awaiting action",
+    "dsar_trend_action": "Action required",
+    "dsar_trend_ontrack": "All on track",
+    "dsar_badge_urgent": "URGENT",
+    "dsar_badge_ok": "OK",
+    "dsar_box_title": "🛡️ What is DSAR (Data Subject Access Request)?",
+    "dsar_box_desc": "DSAR (Data Subject Access Request); official requests submitted to ALPAR AI by users or institutions under KVKK Article 11 and GDPR Article 17 for deletion, redaction, or anonymization of personal data. Legally required to be finalized within 30 days. Requests nearing SLA expiration trigger urgent alerts.",
+    "experts_trend_total": "Total received",
+    "experts_trend_verified": "Verified panel",
+    "experts_trend_awaiting": "Awaiting decision",
+    "kb_trend_ratings": "Live ratings",
+    "kb_trend_audit": "Independent audit",
+    "kbench_box_title": "📊 What is the K-BENCHMARK Methodology?",
+    "kbench_box_desc": "K-BENCHMARK is the scoring matrix applied by the ALPAR AI independent verification engine to AI models (OpenAI, Anthropic, Google Gemini, etc.) measuring Wilson confidence intervals, accuracy, neutrality, and safety. Model scores update in real time based on public and independent audit data."
   },
   "footer": {
     "tagline": "Where the world holds AI accountable.",

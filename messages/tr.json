@@ -1983,7 +1983,22 @@
     "api_keys_connected": "Bağlı API'ler",
     "api_keys_avg_health": "Ort. API Sağlığı",
     "api_keys_daily_cost": "Günlük API Maliyeti",
-    "dsar_sla_urgent": "SLA Acil (<7 gün)"
+    "dsar_sla_urgent": "SLA Acil (<7 gün)",
+    "dsar_trend_sla": "30 günlük SLA",
+    "dsar_trend_awaiting": "Eylem bekleniyor",
+    "dsar_trend_action": "Eylem gerekli",
+    "dsar_trend_ontrack": "Tüm süreçler yolunda",
+    "dsar_badge_urgent": "ACİL",
+    "dsar_badge_ok": "TAMAM",
+    "dsar_box_title": "🛡️ DSAR (Veri Sahibi Erişim ve Unutulma Talebi) Nedir?",
+    "dsar_box_desc": "DSAR (Veri Sahibi Erişim ve Unutulma Talebi); kullanıcıların veya kurumların KVKK Madde 11 ve GDPR Madde 17 uyarınca kişisel verilerinin silinmesi, sansürlenmesi veya anonimleştirilmesi için ALPAR AI platformuna ilettiği resmi başvurulardır. Yasal olarak 30 gün içerisinde sonuçlandırılması zorunludur. SLA süresi dolmak üzere olan başvurular kırmızı alarm verir.",
+    "experts_trend_total": "Toplam alınan",
+    "experts_trend_verified": "Doğrulanmış panel",
+    "experts_trend_awaiting": "Karar bekleniyor",
+    "kb_trend_ratings": "Canlı puanlar",
+    "kb_trend_audit": "Bağımsız denetim",
+    "kbench_box_title": "📊 K-BENCHMARK Metodolojisi Nedir?",
+    "kbench_box_desc": "K-BENCHMARK, ALPAR AI bağımsız doğrulama motorunun yapay zeka modelleri (OpenAI, Anthropic, Google Gemini vb.) üzerinde uyguladığı Wilson güven aralığı, doğruluk, tarafsızlık ve güvenlik puanlaması matrisidir. Model puanları kamusal ve bağımsız denetim verileriyle anlık güncellenir."
   },
   "footer": {
     "tagline": "Dünyanın AI'ı hesap verilebilir kıldığı yer.",

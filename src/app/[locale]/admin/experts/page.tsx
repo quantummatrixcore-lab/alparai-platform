@@ -49,7 +49,7 @@ export default async function AdminExpertsPage({
           value={applications.length}
           icon={<Award className="h-4 w-4" />}
           trend="up"
-          trendLabel="Total received"
+          trendLabel={t("experts_trend_total")}
           accentColor="#f59e0b"
           sparkData={applications.slice(0, 8).map((_, i) => ({ value: i + 1 }))}
           chartType="bar"
@@ -59,7 +59,7 @@ export default async function AdminExpertsPage({
           value={approved.length}
           icon={<CheckCircle2 className="h-4 w-4" />}
           trend={approved.length > 0 ? "up" : "neutral"}
-          trendLabel="Verified panel"
+          trendLabel={t("experts_trend_verified")}
           accentColor="#10b981"
         />
         <MetricCard
@@ -67,7 +67,7 @@ export default async function AdminExpertsPage({
           value={pending.length}
           icon={<Clock className="h-4 w-4" />}
           trend={pending.length > 0 ? "up" : "neutral"}
-          trendLabel="Awaiting decision"
+          trendLabel={t("experts_trend_awaiting")}
           accentColor="#6366f1"
         />
       </div>

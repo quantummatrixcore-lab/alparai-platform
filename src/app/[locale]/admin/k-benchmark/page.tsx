@@ -64,7 +64,7 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
           value={scores?.length ?? 0}
           icon={<Award className="h-4 w-4" />}
           trend="up"
-          trendLabel="Live ratings"
+          trendLabel={t("kb_trend_ratings")}
           accentColor="#f59e0b"
           sparkData={(scores ?? []).slice(0, 8).map((s, i) => ({ value: s.score ?? 70 + i * 3 }))}
           chartType="bar"
@@ -78,7 +78,7 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
           }
           icon={<BarChart3 className="h-4 w-4" />}
           trend="up"
-          trendLabel="Independent audit"
+          trendLabel={t("kb_trend_audit")}
           accentColor="#6366f1"
           sparkData={(scores ?? []).slice(0, 8).map((s, i) => ({ value: s.score ?? 65 + i * 4 }))}
           chartType="line"
@@ -86,15 +86,8 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
       </div>
 
       <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-4 text-xs text-emerald-300">
-        <p className="mb-1 flex items-center gap-2 text-sm font-bold">
-          📊 K-BENCHMARK Metodolojisi Nedir?
-        </p>
-        <p className="text-[11px] leading-relaxed">
-          K-BENCHMARK, ALPAR AI bağımsız doğrulama motorunun yapay zeka modelleri (OpenAI,
-          Anthropic, Google Gemini vb.) üzerinde uyguladığı Wilson güven aralığı, doğruluk,
-          tarafsızlık ve güvenlik puanlaması matrisidir. Model puanları kamusal ve bağımsız denetim
-          verileriyle anlık güncellenir.
-        </p>
+        <p className="mb-1 flex items-center gap-2 text-sm font-bold">{t("kbench_box_title")}</p>
+        <p className="text-[11px] leading-relaxed">{t("kbench_box_desc")}</p>
       </div>
 
       <div className="bg-bg-secondary/40 overflow-hidden rounded-xl border border-white/5 backdrop-blur-xl">

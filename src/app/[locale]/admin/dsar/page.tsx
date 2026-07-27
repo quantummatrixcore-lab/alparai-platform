@@ -52,7 +52,7 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
               value={requests?.length ?? 0}
               icon={<FileText className="h-4 w-4" />}
               trend="neutral"
-              trendLabel="30-day SLA"
+              trendLabel={t("dsar_trend_sla")}
               accentColor="#a855f7"
               sparkData={(requests ?? []).slice(0, 8).map((_, i) => ({ value: i + 1 }))}
               chartType="bar"
@@ -62,7 +62,7 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
               value={pending.length}
               icon={<Clock className="h-4 w-4" />}
               trend={pending.length > 0 ? "up" : "neutral"}
-              trendLabel="Awaiting action"
+              trendLabel={t("dsar_trend_awaiting")}
               accentColor="#f59e0b"
             />
             <MetricCard
@@ -70,9 +70,9 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
               value={urgent.length}
               icon={<AlertTriangle className="h-4 w-4" />}
               trend={urgent.length > 0 ? "down" : "neutral"}
-              trendLabel={urgent.length > 0 ? "Action required" : "All on track"}
+              trendLabel={urgent.length > 0 ? t("dsar_trend_action") : t("dsar_trend_ontrack")}
               accentColor={urgent.length > 0 ? "#ef4444" : "#10b981"}
-              badge={urgent.length > 0 ? "URGENT" : "OK"}
+              badge={urgent.length > 0 ? t("dsar_badge_urgent") : t("dsar_badge_ok")}
               badgeColor={urgent.length > 0 ? "text-red-400" : "text-emerald-400"}
             />
           </div>
@@ -80,16 +80,8 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
       })()}
 
       <div className="rounded-lg border border-purple-500/20 bg-purple-500/10 p-4 text-xs text-purple-300">
-        <p className="mb-1 flex items-center gap-2 text-sm font-bold">
-          🛡️ DSAR (Data Subject Access Request) Nedir ve Ne İş Eder?
-        </p>
-        <p className="text-[11px] leading-relaxed">
-          DSAR (Veri Sahibi Erişim ve Unutulma Talebi); kullanıcıların veya kurumların KVKK Madde 11
-          ve GDPR Madde 17 uyarınca kişisel verilerinin silinmesi, sansürlenmesi veya
-          anonimleştirilmesi için ALPAR AI platformuna ilettiği resmi başvurulardır. Yasal olarak 30
-          gün içerisinde sonuçlandırılması zorunludur. SLA süresi dolmak üzere olan başvurular
-          kırmızı alarm verir.
-        </p>
+        <p className="mb-1 flex items-center gap-2 text-sm font-bold">{t("dsar_box_title")}</p>
+        <p className="text-[11px] leading-relaxed">{t("dsar_box_desc")}</p>
       </div>
 
       <div className="bg-bg-secondary/40 overflow-hidden rounded-xl border border-white/5 backdrop-blur-xl">
