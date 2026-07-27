@@ -1949,7 +1949,9 @@
     "advisory_compliant": "Uyumlu",
     "advisory_empty_h": "Henüz Kayıtlı Danışma Kurulu Üyesi Bulunmuyor",
     "advisory_empty_p": "ALPAR AI bağımsız danışma kurulu ve etik denetim heyeti üyeleri veritabanına eklendiğinde burada listelenecektir.",
-    "outreach_subtitle": "Medya genişletme sunuşlarını, uzman davetlerini yönetin ve kampanya kuyruklarını kontrol edin."
+    "outreach_subtitle": "Medya genişletme sunuşlarını, uzman davetlerini yönetin ve kampanya kuyruklarını kontrol edin.",
+    "nav_group_overview": "Genel Bakış",
+    "toggle_sidebar_tooltip": "Kenar Çubuğunu Aç/Kapat (Ctrl+B)"
   },
   "footer": {
     "tagline": "Dünyanın AI'ı hesap verilebilir kıldığı yer.",
@@ -2058,7 +2060,8 @@
     "hero_new_this_week": "bu hafta +1 yeni",
     "health_chart_incidents": "Bildirilen Olaylar",
     "health_chart_resolved": "Çözülen Sorunlar",
-    "health_chart_api_hits": "API Çağrıları"
+    "health_chart_api_hits": "API Çağrıları",
+    "error_unexpected": "Beklenmeyen bir hata oluştu."
   },
   "common": {
     "share": "Paylaş",

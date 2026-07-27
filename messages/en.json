@@ -1687,7 +1687,6 @@
     "verify_modal_email_placeholder": "e.g. contact@provider.com",
     "verify_modal_email_hint": "This email will receive notifications when new incidents involving this provider are reported.",
     "verify_modal_confirm_btn": "Confirm Verification",
-    "cancel": "Cancel",
     "toggle_sidebar_tooltip": "Toggle Sidebar (Ctrl+B)",
     "syncing_feed": "Syncing Feed...",
     "trigger_ai_crawler": "Trigger AI Crawler",

@@ -1979,7 +1979,8 @@
     "hero_new_this_week": "+1 neu in dieser Woche",
     "health_chart_incidents": "Eingereichte Vorfallsberichte",
     "health_chart_resolved": "Gelöste Probleme",
-    "health_chart_api_hits": "API-Aufrufe"
+    "health_chart_api_hits": "API-Aufrufe",
+    "error_unexpected": "An unexpected error occurred."
   },
   "common": {
     "share": "Teilen",

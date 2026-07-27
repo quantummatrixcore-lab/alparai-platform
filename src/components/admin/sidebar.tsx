@@ -105,7 +105,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     setExpandedGroups((prev) => ({ ...prev, [group]: !prev[group] }));
   };
 
-  const overviewItem = [
+  const overviewItems = [
     { href: "/admin", label: t("dashboard"), icon: LayoutDashboard, active: pathname === "/admin" },
   ];
 
@@ -550,10 +550,9 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
           <div className="space-y-1">
             {renderNavGroup(
               "overview",
-              t("nav_group_operations"),
+              t("nav_group_overview"),
               Activity,
-              overviewItem,
-              true,
+              overviewItems,
             )}
           </div>
           {showOperations &&
