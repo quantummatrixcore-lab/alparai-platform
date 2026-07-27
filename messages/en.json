@@ -1949,6 +1949,8 @@
     "advisory_rule21_bound": "Rule §21 bound",
     "advisory_governance": "Governance Status",
     "advisory_compliant": "Compliant",
+    "advisory_status_active": "ACTIVE",
+    "advisory_badge_ok": "§21 OK",
     "advisory_empty_h": "No Advisory Board Members Registered Yet",
     "advisory_empty_p": "When ALPAR AI independent advisory board and ethical oversight committee members are added to the database, they will be listed here.",
     "outreach_subtitle": "Manage media outreach pitches, expert invitations, and check campaign queues.",

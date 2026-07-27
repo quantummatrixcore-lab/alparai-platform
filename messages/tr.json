@@ -1947,6 +1947,8 @@
     "advisory_rule21_bound": "Kural §21 bağlı",
     "advisory_governance": "Yönetişim Durumu",
     "advisory_compliant": "Uyumlu",
+    "advisory_status_active": "AKTİF",
+    "advisory_badge_ok": "§21 TAMAM",
     "advisory_empty_h": "Henüz Kayıtlı Danışma Kurulu Üyesi Bulunmuyor",
     "advisory_empty_p": "ALPAR AI bağımsız danışma kurulu ve etik denetim heyeti üyeleri veritabanına eklendiğinde burada listelenecektir.",
     "outreach_subtitle": "Medya genişletme sunuşlarını, uzman davetlerini yönetin ve kampanya kuyruklarını kontrol edin.",

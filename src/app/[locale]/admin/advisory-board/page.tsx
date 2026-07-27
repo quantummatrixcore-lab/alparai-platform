@@ -47,12 +47,12 @@ export default async function AdvisoryBoardPage({
         />
         <MetricCard
           title={t("advisory_governance")}
-          value="ACTIVE"
+          value={t("advisory_status_active")}
           icon={<Shield className="h-4 w-4" />}
           trend="up"
           trendLabel={t("advisory_compliant")}
           accentColor="#10b981"
-          badge="§21 OK"
+          badge={t("advisory_badge_ok")}
           badgeColor="text-emerald-400"
         />
       </div>
