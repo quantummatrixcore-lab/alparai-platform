@@ -33,9 +33,7 @@ export default async function OutreachAdminPage({
           <Megaphone className="h-8 w-8 text-amber-400" />
           {t("outreach_hub")}
         </h1>
-        <p className="text-fg-muted mt-2 text-lg">
-          Manage media outreach pitches, expert invitations, and check campaign queues.
-        </p>
+        <p className="text-fg-muted mt-2 text-lg">{t("outreach_subtitle")}</p>
       </div>
 
       <OutreachPageContent initialQueue={queue || []} />

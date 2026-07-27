@@ -36,21 +36,21 @@ export default async function AdvisoryBoardPage({
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <MetricCard
-          title="Advisory Board Members"
+          title={t("advisory_members_count")}
           value={members?.length ?? 0}
           icon={<Users className="h-4 w-4" />}
           trend="neutral"
-          trendLabel="Rule §21 bound"
+          trendLabel={t("advisory_rule21_bound")}
           accentColor="#6366f1"
           sparkData={(members ?? []).map((_, i) => ({ value: i + 1 }))}
           chartType="bar"
         />
         <MetricCard
-          title="Governance Status"
+          title={t("advisory_governance")}
           value="ACTIVE"
           icon={<Shield className="h-4 w-4" />}
           trend="up"
-          trendLabel="Compliant"
+          trendLabel={t("advisory_compliant")}
           accentColor="#10b981"
           badge="§21 OK"
           badgeColor="text-emerald-400"
@@ -107,13 +107,8 @@ export default async function AdvisoryBoardPage({
                       <div className="mb-3 rounded-full border border-amber-500/20 bg-amber-500/10 p-3 text-amber-400">
                         <WarningCircle size={32} weight="duotone" />
                       </div>
-                      <h3 className="text-base font-bold text-white">
-                        Henüz Kayıtlı Danışma Kurulu Üyesi Bulunmuyor
-                      </h3>
-                      <p className="text-fg-muted mt-1 text-xs">
-                        ALPAR AI bağımsız danışma kurulu ve etik denetim heyeti üyeleri veritabanına
-                        eklendiğinde burada listelenecektir.
-                      </p>
+                      <h3 className="text-base font-bold text-white">{t("advisory_empty_h")}</h3>
+                      <p className="text-fg-muted mt-1 text-xs">{t("advisory_empty_p")}</p>
                     </div>
                   </td>
                 </tr>

@@ -44,6 +44,10 @@ import {
   Building2,
   Calculator,
   Zap,
+  Gauge,
+  Newspaper,
+  Clock,
+  Eraser,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
@@ -118,24 +122,60 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
     {
       href: "/admin/ecosystem",
-      label: t("nav_ecosystem"),
+      label: t("nav_ecosystem") || "Import Feeds",
       icon: Import,
       active: pathname.startsWith("/admin/ecosystem"),
+    },
+    {
+      href: "/admin/import",
+      label: t("nav_import") || "Import",
+      icon: Import,
+      active: pathname.startsWith("/admin/import"),
     },
   ];
 
   const intelligenceItems = [
     {
       href: "/admin/k-benchmark",
-      label: t("nav_kBenchmark"),
+      label: t("nav_kBenchmark") || "K-BENCHMARK",
       icon: BarChart3,
       active: pathname.startsWith("/admin/k-benchmark"),
     },
     {
       href: "/admin/analysis",
-      label: t("cross_audit_dashboard"),
+      label: t("cross_audit_dashboard") || "Cross Audit Engine",
       icon: BrainCircuit,
       active: pathname.startsWith("/admin/analysis"),
+    },
+    {
+      href: "/admin/cross-audit-dashboard",
+      label: t("nav_cross_audit_dashboard"),
+      icon: BarChart3,
+      active: pathname.startsWith("/admin/cross-audit-dashboard"),
+    },
+    {
+      href: "/admin/signals",
+      label: t("nav_signals"),
+      icon: Radio,
+      active: pathname.startsWith("/admin/signals"),
+    },
+    {
+      href: "/admin/slo-dashboard",
+      label: t("nav_slo_dashboard"),
+      icon: Gauge,
+      active: pathname.startsWith("/admin/slo-dashboard"),
+    },
+    {
+      href: "/admin/api-metrics",
+      label: t("nav_api_metrics"),
+      icon: Zap,
+      active: pathname.startsWith("/admin/api-metrics"),
+    },
+    {
+      href: "/admin/ai-pulse",
+      label: t("nav_ai_pulse"),
+      icon: Newspaper,
+      active: pathname.startsWith("/admin/ai-pulse"),
     },
     {
       href: "/admin/autopilot",
@@ -145,13 +185,13 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
     {
       href: "/admin/innovations",
-      label: t("innovations"),
+      label: t("innovations") || "AI Lab",
       icon: Sparkles,
       active: pathname.startsWith("/admin/innovations"),
     },
     {
       href: "/admin/geo",
-      label: t("nav_geo"),
+      label: t("nav_geo") || "GEO Engine",
       icon: Globe,
       active: pathname.startsWith("/admin/geo"),
     },
@@ -228,8 +268,14 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       active: pathname.startsWith("/admin/audit"),
     },
     {
+      href: "/admin/redaction-queue",
+      label: t("nav_redaction_queue"),
+      icon: Eraser,
+      active: pathname.startsWith("/admin/redaction-queue"),
+    },
+    {
       href: "/admin/advisory-board",
-      label: t("nav_advisoryBoard"),
+      label: t("nav_advisoryBoard") || "Advisory Board",
       icon: Award,
       active: pathname.startsWith("/admin/advisory-board"),
     },
@@ -343,9 +389,15 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
     {
       href: "/admin/feature-flags",
-      label: t("nav_featureFlags"),
+      label: t("nav_featureFlags") || "Feature Flags",
       icon: ToggleRight,
       active: pathname.startsWith("/admin/feature-flags"),
+    },
+    {
+      href: "/admin/crons",
+      label: t("nav_crons"),
+      icon: Clock,
+      active: pathname.startsWith("/admin/crons"),
     },
   ];
 
@@ -548,20 +600,10 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
 
         <nav className="scrollbar-hide flex-1 overflow-y-auto py-4">
           <div className="space-y-1">
-            {renderNavGroup(
-              "overview",
-              t("nav_group_overview"),
-              Activity,
-              overviewItems,
-            )}
+            {renderNavGroup("overview", t("nav_group_overview"), Activity, overviewItems)}
           </div>
           {showOperations &&
-            renderNavGroup(
-              "operations",
-              t("nav_group_operations"),
-              Shield,
-              operationsItems,
-            )}
+            renderNavGroup("operations", t("nav_group_operations"), Shield, operationsItems)}
           {showIntelligence &&
             renderNavGroup(
               "intelligence",
@@ -570,23 +612,11 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
               intelligenceItems,
             )}
           {showStrategy &&
-            renderNavGroup(
-              "strategy",
-              t("nav_group_strategy"),
-              Compass,
-              strategyItems,
-            )}
+            renderNavGroup("strategy", t("nav_group_strategy"), Compass, strategyItems)}
           {showGovernance &&
-            renderNavGroup(
-              "governance",
-              t("nav_group_governance"),
-              Shield,
-              governanceItems,
-            )}
-          {showGrowth &&
-            renderNavGroup("growth", t("nav_group_growth"), TrendingUp, growthItems)}
-          {showSystem &&
-            renderNavGroup("system", t("nav_group_system"), Settings, systemItems)}
+            renderNavGroup("governance", t("nav_group_governance"), Shield, governanceItems)}
+          {showGrowth && renderNavGroup("growth", t("nav_group_growth"), TrendingUp, growthItems)}
+          {showSystem && renderNavGroup("system", t("nav_group_system"), Settings, systemItems)}
         </nav>
 
         {/* User Profile Footer */}

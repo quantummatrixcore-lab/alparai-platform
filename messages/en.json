@@ -1951,7 +1951,18 @@
     "advisory_compliant": "Compliant",
     "advisory_empty_h": "No Advisory Board Members Registered Yet",
     "advisory_empty_p": "When ALPAR AI independent advisory board and ethical oversight committee members are added to the database, they will be listed here.",
-    "outreach_subtitle": "Manage media outreach pitches, expert invitations, and check campaign queues."
+    "outreach_subtitle": "Manage media outreach pitches, expert invitations, and check campaign queues.",
+    "billing_plan_free": "Free",
+    "billing_plan_pro": "Pro",
+    "billing_plan_enterprise": "Enterprise",
+    "nav_signals": "Signals",
+    "nav_slo_dashboard": "SLO Dashboard",
+    "nav_api_metrics": "API Metrics",
+    "nav_redaction_queue": "Redaction Queue",
+    "nav_cross_audit_dashboard": "Cross Audit",
+    "nav_ai_pulse": "AI Pulse",
+    "nav_crons": "Cron Jobs",
+    "nav_import": "Import"
   },
   "footer": {
     "tagline": "Where the world holds AI accountable.",

@@ -59,11 +59,11 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <MetricCard
-          title="GPT-4o P95 Latency"
+          title={t("ai_pulse_gpt4o_p95")}
           value="340ms"
           icon={<Cpu className="h-4 w-4" />}
           trend="neutral"
-          trendLabel="Stable"
+          trendLabel={t("ai_pulse_trend_stable")}
           accentColor="#10b981"
           sparkData={[
             { value: 310 },
@@ -76,11 +76,11 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
           chartType="line"
         />
         <MetricCard
-          title="Claude 3.5 Sonnet Latency"
+          title={t("ai_pulse_claude_p95")}
           value="210ms"
           icon={<Cpu className="h-4 w-4" />}
           trend="down"
-          trendLabel="Improving"
+          trendLabel={t("ai_pulse_trend_improving")}
           accentColor="#6366f1"
           sparkData={[
             { value: 250 },
@@ -93,11 +93,11 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
           chartType="line"
         />
         <MetricCard
-          title="Gemini 1.5 Flash Latency"
+          title={t("ai_pulse_gemini_p95")}
           value="180ms"
           icon={<Cpu className="h-4 w-4" />}
           trend="down"
-          trendLabel="Fastest"
+          trendLabel={t("ai_pulse_trend_fastest")}
           accentColor="#f59e0b"
           sparkData={[
             { value: 200 },

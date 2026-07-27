@@ -64,7 +64,13 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
                     <span className="text-fg-muted">{sub.user_id?.substring(0, 8)}...</span>
                   </td>
                   <td className="text-fg-primary px-6 py-4 capitalize">
-                    {sub.plan || t("billing_custom")}
+                    {sub.plan === "free"
+                      ? t("billing_plan_free")
+                      : sub.plan === "pro"
+                        ? t("billing_plan_pro")
+                        : sub.plan === "enterprise"
+                          ? t("billing_plan_enterprise")
+                          : sub.plan || t("billing_custom")}
                   </td>
                   <td className="px-6 py-4">
                     {sub.status === "active" ? (

@@ -1951,7 +1951,18 @@
     "advisory_empty_p": "ALPAR AI bağımsız danışma kurulu ve etik denetim heyeti üyeleri veritabanına eklendiğinde burada listelenecektir.",
     "outreach_subtitle": "Medya genişletme sunuşlarını, uzman davetlerini yönetin ve kampanya kuyruklarını kontrol edin.",
     "nav_group_overview": "Genel Bakış",
-    "toggle_sidebar_tooltip": "Kenar Çubuğunu Aç/Kapat (Ctrl+B)"
+    "toggle_sidebar_tooltip": "Kenar Çubuğunu Aç/Kapat (Ctrl+B)",
+    "billing_plan_free": "Ücretsiz",
+    "billing_plan_pro": "Pro",
+    "billing_plan_enterprise": "Kurumsal",
+    "nav_signals": "Sinyaller",
+    "nav_slo_dashboard": "SLO Paneli",
+    "nav_api_metrics": "API Metrikleri",
+    "nav_redaction_queue": "Maskeleme Kuyruğu",
+    "nav_cross_audit_dashboard": "Çapraz Denetim",
+    "nav_ai_pulse": "AI Nabzı",
+    "nav_crons": "Cron İşleri",
+    "nav_import": "İçe Aktar"
   },
   "footer": {
     "tagline": "Dünyanın AI'ı hesap verilebilir kıldığı yer.",

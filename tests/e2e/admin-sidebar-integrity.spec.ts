@@ -6,23 +6,9 @@ test.describe("Item 147 — Admin Sidebar & Page Integrity", () => {
   // Exception list for admin pages that are modal/sub-routes or internal utility paths not directly in main sidebar
   const ALLOWED_PAGE_EXCEPTIONS = [
     "/admin", // Main overview
-    "/admin/ai-pulse", // EXCEPTION: /admin/ai-pulse — utility route, no sidebar needed
-    "/admin/api-keys", // EXCEPTION: /admin/api-keys — utility route, no sidebar needed
-    "/admin/api-metrics", // EXCEPTION: /admin/api-metrics — utility route, no sidebar needed
-    "/admin/autopilot/analytics", // EXCEPTION: /admin/autopilot/analytics — sub-route, no sidebar needed
-    "/admin/crons", // EXCEPTION: /admin/crons — utility route, no sidebar needed
-    "/admin/cross-audit-dashboard", // EXCEPTION: /admin/cross-audit-dashboard — utility route, no sidebar needed
-    "/admin/experts", // EXCEPTION: /admin/experts — utility route, no sidebar needed
-    "/admin/finance", // EXCEPTION: /admin/finance — utility route, no sidebar needed
-    "/admin/import", // EXCEPTION: /admin/import — utility route, no sidebar needed
-    "/admin/investors", // EXCEPTION: /admin/investors — utility route, no sidebar needed
-    "/admin/master-plan", // EXCEPTION: /admin/master-plan — utility route, no sidebar needed
-    "/admin/outreach", // EXCEPTION: /admin/outreach — utility route, no sidebar needed
-    "/admin/redaction-queue", // EXCEPTION: /admin/redaction-queue — utility route, no sidebar needed
-    "/admin/settings", // EXCEPTION: /admin/settings — utility route, no sidebar needed
-    "/admin/signals", // EXCEPTION: /admin/signals — utility route, no sidebar needed
-    "/admin/slo-dashboard", // EXCEPTION: /admin/slo-dashboard — utility route, no sidebar needed
-    "/admin/takedown", // EXCEPTION: /admin/takedown — utility route, no sidebar needed
+    "/admin/api-keys", // EXCEPTION: /admin/api-keys — utility route for API key gen, no sidebar needed
+    "/admin/autopilot/analytics", // EXCEPTION: /admin/autopilot/analytics — sub-route of autopilot group, no sidebar needed
+    "/admin/takedown", // EXCEPTION: /admin/takedown — moderation sub-tool, accessed via moderation queue
   ];
 
   // Helper to discover all admin page routes
