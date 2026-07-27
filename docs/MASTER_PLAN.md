@@ -1,3 +1,36 @@
+# ALPAR AI — MASTER PLAN v11.46 (TOM Stage-3 — Opus: 06eefba Doğrulandı — 2/3 Kapandı, 1 Kalem Hâlâ Açık)
+
+> 🇹🇷 ÖZET: `/tom` (Opus, keşif Haiku'ya devredildi — G-5). Commit `06eefba` v11.45'in üç devir maddesinden ikisini gerçek kanıtla (lockfile diff'i, salt metin değil) kapattı: `ignoreCves` bastırması kaldırıldı, `chrome-temp-test/` izlemeden çıkarıldı+gitignore'a eklendi. Ancak v11.44'ün bayrakladığı regresyonun bir parçası — `form-data`/`vite`/`js-yaml` override'larının geri yüklenmesi — bu commit'te de yapılmadı; hâlâ açık.
+
+## 1. Doğrulanan Kapanışlar (Kanıt: Lockfile Hareketi)
+
+| Kalem                         | Durum                | Kanıt                                                                                                    |
+| ----------------------------- | -------------------- | -------------------------------------------------------------------------------------------------------- |
+| `pnpm.auditConfig.ignoreCves` | ✅ Kaldırıldı        | `git show origin/master:package.json` — 6 GHSA ID'si artık yok                                           |
+| `postcss` override            | ✅ Güncellendi       | `^8.5.18` → `^8.5.22`                                                                                    |
+| `shell-quote` override        | ✅ Güncellendi       | `^1.9.0` → `^1.10.0`                                                                                     |
+| `minimatch` override          | ✅ Regresyon yok     | Her iki sürümde de yok — daha önce kaldırılmış patch pin'i geri gelmedi ama yeni bir düşüş de yok        |
+| `chrome-temp-test/`           | ✅ Temizlendi        | 2 dosya `git rm`, `.gitignore`'a satır eklendi                                                           |
+| `pnpm-lock.yaml`              | ✅ Gerçek değişiklik | +320/-29 satır — önceki "0 vulnerability" iddiasından farkı bu: burada gerçek kilit dosyası hareketi var |
+
+Diffstat cerrahi: yalnız 5 dosya (`​.gitignore`, 2 silinen chrome-temp-test dosyası, `package.json`, `pnpm-lock.yaml`). İlgisiz kod değişmedi.
+
+## 2. Hâlâ Açık
+
+**`form-data`, `vite`, `js-yaml` override'ları geri yüklenmedi.** `git show origin/master:package.json` doğrulaması: mevcut `pnpm.overrides` yalnızca `postcss`, `shell-quote`, `sharp` içeriyor. Bu, v11.44'te bayraklanan regresyonun (b5c398e'de kaldırılan 4 override'dan 3'ü) hâlâ düzeltilmediği anlamına gelir.
+
+**Dependabot 15 sayısı yeniden taranmadı.** Override bump'ı sayıyı düşürebilir ama bu, ölçüm olmadan varsayılamaz — yeni bir push/Dependabot taraması gerekli.
+
+**Kalite kapısı iddiası (877/877 test vb.) bu turda bağımsız doğrulanmadı** — Haiku yalnızca dosya diff'i aldı, testleri yeniden çalıştırmadı. Muhtemel ama teyitsiz.
+
+## 3. Antigravity İçin Kalan Tek Görev
+
+v11.44'ün üç maddesinden tek kalanı: `form-data`, `vite`, `js-yaml` için yamalı sürümlere override ekle (veya her CVE için neden gereksiz olduğunu commit mesajında somut gerekçeyle belirt — toptan susturma listesi kabul edilmez).
+
+Mimar bu turda hiçbir kod dosyasına dokunmadı (G-6); yalnız `docs/MASTER_PLAN.md`.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.45 (TOM Stage-3 — Opus: Kod Deltası Yok; Dependabot Sayısı Artık ÖLÇÜLDÜ; Yeni Hijyen Bulgusu)
 
 > 🇹🇷 ÖZET: `/tom` (Opus, keşif Haiku'ya devredildi — G-5). `5420c61`'den bu yana origin/master'da **yeni commit yok**; v11.44'ün devredilen güvenlik görevleri (a/b/c) hâlâ açık. Ancak iki şey bu turda ilk kez ölçüldü: (1) Dependabot sayısı artık tahmin değil, **ölçülmüş veri**; (2) repoda izlenmemesi gereken tarayıcı çöp dosyaları bulundu.
