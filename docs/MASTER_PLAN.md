@@ -1,3 +1,30 @@
+# ALPAR AI — MASTER PLAN v11.48 (TOM — G-6 İstisnası Loglandı + form-data/js-yaml/vite Override Restorasyonu Doğrulandı)
+
+> 🇹🇷 ÖZET: İki madde. (1) **G-6 istisnası** — Founder'ın açık onayıyla, tekrarlanan `/tom` döngüsünü resmi bir Claude Code skill'ine (`​.claude/skills/tom/SKILL.md`) dönüştürmek için Mimar bu oturumda üç-dosya sınırının (docs/MASTER_PLAN.md, CLAUDE.md, AGENTS.md) dışına çıktı. Bu istisna tek seferliktir, genel kuralı değiştirmez, ve Founder'ın "gerçek skill dosyası oluştur (G-6 istisnası)" seçimiyle (AskUserQuestion) kayıt altına alınmıştır. (2) **v11.47'nin devir görevi doğrulandı**: commit `0249a31`, `form-data`/`js-yaml`/`vite` override'larını geri yükledi.
+
+## 1. G-6 İstisnası (kayıt)
+
+- **Karar**: Founder, `/tom` sürecini gerçek bir slash-komut haline getirmek için `.claude/skills/tom/SKILL.md` dosyasının oluşturulmasını açıkça seçti (iki seçenekten: "AGENTS.md'ye protokol yaz" vs. "gerçek skill dosyası oluştur (G-6 istisnası)").
+- **Kapsam**: Yalnızca `.claude/skills/tom/SKILL.md` — başka hiçbir kod/config/migration dosyasına dokunulmadı.
+- **Skill içeriği**: G-5 (Haiku'ya keşif devri) ve G-6 (yalnız 3 dosya) kurallarını skill'in kendi metnine gömdü — gelecekteki her `/tom` çağrısı bu sınırları otomatik hatırlayacak.
+
+## 2. v11.48 — 0249a31 Doğrulandı
+
+Haiku pass (read-only, `git show origin/master:package.json`):
+
+| Paket         | İddia                 | Doğrulama                                                   |
+| ------------- | --------------------- | ----------------------------------------------------------- |
+| `form-data`   | `^4.0.2` eklendi      | ✅ Doğru — verbatim JSON'da mevcut                          |
+| `js-yaml`     | `^4.1.0` eklendi      | ✅ Doğru                                                    |
+| `vite`        | `^6.2.1` eklendi      | ✅ Doğru                                                    |
+| Değişen dosya | yalnız `package.json` | ✅ Doğru — `1 file changed, 4 insertions(+), 1 deletion(-)` |
+
+v11.44'ün üç maddelik regresyon bulgusunun son kalemi kapandı. **Bu turda doğrulanmadı**: yeni push sonrası Dependabot sayısının 21'den düşüp düşmediği (bir sonraki `git push` çıktısı bunu ortaya çıkaracak — henüz ölçülmedi).
+
+Mimar bu turda `docs/MASTER_PLAN.md` dışında yalnızca `.claude/skills/tom/SKILL.md`'ye dokundu (yukarıdaki açık istisna kapsamında).
+
+---
+
 # ALPAR AI — MASTER PLAN v11.47 (TOM — KRİTİK: Dependabot Sayısı Bu Commit'ten Sonra 15→21'e ÇIKTI)
 
 > 🇹🇷 ÖZET: v11.46'nın `d1d99ba` push'unun kendi GitHub çıktısı: **"21 vulnerabilities (15 high, 6 moderate)"** — v11.45'te ölçülen 15 (10 high, 5 moderate)'ten **+6 net artış (+5 high, +1 moderate)**. `06eefba` "güvenlik düzeltmesi" olarak sunulmuştu; Dependabot'un kendi push-time sinyali bunun tersini gösteriyor. Kaynak: `git push` çıktısı, iki ardışık ölçüm (`917607c` push'u = 15, `d1d99ba` push'u = 21) — tahmin değil.
