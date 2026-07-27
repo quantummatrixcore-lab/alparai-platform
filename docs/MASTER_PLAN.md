@@ -1,3 +1,30 @@
+# ALPAR AI — MASTER PLAN v11.66 (TOM — v11.65'in Gerçek P0 Bug'ı Doğrulandı Kapandı: Async `isConfigured()` Zinciri Sağlam)
+
+> 🇹🇷 ÖZET: v11.65'te bulunan tek gerçek P0 (NVIDIA `isConfigured()` yalnız env okuyor, DB key'i görmüyor) commit `d8b5167`'de kapatıldı — **ve bu kez risk altındaki en kritik nokta da doğrulandı**: metod imzası `Promise<boolean>`'a çevrilirken her çağrı noktasının `await` edildiği teyit edildi. Async'e geçişte `await` unutulsaydı, bir Promise nesnesi JS'te her zaman truthy olacağından **daha sinsi bir yeni bug** doğardı — bu olmadı.
+
+## Doğrulama Tablosu
+
+| Kalem                                                | Durum                             | Kanıt                                                                      |
+| ---------------------------------------------------- | --------------------------------- | -------------------------------------------------------------------------- |
+| `ProviderAdapter.isConfigured()` imzası              | ✅ `Promise<boolean>`'a çevrilmiş | `src/lib/ai/types.ts`                                                      |
+| `nvidia-ngc.ts`                                      | ✅ `resolveApiKey()` kullanıyor   | DB+env, artık `call()` ile aynı yol                                        |
+| `cohere.ts`, `google.ts` (spot-check)                | ✅ Aynı desen                     | İkisi de `resolveApiKey()`'e geçmiş                                        |
+| Gateway çağrı noktası (`openrouter-gateway.ts`)      | ✅ **`await` edilmiş**            | Hem tekil preflight hem `isGatewayConfigured()`'daki `Promise.all()` doğru |
+| Kapsam                                               | 26 dosya, 212 ekleme/124 silme    | 9 adaptör + types + gateway + api-keys + 5 test dosyası                    |
+| `providers/page.tsx`, `api-management/page.tsx` i18n | ✅ Doğru                          | `getTranslations` + `t()` anahtarları eklenmiş                             |
+
+## Bu Turda Doğrulanmayan Ek Kapsam
+
+Diffstat'ta rapor metninde bahsedilmeyen 5 sayfa da değişmiş: `grants`, `integrations`, `investors`, `linkedin`, `platforms` (page.tsx dosyaları, 4-11 satır aralığında). Küçük diff'ler — muhtemelen aynı i18n temizliğinin yan etkisi — ama bu turda içerik doğrulanmadı, sonraki bir turda spot-check gerekebilir.
+
+## Sonuç
+
+v11.65'in raporunda kalan gerçek bulgu (P0 NVIDIA bug) artık kapalı. i18n tarafında `providers`/`api-management` doğrulandı; `api-keys` sayfasının tam temizlendiği bu turda ayrıca teyit edilmedi (diffstat'ta 77 satır değişmiş, büyük olasılıkla kapsamlı). Dependabot 16 (v11.56) hâlâ tek eski açık kalem.
+
+Mimar bu turda yalnızca `docs/MASTER_PLAN.md`'ye dokundu.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.65 (TOM — "OMEGA-360 Admin Audit" Raporu Doğrulandı: 1 Gerçek P0 Bug, Ana İddiaların Çoğu Yanlış)
 
 > 🇹🇷 ÖZET: Kod değişikliği yok (`4391e58` sabit). Kullanıcının paylaştığı "OMEGA-360 Admin Panel Audit" raporu üç Haiku pass ile doğrulandı. Raporun en gösterişli bulgusu — **"7 orphan sayfa"** — büyük ölçüde **yanlış**: 5/7 zaten sidebar'da, 2/7 zaten dokümante edilmiş kasıtlı istisna. "ai_providers tablosu silindi" iddiası **tamamen yanlış** — tablo var, hatta NVIDIA satırıyla güncel. Ancak raporun gömülü olduğu gerçek bir **P0 bug var**: NVIDIA adaptörünün `isConfigured()` metodu yalnızca `process.env` okuyor, admin panelden DB'ye kaydedilen key'i hiç görmüyor — gateway bu kontrolü geçemediği için DB key asla kullanılmıyor.
