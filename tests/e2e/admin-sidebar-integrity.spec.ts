@@ -8,8 +8,6 @@ test.describe("Item 147 — Admin Sidebar & Page Integrity", () => {
     "/admin", // Main overview
     "/admin/autopilot/analytics", // EXCEPTION: /admin/autopilot/analytics — sub-route of autopilot group, no sidebar needed
     "/admin/takedown", // EXCEPTION: /admin/takedown — moderation sub-tool, accessed via moderation queue
-    "/admin/ecosystem", // EXCEPTION: /admin/ecosystem — feed import route merged with /admin/import
-    "/admin/cross-audit-dashboard", // EXCEPTION: /admin/cross-audit-dashboard — alias route of /admin/analysis
   ];
 
   // Helper to discover all admin page routes

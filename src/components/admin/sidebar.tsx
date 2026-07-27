@@ -121,6 +121,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       active: pathname.startsWith("/admin/moderation"),
     },
     {
+      href: "/admin/ecosystem",
+      label: t("nav_ecosystem") || "Ecosystem Hub",
+      icon: Import,
+      active: pathname.startsWith("/admin/ecosystem"),
+    },
+    {
       href: "/admin/import",
       label: t("nav_import") || "Import Center",
       icon: Import,
@@ -136,8 +142,14 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       active: pathname.startsWith("/admin/k-benchmark"),
     },
     {
+      href: "/admin/cross-audit-dashboard",
+      label: t("nav_cross_audit_dashboard") || "Cross Audit Dashboard",
+      icon: BarChart3,
+      active: pathname.startsWith("/admin/cross-audit-dashboard"),
+    },
+    {
       href: "/admin/analysis",
-      label: t("cross_audit_dashboard") || "Cross Audit Engine",
+      label: t("nav_audit_analysis") || "Audit Archive",
       icon: BrainCircuit,
       active: pathname.startsWith("/admin/analysis"),
     },
