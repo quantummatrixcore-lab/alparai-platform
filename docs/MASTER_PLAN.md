@@ -1,3 +1,27 @@
+# ALPAR AI — MASTER PLAN v11.69 (TOM — Sidebar Fallback Zinciri Tamamen Kapandı: 10/10 Temizlendi, Beklenenden Geniş)
+
+> 🇹🇷 ÖZET: v11.68'in küçük devir maddesi (3 satırdaki `||` fallback) commit `b1fe76b`'de kapandı — **ve devir talebinden daha geniş kapsamda**: yalnız 3 değil, dosyadaki **10 fallback'in tamamı** temizlendi. Tam dosya taraması: `sidebar.tsx`'te artık sıfır `|| "` kalıntısı yok.
+
+## Doğrulama Tablosu
+
+| Kalem                                                                                                                                                                                                      | Durum                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| 10 anahtarın tamamı (`nav_ecosystem`, `nav_import`, `nav_kBenchmark`, `nav_cross_audit_dashboard`, `nav_audit_analysis`, `innovations`, `nav_geo`, `nav_advisoryBoard`, `nav_apiKeys`, `nav_featureFlags`) | ✅ Çıplak `t()` çağrısı                                                                                    |
+| `nav_apiKeys`                                                                                                                                                                                              | ✅ Gerçekten eksikti, şimdi eklendi — EN "API Keys & Integrations" / TR "API Anahtarları & Entegrasyonlar" |
+| Diffstat                                                                                                                                                                                                   | ✅ Cerrahi — 3 dosya, 12 ekleme/10 silme                                                                   |
+
+## Sonuç
+
+Sidebar fallback defect sınıfı (v11.41'de ilk görüldü, kapatıldı → v11.60/61'de dsar'da tekrarlandı, kapatıldı → v11.68'de 3 satırda tekrarlandı) artık **dosya genelinde kapsamlı olarak kapandı** — yalnız işaretlenen 3 satır değil, tamamı. Bu, bu zincirdeki en tam kapanış.
+
+## Hâlâ Açık (v11.67/68'den taşınan)
+
+`ecosystem`↔`import` merge iddiası doğrulanmadı; `billing`/`finance` ve `outreach`/`social` çakışmaları ele alınmadı; P0-P3 büyüme yol haritası (Resend→Grants genişletmesi, Founder Focus sıralaması, Gmail MCP, browser-agent taslak) henüz başlamadı.
+
+Mimar bu turda yalnızca `docs/MASTER_PLAN.md`'ye dokundu.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.68 (TOM — v11.67'nin Sidebar Regresyonu Kapandı, Küçük Bir Fallback Kalıntısı Var)
 
 > 🇹🇷 ÖZET: v11.67'de bulunan sidebar regresyonu (`cross-audit-dashboard` ve `ecosystem`'in yanlış "alias" öncülüyle orphan bırakılması) commit `bfd28fc`'de **gerçekten ve doğru şekilde** düzeltildi. Ancak düzeltme, bu zincirde iki kez kapatılmış olan `||` fallback anti-pattern'ini üç yeni satırda tekrar getirdi.
