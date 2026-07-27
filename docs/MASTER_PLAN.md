@@ -1,3 +1,22 @@
+# ALPAR AI — MASTER PLAN v11.51 (TOM — f154b76 Doğrulandı: Advisory-Board Kalan 2 String Kapandı)
+
+> 🇹🇷 ÖZET: v11.50'nin tek devir maddesi — `advisory-board/page.tsx`'teki `value="ACTIVE"` ve `badge="§21 OK"` — commit `f154b76`'da kapandı. Haiku pass (read-only `git show`/`git diff`): her iki string `t("advisory_status_active")`/`t("advisory_badge_ok")` ile değiştirildi, `messages/en.json`+`tr.json`'a doğru çeviriyle (`"AKTİF"`, `"§21 TAMAM"`) eklendi. 3 dosya, 6 ekleme/2 silme — cerrahi. Tüm dosya yeniden tarandı, başka hardcoded string bulunamadı.
+
+## Doğrulama
+
+| Kalem                    | Durum                         |
+| ------------------------ | ----------------------------- |
+| `advisory_status_active` | ✅ Eklendi, doğru TR çevirisi |
+| `advisory_badge_ok`      | ✅ Eklendi, doğru TR çevirisi |
+| Dosya taraması           | ✅ Başka hardcoded string yok |
+| Değişen dosya sayısı     | 3 (cerrahi)                   |
+
+i18n zinciri (v11.44→v11.50→v11.51) burada kapanıyor. Tek açık kalem: Dependabot 21 sayısı (v11.49) — bu commit'le ilgisiz, ayrı iz.
+
+Mimar bu turda yalnızca `docs/MASTER_PLAN.md`'ye dokundu.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.50 (TOM — 038027e Doğrulandı: 4/5 Tam, 1 Kısmi, Sidebar+Script Gerçek)
 
 > 🇹🇷 ÖZET: `/tom` (ilk resmi skill çağrısı — `.claude/skills/tom/SKILL.md`). Commit `038027e` (i18n + sidebar orphan routes + audit script) Haiku pass ile doğrulandı: 5 sayfadan 4'ü (ai-pulse, billing, marketing, outreach) tam çevrildi; advisory-board'da **2 hardcoded string kaldı** (`"ACTIVE"`, `"§21 OK"`). Commit mesajı "6 sayfa" diyor ama diffstat'ta yalnız 5 sayfa değişti — küçük bir sayı tutarsızlığı. Sidebar 7 yeni route ekliyor (gerçek yapısal düzeltme); audit script gerçek fonksiyonel (admin EN/TR + public 5-dil parity check); test dosyası orphan-exception listesini 20→3 satıra düşürüyor (kapsam kaybı değil, mimari hizalama).
