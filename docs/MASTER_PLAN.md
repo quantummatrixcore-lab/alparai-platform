@@ -1,3 +1,61 @@
+# ALPAR AI — MASTER PLAN v11.54 (TOM — KÖK NEDEN BULUNDU: `pnpm.overrides` Anahtarı Yanlış Yazılmış, Hiçbir Override Çalışmıyor)
+
+> 🇹🇷 ÖZET: Dependabot sayısının neden hiç düşmediğinin gerçek nedeni bulundu ve otopilotun teşhisinden farklı. `package.json`'da override bloğu **düz (flat) bir anahtar** olarak yazılmış: `"pnpm.overrides": { ... }`. pnpm bu formu tanımaz — yalnızca **iç içe (nested)** formu okur: `"pnpm": { "overrides": { ... } }`. Yani `postcss`, `shell-quote`, `sharp`, `form-data`, `js-yaml`, `vite` override'larının **altısı da hiçbir zaman uygulanmadı**. v11.44'ten beri süren tüm override ekleme/çıkarma turları etkisizdi.
+
+## Kanıt
+
+`git show origin/master:package.json` son satırları (verbatim):
+
+```json
+  "pnpm.overrides": {
+    "postcss": "^8.5.22",
+    "shell-quote": "^1.10.0",
+    "sharp": "^0.35.3",
+    "form-data": "^4.0.2",
+    "js-yaml": "^4.1.0",
+    "vite": "^6.2.1"
+  }
+}
+```
+
+Ek doğrulama: dosyada üst düzey `"pnpm"` anahtarı **yok**; npm tarzı üst düzey `"overrides"` anahtarı da **yok**. Tek pnpm ilgili anahtar, adında nokta bulunan bu düz anahtar.
+
+## Otopilotun Teşhisi Neden Eksikti
+
+Otopilot raporu, `postcss@8.4.31`'in `next` içine gömülü olduğu ve override'ın buna "yetişemediği" yorumunu yaptı. Doğru gözlem (postcss gerçekten 8.4.31'de kalıyor), **yanlış sebep**: override yetişemediği için değil, override hiç okunmadığı için kalıyor. Aynı şekilde "form-data/js-yaml/vite temizlendi" ifadesi de dayanaksız — o üç override da aynı ölü blokta.
+
+GitHub'ın alt-yol bazlı sayım yaptığı gözlemi ayrı bir konu olarak geçerli olabilir, ancak 21 sayısının sabit kalmasını açıklayan birincil neden bu yapısal hatadır.
+
+## Antigravity İçin Düzeltme Spesifikasyonu (tek dosya)
+
+`package.json` — düz anahtarı iç içe forma çevirin:
+
+```json
+  "pnpm": {
+    "overrides": {
+      "postcss": "^8.5.22",
+      "shell-quote": "^1.10.0",
+      "sharp": "^0.35.3",
+      "form-data": "^4.0.2",
+      "js-yaml": "^4.1.0",
+      "vite": "^6.2.1"
+    }
+  }
+}
+```
+
+Ardından `pnpm install` ile `pnpm-lock.yaml`'ı yeniden çözün — bu kez lockfile'da gerçek sürüm değişiklikleri görünmeli (önceki turlarda görülen lockfile hareketi override'lardan değil, doğrudan bağımlılık bump'larından geliyordu). Sonra `pnpm audit` çıktısını ve yeni Dependabot sayısını raporlayın.
+
+**Uyarı:** Override'lar ilk kez gerçekten devreye gireceği için `pnpm validate` bu sefer kırılabilir (özellikle `vite@^6.2.1` ve `postcss` majör sıçramaları). Kırılırsa bu bir regresyon değil, daha önce hiç test edilmemiş bir konfigürasyonun ilk kez çalışmasıdır — sürüm sınırlarını tek tek ayarlayın, bloğu tekrar devre dışı bırakmayın.
+
+## Bu Turun Olumlu Yanı
+
+Otopilot v11.53'te devredilen ölçüm görevini bu kez gerçekten yaptı ve talimata uygun şekilde **sıfır commit** üretti (measurement-only). v11.52/v11.53'teki durma paterni bu turda kırıldı.
+
+Mimar bu turda yalnızca `docs/MASTER_PLAN.md`'ye dokundu; `package.json` düzeltmesi Antigravity'e spesifikasyon olarak devredildi (G-6).
+
+---
+
 # ALPAR AI — MASTER PLAN v11.53 (TOM — Otopilot Durdu: Üst Üste 2 Tur Sıfır Commit)
 
 > 🇹🇷 ÖZET: İkinci ardışık `/tom` turu, sıfır yeni commit. `3e30393`'ten sonra `git fetch origin master` → delta yok. Otopilot her turda `git pull` + `pnpm validate` çalıştırıp "tam otomasyonda çalışıyor" raporluyor; ancak **üretilen iş yok** ve tek açık kalem (Dependabot 21 — v11.49) hiç ele alınmıyor.
