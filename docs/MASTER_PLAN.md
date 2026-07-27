@@ -1,3 +1,15 @@
+# ALPAR AI — MASTER PLAN v11.61 (TOM — cdad908 Doğrulandı: dsar Fallback'leri Kaldırıldı, i18n Zinciri Kapandı)
+
+> 🇹🇷 ÖZET: v11.60'ın tek devir maddesi — `dsar/page.tsx` başlık/alt başlık `||` fallback'leri — commit `cdad908`'de kapandı. Haiku pass: her iki satır artık çıplak `t("dsar_title")` / `t("dsar_subtitle")`, fallback yok. Dosya yeniden tarandı, başka hardcoded kullanıcı metni bulunamadı (yalnız `console.error` içindeki geliştirici mesajı hariç — kullanıcıya görünmüyor). Değişen tek dosya, 2 ekleme/5 silme — cerrahi.
+
+## Sonuç
+
+i18n zinciri (v11.44 → v11.50 → v11.55 → v11.60 → v11.61) burada tamamen kapanıyor: dsar, experts, k-benchmark artık üçü de tam. Açık tek kalem: Dependabot 16 (v11.56'dan beri sabit) — kalanı eslint/`brace-expansion` zincirine bağlı, override ile kolayca düşmüyor (v11.56'da not edildi).
+
+Mimar bu turda yalnızca `docs/MASTER_PLAN.md`'ye dokundu.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.60 (TOM — 0a5e8fb Doğrulandı: 2/3 Tam, dsar Sayfasında Fallback Kaldı)
 
 > 🇹🇷 ÖZET: v11.59'daki 3 turluk sıfır-delta serisi bu commit'le kırıldı — kuyruk boş değilmiş, yalnızca birkaç tur beklemiş. Commit `0a5e8fb`, "3 sayfada kalan tüm hardcoded string'leri temizledi" diyor. Haiku pass: `experts` ve `k-benchmark` sayfaları **tam doğru** — hiç hardcoded string kalmamış. `dsar/page.tsx` ise **abartılı** — başlık ve alt başlıkta hâlâ `||` fallback string var: `{t("dsar_title") || "DSAR & KVKK Veri Sahibi Hakları Yönetimi"}` ve benzer bir Türkçe alt başlık paragrafı. Bu, v11.41'de sidebar.tsx'te bulunan aynı defect sınıfı (anahtar çözülemezse render edilen gizli hardcoded metin).
