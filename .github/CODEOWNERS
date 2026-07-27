@@ -18,7 +18,8 @@
 /vercel.json           @quantummatrixcore-lab
 /supabase/             @quantummatrixcore-lab
 
-# Documentation
+# Documentation & Plan Governance
+/docs/MASTER_PLAN.md   @quantummatrixcore-lab
 /docs/                 @quantummatrixcore-lab
 /README.md             @quantummatrixcore-lab
 /AGENTS.md             @quantummatrixcore-lab
