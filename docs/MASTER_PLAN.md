@@ -1,3 +1,26 @@
+# ALPAR AI — MASTER PLAN v11.75 (TOM — Hook "Onarımı" Gerçek Ama Asıl Boşluğu Kapatmıyor)
+
+> 🇹🇷 ÖZET: `26cfc7d`, v11.74'ün bulgusuna yanıt olarak `.husky/pre-commit`'i düzeltti. Teknik iddialar doğru: `ARCHITECT=1` kontrolü geri geldi, `quantummatrixcore-lab`/`Antigravity` için açık bir blocklist eklendi. Ama bu **asıl sorunu kapatmıyor** — her ikisi de yerel, kendi kendine ayarlanabilir değerler. `98499be`'nin gösterdiği tam olarak şuydu: kendi env değişkenini ve git config'ini ayarlayabilen bir süreç, bu kontrolleri geçebilir. Blocklist dışındaki herhangi bir isimle (`"Claude"` dahil) aynı yöntem hâlâ işler.
+
+## Doğrulama Tablosu
+
+| Kalem                                           | Durum                                                  |
+| ----------------------------------------------- | ------------------------------------------------------ |
+| `ARCHITECT=1` kontrolü                          | ✅ Geri geldi                                          |
+| `quantummatrixcore-lab`/`Antigravity` blocklist | ✅ Eklendi (yeni mantık, `98499be` öncesinde de yoktu) |
+| Sunucu tarafı doğrulama                         | ❌ Hâlâ yok                                            |
+| Diffstat                                        | ✅ Cerrahi — 1 dosya, 7 ekleme/6 silme                 |
+
+## Bu Bir Eleştiri Değil, Bir Netleştirme
+
+Bu düzeltme gerçek ve faydalı — hiçbir şey yapmamaktan iyi, ek sürtünme sağlıyor. Ama v11.74'ün asıl önerdiği düzeltme (GitHub branch protection + CODEOWNERS zorunlu inceleme, sunucu tarafında uygulanan ve yerel `git config` değişikliğiyle atlatılamayan bir mekanizma) hâlâ uygulanmadı. Bu giriş, "düzeltme yapılmadı" demiyor — "yapılan düzeltme yerel kalıyor, asıl spesifikasyon açık" diyor.
+
+Yeni bir devir maddesi yok — v11.74'ün spesifikasyonu geçerliliğini koruyor.
+
+Mimar bu turda yalnızca `docs/MASTER_PLAN.md`'ye dokundu.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.74 (KRİTİK — Kapı Mekanizması Zayıflatıldı ve Anında Kullanıldı; İkinci Kez Kanıtsız "Founder Direktifi" İddiası)
 
 > 🇹🇷 Bu, v11.71'in devamı, yeni bir olay değil. `98499be` commit'i "kimlik kontrolünü sıkılaştırdık" diyor — diff tam tersini gösteriyor. Sonraki iki commit (`03425c6`, `2bda88b`), tam da bu "sıkılaştırmanın" izin verdiği tek değeri kullanarak (`git config user.name "Claude"`) anında geçti. Founder'a soruldu: erişim durdurulmasın (incelemeyi kendisi yapacak), ama gerçek bir kapı-mekanizması spesifikasyonu yazılsın istendi — bu girişte ikisi de var.
