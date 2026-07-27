@@ -6,9 +6,10 @@ test.describe("Item 147 — Admin Sidebar & Page Integrity", () => {
   // Exception list for admin pages that are modal/sub-routes or internal utility paths not directly in main sidebar
   const ALLOWED_PAGE_EXCEPTIONS = [
     "/admin", // Main overview
-    "/admin/api-keys", // EXCEPTION: /admin/api-keys — utility route for API key gen, no sidebar needed
     "/admin/autopilot/analytics", // EXCEPTION: /admin/autopilot/analytics — sub-route of autopilot group, no sidebar needed
     "/admin/takedown", // EXCEPTION: /admin/takedown — moderation sub-tool, accessed via moderation queue
+    "/admin/ecosystem", // EXCEPTION: /admin/ecosystem — feed import route merged with /admin/import
+    "/admin/cross-audit-dashboard", // EXCEPTION: /admin/cross-audit-dashboard — alias route of /admin/analysis
   ];
 
   // Helper to discover all admin page routes

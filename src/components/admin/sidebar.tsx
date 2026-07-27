@@ -121,14 +121,8 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       active: pathname.startsWith("/admin/moderation"),
     },
     {
-      href: "/admin/ecosystem",
-      label: t("nav_ecosystem") || "Import Feeds",
-      icon: Import,
-      active: pathname.startsWith("/admin/ecosystem"),
-    },
-    {
       href: "/admin/import",
-      label: t("nav_import") || "Import",
+      label: t("nav_import") || "Import Center",
       icon: Import,
       active: pathname.startsWith("/admin/import"),
     },
@@ -146,12 +140,6 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       label: t("cross_audit_dashboard") || "Cross Audit Engine",
       icon: BrainCircuit,
       active: pathname.startsWith("/admin/analysis"),
-    },
-    {
-      href: "/admin/cross-audit-dashboard",
-      label: t("nav_cross_audit_dashboard"),
-      icon: BarChart3,
-      active: pathname.startsWith("/admin/cross-audit-dashboard"),
     },
     {
       href: "/admin/signals",
@@ -368,6 +356,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       label: t("nav_apiManagement"),
       icon: Zap,
       active: pathname.startsWith("/admin/api-management"),
+    },
+    {
+      href: "/admin/api-keys",
+      label: t("nav_apiKeys") || "API Keys & Integrations",
+      icon: Lock,
+      active: pathname.startsWith("/admin/api-keys"),
     },
     {
       href: "/admin/providers",
