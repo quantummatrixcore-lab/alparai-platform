@@ -1,3 +1,22 @@
+# ALPAR AI — MASTER PLAN v11.49 (TOM — Override Restorasyonu Dependabot Sayısını Değiştirmedi: Hâlâ 21)
+
+> 🇹🇷 ÖZET: v11.48'in `e225cf2` push'unun kendi GitHub çıktısı: hâlâ **"21 vulnerabilities (15 high, 6 moderate)"** — `0249a31`'in form-data/js-yaml/vite override restorasyonundan sonra bile **hiç değişmedi**. Kaynak: `git push` çıktısı, doğrudan ölçüm — tahmin değil.
+
+## Olası Nedenler (doğrulanmadı — ikisi de [tahmin — doğrulanmamış])
+
+1. Dependabot'un GitHub tarafındaki yeniden tarama gecikmesi olabilir — override commit'i ile bu push arasında yalnızca dakikalar var; sayı henüz güncellenmemiş olabilir.
+2. Eklenen override'lar (`form-data@^4.0.2`, `js-yaml@^4.1.0`, `vite@^6.2.1`) flaglanan CVE'lerle eşleşmiyor olabilir — yani yanlış paketler hedeflenmiş olabilir.
+
+**Ayırt edilemez durum**: Bu turda hangisi olduğu net değil. Bir sonraki `/tom` çağrısında yeniden push edilip sayı kontrol edilmeli; değişmezse ihtimal (2) doğrulanmış sayılır.
+
+## Antigravity İçin Görev
+
+Yeni kod değişikliği istenmiyor — yalnızca ölçüm: `/admin` veya GitHub Security sekmesinden (`​/security/dependabot`) 21 kaydın tam CVE listesini çekip hangi paketlere ait olduklarını `form-data`/`js-yaml`/`vite`/`postcss`/`shell-quote`/`sharp` override listesiyle karşılaştır. Eşleşmeyen bir CVE varsa, hangi paketin gerçekten hedeflenmesi gerektiği ortaya çıkar.
+
+Mimar bu turda yalnızca `docs/MASTER_PLAN.md`'ye dokundu.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.48 (TOM — G-6 İstisnası Loglandı + form-data/js-yaml/vite Override Restorasyonu Doğrulandı)
 
 > 🇹🇷 ÖZET: İki madde. (1) **G-6 istisnası** — Founder'ın açık onayıyla, tekrarlanan `/tom` döngüsünü resmi bir Claude Code skill'ine (`​.claude/skills/tom/SKILL.md`) dönüştürmek için Mimar bu oturumda üç-dosya sınırının (docs/MASTER_PLAN.md, CLAUDE.md, AGENTS.md) dışına çıktı. Bu istisna tek seferliktir, genel kuralı değiştirmez, ve Founder'ın "gerçek skill dosyası oluştur (G-6 istisnası)" seçimiyle (AskUserQuestion) kayıt altına alınmıştır. (2) **v11.47'nin devir görevi doğrulandı**: commit `0249a31`, `form-data`/`js-yaml`/`vite` override'larını geri yükledi.
