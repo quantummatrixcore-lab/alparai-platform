@@ -52,6 +52,14 @@ test.describe("i18n Language & Routing Checks", () => {
     await expect(page.locator("h1").first()).toBeVisible();
   });
 
+  test("RU locale renders correctly with Russian language attribute", async ({ page }) => {
+    await page.goto("/ru");
+    await page.waitForLoadState("domcontentloaded");
+
+    await expect(page.locator("html")).toHaveAttribute("lang", "ru");
+    await expect(page.locator("h1").first()).toBeVisible();
+  });
+
   test("admin routes remain accessible in DE and FR locales", async ({ page }) => {
     await page.goto("/de/admin");
     await page.waitForLoadState("domcontentloaded");
