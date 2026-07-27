@@ -1,3 +1,67 @@
+# ALPAR AI — MASTER PLAN v11.67 (STRATEJİ — Founder Büyüme Yol Haritası + Sidebar Regresyon Düzeltmesi)
+
+> 🇹🇷 Bu giriş bir doğrulama turu değil, Founder'ın doğrudan talebiyle yazılan bir **strateji ve önceliklendirme dokümanı**. Founder haklı: son ~20 giriş verify→düzelt→yeniden-doğrula döngüsüydü — gerçek hataları yakaladı (güvenlik regresyonu, P0 async bug) ama bu bir büyüme stratejisi değil. Bu giriş üç şey yapıyor: (1) Founder'ın altı somut talebine tek tek cevap veriyor, (2) yazılırken içeri giren yeni bir sidebar "temizlik" commit'inin aslında **regresyon** olduğunu tespit edip düzeltme spesifikasyonu veriyor, (3) kanıta dayalı, önceliklendirilmiş bir yol haritası (P0-P3) sunuyor.
+
+## 0. ACİL: `708e199` Sidebar "Temizliği" Yanlış Öncülle Yapılmış — Gerçek Bir Regresyon
+
+Bu giriş yazılırken `708e199` commit'i geldi ("eliminate duplicate routes"). Doğrulama (Haiku, `git show`):
+
+- **`/admin/cross-audit-dashboard` ve `/admin/ecosystem` sidebar'dan kaldırıldı**, ama **her ikisi de hâlâ kod olarak var** (`page.tsx` dosyaları duruyor) — artık **orphan** (erişilemez ama var).
+- Test dosyası (`admin-sidebar-integrity.spec.ts`) güncellenmiş, ama eklenen gerekçe **yanlış**: `/admin/cross-audit-dashboard` için `"alias route of /admin/analysis"` yazıyor. **Bu doğru değil** — daha önce doğrulandı: `analysis/page.tsx` statik dosya okuyor (`docs/ai-audit/audit-registry.json` + **`docs/MASTER-ANALYSIS.md`** — CLAUDE.md Kural #4'te "asla okuma, eski" diye işaretli dosya!), `cross-audit-dashboard/page.tsx` ise canlı bir server action çağırıyor (`getCrossAuditDashboardData()`). **İki farklı özellik, alias değil.**
+- Sonuç: sidebar'da kalan tek "cross audit" linki (`/admin/analysis`), hâlâ yanlış çeviri anahtarıyla etiketli (`t("cross_audit_dashboard")`) ve **eski/deprecated bir dosyayı okuyan sayfaya gidiyor** — canlı metrik dashboard'u ise artık hiçbir menüden erişilemiyor.
+- `/admin/ecosystem`'in `/admin/import`'a "merge edildiği" iddiası bu turda doğrulanmadı — ayrı bir kontrol gerekiyor.
+- Bu, tam olarak bu zincirin tekrar tekrar yakaladığı kalıp: "düzeltildi" denen bir commit, kontrol edilmeden gerçekte yanlış bir öncülle yanlış tarafı siliyor.
+
+**Antigravity için düzeltme (küçük, kesin):**
+
+1. `src/components/admin/sidebar.tsx` — `/admin/cross-audit-dashboard` linkini geri ekleyin, doğru anahtarla (`nav_cross_audit_dashboard`, zaten `messages/*.json`'da var).
+2. `/admin/analysis` linkinin etiketini düzeltin — `t("cross_audit_dashboard")` DEĞİL, kendine ait bir anahtar (`analysisHeading` zaten kodda kullanılıyor, sidebar'a da aynısı yazılsın).
+3. `analysis/page.tsx`'in `docs/MASTER-ANALYSIS.md` okuyup okumaması gerektiğini ayrıca değerlendirin — CLAUDE.md bu dosyayı "eski" olarak işaretliyor; admin'e eski veri gösteriliyor olabilir.
+4. `/admin/ecosystem`↔`/admin/import` "merge" iddiasını doğrulayın (bu turda yapılmadı) — gerçekten aynı işlevse silinmesi doğru, değilse aynı hata tekrarlanmış olur.
+5. `billing`/`finance` ve `outreach`/`social` çakışmaları bu commit'te hiç ele alınmadı — hâlâ açık (v11.67 §3'te ele alınıyor).
+
+## 1. Founder'ın 6 Talebine Doğrudan Cevap
+
+**(1) "Sürekli copy-paste doğrulama yapıyoruz"** — Doğru tespit. Bu tur bir strateji dokümanı; doğrulama devam edecek ama artık tek çalışma modu olmayacak.
+
+**(2) Stratejik hamleler (mail, başvuru, devlet destekleri, network)** — §2-3'te kanıta dayalı yol haritası var.
+
+**(3) Profesyonel önceliklendirme** — §3'te P0-P3.
+
+**(4) Gmail MCP ile otomatik mail** — Kodda zaten **Resend** ile çalışan bir otomasyon var (aşağıda). Gmail MCP, oturum-bazlı tekil stratejik mailler (bir kuruma soru, bir ortaklık teklifi) için düşük riskli ve hemen kullanılabilir — ama kuyruklu/tekrarlayan gönderimin sistemi Resend olarak kalmalı; iki paralel mail altyapısı gereksiz risk.
+
+**(5) Browser agent ile başvuru otomasyonu** — Riskli: çoğu hızlandırıcı/hibe portalı bot-engelleme kullanıyor ve "neden biz" sorularına insan yazması gerekiyor — otomatik doldurma başvuruyu zayıflatabilir. Öneri: browser agent **taslak hazırlasın**, insan gözden geçirip gönderrsin — zaten `grants` şemasındaki `prepared_content_ref` alanı bu insan-onay adımını varsayıyor (v11.33 tasarımı).
+
+**(6) Sidebar çift menüler** — §0'da ele alındı; ayrıca `billing`/`finance` ve `outreach`/`social` çakışmaları hâlâ açık.
+
+## 2. Kod Neyi Gerçekten Otomatikleştiriyor (kanıt tablosu)
+
+| Özellik                | Sidebar            | Gerçek otomasyon           | Kanıt                                                                                                             |
+| ---------------------- | ------------------ | -------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Outreach (medya/uzman) | `/admin/outreach`  | ✅ **Gerçekten otomatik**  | `src/lib/audit/outreach-agent.ts` — Resend ile gerçek mail, cron (`api/cron/outreach`), günde 50 limit            |
+| Investors              | `/admin/investors` | ⚠️ **Kısmen otomatik**     | `src/actions/investor.ts` — başvuru + onay maillerini Resend ile gerçekten gönderiyor; kabul kararı insan (doğru) |
+| Grants                 | `/admin/grants`    | ❌ **Yalnız manuel takip** | `updateGrantStatus()` sadece DB günceller; `apply_url`'e insan gidip başvuru yapıyor                              |
+| LinkedIn               | `/admin/linkedin`  | ❌ **Yalnız manuel takip** | DB status enum; `ops/linkedin-assets/`'te ~30 yerel Playwright script'i var ama üretime bağlı değil               |
+| Platforms              | `/admin/platforms` | ❌ **Yalnız manuel takip** | DB status enum, dış API çağrısı yok                                                                               |
+
+**Sonuç**: "mail gönderemiyoruz" değil sorun — Outreach'te zaten çalışan Resend+cron deseni Grants'e hiç uygulanmamış. En ucuz kazanım, yeni bir sistem kurmak değil, var olanı genişletmek.
+
+## 3. Önceliklendirilmiş Yol Haritası
+
+| Öncelik | Kalem                                                                                                               | Neden                                                                 |
+| ------- | ------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| **P0**  | §0'daki sidebar regresyonunu düzelt                                                                                 | Az önce tanıtılan gerçek bug, canlı özellik erişilemez durumda        |
+| **P0**  | `billing`/`finance`, `outreach`/`social` çakışmalarını netleştir (birleştir veya ayrı ayrı gerekçelendir)           | Founder'ın doğrudan şikayeti                                          |
+| **P1**  | Outreach/Resend desenini Grants'e uygula (durum-tetiklemeli hatırlatma/deadline maili — tam otomatik başvuru değil) | En düşük riskli, en yüksek kaldıraçlı genişleme                       |
+| **P1**  | "Founder Focus" sıralaması — sidebar'da iş önceliğine göre üstte sabit birkaç kalem (outreach, grants, investors)   | Somut IA spesifikasyonu, yorum değil                                  |
+| **P2**  | Gmail MCP — oturum-bazlı, insan onaylı tekil stratejik mailler                                                      | Ürün kodu değişikliği gerektirmiyor, hemen kullanılabilir             |
+| **P2**  | Browser-agent destekli (otomatik-gönderim değil) başvuru taslağı                                                    | `prepared_content_ref` akışını besler                                 |
+| **P3**  | GitHub/Reddit/HackerOne ağ büyümesi                                                                                 | v11.40'a göre tek blokaj Founder'ın kendi hesap açması — insan görevi |
+
+Mimar bu turda yalnızca `docs/MASTER_PLAN.md`'ye dokundu; tüm düzeltmeler Antigravity/OpenCode'a spesifikasyon olarak devredildi (G-6).
+
+---
+
 # ALPAR AI — MASTER PLAN v11.66 (TOM — v11.65'in Gerçek P0 Bug'ı Doğrulandı Kapandı: Async `isConfigured()` Zinciri Sağlam)
 
 > 🇹🇷 ÖZET: v11.65'te bulunan tek gerçek P0 (NVIDIA `isConfigured()` yalnız env okuyor, DB key'i görmüyor) commit `d8b5167`'de kapatıldı — **ve bu kez risk altındaki en kritik nokta da doğrulandı**: metod imzası `Promise<boolean>`'a çevrilirken her çağrı noktasının `await` edildiği teyit edildi. Async'e geçişte `await` unutulsaydı, bir Promise nesnesi JS'te her zaman truthy olacağından **daha sinsi bir yeni bug** doğardı — bu olmadı.
