@@ -1,3 +1,28 @@
+# ALPAR AI — MASTER PLAN v11.56 (ÖLÇÜM — Dependabot 21 → 16 DÜŞTÜ: Zincirdeki İlk Gerçek İyileşme)
+
+> 🇹🇷 ÖZET: v11.55'in `abb00fb` push'unun GitHub çıktısı: **"16 vulnerabilities (11 high, 5 moderate)"** — v11.49'dan beri sabit duran **21'den (15 high, 6 moderate) düşüş**. Net: **−5 zafiyet (−4 high, −1 moderate)**. Kaynak: `git push` çıktısı, doğrudan ölçüm — tahmin değil.
+
+## Ölçüm Zinciri (hepsi push çıktısından, Kural #10)
+
+| Sürüm           | Commit              | Dependabot                                   |
+| --------------- | ------------------- | -------------------------------------------- |
+| v11.45          | `917607c`           | 15 (10 high, 5 moderate)                     |
+| v11.47          | `d1d99ba`           | 21 (15 high, 6 moderate) — artış             |
+| v11.49–v11.54   | `720d6cd`…`f898512` | 21 — sabit, hiç kıpırdamadı                  |
+| **v11.56 (bu)** | **`abb00fb`**       | **16 (11 high, 5 moderate)** — **ilk düşüş** |
+
+## Yorum
+
+Sayının 21'de çakılı kalmasının nedeni v11.54'te bulunmuştu: `"pnpm.overrides"` düz anahtarı pnpm tarafından hiç okunmuyordu. `178aca7` bunu iç içe forma çevirdi; v11.55 lockfile'da `postcss@8.5.22` çözümlemesiyle override'ların gerçekten devreye girdiğini doğruladı. Bu ölçüm o zincirin son halkasıdır: **yapısal düzeltme → lockfile hareketi → platform sayısında düşüş.** Üç bağımsız kanıt aynı yönü gösteriyor.
+
+Kalan 16 kayıt için not: v11.54'ün ölçümüne göre yükün büyük kısmı `brace-expansion@1.x` / `minimatch@3.x` dalından geliyor ve bu dal `eslint` bağımlılığı nedeniyle 1.x'te tutulmak zorunda (major zorlama `expand is not a function` ile ESLint'i kırıyor). Yani kalan sayı, kolay override ile kapanacak türden değil — eslint zincirinin kendisi güncellenmeden düşmesi beklenmemeli.
+
+**Sonraki ölçüm**: GitHub yeniden taraması asenkron; bir sonraki push çıktısı 16'nın altına inip inmediğini gösterecek. Varsayım yapılmayacak.
+
+Mimar bu turda yalnızca `docs/MASTER_PLAN.md`'ye dokundu.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.55 (TOM — Kök Neden Düzeltmesi Doğrulandı: Override'lar İlk Kez Gerçekten Çalışıyor)
 
 > 🇹🇷 ÖZET: v11.54'ün kök neden tespiti üzerine yapılan düzeltme (`178aca7`) doğrulandı — **bu zincirdeki en güçlü kanıt turu**. `package.json` artık gerçek bir üst düzey `"pnpm"` anahtarı içeriyor, `"overrides"` iç içe. Kilit kanıt: `pnpm-lock.yaml`'da `postcss` artık **8.5.22** olarak çözülüyor (önceden `next` içine gömülü `8.4.31`'de sabitliydi). Lockfile 294 satır silme / 30 ekleme ile budandı. Zincirde ilk kez bir "güvenlik düzeltmesi" iddiası, çözümlenmiş bağımlılık ağacında doğrulanabilir bir sürüm değişikliği üretti.
