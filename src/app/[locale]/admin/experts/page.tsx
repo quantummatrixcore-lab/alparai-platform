@@ -45,7 +45,7 @@ export default async function AdminExpertsPage({
     <Container className="py-10">
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <MetricCard
-          title="Expert Applications"
+          title={t("experts_title_apps")}
           value={applications.length}
           icon={<Award className="h-4 w-4" />}
           trend="up"
@@ -55,7 +55,7 @@ export default async function AdminExpertsPage({
           chartType="bar"
         />
         <MetricCard
-          title="Approved Experts"
+          title={t("experts_title_approved")}
           value={approved.length}
           icon={<CheckCircle2 className="h-4 w-4" />}
           trend={approved.length > 0 ? "up" : "neutral"}
@@ -63,7 +63,7 @@ export default async function AdminExpertsPage({
           accentColor="#10b981"
         />
         <MetricCard
-          title="Pending Review"
+          title={t("experts_title_pending")}
           value={pending.length}
           icon={<Clock className="h-4 w-4" />}
           trend={pending.length > 0 ? "up" : "neutral"}

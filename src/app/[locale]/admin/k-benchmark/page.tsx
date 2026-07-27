@@ -60,7 +60,7 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <MetricCard
-          title="Total Models Rated"
+          title={t("kb_total_models")}
           value={scores?.length ?? 0}
           icon={<Award className="h-4 w-4" />}
           trend="up"
@@ -70,7 +70,7 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
           chartType="bar"
         />
         <MetricCard
-          title="Avg. K-Score"
+          title={t("kb_avg_score")}
           value={
             scores && scores.length > 0
               ? `${(scores.reduce((a, s) => a + (s.score ?? 0), 0) / scores.length).toFixed(1)}`
