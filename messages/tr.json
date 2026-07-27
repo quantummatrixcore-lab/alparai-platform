@@ -1996,6 +1996,7 @@
     "nav_redaction_queue": "Maskeleme Kuyruğu",
     "nav_cross_audit_dashboard": "Çapraz Denetim Paneli",
     "nav_audit_analysis": "Denetim Arşivi",
+    "nav_apiKeys": "API Anahtarları & Entegrasyonlar",
     "nav_ai_pulse": "AI Nabzı",
     "nav_crons": "Cron İşleri",
     "nav_import": "İçe Aktar",

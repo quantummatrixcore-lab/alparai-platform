@@ -122,13 +122,13 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
     {
       href: "/admin/ecosystem",
-      label: t("nav_ecosystem") || "Ecosystem Hub",
+      label: t("nav_ecosystem"),
       icon: Import,
       active: pathname.startsWith("/admin/ecosystem"),
     },
     {
       href: "/admin/import",
-      label: t("nav_import") || "Import Center",
+      label: t("nav_import"),
       icon: Import,
       active: pathname.startsWith("/admin/import"),
     },
@@ -137,19 +137,19 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
   const intelligenceItems = [
     {
       href: "/admin/k-benchmark",
-      label: t("nav_kBenchmark") || "K-BENCHMARK",
+      label: t("nav_kBenchmark"),
       icon: BarChart3,
       active: pathname.startsWith("/admin/k-benchmark"),
     },
     {
       href: "/admin/cross-audit-dashboard",
-      label: t("nav_cross_audit_dashboard") || "Cross Audit Dashboard",
+      label: t("nav_cross_audit_dashboard"),
       icon: BarChart3,
       active: pathname.startsWith("/admin/cross-audit-dashboard"),
     },
     {
       href: "/admin/analysis",
-      label: t("nav_audit_analysis") || "Audit Archive",
+      label: t("nav_audit_analysis"),
       icon: BrainCircuit,
       active: pathname.startsWith("/admin/analysis"),
     },
@@ -185,13 +185,13 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
     {
       href: "/admin/innovations",
-      label: t("innovations") || "AI Lab",
+      label: t("innovations"),
       icon: Sparkles,
       active: pathname.startsWith("/admin/innovations"),
     },
     {
       href: "/admin/geo",
-      label: t("nav_geo") || "GEO Engine",
+      label: t("nav_geo"),
       icon: Globe,
       active: pathname.startsWith("/admin/geo"),
     },
@@ -275,7 +275,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
     {
       href: "/admin/advisory-board",
-      label: t("nav_advisoryBoard") || "Advisory Board",
+      label: t("nav_advisoryBoard"),
       icon: Award,
       active: pathname.startsWith("/admin/advisory-board"),
     },
@@ -371,7 +371,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
     {
       href: "/admin/api-keys",
-      label: t("nav_apiKeys") || "API Keys & Integrations",
+      label: t("nav_apiKeys"),
       icon: Lock,
       active: pathname.startsWith("/admin/api-keys"),
     },
@@ -395,7 +395,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
     {
       href: "/admin/feature-flags",
-      label: t("nav_featureFlags") || "Feature Flags",
+      label: t("nav_featureFlags"),
       icon: ToggleRight,
       active: pathname.startsWith("/admin/feature-flags"),
     },

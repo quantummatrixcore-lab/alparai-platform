@@ -1963,6 +1963,7 @@
     "nav_redaction_queue": "Redaction Queue",
     "nav_cross_audit_dashboard": "Cross Audit Dashboard",
     "nav_audit_analysis": "Audit Archive",
+    "nav_apiKeys": "API Keys & Integrations",
     "nav_ai_pulse": "AI Pulse",
     "nav_crons": "Cron Jobs",
     "nav_import": "Import",
