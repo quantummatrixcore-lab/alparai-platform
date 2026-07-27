@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Check, X, Shield, ExternalLink } from "lucide-react";
 import { bulkApproveIncidents, bulkRejectIncidents } from "@/actions/admin";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
+import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer } from "recharts";
+import { EmptyStateIllustration } from "./admin-design-kit";
 
 export interface ImportedIncident {
   id: string;
@@ -107,8 +109,84 @@ export function ImportQueueClient({ initialIncidents, locale: _locale }: ImportQ
     }
   };
 
+  const chartData = useMemo(() => {
+    if (!incidents || incidents.length === 0) return [];
+
+    // Group incidents by source or severity since queue items don't have pending/completed statuses here
+    // Let's group by severity for the donut chart
+    const grouped = incidents.reduce(
+      (acc, incident) => {
+        const sev = incident.severity || "unknown";
+        if (!acc[sev]) acc[sev] = 0;
+        acc[sev] += 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
+
+    const colors: Record<string, string> = {
+      critical: "#F43F5E", // Rose 500
+      high: "#F97316", // Orange 500
+      medium: "#EAB308", // Yellow 500
+      low: "#3B82F6", // Blue 500
+      unknown: "#6B7280", // Gray 500
+    };
+
+    return Object.entries(grouped).map(([name, value]) => ({
+      name: name.charAt(0).toUpperCase() + name.slice(1),
+      value,
+      color: colors[name] || colors.unknown,
+    }));
+  }, [incidents]);
+
   return (
     <div className="space-y-6">
+      {/* 360° Observe: Queue Distribution Chart */}
+      <div className="rounded-xl border border-white/5 bg-neutral-950/40 p-6">
+        <h3 className="text-fg-primary mb-6 text-sm font-bold tracking-wide">
+          Queue Distribution (By Severity)
+        </h3>
+        <div className="flex h-64 w-full items-center justify-center">
+          {chartData.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={chartData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  paddingAngle={5}
+                  dataKey="value"
+                  stroke="none"
+                >
+                  {chartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <RechartsTooltip
+                  contentStyle={{
+                    backgroundColor: "#0E1622",
+                    borderColor: "rgba(255,255,255,0.1)",
+                    borderRadius: "8px",
+                  }}
+                  itemStyle={{ fontSize: "12px", color: "#F3F4F6" }}
+                  labelStyle={{ display: "none" }}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  formatter={(value: any, name: any) => [`${value} incidents`, name]}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          ) : (
+            <EmptyStateIllustration
+              title="Empty Queue"
+              description="There are no incidents waiting for import approval."
+              icon={Shield}
+            />
+          )}
+        </div>
+      </div>
+
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
           <h1 className="text-2xl font-black text-white">{t("import_q_title")}</h1>

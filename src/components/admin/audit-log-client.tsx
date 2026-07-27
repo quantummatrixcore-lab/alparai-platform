@@ -1,6 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip as RechartsTooltip,
+  ResponsiveContainer,
+} from "recharts";
+import { format } from "date-fns";
+import { EmptyStateIllustration } from "./admin-design-kit";
 import {
   Activity,
   Search,
@@ -260,8 +271,94 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
     }
   };
 
+  // Generate chart data from logs (group by day or hour depending on span, simple day grouping for now)
+  const chartData = useMemo(() => {
+    if (!logs || logs.length === 0) return [];
+    const grouped = logs.reduce(
+      (acc, log) => {
+        const date = new Date(log.created_at);
+        const day = format(date, "MMM dd");
+        if (!acc[day]) acc[day] = { date: day, count: 0, security: 0 };
+        acc[day].count += 1;
+        if (log.action.startsWith("security") || log.action.includes("key")) {
+          acc[day].security += 1;
+        }
+        return acc;
+      },
+      {} as Record<string, { date: string; count: number; security: number }>,
+    );
+
+    // Sort by actual date ascending
+    return Object.values(grouped).reverse(); // assuming logs are descending originally
+  }, [logs]);
+
   return (
     <div className="space-y-6">
+      {/* 360° Observe: Log Volume Chart */}
+      <div className="rounded-xl border border-white/5 bg-neutral-950/40 p-6">
+        <h3 className="text-fg-primary mb-6 text-sm font-bold tracking-wide">
+          Log Volume (Last Activity)
+        </h3>
+        <div className="h-64 w-full">
+          {chartData.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="rgba(255,255,255,0.05)"
+                  vertical={false}
+                />
+                <XAxis
+                  dataKey="date"
+                  stroke="#6B7280"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  dy={10}
+                />
+                <YAxis
+                  stroke="#6B7280"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(val) => `${val}`}
+                />
+                <RechartsTooltip
+                  cursor={{ fill: "rgba(255,255,255,0.02)" }}
+                  contentStyle={{
+                    backgroundColor: "#0E1622",
+                    borderColor: "rgba(255,255,255,0.1)",
+                    borderRadius: "8px",
+                  }}
+                  itemStyle={{ color: "#F3F4F6", fontSize: "12px" }}
+                  labelStyle={{ color: "#9CA3AF", fontSize: "12px", marginBottom: "4px" }}
+                />
+                <Bar
+                  dataKey="count"
+                  name="Total Actions"
+                  fill="#00D2FF"
+                  radius={[4, 4, 0, 0]}
+                  maxBarSize={40}
+                />
+                <Bar
+                  dataKey="security"
+                  name="Security Events"
+                  fill="#00FF88"
+                  radius={[4, 4, 0, 0]}
+                  maxBarSize={40}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <EmptyStateIllustration
+              title="No Log Data"
+              description="There are no audit logs to visualize in the current timeframe."
+              icon={Activity}
+            />
+          )}
+        </div>
+      </div>
+
       <div className="grid gap-3 sm:grid-cols-4">
         <MetricWidget
           icon={Activity}

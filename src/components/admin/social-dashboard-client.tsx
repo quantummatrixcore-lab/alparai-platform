@@ -1,8 +1,19 @@
 "use client";
 
 import * as React from "react";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useMemo } from "react";
 import { useTranslations } from "next-intl";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip as RechartsTooltip,
+  ResponsiveContainer,
+} from "recharts";
+import { format } from "date-fns";
+import { EmptyStateIllustration } from "./admin-design-kit";
 import {
   Calendar,
   FileText,
@@ -502,8 +513,102 @@ export function SocialDashboardClient({
     },
   ] as const;
 
+  const chartData = useMemo(() => {
+    if (!posts || posts.length === 0) return [];
+
+    // Reverse to process oldest to newest, assuming initial is newest first
+    const sorted = [...posts].reverse();
+
+    const grouped = sorted.reduce(
+      (acc, post) => {
+        // Use created_at or published_at
+        const date = new Date(post.published_at || post.created_at);
+        const day = format(date, "MMM dd");
+        if (!acc[day]) acc[day] = { date: day, reach: 0, likes: 0, comments: 0 };
+
+        acc[day].reach += post.estimated_reach || 0;
+        acc[day].likes += post.likes || 0;
+        acc[day].comments += post.comments_count || 0;
+
+        return acc;
+      },
+      {} as Record<string, { date: string; reach: number; likes: number; comments: number }>,
+    );
+
+    return Object.values(grouped);
+  }, [posts]);
+
   return (
     <div className="mx-auto max-w-7xl space-y-6 p-6">
+      {/* 360° Observe: Social Performance Trend */}
+      <div className="rounded-xl border border-white/5 bg-neutral-950/40 p-6">
+        <h3 className="text-fg-primary mb-6 text-sm font-bold tracking-wide">
+          Social Performance Trend (Engagement)
+        </h3>
+        <div className="h-64 w-full">
+          {chartData.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={chartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="rgba(255,255,255,0.05)"
+                  vertical={false}
+                />
+                <XAxis
+                  dataKey="date"
+                  stroke="#6B7280"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  dy={10}
+                />
+                <YAxis
+                  stroke="#6B7280"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(val) => `${val}`}
+                />
+                <RechartsTooltip
+                  cursor={{ stroke: "rgba(255,255,255,0.1)", strokeWidth: 1 }}
+                  contentStyle={{
+                    backgroundColor: "#0E1622",
+                    borderColor: "rgba(255,255,255,0.1)",
+                    borderRadius: "8px",
+                  }}
+                  itemStyle={{ fontSize: "12px" }}
+                  labelStyle={{ color: "#9CA3AF", fontSize: "12px", marginBottom: "4px" }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="likes"
+                  name="Likes"
+                  stroke="#00FF88"
+                  strokeWidth={2}
+                  dot={{ r: 4, fill: "#00FF88", strokeWidth: 0 }}
+                  activeDot={{ r: 6 }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="comments"
+                  name="Comments"
+                  stroke="#00D2FF"
+                  strokeWidth={2}
+                  dot={{ r: 4, fill: "#00D2FF", strokeWidth: 0 }}
+                  activeDot={{ r: 6 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          ) : (
+            <EmptyStateIllustration
+              title="No Engagement Data"
+              description="There is no social post data to visualize for the current timeframe."
+              icon={BarChart3}
+            />
+          )}
+        </div>
+      </div>
+
       {/* Platform Connections */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {initialAccounts.map((account) => {

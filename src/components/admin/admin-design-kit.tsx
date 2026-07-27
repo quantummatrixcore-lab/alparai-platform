@@ -581,3 +581,46 @@ export function AdminContainer({
     </div>
   );
 }
+
+export function SkeletonLoader({
+  className,
+  height = "h-64",
+}: {
+  className?: string;
+  height?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "animate-pulse rounded-xl border border-white/10 bg-white/5",
+        height,
+        className,
+      )}
+    />
+  );
+}
+
+export function EmptyStateIllustration({
+  title,
+  description,
+  icon: Icon,
+  className,
+}: {
+  title: string;
+  description?: string;
+  icon?: React.ElementType;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center rounded-xl border border-dashed border-white/10 bg-white/5 p-8 text-center",
+        className,
+      )}
+    >
+      {Icon && <Icon className="text-fg-muted/50 mb-4 h-10 w-10" />}
+      <h3 className="text-fg-primary text-sm font-bold tracking-wide">{title}</h3>
+      {description && <p className="text-fg-muted mt-2 max-w-sm text-sm">{description}</p>}
+    </div>
+  );
+}
