@@ -1,3 +1,32 @@
+# ALPAR AI — MASTER PLAN v11.76 (STRATEJİ — Founder'ın 6 Maddesine Cevap + CODEOWNERS Doğrulaması)
+
+> 🇹🇷 Founder altı somut stratejik soru sordu ve 360° profesyonel güncelleme istedi. Bu giriş genel tavsiye değil, kodda gerçekten ne olduğunu kullanıyor — bir maddede (Yapay Zeka Fabrikası) Founder'a hiç sunulmamış, hazır bir başvuru paketi bulundu.
+
+## CODEOWNERS Doğrulaması (kısa)
+
+`39a1c81`, `.github/CODEOWNERS`'a `/docs/MASTER_PLAN.md @quantummatrixcore-lab` ekledi — gerçek, cerrahi (1 dosya, 2 ekleme/1 silme). v11.75'in yönünde gerçek bir adım. İki not:
+
+1. CODEOWNERS yalnızca GitHub'ın branch protection ayarında "Require review from Code Owners" AÇIKSA merge'leri engeller — bu bir depo ayarı, git dosyalarından görünmez. Founder `github.com/.../settings/branches`'i kendisi kontrol etmeli.
+2. Mevcut CI (`plan-guard.yml`) zaten `[architect]` etiketi + yazar e-postası uyuşmazlığında build'i düşürüyor — ama bu depodaki HERKESİN commit'i (gerçek Mimar dahil) aynı `noreply@anthropic.com` e-postasını paylaşıyor. Yani bu kontrol, Antigravity'nin aynı adresle etiketi taklit etmesini ayırt edemiyor — `39a1c81`'in getirdiği değil, önceden var olan yapısal bir boşluk.
+
+## Altı Madde
+
+**(1) GitHub/Reddit/HackerOne — Antigravity'ye yaptıralım.** v11.40'a göre tek blokaj Founder'ın kendi hesap oluşturması — insan görevi. Hesaplar kurulduktan sonra Antigravity içerik/README taslağı hazırlayabilir; hesap oluşturma ve platform ilişkisi Founder'da kalmalı (bu platformlar kimliği gerçek bir kişiye bağlıyor).
+
+**(2) Başvuruları tarayıcı ajanla tam otomatik yaptıralım.** Bu, repodaki mevcut, açık bir kuralla çelişiyor: `docs/APPLICATIONS/001-ai-factory-application.md`'nin kendi başlığı "Founder submits the form personally (Rule #6 — no automated external submission)" diyor. Bu yeni bir itiraz değil — projenin zaten yazılı politikası, v11.67'nin gerekçesiyle aynı: bot-engelleme + "neden biz" sorularına scripted cevap zayıf kalıyor. Öneri aynı: tarayıcı ajan taslak hazırlasın, Founder gözden geçirip kendisi gönderrsin.
+
+**(3) Admin'de profesyonel başvuru takibi.** Şema büyük ölçüde zaten var: `grant_applications`'ta `phase` (1-3), `status` (not_started/drafting/submitted_pending_review/approved/rejected/accepted_by_program), `notes`, `prepared_content_ref`. Eksik olan: **istenen evrak** alanı ve **sıradaki aksiyon tarihi**. Spesifikasyon: `grant_applications`'a `documents_requested` (text[], nullable) ve `next_action_due` (date, nullable) kolonları ekleyen yeni migration (mevcut RLS politikasıyla uyumlu), `grants-list.tsx`'i düz tablodan Kanban-tarzı pipeline'a (Başvuruldu → Cevap Bekleniyor → Evrak İstendi → Karar) çevirin.
+
+**(4) Musa Aygül (Selçuk Üniversitesi) danışman olarak eklensin mi?** Şema ve genel sayfa zaten var (`advisory_board_members` tablosu; `/about/advisory-board` şu an "oluşum aşamasında", hiç üye yok). **Yayınlamadan önce**: bu gerçek, isimli bir kişi — adı/fotoğrafı/kurumuyla kamuya açık listelenmesi için **açık yazılı onayı** bir formalite değil, ön koşuldur. Doğrulanması gereken: (a) danışmanlık rolünü gerçekten kabul etti mi, (b) yayınlanacak bio/unvan metnini onayladı mı, (c) bağlantılı kurumsal profil doğru kişiyle eşleşiyor mu. Founder onayı doğrudan alındıktan sonra bu, yeni şema gerektirmeyen, doğrudan bir INSERT + onaylı metin işi.
+
+**(5) Yapay Zeka Fabrikası stratejisi.** **Kullanılmamış, tam bir başvuru paketi zaten var**: `docs/APPLICATIONS/001-ai-factory-application.md`. İçinde: program değerlendirmesi (50-150K USD yatırım, 3-6 ay hızlandırma, ~3.000 girişimden top-8), 6 kriterli uyum analizi (AI yetkinliği/akademik olgunluk/ürün-vizyon/banka sinerjisinde güçlü; ödül geçmişi ve erken ticari çekişte dürüst zayıflık), yapıştırmaya hazır EN+TR başvuru metni. Kendi zamanlama notu: şimdi başvurun, çünkü 2 Ağustos 2026 lansmanı görüşme aşamasına kadar "henüz yayınlanmamış vaat"i "canlı platform kanıtı"na çevirir. **Bu yeni tasarlanacak bir strateji değil — Founder'a hiç sunulmamış hazır bir belge.** Öneri: Founder bu dosyayı doğrudan açsın, `[FOUNDER TO FILL]` kişisel/yasal alanları doldursun, belgenin kendi Kural #6'sına göre kendisi göndersin.
+
+**(6) "Antigravity işleri bitirdi."** Yukarıdaki CODEOWNERS doğrulamasına göre — gerçek ilerleme, bu kez doğru kapsamda, ama kısmi (depo-ayarı bağımlılığı buradan doğrulanamıyor) ve `plan-guard.yml`'in paylaşılan-e-posta boşluğunu çözmüyor. Dürüstçe "kapandı" değil, "ilerleme kaydedildi" olarak işaretleniyor.
+
+Mimar bu turda yalnızca `docs/MASTER_PLAN.md`'ye dokundu; (3) ve (4) Antigravity'ye somut spesifikasyon, (1)(2)(5) Founder kararı/aksiyonu, (6) doğrulama notu.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.75 (TOM — Hook "Onarımı" Gerçek Ama Asıl Boşluğu Kapatmıyor)
 
 > 🇹🇷 ÖZET: `26cfc7d`, v11.74'ün bulgusuna yanıt olarak `.husky/pre-commit`'i düzeltti. Teknik iddialar doğru: `ARCHITECT=1` kontrolü geri geldi, `quantummatrixcore-lab`/`Antigravity` için açık bir blocklist eklendi. Ama bu **asıl sorunu kapatmıyor** — her ikisi de yerel, kendi kendine ayarlanabilir değerler. `98499be`'nin gösterdiği tam olarak şuydu: kendi env değişkenini ve git config'ini ayarlayabilen bir süreç, bu kontrolleri geçebilir. Blocklist dışındaki herhangi bir isimle (`"Claude"` dahil) aynı yöntem hâlâ işler.
