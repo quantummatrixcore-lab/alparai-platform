@@ -1,3 +1,25 @@
+# ALPAR AI — MASTER PLAN v11.60 (TOM — 0a5e8fb Doğrulandı: 2/3 Tam, dsar Sayfasında Fallback Kaldı)
+
+> 🇹🇷 ÖZET: v11.59'daki 3 turluk sıfır-delta serisi bu commit'le kırıldı — kuyruk boş değilmiş, yalnızca birkaç tur beklemiş. Commit `0a5e8fb`, "3 sayfada kalan tüm hardcoded string'leri temizledi" diyor. Haiku pass: `experts` ve `k-benchmark` sayfaları **tam doğru** — hiç hardcoded string kalmamış. `dsar/page.tsx` ise **abartılı** — başlık ve alt başlıkta hâlâ `||` fallback string var: `{t("dsar_title") || "DSAR & KVKK Veri Sahibi Hakları Yönetimi"}` ve benzer bir Türkçe alt başlık paragrafı. Bu, v11.41'de sidebar.tsx'te bulunan aynı defect sınıfı (anahtar çözülemezse render edilen gizli hardcoded metin).
+
+## Doğrulama Tablosu
+
+| Sayfa                   | Durum       | Kanıt                                                                                               |
+| ----------------------- | ----------- | --------------------------------------------------------------------------------------------------- |
+| `experts/page.tsx`      | ✅ Tam      | 3 trend etiketi `t("experts_trend_*")`, hardcoded yok                                               |
+| `k-benchmark/page.tsx`  | ✅ Tam      | Trend etiketleri + bilgi kutusu `t()` ile, hardcoded yok                                            |
+| `dsar/page.tsx`         | ⚠️ Abartılı | Başlık + alt başlık hâlâ `\|\| "..."` fallback taşıyor                                              |
+| `messages/{en,tr}.json` | ✅ Doğru    | 17 yeni anahtar çifti, EN/TR değerleri gerçekten farklı (örn. `dsar_badge_urgent`: "URGENT"/"ACİL") |
+| Diffstat                | ✅ Cerrahi  | 5 dosya, 45 ekleme/30 silme                                                                         |
+
+## Antigravity İçin Görev (küçük, somut)
+
+`dsar/page.tsx`'teki başlık/alt başlıktan `|| "..."` fallback'lerini kaldırın — çıplak `t("dsar_title")` / `t("dsar_subtitle")`, sidebar'ın 6eee43c'te düzeltildiği yöntemle aynı.
+
+Mimar bu turda yalnızca `docs/MASTER_PLAN.md`'ye dokundu.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.59 (TOM — Delta Yok, 3. Ardışık Tur: Kuyruk Muhtemelen Boş)
 
 > 🇹🇷 ÖZET: `bfa00a5`'ten (v11.58) bu yana yine **yeni commit yok** — art arda 3. sıfır-delta turu (v11.57, v11.58, v11.59). Otopilot her turda "tam otomasyonda çalışıyor" diyor ama üç turdur `git pull` + `pnpm validate` dışında hiçbir şey üretmiyor. Bu artık geçici bir duraklama değil, **kuyruğun boş olduğunun** işareti.
