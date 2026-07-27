@@ -35,11 +35,9 @@ export default async function GrantsAdminPage({
       <div>
         <h1 className="flex items-center gap-3 text-3xl font-black tracking-tight text-white">
           <Building2 className="h-8 w-8 text-amber-400" />
-          {t("nav_grants") || "Grant Cockpit"}
+          {t("nav_grants")}
         </h1>
-        <p className="text-fg-muted mt-2 text-lg">
-          {t("grants_subtitle") || "Manage foundation and state support grant applications."}
-        </p>
+        <p className="text-fg-muted mt-2 text-lg">{t("grants_subtitle")}</p>
       </div>
 
       <AdminSectionCard title={t("grants_active_section")}>

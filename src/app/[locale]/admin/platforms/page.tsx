@@ -34,7 +34,7 @@ export default async function PlatformsAdminPage({
       <div>
         <h1 className="flex items-center gap-3 text-3xl font-black tracking-tight text-white">
           <Globe className="h-8 w-8 text-pink-400" />
-          {t("platforms_title") || "Platform Accounts"}
+          {t("platforms_title")}
         </h1>
         <p className="text-fg-muted mt-2 text-lg">{t("platforms_subtitle")}</p>
       </div>

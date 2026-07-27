@@ -35,7 +35,7 @@ export default async function LinkedinAdminPage({
       <div>
         <h1 className="flex items-center gap-3 text-3xl font-black tracking-tight text-white">
           <Users className="h-8 w-8 text-sky-400" />
-          {t("linkedin_title") || "LinkedIn Contacts Tracker"}
+          {t("linkedin_title")}
         </h1>
         <p className="text-fg-muted mt-2 text-lg">{t("linkedin_subtitle")}</p>
       </div>

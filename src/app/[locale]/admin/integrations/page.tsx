@@ -91,7 +91,7 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
       <AdminContainer>
         <AdminPageHeader
           icon={<Cpu className="text-brand-400 h-6 w-6 animate-pulse" />}
-          title={t("integrations_title") || "Integrations & Third-Party Services"}
+          title={t("integrations_title")}
           subtitle={t("integrations_syncing")}
         />
         <div className="space-y-6">
@@ -115,7 +115,7 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
       <AdminContainer>
         <AdminPageHeader
           icon={<AlertTriangle className="h-6 w-6 text-rose-400" />}
-          title={t("integrations_title") || "Integrations & Third-Party Services"}
+          title={t("integrations_title")}
           subtitle={t("integrations_sync_failed")}
         />
         <div className="bg-bg-secondary/40 border-border-subtle rounded-xl border p-8 text-center">
@@ -125,7 +125,7 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
             variant="outline"
             leftIcon={<RefreshCw className="h-4 w-4" />}
           >
-            {t("integrations_retry") || "Retry"}
+            {t("integrations_retry")}
           </Button>
         </div>
       </AdminContainer>
@@ -140,11 +140,8 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
     <AdminContainer>
       <AdminPageHeader
         icon={<Cpu className="text-brand-400 h-6 w-6" />}
-        title={`${t("integrations_title") || "Integrations"} (${totalConnected}/${totalServices})`}
-        subtitle={
-          t("integrations_subtitle") ||
-          "Manage and monitor the status of API, database, security, and email integrations on the platform."
-        }
+        title={`${t("integrations_title")} (${totalConnected}/${totalServices})`}
+        subtitle={t("integrations_subtitle")}
         lastUpdated={lastUpdatedTime}
         action={
           <Button
@@ -154,9 +151,7 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
             size="sm"
             leftIcon={<RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />}
           >
-            {loading
-              ? t("integrations_refreshing") || "Refreshing..."
-              : t("integrations_refresh") || "Refresh"}
+            {loading ? t("integrations_refreshing") : t("integrations_refresh")}
           </Button>
         }
       />
