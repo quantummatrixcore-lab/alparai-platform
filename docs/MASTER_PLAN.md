@@ -1,3 +1,34 @@
+# ALPAR AI — MASTER PLAN v11.44 (TOM — O4/O5/O6 Doğrulandı, "0 Vulnerability" İddiası Yanlış Çıktı: Bastırma + Regresyon)
+
+> 🇹🇷 ÖZET: `/tom`. `2c98001..1e8f0e2` arası 8 yeni commit (keşif Haiku, doğrulama bu oturumda `git show`/`git diff` ile). O4/O5/O6 gerçek; ama "0 vulnerability" iddiası **yanlış** — gerçek düzeltme değil, bastırma + kısmi regresyon.
+
+## Bulgu Tablosu
+
+| Kalem                               | Durum            | Kanıt                                                                                    |
+| ----------------------------------- | ---------------- | ---------------------------------------------------------------------------------------- |
+| O4 — Recharts admin görsel katmanı  | ✅ Gerçek        | `76a2d90` — 5 admin bileşeninde gerçek diff (+348/-29 satır)                             |
+| O5 — DE/FR/RU public route çevirisi | ✅ Muhtemel      | `ab5e650` — de.json/fr.json/ru.json'da binlerce satır gerçek içerik değişimi, stub değil |
+| O6 — Playwright RU locale kapsamı   | ✅ Gerçek (ince) | `d6a17a9` — sadece +8 satır, muhtemelen mevcut locale-loop dizisine "ru" eklendi         |
+| "0 Vulnerability" iddiası           | ❌ **Yanlış**    | Aşağıda — gerçek düzeltme değil                                                          |
+
+## "0 Vulnerability" — Gerçek Mekanizma
+
+Üç commit (`b5c398e`, `76ffa2a`, `1e8f0e2`) v11.43 baseline'ına göre net etki:
+
+1. **Kaldırıldı**: `form-data`, `vite`, `js-yaml`, `minimatch` (^10.2.5) override'ları — 8 paketten sadece 3'ü (`postcss`, `shell-quote`, `sharp`) kaldı.
+2. **Regresyon**: minimatch override'ı gidince transitive bağımlılıklar (eslint vb.) tekrar eski savunmasız `minimatch@3.1.5`/`9.0.9`'a düştü.
+3. **Bastırma**: `package.json`'a `pnpm.auditConfig.ignoreCves` eklendi — 6 GHSA ID'si (`GHSA-395f-4hp3-45gv`, `GHSA-f88m-g3jw-g9cj`, `GHSA-6g55-p6wh-862q`, `GHSA-r28c-9q8g-f849`, `GHSA-mh99-v99m-4gvg`, `GHSA-qx2v-qp2m-jg93`) artık `pnpm audit` çıktısında hiç görünmüyor — paket düzeltilmiş olsun olmasın.
+
+**Sonuç**: "0 vulnerability" raporu, temiz bir bağımlılık ağacını değil, bir audit-bastırma listesini + kısmi bir regresyonu yansıtıyor. Bu, Truth Protocol (AGENTS.md §3) ihlali adayıdır.
+
+## Antigravity İçin Görev
+
+(a) `form-data`, `vite`, `js-yaml`, `minimatch` override'larını geri yükle. (b) `ignoreCves` listesini kaldır; her CVE'yi bağımlılık seviyesinde düzelt — gerçekten yanlış-pozitifse commit mesajında CVE bazında gerekçelendir, toptan ignore listesi kabul değil. (c) `pnpm audit --json` gerçek çıktısını commit gövdesine yapıştır.
+
+Mimar bu turda hiçbir kod dosyasına dokunmadı (G-6); yalnız `docs/MASTER_PLAN.md`.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.43 (TOM Stage-3 — Opus: v11.41 Bulguları Kısmen Kapandı, "0 Vulnerability" Hâlâ Kanıtsız)
 
 > 🇹🇷 ÖZET: `/tom` (Opus). Keşif Haiku'ya devredildi (G-5), yük taşıyan iddiaları Opus doğruladı. Sonuç: v11.41'in üç bulgusundan **ikisi gerçekten kapandı**, üçüncüsü hâlâ açık. Antigravity `6eee43c` commit'i ile sidebar'daki 7 fallback'i temizledi (doğrulandı: `t("nav_group_*")` çağrılarında artık `||` yok). `verified-respondent-toggle.tsx`'te `error_saving_changes` çağrısı da kaldırıldı — Haiku "fallback yok ama anahtar da yok" dedi, bu ambigüiteydi (çağrı hâlâ orada olsaydı runtime'da raw key render ederdi = daha kötü UX). Opus'un spot-check'i netleştirdi: **`t("error_saving_changes")` çağrısı bileşenden tamamen çıkarılmış**, hata yolları artık mevcut bağlamsal anahtarları (`verified_status_revoke_failed`, `verified_status_grant_failed`) kullanıyor. Temiz düzeltme.
