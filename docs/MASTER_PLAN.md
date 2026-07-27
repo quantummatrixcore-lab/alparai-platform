@@ -1,3 +1,33 @@
+# ALPAR AI — MASTER PLAN v11.43 (TOM Stage-3 — Opus: v11.41 Bulguları Kısmen Kapandı, "0 Vulnerability" Hâlâ Kanıtsız)
+
+> 🇹🇷 ÖZET: `/tom` (Opus). Keşif Haiku'ya devredildi (G-5), yük taşıyan iddiaları Opus doğruladı. Sonuç: v11.41'in üç bulgusundan **ikisi gerçekten kapandı**, üçüncüsü hâlâ açık. Antigravity `6eee43c` commit'i ile sidebar'daki 7 fallback'i temizledi (doğrulandı: `t("nav_group_*")` çağrılarında artık `||` yok). `verified-respondent-toggle.tsx`'te `error_saving_changes` çağrısı da kaldırıldı — Haiku "fallback yok ama anahtar da yok" dedi, bu ambigüiteydi (çağrı hâlâ orada olsaydı runtime'da raw key render ederdi = daha kötü UX). Opus'un spot-check'i netleştirdi: **`t("error_saving_changes")` çağrısı bileşenden tamamen çıkarılmış**, hata yolları artık mevcut bağlamsal anahtarları (`verified_status_revoke_failed`, `verified_status_grant_failed`) kullanıyor. Temiz düzeltme.
+
+**Kapatma değeri:** Bu tam olarak Stage-3 review'ın var oluş nedenidir — Haiku ambigüiteyi rapor etti, Opus 6 satırlık bir spot-check ile bunu "eksik anahtar defekti" olarak yanlış işaretlemekten alıkoydu.
+
+## Stage-3 Bulgu Tablosu
+
+| Bulgu (v11.41'den)                                      | Yeni Durum              | Kanıt                                                                                             |
+| ------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------- |
+| Sidebar'da 7 `nav_group_*` fallback                     | ✅ Kapandı              | `6eee43c` — 7 çağrının hepsi bare `t(...)`                                                        |
+| `verified-respondent-toggle.tsx` `error_saving_changes` | ✅ Kapandı              | Çağrı kaldırılmış; hata yolları `verified_status_*_failed` kullanıyor (anahtarlar mevcut)         |
+| "0 Vulnerability" iddiası                               | ❌ Kanıtsız (değişmedi) | `733e454..origin/master` aralığında `package.json`/`pnpm-lock.yaml`'da hâlâ hiçbir değişiklik yok |
+
+## Bonus Doğrulamalar (önceki turlarda atlanmış, bu turda opportunist olarak yapıldı)
+
+| Kontrol                                                                                                    | Sonuç                                                                                                              |
+| ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Founder Cockpit 3 tablosunun RLS politikası (`is_moderator(auth.uid())` FOR ALL)                           | ✅ Üçü de var (linkedin_contacts, grant_applications, platform_signups)                                            |
+| `20260819100000_seed_grants_catalog.sql` gerçekten `apply_url` + `prepared_content_ref` populate ediyor mu | ✅ Evet — Google `https://cloud.google.com/startup` + `docs/APPLICATIONS/002-big-tech-grants.md`, Microsoft aynısı |
+| Son 3 kod commit'inde sırasız secret / hardcoded key                                                       | ✅ Temiz                                                                                                           |
+
+## Sıradaki İş
+
+Kod tarafı: (a) gerçek `pnpm audit` çalıştırılıp lockfile diff'iyle birlikte gerçek sayı raporlansın — hâlâ "0" iddiası için hiçbir kanıt yok. (b) O4-O7 (admin IA/görsel revizyon, DE/FR public route, Playwright E2E, production smoke-test kanıtı) v11.40 tablosunda hâlâ ⬜.
+
+Mimar bu turda hiçbir kod dosyasına dokunmadı (G-6); yalnız `docs/MASTER_PLAN.md`.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.42 (TOM — Fable 5: Delta Yok)
 
 > 🇹🇷 ÖZET: `/tom`. Tek Haiku kontrolü: `abd713f`'ten bu yana origin/master'da **yeni commit yok**. v11.41'in üç bulgusu (sidebar'da 7 fallback, `verified-respondent-toggle.tsx`'te 1 fallback, kanıtsız "0 vulnerability" iddiası) hâlâ açık ve devredilmiş durumda; yeniden doğrulama gerekmedi çünkü kod değişmedi. O4-O7 dokunulmamış. Yeni spesifikasyon yok — v11.41'in handoff'u geçerliliğini koruyor.
