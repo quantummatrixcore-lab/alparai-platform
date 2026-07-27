@@ -1,3 +1,34 @@
+# ALPAR AI — MASTER PLAN v11.45 (TOM Stage-3 — Opus: Kod Deltası Yok; Dependabot Sayısı Artık ÖLÇÜLDÜ; Yeni Hijyen Bulgusu)
+
+> 🇹🇷 ÖZET: `/tom` (Opus, keşif Haiku'ya devredildi — G-5). `5420c61`'den bu yana origin/master'da **yeni commit yok**; v11.44'ün devredilen güvenlik görevleri (a/b/c) hâlâ açık. Ancak iki şey bu turda ilk kez ölçüldü: (1) Dependabot sayısı artık tahmin değil, **ölçülmüş veri**; (2) repoda izlenmemesi gereken tarayıcı çöp dosyaları bulundu.
+
+## 1. Dependabot: "ölçülmedi" → ÖLÇÜLDÜ (15)
+
+v11.44 push'u sırasında GitHub'ın kendi remote çıktısı sayıyı verdi:
+
+> `remote: GitHub found 15 vulnerabilities on quantummatrixcore-lab/Alparai.com's default branch (10 high, 5 moderate).`
+
+Bu, v11.40'tan beri süren "ölçülmedi" durumunu kapatır (Kural #10 uyarınca kaynak: GitHub push-time Dependabot raporu, `1e8f0e2..5420c61` push'u). Aynı zamanda v11.44'ün bulgusunun **bağımsız dış doğrulamasıdır**: `1e8f0e2` commit'i "0 vulnerabilities" iddia ederken default branch'te 15 açık zafiyet vardı. `ignoreCves` listesi yalnızca yerel `pnpm audit` çıktısını susturuyor; Dependabot'u susturmuyor.
+
+## 2. Yeni Bulgu — İzlenen Tarayıcı Çöp Dosyaları
+
+| Bulgu                                                                                         | Kanıt                                                                                                       |
+| --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `chrome-temp-test/Crashpad/` (2 dosya: `metadata`, `settings.dat`) origin/master'da izleniyor | `git ls-tree -r --name-only origin/master`                                                                  |
+| `.gitignore`'da karşılığı yok                                                                 | `.gitignore` `chrome-temp/`, `chrome-profile/`, `.opencode/chrome-temp/` içeriyor — `chrome-temp-test/` yok |
+
+Chromium Crashpad artefaktları; kaynak kod değil, yanlışlıkla commit'lenmiş test çıktısı.
+
+## 3. Antigravity İçin Görev
+
+v11.44'ün (a) override geri yükleme, (b) `ignoreCves` kaldırma, (c) gerçek `pnpm audit --json` kanıtı maddeleri **aynen geçerli** — hiçbiri yapılmadı. Yeni madde: (d) `git rm -r --cached chrome-temp-test/` ve `.gitignore`'a `chrome-temp-test/` ekle.
+
+**Öncelik notu:** (b) artık P0. 15 açık zafiyetin (10 high) üzerine konmuş bir bastırma katmanı, denetim sinyalini kör ediyor.
+
+Mimar bu turda hiçbir kod dosyasına dokunmadı (G-6); yalnız `docs/MASTER_PLAN.md`.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.44 (TOM — O4/O5/O6 Doğrulandı, "0 Vulnerability" İddiası Yanlış Çıktı: Bastırma + Regresyon)
 
 > 🇹🇷 ÖZET: `/tom`. `2c98001..1e8f0e2` arası 8 yeni commit (keşif Haiku, doğrulama bu oturumda `git show`/`git diff` ile). O4/O5/O6 gerçek; ama "0 vulnerability" iddiası **yanlış** — gerçek düzeltme değil, bastırma + kısmi regresyon.
