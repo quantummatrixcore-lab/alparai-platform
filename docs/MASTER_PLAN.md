@@ -1,3 +1,28 @@
+# ALPAR AI — MASTER PLAN v11.64 (TOM Fable 5 — Delta Yok, 3. Tur: v11.44–v11.63 Döngüsünün Konsolide Kapanış Tablosu)
+
+> 🇹🇷 ÖZET: `292e14d`'den bu yana yeni commit yok (3. ardışık sıfır-delta). Bir stub daha yazmak yerine bu giriş, 20 sürümlük doğrulama döngüsünün konsolide kapanış kaydıdır — tüm satırlar mevcut girişlere atıf, yeni iddia yok.
+
+## Kapanmış İzler (kanıt: ilgili sürüm girişleri)
+
+| İz                     | Süreç         | Sonuç                                                                                                                                       |
+| ---------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Güvenlik/override      | v11.44→v11.56 | Kök neden: düz `"pnpm.overrides"` anahtarı (v11.54); düzeltme doğrulandı, postcss 8.4.31→8.5.22 (v11.55); Dependabot 21→16 ölçüldü (v11.56) |
+| Admin i18n             | v11.44→v11.61 | dsar/experts/k-benchmark dahil tüm sayfalar + sidebar temiz; son fallback'ler `cdad908`'de kaldırıldı (v11.61)                              |
+| parseMasterPlan        | v11.34→v11.40 | FOUNDER_BACKLOG marker kapsamı; sahte %90 tamamlanma düzeltildi                                                                             |
+| `/tom` kurumsallaşması | v11.48        | Skill dosyası (Founder onaylı G-6 istisnası); o istisna dışında G-6 ihlalsiz                                                                |
+
+## Açık Tek Kalem
+
+**Dependabot 16** (11 high, 5 moderate; v11.56'dan beri her push'ta sabit). Kalan yük eslint→`minimatch@3.x`→`brace-expansion@1.x` zinciri; major zorlama ESLint'i kırıyor (v11.54 ölçümü). Düşürme yolu override değil, eslint zincirinin kendisinin güncellenmesi — ayrı, Founder onayı gerektiren bir iş kalemi.
+
+## Doğrulama Döngüsünün Bilançosu
+
+20 turda: 6 gerçek kod teslimi doğrulandı, 4 abartılı iddia düzeltildi, 2 dayanaksız iddia ("0 vulnerability") reddedildi, 1 kök neden bulundu, 5 sıfır-delta turu dürüstçe kaydedildi. Desen: her "tamamen bitti" iddiası incelemede ortalama bir gerçek düzeltme çıkardı — doğrulama katmanının varlık sebebi budur.
+
+Mimar bu turda yalnızca `docs/MASTER_PLAN.md`'ye dokundu.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.63 (TOM — Delta Yok, 2. Ardışık Tur)
 
 > 🇹🇷 ÖZET: `ac15a38`'ten (v11.62) bu yana yine **yeni commit yok** — 2. ardışık sıfır-delta turu. i18n zinciri kapalı, Dependabot 16'da sabit; yeni bir iş kalemi Founder tarafından tanımlanmadıkça beklenen durum bu.
