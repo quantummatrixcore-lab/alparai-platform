@@ -34,12 +34,9 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
     <div className="animate-in fade-in space-y-8 duration-500">
       <div>
         <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">
-          {t("dsar_title") || "DSAR & KVKK Veri Sahibi Hakları Yönetimi"}
+          {t("dsar_title")}
         </h1>
-        <p className="text-fg-secondary mt-2">
-          {t("dsar_subtitle") ||
-            "KVKK ve GDPR kapsamında gelen veri silme, anonimleştirme ve unutulma taleplerinin yasal 30 günlük SLA takibi."}
-        </p>
+        <p className="text-fg-secondary mt-2">{t("dsar_subtitle")}</p>
       </div>
 
       {(() => {
