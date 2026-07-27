@@ -1,3 +1,11 @@
+# ALPAR AI — MASTER PLAN v11.63 (TOM — Delta Yok, 2. Ardışık Tur)
+
+> 🇹🇷 ÖZET: `ac15a38`'ten (v11.62) bu yana yine **yeni commit yok** — 2. ardışık sıfır-delta turu. i18n zinciri kapalı, Dependabot 16'da sabit; yeni bir iş kalemi Founder tarafından tanımlanmadıkça beklenen durum bu.
+
+Mimar bu turda yalnızca `docs/MASTER_PLAN.md`'ye dokundu.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.62 (TOM — Delta Yok)
 
 > 🇹🇷 ÖZET: `bfa35f8`'ten (v11.61) bu yana **yeni commit yok**. Paylaşılan rapor aynı commit'i tekrar ediyor. Açık kalemler değişmedi: yalnızca Dependabot 16 (v11.56'dan beri sabit, eslint/brace-expansion zincirine bağlı).
