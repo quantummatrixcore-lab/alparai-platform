@@ -1,3 +1,35 @@
+# ALPAR AI — MASTER PLAN v11.65 (TOM — "OMEGA-360 Admin Audit" Raporu Doğrulandı: 1 Gerçek P0 Bug, Ana İddiaların Çoğu Yanlış)
+
+> 🇹🇷 ÖZET: Kod değişikliği yok (`4391e58` sabit). Kullanıcının paylaştığı "OMEGA-360 Admin Panel Audit" raporu üç Haiku pass ile doğrulandı. Raporun en gösterişli bulgusu — **"7 orphan sayfa"** — büyük ölçüde **yanlış**: 5/7 zaten sidebar'da, 2/7 zaten dokümante edilmiş kasıtlı istisna. "ai_providers tablosu silindi" iddiası **tamamen yanlış** — tablo var, hatta NVIDIA satırıyla güncel. Ancak raporun gömülü olduğu gerçek bir **P0 bug var**: NVIDIA adaptörünün `isConfigured()` metodu yalnızca `process.env` okuyor, admin panelden DB'ye kaydedilen key'i hiç görmüyor — gateway bu kontrolü geçemediği için DB key asla kullanılmıyor.
+
+## Doğrulama Tablosu
+
+| İddia                                                                                                   | Durum                          | Kanıt                                                                                                                                                                                                                                                                                                |
+| ------------------------------------------------------------------------------------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 7 orphan sayfa (api-keys, autopilot/analytics, finance, investors, launch-signal, marketing, platforms) | ❌ Çoğunlukla yanlış           | 5/7 (`finance`, `investors`, `launch-signal`, `marketing`, `platforms`) sidebar.tsx'te aktif href ile var; 2/7 (`api-keys`, `autopilot/analytics`) `admin-sidebar-integrity.spec.ts`'de zaten gerekçeli istisna                                                                                      |
+| `providers/page.tsx` i18n yok                                                                           | ✅ Doğru                       | `getTranslations`/`useTranslations` import yok, title+description hardcoded İngilizce                                                                                                                                                                                                                |
+| `api-management/page.tsx` i18n yok                                                                      | ✅ Doğru                       | `generateMetadata` + h1 hardcoded, i18n import yok                                                                                                                                                                                                                                                   |
+| `ecosystem/page.tsx` i18n yok                                                                           | ✅ Doğru                       | i18n import yok (sayfa `EcosystemDashboard` bileşenine devrediyor, kendi metni yok)                                                                                                                                                                                                                  |
+| `api-keys/page.tsx` hardcoded TR metin                                                                  | ✅ Doğru, hatta rapordan geniş | Başlık/açıklama dahil onlarca satırda hardcoded Türkçe                                                                                                                                                                                                                                               |
+| NVIDIA adaptörü kayıtlı ama key path kopuk                                                              | ✅ **Doğru — gerçek P0**       | `nvidia-ngc.ts`: `isConfigured()` yalnız `process.env.NVIDIA_NGC_API_KEY` okuyor; `call()` ise `resolveApiKey("nvidia", ...)` ile DB+env okuyor. Gateway (`openrouter-gateway.ts:176`) ön kontrolde `isConfigured()` çağırıyor — DB'ye admin panelden girilen key hiçbir zaman bu kontrolü geçemiyor |
+| `.env.example`'da `NVIDIA_NGC_API_KEY` yok                                                              | ❌ Yanlış                      | `.env.example:71`'de zaten var                                                                                                                                                                                                                                                                       |
+| `ai_providers` tablosu migration'da silinmiş                                                            | ❌ Yanlış                      | Tablo `20260605000001_initial_schema.sql`'de oluşturulmuş, DROP yok; `20260817000000_nvidia_provider.sql` ile NVIDIA satırı eklenerek güncellenmiş                                                                                                                                                   |
+| NVIDIA yalnız FREE_TRIAGE/SLOT_1'de                                                                     | ⚠️ Kısmen yanlış               | `openrouter-gateway.ts`'nin kendi SLOT_2/3'ünde yok (doğru), ama `src/lib/audit/model-router.ts`'de NVIDIA çok daha geniş kullanılıyor (basic, slot1/2/3, supreme chains)                                                                                                                            |
+
+## Antigravity İçin Görev (yalnız gerçek bulgu)
+
+`src/lib/ai/adapters/nvidia-ngc.ts` — `isConfigured()` metodunu `resolveApiKey()`'in kullandığı aynı DB+env kontrolüne çevirin (diğer adaptörlerin `isConfigured()` metotlarının aynı düzende olup olmadığını da kontrol edin — rapor "tüm adaptörler aynı env-only kalıbı izliyor" diyor, bu doğruysa sistem genelinde bir sınıf hatası, tek dosyalık bir yama değil).
+
+i18n kalemleri (providers, api-management, ecosystem, api-keys) ayrı, küçük bir devir maddesi olarak eklenebilir — ancak "7 orphan sayfa" ve "silinmiş tablo" iddiaları **gerçek değil**, iş kalemi açılmasın.
+
+## Genel Değerlendirme
+
+Bu raporun güvenilirliği düşük: 9 iddiadan 4'ü doğru, 1'i gerçek ve önemli, 3'ü yanlış, 1'i kısmen yanlış. En gösterişli/alarmcı iki bulgu (orphan sayfalar, silinmiş tablo) tam tersine kanıtlanmadı. Kaynağı ne olursa olsun, bu tür kapsamlı raporlar da doğrulanmadan MASTER_PLAN'a girmemeli.
+
+Mimar bu turda yalnızca `docs/MASTER_PLAN.md`'ye dokundu.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.64 (TOM Fable 5 — Delta Yok, 3. Tur: v11.44–v11.63 Döngüsünün Konsolide Kapanış Tablosu)
 
 > 🇹🇷 ÖZET: `292e14d`'den bu yana yeni commit yok (3. ardışık sıfır-delta). Bir stub daha yazmak yerine bu giriş, 20 sürümlük doğrulama döngüsünün konsolide kapanış kaydıdır — tüm satırlar mevcut girişlere atıf, yeni iddia yok.
