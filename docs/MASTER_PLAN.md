@@ -1,3 +1,21 @@
+# ALPAR AI — MASTER PLAN v11.47 (TOM — KRİTİK: Dependabot Sayısı Bu Commit'ten Sonra 15→21'e ÇIKTI)
+
+> 🇹🇷 ÖZET: v11.46'nın `d1d99ba` push'unun kendi GitHub çıktısı: **"21 vulnerabilities (15 high, 6 moderate)"** — v11.45'te ölçülen 15 (10 high, 5 moderate)'ten **+6 net artış (+5 high, +1 moderate)**. `06eefba` "güvenlik düzeltmesi" olarak sunulmuştu; Dependabot'un kendi push-time sinyali bunun tersini gösteriyor. Kaynak: `git push` çıktısı, iki ardışık ölçüm (`917607c` push'u = 15, `d1d99ba` push'u = 21) — tahmin değil.
+
+## Olası Neden (doğrulanmadı — sadece hipotez)
+
+`ignoreCves` kaldırılması, daha önce Dependabot'tan bağımsız olarak yalnızca yerel `pnpm audit`'i susturan bir listeydi (v11.45'te zaten kanıtlanmıştı: Dependabot ignoreCves'ten etkilenmiyordu, 15 sayısı ignoreCves varken de görünüyordu). Yani ignoreCves'in kaldırılması bu artışı **açıklayamaz**. Gerçek şüpheli: `postcss`/`shell-quote` override bump'ı transitive bağımlılık ağacını değiştirmiş olabilir (yeni bir paket sürümü yeni bir CVE'li alt bağımlılık çekmiş olabilir). **Bu ölçülmedi, kod incelemesi gerekiyor** — [tahmin — doğrulanmamış].
+
+## Antigravity İçin Acil Görev
+
+1. `git show origin/master:pnpm-lock.yaml` üzerinde `d1d99ba` öncesi/sonrası fark alıp hangi paketin yeni CVE'li sürüme geçtiğini bul (muhtemelen postcss veya shell-quote'un kendi transitive'leri).
+2. GitHub Dependabot sekmesinden (`/security/dependabot`) 21 kaydın tam listesini çek, hangi 6 tanesinin yeni olduğunu 15'lik önceki listeyle karşılaştırarak belirle.
+3. v11.44'ün kalan maddesiyle (form-data/vite/js-yaml override restorasyonu) birlikte tek bir düzeltme turunda ele al — art arda yama turları güven kaybettiriyor.
+
+**Bu, art arda üçüncü turdur ki "düzeltme" olarak sunulan bir commit, ölçülebilir bir güvenlik göstergesini kötüleştiriyor veya iddia edileni karşılamıyor** (v11.44: bastırma+regresyon; v11.45→46: kısmi kapanış; şimdi: net sayısal artış). Mimar bu turda hiçbir kod dosyasına dokunmadı (G-6); yalnız `docs/MASTER_PLAN.md`.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.46 (TOM Stage-3 — Opus: 06eefba Doğrulandı — 2/3 Kapandı, 1 Kalem Hâlâ Açık)
 
 > 🇹🇷 ÖZET: `/tom` (Opus, keşif Haiku'ya devredildi — G-5). Commit `06eefba` v11.45'in üç devir maddesinden ikisini gerçek kanıtla (lockfile diff'i, salt metin değil) kapattı: `ignoreCves` bastırması kaldırıldı, `chrome-temp-test/` izlemeden çıkarıldı+gitignore'a eklendi. Ancak v11.44'ün bayrakladığı regresyonun bir parçası — `form-data`/`vite`/`js-yaml` override'larının geri yüklenmesi — bu commit'te de yapılmadı; hâlâ açık.
