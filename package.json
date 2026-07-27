@@ -119,18 +119,8 @@
     ]
   },
   "pnpm.overrides": {
-    "postcss": "^8.5.18",
-    "shell-quote": "^1.9.0",
+    "postcss": "^8.5.22",
+    "shell-quote": "^1.10.0",
     "sharp": "^0.35.3"
-  },
-  "pnpm.auditConfig": {
-    "ignoreCves": [
-      "GHSA-395f-4hp3-45gv",
-      "GHSA-f88m-g3jw-g9cj",
-      "GHSA-6g55-p6wh-862q",
-      "GHSA-r28c-9q8g-f849",
-      "GHSA-mh99-v99m-4gvg",
-      "GHSA-qx2v-qp2m-jg93"
-    ]
   }
 }
