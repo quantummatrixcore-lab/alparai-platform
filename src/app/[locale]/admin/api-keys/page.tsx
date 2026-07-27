@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { requireAdmin } from "@/lib/auth/session";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,8 +19,10 @@ import {
 import { Link } from "@/i18n/routing";
 import { MetricCard } from "@/components/admin/metric-card";
 
-export async function generateMetadata() {
-  return { title: `API Anahtarları & Entegrasyonlar | ALPAR AI Admin` };
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "admin" });
+  return { title: `${t("api_keys_doc_title") || "API Keys & Integrations"} | ALPAR AI Admin` };
 }
 
 export default async function AdminApiKeysPage({
@@ -30,6 +32,7 @@ export default async function AdminApiKeysPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "admin" });
   await requireAdmin();
 
   const apiProviders = [
@@ -101,26 +104,23 @@ export default async function AdminApiKeysPage({
         <div>
           <h1 className="text-fg-primary inline-flex items-center gap-2.5 text-2xl font-bold tracking-tight">
             <Key className="text-brand-400 h-6 w-6" />
-            API Anahtarları & Entegrasyon Kontrol Paneli
+            {t("api_keys_h1")}
           </h1>
-          <p className="text-fg-muted mt-1 text-sm">
-            Yapay zeka sağlayıcılarının (OpenAI, Anthropic, Gemini) ve altyapı API anahtarlarının
-            canlı kullanımı, kota harcamaları ve anahtar güvenliği.
-          </p>
+          <p className="text-fg-muted mt-1 text-sm">{t("api_keys_subtitle")}</p>
         </div>
         <nav className="flex items-center gap-2 text-sm">
           <Link
             href={"/admin/integrations"}
             className="bg-brand-500/20 text-brand-300 border-brand-500/30 hover:bg-brand-500/30 flex items-center gap-2 rounded-lg border px-4 py-2 font-medium transition-all"
           >
-            <Cpu className="h-4 w-4" /> Entegrasyon Haritası
+            <Cpu className="h-4 w-4" /> {t("api_keys_integration_map") || "Integration Map"}
           </Link>
         </nav>
       </header>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <MetricCard
-          title="Connected APIs"
+          title={t("api_keys_connected")}
           value={apiProviders.filter((p) => p.status === "connected").length}
           icon={<CheckCircle2 className="h-4 w-4" />}
           trend="up"
@@ -130,7 +130,7 @@ export default async function AdminApiKeysPage({
           chartType="bar"
         />
         <MetricCard
-          title="Avg. API Health"
+          title={t("api_keys_avg_health")}
           value={`${Math.round(apiProviders.reduce((a, p) => a + p.health, 0) / apiProviders.length)}%`}
           icon={<Activity className="h-4 w-4" />}
           trend="up"
@@ -147,7 +147,7 @@ export default async function AdminApiKeysPage({
           chartType="line"
         />
         <MetricCard
-          title="Daily API Cost"
+          title={t("api_keys_daily_cost")}
           value="$0.16"
           icon={<DollarSign className="h-4 w-4" />}
           trend="down"
@@ -169,12 +169,10 @@ export default async function AdminApiKeysPage({
         <div className="absolute top-0 right-0 h-full w-1/2 bg-gradient-to-l from-emerald-500/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
         <div className="relative z-10">
           <p className="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-400">
-            <Shield className="h-5 w-5" /> SIFIR-SIZINTI API ANAHTAR GÜVENLİĞİ AKTİF
+            <Shield className="h-5 w-5" /> {t("api_keys_sec_title")}
           </p>
           <p className="max-w-4xl text-xs leading-relaxed text-emerald-100/70">
-            Tüm API anahtarlarınız Vercel Environment Variables üzerinde AES-256 şifrelenmiş olarak
-            saklanır. İstemci tarafına (browser) asla sızdırılmaz. Tüm işlemler sunucu tarafı Server
-            Actions ve Edge Functions üzerinden yürütülür.
+            {t("api_keys_sec_desc")}
           </p>
         </div>
       </div>
@@ -184,15 +182,15 @@ export default async function AdminApiKeysPage({
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <span className="text-fg-muted text-xs font-semibold tracking-wider uppercase">
-                Aktif API Bağlantısı
+                {t("api_keys_active_conn")}
               </span>
               <Activity className="h-5 w-5 text-cyan-400 transition-transform group-hover:scale-110" />
             </div>
             <p className="mt-4 text-3xl font-black text-white drop-shadow-[0_0_10px_rgba(6,182,212,0.4)]">
-              6 <span className="text-fg-muted text-sm font-normal">/ 6 Sağlayıcı</span>
+              6 <span className="text-fg-muted text-sm font-normal">/ 6</span>
             </p>
             <div className="mt-3 flex w-fit items-center gap-2 rounded border border-cyan-500/20 bg-cyan-500/10 px-2 py-1 text-[10px] font-bold tracking-wider text-cyan-400 uppercase">
-              <CheckCircle2 className="h-3 w-3" /> Tüm Sistemler Operasyonel
+              <CheckCircle2 className="h-3 w-3" /> {t("api_keys_all_sys_op")}
             </div>
           </CardContent>
         </Card>
@@ -201,15 +199,15 @@ export default async function AdminApiKeysPage({
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <span className="text-fg-muted text-xs font-semibold tracking-wider uppercase">
-                Günlük Toplam Harcama
+                {t("api_keys_daily_total")}
               </span>
               <DollarSign className="text-brand-400 h-5 w-5 transition-transform group-hover:scale-110" />
             </div>
             <p className="mt-4 text-3xl font-black text-white drop-shadow-[0_0_10px_rgba(168,85,247,0.4)]">
-              $0.16 <span className="text-fg-muted text-sm font-normal">/ gün</span>
+              $0.16
             </p>
             <div className="text-brand-400 bg-brand-500/10 border-brand-500/20 mt-3 flex w-fit items-center gap-2 rounded border px-2 py-1 text-[10px] font-bold tracking-wider uppercase">
-              <Zap className="h-3 w-3" /> Free-tier Kalkanı Aktif
+              <Zap className="h-3 w-3" /> {t("api_keys_free_shield")}
             </div>
           </CardContent>
         </Card>
@@ -218,7 +216,7 @@ export default async function AdminApiKeysPage({
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <span className="text-fg-muted text-xs font-semibold tracking-wider uppercase">
-                Güvenlik Seviyesi
+                {t("api_keys_sec_level")}
               </span>
               <Lock className="h-5 w-5 text-purple-400 transition-transform group-hover:scale-110" />
             </div>
@@ -226,7 +224,7 @@ export default async function AdminApiKeysPage({
               AES-256
             </p>
             <div className="mt-3 flex w-fit items-center gap-2 rounded border border-purple-500/20 bg-purple-500/10 px-2 py-1 text-[10px] font-bold tracking-wider text-purple-400 uppercase">
-              <Shield className="h-3 w-3" /> Edge Isolation Aktif
+              <Shield className="h-3 w-3" /> {t("api_keys_edge_isol")}
             </div>
           </CardContent>
         </Card>
@@ -235,15 +233,15 @@ export default async function AdminApiKeysPage({
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <span className="text-fg-muted text-xs font-semibold tracking-wider uppercase">
-                Kota Uyarıları
+                {t("api_keys_quota_alerts")}
               </span>
               <AlertTriangle className="h-5 w-5 text-rose-400 transition-transform group-hover:scale-110" />
             </div>
             <p className="mt-4 text-3xl font-black text-white drop-shadow-[0_0_10px_rgba(244,63,94,0.4)]">
-              0 <span className="text-fg-muted text-sm font-normal">Kritik</span>
+              0 <span className="text-fg-muted text-sm font-normal">{t("api_keys_critical")}</span>
             </p>
             <div className="mt-3 flex w-fit items-center gap-2 rounded border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 text-[10px] font-bold tracking-wider text-emerald-400 uppercase">
-              <Activity className="h-3 w-3" /> Limitler Optimal
+              <Activity className="h-3 w-3" /> {t("api_keys_opt_limits")}
             </div>
           </CardContent>
         </Card>
@@ -255,12 +253,11 @@ export default async function AdminApiKeysPage({
             <CardHeader className="border-b border-white/10 bg-neutral-950/40">
               <CardTitle className="flex items-center justify-between text-base">
                 <span className="flex items-center gap-2">
-                  <Server className="text-brand-400 h-5 w-5" /> API Sağlayıcıları ve Anahtar
-                  Envanteri
+                  <Server className="text-brand-400 h-5 w-5" /> {t("api_keys_prov_inv")}
                 </span>
                 <span className="text-fg-muted flex items-center gap-2 font-mono text-xs font-normal">
-                  <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400"></span> Canlı
-                  Veri
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400"></span>{" "}
+                  {t("api_keys_live_data")}
                 </span>
               </CardTitle>
             </CardHeader>
@@ -269,11 +266,11 @@ export default async function AdminApiKeysPage({
                 <table className="w-full text-left text-sm">
                   <thead className="text-fg-muted border-b border-white/5 bg-white/[0.02] text-xs font-semibold tracking-wider uppercase">
                     <tr>
-                      <th className="p-4">Sağlayıcı / Servis</th>
-                      <th className="p-4">Değişken / Ortam</th>
-                      <th className="p-4">Maliyet (Günlük)</th>
-                      <th className="p-4">Limit (RPM)</th>
-                      <th className="p-4 text-right">Durum</th>
+                      <th className="p-4">{t("api_keys_th_prov")}</th>
+                      <th className="p-4">{t("api_keys_th_env")}</th>
+                      <th className="p-4">{t("api_keys_th_cost")}</th>
+                      <th className="p-4">{t("api_keys_th_limit")}</th>
+                      <th className="p-4 text-right">{t("api_keys_th_status")}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5 font-mono">
@@ -317,14 +314,14 @@ export default async function AdminApiKeysPage({
           <Card className="border-white/10 bg-neutral-900/60 backdrop-blur-xl">
             <CardHeader className="border-b border-white/10 pb-4">
               <CardTitle className="flex items-center gap-2 text-base">
-                <BarChart3 className="text-brand-400 h-5 w-5" /> Trafik & API Kullanımı (24s)
+                <BarChart3 className="text-brand-400 h-5 w-5" /> {t("api_keys_traffic_title")}
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
               <div className="space-y-6">
                 <div>
                   <div className="text-fg-secondary mb-2 flex items-end justify-between font-mono text-xs font-bold tracking-wider">
-                    <span>LLM TOKEN HACMİ</span>
+                    <span>{t("api_keys_token_vol")}</span>
                     <span className="text-brand-400">25.57K / 100K</span>
                   </div>
                   <div className="h-2.5 w-full overflow-hidden rounded-full border border-white/5 bg-neutral-800">
@@ -337,7 +334,7 @@ export default async function AdminApiKeysPage({
 
                 <div>
                   <div className="text-fg-secondary mb-2 flex items-end justify-between font-mono text-xs font-bold tracking-wider">
-                    <span>DATABASE QUERIES</span>
+                    <span>{t("api_keys_db_queries")}</span>
                     <span className="text-cyan-400">12K / 50K</span>
                   </div>
                   <div className="h-2.5 w-full overflow-hidden rounded-full border border-white/5 bg-neutral-800">
@@ -348,7 +345,7 @@ export default async function AdminApiKeysPage({
 
                 <div>
                   <div className="text-fg-secondary mb-2 flex items-end justify-between font-mono text-xs font-bold tracking-wider">
-                    <span>REDIS CACHE HITS</span>
+                    <span>{t("api_keys_redis_hits")}</span>
                     <span className="text-rose-400">1.2K / 10K</span>
                   </div>
                   <div className="h-2.5 w-full overflow-hidden rounded-full border border-white/5 bg-neutral-800">

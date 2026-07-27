@@ -57,7 +57,7 @@ export default async function AdminInvestorsPage({
     <Container className="py-10">
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <MetricCard
-          title="Investor Applications"
+          title={t("investors_title_apps")}
           value={applications.length}
           icon={<TrendingUp className="h-4 w-4" />}
           trend="up"
@@ -67,7 +67,7 @@ export default async function AdminInvestorsPage({
           chartType="bar"
         />
         <MetricCard
-          title="Approved Investors"
+          title={t("investors_title_approved")}
           value={approved.length}
           icon={<DollarSign className="h-4 w-4" />}
           trend={approved.length > 0 ? "up" : "neutral"}
@@ -75,7 +75,7 @@ export default async function AdminInvestorsPage({
           accentColor="#f59e0b"
         />
         <MetricCard
-          title="Pending Review"
+          title={t("investors_title_pending")}
           value={pendingApps.length}
           icon={<Clock className="h-4 w-4" />}
           trend={pendingApps.length > 0 ? "up" : "neutral"}

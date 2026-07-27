@@ -10,8 +10,8 @@ const MAX_RETRIES = 1;
 import { resolveApiKey } from "../api-keys";
 
 export class OpenRouterAdapter implements ProviderAdapter {
-  isConfigured(): boolean {
-    return !!(process.env.OPENROUTER_API_KEY || process.env.UPSTASH_REDIS_REST_URL);
+  async isConfigured(): Promise<boolean> {
+    return !!(await resolveApiKey("openrouter", "OPENROUTER_API_KEY"));
   }
 
   async call(request: GatewayRequest): Promise<GatewayResult> {

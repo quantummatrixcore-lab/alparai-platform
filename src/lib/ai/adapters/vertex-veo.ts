@@ -8,8 +8,8 @@ const VEO_URL =
 const REQUEST_TIMEOUT_MS = 180_000; // Video generation can take up to 3 minutes
 
 export class VertexVeoAdapter {
-  isConfigured(): boolean {
-    return !!process.env.VERTEX_API_KEY;
+  async isConfigured(): Promise<boolean> {
+    return !!(await resolveApiKey("vertex", "VERTEX_API_KEY"));
   }
 
   /**

@@ -8,8 +8,8 @@ const REQUEST_TIMEOUT_MS = 35_000; // HuggingFace serverless startup might take 
 import { resolveApiKey } from "../api-keys";
 
 export class HuggingFaceAdapter implements ProviderAdapter {
-  isConfigured(): boolean {
-    return !!(process.env.HUGGINGFACE_API_KEY || process.env.HF_API_KEY);
+  async isConfigured(): Promise<boolean> {
+    return !!(await resolveApiKey("huggingface", "HUGGINGFACE_API_KEY"));
   }
 
   async generateImage(

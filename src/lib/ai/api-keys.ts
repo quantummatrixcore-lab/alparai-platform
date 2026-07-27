@@ -41,8 +41,9 @@ export async function resolveApiKey(provider: string, envVar: string): Promise<s
   }
 
   // 3. Special fallbacks
-  if (provider === "google" && process.env.GEMINI_API_KEY) {
-    return process.env.GEMINI_API_KEY;
+  if (provider === "google") {
+    if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
+    if (process.env.GOOGLE_API_KEY) return process.env.GOOGLE_API_KEY;
   }
   if (provider === "huggingface" && process.env.HF_API_KEY) {
     return process.env.HF_API_KEY;

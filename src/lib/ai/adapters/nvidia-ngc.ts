@@ -10,8 +10,8 @@ const MAX_RETRIES = 1;
 import { resolveApiKey } from "../api-keys";
 
 export class NvidiaNgcAdapter implements ProviderAdapter {
-  isConfigured(): boolean {
-    return !!process.env.NVIDIA_NGC_API_KEY;
+  async isConfigured(): Promise<boolean> {
+    return !!(await resolveApiKey("nvidia", "NVIDIA_NGC_API_KEY"));
   }
 
   async call(request: GatewayRequest): Promise<GatewayResult> {

@@ -90,9 +90,10 @@ describe("AI Adapters", () => {
   describe("CohereAdapter", () => {
     const adapter = new CohereAdapter();
 
-    it("should return true for isConfigured", () => {
+    it("should return true for isConfigured", async () => {
       process.env.COHERE_API_KEY = "test-key";
-      expect(adapter.isConfigured()).toBe(true);
+      mockResolveApiKey.mockResolvedValue("test-key");
+      expect(await adapter.isConfigured()).toBe(true);
       delete process.env.COHERE_API_KEY;
     });
 
@@ -235,10 +236,11 @@ describe("AI Adapters", () => {
   describe("GoogleAdapter", () => {
     const adapter = new GoogleAdapter();
 
-    it("should return true for isConfigured", () => {
-      process.env.GOOGLE_API_KEY = "test-key";
-      expect(adapter.isConfigured()).toBe(true);
-      delete process.env.GOOGLE_API_KEY;
+    it("should return true for isConfigured", async () => {
+      process.env.GOOGLE_GENERATIVE_AI_API_KEY = "test-key";
+      mockResolveApiKey.mockResolvedValue("test-key");
+      expect(await adapter.isConfigured()).toBe(true);
+      delete process.env.GOOGLE_GENERATIVE_AI_API_KEY;
     });
 
     it("should return no_api_key error when API key is missing", async () => {
@@ -399,9 +401,10 @@ describe("AI Adapters", () => {
   describe("HuggingFaceAdapter", () => {
     const adapter = new HuggingFaceAdapter();
 
-    it("should return true for isConfigured", () => {
+    it("should return true for isConfigured", async () => {
       process.env.HUGGINGFACE_API_KEY = "test-key";
-      expect(adapter.isConfigured()).toBe(true);
+      mockResolveApiKey.mockResolvedValue("test-key");
+      expect(await adapter.isConfigured()).toBe(true);
       delete process.env.HUGGINGFACE_API_KEY;
     });
 
@@ -555,9 +558,10 @@ describe("AI Adapters", () => {
   describe("BlackboxAdapter", () => {
     const adapter = new BlackboxAdapter();
 
-    it("should return true for isConfigured", () => {
+    it("should return true for isConfigured", async () => {
       process.env.BLACKBOX_API_KEY = "test-key";
-      expect(adapter.isConfigured()).toBe(true);
+      mockResolveApiKey.mockResolvedValue("test-key");
+      expect(await adapter.isConfigured()).toBe(true);
       delete process.env.BLACKBOX_API_KEY;
     });
 
@@ -653,9 +657,10 @@ describe("AI Adapters", () => {
   describe("NvidiaNgcAdapter", () => {
     const adapter = new NvidiaNgcAdapter();
 
-    it("should return true for isConfigured", () => {
+    it("should return true for isConfigured", async () => {
       process.env.NVIDIA_NGC_API_KEY = "test-key";
-      expect(adapter.isConfigured()).toBe(true);
+      mockResolveApiKey.mockResolvedValue("test-key");
+      expect(await adapter.isConfigured()).toBe(true);
       delete process.env.NVIDIA_NGC_API_KEY;
     });
 

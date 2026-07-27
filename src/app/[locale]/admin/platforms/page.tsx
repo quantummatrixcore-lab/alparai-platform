@@ -4,12 +4,15 @@ import { AdminSectionCard } from "@/components/admin/admin-design-kit";
 import { requireModerator } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import { Globe } from "lucide-react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 export default async function PlatformsAdminPage({
   params: { locale },
 }: {
   params: { locale: string };
 }) {
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "admin" });
   const user = await requireModerator();
   if (!user) redirect(`/${locale}/login`);
 
@@ -31,14 +34,12 @@ export default async function PlatformsAdminPage({
       <div>
         <h1 className="flex items-center gap-3 text-3xl font-black tracking-tight text-white">
           <Globe className="h-8 w-8 text-pink-400" />
-          Platform Accounts
+          {t("platforms_title") || "Platform Accounts"}
         </h1>
-        <p className="text-fg-muted mt-2 text-lg">
-          Manage outreach and signup progress on third-party platforms.
-        </p>
+        <p className="text-fg-muted mt-2 text-lg">{t("platforms_subtitle")}</p>
       </div>
 
-      <AdminSectionCard title="Target Platforms">
+      <AdminSectionCard title={t("platforms_target_section")}>
         <PlatformsList initialPlatforms={platforms || []} />
       </AdminSectionCard>
     </div>

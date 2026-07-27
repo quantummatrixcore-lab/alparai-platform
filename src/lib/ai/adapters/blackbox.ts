@@ -10,8 +10,8 @@ const MAX_RETRIES = 1;
 import { resolveApiKey } from "../api-keys";
 
 export class BlackboxAdapter implements ProviderAdapter {
-  isConfigured(): boolean {
-    return !!process.env.BLACKBOX_API_KEY;
+  async isConfigured(): Promise<boolean> {
+    return !!(await resolveApiKey("blackbox", "BLACKBOX_API_KEY"));
   }
 
   async call(request: GatewayRequest): Promise<GatewayResult> {

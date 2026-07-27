@@ -58,9 +58,8 @@ export async function generateWeeklyVideoSummary(): Promise<VideoPipelineResult>
 
     // 3. Call Veo Video Generation (or use fallback mock if key missing)
     let videoUrl = "";
-    const isConfigured = veo.isConfigured();
-
-    if (isConfigured && process.env.VERTEX_API_KEY) {
+    const isConfigured = await veo.isConfigured();
+    if (isConfigured) {
       const response = await veo.generateVideo(prompt, "16:9", 5);
       if (response.ok) {
         // Upload base64 video to Supabase Storage bucket 'social-assets'

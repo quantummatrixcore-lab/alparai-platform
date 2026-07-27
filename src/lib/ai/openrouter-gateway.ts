@@ -173,12 +173,13 @@ export async function callModel(request: GatewayRequest): Promise<GatewayResult>
     };
   }
 
-  if (!adapter.isConfigured()) {
+  const isConfigured = await adapter.isConfigured();
+  if (!isConfigured) {
     return {
       ok: false,
       error: {
         code: "no_api_key",
-        message: `API Key for provider '${provider}' is not configured in environment variables.`,
+        message: `API Key for provider '${provider}' is not configured in environment variables or database.`,
         model: modelToCall.id,
       },
     };
@@ -266,7 +267,9 @@ export async function callWithFailover(
   };
 }
 
-export function isGatewayConfigured(): boolean {
-  // If at least one provider is configured, the gateway is functional.
-  return Object.values(adapters).some((adapter) => adapter.isConfigured());
+export async function isGatewayConfigured(): Promise<boolean> {
+  const checks = await Promise.all(
+    Object.values(adapters).map((adapter) => adapter.isConfigured()),
+  );
+  return checks.some(Boolean);
 }

@@ -49,5 +49,5 @@ export type GatewayResult =
 
 export interface ProviderAdapter {
   call(request: GatewayRequest): Promise<GatewayResult>;
-  isConfigured(): boolean;
+  isConfigured(): Promise<boolean>;
 }

@@ -4,12 +4,15 @@ import { AdminSectionCard } from "@/components/admin/admin-design-kit";
 import { requireModerator } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import { Building2 } from "lucide-react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 export default async function GrantsAdminPage({
   params: { locale },
 }: {
   params: { locale: string };
 }) {
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "admin" });
   const user = await requireModerator();
   if (!user) redirect(`/${locale}/login`);
 
@@ -32,14 +35,14 @@ export default async function GrantsAdminPage({
       <div>
         <h1 className="flex items-center gap-3 text-3xl font-black tracking-tight text-white">
           <Building2 className="h-8 w-8 text-amber-400" />
-          Grant Cockpit
+          {t("nav_grants") || "Grant Cockpit"}
         </h1>
         <p className="text-fg-muted mt-2 text-lg">
-          Manage foundation and state support grant applications.
+          {t("grants_subtitle") || "Manage foundation and state support grant applications."}
         </p>
       </div>
 
-      <AdminSectionCard title="Active Grants">
+      <AdminSectionCard title={t("grants_active_section")}>
         <GrantsList initialGrants={grants || []} userRole={user.role} />
       </AdminSectionCard>
     </div>

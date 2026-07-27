@@ -35,9 +35,10 @@ describe("VertexGeminiAdapter", () => {
     global.fetch = originalFetch;
   });
 
-  it("should return true for isConfigured", () => {
+  it("should return true for isConfigured", async () => {
     process.env.VERTEX_API_KEY = "test-key";
-    expect(adapter.isConfigured()).toBe(true);
+    mockResolveApiKey.mockResolvedValue("test-key");
+    expect(await adapter.isConfigured()).toBe(true);
     delete process.env.VERTEX_API_KEY;
   });
 

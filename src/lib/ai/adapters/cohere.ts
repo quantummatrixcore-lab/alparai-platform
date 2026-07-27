@@ -8,8 +8,8 @@ const REQUEST_TIMEOUT_MS = 30_000;
 import { resolveApiKey } from "../api-keys";
 
 export class CohereAdapter implements ProviderAdapter {
-  isConfigured(): boolean {
-    return !!process.env.COHERE_API_KEY;
+  async isConfigured(): Promise<boolean> {
+    return !!(await resolveApiKey("cohere", "COHERE_API_KEY"));
   }
 
   async call(request: GatewayRequest): Promise<GatewayResult> {

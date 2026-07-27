@@ -92,7 +92,7 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
         <AdminPageHeader
           icon={<Cpu className="text-brand-400 h-6 w-6 animate-pulse" />}
           title={t("integrations_title") || "Integrations & Third-Party Services"}
-          subtitle="Syncing third-party integrations status..."
+          subtitle={t("integrations_syncing")}
         />
         <div className="space-y-6">
           {[1, 2, 3].map((i) => (
@@ -116,7 +116,7 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
         <AdminPageHeader
           icon={<AlertTriangle className="h-6 w-6 text-rose-400" />}
           title={t("integrations_title") || "Integrations & Third-Party Services"}
-          subtitle="Failed to sync integration status"
+          subtitle={t("integrations_sync_failed")}
         />
         <div className="bg-bg-secondary/40 border-border-subtle rounded-xl border p-8 text-center">
           <p className="mb-4 text-sm text-rose-400">{error}</p>
