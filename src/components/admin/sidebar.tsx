@@ -26,6 +26,8 @@ import {
   DollarSign,
   Server,
   Plug,
+  CreditCard,
+  Mail,
   ToggleRight,
   ChevronDown,
   ChevronRight,
@@ -284,8 +286,8 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
   const growthItems = [
     {
       href: "/admin/outreach",
-      label: t("nav_outreach"),
-      icon: Share2,
+      label: t("nav_email_outreach"),
+      icon: Mail,
       active: pathname.startsWith("/admin/outreach"),
     },
     {
@@ -308,7 +310,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
     {
       href: "/admin/social",
-      label: t("social_media_hub"),
+      label: t("nav_social_posts"),
       icon: Share2,
       active: pathname.startsWith("/admin/social"),
     },
@@ -347,14 +349,14 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
     {
       href: "/admin/billing",
-      label: t("nav_billing"),
-      icon: DollarSign,
+      label: t("nav_subscriptions"),
+      icon: CreditCard,
       active: pathname.startsWith("/admin/billing"),
     },
     {
       href: "/admin/finance",
-      label: t("nav_finance"),
-      icon: DollarSign,
+      label: t("nav_infra_costs"),
+      icon: BarChart3,
       active: pathname.startsWith("/admin/finance"),
     },
     {

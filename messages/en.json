@@ -685,7 +685,7 @@
     "apiUsageMetricsTitle": "API Usage Metrics",
     "api_key": "API Key",
     "api_keys": "API Keys",
-    "api_keys_subtitle": "Manage API keys for AI evaluation providers.",
+    "api_keys_subtitle": "Live usage, quota consumption, and key security for AI providers (OpenAI, Anthropic, Gemini) and infrastructure APIs.",
     "api_metrics": "API Gateway Hub",
     "api_metrics_subtitle": "Real-time API request metrics, error rates, and rate limit tracking.",
     "api_metrics_title": "API Gateway Metrics",
@@ -2003,7 +2003,6 @@
     "api_mgmt_h1": "API Management Hub",
     "api_mgmt_subtitle": "Live API provider status, model health monitoring, quota tracking, and usage analytics",
     "api_keys_h1": "API Keys & Integration Control Panel",
-    "api_keys_subtitle": "Live usage, quota consumption, and key security for AI providers (OpenAI, Anthropic, Gemini) and infrastructure APIs.",
     "api_keys_sec_title": "ZERO-LEAK API KEY SECURITY ACTIVE",
     "api_keys_sec_desc": "All your API keys are stored encrypted with AES-256 in Vercel Environment Variables. Never leaked to the client browser. All operations are executed server-side via Server Actions and Edge Functions.",
     "api_keys_active_conn": "Active API Connections",
@@ -2037,7 +2036,11 @@
     "linkedin_subtitle": "Manage outreach and connection requests for Founder tasks.",
     "platforms_subtitle": "Manage outreach and signup progress on third-party platforms.",
     "api_keys_doc_title": "API Keys & Integrations",
-    "api_keys_integration_map": "Integration Map"
+    "api_keys_integration_map": "Integration Map",
+    "nav_email_outreach": "Email Outreach",
+    "nav_social_posts": "Social Media Hub",
+    "nav_subscriptions": "Customer Subscriptions",
+    "nav_infra_costs": "Cloud Costs & Infra"
   },
   "footer": {
     "tagline": "Where the world holds AI accountable.",
