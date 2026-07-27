@@ -1,3 +1,29 @@
+# ALPAR AI — MASTER PLAN v11.50 (TOM — 038027e Doğrulandı: 4/5 Tam, 1 Kısmi, Sidebar+Script Gerçek)
+
+> 🇹🇷 ÖZET: `/tom` (ilk resmi skill çağrısı — `.claude/skills/tom/SKILL.md`). Commit `038027e` (i18n + sidebar orphan routes + audit script) Haiku pass ile doğrulandı: 5 sayfadan 4'ü (ai-pulse, billing, marketing, outreach) tam çevrildi; advisory-board'da **2 hardcoded string kaldı** (`"ACTIVE"`, `"§21 OK"`). Commit mesajı "6 sayfa" diyor ama diffstat'ta yalnız 5 sayfa değişti — küçük bir sayı tutarsızlığı. Sidebar 7 yeni route ekliyor (gerçek yapısal düzeltme); audit script gerçek fonksiyonel (admin EN/TR + public 5-dil parity check); test dosyası orphan-exception listesini 20→3 satıra düşürüyor (kapsam kaybı değil, mimari hizalama).
+
+## Doğrulama Tablosu
+
+| Kalem                                            | Durum       | Kanıt                                                                                                                                                                                                  |
+| ------------------------------------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| ai-pulse, billing, marketing, outreach sayfaları | ✅ Tam      | `t()`/`getTranslations` kullanıyor, hardcoded string kalmadı                                                                                                                                           |
+| advisory-board sayfası                           | ⚠️ Kısmi    | `value="ACTIVE"`, `badge="§21 OK"` hâlâ hardcoded                                                                                                                                                      |
+| "6 sayfa" iddiası                                | ⚠️ Tutarsız | Diffstat'ta yalnız 5 sayfa dosyası değişti                                                                                                                                                             |
+| sidebar.tsx orphan route'lar                     | ✅ Gerçek   | 7 route eklendi (`/admin/signals`, `/admin/slo-dashboard`, `/admin/api-metrics`, `/admin/ai-pulse`, `/admin/cross-audit-dashboard`, `/admin/import`, `/admin/redaction-queue`), hepsi `t("nav_*")` ile |
+| scripts/check-i18n.mjs                           | ✅ Gerçek   | `getEmptyKeys()`, admin EN/TR kuralı, public 5-dil parity kontrolü eklendi — stub değil                                                                                                                |
+| admin-sidebar-integrity.spec.ts                  | ✅ Hizalama | İstisna listesi 20→3 satır; 17 route artık gerçek sidebar girişi, orphan değil                                                                                                                         |
+| package.json / pnpm-lock.yaml                    | Değişmedi   | Bu commit güvenlik/Dependabot ile ilgisiz                                                                                                                                                              |
+
+## Antigravity İçin Kalan Tek Görev
+
+`src/app/[locale]/admin/advisory-board/page.tsx` — `value="ACTIVE"` ve `badge="§21 OK"` için `messages/{en,tr}.json`'a admin namespace'te yeni anahtar ekleyip `t()` ile sarmalayın (5 sayfadan geri kalan tek eksik).
+
+Dependabot 21 sayısı (v11.49) bu turda etkilenmedi — ayrı konu, hâlâ açık.
+
+Mimar bu turda yalnızca `docs/MASTER_PLAN.md`'ye dokundu.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.49 (TOM — Override Restorasyonu Dependabot Sayısını Değiştirmedi: Hâlâ 21)
 
 > 🇹🇷 ÖZET: v11.48'in `e225cf2` push'unun kendi GitHub çıktısı: hâlâ **"21 vulnerabilities (15 high, 6 moderate)"** — `0249a31`'in form-data/js-yaml/vite override restorasyonundan sonra bile **hiç değişmedi**. Kaynak: `git push` çıktısı, doğrudan ölçüm — tahmin değil.
