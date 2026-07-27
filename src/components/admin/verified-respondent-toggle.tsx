@@ -40,7 +40,7 @@ export function VerifiedRespondentToggle({
             toast.error(res.error || t("verified_status_revoke_failed"));
           }
         } catch {
-          toast.error(t("error_saving_changes") || "An error occurred.");
+          toast.error(t("verified_status_revoke_failed"));
         } finally {
           setLoading(false);
         }
@@ -62,7 +62,7 @@ export function VerifiedRespondentToggle({
         toast.error(res.error || t("verified_status_grant_failed"));
       }
     } catch {
-      toast.error(t("error_saving_changes") || "An error occurred.");
+      toast.error(t("verified_status_grant_failed"));
     } finally {
       setLoading(false);
     }
@@ -127,7 +127,7 @@ export function VerifiedRespondentToggle({
 
           <div className="flex justify-end gap-3 pt-2">
             <Button type="button" variant="ghost" onClick={() => setOpen(false)} disabled={loading}>
-              {t("cancel") || "Cancel"}
+              {t("cancel")}
             </Button>
             <Button type="submit" variant="primary" disabled={loading}>
               {t("verify_modal_confirm_btn")}

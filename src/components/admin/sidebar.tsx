@@ -547,44 +547,47 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
         </div>
 
         <nav className="scrollbar-hide flex-1 overflow-y-auto py-4">
-          {renderNavGroup(
-            "overview",
-            t("nav_group_operations") || "Overview",
-            LayoutDashboard,
-            overviewItem,
-          )}
+          <div className="space-y-1">
+            {renderNavGroup(
+              "overview",
+              t("nav_group_operations"),
+              Activity,
+              overviewItem,
+              true,
+            )}
+          </div>
           {showOperations &&
             renderNavGroup(
               "operations",
-              t("nav_group_operations") || "Operations",
+              t("nav_group_operations"),
               Shield,
               operationsItems,
             )}
           {showIntelligence &&
             renderNavGroup(
               "intelligence",
-              t("nav_group_intelligence") || "Intelligence",
+              t("nav_group_intelligence"),
               BrainCircuit,
               intelligenceItems,
             )}
           {showStrategy &&
             renderNavGroup(
               "strategy",
-              t("nav_group_strategy") || "Strategy",
+              t("nav_group_strategy"),
               Compass,
               strategyItems,
             )}
           {showGovernance &&
             renderNavGroup(
               "governance",
-              t("nav_group_governance") || "Governance",
+              t("nav_group_governance"),
               Shield,
               governanceItems,
             )}
           {showGrowth &&
-            renderNavGroup("growth", t("nav_group_growth") || "Growth", TrendingUp, growthItems)}
+            renderNavGroup("growth", t("nav_group_growth"), TrendingUp, growthItems)}
           {showSystem &&
-            renderNavGroup("system", t("nav_group_system") || "System", Settings, systemItems)}
+            renderNavGroup("system", t("nav_group_system"), Settings, systemItems)}
         </nav>
 
         {/* User Profile Footer */}
