@@ -1,3 +1,35 @@
+# ALPAR AI — MASTER PLAN v11.55 (TOM — Kök Neden Düzeltmesi Doğrulandı: Override'lar İlk Kez Gerçekten Çalışıyor)
+
+> 🇹🇷 ÖZET: v11.54'ün kök neden tespiti üzerine yapılan düzeltme (`178aca7`) doğrulandı — **bu zincirdeki en güçlü kanıt turu**. `package.json` artık gerçek bir üst düzey `"pnpm"` anahtarı içeriyor, `"overrides"` iç içe. Kilit kanıt: `pnpm-lock.yaml`'da `postcss` artık **8.5.22** olarak çözülüyor (önceden `next` içine gömülü `8.4.31`'de sabitliydi). Lockfile 294 satır silme / 30 ekleme ile budandı. Zincirde ilk kez bir "güvenlik düzeltmesi" iddiası, çözümlenmiş bağımlılık ağacında doğrulanabilir bir sürüm değişikliği üretti.
+
+## Kanıt Tablosu
+
+| Kalem                           | Durum                   | Kanıt                                                                                            |
+| ------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------ |
+| Üst düzey `"pnpm"` anahtarı     | ✅ Var                  | `git show origin/master:package.json` — iç içe `"overrides"` bloğu, 6 giriş                      |
+| Düz `"pnpm.overrides"` anahtarı | ✅ Kaldırıldı           | Dosyada artık yok                                                                                |
+| `pnpm-lock.yaml` hareketi       | ✅ Büyük                | `30 insertions(+), 294 deletions(-)` — net −264 satır budama                                     |
+| `postcss` çözümlemesi           | ✅ **8.4.31 → 8.5.22**  | Lockfile satır 3909/8528: `postcss@8.5.22`                                                       |
+| `brace-expansion`               | Beklenen durum          | `1.1.16`, `2.1.2`, `5.0.8` yan yana — `minimatch@3.x`/eslint 1.x dalını zorunlu kılıyor          |
+| `pnpm audit` 7 → 2 iddiası      | ⚠️ Git'ten doğrulanamaz | Komut çalıştırma gerektirir; lockfile kanıtı yönü ilk kez makul kılıyor ama sayıyı teyit etmiyor |
+| `pnpm validate` yeşil iddiası   | ⚠️ Git'ten doğrulanamaz | Aynı gerekçe                                                                                     |
+
+## v11.54'ün Uyarısı Gerçekleşmedi — Bunu Da Dürüstçe Kaydediyoruz
+
+v11.54, override'lar ilk kez devreye girdiğinde `pnpm validate`'in kırılabileceğini (özellikle `vite@^6.2.1` ve `postcss` sıçramaları) uyarmıştı. Rapora göre kırılmadı. Tahmin edilenden **daha iyi** bir sonuç; uyarıyı sessizce düşürmek yerine gerçekleşmediğini açıkça yazıyoruz.
+
+## İkinci Commit: `29f73dc` (i18n, ayrı konu)
+
+`dsar`, `experts`, `k-benchmark` admin sayfaları `useTranslations`'a çevrilmiş; `messages/{en,tr}.json`'a 21'er satır anahtar eklenmiş. Diffstat gerçek. **Bu turda hardcoded string taraması yapılmadı** — sayfaların tam temizlendiği doğrulanmadı, yalnız commit'in gerçek olduğu doğrulandı. v11.51'de "kapandı" denen i18n izi, yeni sayfalarla genişlemiş durumda (regresyon değil, yeni kapsam).
+
+## Açık Kalan Ölçüm
+
+GitHub Dependabot sayısı platform tarafında asenkron yeniden taranır. Bu commit'in lockfile'ı gerçekten değiştirdiği kanıtlandı, ancak **sayının düştüğü varsayılmamalıdır** — bir sonraki push çıktısındaki rakam ne ise o kaydedilecek. v11.49'dan beri 21'de sabit.
+
+Mimar bu turda yalnızca `docs/MASTER_PLAN.md`'ye dokundu.
+
+---
+
 # ALPAR AI — MASTER PLAN v11.54 (TOM — KÖK NEDEN BULUNDU: `pnpm.overrides` Anahtarı Yanlış Yazılmış, Hiçbir Override Çalışmıyor)
 
 > 🇹🇷 ÖZET: Dependabot sayısının neden hiç düşmediğinin gerçek nedeni bulundu ve otopilotun teşhisinden farklı. `package.json`'da override bloğu **düz (flat) bir anahtar** olarak yazılmış: `"pnpm.overrides": { ... }`. pnpm bu formu tanımaz — yalnızca **iç içe (nested)** formu okur: `"pnpm": { "overrides": { ... } }`. Yani `postcss`, `shell-quote`, `sharp`, `form-data`, `js-yaml`, `vite` override'larının **altısı da hiçbir zaman uygulanmadı**. v11.44'ten beri süren tüm override ekleme/çıkarma turları etkisizdi.
