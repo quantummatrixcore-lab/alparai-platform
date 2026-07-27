@@ -118,15 +118,10 @@
       "prettier --write"
     ]
   },
-  "overrides": {
-    "postcss@<8.5.10": ">=8.5.10",
-    "shell-quote@<=1.8.4": ">=1.9.0",
-    "sharp@<0.35.0": ">=0.35.0",
-    "postcss@<=8.5.11": ">=8.5.12",
-    "postcss@<=8.5.17": ">=8.5.18",
-    "eslint>minimatch": "^10.2.5",
-    "@eslint/config-array>minimatch": "^10.2.5",
-    "@eslint/eslintrc>minimatch": "^10.2.5",
-    "brace-expansion@<=5.0.7": ">=5.0.8"
+  "pnpm.overrides": {
+    "postcss": "^8.5.18",
+    "brace-expansion": "^5.0.8",
+    "shell-quote": "^1.9.0",
+    "sharp": "^0.35.3"
   }
 }
