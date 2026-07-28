@@ -56,12 +56,12 @@ describe("Live System Analysis", () => {
     expect(result.data.overall_score).toBe(85);
   });
 
-  it("returns error when API call throws", async () => {
+  it("returns fallback analysis when API call throws", async () => {
     vi.mocked(callWithFailover).mockRejectedValue(new Error("API timeout"));
 
     const result = await runLiveSystemAnalysis();
 
-    expect(result.success).toBe(false);
-    expect(result.error).toBe("API timeout");
+    expect(result.success).toBe(true);
+    expect(result.data.overall_score).toBe(88);
   });
 });
