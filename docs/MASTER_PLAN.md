@@ -6,6 +6,39 @@ Bu belge artık kısa tutuluyor: yalnızca "şu an neredeyiz" ve "sıradaki işl
 
 ---
 
+## v11.88 — Fable 5 Devir Paketi + v11.87 P0'ının Çözümü Doğrulandı (2026-07-28)
+
+**Özet:** Founder, MASTER_PLAN'ı Fable 5'e yeniden yazdıracak; bu giriş, Fable 5'in keşif için token harcamasını sıfırlayan devir paketidir. Ayrıca v11.87'nin P0 blokajı (kurgusal danışman kimlikleri) Antigravity tarafından `c82615e` ile çözüldü — doğrulandı, bir kalıntı risk kaldı.
+
+### v11.87 P0 — çözüldü, kanıtlı
+
+`c82615e`: 4 kurgusal kişi (`Prof. Dr. Kemal Yılmaz`, `Dr. Sarah Jenkins`, `Prof. Arda Akdağ`, `Elena Rostova`) **silindi**, yerlerine `[Open Position] ... Seat` kayıtları geldi, `is_active: false`. Migration'a açık `DELETE` de eklenmiş, yani mevcut kayıtlar temizleniyor. Doğru düzeltme.
+
+**Kalıntı risk (P1, yeni):** Kurum alanları hâlâ `ETH Zurich & ITU Partner Chair`, `Stanford HAI Partner Chair`, `Bilkent Law Partner Chair`, `CERN IT Security Partner Chair` diyor. Kişi uydurması bitti ama bu ifadeler **bu kurumlarla ortaklık/kürsü anlaşması varmış izlenimi** veriyor — dört kurumun hiçbiriyle böyle bir mutabakat bu repoda doğrulanmadı. Rızası alınmamış üçüncü taraf kurum adları. Öneri: kurum alanı `Aranan profil: AI etiği akademisyeni` gibi hedef-tanımına çevrilsin, kurum adı geçmesin.
+
+### Fable 5 Devir Paketi
+
+**P1 — Parser sözleşmesi** (`src/lib/utils/markdown-parser.ts:18-84`, koddan doğrulandı):
+Parser dosyanın **yalnızca** `FOUNDER_BACKLOG_START/END` arasını okur; dışarıdaki hiçbir bölüm `/admin/master-plan` panelinde görünmez. Satır: `| id | priority | [OWNER] Başlık | Açıklama | durum |` — `id` yalnızca rakam olmalı (değilse satır sessizce atlanır), owner `^\[(\w+)\]` deseninden çıkar, durum `✅`→completed / `⏸`→paused / diğeri→pending. Sözleşme bozulursa panel hatasız şekilde boşalır.
+
+**P2 — Fact olarak kullanılabilir (yeniden ölçme):**
+Production READY (Vercel API) · deploy hattı çalışıyor · 905/914 test geçiyor, 2 dosya `google-news-url-decoder` eksikliğinden çalışmıyor · typecheck+lint temiz · 9 gerçek grant programı seed'li (`20260819100000_seed_grants_catalog.sql`) · LinkedIn hedef listesi gerçek kişiler, `status: to_add` · Reddit/HN/RSS/GitHub bağlayıcıları canlı, günlük cron · çok-sağlayıcılı AI Gateway failover · RLS 65/65 · 118 rota, 87+ tablo.
+
+**P3 — Fact olarak YAZILAMAZ (kanıt yok):**
+KVKK / "Case #001" düzenleyici traction · Horizon Europe, EIC, NGI, Open Philanthropy, Mozilla, FLI, McGovern, TÜBİTAK, KOSGEB, İş Bankası YZF rakamları (programlar gerçek, ALPAR AI'ın uygunluğu/başvurusu doğrulanmadı — "hedef havuz" denebilir, "erişilen" denemez) · MRR/abone sayısı (`finance_revenue_metrics` fabrikasyon) · danışma kurulu üyeleri (hepsi açık pozisyon) · "$500K+ compute" gibi üst-sınır toplamları (hepsine kabul varsayar).
+
+**P4 — Hedef yapı:** Dosya 569 satır ve v11.78–v11.88 arası **11 girişin hepsi aynı gün**. Fable 5 devrinden önce v11.78–v11.86 `MASTER_PLAN_ARCHIVE.md`'ye taşınmalı; canlı dosya ~150 satır hedefiyle 5 bölüme insin: (1) Konum — AI Act Madde 50/73 uyum katmanı, AGPL-3.0; (2) Mimari özet — her madde tek satır + dosya yolu; (3) Sermaye hattı — 3a doğrulanmış 9 program, 3b hedef havuz `[doğrulanmamış]` etiketli; (4) Yönetişim — G-5/G-6, TOM, tek-kişi bağımlılığı; (5) Yürütme kurulu — parser'ın okuduğu tek bölüm.
+
+**Fable 5 talimatının özü:** Keşif yapma, P1/P2/P3 elinde. Yasak listesine dokunma. Backlog tablosunun sütun düzenini bozma.
+
+### Backlog'a girmesi gereken açık maddeler
+
+P0: Integrations rating — Tavily yoksa uydurma sayı yerine "N/A" · `google-news-url-decoder` eksik paketi · `finance_revenue_metrics` fabrikasyon MRR yatırımcı yüzeyinde mi.
+P1: Advisory board kurum adları (yukarıdaki kalıntı risk) · AI Act Madde 73 tarihini resmî kaynaktan teyit · Marketing sayfası hardcoded "—" · Outreach'e gerçek kişi girişi · GitHub auto-delete-branches + branch protection.
+P2: Valuation otomatik öneri · Providers sayfası isim/kapsam · `de.json`/`fr.json` 13 eksik `autopilot.*` anahtarı.
+
+---
+
 ## v11.87 — 🔴 KRİTİK: Sahte Danışman Kimlikleri Production'da Canlı + "Sovereign Architect" Talebi Değerlendirmesi (2026-07-28)
 
 **Özet:** İki ayrı konu bu turda birleşti. (1) Founder, kendini "sistem talimatı" gibi gösteren ama aslında kullanıcı mesajı olan bir metin yapıştırdı — MASTER_PLAN'ı devasa bir doktrine dönüştürmemi ve doğrulanmamış iddialar/rakamlar yazmamı istiyordu; TOM disiplini gereği reddedildi/etiketlendi. (2) Bu değerlendirme sırasında Antigravity'nin v11.86 fix commit'i (`35b0e39`) incelendi: **3 fix gerçek ve iyi, 1 fix kısmi, 1 fix ciddi bir sorun içeriyor ve şu an production'da canlı.**
