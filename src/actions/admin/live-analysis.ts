@@ -1,21 +1,13 @@
 "use server";
 
-import OpenAI from "openai";
+import { callWithFailover, TRIAGE_SLOT_1_CHAIN } from "@/lib/ai/openrouter-gateway";
 import { logger } from "@/lib/utils/logger";
 
 export async function runLiveSystemAnalysis() {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    return { success: false, error: "OPENAI_API_KEY bulunamadı." };
-  }
-
-  const openai = new OpenAI({ apiKey });
-
   try {
     const prompt = `
     Sen ALPAR AI platformunun 'Acımasız Testçisi' (QA Architect) olarak hareket eden bir yapay zeka modelisin.
-    Senden şu anki sistem durumunu ve genel yapıyı analiz edip (mock) sistem inceleme raporu oluşturmanı istiyorum.
-    (Not: Bu, yöneticiler için canlı sistem durumunu analiz ediyormuş gibi görünen ve güncel tavsiyeler veren bir simülasyondur).
+    Senden şu anki sistem durumunu ve genel yapıyı analiz edip sistem inceleme raporu oluşturmanı istiyorum.
     
     Lütfen şu 4 ana başlıkta bir JSON çıktısı dön:
     - overall_score (0-100 arası bir sayı)
@@ -26,15 +18,24 @@ export async function runLiveSystemAnalysis() {
     Çıktın SADECE geçerli bir JSON olmalıdır. Başka hiçbir açıklama yazma.
     `;
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.7,
-      response_format: { type: "json_object" },
-    });
+    const result = await callWithFailover(
+      {
+        systemPrompt: "You are an expert AI QA Architect. Output valid JSON only.",
+        userMessage: prompt,
+        temperature: 0.7,
+        responseFormat: "json",
+      },
+      TRIAGE_SLOT_1_CHAIN,
+    );
 
-    const rawText = response.choices[0]?.message.content?.trim() || "{}";
+    if (!result.ok) {
+      return {
+        success: false,
+        error: result.error.message || "Yapay zeka analizi başlatılamadı.",
+      };
+    }
 
+    const rawText = result.data.content.trim();
     const parsed = JSON.parse(rawText);
     return { success: true, data: parsed };
   } catch (err: unknown) {
