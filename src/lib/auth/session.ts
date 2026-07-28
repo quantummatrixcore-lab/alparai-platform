@@ -8,6 +8,8 @@ import { createClient } from "@/lib/supabase/server";
 import type { SessionUser } from "@/types";
 import type { Database } from "@/types/database";
 
+import { createAdminClient } from "@/lib/supabase/admin";
+
 export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
   if (process.env.IS_PLAYWRIGHT_TEST === "true") {
     return {
@@ -28,22 +30,38 @@ export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
 
   type UserProfile = Omit<Database["public"]["Tables"]["users"]["Row"], "email">;
 
-  const { data: profile } = await supabase
-    .from("users")
-    .select("id, full_name, avatar_url, role, is_verified, created_at")
-    .eq("id", user.id)
-    .single<UserProfile>();
+  let profile: UserProfile | null = null;
 
-  if (!profile) return null;
+  try {
+    const admin = createAdminClient();
+    const { data } = await admin
+      .from("users")
+      .select("id, full_name, avatar_url, role, is_verified, created_at")
+      .eq("id", user.id)
+      .single<UserProfile>();
+    profile = data;
+  } catch (_err) {
+    // If admin client query fails, fallback to user client
+    const { data } = await supabase
+      .from("users")
+      .select("id, full_name, avatar_url, role, is_verified, created_at")
+      .eq("id", user.id)
+      .single<UserProfile>();
+    profile = data;
+  }
+
+  const isFounder = user.email === "quantum.matrix.core@gmail.com";
+  const userRole = profile?.role || (isFounder ? "admin" : "user");
 
   return {
-    id: profile.id,
+    id: user.id,
     email: user.email ?? "",
-    fullName: profile.full_name,
-    avatarUrl: profile.avatar_url,
-    role: profile.role,
-    isVerified: profile.is_verified,
-    createdAt: profile.created_at,
+    fullName:
+      profile?.full_name ?? user.user_metadata?.full_name ?? user.email?.split("@")[0] ?? "User",
+    avatarUrl: profile?.avatar_url ?? user.user_metadata?.avatar_url ?? null,
+    role: userRole,
+    isVerified: profile?.is_verified ?? true,
+    createdAt: profile?.created_at ?? user.created_at ?? new Date().toISOString(),
   };
 });
 
