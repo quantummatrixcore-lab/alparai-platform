@@ -6,6 +6,90 @@ Bu belge artık kısa tutuluyor: yalnızca "şu an neredeyiz" ve "sıradaki işl
 
 ---
 
+## v11.85 — OMEGA Audit Tam Doğrulaması: Gerçek Sayılar Farklı, 1 Gerçek Güvenlik Regresyonu Bulundu (2026-07-28)
+
+**Özet:** v11.84'te kasıtlı olarak atlanan OMEGA test/audit iddiaları bu turda tam çalıştırılarak doğrulandı (`pnpm test`, `pnpm typecheck`, `pnpm lint`). **Sonuç: OMEGA'nın sayıları yanlıştı, kök neden teşhisi yanlıştı, ve OMEGA'nın hiç bahsetmediği 2 ayrı gerçek sorun bulundu** — biri eksik paket, diğeri `ae30597`'den kalma bir yetkilendirme regresyonu.
+
+### Gerçek test sonucu vs. OMEGA iddiası
+
+| Kaynak                   | Toplam  | Başarılı | Başarısız                         |
+| ------------------------ | ------- | -------- | --------------------------------- |
+| OMEGA iddiası            | 922     | 917      | 5                                 |
+| **Gerçek (`pnpm test`)** | **914** | **905**  | **9** (+ 2 dosya hiç yüklenemedi) |
+
+### Kök neden düzeltmesi — OMEGA'nın "instanceof hatası" teşhisi YANLIŞ
+
+OMEGA, `live-cross-audit.test.ts`/`live-strategy.test.ts` başarısızlıklarını "OpenRouter adapter'da instanceof sorunu" olarak tanımladı. **Gerçek çalıştırmada bu tip bir hata hiç yok.** Gerçek neden: bu testler `afe0f8a` commit'inden (strategy/cross-audit'i Gateway'e taşıyan fix) ÖNCEKİ kod yoluna göre mock'lanmış — testler hâlâ direkt OpenAI çağrısı bekliyor, ama kod artık `callWithFailover` ile Gemini→NVIDIA→OpenRouter→Blackbox→Cohere zincirini deniyor. Test ortamında hiçbiri mock'lanmadığı için zincir tükeniyor ve fallback dönüyor — **testler eski, kod doğru; bu bir adapter bug'ı değil, migration sonrası güncellenmemiş test.**
+
+### i18n-parity — OMEGA'nın tek doğru iddiası
+
+`de.json`/`fr.json`'da 13 eksik `autopilot.*` anahtarı — OMEGA'nın listesiyle birebir eşleşti. Bu doğru ve gerçek.
+
+### session.test.ts — OMEGA'nın "davranış uyuşmazlığı" dediği şey aslında GERÇEK BİR REGRESYON
+
+`src/lib/auth/session.ts:52-53` incelendi: `ae30597` commit'i ("founder fallback" fix'i) `getCurrentUser()`'ı, profil bulunamadığında **yalnızca founder için değil, profili olmayan HERHANGİ bir kimlik doğrulanmış kullanıcı için** sentetik bir user objesi (`role: "user"`) döndürecek şekilde genişletmiş. `isFounder` kontrolü yalnızca `role`'ü etkiliyor (founder ise "admin", değilse "user") — ama fonksiyon her durumda `null` yerine bir obje dönüyor. Test bunu doğru yakalamış: "profili olmayan kullanıcı `null` almalı" beklentisi artık tutmuyor, çünkü kod artık profili olmayan **herkese** bir user objesi veriyor.
+
+**Neden önemli:** Bu, v11.79-81'in "founder 401/403 bypass" fix'inin **kapsamının istenenden geniş uygulandığı** anlamına geliyor — yalnızca founder email'i için bypass yapılması gerekirken, profili olmayan tüm kullanıcılar artık reddedilmek yerine geçerli (düşük yetkili) kullanıcı olarak kabul ediliyor. Kritik bir yetki yükseltmesi değil (rol hâlâ "user"), ama **niyet edilenden geniş bir davranış değişikliği** — Antigravity'ye düzeltme spec'i gerekiyor.
+
+### OMEGA'nın hiç bahsetmediği 2 gerçek dosya-seviyeli hata
+
+`tests/actions/ecosystem.test.ts` ve `tests/connectors/rss.test.ts` **hiç çalışmıyor** (toplama aşamasında patlıyor, "no tests"):
+
+```
+Error: Cannot find package 'google-news-url-decoder' imported from
+'/home/user/Alparai.com/src/lib/connectors/rss.ts'
+```
+
+`package.json:66`'da `"google-news-url-decoder": "^1.2.2"` bağımlılık olarak tanımlı, ama `node_modules/`'da **fiziksel olarak yok**. `pnpm install` hiç çalıştırılmamış veya lockfile senkron değil. Bu, OMEGA'nın "917/922 test geçti" iddiasının nasıl üretildiğini şüpheli kılıyor — gerçek ortamda bu 2 dosya toplama aşamasında bile başarısız oluyor.
+
+### Doğrulanan diğer OMEGA iddiaları
+
+| İddia                  | Sonuç                             |
+| ---------------------- | --------------------------------- |
+| TypeScript compilation | ✅ Doğru — `pnpm typecheck` temiz |
+| ESLint 0 uyarı         | ✅ Doğru — `pnpm lint` temiz      |
+| `as any`: 12           | ~Doğru — gerçek 11                |
+| `console.*`: 27        | ~Doğru — gerçek 28                |
+
+### Durum Tablosu
+
+| Konu                                   | Durum                                                  | Kanıt                                                       |
+| -------------------------------------- | ------------------------------------------------------ | ----------------------------------------------------------- |
+| OMEGA test sayıları                    | ❌ yanlış                                              | 914/905/9 (gerçek) vs 922/917/5 (iddia)                     |
+| OMEGA "instanceof" kök nedeni          | ❌ yanlış                                              | gerçek neden: Gateway migration sonrası güncellenmemiş mock |
+| i18n eksik anahtarlar                  | ✅ doğru                                               | 13 anahtar birebir eşleşti                                  |
+| `getCurrentUser()` regresyonu          | 🔴 gerçek, OMEGA'nın "davranış uyuşmazlığı" dediği şey | `session.ts:52-53`, kapsam niyet edilenden geniş            |
+| Eksik `google-news-url-decoder` paketi | 🔴 gerçek, OMEGA'da hiç yok                            | `package.json:66` vs `node_modules/` boş                    |
+| TypeScript/ESLint                      | ✅ doğru                                               | temiz çalıştırma                                            |
+
+### Handoff — Antigravity'ye (3 gerçek düzeltme)
+
+```
+P0 — google-news-url-decoder eksik paket
+YAP: pnpm install (lockfile'ı package.json ile senkronize et), commit
+pnpm-lock.yaml. Doğrulama: pnpm test tests/connectors/rss.test.ts
+tests/actions/ecosystem.test.ts geçmeli.
+
+P0 — getCurrentUser() founder-bypass kapsamı düzelt (src/lib/auth/session.ts:52-53)
+SORUN: Profili olmayan HERHANGİ kullanıcı artık null yerine sentetik user
+objesi alıyor, yalnızca founder almalıydı.
+YAP: `if (!profile && !isFounder) return null;` gibi bir kontrol ekle —
+profil yoksa VE founder değilse null dön, önceki (doğru) davranışı geri
+getir. Founder için sentetik profil oluşturma mantığı aynen kalsın.
+Doğrulama: pnpm test tests/lib/session.test.ts geçmeli.
+
+P1 — live-cross-audit.test.ts + live-strategy.test.ts mock güncellemesi
+SORUN: Testler afe0f8a öncesi (direkt OpenAI) koduna göre mock'lanmış,
+Gateway migration'ı yansıtmıyor.
+YAP: Test mock'larını callWithFailover / Gemini-NVIDIA-OpenRouter zincirini
+mock edecek şekilde güncelle. Doğrulama: pnpm test tests/actions/live-cross-audit.test.ts
+tests/actions/live-strategy.test.ts geçmeli.
+```
+
+**Not:** i18n eksik anahtarlar (13 adet) P2 — güvenlik/işlevsellik etkisi yok, ayrı bir turda çeviri eklenebilir.
+
+---
+
 ## v11.84 — Production READY Doğrulandı + OMEGA Audit Spot-Check (2026-07-28)
 
 **Özet:** v11.83'ün "BUILDING, sonuç bekleniyor" durumu kapandı. Antigravity "READY, canlıda" dedi (`npx vercel list` çıktısı yapıştırdı); bağımsız olarak `mcp__Vercel__list_deployments` ile doğrulandı — **doğru.** Aynı turda ayrı bir "OMEGA 360° Audit" raporu geldi (87/100 skor, 5 başarısız test, 12 `as any`, vb.); token-verimli hafif spot-check yapıldı (tam test suite çalıştırılmadı).
