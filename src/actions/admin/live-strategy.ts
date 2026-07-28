@@ -21,7 +21,7 @@ export async function runLiveStrategyAnalysis(context: {
     - Riskler: Yüksek Risk: ${context.highRisks}, Aktif Risk: ${context.activeRisks}
     - Kilometre Taşları: Tamamlanan: ${context.doneMilestones} / Toplam: ${context.totalMilestones}
 
-    Lütfen bu metrikleri analiz ederek bir durum raporu (mock) oluştur.
+    Lütfen bu gerçek verileri ve metrikleri derinlemesine analiz ederek gerçekçi ve eyleme dönüştürülebilir profesyonel bir stratejik durum raporu oluştur.
     
     Lütfen şu 4 ana başlıkta bir JSON çıktısı dön:
     - health_score (0-100 arası bir sayı)

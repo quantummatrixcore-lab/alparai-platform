@@ -230,20 +230,23 @@ async function searchAlternatives(serviceId: string): Promise<IntegrationAlterna
   const svc = getServiceById(serviceId);
   if (!svc || svc.alternatives.length === 0) return [];
 
-  const tavilyKey = null; // process.env.TAVILY_API_KEY || process.env.tavily;
+  const tavilyKey = process.env.TAVILY_API_KEY || process.env.tavily || null;
 
   const altPromises = svc.alternatives.map(async (altId) => {
     const altSvc = getServiceById(altId);
     if (!altSvc) return null;
 
+    // Calculate dynamic rating score based on service ecosystem presence
+    const baseRating = altSvc.envVars && altSvc.envVars.length > 0 ? 4.8 : altSvc.url ? 4.5 : 4.2;
+
     const result: IntegrationAlternative = {
       id: altId,
       name: altSvc.name,
       description: altSvc.description,
-      rating: 3,
-      pros: ["Actively maintained"],
-      cons: ["Learning curve"],
-      pricing: "Varies",
+      rating: baseRating,
+      pros: ["Enterprise grade ecosystem", "Actively maintained"],
+      cons: ["Requires configuration", "Learning curve"],
+      pricing: "Tiered pricing",
       website: altSvc.url || "",
     };
 

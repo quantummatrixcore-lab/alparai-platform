@@ -137,6 +137,33 @@ export default async function FinancePage({ params }: { params: Promise<{ locale
       trend: "stable" as const,
       lastUpdated: new Date().toISOString(),
     },
+    {
+      name: "github_copilot",
+      currentCost: Number(
+        currentCosts.find((c) => c.service === "github_copilot")?.amount_usd ?? 19.0,
+      ),
+      budgetLimit: Number(
+        currentCosts.find((c) => c.service === "github_copilot")?.budget_usd ?? 20.0,
+      ),
+      trend: "stable" as const,
+      lastUpdated: new Date().toISOString(),
+    },
+    {
+      name: "claude_pro",
+      currentCost: Number(currentCosts.find((c) => c.service === "claude_pro")?.amount_usd ?? 20.0),
+      budgetLimit: Number(currentCosts.find((c) => c.service === "claude_pro")?.budget_usd ?? 20.0),
+      trend: "stable" as const,
+      lastUpdated: new Date().toISOString(),
+    },
+    {
+      name: "google_one",
+      currentCost: Number(
+        currentCosts.find((c) => c.service === "google_one")?.amount_usd ?? 19.99,
+      ),
+      budgetLimit: Number(currentCosts.find((c) => c.service === "google_one")?.budget_usd ?? 20.0),
+      trend: "stable" as const,
+      lastUpdated: new Date().toISOString(),
+    },
   ].map((s) => {
     const percentUsed = s.budgetLimit > 0 ? Math.round((s.currentCost / s.budgetLimit) * 100) : 0;
     return { ...s, percentUsed };

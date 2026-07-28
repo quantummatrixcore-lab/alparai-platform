@@ -17,9 +17,12 @@ describe("Live Cross-Audit Test", () => {
   it("returns fallback data when gateway returns error", async () => {
     vi.mocked(callWithFailover).mockResolvedValue({
       ok: false,
-      error: "Gateway connection error",
-      provider: "google",
-      model: "gemini-1.5-flash",
+      error: {
+        code: "api_error",
+        message: "Gateway connection error",
+        model: "google/gemini-1.5-flash",
+      },
+      attemptedModels: ["google/gemini-1.5-flash"],
     });
 
     const result = await runLiveCrossAuditTest("test incident");
@@ -41,9 +44,11 @@ describe("Live Cross-Audit Test", () => {
           truth_score: 75,
           risk_level: "Minimal",
         }),
+        model: "google/gemini-1.5-flash",
+        usage: { promptTokens: 10, completionTokens: 10, totalTokens: 20 },
+        latencyMs: 100,
       },
-      provider: "google",
-      model: "gemini-1.5-flash",
+      attemptedModels: ["google/gemini-1.5-flash"],
     });
 
     const result = await runLiveCrossAuditTest("test incident");

@@ -28,9 +28,12 @@ describe("Live Strategy Analysis", () => {
   it("returns fallback data when gateway returns error", async () => {
     vi.mocked(callWithFailover).mockResolvedValue({
       ok: false,
-      error: "Gateway connection error",
-      provider: "google",
-      model: "gemini-1.5-flash",
+      error: {
+        code: "api_error",
+        message: "Gateway connection error",
+        model: "google/gemini-1.5-flash",
+      },
+      attemptedModels: ["google/gemini-1.5-flash"],
     });
 
     const result = await runLiveStrategyAnalysis(MOCK_CONTEXT);
@@ -51,9 +54,11 @@ describe("Live Strategy Analysis", () => {
           strategic_gaps: ["Monetization missing", "PITR not configured"],
           recommendations: ["Activate Stripe Pro tier", "Upgrade Supabase to Pro"],
         }),
+        model: "google/gemini-1.5-flash",
+        usage: { promptTokens: 10, completionTokens: 10, totalTokens: 20 },
+        latencyMs: 100,
       },
-      provider: "google",
-      model: "gemini-1.5-flash",
+      attemptedModels: ["google/gemini-1.5-flash"],
     });
 
     const result = await runLiveStrategyAnalysis(MOCK_CONTEXT);
