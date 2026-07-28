@@ -106,9 +106,9 @@ export async function submitProviderResponse(
       const { error: updateErr } = await admin
         .from("ai_provider_responses")
         .update({
-          response_text: maskPII(responseText),
-          responder_name: maskPII(responderName),
-          responder_role: responderRole ? maskPII(responderRole) : null,
+          response_text: maskPII(responseText).masked,
+          responder_name: maskPII(responderName).masked,
+          responder_role: responderRole ? maskPII(responderRole).masked : null,
           responder_email: contactEmail,
           is_official: true,
           is_published: true,
@@ -123,9 +123,9 @@ export async function submitProviderResponse(
       const { error: insertErr } = await admin.from("ai_provider_responses").insert({
         incident_id: incidentId,
         ai_provider_id: provider.id,
-        response_text: maskPII(responseText),
-        responder_name: maskPII(responderName),
-        responder_role: responderRole ? maskPII(responderRole) : null,
+        response_text: maskPII(responseText).masked,
+        responder_name: maskPII(responderName).masked,
+        responder_role: responderRole ? maskPII(responderRole).masked : null,
         responder_email: contactEmail,
         is_official: true,
         is_published: true,

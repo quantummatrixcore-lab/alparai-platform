@@ -59,8 +59,8 @@ const runExpertWork = async (data: ExpertWorkInput): Promise<ExpertWorkResult> =
   try {
     const admin = createAdminClient();
     const { error: dbError } = await admin.from("expert_applications").insert({
-      name: maskPII(data.name),
-      title_institution: `${maskPII(data.title)} - ${maskPII(data.institution)}`,
+      name: maskPII(data.name).masked,
+      title_institution: `${maskPII(data.title).masked} - ${maskPII(data.institution).masked}`,
       expertise: data.expertiseArea,
       linkedin_url: data.linkedinUrl || null,
       email: data.email,

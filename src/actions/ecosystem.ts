@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logger } from "@/lib/utils/logger";
+import { getCurrentUser } from "@/lib/auth/session";
+import { runExternalFetchTask } from "@/lib/services/external-fetcher";
 
 export async function approveQueueItem(id: string): Promise<void> {
   const supabase = createAdminClient();
@@ -76,31 +78,27 @@ export async function updateEcosystemCategory(id: string, category: string): Pro
 }
 
 export async function triggerExternalFetch(): Promise<{ success: boolean; message: string }> {
-  const secret = process.env.CRON_SECRET;
-  if (!secret) return { success: false, message: "CRON_SECRET not configured" };
+  const user = await getCurrentUser();
+  if (!user || (user.role !== "admin" && user.role !== "ceo")) {
+    return { success: false, message: "Yetkisiz erişim (Unauthorized)" };
+  }
 
   try {
-    const url = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const res = await fetch(`${url}/api/cron/fetch-external`, {
-      headers: { authorization: `Bearer ${secret}` },
-      signal: AbortSignal.timeout(130_000),
-    });
-
-    if (!res.ok) {
-      const text = await res.text().catch(() => "unknown error");
-      return { success: false, message: `Fetch failed (${res.status}): ${text}` };
-    }
-
-    const data = await res.json();
+    const data = await runExternalFetchTask();
     revalidatePath("/[locale]/admin/ecosystem", "page");
     return {
       success: true,
-      message: `Done: ${data.total_fetched || 0} incidents, ${data.positive_inserted || 0} positive, ${data.ai_verified_published || 0} auto-published`,
+      message: `Tamamlandı: ${data.total_fetched || 0} potansiyel olay, ${data.positive_inserted || 0} olumlu gelişme, ${data.ai_verified_published || 0} otomatik yayınlandı`,
     };
   } catch (err) {
+    logger.error(
+      "[triggerExternalFetch] Execution failed",
+      undefined,
+      err instanceof Error ? err : undefined,
+    );
     return {
       success: false,
-      message: err instanceof Error ? err.message : "Unknown error",
+      message: err instanceof Error ? err.message : "Bilinmeyen hata oluştu",
     };
   }
 }

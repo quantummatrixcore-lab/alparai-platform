@@ -38,7 +38,7 @@ async function runSubmitWhistleblowerWork(
     .insert({
       encrypted_content: data.encryptedContent,
       category: data.category,
-      provider_hint: data.providerHint ? maskPII(data.providerHint) : null,
+      provider_hint: data.providerHint ? maskPII(data.providerHint).masked : null,
       status: "pending",
     })
     .select("id")

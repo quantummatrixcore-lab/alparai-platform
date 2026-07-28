@@ -43,7 +43,7 @@ export function EcosystemDashboard({ data }: { data: DashboardData }) {
                   {t("ecosystem_hub_title") || "Ecosystem Intelligence Hub"}
                 </h1>
                 <span className="border-brand-500/30 bg-brand-500/20 text-brand-300 rounded-full border px-3 py-0.5 text-xs font-extrabold">
-                  CRAWLER ACTIVE
+                  {t("crawler_active") || "CRAWLER ACTIVE"}
                 </span>
               </div>
               <p className="mt-1 text-xs text-zinc-400">
@@ -67,27 +67,24 @@ export function EcosystemDashboard({ data }: { data: DashboardData }) {
           </div>
           <div className="min-w-0 flex-1">
             <h4 className="flex items-center gap-2 text-xs font-bold tracking-wider text-amber-300 uppercase">
-              <span>Review Queue Guidance (İnceleme Kuyruğu Rehberi)</span>
+              <span>{t("review_queue_guidance") || "İnceleme Kuyruğu Rehberi"}</span>
             </h4>
             <p className="mt-1 text-xs leading-relaxed text-zinc-300">
-              Kuyruktaki kayıtlar; <strong>OECD AI Observatory</strong>,{" "}
-              <strong>AI Incident Database (AIID)</strong> ve küresel RSS haber akışlarından ALPAR
-              AI otonom tarayıcıları tarafından otomatik çekilen potansiyel olay taslaklarıdır.
-              Moderatör onayından geçen taslaklar doğrudan onaylı halka açık incident kaydına
-              dönüştürülür.
+              {t("review_queue_guidance_desc") ||
+                "Kuyruktaki kayıtlar; OECD AI Observatory, AI Incident Database (AIID) ve küresel RSS haber akışlarından ALPAR AI otonom tarayıcıları tarafından otomatik çekilen potansiyel olay taslaklarıdır."}
             </p>
             <div className="mt-3 flex flex-wrap gap-4 text-[11px] text-zinc-400">
               <span className="flex items-center gap-1.5 font-medium">
                 <Bot className="text-brand-400 h-3.5 w-3.5" />
-                OECD AI & AIID Integration Active
+                {t("oecd_aiid_active") || "OECD AI & AIID Integration Active"}
               </span>
               <span className="flex items-center gap-1.5 font-medium">
                 <Rss className="h-3.5 w-3.5 text-sky-400" />
-                Global RSS News Feeds
+                {t("global_rss_feeds") || "Global RSS News Feeds"}
               </span>
               <span className="flex items-center gap-1.5 font-medium">
                 <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-                Human Moderator Gatekeeping
+                {t("human_moderator_gatekeeping") || "Human Moderator Gatekeeping"}
               </span>
             </div>
           </div>

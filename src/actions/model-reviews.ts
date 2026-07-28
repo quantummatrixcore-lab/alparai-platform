@@ -50,8 +50,8 @@ const runModelReviewWork = async (
     score_creativity: data.scoreCreativity,
     score_speed: data.scoreSpeed,
     score_value: data.scoreValue,
-    title: data.title ? maskPII(data.title) : null,
-    body: data.body ? maskPII(data.body) : null,
+    title: data.title ? maskPII(data.title).masked : null,
+    body: data.body ? maskPII(data.body).masked : null,
     status: "published",
   };
   const { data: row, error } = await supabase

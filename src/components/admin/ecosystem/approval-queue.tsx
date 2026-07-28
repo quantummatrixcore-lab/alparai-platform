@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { approveQueueItem, rejectQueueItem } from "@/actions/ecosystem";
 import { Clock, Check, X, ExternalLink, Loader2 } from "lucide-react";
 import type { Database } from "@/types/database";
@@ -28,6 +29,7 @@ function SourceBadge({ source }: { source: string }) {
 }
 
 export function ApprovalQueue({ items: initialItems }: { items: QueueItem[] }) {
+  const t = useTranslations("admin");
   const [items, setItems] = useState(initialItems);
   const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
   const [, startTransition] = useTransition();
@@ -66,15 +68,16 @@ export function ApprovalQueue({ items: initialItems }: { items: QueueItem[] }) {
           </div>
           <div>
             <h3 className="flex items-center gap-2 text-sm font-bold tracking-wider text-white uppercase">
-              <span>Review Queue</span>
+              <span>{t("review_queue") || "Review Queue"}</span>
               {items.length > 0 && (
                 <span className="rounded-full border border-amber-500/30 bg-amber-500/20 px-2 py-0.5 text-[11px] font-extrabold text-amber-400">
-                  {items.length} PENDING
+                  {t("pending_badge", { count: items.length }) || `${items.length} BEKLEYEN`}
                 </span>
               )}
             </h3>
             <p className="text-xs text-zinc-400">
-              Crawled drafts from OECD, AIID, RSS feeds awaiting human moderation
+              {t("crawled_drafts_subtitle") ||
+                "Crawled drafts from OECD, AIID, RSS feeds awaiting human moderation"}
             </p>
           </div>
         </div>
@@ -86,9 +89,10 @@ export function ApprovalQueue({ items: initialItems }: { items: QueueItem[] }) {
             <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10">
               <Check className="h-6 w-6 text-emerald-400" />
             </div>
-            <h4 className="text-sm font-bold text-white">Queue is Empty</h4>
+            <h4 className="text-sm font-bold text-white">{t("queue_empty") || "Queue is Empty"}</h4>
             <p className="mt-1 text-xs text-zinc-400">
-              All external incident drafts have been reviewed and moderated.
+              {t("queue_empty_desc") ||
+                "All external incident drafts have been reviewed and moderated."}
             </p>
           </div>
         ) : (
@@ -144,7 +148,7 @@ export function ApprovalQueue({ items: initialItems }: { items: QueueItem[] }) {
                       ) : (
                         <Check className="h-3.5 w-3.5" />
                       )}
-                      <span>Approve</span>
+                      <span>{t("approve") || "Approve"}</span>
                     </button>
                     <button
                       onClick={() => handleReject(item.id)}
@@ -156,7 +160,7 @@ export function ApprovalQueue({ items: initialItems }: { items: QueueItem[] }) {
                       ) : (
                         <X className="h-3.5 w-3.5" />
                       )}
-                      <span>Reject</span>
+                      <span>{t("reject") || "Reject"}</span>
                     </button>
                   </div>
                 </div>

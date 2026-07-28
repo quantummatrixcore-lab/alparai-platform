@@ -35,8 +35,8 @@ const runSuggestionWork = async (
   const supabase = await createServerClient();
   const insertRow: Database["public"]["Tables"]["suggestions"]["Insert"] = {
     user_id: data.userId,
-    title: maskPII(data.title),
-    description: maskPII(data.description),
+    title: maskPII(data.title).masked,
+    description: maskPII(data.description).masked,
     category: data.category,
     status: "open",
     is_anonymous: false,
