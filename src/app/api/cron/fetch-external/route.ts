@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { fetchRedditPosts } from "@/lib/connectors/reddit";
 import { fetchHNStories } from "@/lib/connectors/hackernews";
+import { fetchGitHubIncidents } from "@/lib/connectors/github";
 import { fetchRSSFeed } from "@/lib/connectors/rss";
 import { verifyExternalItem, publishVerifiedItem } from "@/lib/ai/external-verifier";
 import { logger } from "@/lib/utils/logger";
@@ -105,6 +106,12 @@ async function getHandler(request: Request) {
   for (const kw of positiveKeywords) {
     const stories = await fetchHNStories(kw);
     allPositive.push(...stories.map((s) => ({ ...s, source: "hn" })));
+  }
+
+  // 5. Fetch GitHub — negative & security issues
+  for (const kw of ["vulnerability", "leak", "hallucination"]) {
+    const ghIssues = await fetchGitHubIncidents(kw);
+    allFetched.push(...ghIssues.map((g) => ({ ...g, source: "github" })));
   }
 
   // 5. Fetch RSS Feeds
