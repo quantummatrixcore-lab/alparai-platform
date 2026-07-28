@@ -12,6 +12,8 @@ import {
   type AttemptContext,
 } from "@/lib/autopilot";
 
+import { maskPII } from "@/lib/pii/guardian";
+
 export interface SubmitWhistleblowerResult {
   ok: boolean;
   error?: string;
@@ -36,7 +38,7 @@ async function runSubmitWhistleblowerWork(
     .insert({
       encrypted_content: data.encryptedContent,
       category: data.category,
-      provider_hint: data.providerHint || null,
+      provider_hint: data.providerHint ? maskPII(data.providerHint) : null,
       status: "pending",
     })
     .select("id")

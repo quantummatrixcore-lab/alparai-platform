@@ -11,6 +11,7 @@ import { getProviderResponseNotificationEmail } from "@/emails/templates";
 import { generateEmailUnsubscribeToken } from "@/lib/utils/unsubscribe";
 import { isEmailAllowed } from "@/lib/email/cap";
 import { logger } from "@/lib/utils/logger";
+import { maskPII } from "@/lib/pii/guardian";
 
 const responseInputSchema = z.object({
   incidentId: z.string().uuid(),
@@ -105,9 +106,9 @@ export async function submitProviderResponse(
       const { error: updateErr } = await admin
         .from("ai_provider_responses")
         .update({
-          response_text: responseText,
-          responder_name: responderName,
-          responder_role: responderRole || null,
+          response_text: maskPII(responseText),
+          responder_name: maskPII(responderName),
+          responder_role: responderRole ? maskPII(responderRole) : null,
           responder_email: contactEmail,
           is_official: true,
           is_published: true,
@@ -122,9 +123,9 @@ export async function submitProviderResponse(
       const { error: insertErr } = await admin.from("ai_provider_responses").insert({
         incident_id: incidentId,
         ai_provider_id: provider.id,
-        response_text: responseText,
-        responder_name: responderName,
-        responder_role: responderRole || null,
+        response_text: maskPII(responseText),
+        responder_name: maskPII(responderName),
+        responder_role: responderRole ? maskPII(responderRole) : null,
         responder_email: contactEmail,
         is_official: true,
         is_published: true,

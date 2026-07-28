@@ -12,6 +12,8 @@ import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
 import type { Database } from "@/types/database";
 import { logger } from "@/lib/utils/logger";
 
+import { maskPII } from "@/lib/pii/guardian";
+
 export interface SubmitModelReviewState {
   ok: boolean;
   error?: string;
@@ -48,8 +50,8 @@ const runModelReviewWork = async (
     score_creativity: data.scoreCreativity,
     score_speed: data.scoreSpeed,
     score_value: data.scoreValue,
-    title: data.title,
-    body: data.body,
+    title: data.title ? maskPII(data.title) : null,
+    body: data.body ? maskPII(data.body) : null,
     status: "published",
   };
   const { data: row, error } = await supabase

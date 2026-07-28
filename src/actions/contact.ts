@@ -10,6 +10,8 @@ import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import { hashIp } from "@/lib/utils/hash";
 import { logger } from "@/lib/utils/logger";
 
+import { maskPII } from "@/lib/pii/guardian";
+
 export interface ContactState {
   ok: boolean;
   error?: string;
@@ -41,8 +43,8 @@ const runContactWork = async (
       from: "ALPAR AI Contact <contact@alparai.com>",
       to: APP_EMAIL,
       replyTo: data.email,
-      subject: `[${data.category}] ${data.subject}`,
-      text: `From: ${data.name} <${data.email}>\n\n${data.message}\n\n--\nIP Hash: ${hashIp(data.ip)}`,
+      subject: `[${data.category}] ${maskPII(data.subject)}`,
+      text: `From: ${data.name} <${data.email}>\n\n${maskPII(data.message)}\n\n--\nIP Hash: ${hashIp(data.ip)}`,
     });
     return { kind: "success", value: { sent: true, channel: "email" } };
   } catch (e) {

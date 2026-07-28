@@ -9,6 +9,8 @@ import { hashIp } from "@/lib/utils/hash";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logger } from "@/lib/utils/logger";
 
+import { maskPII } from "@/lib/pii/guardian";
+
 const expertApplicationSchema = z.object({
   name: z
     .string()
@@ -57,8 +59,8 @@ const runExpertWork = async (data: ExpertWorkInput): Promise<ExpertWorkResult> =
   try {
     const admin = createAdminClient();
     const { error: dbError } = await admin.from("expert_applications").insert({
-      name: data.name,
-      title_institution: `${data.title} - ${data.institution}`,
+      name: maskPII(data.name),
+      title_institution: `${maskPII(data.title)} - ${maskPII(data.institution)}`,
       expertise: data.expertiseArea,
       linkedin_url: data.linkedinUrl || null,
       email: data.email,
