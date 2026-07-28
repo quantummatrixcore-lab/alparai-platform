@@ -1,4 +1,4 @@
--- Migration: Seed advisory board open position seats (Rule #30 compliant)
+-- Migration: Seed advisory board open position seats (Rule #30 & v11.88 compliant)
 -- Timestamp: 20260729000000
 -- ROLLBACK: DELETE FROM public.advisory_board_members WHERE name LIKE '[Open Position]%';
 
@@ -10,8 +10,8 @@ VALUES
     '[Open Position] AI Ethics & Governance Seat',
     'Senior AI Ethics & Governance Fellow',
     'Kıdemli YZ Etiği ve Yönetişim Üyesi',
-    'ETH Zurich & ITU Partner Chair',
-    'ETH Zürih ve İTÜ Paydaş Kürsüsü',
+    'Academic & Industry AI Ethics Research',
+    'Akademik ve Sektörel YZ Etiği Araştırması',
     'Open position for leading researcher in AI safety alignment and algorithmic accountability.',
     'Yapay zeka güvenlik hizalaması ve algoritmik hesap verebilirlik alanında açık danışmanlık kürsüsü.',
     1,
@@ -22,8 +22,8 @@ VALUES
     '[Open Position] AI Safety Benchmarks Seat',
     'Director of AI Safety Benchmarks',
     'YZ Güvenlik Kıstasları Direktörü',
-    'Stanford HAI Partner Chair',
-    'Stanford HAI Paydaş Kürsüsü',
+    'AI Safety & Evaluation Consortium',
+    'YZ Güvenlik ve Değerlendirme Konsorsiyumu',
     'Open position for specialist in automated LLM vulnerability auditing.',
     'Otomatikleştirilmiş LLM zafiyet denetimi için açık danışmanlık kürsüsü.',
     2,
@@ -34,8 +34,8 @@ VALUES
     '[Open Position] Legal & EU AI Act Compliance Seat',
     'Legal & EU AI Act Compliance Counsel',
     'Hukuk ve AB YZ Yasası Danışmanı',
-    'Bilkent Law Partner Chair',
-    'Bilkent Hukuk Paydaş Kürsüsü',
+    'International AI Regulation & Policy',
+    'Uluslararası YZ Düzenleme ve Politikası',
     'Open position for expert in EU AI Act Article 73 compliance.',
     'AB YZ Yasası Madde 73 şeffaflık zorunlulukları için açık danışmanlık kürsüsü.',
     3,
@@ -46,8 +46,8 @@ VALUES
     '[Open Position] Systems Reliability Seat',
     'Chief Systems Reliability Strategist',
     'Baş Sistem Güvenilirliği Stratejisti',
-    'CERN IT Security Partner Chair',
-    'CERN BT Güvenliği Paydaş Kürsüsü',
+    'Distributed Systems & Infrastructure',
+    'Dağıtık Sistemler ve Altyapı',
     'Open position for specialist in high-throughput audit telemetry.',
     'Yüksek başarımlı denetim telemetrisi için açık danışmanlık kürsüsü.',
     4,
