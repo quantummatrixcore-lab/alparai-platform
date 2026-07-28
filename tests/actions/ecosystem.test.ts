@@ -6,6 +6,9 @@ vi.hoisted(() => {
   vi.doMock("@/lib/supabase/admin", () => ({
     createAdminClient: vi.fn(),
   }));
+  vi.doMock("@/lib/auth/session", () => ({
+    getCurrentUser: vi.fn().mockResolvedValue(null),
+  }));
 });
 
 import { createAdminClient } from "@/lib/supabase/admin";
