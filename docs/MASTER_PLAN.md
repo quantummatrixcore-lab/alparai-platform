@@ -6,6 +6,41 @@ Bu belge artık kısa tutuluyor: yalnızca "şu an neredeyiz" ve "sıradaki işl
 
 ---
 
+## v11.79 — Admin Panel Canlı Veri Denetimi + Yeni Bağlayıcılar (2026-07-28)
+
+**Özet:** Founder "admin panelde canlı veri yok, GitHub/Reddit/HackerOne'dan çekilmesi lazım, NVIDIA modelleriyle tüm veriler çekilebilir" dedi ve "100 kez söyledim, yapılmadı" diye belirtti. Üç paralel keşif kanıtla doğruladı: **iddia kısmen doğru, kısmen yanlış.**
+
+### Bulgu 1 — 49 admin sayfası, üç kategori
+
+- **Gerçek ve dolu (11 sayfa):** `strategy/*` (5 tablo), `k-benchmark`, `launch-signal`, ana panel, `moderation`, `import`, `users`, `finance` (zayıf — 2 kayıt).
+- **Tamamen sahte/hardcoded (6 sayfa) — gerçek sorun:** `api-keys` (satır 38-99 hardcoded dizi), `signals` (`initialSignals={[]}`), `ai-pulse` (satır 11-49 hardcoded), `api-metrics` (`trafficData={[]}`), `slo-dashboard` (`initialSlos={{}}`), `marketing` (tüm metrikler "—" placeholder).
+- **Sorgu gerçek, doluluk doğrulanmadı (12 sayfa):** `advisory-board`, `billing`, `dsar`, `experts`, `grants`, `investors`, `linkedin`, `outreach`, `platforms`, `redaction-queue`, `takedown`.
+
+**Düzeltme — `ecosystem` sayfası "boş" değil:** İlk tarama "seed migration yok, muhtemelen boş" dedi; bu yanlış kanıttı. `vercel.json`'da doğrulandı: `fetch-external` cron'u **saatlik çalışıyor** (`"schedule": "0 * * * *"`). Tablo seed edilmemiş olabilir ama cron üretimde çalışıyorsa satırlar birikmiş olmalı — gerçek satır sayısı yalnızca DB erişimiyle görülür, Antigravity doğrulayacak.
+
+### Bulgu 2 — Reddit zaten canlı, GitHub ve HackerOne hiç yok
+
+| Kaynak     | Durum                                                                                                |
+| ---------- | ---------------------------------------------------------------------------------------------------- |
+| Reddit     | ✅ Zaten canlı (`src/lib/connectors/reddit.ts`, saatlik cron, `external_incidents_queue`'ya yazıyor) |
+| HackerNews | ✅ Zaten canlı (istenmemiş ama bonus)                                                                |
+| GitHub     | ❌ Sıfır eşleşme — hiç yok                                                                           |
+| HackerOne  | ❌ Sıfır eşleşme — hiç yok                                                                           |
+
+"Hiçbiri yapılmadı" ifadesi kısmen yanlış — Reddit önceki bir turda yapılmış ama hiç raporlanmamış/unutulmuş. Gerçek eksik yalnızca GitHub ve HackerOne.
+
+### Bulgu 3 — NVIDIA modelleri veri çekmez, zenginleştirir
+
+NVIDIA adaptörü gerçek ve gateway'e bağlı (`src/lib/ai/adapters/nvidia-ngc.ts`, `meta/llama-3.1-70b-instruct` ücretsiz katmanda tanımlı). Ama bir LLM internetten veri çekmez — bunu bağlayıcılar yapar. NVIDIA'nın gerçek rolü, çekilen veriyi sınıflandırma/özet/tekrar-tespiti ile zenginleştirmek. Bu desen zaten var (`autopilot-sync.ts:61-154`, `classifyAndTranslateNewsWithGemini()`) ama **Gemini ile, NVIDIA ile değil**.
+
+### Handoff — Antigravity'ye verilen spec
+
+P0: 6 hardcoded sayfayı gerçek veriye bağla + sahte-veri denetimini `advisory_board_members`/`investor_applications`/`grant_applications`'a genişlet. P1: `external_incidents_queue` gerçek satır sayısını doğrula, GitHub Security Advisories bağlayıcısı ekle (`src/lib/connectors/github.ts`, mevcut `reddit.ts` deseninde), HackerOne için önce halka açık bir feed/API şekli olup olmadığını doğrula (uydurma endpoint yazma). P2: NVIDIA'yı mevcut Gemini classifier desenine alternatif/ek olarak zenginleştirme katmanına ekle.
+
+Tam brief Founder'a ayrıca iletildi (Antigravity'ye yapıştırılacak metin).
+
+---
+
 ## v11.78 — T-5 Lansman Değerlendirmesi (2026-07-28)
 
 **Özet:** Lansmana 5 gün kaldı ve tarih keyfi değil — `docs/UPDATE_PLAN_2026Q3.md:5`'e göre 2 Ağustos 2026, EU AI Act Madde 73'ün yürürlüğe girdiği gün. Tarih ayrıca koda gömülü (`src/app/api/cron/kill-metric/route.ts:16`, `pivot-check/route.ts:16`). Ürün fazlasıyla hazır: 118 rota, 87+ tablo, canlı Stripe, 9 AI sağlayıcı adaptörü. Dağıtım tarafında ise sıfır hareket var — 7 uzman maili, Product Hunt varlıkları, Reddit/HackerOne stratejileri yazılmış, hiçbiri gönderilmemiş. Son 20 commit'te ürün kodu yok; hepsi MASTER_PLAN ve yönetişim. Bu girdinin tek amacı, kalan 5 günü doğru yere yönlendirmek.
