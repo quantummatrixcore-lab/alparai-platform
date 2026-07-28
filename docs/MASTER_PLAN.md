@@ -6,6 +6,37 @@ Bu belge artık kısa tutuluyor: yalnızca "şu an neredeyiz" ve "sıradaki işl
 
 ---
 
+## v11.81 — Admin Panel Hâlâ Canlı Değil: 360° Kök Neden + Antigravity'ye Kanıt Zorunluluğu (2026-07-28)
+
+**Özet:** v11.79/v11.80'de Antigravity "OPENAI_API_KEY hatası düzeltildi, 82 incident yüklendi, canlı mod aktif" dedi, git commit kanıtıyla doğrulanmıştı. **Founder aynı production sayfalarını tekrar test etti ve birebir aynı hataları görüyor** — 401 (ecosystem), "OPENAI_API_KEY bulunamadı" (analysis, strategy), server component crash (innovations), questionnaire/valuation/marketing canlı değil. Bu oturumda commit varlığının production'da çalıştığı anlamına gelmediğinin **ikinci** kanıtı (birincisi: v11.80'deki kaybolan Dependabot PR'lar).
+
+### Bulgu 1 — Hata mesajı kodda artık yok
+
+`grep -rn "OPENAI_API_KEY bulunamadı" src/` → sıfır eşleşme (template literal dahil). Bu mesaj commit `afe0f8a`'da kaldırıldı. Founder hâlâ görüyorsa en olası açıklama: **production, bu commit'ten önceki eski bir build'i çalıştırıyor** — deploy tetiklenmemiş veya tamamlanmamış.
+
+### Bulgu 2 — 3 ayrı gerçek sorun (Haiku keşif, kod kanıtlı)
+
+- **A. `fetch-external` cron route bug'ı:** `src/app/api/cron/fetch-external/route.ts:10` yalnızca `Bearer ${CRON_SECRET}` kontrol ediyor, Vercel'in native cron'unun gönderdiği `x-vercel-cron: 1` header'ını kontrol etmiyor. Diğer cron route'ları (`keep-alive`, `hard-delete`, `moderation-sla-alarm`) ikisini de kontrol ediyor, `fetch-external` bu deseni takip etmiyor — saatlik zamanlanmış cron her çalıştığında 401 alıp sessizce başarısız oluyor olabilir.
+- **B. Gateway'in gerçek anahtar ihtiyacı hiç doğrulanmadı:** `src/actions/innovations.ts:251` artık `callWithFailover(TRIAGE_SLOT_1_CHAIN, ...)` kullanıyor (Gateway'e taşınmış, doğru), ama bu zincir `GEMINI_API_KEY`/`NVIDIA_NGC_API_KEY`/`OPENROUTER_API_KEY`/`COHERE_API_KEY` gerektiriyor. Antigravity yalnızca "OPENAI_API_KEY'i Vercel'e enjekte ettim" dedi — kod artık bu anahtarı kullanmıyor bile.
+- **C. `CRON_SECRET` muhtemelen Vercel'de yok:** GitHub Actions `scheduled-crons.yml`'deki `${{ secrets.CRON_SECRET }}` bir GitHub secret, Vercel env var'ı değil — ikisi ayrı sistemler.
+
+### Kök Neden Sentezi
+
+Kod tarafı gerçekten düzeltildi (Gateway migration, founder bypass gerçek). Ama üç sebepten production'da işe yaramıyor: (1) Vercel env var listesi hiç bağımsız doğrulanmadı — yanlış anahtar için "enjekte ettim" dendi, (2) `fetch-external` route'unda gerçek bir kod bug'ı var, (3) production'ın commit `8ec3f9c` (veya sonrası) çalıştırıp çalıştırmadığı hiç doğrulanmadı — bu oturumda Vercel MCP kimlik doğrulaması yapılı değil, API'den kontrol edilemiyor.
+
+### Handoff — Antigravity'ye (kanıt zorunlu, düz metin özet reddedilecek)
+
+- **P0:** `fetch-external` + `kill-metric`/`outreach`/`pivot-check`/`translate-backfill`/`verify-geo-citations` route'larına `x-vercel-cron` header kontrolü ekle (diğer route'lardaki desen)
+- **P0:** `vercel env ls production` çıktısıyla `CRON_SECRET`, `GEMINI_API_KEY`, `NVIDIA_NGC_API_KEY`, `OPENROUTER_API_KEY`, `COHERE_API_KEY` var mı kanıtla (OPENAI_API_KEY artık konu dışı)
+- **P0:** Production'ın gerçek deployment commit SHA'sını al, origin/master HEAD ile eşleşiyor mu doğrula; eşleşmiyorsa build log'unu getir
+- **P1:** `/admin/analysis`'te "Yapay Zeka Analizini Başlat"a basıp gerçek hata mesajını yakala (ekran görüntüsü/network response) — kodda olmayan bir string çıkıyorsa bu kesin kanıttır ki eski build çalışıyor
+
+**Kanıt türleri kabul edilir:** env var listesi çıktısı, deployment SHA + "Ready" durumu, gerçek curl/network response. Düz metin "tamamlandı" cümlesi bu turda otomatik reddedilir.
+
+**Founder'a not:** Vercel MCP bu oturumda kimlik doğrulamalı değil — bağlanırsa bir sonraki turda Antigravity'nin raporunu beklemeden env var/deployment durumunu doğrudan kendim doğrulayabilirim.
+
+---
+
 ## v11.80 — Branch Cleanup Denetimi + Admin Panel Deployment Kök Neden + TOM v5.0 Sadeleştirme (2026-07-28)
 
 **Özet:** Founder aynı oturumda üç konu açtı: (1) admin panelde production hataları ("401 Unauthorized", "OPENAI_API_KEY bulunamadı", server component crash), (2) GitHub'da 11 branch birikmesi, (3) NVIDIA'nın admin paneli için birincil veri kaynağı olup olamayacağı. Üçü de kanıtla kapatıldı; branch cleanup'ta Antigravity'nin ilk "tamamlandı" raporu bir kez yanlış çıktı, düzeltmesi bağımsız doğrulandı.
