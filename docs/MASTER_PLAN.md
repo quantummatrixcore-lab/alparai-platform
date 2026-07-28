@@ -6,6 +6,43 @@ Bu belge artık kısa tutuluyor: yalnızca "şu an neredeyiz" ve "sıradaki işl
 
 ---
 
+## v11.83 — Vercel Deployment Canlı Takip: CANCELED → ERROR → BUILDING İlerlemesi (2026-07-28)
+
+**Özet:** v11.82'nin bulduğu deployment-kuyruğu sorunu (`65be426`, `2fa4d0f`) çözülünce, `list_deployments` tekrar sorgulandı: build'ler artık gerçekten **tetikleniyor** (önceden ignore-command tarafından atlanıyordu). Ama ilk 5 gerçek build denemesi **state: ERROR** ile bitti — yeni, farklı bir build-time hatası. Bu MASTER_PLAN'a yazılırken Antigravity paralelde tespit edip düzeltti; şu an yeni bir build **BUILDING** durumunda, henüz sonucu bilinmiyor.
+
+### Bulgu — ERROR'lar (build gerçekten başlıyor, ama derleme hatası var)
+
+| Deployment                         | Commit                                  | Durum | Inspector URL                                                             |
+| ---------------------------------- | --------------------------------------- | ----- | ------------------------------------------------------------------------- |
+| `dpl_AX4f39PCNzjbzrdEg9AqJ6fd26Kf` | `bad473e` (5-language parity exclusion) | ERROR | vercel.com/quantummatrixcore-lab/alparai-com/AX4f39PCNzjbzrdEg9AqJ6fd26Kf |
+| `dpl_AQUadAy3nj61CtQWqE6S4yRxk2HQ` | `bad473e` (tekrar)                      | ERROR | vercel.com/quantummatrixcore-lab/alparai-com/AQUadAy3nj61CtQWqE6S4yRxk2HQ |
+| `dpl_DotapiYx1mRkXfUGeyUYxc6Tbmqn` | `2fa4d0f` (Hobby-plan cron fix)         | ERROR | vercel.com/quantummatrixcore-lab/alparai-com/DotapiYx1mRkXfUGeyUYxc6Tbmqn |
+| `dpl_6Hsw6TzgqJtML9PY9x4bXrtnpUG4` | `2fa4d0f` (tekrar)                      | ERROR | vercel.com/quantummatrixcore-lab/alparai-com/6Hsw6TzgqJtML9PY9x4bXrtnpUG4 |
+
+`get_deployment_build_logs`/`get_runtime_errors` bu turda "yap" onayına rağmen hâlâ "MCP tool call requires approval" veriyor (3 farklı deployment ID'siyle denendi) — build log'un tam içeriği bu oturumdan görülemedi. Kanıt yalnızca deployment metadata'sından (state, commit, zaman) çıkarıldı.
+
+### Antigravity'nin bağımsız düzeltmesi (paralel, spec beklenmeden)
+
+Commit `b7f963f`: `src/actions/innovations.ts`'e eksik `import { logger } from "@/lib/utils/logger"` eklendi — 1 satırlık değişiklik, klasik bir TypeScript/build-time hatası imzası (kullanılan ama import edilmemiş sembol). Bu, ERROR'lu build'lerin olası nedeniyle uyumlu.
+
+### Şu anki canlı durum (bu satır yazılırken)
+
+`list_deployments` tekrar sorgulandı: `b7f963f` için deployment **BUILDING** durumunda (`dpl_5q95CPRN2aZirtG8qWgJh5bfLpgt`, target: production), bir sonraki kuyruktaki deployment **QUEUED**. **Sonuç henüz bilinmiyor** — READY mi ERROR mi olacağı bu turda görülmedi, tahmin edilmiyor.
+
+### Durum Tablosu
+
+| Konu                                 | Durum                                         | Kanıt                                                   |
+| ------------------------------------ | --------------------------------------------- | ------------------------------------------------------- |
+| Deploy-gate/cron kök nedeni (v11.82) | ✅ doğrulandı, düzeltildi                     | build'ler artık tetikleniyor (CANCELED → gerçek deneme) |
+| Yeni build-time hatası               | ✅ tespit edildi + fix gönderildi             | `b7f963f` (logger import)                               |
+| Fix'in başarılı deploy'a yol açtığı  | ⏳ doğrulanamadı — build sürüyor              | `dpl_5q95CPRN2aZirtG8qWgJh5bfLpgt`: BUILDING            |
+| Build log tam içeriği                | ⏳ erişilemedi                                | MCP onay hatası, 3 denemede de                          |
+| Custom domain doğru projeye bağlı mı | ⏳ Founder'ın dashboard'dan bakması gerekiyor | API bunu göstermiyor (genel kısıt)                      |
+
+**Handoff:** Bir sonraki turda (veya Founder production'ı tekrar test ettiğinde) bu build'in READY olup olmadığı ve gerçekten canlıya yansıyıp yansımadığı doğrulanacak, v11.84 olarak yazılacak. Kanıtsız "artık çalışıyor" iddiası bu noktada yapılmıyor — build tamamlanmadan sonuç bilinmez.
+
+---
+
 ## v11.82 — Vercel Doğrudan Bağlandı: Gerçek Kök Neden Deployment Kuyruğu, Antigravity Bağımsız Olarak Doğru Fix'i Yaptı (2026-07-28)
 
 **Özet:** Founder bu turda Vercel MCP + Gmail MCP bağladı. İlk kez production durumu koddan tahmin değil, **doğrudan Vercel API'sinden** sorgulandı. v11.81'in "env var eksik" teşhisinden daha temel bir sorun bulundu: **deployment kuyruğu tıkanmıştı.** Bulgu MASTER_PLAN'a yazılırken Antigravity paralelde (muhtemelen v11.81'in spec'ini okuyarak) tam isabetli 2 commit attı — bulgular ve düzeltme birbirini doğruladı.
