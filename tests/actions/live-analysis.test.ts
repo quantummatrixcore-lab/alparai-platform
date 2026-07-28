@@ -24,6 +24,7 @@ describe("Live System Analysis", () => {
         message: "No configured API key found",
         model: "failover",
       },
+      attemptedModels: ["failover"],
     });
 
     const result = await runLiveSystemAnalysis();
@@ -46,6 +47,7 @@ describe("Live System Analysis", () => {
         usage: { promptTokens: 10, completionTokens: 20, totalTokens: 30 },
         latencyMs: 150,
       },
+      attemptedModels: ["nvidia/llama-3.1-nemotron-70b-instruct"],
     });
 
     const result = await runLiveSystemAnalysis();
