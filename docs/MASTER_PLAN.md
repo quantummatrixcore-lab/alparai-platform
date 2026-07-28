@@ -6,6 +6,43 @@ Bu belge artık kısa tutuluyor: yalnızca "şu an neredeyiz" ve "sıradaki işl
 
 ---
 
+## v11.82 — Vercel Doğrudan Bağlandı: Gerçek Kök Neden Deployment Kuyruğu, Antigravity Bağımsız Olarak Doğru Fix'i Yaptı (2026-07-28)
+
+**Özet:** Founder bu turda Vercel MCP + Gmail MCP bağladı. İlk kez production durumu koddan tahmin değil, **doğrudan Vercel API'sinden** sorgulandı. v11.81'in "env var eksik" teşhisinden daha temel bir sorun bulundu: **deployment kuyruğu tıkanmıştı.** Bulgu MASTER_PLAN'a yazılırken Antigravity paralelde (muhtemelen v11.81'in spec'ini okuyarak) tam isabetli 2 commit attı — bulgular ve düzeltme birbirini doğruladı.
+
+### Bulgu 1 — Git kanıtları gerçek GitHub'da doğrulandı
+
+`mcp__github__get_commit` ile (yerel git proxy değil, gerçek GitHub API) commit `8ec3f9c`'nin gerçekten master HEAD'i olduğu teyit edildi — önceki turlardaki "commit var" doğrulamaları geçerliydi, proxy güvenilirdi.
+
+### Bulgu 2 — Deployment kuyruğu 2+ gün geride, CANCELED döngüsünde
+
+`mcp__Vercel__list_deployments` son 20 deployment'ı gösterdi: en son deneme, commit mesajı `v11.33` olan (GitHub'da doğrulanan gerçek tarih: **2026-07-26**, bugünden 2 gün önce) bir commit'e aitti, durumu **CANCELED**. Bugünkü asıl fix commit'leri (`ae30597`...`8ec3f9c`, v11.74-81 dönemi) bu 20 deployment'ın **hiçbirinde görünmüyordu** — Vercel bunları henüz build etmeye çalışmamıştı bile.
+
+### Bulgu 3 — Gerçek kök neden: Hobby plan + saatlik cron uyumsuzluğu
+
+Bulgu yazılırken Antigravity iki commit attı (`65be426`, `2fa4d0f`) — ikisi de tam isabetli:
+
+- `vercel.json`'daki `fetch-external` cron zamanlaması `"0 * * * *"` (saatlik) idi. **Vercel Hobby plan yalnızca günlük cron destekliyor** — bu uyumsuzluk, deployment validasyonunun sürekli başarısız/CANCELED olmasının gerçek nedeni olabilir. Düzeltme: `"0 0 * * *"` (günlük).
+- `src/app/api/cron/fetch-external/route.ts`'e v11.81'de tam olarak spec'lenen `x-vercel-cron: 1` header kontrolü eklendi — v11.81'in cron-bug teşhisi doğrulandı ve düzeltildi.
+- `scripts/deploy-gate.mjs` gevşetildi: artık `master` branch'teki (hemen hemen) her commit deploy tetikliyor, yalnızca `[deploy]` etiketli olanlar değil. Bu, docs-only commit'lerin de artık build tetikleyeceği anlamına geliyor (maliyet açısından not edilecek, ama "commit'ler deploy olmuyor" şikayetini kökten çözüyor).
+
+### Durum
+
+| Konu                                              | Durum                   | Kanıt                                                                                                                                             |
+| ------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Git/GitHub senkronizasyonu                        | ✅ doğrulandı           | `mcp__github__get_commit` gerçek API                                                                                                              |
+| Deployment kuyruğu tıkanıklığı kök nedeni         | ✅ bulundu + düzeltildi | commit `2fa4d0f` (Hobby plan cron uyumsuzluğu)                                                                                                    |
+| Cron route `x-vercel-cron` bug'ı (v11.81 spec'i)  | ✅ düzeltildi           | commit `65be426`                                                                                                                                  |
+| Deploy-gate katılığı                              | ✅ gevşetildi           | commit `65be426`, `scripts/deploy-gate.mjs` diff                                                                                                  |
+| Custom domain'in doğru projeye bağlı olduğu       | ⏳ doğrulanamadı        | `get_project` API'si custom domain göstermiyor (genel API kısıtı, 3 alakasız projede de aynı) — Founder'ın Vercel dashboard'dan bakması gerekiyor |
+| Bu fix'lerin production'da gerçekten yayınlandığı | ⏳ doğrulanamadı        | `get_deployment_build_logs`/`get_runtime_errors` bu turda "onay gerekiyor" hatası verdi                                                           |
+
+**Not:** Bu turda `get_deployment_build_logs` ve `get_runtime_errors` araçları MCP onay hatası verdi — CANCELED deployment'ların build log'undaki tam hata mesajı bu yüzden görülemedi; Hobby-plan-cron teşhisi Antigravity'nin commit mesajından ve genel Vercel bilgisinden çıkarıldı, build log'la birebir teyit edilmedi.
+
+**Handoff:** Bir sonraki turda (build log onayı verilirse veya Founder yeni bir production testi yaparsa) bu fix'lerin gerçekten deployment'ı düzelttiği doğrulanacak, v11.83 olarak yazılacak.
+
+---
+
 ## v11.81 — Admin Panel Hâlâ Canlı Değil: 360° Kök Neden + Antigravity'ye Kanıt Zorunluluğu (2026-07-28)
 
 **Özet:** v11.79/v11.80'de Antigravity "OPENAI_API_KEY hatası düzeltildi, 82 incident yüklendi, canlı mod aktif" dedi, git commit kanıtıyla doğrulanmıştı. **Founder aynı production sayfalarını tekrar test etti ve birebir aynı hataları görüyor** — 401 (ecosystem), "OPENAI_API_KEY bulunamadı" (analysis, strategy), server component crash (innovations), questionnaire/valuation/marketing canlı değil. Bu oturumda commit varlığının production'da çalıştığı anlamına gelmediğinin **ikinci** kanıtı (birincisi: v11.80'deki kaybolan Dependabot PR'lar).
