@@ -975,6 +975,7 @@
     "health_status_down": "Down",
     "health_status_healthy": "Healthy",
     "health_subsystem_grid": "9-Subsystem Health Grid",
+    "health_system_desc": "Real-time health monitoring of 9 core subsystems including Supabase DB, Auth, Redis, Storage, AI Gateway, Crons, Email, and Edge CDN.",
     "health_system_status": "System Status:",
     "heatmap_analysis": "Heatmap analysis of model performance",
     "heatmap_cat_bias": "Bias",
@@ -2300,7 +2301,20 @@
     "btn_disable": "Disable",
     "btn_enable": "Enable",
     "stats_cost": "Estimated Cost",
-    "stats_tokens": "Total Tokens"
+    "stats_tokens": "Total Tokens",
+    "stats_avg_latency": "Avg Latency",
+    "stats_daily_tokens": "Daily Tokens",
+    "engines_title": "Active Engines Status",
+    "engines_col_name": "Engine",
+    "engines_col_type": "Type",
+    "engines_col_status": "Status",
+    "engines_col_heartbeat": "Last Heartbeat",
+    "cron_title": "Cron Job Run Logs",
+    "cron_empty": "No cron runs recorded yet.",
+    "cron_col_name": "Cron",
+    "cron_col_status": "Status",
+    "cron_col_started": "Started At",
+    "cron_col_error": "Error"
   },
   "takedown": {
     "reasons": {

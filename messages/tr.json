@@ -975,6 +975,7 @@
     "health_status_down": "Çökmüş",
     "health_status_healthy": "Sağlıklı",
     "health_subsystem_grid": "9 Alt Sistem Sağlık Tablosu",
+    "health_system_desc": "Supabase DB, Auth, Redis, Storage, AI Gateway, Crons, Email ve Edge CDN dahil 9 temel alt sistemin anlık canlı durum takibi.",
     "health_system_status": "Sistem Durumu:",
     "heatmap_analysis": "Model performansının ısı haritası analizi",
     "heatmap_cat_bias": "Yanlılık",
@@ -2300,7 +2301,20 @@
     "btn_disable": "Durdur",
     "btn_enable": "Başlat",
     "stats_cost": "Tahmini Maliyet",
-    "stats_tokens": "Toplam Token"
+    "stats_tokens": "Toplam Token",
+    "stats_avg_latency": "Ort. Gecikme",
+    "stats_daily_tokens": "Günlük Token",
+    "engines_title": "Aktif Motor Durumları",
+    "engines_col_name": "Motor",
+    "engines_col_type": "Tür",
+    "engines_col_status": "Durum",
+    "engines_col_heartbeat": "Son Kalp Atışı",
+    "cron_title": "Cron İş Günlükleri",
+    "cron_empty": "Henüz cron çalışması kaydedilmemiş.",
+    "cron_col_name": "Cron",
+    "cron_col_status": "Durum",
+    "cron_col_started": "Başlangıç",
+    "cron_col_error": "Hata"
   },
   "takedown": {
     "reasons": {

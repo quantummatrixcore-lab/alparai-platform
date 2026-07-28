@@ -25,12 +25,9 @@ export default async function HealthPage({ params }: { params: Promise<{ locale:
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500"></span>
           </span>
-          {t("nav_systemHealth")} — Canlı Sistem Sağlığı & SLA Alarmları
+          {t("nav_systemHealth")}
         </h1>
-        <p className="text-fg-muted mt-1 text-sm">
-          Supabase DB, Auth, Redis, Storage, AI Gateway, Crons, Email ve Edge CDN dahil 9 temel alt
-          sistemin anlık canlı durum takibi.
-        </p>
+        <p className="text-fg-muted mt-1 text-sm">{t("health_system_desc")}</p>
       </div>
 
       <HealthDashboardClient initialReport={initialReport} />
