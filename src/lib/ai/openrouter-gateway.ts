@@ -43,6 +43,12 @@ export type {
 // Default model setup for the Cross-Audit Engine (kept for backwards compatibility)
 export const FREE_TRIAGE_MODELS: readonly GatewayModel[] = [
   { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 2048 },
+  {
+    id: "nvidia/llama-3.1-nemotron-70b-instruct",
+    provider: "nvidia",
+    tier: "free",
+    maxTokens: 2048,
+  },
   { id: "meta/llama-3.1-70b-instruct", provider: "nvidia", tier: "free", maxTokens: 2048 },
   { id: "deepseek/deepseek-chat", provider: "openrouter", tier: "free", maxTokens: 2048 },
   { id: "blackboxai", provider: "blackbox", tier: "free", maxTokens: 2048 },
@@ -58,6 +64,12 @@ export const SUPREME_COURT_MODEL: GatewayModel = {
 // Dedicated multi-provider failover chains for each parallel slot
 export const TRIAGE_SLOT_1_CHAIN: readonly GatewayModel[] = [
   { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 2048 },
+  {
+    id: "nvidia/llama-3.1-nemotron-70b-instruct",
+    provider: "nvidia",
+    tier: "free",
+    maxTokens: 2048,
+  },
   { id: "meta/llama-3.1-70b-instruct", provider: "nvidia", tier: "free", maxTokens: 2048 },
   { id: "deepseek/deepseek-chat", provider: "openrouter", tier: "free", maxTokens: 2048 },
   { id: "blackboxai", provider: "blackbox", tier: "free", maxTokens: 2048 },
