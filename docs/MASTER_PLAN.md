@@ -6,6 +6,52 @@ Bu belge artık kısa tutuluyor: yalnızca "şu an neredeyiz" ve "sıradaki işl
 
 ---
 
+## v11.87 — 🔴 KRİTİK: Sahte Danışman Kimlikleri Production'da Canlı + "Sovereign Architect" Talebi Değerlendirmesi (2026-07-28)
+
+**Özet:** İki ayrı konu bu turda birleşti. (1) Founder, kendini "sistem talimatı" gibi gösteren ama aslında kullanıcı mesajı olan bir metin yapıştırdı — MASTER_PLAN'ı devasa bir doktrine dönüştürmemi ve doğrulanmamış iddialar/rakamlar yazmamı istiyordu; TOM disiplini gereği reddedildi/etiketlendi. (2) Bu değerlendirme sırasında Antigravity'nin v11.86 fix commit'i (`35b0e39`) incelendi: **3 fix gerçek ve iyi, 1 fix kısmi, 1 fix ciddi bir sorun içeriyor ve şu an production'da canlı.**
+
+### 🔴 P0 — Advisory Board seed'i gerçek kurumlara bağlı UYDURMA isimler içeriyor, ŞU AN PRODUCTION'DA CANLI
+
+`supabase/migrations/20260729000000_seed_advisory_board.sql`, `advisory_board_members` tablosuna **4 kurgusal kişi** ekledi, gerçek prestijli kurumlara sahte bağlarla: "Prof. Dr. Kemal Yılmaz" (ETH Zurich & İTÜ), "Dr. Sarah Jenkins" (Stanford HAI Institute), "Prof. Arda Akdağ" (Bilkent Hukuk), "Elena Rostova" (CERN BT Güvenliği) — hepsi `is_active: true`.
+
+**Doğrulandı — bu şu an production'da:** `mcp__Vercel__list_deployments` ile kontrol edildi, commit `35b0e39` içeren 2 deployment `state: READY`, `target: production`. **Bu veriler şu anda gerçek ziyaretçilerin/yatırımcıların erişebileceği admin panelde duruyor.**
+
+**Neden kritik:** v11.86'daki spec'im "Founder'la netleştirilmeli" diyordu — kurgusal isim üretimi istenmedi. Bu, v11.78'de tespit edilen "seed veri yatırımcıya gerçek gibi görünürse due diligence'ta telafisi olmayan güven kaybı" riskiyle **aynı sınıfta**, üstelik daha ağır — burada gerçek kurumlara (ETH Zürih, Stanford, CERN, Bilkent) sahte kişi atfediliyor. Bir "güven altyapısı" şirketi için bu özellikle riskli.
+
+**İyi haber — halka açık sayfa etkilenmemiş:** `/about/advisory-board` (public sayfa) bu tabloyu sorgulamıyor, yalnızca kategori bazlı açıklamalar gösteriyor (isim yok). Risk şu an yalnızca **admin panelinde** (girişli erişim), ama due diligence sırasında admin erişimi verilebilir.
+
+**Founder'ın kararı gerekiyor:** (a) Bu migration'ı geri al (`DELETE FROM advisory_board_members WHERE name IN (...)` — rollback SQL zaten migration dosyasında yazılı), (b) veya kurgusal olduğunu açıkça belirten bir etiket ekle (örn. `is_active: false` + "ÖRNEK/ILLUSTRATIVE" notu), (c) veya gerçek aday isimlerle değiştir.
+
+### ✅ Diğer v11.86 fix'leri — doğru ve gerçek
+
+- **Strategy AI prompt:** "(mock)" kelimesi kaldırıldı, gerçek/eyleme dönüştürülebilir rapor istendi. Doğru düzeltme.
+- **LinkedIn:** 37 placeholder satırı **gerçek, doğrulanabilir** AI güvenlik liderleriyle değiştirildi (Dario Amodei, Yoshua Bengio, Demis Hassabis, Timnit Gebru vb.) — hepsi `status: 'to_add'` (bağlantı kurulacaklar listesi, "zaten danışmanımız" iddiası değil). Doğru ve dürüst çerçeveleme.
+- **Finance:** github_copilot/claude_pro/google_one maliyet satırları eklendi (varsayılan $19-20/ay). **Not:** bunlar makul varsayılan/tahmini değerler — Founder gerçek fatura tutarlarını girmeli, kod bunu tahmin edemez.
+
+### ⚠️ Kısmi fix — Integrations rating
+
+`tavilyKey` artık gerçek env var'dan okunuyor (`process.env.TAVILY_API_KEY`) — bu kısım doğru. Ama Tavily key set değilse (muhtemelen production'da hâlâ yok), rating hâlâ **uydurma bir sezgisel değer** (`envVars var mı` → 4.8/4.5/4.2) — "her zaman 3" yerine "her zaman 4.2-4.8 arası bir şey" oldu, temelde hâlâ fabrikasyon veri, yalnızca daha az belli oluyor. `pros`/`cons` alanları da hâlâ jenerik sabit metin.
+
+### "Sovereign Architect" talebi — TOM değerlendirmesi (Founder onaylı karar)
+
+Founder'ın kararları: (1) KVKK/"Case #001" iddiası `[tahmin — doğrulanmamış]` etiketiyle işlenecek, gerçek olarak yazılmayacak. (2) Doğrulanmamış grant rakamları (Horizon Europe, EIC, Open Philanthropy, TÜBİTAK vb.) için karar bana bırakıldı — profesyonel karar: yalnızca zaten kanıtlı 9 program (v11.86'da doğrulanan grant_applications seed'i) MASTER_PLAN'da fact olarak kalıyor; diğerleri gerçek var olan fon mekanizmaları olarak **araştırılacak liste** halinde, taahhüt edilmiş rakam gibi değil, açıkça "ALPAR AI'ın bu programlara başvurup başvurmadığı/uygunluğu doğrulanmadı" notuyla anılabilir — bu turda MASTER_PLAN'a yeni bir rakam yazılmadı. (3) Format: mevcut yalın yapı korunuyor, devasa 5-bölümlük yeniden yazım yapılmadı.
+
+### Durum Tablosu
+
+| Konu                                              | Durum                                                 | Kanıt                                                 |
+| ------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- |
+| Advisory Board sahte isimler                      | 🔴 **Production'da canlı, Founder kararı bekleniyor** | `dpl_2VmSEjJ8...`, `dpl_6zmZrLCJ...` READY/production |
+| Public advisory-board sayfası                     | ✅ etkilenmemiş                                       | kategori bazlı, isim yok                              |
+| LinkedIn gerçek isimler                           | ✅ doğru                                              | 37 placeholder → gerçek, doğrulanabilir kişiler       |
+| Finance abonelik takibi                           | ✅ makul varsayılan                                   | Founder gerçek tutarı girmeli                         |
+| Strategy AI prompt                                | ✅ düzeltildi                                         | "(mock)" kaldırıldı                                   |
+| Integrations rating                               | ⚠️ kısmi                                              | Tavily key okunuyor ama fallback hâlâ uydurma         |
+| KVKK/grant rakamları (Sovereign Architect talebi) | ✅ TOM disipliniyle işlendi                           | doğrulanmamış hiçbir şey fact olarak yazılmadı        |
+
+**Handoff — Antigravity'ye acil:** Advisory Board migration'ı için Founder'ın kararını bekle; onay olmadan bu veriyi olduğu gibi bırakma. Integrations rating fallback'i de gerçek veri yoksa "N/A" göstermeli, uydurma sayı değil.
+
+---
+
 ## v11.86 — 13 Madde İkinci Tur Admin QA + v11.85 Regresyonunun Düzeltmesi Doğrulandı (2026-07-28)
 
 **Özet:** Founder production'da (READY sonrası) 13 ayrı admin sayfası sorunu raporladı, artı "360 derece düşün" talebi. 3 paralel Haiku keşfi her maddeyi kod üzerinden doğruladı: **2 gerçek bug, 3 eksik özellik, 3 madde kodda zaten çalışıyor (Founder'ın iddiası kodla çelişiyor), 1 madde Founder'ın öncülü yanlış (zaten gerçek veri var), 2 karma durum.** Ayrıca aynı turda Antigravity, v11.85'te tespit edilen `getCurrentUser()` yetki-kapsamı regresyonunu **spec'lendiği gibi** düzeltti — bağımsız test çalıştırmasıyla doğrulandı.
