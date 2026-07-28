@@ -7,7 +7,9 @@ export const maxDuration = 120;
 
 async function getHandler(request: Request) {
   const authHeader = request.headers.get("authorization");
-  const isAuthorized = authHeader === `Bearer ${process.env.CRON_SECRET}`;
+  const isVercelCron = request.headers.get("x-vercel-cron") === "1";
+  const isAuthorized =
+    isVercelCron || (process.env.CRON_SECRET && authHeader === `Bearer ${process.env.CRON_SECRET}`);
   if (!isAuthorized) return new NextResponse("Unauthorized", { status: 401 });
 
   const result = await runExternalFetchTask();
