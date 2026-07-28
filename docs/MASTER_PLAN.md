@@ -4,6 +4,83 @@ Bu belge artık kısa tutuluyor: yalnızca "şu an neredeyiz" ve "sıradaki işl
 
 ---
 
+## v11.78 — T-5 Lansman Değerlendirmesi (2026-07-28)
+
+**Özet:** Lansmana 5 gün kaldı ve tarih keyfi değil — `docs/UPDATE_PLAN_2026Q3.md:5`'e göre 2 Ağustos 2026, EU AI Act Madde 73'ün yürürlüğe girdiği gün. Tarih ayrıca koda gömülü (`src/app/api/cron/kill-metric/route.ts:16`, `pivot-check/route.ts:16`). Ürün fazlasıyla hazır: 118 rota, 87+ tablo, canlı Stripe, 9 AI sağlayıcı adaptörü. Dağıtım tarafında ise sıfır hareket var — 7 uzman maili, Product Hunt varlıkları, Reddit/HackerOne stratejileri yazılmış, hiçbiri gönderilmemiş. Son 20 commit'te ürün kodu yok; hepsi MASTER_PLAN ve yönetişim. Bu girdinin tek amacı, kalan 5 günü doğru yere yönlendirmek.
+
+### DORA Ölçümü — dürüst tablo
+
+Elite seviyeye "ulaşmak" için süreç değiştirmeye gerek yok; **ölçüm kurmaya** gerek var. Bugün 4 metriğin 3'ü raporlanamaz durumda.
+
+| Metrik                        | Durum                                | Dayanak                                                                                                                                                            |
+| ----------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Dağıtım sıklığı               | Elite bandına yakın **[vekil ölçü]** | 90 günde 125 `[deploy]` işaretli commit ≈ 1,4/gün. Gerçek deploy kaydı Vercel'de; repodan görünmüyor.                                                              |
+| Değişiklik teslim süresi      | **Ölçülemiyor**                      | commit→prod zaman damgası hiçbir yerde toplanmıyor.                                                                                                                |
+| Değişiklik başarısızlık oranı | **Ölçülemiyor**                      | 19 rollback/hotfix commit'i var, ama bu metrik "başarısız _deploy_ oranı"dır, "rollback yazan _commit_ oranı" değil. İkisini karıştırıp oran türetmek yanlış olur. |
+| Hizmeti geri yükleme süresi   | **Ölçülemiyor**                      | Sentry'de olay verisi var, toplanmıyor.                                                                                                                            |
+
+Not: `public.dora_metrics` tablosu şemada **zaten mevcut**. Dolu olup olmadığı ve besleyen bir iş bulunup bulunmadığı doğrulanmadı — iki yönde de iddia edilmiyor.
+
+Mevcut hat: otomatik prod deploy workflow'u yok (Vercel GitHub entegrasyonu + `scripts/deploy-gate.mjs`), `rollback.yml` yalnızca manuel tetiklemeli, `smoke-test.yml` deploy sonrası canlı sağlık kontrolü yapıyor. Test tarafı sağlam: 168 test dosyası, coverage eşikleri %85/85/80/85.
+
+### Dört Mercek
+
+**A. Yönetişim — "kurucu 3 ay yoksa ne olur?"**
+
+- `.github/CODEOWNERS`'ta **her yol** tek kişide (`@quantummatrixcore-lab`). Başvuruları o gönderiyor, hesapları o açıyor, onayı o veriyor. Tek nokta arıza.
+- Asıl yönetişim bulgusu şu: lansman öncesi son 4 haftanın mühendislik dikkati, "MASTER_PLAN'a kim yazabilir" sorusuna gitti (v11.67→v11.77 zinciri, 899 KB arşiv). Sorun gerçekti, ama maliyeti ürün ve dağıtım oldu.
+- Öneri: lansman haftası boyunca yönetişim tartışması dondurulur; T+7'de yeniden açılır.
+
+**B. Regülasyon ve ekosistem**
+
+- Lansman günü = AI Act Madde 73'ün (ciddi olay bildirimi) uygulanmaya başladığı gün. Bu, "bir platform daha" ile "yükümlülüğün doğduğu gün hazır olan platform" arasındaki farktır. Basın metni, uzman maili ve hibe başvurularının tamamı bu tek cümle etrafında kurulmalı.
+- **Maddenin yürürlük tarihi hukuki teyit ister** `[doğrulanmalı]` — repo içi doküman kaynak sayılmaz. Yanlışsa tüm konumlandırma dayanaksız kalır, bu yüzden T-5'te doğrulanması gereken tek dış bilgi budur.
+- Ürün tarafında karşılığı zaten var: `/transparency/art-73-tracker` rotası canlı.
+
+**C. Yatırılabilirlik**
+
+- **P0 risk — tohumlanmış gelir verisi.** `finance_revenue_metrics` tablosu Şubat–Temmuz 2026 için seed edilmiş "$12k–$34k MRR / 52–142 abone" içeriyor. Aynı anda `/invest` ve `/investor-portal` halka açık rotalar. Bu iki yüzeyin kesişip kesişmediği doğrulanmalı; seed veri yatırımcıya gerçek gibi görünüyorsa, due diligence'ta yakalandığında telafisi olmayan güven kaybı doğar.
+- Ödeme altyapısı gerçek (Stripe checkout + webhook canlı, 4 katmanlı fiyatlandırma). **Gerçek abone sayısı ölçülmedi.**
+- DORA'nın 3/4 metriğinin raporlanamaması teknik DD'de doğrudan soru olur.
+
+**D. Ürün-pazar uyumu — "ilk 100 kullanıcı nereden?"**
+
+- Hazır ama kullanılmamış kanallar: 7 uzman maili (`docs/OUTREACH/01–07`), Reddit/HackerOne/GitHub stratejileri, Product Hunt görselleri (`docs/launch-assets/`), TR basın taslakları.
+- Asıl tespit: **118 rota ve 87 tablo inşa edilmişken hiçbir dağıtım kanalı açılmamış.** Lansman öncesi bir şirket için ürün ihtiyacın çok ötesinde; kanal ise sıfır.
+- T-5'te en yüksek getirili iş yeni özellik değil, **gönderme eylemi**.
+
+### T-5 Öncelik Listesi
+
+| Öncelik                    | İş                                                                                                            | Sorumlu               | Dosya / yer                                                                               |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------- | --------------------- | ----------------------------------------------------------------------------------------- |
+| **P0**                     | Seed gelir verisi yatırımcı-görünür yüzeyde çıkıyor mu — doğrula; çıkıyorsa kaldır veya "örnek veri" etiketle | Antigravity           | `/invest`, `/investor-portal`, `/admin/finance`, `finance_revenue_metrics` seed migration |
+| **P0**                     | 60 action dosyasında serbest metin alan girdileri tespit et, `maskPII` çağrısı ekle                           | Antigravity           | `src/actions/*.ts` — `whistleblower.ts` ilk sırada                                        |
+| **P0**                     | AI Act Madde 73 yürürlük tarihini resmi kaynaktan teyit et                                                    | Founder               | —                                                                                         |
+| **P1**                     | 5 yüksek ihtimalli uzman mailini gönder; her gönderimin mesaj kimliği kanıt olarak kaydedilsin                | Antigravity           | `docs/OUTREACH/`, Gmail MCP                                                               |
+| **P1**                     | Lansman günü varlıklarını zamanla (Product Hunt, Reddit, TR basın)                                            | Founder + Antigravity | `docs/launch-assets/`, `docs/RUNBOOK_LAUNCH_DAY.md`                                       |
+| **P2** _(lansman sonrası)_ | DORA ölçümünü kur: Vercel Deployments API + `git log` + Sentry Issues → `public.dora_metrics`                 | Antigravity           | `scripts/dora-metrics.mjs` [yeni]                                                         |
+| **P2** _(sonrası)_         | `de/fr/ru.json` üçü de birebir 125.692 byte — gerçek çeviri mi, kopya mı, doğrula                             | Antigravity           | `messages/{de,fr,ru}.json`                                                                |
+| **P3**                     | `CLAUDE.md` "Next.js 15" diyor, gerçek 16.2.11 — düzeltme kararı                                              | Mimar                 | `CLAUDE.md`                                                                               |
+
+P2'lerin ertelenme gerekçesi: T-5'te enstrümantasyon ve çeviri denetimi yazmak, lansmanın kendisinden çalar.
+
+### PII kapsama boşluğu (P0'ın gerekçesi)
+
+`src/lib/pii/guardian.ts` 334 satır ve 14 kategori maskeliyor (IBAN mod-97, TC Kimlik algoritma doğrulamalı, Luhn'lu kart, API anahtar önekleri…). Ama `maskPII` yalnızca **2 dosyadan** çağrılıyor: `src/actions/incidents.ts:105-106` ve `src/actions/comments.ts:42`. Toplam 60 action dosyası var ve `CLAUDE.md` "her kullanıcı serbest metni insert öncesi maskelenir" diyor. Kalan 58'in hangisinin serbest metin aldığı **doğrulanmadı** — ama `whistleblower.ts` tanımı gereği ürünün en hassas girdisi ve kapsam dışında. Denetim lansmandan önce yapılmalı.
+
+### Güvenlik ve teknik borç — temiz taraf
+
+- RLS %100: 65 `create table` / 65 `enable row level security`, açıkta tablo yok.
+- `src/` altında 597 dosyada **0** TODO/FIXME/HACK.
+- `.env.example` var, `.env*` gitignore'da, repoda gerçek sır yok.
+- Bağımlılıklar güncel: next 16.2.11, react 19.2.3, supabase-js 2.110.8, tailwind 4.3.3.
+
+### Bu planın başarısız olmasının en olası tek nedeni
+
+Ürün hazır — fazlasıyla hazır. 118 rota, 87 tablo, canlı ödeme, 9 AI sağlayıcısı, %100 RLS, sıfır TODO. Dağıtım varlıkları da hazır: mailler yazılmış, basın metinleri yazılmış, Product Hunt görselleri hazırlanmış. Eksik olan tek şey **gönderme eylemi**. Buna rağmen son 4 haftanın mühendislik dikkati, bir doküman dosyasına kimin yazma yetkisi olduğu tartışmasına gitti; arşiv 899 KB'a ulaştı, son 20 commit'te tek satır ürün kodu yok. Bu planın başarısız olmasının en olası nedeni teknik bir arıza değil: kalan 5 günün de aynı yönetişim döngüsünde geçmesi ve regülasyonun yürürlüğe girdiği günün, hazır olan her şey masada dururken sessizce geçmesi.
+
+---
+
 ## Şu An Neredeyiz (2026-07-28) — v11.77 Güncellemesi
 
 **Bulgu: Büyüme varlıkları hazır ve doğrulanmış.**
