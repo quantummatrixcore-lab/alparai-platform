@@ -6,6 +6,61 @@ Bu belge artık kısa tutuluyor: yalnızca "şu an neredeyiz" ve "sıradaki işl
 
 ---
 
+## v11.86 — 13 Madde İkinci Tur Admin QA + v11.85 Regresyonunun Düzeltmesi Doğrulandı (2026-07-28)
+
+**Özet:** Founder production'da (READY sonrası) 13 ayrı admin sayfası sorunu raporladı, artı "360 derece düşün" talebi. 3 paralel Haiku keşfi her maddeyi kod üzerinden doğruladı: **2 gerçek bug, 3 eksik özellik, 3 madde kodda zaten çalışıyor (Founder'ın iddiası kodla çelişiyor), 1 madde Founder'ın öncülü yanlış (zaten gerçek veri var), 2 karma durum.** Ayrıca aynı turda Antigravity, v11.85'te tespit edilen `getCurrentUser()` yetki-kapsamı regresyonunu **spec'lendiği gibi** düzeltti — bağımsız test çalıştırmasıyla doğrulandı.
+
+### v11.85 regresyon düzeltmesi — doğrulandı
+
+Commit `e02e9df`: `src/lib/auth/session.ts`'e tam olarak spec'lenen `if (!profile && !isFounder) return null;` kontrolü eklendi. `pnpm test tests/lib/session.test.ts tests/actions/live-cross-audit.test.ts tests/actions/live-strategy.test.ts` çalıştırıldı — **15/15 test geçti** (önceden 7 başarısızdı). Gateway test mock'ları da güncellendi. v11.85'in P0 spec'i tam karşılandı.
+
+### 🔴 Kategori A — Gerçek, doğrulanmış bug'lar
+
+- **A1. Strategy AI analizi şablon gibi:** `src/actions/admin/live-strategy.ts:24` — prompt'ta LLM'e kelimenin tam anlamıyla "**(mock)**" bir rapor oluşturması söyleniyor. Gerçek SWOT/risk sayıları doğru enjekte ediliyor ama bu talimat şablon cevaba yol açıyor.
+- **A2. Integrations sayfası tüm alternatiflere sabit 3 yıldız:** `src/app/api/admin/integrations/route.ts:243` — `result.rating = 3` koşulsuz. Satır 233: `tavilyKey = null` — gerçek rating hesaplaması hiç tetiklenmiyor. `page.tsx:80-87`'de "$347/ay tasarruf" da sabit mock veri. **Founder'ın şüphesi doğruydu.**
+
+### ⚪ Kategori B — Kodda zaten çalışıyor, Founder'ın iddiası kodla çelişiyor
+
+- **B1. Questionnaire "Tekrar Çalıştır":** Bug değil — `questionnaire-client.tsx:247`'de model seçilmeden buton kasıtlı devre dışı (UX netliği eksik, işlevsellik sorunu yok).
+- **B2. Resources sayfası "hepsi yok":** Kod incelendiğinde `getLiveCapacityMetrics()` gerçek canlı veri çekiyor (DB/Storage/Redis/Email kullanımı, vendor kataloğu). Founder'ın iddiası koda göre yanlış — canlı ortamda farklı bir sorun (cache/oturum) olabilir.
+- **B3. Feature Flags butonları:** `handleToggle()` → server action → DB upsert + revalidate zinciri eksiksiz. Sayfanın amacı: PII Guardian/Sybil shield/Cross-Audit/GEO Verifier gibi sistem özelliklerini Redis üzerinden anlık aç/kapa — teknik ops paneli, "ne olduğunu anlamadım" normal bir tepki.
+
+### 🟡 Kategori C — Eksik özellik (bug değil, yeni geliştirme)
+
+- **C1. Valuation:** Strateji verilerinden otomatik yeniden hesaplama hiç yok, tamamen manuel giriş+kaydet akışı.
+- **C2. Advisory Board:** Tablo tamamen boş (0 satır), hiç action dosyası yok. Founder'ın istediği "AI ile analiz doldur" mekanizması sıfırdan yazılmalı.
+- **C3. Finance:** Şema yalnızca vercel/supabase/gemini/anthropic/resend/upstash/buffer destekliyor — GitHub/Claude Pro/Google Ultra gibi kişisel abonelikler için ne alan ne mekanizma var.
+
+### 🟢 Kategori D — Founder'ın öncülü yanlış
+
+- **D1. Grants:** Zaten **9 GERÇEK, resmi grant programı** seed edilmiş (Google for Startups, AWS Activate, Anthropic Startup Program, NVIDIA Inception, GitHub/Vercel/Supabase for Startups vb.) — gerçek URL'ler, gerçek fon miktarlarıyla. Ek liste gerekmiyor.
+
+### Karma durumlar
+
+- **LinkedIn:** 13 gerçek isim (Rumman Chowdhury, Irene Solaiman, Sean McGregor vb.) + 37 "Placeholder Contact N" iskele satırı — bunların gerçek isimlerle değiştirilmesi gerekiyor.
+- **Outreach:** Kasıtlı boş — şablon + gönderim mekanizması hazır, Founder'ın gerçek kişi girmesi bekleniyor.
+- **Providers:** Sayfa aslında API key yönetimi yapıyor, "Providers" adı yanıltıcı; UI'daki "OpenAI" seçeneğinin karşılığı olan adapter yok (Gateway'e taşındı); `integrations/registry.ts`'de AI sağlayıcıları hiç yok.
+
+### Durum Tablosu
+
+| Kategori                                       | Sayı | Durum                                      |
+| ---------------------------------------------- | ---- | ------------------------------------------ |
+| Gerçek bug (A)                                 | 2    | Antigravity'ye P0 spec verildi             |
+| Kodda çalışıyor, Founder'ın iddiası yanlış (B) | 3    | Founder'a bildirilecek, canlı yeniden test |
+| Eksik özellik (C)                              | 3    | P1/P2 spec verildi                         |
+| Founder'ın öncülü yanlış (D)                   | 1    | Ek iş gerekmiyor                           |
+| Karma (LinkedIn/Outreach/Providers)            | 3    | P1/P2 spec verildi                         |
+
+### Handoff — Antigravity'ye (P0/P1/P2, tam brief plan dosyasında)
+
+**P0:** Integrations 3-yıldız bug'ını düzelt (Tavily aktive et veya rating'i kaldır) + Strategy AI prompt'undan "(mock)" kelimesini çıkar.
+**P1:** Advisory Board AI-analiz action'ı yaz, Finance'e SaaS abonelik takibi ekle, LinkedIn 37 placeholder'ı gerçek isimlerle değiştir.
+**P2:** Valuation'a opsiyonel canlı öneri butonu, Providers sayfası isim/kapsam netleştirmesi, Questionnaire'e "önce model seç" ipucu.
+
+**Founder'a not:** Resources, Feature Flags ve Grants maddeleri kod incelemesinde sorunsuz çıktı — bu üçü için ek iş speclenmedi, canlı ortamda tekrar test önerilir (özellikle Resources/Feature Flags — belki tarayıcı cache'i veya farklı bir oturum sorunu).
+
+---
+
 ## v11.85 — OMEGA Audit Tam Doğrulaması: Gerçek Sayılar Farklı, 1 Gerçek Güvenlik Regresyonu Bulundu (2026-07-28)
 
 **Özet:** v11.84'te kasıtlı olarak atlanan OMEGA test/audit iddiaları bu turda tam çalıştırılarak doğrulandı (`pnpm test`, `pnpm typecheck`, `pnpm lint`). **Sonuç: OMEGA'nın sayıları yanlıştı, kök neden teşhisi yanlıştı, ve OMEGA'nın hiç bahsetmediği 2 ayrı gerçek sorun bulundu** — biri eksik paket, diğeri `ae30597`'den kalma bir yetkilendirme regresyonu.
