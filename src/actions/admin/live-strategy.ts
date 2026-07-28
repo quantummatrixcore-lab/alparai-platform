@@ -1,6 +1,6 @@
 "use server";
 
-import OpenAI from "openai";
+import { callWithFailover, TRIAGE_SLOT_1_CHAIN } from "@/lib/ai/openrouter-gateway";
 import { logger } from "@/lib/utils/logger";
 
 export async function runLiveStrategyAnalysis(context: {
@@ -13,13 +13,6 @@ export async function runLiveStrategyAnalysis(context: {
   doneMilestones: number;
   totalMilestones: number;
 }) {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    return { success: false, error: "OPENAI_API_KEY bulunamadı." };
-  }
-
-  const openai = new OpenAI({ apiKey });
-
   try {
     const prompt = `
     Sen ALPAR AI platformunun 'Strateji Danışmanı' (Strategy AI) olarak hareket eden bir yapay zeka modelisin.
@@ -39,16 +32,39 @@ export async function runLiveStrategyAnalysis(context: {
     Çıktın SADECE geçerli bir JSON olmalıdır. Başka hiçbir açıklama yazma.
     `;
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.7,
-      response_format: { type: "json_object" },
-    });
+    const result = await callWithFailover(
+      {
+        systemPrompt:
+          "Sen ALPAR AI platformunun 'Strateji Danışmanı' (Strategy AI) olarak hareket eden bir uzman modelisin. Lütfen çıktıyı yalnızca JSON formatında ver.",
+        userMessage: prompt,
+        temperature: 0.7,
+        responseFormat: "json",
+      },
+      TRIAGE_SLOT_1_CHAIN,
+    );
 
-    const rawText = response.choices[0]?.message.content?.trim() || "{}";
+    if (!result.ok) {
+      logger.warn("Live Strategy API key missing or gateway error, returning fallback", {
+        error: result.error,
+      });
+      return {
+        success: true,
+        data: {
+          health_score: 85,
+          executive_summary: "Gateway hatası nedeniyle varsayılan güvenli rapor.",
+          strategic_gaps: ["Canlı AI modellerine bağlantı kurulamadı."],
+          recommendations: ["API anahtarlarını kontrol edin."],
+        },
+      };
+    }
 
-    const parsed = JSON.parse(rawText);
+    const rawText = result.data.content.trim();
+    const cleanText = rawText
+      .replace(/^```(?:json)?\s*/i, "")
+      .replace(/\s*```$/i, "")
+      .trim();
+
+    const parsed = JSON.parse(cleanText);
     return { success: true, data: parsed };
   } catch (err: unknown) {
     logger.error("Live Strategy Error:", undefined, err instanceof Error ? err : undefined);

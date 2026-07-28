@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Bot, Loader2, Target, AlertTriangle } from "lucide-react";
-import { runLiveStrategyAnalysis } from "@/actions/admin/live-strategy";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -33,12 +32,26 @@ export function LiveStrategyClient({ context }: LiveStrategyClientProps) {
   const handleAnalyze = async () => {
     setIsAnalyzing(true);
     try {
-      const res = await runLiveStrategyAnalysis(context);
-      if (res.success && res.data) {
-        setResult(res.data as LiveStrategyResult);
+      const res = await fetch("/api/admin/live-strategy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ context }),
+      });
+
+      let resData;
+      try {
+        resData = await res.json();
+      } catch (_e) {}
+
+      if (!res.ok) {
+        throw new Error(resData?.message || "Sunucu hatası");
+      }
+
+      if (resData?.success && resData?.data) {
+        setResult(resData.data as LiveStrategyResult);
         toast.success("AI Strategy Analysis Complete");
       } else {
-        toast.error(res.error || "Failed to run analysis");
+        toast.error(resData?.error || "Failed to run analysis");
       }
     } catch (_err) {
       toast.error("An error occurred");
