@@ -4,6 +4,8 @@ import { runExternalFetchTask } from "@/lib/services/external-fetcher";
 import { logger } from "@/lib/utils/logger";
 import { revalidatePath } from "next/cache";
 
+export const maxDuration = 60;
+
 export async function POST(_req: Request) {
   try {
     const user = await getCurrentUser();

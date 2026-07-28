@@ -71,45 +71,72 @@ export async function runExternalFetchTask() {
     source_score: number;
   }> = [];
 
-  // 1. Fetch Reddit — negative keywords
-  for (const sub of redditSubs) {
-    for (const kw of redditKeywords) {
-      const posts = await fetchRedditPosts(sub, kw);
-      allFetched.push(...posts.map((p) => ({ ...p, source: "reddit" })));
+  // 1. Fetch Reddit, HN, GitHub, and RSS concurrently via Promise.all
+  const redditFetchPromises = redditSubs.flatMap((sub) => [
+    ...redditKeywords.map((kw) =>
+      fetchRedditPosts(sub, kw).then((posts) => ({
+        type: "fetched",
+        items: posts.map((p) => ({ ...p, source: "reddit" })),
+      })),
+    ),
+    ...positiveKeywords
+      .slice(0, 3)
+      .map((kw) =>
+        fetchRedditPosts(sub, kw).then((posts) => ({
+          type: "positive",
+          items: posts.map((p) => ({ ...p, source: "reddit" })),
+        })),
+      ),
+  ]);
+
+  const hnFetchPromises = [
+    ...hnKeywords.map((kw) =>
+      fetchHNStories(kw).then((stories) => ({
+        type: "fetched",
+        items: stories.map((s) => ({ ...s, source: "hn" })),
+      })),
+    ),
+    ...positiveKeywords
+      .slice(0, 3)
+      .map((kw) =>
+        fetchHNStories(kw).then((stories) => ({
+          type: "positive",
+          items: stories.map((s) => ({ ...s, source: "hn" })),
+        })),
+      ),
+  ];
+
+  const ghFetchPromises = ["vulnerability", "leak"].map((kw) =>
+    fetchGitHubIncidents(kw).then((issues) => ({
+      type: "fetched",
+      items: issues.map((g) => ({ ...g, source: "github" })),
+    })),
+  );
+
+  const rssFetchPromises = rssFeeds.map((feed) =>
+    fetchRSSFeed(feed.url, feed.name).then((items) => ({
+      type: "both",
+      items: items.map((i) => ({ ...i, source: "rss" })),
+    })),
+  );
+
+  const results = await Promise.allSettled([
+    ...redditFetchPromises,
+    ...hnFetchPromises,
+    ...ghFetchPromises,
+    ...rssFetchPromises,
+  ]);
+
+  for (const res of results) {
+    if (res.status === "fulfilled") {
+      const { type, items } = res.value;
+      if (type === "fetched" || type === "both") {
+        allFetched.push(...items);
+      }
+      if (type === "positive" || type === "both") {
+        allPositive.push(...items);
+      }
     }
-  }
-
-  // 2. Fetch Reddit — positive keywords
-  for (const sub of redditSubs) {
-    for (const kw of positiveKeywords) {
-      const posts = await fetchRedditPosts(sub, kw);
-      allPositive.push(...posts.map((p) => ({ ...p, source: "reddit" })));
-    }
-  }
-
-  // 3. Fetch HN — negative
-  for (const kw of hnKeywords) {
-    const stories = await fetchHNStories(kw);
-    allFetched.push(...stories.map((s) => ({ ...s, source: "hn" })));
-  }
-
-  // 4. Fetch HN — positive
-  for (const kw of positiveKeywords) {
-    const stories = await fetchHNStories(kw);
-    allPositive.push(...stories.map((s) => ({ ...s, source: "hn" })));
-  }
-
-  // 5. Fetch GitHub — negative & security issues
-  for (const kw of ["vulnerability", "leak", "hallucination"]) {
-    const ghIssues = await fetchGitHubIncidents(kw);
-    allFetched.push(...ghIssues.map((g) => ({ ...g, source: "github" })));
-  }
-
-  // 6. Fetch RSS Feeds
-  for (const feed of rssFeeds) {
-    const items = await fetchRSSFeed(feed.url, feed.name);
-    allFetched.push(...items.map((i) => ({ ...i, source: "rss" })));
-    allPositive.push(...items.map((i) => ({ ...i, source: "rss" })));
   }
 
   logger.info(
