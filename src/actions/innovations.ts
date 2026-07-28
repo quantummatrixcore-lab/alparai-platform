@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import type { ExternalIncidentQueueItem, StrategyInnovation } from "@/types";
 import type { Database } from "@/types/database";
 import { callWithFailover, TRIAGE_SLOT_1_CHAIN } from "@/lib/ai/openrouter-gateway";
+import { logger } from "@/lib/utils/logger";
 
 export async function getExternalQueue(): Promise<ExternalIncidentQueueItem[]> {
   await requireAdmin();
