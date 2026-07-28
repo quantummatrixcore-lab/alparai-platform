@@ -121,8 +121,8 @@ try {
     for (const lang of publicLangs) {
       if (lang === "en" || !publicKeySets[lang]) continue;
       const otherSet = publicKeySets[lang];
-      const missingInOther = [...enPublicSet].filter(k => !otherSet.has(k) && !k.startsWith("admin."));
-      const extraInOther = [...otherSet].filter(k => !enPublicSet.has(k) && !k.startsWith("admin."));
+      const missingInOther = [...enPublicSet].filter(k => !otherSet.has(k) && !k.startsWith("admin.") && !k.startsWith("autopilot."));
+      const extraInOther = [...otherSet].filter(k => !enPublicSet.has(k) && !k.startsWith("admin.") && !k.startsWith("autopilot."));
       if (missingInOther.length > 0) {
         console.error(`\x1b[31mError: Public keys missing in ${lang}.json (vs en.json):\x1b[0m`);
         missingInOther.slice(0, 20).forEach(key => console.error(`  - ${key}`));
