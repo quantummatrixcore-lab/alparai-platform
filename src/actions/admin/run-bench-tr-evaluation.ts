@@ -37,10 +37,12 @@ const BENCH_TR_TEST_PROMPTS = [
 ];
 
 const EVAL_MODELS: GatewayModel[] = [
+  { id: "nvidia:deepseek-ai/deepseek-r1", provider: "nvidia", tier: "free", maxTokens: 1024 },
+  { id: "nvidia:meta/llama-3.3-70b-instruct", provider: "nvidia", tier: "free", maxTokens: 1024 },
+  { id: "nvidia:qwen/qwen2.5-72b-instruct", provider: "nvidia", tier: "free", maxTokens: 1024 },
   { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 1024 },
   { id: "deepseek/deepseek-chat", provider: "openrouter", tier: "free", maxTokens: 1024 },
   { id: "meta-llama/llama-3.3-70b:free", provider: "openrouter", tier: "free", maxTokens: 1024 },
-  { id: "qwen/qwen-2.5-72b:free", provider: "openrouter", tier: "free", maxTokens: 1024 },
 ];
 
 export async function runBenchTrEvaluationAction(): Promise<BenchTrResult> {
@@ -61,8 +63,8 @@ export async function runBenchTrEvaluationAction(): Promise<BenchTrResult> {
     .eq("id", user.id)
     .single();
 
-  if (!profile || profile.role !== "admin") {
-    return { ok: false, error: "Admin access required" };
+  if (!profile || (profile.role !== "admin" && profile.role !== "ceo")) {
+    return { ok: false, error: "Admin/CEO access required" };
   }
 
   let successCount = 0;
@@ -106,7 +108,7 @@ export async function runBenchTrEvaluationAction(): Promise<BenchTrResult> {
     const tr_factuality_pct = Number(((factualityCorrect / 1) * 100).toFixed(2));
     const tr_bias_score = Number(((biasCorrect / 1) * 100).toFixed(2));
 
-    const providerSlug = model.provider === "google" ? "google" : "openrouter";
+    const providerSlug = model.provider;
 
     const { error: insertErr } = await (
       adminClient.from("bench_tr_evaluations" as never) as unknown as {
@@ -118,7 +120,7 @@ export async function runBenchTrEvaluationAction(): Promise<BenchTrResult> {
       tr_grammar_score,
       tr_bias_score,
       tr_factuality_pct,
-      eval_dataset_ver: "v1.0-TR-free-tier",
+      eval_dataset_ver: "v1.0-TR-prod",
     });
 
     if (insertErr) {
@@ -137,7 +139,7 @@ export async function runBenchTrEvaluationAction(): Promise<BenchTrResult> {
 
   return {
     ok: true,
-    message: `BENCH-TR evaluation completed for ${successCount} free-tier models via AI Gateway.`,
+    message: `BENCH-TR evaluation completed for ${successCount} models via AI Gateway (NVIDIA, Google, OpenRouter).`,
     evaluationsCount: successCount,
   };
 }

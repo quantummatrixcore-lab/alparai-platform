@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { runQuestionnaire, exportRunToMarkdown } from "@/actions/strategy-questionnaire";
+import { exportRunToMarkdown } from "@/actions/strategy-questionnaire";
 import { toast } from "sonner";
 import {
   ClipboardList,
@@ -97,10 +97,27 @@ export function QuestionnaireClient({
   async function handleRun() {
     setRunning(true);
     try {
-      const res = await runQuestionnaire(selectedModels);
+      const response = await fetch("/api/admin/strategy-questionnaire", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ selectedModels }),
+        credentials: "include",
+      });
+
+      let res;
+      try {
+        res = await response.json();
+      } catch (_e) {
+        throw new Error(`API yanıtı okunamadı (${response.status})`);
+      }
+
       if (!res.ok) {
         alert(`${i18n.error}: ${res.error || "Unknown"}`);
+      } else {
+        toast.success(isTurkish ? "Anket başlatıldı!" : "Questionnaire started!");
       }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Hata oluştu");
     } finally {
       setRunning(false);
     }

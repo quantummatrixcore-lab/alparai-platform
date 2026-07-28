@@ -19,7 +19,6 @@ import {
 import { useTranslations } from "next-intl";
 import { Shield, Activity, Cpu, AlertTriangle, FileText, Lock, Eye, Bot, Play } from "lucide-react";
 import type { CrossAuditDashboardData } from "@/actions/admin/cross-audit-metrics";
-import { runLiveCrossAuditTest } from "@/actions/admin/live-cross-audit";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -69,14 +68,34 @@ export function CrossAuditDashboardClient({ data }: CrossAuditDashboardClientPro
     setTestResult(null);
     toast.loading("Çapraz Sorgu Simülasyonu çalışıyor...", { id: "cross-audit" });
 
-    const res = await runLiveCrossAuditTest(testInput);
-    setIsTesting(false);
+    try {
+      const res = await fetch("/api/admin/live-cross-audit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: testInput }),
+        credentials: "include",
+      });
 
-    if (res.success && res.data) {
-      toast.success("Çapraz Sorgu tamamlandı!", { id: "cross-audit" });
-      setTestResult(res.data);
-    } else {
-      toast.error(res.error || "Bir hata oluştu", { id: "cross-audit" });
+      let resData;
+      try {
+        resData = await res.json();
+      } catch (_e) {}
+
+      if (!res.ok) {
+        throw new Error(resData?.message || "Sunucu hatası");
+      }
+
+      setIsTesting(false);
+
+      if (resData?.success && resData?.data) {
+        toast.success("Çapraz Sorgu tamamlandı!", { id: "cross-audit" });
+        setTestResult(resData.data);
+      } else {
+        toast.error(resData?.error || "Bir hata oluştu", { id: "cross-audit" });
+      }
+    } catch (_err) {
+      setIsTesting(false);
+      toast.error("Bir hata oluştu", { id: "cross-audit" });
     }
   };
 

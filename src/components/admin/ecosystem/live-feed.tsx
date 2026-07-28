@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { archiveEcosystemNews } from "@/actions/ecosystem";
 import { Radio, Archive, ExternalLink, Globe } from "lucide-react";
 import type { Database } from "@/types/database";
@@ -20,6 +21,7 @@ const CATEGORY_STYLES: Record<string, { bg: string; text: string; border: string
 };
 
 export function LiveFeed({ items }: { items: EcosystemNews[] }) {
+  const t = useTranslations("admin");
   const [, startTransition] = useTransition();
 
   const handleArchive = (id: string) => {
@@ -35,10 +37,11 @@ export function LiveFeed({ items }: { items: EcosystemNews[] }) {
           </div>
           <div>
             <h3 className="text-sm font-bold tracking-wider text-white uppercase">
-              Live Ecosystem Stream
+              {t("live_stream") || "Live Ecosystem Stream"}
             </h3>
             <p className="text-xs text-zinc-400">
-              Published articles, governance news & research updates
+              {t("live_stream_subtitle") ||
+                "Published articles, governance news & research updates"}
             </p>
           </div>
         </div>
@@ -48,9 +51,12 @@ export function LiveFeed({ items }: { items: EcosystemNews[] }) {
         {items.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-12 text-center">
             <Globe className="mb-3 h-8 w-8 text-zinc-600" />
-            <h4 className="text-sm font-bold text-white">No Published Articles</h4>
+            <h4 className="text-sm font-bold text-white">
+              {t("no_published_articles") || "No Published Articles"}
+            </h4>
             <p className="mt-1 text-xs text-zinc-400">
-              Approved news items and incidents will appear in this real-time stream.
+              {t("no_published_articles_desc") ||
+                "Approved news items and incidents will appear in this real-time stream."}
             </p>
           </div>
         ) : (

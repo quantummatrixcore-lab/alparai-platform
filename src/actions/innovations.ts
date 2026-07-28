@@ -5,8 +5,7 @@ import { requireAdmin } from "@/lib/auth/session";
 import { revalidatePath } from "next/cache";
 import type { ExternalIncidentQueueItem, StrategyInnovation } from "@/types";
 import type { Database } from "@/types/database";
-import { logger } from "@/lib/utils/logger";
-import OpenAI from "openai";
+import { callWithFailover, TRIAGE_SLOT_1_CHAIN } from "@/lib/ai/openrouter-gateway";
 
 export async function getExternalQueue(): Promise<ExternalIncidentQueueItem[]> {
   await requireAdmin();
@@ -245,17 +244,13 @@ export async function autoReviewAllPending(): Promise<{
     return { success: true, message: "Kuyrukta bekleyen olay yok.", processed: 0 };
   }
 
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   let processed = 0;
 
   for (const item of pendingItems) {
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: `You are an AI Incident Reviewer for ALPAR AI. Analyze the following incident report and decide whether it should be accepted, rejected, or marked as a duplicate.
+      const res = await callWithFailover(
+        {
+          systemPrompt: `You are an AI Incident Reviewer for ALPAR AI. Analyze the following incident report and decide whether it should be accepted, rejected, or marked as a duplicate.
 Output strictly in JSON format:
 {
   "action": "accept" | "reject" | "duplicate",
@@ -264,20 +259,26 @@ Output strictly in JSON format:
   "reason": "short explanation"
 }
 Criteria: If the text describes a genuine AI incident (hallucination, data leak, bias, etc.), "accept" it. If it is spam, unrelated news, or just random chatter, "reject" it.`,
-          },
-          {
-            role: "user",
-            content: `Title: ${item.title}\n\nBody:\n${item.body}`,
-          },
-        ],
-        response_format: { type: "json_object" },
-        temperature: 0.1,
-      });
+          userMessage: `Title: ${item.title}\n\nBody:\n${item.body}`,
+          temperature: 0.1,
+          responseFormat: "json",
+        },
+        TRIAGE_SLOT_1_CHAIN,
+      );
 
-      const content = response.choices[0]?.message?.content;
-      if (!content) continue;
+      if (!res.ok) continue;
 
-      const result = JSON.parse(content) as { action: string; category: string; severity: string };
+      const cleanText = res.data.content
+        .trim()
+        .replace(/^```(?:json)?\s*/i, "")
+        .replace(/\s*```$/i, "")
+        .trim();
+
+      const result = JSON.parse(cleanText) as {
+        action: string;
+        category: string;
+        severity: string;
+      };
 
       if (result.action === "accept") {
         await acceptExternalIncident(item.id, result.category, result.severity);

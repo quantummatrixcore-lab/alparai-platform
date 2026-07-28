@@ -1,12 +1,14 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { Sparkles, ExternalLink, ShieldCheck } from "lucide-react";
 import type { Database } from "@/types/database";
 
 type EcosystemNews = Database["public"]["Tables"]["ecosystem_news"]["Row"];
 
 export function PositiveDevelopments({ items }: { items: EcosystemNews[] }) {
+  const t = useTranslations("admin");
   return (
     <div className="overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/80 shadow-2xl backdrop-blur-xl">
       <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
@@ -16,9 +18,11 @@ export function PositiveDevelopments({ items }: { items: EcosystemNews[] }) {
           </div>
           <div>
             <h3 className="text-sm font-bold tracking-wider text-white uppercase">
-              Positive Developments
+              {t("positive_developments") || "Positive Developments"}
             </h3>
-            <p className="text-xs text-zinc-400">AI Safety wins, governance & alignment news</p>
+            <p className="text-xs text-zinc-400">
+              {t("positive_developments_subtitle") || "AI Safety wins, governance & alignment news"}
+            </p>
           </div>
         </div>
       </div>
@@ -27,9 +31,12 @@ export function PositiveDevelopments({ items }: { items: EcosystemNews[] }) {
         {items.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-12 text-center">
             <ShieldCheck className="mb-3 h-8 w-8 text-zinc-600" />
-            <h4 className="text-sm font-bold text-white">No Items Tracked</h4>
+            <h4 className="text-sm font-bold text-white">
+              {t("no_items_tracked") || "No Items Tracked"}
+            </h4>
             <p className="mt-1 text-xs text-zinc-400">
-              Positive AI milestones and safety breakthroughs will appear here.
+              {t("no_items_tracked_desc") ||
+                "Positive AI milestones and safety breakthroughs will appear here."}
             </p>
           </div>
         ) : (

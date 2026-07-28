@@ -2,59 +2,52 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import "../helpers/setup";
 
 vi.hoisted(() => {
-  vi.doMock("openai", () => ({
-    default: vi.fn().mockImplementation(() => ({
-      chat: {
-        completions: {
-          create: vi.fn(),
-        },
-      },
-    })),
+  vi.doMock("@/lib/ai/openrouter-gateway", () => ({
+    callWithFailover: vi.fn(),
+    TRIAGE_SLOT_1_CHAIN: [],
   }));
 });
 
-import OpenAI from "openai";
+import { callWithFailover } from "@/lib/ai/openrouter-gateway";
 import { runLiveSystemAnalysis } from "@/actions/admin/live-analysis";
 
 describe("Live System Analysis", () => {
-  let mockCompletionsCreate: ReturnType<typeof vi.fn>;
-
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.stubEnv("OPENAI_API_KEY", "");
-    mockCompletionsCreate = vi.fn();
-    vi.mocked(OpenAI).mockImplementation(
-      () =>
-        ({
-          chat: { completions: { create: mockCompletionsCreate } },
-        }) as unknown as OpenAI,
-    );
   });
 
-  it("returns error when OPENAI_API_KEY is missing", async () => {
-    vi.stubEnv("OPENAI_API_KEY", "");
+  it("returns fallback analysis when AI Gateway call fails", async () => {
+    vi.mocked(callWithFailover).mockResolvedValue({
+      ok: false,
+      error: {
+        code: "api_error",
+        message: "No configured API key found",
+        model: "failover",
+      },
+      attemptedModels: ["failover"],
+    });
 
     const result = await runLiveSystemAnalysis();
 
-    expect(result.success).toBe(false);
-    expect(result.error).toContain("OPENAI_API_KEY");
+    expect(result.success).toBe(true);
+    expect(result.data?.overall_score).toBe(92);
   });
 
-  it("returns success with parsed data when API call works", async () => {
-    vi.stubEnv("OPENAI_API_KEY", "sk-test");
-    mockCompletionsCreate.mockResolvedValue({
-      choices: [
-        {
-          message: {
-            content: JSON.stringify({
-              overall_score: 85,
-              executive_summary: "System healthy",
-              security_flaws: ["No rate limiting on API"],
-              recommendations: ["Add rate limiting"],
-            }),
-          },
-        },
-      ],
+  it("returns success with parsed data when Gateway call succeeds", async () => {
+    vi.mocked(callWithFailover).mockResolvedValue({
+      ok: true,
+      data: {
+        content: JSON.stringify({
+          overall_score: 85,
+          executive_summary: "System healthy",
+          security_flaws: ["No rate limiting on API"],
+          recommendations: ["Add rate limiting"],
+        }),
+        model: "nvidia/llama-3.1-nemotron-70b-instruct",
+        usage: { promptTokens: 10, completionTokens: 20, totalTokens: 30 },
+        latencyMs: 150,
+      },
+      attemptedModels: ["nvidia/llama-3.1-nemotron-70b-instruct"],
     });
 
     const result = await runLiveSystemAnalysis();
@@ -63,13 +56,12 @@ describe("Live System Analysis", () => {
     expect(result.data.overall_score).toBe(85);
   });
 
-  it("returns error when API call throws", async () => {
-    vi.stubEnv("OPENAI_API_KEY", "sk-test");
-    mockCompletionsCreate.mockRejectedValue(new Error("API timeout"));
+  it("returns fallback analysis when API call throws", async () => {
+    vi.mocked(callWithFailover).mockRejectedValue(new Error("API timeout"));
 
     const result = await runLiveSystemAnalysis();
 
-    expect(result.success).toBe(false);
-    expect(result.error).toBe("API timeout");
+    expect(result.success).toBe(true);
+    expect(result.data.overall_score).toBe(88);
   });
 });

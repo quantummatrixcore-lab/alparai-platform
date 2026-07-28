@@ -96,14 +96,8 @@ export default async function AdminAutopilotPage({
         <Stat label={t("stats_tokens")} value={stats.totalTokens.toLocaleString()} />
         <Stat label={t("stats_p50")} value={formatMs(stats.p50DurationMs)} />
         <Stat label={t("stats_p95")} value={formatMs(stats.p95DurationMs)} />
-        <Stat
-          label={locale === "tr" ? "Ort. Gecikme" : "Avg Latency"}
-          value={formatMs(stats.avgLatencyMs)}
-        />
-        <Stat
-          label={locale === "tr" ? "Günlük Token" : "Daily Tokens"}
-          value={dailyTokens.toLocaleString()}
-        />
+        <Stat label={t("stats_avg_latency")} value={formatMs(stats.avgLatencyMs)} />
+        <Stat label={t("stats_daily_tokens")} value={dailyTokens.toLocaleString()} />
       </div>
 
       {/* Workers Management Component */}
@@ -175,9 +169,7 @@ export default async function AdminAutopilotPage({
         {/* Active Engines Card */}
         <Card>
           <CardHeader>
-            <CardTitle>
-              {locale === "tr" ? "Aktif Motor Durumları" : "Active Engines Status"}
-            </CardTitle>
+            <CardTitle>{t("engines_title")}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
@@ -185,12 +177,10 @@ export default async function AdminAutopilotPage({
                 <caption className="sr-only">Active Engines Status Table</caption>
                 <thead className="text-fg-muted">
                   <tr>
-                    <th className="py-2 font-medium">{locale === "tr" ? "Motor" : "Engine"}</th>
-                    <th className="py-2 font-medium">{locale === "tr" ? "Tür" : "Type"}</th>
-                    <th className="py-2 font-medium">{locale === "tr" ? "Durum" : "Status"}</th>
-                    <th className="py-2 font-medium">
-                      {locale === "tr" ? "Son Kalp Atışı" : "Last Heartbeat"}
-                    </th>
+                    <th className="py-2 font-medium">{t("engines_col_name")}</th>
+                    <th className="py-2 font-medium">{t("engines_col_type")}</th>
+                    <th className="py-2 font-medium">{t("engines_col_status")}</th>
+                    <th className="py-2 font-medium">{t("engines_col_heartbeat")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -227,27 +217,21 @@ export default async function AdminAutopilotPage({
         {/* Cron Job Logs Card */}
         <Card>
           <CardHeader>
-            <CardTitle>{locale === "tr" ? "Cron İş Günlükleri" : "Cron Job Run Logs"}</CardTitle>
+            <CardTitle>{t("cron_title")}</CardTitle>
           </CardHeader>
           <CardContent>
             {cronLogs.length === 0 ? (
-              <p className="text-fg-muted text-sm">
-                {locale === "tr"
-                  ? "Henüz cron çalışması kaydedilmemiş."
-                  : "No cron runs recorded yet."}
-              </p>
+              <p className="text-fg-muted text-sm">{t("cron_empty")}</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
                   <caption className="sr-only">Cron Job Run Logs Table</caption>
                   <thead className="text-fg-muted">
                     <tr>
-                      <th className="py-2 font-medium">Cron</th>
-                      <th className="py-2 font-medium">{locale === "tr" ? "Durum" : "Status"}</th>
-                      <th className="py-2 font-medium">
-                        {locale === "tr" ? "Başlangıç" : "Started At"}
-                      </th>
-                      <th className="py-2 font-medium">{locale === "tr" ? "Hata" : "Error"}</th>
+                      <th className="py-2 font-medium">{t("cron_col_name")}</th>
+                      <th className="py-2 font-medium">{t("cron_col_status")}</th>
+                      <th className="py-2 font-medium">{t("cron_col_started")}</th>
+                      <th className="py-2 font-medium">{t("cron_col_error")}</th>
                     </tr>
                   </thead>
                   <tbody>

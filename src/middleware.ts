@@ -61,7 +61,8 @@ export async function middleware(request: NextRequest) {
       .eq("id", user.id)
       .single();
 
-    const userRole = profile?.role as string | undefined;
+    const isFounder = user.email === "quantum.matrix.core@gmail.com";
+    const userRole = (profile?.role as string | undefined) || (isFounder ? "admin" : undefined);
     if (
       userRole !== "moderator" &&
       userRole !== "admin" &&

@@ -17,6 +17,7 @@ const REQUIRED_VARS: { key: string; provider: string; required: boolean }[] = [
   { key: "UPSTASH_REDIS_REST_URL", provider: "redis", required: false },
   { key: "UPSTASH_REDIS_REST_TOKEN", provider: "redis", required: false },
   { key: "GEMINI_API_KEY", provider: "gemini", required: true },
+  { key: "NVIDIA_NGC_API_KEY", provider: "nvidia", required: true },
   { key: "ANTHROPIC_API_KEY", provider: "anthropic", required: false },
   { key: "OPENROUTER_API_KEY", provider: "openrouter", required: false },
   { key: "DEEPSEEK_API_KEY", provider: "deepseek", required: false },

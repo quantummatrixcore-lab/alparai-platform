@@ -9,17 +9,17 @@ import { resolveApiKey } from "../api-keys";
 
 export class GoogleAdapter implements ProviderAdapter {
   async isConfigured(): Promise<boolean> {
-    return !!(await resolveApiKey("google", "GOOGLE_GENERATIVE_AI_API_KEY"));
+    return !!(await resolveApiKey("google", "GEMINI_API_KEY"));
   }
 
   async call(request: GatewayRequest): Promise<GatewayResult> {
-    const apiKey = await resolveApiKey("google", "GOOGLE_API_KEY");
+    const apiKey = await resolveApiKey("google", "GEMINI_API_KEY");
     if (!apiKey) {
       return {
         ok: false,
         error: {
           code: "no_api_key",
-          message: "GOOGLE_API_KEY or GEMINI_API_KEY is not configured.",
+          message: "GEMINI_API_KEY or GOOGLE_API_KEY is not configured.",
           model: request.model.id,
         },
       };

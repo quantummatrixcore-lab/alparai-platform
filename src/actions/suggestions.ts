@@ -12,6 +12,8 @@ import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
 import type { Database } from "@/types/database";
 import { logger } from "@/lib/utils/logger";
 
+import { maskPII } from "@/lib/pii/guardian";
+
 export interface SubmitSuggestionState {
   ok: boolean;
   error?: string;
@@ -33,8 +35,8 @@ const runSuggestionWork = async (
   const supabase = await createServerClient();
   const insertRow: Database["public"]["Tables"]["suggestions"]["Insert"] = {
     user_id: data.userId,
-    title: data.title,
-    description: data.description,
+    title: maskPII(data.title).masked,
+    description: maskPII(data.description).masked,
     category: data.category,
     status: "open",
     is_anonymous: false,

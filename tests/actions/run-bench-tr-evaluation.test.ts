@@ -53,7 +53,7 @@ describe("BENCH-TR Evaluation", () => {
     const result = await runBenchTrEvaluationAction();
 
     expect(result.ok).toBe(false);
-    expect(result.error).toBe("Admin access required");
+    expect(result.error).toBe("Admin/CEO access required");
   });
 
   it("completes evaluation when admin and all models respond", async () => {

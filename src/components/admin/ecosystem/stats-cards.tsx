@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { Globe, AlertTriangle, Sparkles, Clock, TrendingUp } from "lucide-react";
 
 interface EcosystemStats {
@@ -12,38 +13,41 @@ interface EcosystemStats {
 }
 
 export function StatsCards({ stats }: { stats: EcosystemStats }) {
+  const t = useTranslations("admin");
   const cards = [
     {
-      label: "Total Telemetry Articles",
+      label: t("stat_total_articles") || "Total Telemetry Articles",
       value: stats.total,
-      subtext: `${stats.sourceCount || 4} active global sources`,
+      subtext:
+        t("stat_active_sources", { count: stats.sourceCount || 4 }) ||
+        `${stats.sourceCount || 4} active global sources`,
       icon: Globe,
       color: "text-brand-300",
       bgGlow: "from-brand-500/10 via-transparent to-transparent",
       borderColor: "border-brand-500/30",
     },
     {
-      label: "Ingested Incidents",
+      label: t("stat_ingested_incidents") || "Ingested Incidents",
       value: stats.incidents,
-      subtext: "Tracked AI safety violations",
+      subtext: t("stat_violation_subtext") || "Tracked AI safety violations",
       icon: AlertTriangle,
       color: "text-rose-400",
       bgGlow: "from-rose-500/10 via-transparent to-transparent",
       borderColor: "border-rose-500/20 hover:border-rose-500/40",
     },
     {
-      label: "Positive Developments",
+      label: t("stat_positive_developments") || "Positive Developments",
       value: stats.positive,
-      subtext: "Governance & alignment wins",
+      subtext: t("stat_governance_subtext") || "Governance & alignment wins",
       icon: Sparkles,
       color: "text-emerald-400",
       bgGlow: "from-emerald-500/10 via-transparent to-transparent",
       borderColor: "border-emerald-500/20 hover:border-emerald-500/40",
     },
     {
-      label: "Review Queue",
+      label: t("stat_review_queue") || "Review Queue",
       value: stats.queue,
-      subtext: "Pending moderator review",
+      subtext: t("stat_pending_subtext") || "Pending moderator review",
       icon: Clock,
       color: "text-amber-400",
       bgGlow: "from-amber-500/10 via-transparent to-transparent",
