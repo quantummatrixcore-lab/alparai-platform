@@ -18,7 +18,6 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-import { runLiveSystemAnalysis } from "@/actions/admin/live-analysis";
 import { toast } from "sonner";
 
 interface ScoreSet {
@@ -170,14 +169,37 @@ export function AnalysisDashboardClient({
     setIsLiveAnalyzing(true);
     setLiveResult(null);
     toast.loading("Yapay zeka analiz yapıyor (gpt-4o-mini)...", { id: "live-analysis" });
-    const result = await runLiveSystemAnalysis();
-    setIsLiveAnalyzing(false);
+    try {
+      const res = await fetch("/api/admin/live-analysis", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
 
-    if (result.success && result.data) {
-      toast.success("Analiz tamamlandı!", { id: "live-analysis" });
-      setLiveResult(result.data);
-    } else {
-      toast.error(result.error || "Analiz sırasında bir hata oluştu.", { id: "live-analysis" });
+      let result;
+      try {
+        result = await res.json();
+      } catch (_e) {
+        throw new Error(`API yanıtı okunamadı (Status: ${res.status})`);
+      }
+
+      if (!res.ok) {
+        throw new Error(result?.message || `Sunucu hatası: ${res.status}`);
+      }
+
+      setIsLiveAnalyzing(false);
+
+      if (result.success && result.data) {
+        toast.success("Analiz tamamlandı!", { id: "live-analysis" });
+        setLiveResult(result.data);
+      } else {
+        toast.error(result.message || "Analiz sırasında bir hata oluştu.", { id: "live-analysis" });
+      }
+    } catch (err) {
+      setIsLiveAnalyzing(false);
+      toast.error(
+        `Ağ veya Sunucu Hatası: ${err instanceof Error ? err.message : "Bilinmeyen hata"}`,
+        { id: "live-analysis" },
+      );
     }
   };
 

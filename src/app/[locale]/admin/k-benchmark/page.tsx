@@ -131,7 +131,7 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
   const supabase = await createServerClient();
   const { data: rawScores, error } = await supabase
     .from("k_model_scores")
-    .select("*")
+    .select("*, ai_models:model_id(*, ai_providers:provider_id(*))")
     .order("created_at", { ascending: false });
 
   if (error) {

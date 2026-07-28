@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useTransition } from "react";
-import { triggerExternalFetch } from "@/actions/ecosystem";
+import { useTransition } from "react";
 import { RefreshCw } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -12,7 +11,24 @@ export function ManualFetchButton() {
   const handleFetch = () => {
     startTransition(async () => {
       try {
-        const result = await triggerExternalFetch();
+        const response = await fetch("/api/admin/ecosystem-fetch", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        let result;
+        try {
+          result = await response.json();
+        } catch (_e) {
+          throw new Error(`API yanıtı okunamadı (Status: ${response.status})`);
+        }
+
+        if (!response.ok) {
+          throw new Error(result?.message || `Sunucu hatası: ${response.status}`);
+        }
+
         const toast = document.getElementById("fetch-toast");
         if (!toast) return;
         const msg = toast.querySelector(".toast-msg");
