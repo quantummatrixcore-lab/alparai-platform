@@ -51,6 +51,7 @@ export const FREE_TRIAGE_MODELS: readonly GatewayModel[] = [
   },
   { id: "deepseek-ai/deepseek-r1", provider: "nvidia", tier: "free", maxTokens: 2048 },
   { id: "deepseek-ai/deepseek-v3", provider: "nvidia", tier: "free", maxTokens: 2048 },
+  { id: "thudm/glm-4-9b-chat", provider: "nvidia", tier: "free", maxTokens: 2048 },
   { id: "meta/llama-3.3-70b-instruct", provider: "nvidia", tier: "free", maxTokens: 2048 },
   { id: "qwen/qwen2.5-72b-instruct", provider: "nvidia", tier: "free", maxTokens: 2048 },
   { id: "mistralai/mixtral-8x22b-instruct", provider: "nvidia", tier: "free", maxTokens: 2048 },
