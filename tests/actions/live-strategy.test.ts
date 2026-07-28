@@ -1,13 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import "../helpers/setup";
 
-vi.hoisted(() => {
-  vi.doMock("openai", () => ({
-    default: vi.fn(),
-  }));
-});
+vi.mock("@/lib/ai/openrouter-gateway", () => ({
+  callWithFailover: vi.fn(),
+  TRIAGE_SLOT_1_CHAIN: ["google/gemini-1.5-flash"],
+}));
 
-import OpenAI from "openai";
+import { callWithFailover } from "@/lib/ai/openrouter-gateway";
 import { runLiveStrategyAnalysis } from "@/actions/admin/live-strategy";
 
 const MOCK_CONTEXT = {
@@ -22,59 +21,45 @@ const MOCK_CONTEXT = {
 };
 
 describe("Live Strategy Analysis", () => {
-  let mockCreate: ReturnType<typeof vi.fn>;
-
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.stubEnv("OPENAI_API_KEY", "");
-    mockCreate = vi.fn();
-    vi.mocked(OpenAI).mockImplementation(
-      () =>
-        ({
-          chat: { completions: { create: mockCreate } },
-        }) as unknown as OpenAI,
-    );
   });
 
-  it("returns error when OPENAI_API_KEY is missing", async () => {
-    vi.stubEnv("OPENAI_API_KEY", "");
-
-    const result = await runLiveStrategyAnalysis(MOCK_CONTEXT);
-
-    expect(result.success).toBe(false);
-    expect(result.error).toContain("OPENAI_API_KEY");
-  });
-
-  it("returns success with strategic analysis data", async () => {
-    vi.stubEnv("OPENAI_API_KEY", "sk-test");
-    mockCreate.mockResolvedValue({
-      choices: [
-        {
-          message: {
-            content: JSON.stringify({
-              health_score: 72,
-              executive_summary: "Good progress but risk exposure high",
-              strategic_gaps: ["Monetization missing", "PITR not configured"],
-              recommendations: ["Activate Stripe Pro tier", "Upgrade Supabase to Pro"],
-            }),
-          },
-        },
-      ],
+  it("returns fallback data when gateway returns error", async () => {
+    vi.mocked(callWithFailover).mockResolvedValue({
+      ok: false,
+      error: "Gateway connection error",
+      provider: "google",
+      model: "gemini-1.5-flash",
     });
 
     const result = await runLiveStrategyAnalysis(MOCK_CONTEXT);
 
     expect(result.success).toBe(true);
-    expect(result.data.health_score).toBe(72);
-    expect(result.data.recommendations).toHaveLength(2);
+    expect(result.data?.executive_summary).toContain(
+      "Gateway hatası nedeniyle varsayılan güvenli rapor.",
+    );
   });
 
-  it("returns error when API call throws", async () => {
-    vi.stubEnv("OPENAI_API_KEY", "sk-test");
-    mockCreate.mockRejectedValue(new Error("Rate limit exceeded"));
+  it("returns success with strategic analysis data", async () => {
+    vi.mocked(callWithFailover).mockResolvedValue({
+      ok: true,
+      data: {
+        content: JSON.stringify({
+          health_score: 72,
+          executive_summary: "Good progress but risk exposure high",
+          strategic_gaps: ["Monetization missing", "PITR not configured"],
+          recommendations: ["Activate Stripe Pro tier", "Upgrade Supabase to Pro"],
+        }),
+      },
+      provider: "google",
+      model: "gemini-1.5-flash",
+    });
 
     const result = await runLiveStrategyAnalysis(MOCK_CONTEXT);
 
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
+    expect(result.data?.health_score).toBe(72);
+    expect(result.data?.recommendations).toHaveLength(2);
   });
 });

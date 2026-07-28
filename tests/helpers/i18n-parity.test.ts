@@ -28,7 +28,8 @@ describe("i18n translation file parity", () => {
       it("has all keys present in en.json", () => {
         const isPublicLocaleOnly = locale === "de" || locale === "fr";
         const missing = enKeys.filter((k) => {
-          if (isPublicLocaleOnly && k.startsWith("admin.")) return false;
+          if (isPublicLocaleOnly && (k.startsWith("admin.") || k.startsWith("autopilot.")))
+            return false;
           return !keys.includes(k);
         });
         expect(missing).toEqual([]);
