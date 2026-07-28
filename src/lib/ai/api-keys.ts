@@ -45,6 +45,13 @@ export async function resolveApiKey(provider: string, envVar: string): Promise<s
     if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
     if (process.env.GOOGLE_API_KEY) return process.env.GOOGLE_API_KEY;
   }
+  if (provider === "nvidia") {
+    if (process.env.NVIDIA_API_KEY) return process.env.NVIDIA_API_KEY;
+    if (process.env.NGC_API_KEY) return process.env.NGC_API_KEY;
+  }
+  if (provider === "openrouter" && process.env.OPENROUTER_API_KEY) {
+    return process.env.OPENROUTER_API_KEY;
+  }
   if (provider === "huggingface" && process.env.HF_API_KEY) {
     return process.env.HF_API_KEY;
   }
