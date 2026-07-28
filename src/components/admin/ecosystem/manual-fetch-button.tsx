@@ -16,6 +16,7 @@ export function ManualFetchButton() {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
         });
 
         let result;

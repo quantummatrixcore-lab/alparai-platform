@@ -36,6 +36,7 @@ export function LiveStrategyClient({ context }: LiveStrategyClientProps) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ context }),
+        credentials: "include",
       });
 
       let resData;

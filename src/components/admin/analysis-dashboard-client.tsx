@@ -173,6 +173,7 @@ export function AnalysisDashboardClient({
       const res = await fetch("/api/admin/live-analysis", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
       });
 
       let result;

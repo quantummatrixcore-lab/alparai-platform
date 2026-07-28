@@ -73,6 +73,7 @@ export function CrossAuditDashboardClient({ data }: CrossAuditDashboardClientPro
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: testInput }),
+        credentials: "include",
       });
 
       let resData;
