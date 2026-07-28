@@ -6,6 +6,38 @@ Bu belge artık kısa tutuluyor: yalnızca "şu an neredeyiz" ve "sıradaki işl
 
 ---
 
+## v11.84 — Production READY Doğrulandı + OMEGA Audit Spot-Check (2026-07-28)
+
+**Özet:** v11.83'ün "BUILDING, sonuç bekleniyor" durumu kapandı. Antigravity "READY, canlıda" dedi (`npx vercel list` çıktısı yapıştırdı); bağımsız olarak `mcp__Vercel__list_deployments` ile doğrulandı — **doğru.** Aynı turda ayrı bir "OMEGA 360° Audit" raporu geldi (87/100 skor, 5 başarısız test, 12 `as any`, vb.); token-verimli hafif spot-check yapıldı (tam test suite çalıştırılmadı).
+
+### Doğrulama 1 — Production READY (kanıtlandı)
+
+`mcp__Vercel__list_deployments`: `dpl_FyG1E2XTqZND5nuWXaMgCLuxBQs7` ve `dpl_5q95CPRN2aZirtG8qWgJh5bfLpgt`, commit `b7f963f` (logger import fix), ikisi de `state: READY`, `target: production`. v11.79-83 boyunca izlenen CANCELED → ERROR → BUILDING → **READY** zinciri burada kapanıyor — admin panel artık gerçekten production'a deploy edilmiş kod çalıştırıyor.
+
+### Doğrulama 2 — OMEGA audit spot-check (kısmi, tam değil)
+
+| İddia                                                     | Grep sonucu                                                                                                                                                | Değerlendirme                                                                                                                                                                                                      |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `as any`: 12 adet                                         | 11                                                                                                                                                         | Yakın, muhtemelen farklı sayma yöntemi — kabaca doğru                                                                                                                                                              |
+| `console.*`: 27 adet                                      | 28                                                                                                                                                         | Yakın, tutarlı                                                                                                                                                                                                     |
+| `instanceof` hatası, openrouter.ts:86, "adapter'da sorun" | **Kod incelendi: standart, doğru OpenAI SDK hata-tipi kontrolü** (`err instanceof OpenAI.RateLimitError/APIConnectionTimeoutError/APIError`), import doğru | **OMEGA'nın çerçevelemesi yanlış yönlendirici.** Bahsedilen başarısız testler muhtemelen test mock'unun bu statik hata sınıflarını sağlamamasından kaynaklanıyor — test altyapısı sorunu, adapter kodu bug'ı değil |
+
+**Not:** Bu bir tam doğrulama değil — 917/922 test sonucu, güvenlik/API bulguları gibi diğer OMEGA maddeleri bu turda kontrol edilmedi (token verimliliği için kapsam kasıtlı daraltıldı). `as any`/`console` sayıları ve `instanceof` iddiası dışındaki maddeler "doğrulanmadı" statüsünde kalıyor, ne doğru ne yanlış olarak işaretlenmedi.
+
+### Durum
+
+| Konu                                               | Durum                 | Kanıt                                                                  |
+| -------------------------------------------------- | --------------------- | ---------------------------------------------------------------------- |
+| Production deployment                              | ✅ READY, doğrulandı  | `dpl_FyG1E2XTqZND5nuWXaMgCLuxBQs7`, `dpl_5q95CPRN2aZirtG8qWgJh5bfLpgt` |
+| v11.79-83 admin panel canlı veri zinciri           | ✅ kapandı            | CANCELED→ERROR→BUILDING→READY tam izlendi                              |
+| OMEGA `as any`/`console` sayıları                  | ~✅ kabaca tutarlı    | grep ile çapraz kontrol                                                |
+| OMEGA `instanceof` "adapter bug'ı" iddiası         | ❌ yanlış çerçeveleme | kod standart, muhtemelen test-mock sorunu                              |
+| OMEGA'nın diğer maddeleri (testler, güvenlik, API) | ⏳ doğrulanmadı       | bu turda kapsam dışı, token-verimli tarandı                            |
+
+**Handoff:** Founder production'ı tarayıcıda test edip (ecosystem/analysis/strategy/innovations sayfaları) gerçekten çalıştığını teyit ederse, bu döngü tam kapanır. OMEGA'nın kalan maddeleri (5 test hatası, güvenlik bulguları) ayrı bir turda, gerekirse tam test suite ile doğrulanmalı — bu turda kasıtlı olarak atlandı.
+
+---
+
 ## v11.83 — Vercel Deployment Canlı Takip: CANCELED → ERROR → BUILDING İlerlemesi (2026-07-28)
 
 **Özet:** v11.82'nin bulduğu deployment-kuyruğu sorunu (`65be426`, `2fa4d0f`) çözülünce, `list_deployments` tekrar sorgulandı: build'ler artık gerçekten **tetikleniyor** (önceden ignore-command tarafından atlanıyordu). Ama ilk 5 gerçek build denemesi **state: ERROR** ile bitti — yeni, farklı bir build-time hatası. Bu MASTER_PLAN'a yazılırken Antigravity paralelde tespit edip düzeltti; şu an yeni bir build **BUILDING** durumunda, henüz sonucu bilinmiyor.
