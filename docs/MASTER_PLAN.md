@@ -2,6 +2,8 @@
 
 Bu belge artık kısa tutuluyor: yalnızca "şu an neredeyiz" ve "sıradaki işler" burada. Geçmişteki tüm detaylı kayıtlar `docs/MASTER_PLAN_ARCHIVE.md` dosyasında. Belge her güncellemede şişip pahalılaşmasın diye bu değişiklik yapıldı — Founder'ın açık talebi üzerine.
 
+**Canlı ilerleme durumu artık burada değil.** Yol haritası/görevler `/admin/strategy/roadmap` (`strategy_milestones` + `strategy_todos` tabloları), riskler `/admin/strategy/risks` (`strategy_risks`) üzerinden takip ediliyor — bu tablolar zaten dolu (55 todo, 13 risk, seed edilmiş) ve gerçek admin sayfalarıyla görüntüleniyor. Bu dosyanın rolü daraldı: yalnızca yönetişim el değiştirme kaydı — kim neyi doğruladı, hangi spec'i kime verdi.
+
 ---
 
 ## v11.78 — T-5 Lansman Değerlendirmesi (2026-07-28)
