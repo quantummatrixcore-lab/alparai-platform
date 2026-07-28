@@ -22,12 +22,20 @@ export default async function ValuationPage({ params }: { params: Promise<{ loca
   const isReadOnly = (user.role as string) === "advisor";
 
   const supabase = await createServerClient();
-  const { data } = await supabase
-    .from("strategy_valuations")
-    .select("*")
-    .order("snapshot_date", { ascending: false });
 
-  const initialValuations = (data ?? []) as StrategyValuation[];
+  const [dataRes, swotRes, risksRes, milestonesRes] = await Promise.all([
+    supabase.from("strategy_valuations").select("*").order("snapshot_date", { ascending: false }),
+    supabase.from("strategy_swot_items").select("*", { count: "exact", head: true }),
+    supabase.from("strategy_risks").select("*", { count: "exact", head: true }),
+    supabase.from("strategy_milestones").select("*", { count: "exact", head: true }),
+  ]);
+
+  const initialValuations = (dataRes.data ?? []) as StrategyValuation[];
+  const strategyCounts = {
+    swot: swotRes.count ?? 0,
+    risks: risksRes.count ?? 0,
+    milestones: milestonesRes.count ?? 0,
+  };
   const t = await getTranslations({ locale, namespace: "admin" });
 
   return (
@@ -54,6 +62,7 @@ export default async function ValuationPage({ params }: { params: Promise<{ loca
         {/* Valuation Calculator Component */}
         <ValuationCalculatorClient
           initialValuations={initialValuations}
+          strategyCounts={strategyCounts}
           isReadOnly={isReadOnly}
           locale={locale}
         />

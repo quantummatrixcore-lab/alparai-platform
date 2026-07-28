@@ -22,7 +22,7 @@ export interface IntegrationAlternative {
   id: string;
   name: string;
   description: string;
-  rating: number;
+  rating?: number | null;
   pros: string[];
   cons: string[];
   pricing: string;

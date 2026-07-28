@@ -10,7 +10,11 @@ interface AlternativeCardsProps {
   alternatives: IntegrationAlternative[];
 }
 
-function RatingStars({ rating }: { rating: number }) {
+function RatingStars({ rating }: { rating?: number | null }) {
+  if (!rating || rating <= 0) {
+    return <span className="text-fg-muted font-mono text-[10px] font-medium">Unrated (N/A)</span>;
+  }
+
   return (
     <div className="flex items-center gap-0.5">
       {[1, 2, 3, 4, 5].map((star) => (

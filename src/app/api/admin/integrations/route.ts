@@ -236,14 +236,11 @@ async function searchAlternatives(serviceId: string): Promise<IntegrationAlterna
     const altSvc = getServiceById(altId);
     if (!altSvc) return null;
 
-    // Calculate dynamic rating score based on service ecosystem presence
-    const baseRating = altSvc.envVars && altSvc.envVars.length > 0 ? 4.8 : altSvc.url ? 4.5 : 4.2;
-
     const result: IntegrationAlternative = {
       id: altId,
       name: altSvc.name,
       description: altSvc.description,
-      rating: baseRating,
+      rating: undefined,
       pros: ["Enterprise grade ecosystem", "Actively maintained"],
       cons: ["Requires configuration", "Learning curve"],
       pricing: "Tiered pricing",

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Plus, BarChart2, Calendar, Loader2 } from "lucide-react";
+import { Plus, BarChart2, Calendar, Loader2, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { saveValuationAction } from "@/actions/strategy";
 import { toast } from "sonner";
@@ -11,12 +11,18 @@ import type { Json } from "@/types/database";
 
 interface ValuationCalculatorClientProps {
   initialValuations: StrategyValuation[];
+  strategyCounts?: {
+    swot: number;
+    risks: number;
+    milestones: number;
+  };
   isReadOnly: boolean;
   locale: string;
 }
 
 export function ValuationCalculatorClient({
   initialValuations,
+  strategyCounts = { swot: 0, risks: 0, milestones: 0 },
   isReadOnly,
   locale,
 }: ValuationCalculatorClientProps) {
@@ -136,55 +142,95 @@ export function ValuationCalculatorClient({
     }
   };
 
+  const handleAutoSuggestFromStrategy = () => {
+    const { swot, risks, milestones } = strategyCounts;
+
+    // Calculate Berkus adjustments based on real strategy counts
+    const prototypeBonus = milestones > 0 ? Math.min(500000, 300000 + milestones * 35000) : 300000;
+    const teamBonus = swot > 0 ? Math.min(500000, 350000 + swot * 20000) : 350000;
+    const rolloutBonus =
+      risks > 0 ? Math.min(500000, 250000 + Math.max(0, 10 - risks) * 25000) : 25000;
+
+    setBerkusInputs((prev) => ({
+      ...prev,
+      prototype: prototypeBonus,
+      team: teamBonus,
+      rollout: rolloutBonus,
+    }));
+
+    // Calculate Scorecard adjustments
+    setScorecardInputs((prev) => ({
+      ...prev,
+      technology: Math.min(150, 100 + milestones * 5),
+      competition: Math.min(150, 90 + swot * 3),
+      marketing: Math.min(150, 80 + Math.max(0, 10 - risks) * 4),
+    }));
+
+    toast.success(
+      `Valuation parameters auto-suggested from Strategy metrics (${swot} SWOT, ${risks} Risks, ${milestones} Milestones).`,
+    );
+  };
+
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
       {/* CALCULATOR COLUMN */}
       <div className="space-y-6 lg:col-span-8">
-        {/* Method Select Tabs */}
-        <div className="bg-bg-secondary/40 border-border-subtle flex scrollbar-none gap-2 overflow-x-auto rounded-2xl border p-1.5 backdrop-blur-md">
+        {/* Method Select Tabs + Auto-Suggest Action */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="bg-bg-secondary/40 border-border-subtle flex scrollbar-none gap-2 overflow-x-auto rounded-2xl border p-1.5 backdrop-blur-md">
+            <button
+              onClick={() => setActiveTab("berkus")}
+              className={cn(
+                "flex-1 rounded-xl px-4 py-2 text-xs font-bold tracking-wider uppercase transition duration-300",
+                activeTab === "berkus"
+                  ? "bg-brand-500/15 text-brand-300 border-brand-500/20 border shadow-[inset_0_0_12px_rgba(168,85,247,0.1)]"
+                  : "text-fg-muted hover:bg-white/5 hover:text-white",
+              )}
+            >
+              {t("val_berkus_method")}
+            </button>
+            <button
+              onClick={() => setActiveTab("scorecard")}
+              className={cn(
+                "flex-1 rounded-xl px-4 py-2 text-xs font-bold tracking-wider uppercase transition duration-300",
+                activeTab === "scorecard"
+                  ? "bg-brand-500/15 text-brand-300 border-brand-500/20 border shadow-[inset_0_0_12px_rgba(168,85,247,0.1)]"
+                  : "text-fg-muted hover:bg-white/5 hover:text-white",
+              )}
+            >
+              {t("val_scorecard_method")}
+            </button>
+            <button
+              onClick={() => setActiveTab("vc")}
+              className={cn(
+                "flex-1 rounded-xl px-4 py-2 text-xs font-bold tracking-wider uppercase transition duration-300",
+                activeTab === "vc"
+                  ? "bg-brand-500/15 text-brand-300 border-brand-500/20 border shadow-[inset_0_0_12px_rgba(168,85,247,0.1)]"
+                  : "text-fg-muted hover:bg-white/5 hover:text-white",
+              )}
+            >
+              {t("val_vc_exit_method")}
+            </button>
+            <button
+              onClick={() => setActiveTab("history")}
+              className={cn(
+                "flex-1 rounded-xl px-4 py-2 text-xs font-bold tracking-wider uppercase transition duration-300",
+                activeTab === "history"
+                  ? "bg-brand-500/15 text-brand-300 border-brand-500/20 border shadow-[inset_0_0_12px_rgba(168,85,247,0.1)]"
+                  : "text-fg-muted hover:bg-white/5 hover:text-white",
+              )}
+            >
+              {t("val_log_history")}
+            </button>
+          </div>
+
           <button
-            onClick={() => setActiveTab("berkus")}
-            className={cn(
-              "flex-1 rounded-xl px-4 py-2 text-xs font-bold tracking-wider uppercase transition duration-300",
-              activeTab === "berkus"
-                ? "bg-brand-500/15 text-brand-300 border-brand-500/20 border shadow-[inset_0_0_12px_rgba(168,85,247,0.1)]"
-                : "text-fg-muted hover:bg-white/5 hover:text-white",
-            )}
+            onClick={handleAutoSuggestFromStrategy}
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs font-bold text-amber-300 transition hover:bg-amber-500/20"
+            title="Auto-fill valuation multipliers based on SWOT, risks, and roadmap milestones"
           >
-            {t("val_berkus_method")}
-          </button>
-          <button
-            onClick={() => setActiveTab("scorecard")}
-            className={cn(
-              "flex-1 rounded-xl px-4 py-2 text-xs font-bold tracking-wider uppercase transition duration-300",
-              activeTab === "scorecard"
-                ? "bg-brand-500/15 text-brand-300 border-brand-500/20 border shadow-[inset_0_0_12px_rgba(168,85,247,0.1)]"
-                : "text-fg-muted hover:bg-white/5 hover:text-white",
-            )}
-          >
-            {t("val_scorecard_method")}
-          </button>
-          <button
-            onClick={() => setActiveTab("vc")}
-            className={cn(
-              "flex-1 rounded-xl px-4 py-2 text-xs font-bold tracking-wider uppercase transition duration-300",
-              activeTab === "vc"
-                ? "bg-brand-500/15 text-brand-300 border-brand-500/20 border shadow-[inset_0_0_12px_rgba(168,85,247,0.1)]"
-                : "text-fg-muted hover:bg-white/5 hover:text-white",
-            )}
-          >
-            {t("val_vc_exit_method")}
-          </button>
-          <button
-            onClick={() => setActiveTab("history")}
-            className={cn(
-              "flex-1 rounded-xl px-4 py-2 text-xs font-bold tracking-wider uppercase transition duration-300",
-              activeTab === "history"
-                ? "bg-brand-500/15 text-brand-300 border-brand-500/20 border shadow-[inset_0_0_12px_rgba(168,85,247,0.1)]"
-                : "text-fg-muted hover:bg-white/5 hover:text-white",
-            )}
-          >
-            {t("val_log_history")}
+            <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+            Auto-Suggest from Strategy Data
           </button>
         </div>
 
