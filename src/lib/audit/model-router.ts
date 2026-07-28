@@ -16,13 +16,26 @@ export interface ModelRouterResult {
 }
 
 const BASIC_CHAIN: ModelChainItem[] = [
+  {
+    id: "nvidia/llama-3.1-nemotron-70b-instruct",
+    provider: "nvidia",
+    tier: "free",
+    maxTokens: 2048,
+  },
+  { id: "deepseek-ai/deepseek-r1", provider: "nvidia", tier: "free", maxTokens: 2048 },
   { id: "command-r", provider: "cohere", tier: "free", maxTokens: 2048 },
   { id: "google/gemma-2-27b-it", provider: "nvidia", tier: "free", maxTokens: 2048 },
 ];
 
 const BASIC_SUPREME: ModelChainItem[] = [
+  { id: "meta/llama-3.1-405b-instruct", provider: "nvidia", tier: "free", maxTokens: 4096 },
+  {
+    id: "nvidia/llama-3.1-nemotron-70b-instruct",
+    provider: "nvidia",
+    tier: "free",
+    maxTokens: 2048,
+  },
   { id: "command-r", provider: "cohere", tier: "free", maxTokens: 2048 },
-  { id: "google/gemma-2-27b-it", provider: "nvidia", tier: "free", maxTokens: 2048 },
   { id: "openai/gpt-4o-mini", provider: "openrouter", tier: "free", maxTokens: 2048 },
 ];
 
