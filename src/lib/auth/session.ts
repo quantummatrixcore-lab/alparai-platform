@@ -51,6 +51,11 @@ export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
   }
 
   const isFounder = user.email === "quantum.matrix.core@gmail.com";
+
+  if (!profile && !isFounder) {
+    return null;
+  }
+
   const userRole = profile?.role || (isFounder ? "admin" : "user");
 
   return {
