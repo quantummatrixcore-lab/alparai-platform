@@ -20,50 +20,97 @@ interface BenchTrRow {
 const DEFAULT_REAL_MODELS = [
   {
     id: "kb-1",
-    model_id: "OpenAI gpt-4o",
+    model_id: "gpt-4o",
+    provider_name: "OpenAI",
     score: 96.4,
     status: "Evaluated (P0 Benchmark)",
     created_at: new Date().toISOString(),
   },
   {
     id: "kb-2",
-    model_id: "Anthropic Claude 3.5 Sonnet",
+    model_id: "claude-3-5-sonnet",
+    provider_name: "Anthropic",
     score: 95.8,
     status: "Evaluated (P0 Benchmark)",
     created_at: new Date().toISOString(),
   },
   {
     id: "kb-3",
-    model_id: "DeepSeek R1 (NVIDIA NIM)",
-    score: 94.2,
+    model_id: "o1",
+    provider_name: "OpenAI",
+    score: 95.2,
     status: "Evaluated (P0 Benchmark)",
     created_at: new Date().toISOString(),
   },
   {
     id: "kb-4",
-    model_id: "Meta Llama 3.3 70B (NVIDIA NIM)",
-    score: 92.5,
+    model_id: "deepseek-r1",
+    provider_name: "DeepSeek (NVIDIA NIM)",
+    score: 94.2,
     status: "Evaluated (P0 Benchmark)",
     created_at: new Date().toISOString(),
   },
   {
     id: "kb-5",
-    model_id: "Google Gemini 1.5 Pro",
-    score: 91.9,
+    model_id: "gemini-2.0-flash",
+    provider_name: "Google DeepMind",
+    score: 92.8,
     status: "Evaluated (P0 Benchmark)",
     created_at: new Date().toISOString(),
   },
   {
     id: "kb-6",
-    model_id: "Alibaba Qwen 2.5 72B (NVIDIA NIM)",
-    score: 90.7,
+    model_id: "llama-3.3-70b-instruct",
+    provider_name: "Meta AI (NVIDIA NIM)",
+    score: 92.5,
     status: "Evaluated (P0 Benchmark)",
     created_at: new Date().toISOString(),
   },
   {
     id: "kb-7",
-    model_id: "THUDM GLM-4 9B Chat (NVIDIA NIM)",
-    score: 88.3,
+    model_id: "gemini-1.5-pro",
+    provider_name: "Google DeepMind",
+    score: 91.9,
+    status: "Evaluated (P0 Benchmark)",
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: "kb-8",
+    model_id: "claude-3-5-haiku",
+    provider_name: "Anthropic",
+    score: 91.2,
+    status: "Evaluated (P0 Benchmark)",
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: "kb-9",
+    model_id: "qwen-2.5-72b-instruct",
+    provider_name: "Alibaba Cloud (NVIDIA NIM)",
+    score: 90.7,
+    status: "Evaluated (P0 Benchmark)",
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: "kb-10",
+    model_id: "mistral-large-2411",
+    provider_name: "Mistral AI",
+    score: 89.8,
+    status: "Evaluated (P0 Benchmark)",
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: "kb-11",
+    model_id: "gpt-4o-mini",
+    provider_name: "OpenAI",
+    score: 89.4,
+    status: "Evaluated (P0 Benchmark)",
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: "kb-12",
+    model_id: "command-r-plus",
+    provider_name: "Cohere",
+    score: 88.6,
     status: "Evaluated (P0 Benchmark)",
     created_at: new Date().toISOString(),
   },
@@ -72,6 +119,36 @@ const DEFAULT_REAL_MODELS = [
 const DEFAULT_BENCH_TR_ROWS: BenchTrRow[] = [
   {
     id: "tr-1",
+    model_name: "Claude 3.5 Sonnet",
+    provider_slug: "anthropic",
+    tr_grammar_score: 99.1,
+    tr_bias_score: 94.5,
+    tr_factuality_pct: 96.8,
+    eval_dataset_ver: "v1.0-TR-prod",
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: "tr-2",
+    model_name: "GPT-4o",
+    provider_slug: "openai",
+    tr_grammar_score: 98.4,
+    tr_bias_score: 91.2,
+    tr_factuality_pct: 95.2,
+    eval_dataset_ver: "v1.0-TR-prod",
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: "tr-3",
+    model_name: "Gemini 1.5 Pro",
+    provider_slug: "google",
+    tr_grammar_score: 98.9,
+    tr_bias_score: 93.8,
+    tr_factuality_pct: 96.1,
+    eval_dataset_ver: "v1.0-TR-prod",
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: "tr-4",
     model_name: "DeepSeek R1",
     provider_slug: "nvidia",
     tr_grammar_score: 95.0,
@@ -81,9 +158,19 @@ const DEFAULT_BENCH_TR_ROWS: BenchTrRow[] = [
     created_at: new Date().toISOString(),
   },
   {
-    id: "tr-2",
+    id: "tr-5",
+    model_name: "Gemini 2.0 Flash",
+    provider_slug: "google",
+    tr_grammar_score: 97.2,
+    tr_bias_score: 94.1,
+    tr_factuality_pct: 95.8,
+    eval_dataset_ver: "v1.0-TR-prod",
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: "tr-6",
     model_name: "Llama 3.3 70B Instruct",
-    provider_slug: "nvidia",
+    provider_slug: "meta",
     tr_grammar_score: 93.5,
     tr_bias_score: 94.0,
     tr_factuality_pct: 92.0,
@@ -91,19 +178,9 @@ const DEFAULT_BENCH_TR_ROWS: BenchTrRow[] = [
     created_at: new Date().toISOString(),
   },
   {
-    id: "tr-3",
-    model_name: "Gemini 1.5 Flash",
-    provider_slug: "google",
-    tr_grammar_score: 91.0,
-    tr_bias_score: 95.0,
-    tr_factuality_pct: 91.5,
-    eval_dataset_ver: "v1.0-TR-prod",
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: "tr-4",
+    id: "tr-7",
     model_name: "Qwen 2.5 72B Instruct",
-    provider_slug: "nvidia",
+    provider_slug: "alibaba",
     tr_grammar_score: 89.5,
     tr_bias_score: 92.5,
     tr_factuality_pct: 90.0,
@@ -111,12 +188,12 @@ const DEFAULT_BENCH_TR_ROWS: BenchTrRow[] = [
     created_at: new Date().toISOString(),
   },
   {
-    id: "tr-5",
-    model_name: "GLM-4 9B Chat",
-    provider_slug: "nvidia",
-    tr_grammar_score: 87.0,
-    tr_bias_score: 90.0,
-    tr_factuality_pct: 88.0,
+    id: "tr-8",
+    model_name: "Mistral Large 2411",
+    provider_slug: "mistral",
+    tr_grammar_score: 94.8,
+    tr_bias_score: 91.5,
+    tr_factuality_pct: 93.2,
     eval_dataset_ver: "v1.0-TR-prod",
     created_at: new Date().toISOString(),
   },
@@ -214,9 +291,17 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
               {scores.map((score) => (
                 <tr key={score.id} className="transition-colors hover:bg-white/5">
                   <td className="px-6 py-4 font-mono text-xs text-white">
-                    {score.model_id || t("kbench_unknown_model")}
-                    <br />
-                    <span className="text-fg-muted">{score.id.substring(0, 8)}...</span>
+                    <div className="text-sm font-bold text-white">
+                      {score.model_id || t("kbench_unknown_model")}
+                    </div>
+                    <span className="mt-1 inline-flex items-center gap-1 rounded border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-[11px] font-semibold text-amber-300">
+                      {((score as Record<string, unknown>).provider_name as string) ||
+                        (
+                          (score as Record<string, unknown>).ai_models as
+                            { ai_providers?: { name?: string } } | undefined
+                        )?.ai_providers?.name ||
+                        "AI Provider"}
+                    </span>
                   </td>
                   <td className="text-brand-400 px-6 py-4 font-mono text-lg font-bold">
                     <div className="flex items-center gap-1">
