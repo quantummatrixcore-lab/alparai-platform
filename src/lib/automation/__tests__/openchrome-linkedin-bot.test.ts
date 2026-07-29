@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { type LinkedInOutreachContact, runLinkedInOutreachBot } from "../openchrome-linkedin-bot";
+import {
+  type LinkedInBotResult,
+  type LinkedInOutreachContact,
+  runLinkedInOutreachBot,
+} from "../openchrome-linkedin-bot";
 
 describe("openchrome-linkedin-bot", () => {
   const sampleContacts: LinkedInOutreachContact[] = [
@@ -21,7 +25,10 @@ describe("openchrome-linkedin-bot", () => {
   ];
 
   it("runs gracefully in dry-run mode when CDP endpoint is unreachable", async () => {
-    const result = await runLinkedInOutreachBot(sampleContacts, "http://127.0.0.1:99999");
+    const result: LinkedInBotResult = await runLinkedInOutreachBot(
+      sampleContacts,
+      "http://127.0.0.1:99999",
+    );
 
     expect(result.processedCount).toBe(2);
     expect(result.navigatedCount).toBe(0);
@@ -31,5 +38,25 @@ describe("openchrome-linkedin-bot", () => {
     expect(result.logs.some((l) => l.includes("CDP port http://127.0.0.1:99999 unavailable"))).toBe(
       true,
     );
+  });
+
+  it("correctly calculates metrics when all contacts are skipped", async () => {
+    const skippedContacts: LinkedInOutreachContact[] = [
+      {
+        id: "3",
+        fullName: "Sam Altman",
+        title: "CEO, OpenAI",
+        profileUrl: "https://www.linkedin.com/in/samaltman",
+        status: "skipped",
+      },
+    ];
+
+    const result = await runLinkedInOutreachBot(skippedContacts, "http://127.0.0.1:99999");
+
+    expect(result.processedCount).toBe(1);
+    expect(result.navigatedCount).toBe(0);
+    expect(result.connectedCount).toBe(0);
+    expect(result.messageSentCount).toBe(0);
+    expect(result.skippedCount).toBe(1);
   });
 });
