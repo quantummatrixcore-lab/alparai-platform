@@ -7,6 +7,7 @@ import { verifyExternalItem, publishVerifiedItem } from "@/lib/ai/external-verif
 import { logger } from "@/lib/utils/logger";
 
 const TRUSTED_ALLOWLIST = [
+  "technologyreview.com",
   "technologyreview.mit.edu",
   "404media.co",
   "lastweekinai.substack.com",
