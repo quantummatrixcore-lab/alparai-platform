@@ -70,7 +70,14 @@ export function UserMenu({ initialUser }: { initialUser: SessionUserShape | null
             className="h-full w-full object-cover"
           />
         ) : (
-          <span className="text-sm font-semibold">{getInitials(user.fullName ?? user.email)}</span>
+          <span className="text-sm font-semibold">
+            {getInitials(
+              user.email === "quantum.matrix.core@gmail.com" ||
+                user.email === "ercument.erden@alparai.com"
+                ? "Ercüment Erden"
+                : (user.fullName ?? user.email),
+            )}
+          </span>
         )}
       </button>
       {open && (
@@ -80,7 +87,10 @@ export function UserMenu({ initialUser }: { initialUser: SessionUserShape | null
         >
           <div className="border-border-subtle border-b p-3">
             <p className="text-fg-primary truncate text-sm font-semibold">
-              {user.fullName ?? user.email}
+              {user.email === "quantum.matrix.core@gmail.com" ||
+              user.email === "ercument.erden@alparai.com"
+                ? "Kurucu Ercüment ERDEN"
+                : (user.fullName ?? user.email)}
             </p>
             <p className="text-fg-muted truncate text-xs">{user.email}</p>
             {isMod && (

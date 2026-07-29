@@ -136,11 +136,14 @@ export function LanguageSwitcher({
         <div
           className={cn(
             "absolute right-0 z-50 min-w-[180px] overflow-hidden rounded-xl",
-            direction === "up" ? "bottom-full mb-1.5" : "top-full mt-1.5",
+            direction === "up" ? "mb-1.5" : "top-full mt-1.5",
             "border border-white/[0.1] bg-[#0a0a0f]/95 backdrop-blur-xl",
             "shadow-[0_8px_32px_rgba(0,0,0,0.6)]",
           )}
-          style={{ animation: "fadeIn 0.15s ease-out" }}
+          style={{
+            animation: "fadeIn 0.15s ease-out",
+            ...(direction === "up" ? { bottom: "100%" } : {}),
+          }}
         >
           <div className="p-1">
             {availableOptions.map((opt) => (
