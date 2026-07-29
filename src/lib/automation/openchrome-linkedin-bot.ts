@@ -11,6 +11,7 @@ export interface LinkedInOutreachContact {
 export interface LinkedInBotResult {
   readonly processedCount: number;
   readonly navigatedCount: number;
+  readonly connectedCount: number;
   readonly skippedCount: number;
   readonly logs: readonly string[];
 }
@@ -41,6 +42,7 @@ export async function runLinkedInOutreachBot(
       return {
         processedCount: contacts.length,
         navigatedCount: 0,
+        connectedCount: 0,
         skippedCount: contacts.length,
         logs,
       };
@@ -54,6 +56,7 @@ export async function runLinkedInOutreachBot(
       return {
         processedCount: contacts.length,
         navigatedCount: 0,
+        connectedCount: 0,
         skippedCount: contacts.length,
         logs,
       };
@@ -66,6 +69,7 @@ export async function runLinkedInOutreachBot(
     });
 
     let navigatedCount = 0;
+    let connectedCount = 0;
     let skippedCount = 0;
 
     for (const contact of contacts) {
@@ -76,15 +80,83 @@ export async function runLinkedInOutreachBot(
       }
 
       logs.push(`[LinkedInBot CDP] Navigating to ${contact.fullName} (${contact.profileUrl})...`);
+
+      // Send navigation command
+      const navPromise = new Promise<boolean>((resolve) => {
+        const handler = (data: WebSocket.Data) => {
+          try {
+            const msg = JSON.parse(data.toString());
+            if (msg.id === 100) {
+              ws.off("message", handler);
+              resolve(Boolean(msg.result?.frameId));
+            }
+          } catch {
+            // ignore
+          }
+        };
+        ws.on("message", handler);
+      });
+
       ws.send(
         JSON.stringify({
-          id: Date.now(),
+          id: 100,
           method: "Page.navigate",
           params: { url: contact.profileUrl },
         }),
       );
-      await new Promise((r) => setTimeout(r, 1500));
-      navigatedCount++;
+
+      const navSuccess = await navPromise;
+      if (navSuccess) {
+        navigatedCount++;
+        await new Promise((r) => setTimeout(r, 2000));
+
+        // Evaluate DOM for Connect button click
+        const connectPromise = new Promise<boolean>((resolve) => {
+          const handler = (data: WebSocket.Data) => {
+            try {
+              const msg = JSON.parse(data.toString());
+              if (msg.id === 101) {
+                ws.off("message", handler);
+                resolve(Boolean(msg.result?.result?.value?.clicked));
+              }
+            } catch {
+              // ignore
+            }
+          };
+          ws.on("message", handler);
+        });
+
+        ws.send(
+          JSON.stringify({
+            id: 101,
+            method: "Runtime.evaluate",
+            params: {
+              expression: `
+                (() => {
+                  const buttons = Array.from(document.querySelectorAll('button'));
+                  const connectBtn = buttons.find(b => b.textContent?.trim().includes('Connect') || b.ariaLabel?.includes('Connect'));
+                  if (connectBtn) {
+                    connectBtn.click();
+                    return { clicked: true };
+                  }
+                  return { clicked: false, reason: 'Connect button not found on DOM' };
+                })()
+              `,
+              returnByValue: true,
+            },
+          }),
+        );
+
+        const clicked = await connectPromise;
+        if (clicked) {
+          connectedCount++;
+          logs.push(`[LinkedInBot CDP] Triggered Connect DOM interaction for ${contact.fullName}.`);
+        } else {
+          logs.push(
+            `[LinkedInBot CDP] Navigated to ${contact.fullName}, Connect button pending DOM state.`,
+          );
+        }
+      }
     }
 
     ws.close();
@@ -92,6 +164,7 @@ export async function runLinkedInOutreachBot(
     return {
       processedCount: contacts.length,
       navigatedCount,
+      connectedCount,
       skippedCount,
       logs,
     };
@@ -102,6 +175,7 @@ export async function runLinkedInOutreachBot(
     return {
       processedCount: contacts.length,
       navigatedCount: 0,
+      connectedCount: 0,
       skippedCount: contacts.length,
       logs,
     };
