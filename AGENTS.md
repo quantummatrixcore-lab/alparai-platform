@@ -31,6 +31,7 @@ pnpm db:migrate       # supabase migration up
 - **PII Guardian** — every user-submitted free-text is masked before insert (`src/lib/pii/guardian.ts`).
 - **i18n** — copy in `messages/{en,tr}.json`. Use `useTranslations("namespace")` / `getTranslations({locale, namespace})`.
 - **Tailwind v4** — design tokens in `src/app/globals.css` (`@theme inline`). No `tailwind.config.ts`.
+- **Corporate Email Rule** — ALL outreach, advisory board, and platform emails MUST be sent exclusively from `ercument.erden@alparai.com` or `hello@alparai.com` via Resend API. NEVER send corporate/outreach emails from `@gmail.com`.
 - **Components** — `src/components/ui/` is pure primitives; feature components live under `incidents/`, `auth/`, `admin/`, `legal/`, `marketing/`.
 
 ## File map

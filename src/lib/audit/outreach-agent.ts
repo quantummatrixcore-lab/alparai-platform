@@ -69,7 +69,7 @@ export async function processOutreachQueue(
         const emailBody = item.body_template + footer;
 
         const { error: sendError } = await resend.emails.send({
-          from: "ALPAR AI <hello@alparai.com>",
+          from: "Ercüment Erden <ercument.erden@alparai.com>",
           to: item.recipient_email,
           subject: item.subject,
           text: emailBody,
