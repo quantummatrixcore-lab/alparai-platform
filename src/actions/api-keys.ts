@@ -114,7 +114,8 @@ export async function saveApiKey(
 
     if (error) throw error;
 
-    revalidatePath("/admin/api-keys");
+    revalidatePath("/[locale]/admin/providers", "page");
+    revalidatePath("/[locale]/admin/api-keys", "page");
     return { ok: true };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Failed to save key";
@@ -145,7 +146,8 @@ export async function deleteApiKey(provider: string) {
 
     if (error) throw error;
 
-    revalidatePath("/admin/api-keys");
+    revalidatePath("/[locale]/admin/providers", "page");
+    revalidatePath("/[locale]/admin/api-keys", "page");
     return { ok: true };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Failed to delete key";
