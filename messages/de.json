@@ -845,7 +845,20 @@
     "btn_disable": "Disable",
     "btn_enable": "Enable",
     "stats_cost": "Estimated Cost",
-    "stats_tokens": "Total Tokens"
+    "stats_tokens": "Total Tokens",
+    "stats_avg_latency": "Durchschnittliche Latenz",
+    "stats_daily_tokens": "Tägliche Tokens",
+    "engines_title": "Status der aktiven Engines",
+    "engines_col_name": "Engine",
+    "engines_col_type": "Typ",
+    "engines_col_status": "Status",
+    "engines_col_heartbeat": "Letzter Heartbeat",
+    "cron_title": "Cron-Job-Protokolle",
+    "cron_empty": "Noch keine Cron-Ausführungen aufgezeichnet.",
+    "cron_col_name": "Cron",
+    "cron_col_status": "Status",
+    "cron_col_started": "Gestartet am",
+    "cron_col_error": "Fehler"
   },
   "takedown": {
     "reasons": {
