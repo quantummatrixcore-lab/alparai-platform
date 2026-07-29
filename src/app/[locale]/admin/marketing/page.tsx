@@ -18,19 +18,20 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
 
   const supabase = createAdminClient();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { count: incidentsCount } = await (supabase as any)
+  const { count: incidentsCount } = await supabase
     .from("incidents")
     .select("*", { count: "exact", head: true });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { count: outreachCount } = await (supabase as any)
-    .from("outreach_queue")
-    .select("*", { count: "exact", head: true });
+  const outreachTable = supabase.from("outreach_queue" as never) as unknown as {
+    select: (
+      cols: string,
+      options: { count: "exact"; head: true },
+    ) => Promise<{ count: number | null }>;
+  };
+  const { count: outreachCount } = await outreachTable.select("*", { count: "exact", head: true });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { count: profilesCount } = await (supabase as any)
-    .from("profiles")
+  const { count: usersCount } = await supabase
+    .from("users")
     .select("*", { count: "exact", head: true });
 
   return (
@@ -68,7 +69,7 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
         />
         <MetricCard
           title={t("marketing_activated")}
-          value={(profilesCount ?? 0).toLocaleString()}
+          value={(usersCount ?? 0).toLocaleString()}
           icon={<Users className="h-4 w-4" />}
           trend="up"
           trendLabel="Registered Accounts"
