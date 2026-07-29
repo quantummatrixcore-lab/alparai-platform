@@ -2319,12 +2319,12 @@
   },
   "takedown": {
     "reasons": {
-      "defamation": "Defamation / libel",
-      "copyright": "Copyright violation",
-      "privacy": "Personal data exposure",
-      "factual_error": "Factual inaccuracy",
-      "legal_court_order": "Court order",
-      "other": "Other (explain in details)"
+      "defamation": "Verleumdung / Rufmord",
+      "copyright": "Urheberrechtsverletzung",
+      "privacy": "Offenlegung personenbezogener Daten",
+      "factual_error": "Faktischer Fehler",
+      "legal_court_order": "Gerichtsbeschluss",
+      "other": "Sonstiges (in Details erläutern)"
     }
   },
   "contact": {
@@ -2356,17 +2356,17 @@
   },
   "badge": {
     "severity": {
-      "low": "Low",
-      "medium": "Medium",
-      "high": "High",
-      "critical": "Critical"
+      "low": "Niedrig",
+      "medium": "Mittel",
+      "high": "Hoch",
+      "critical": "Kritisch"
     },
     "status": {
-      "pending_review": "Pending review",
-      "published": "Published",
-      "rejected": "Rejected",
-      "archived": "Archived",
-      "takedown": "Taken down"
+      "pending_review": "Ausstehende Überprüfung",
+      "published": "Veröffentlicht",
+      "rejected": "Abgelehnt",
+      "archived": "Archiviert",
+      "takedown": "Entfernt"
     }
   },
   "settings": {

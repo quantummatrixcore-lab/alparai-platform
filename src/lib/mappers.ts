@@ -44,12 +44,12 @@ export function toIncidentListItem(
   translations?: TranslationMap,
   locale?: string,
 ): IncidentListItem {
-  const localeIsDEorFR = locale === "de" || locale === "fr";
+  const localeIsExtra = locale === "de" || locale === "fr" || locale === "ru";
   let machineTranslated = false;
   let translatedTitle: string | null = null;
   let translatedDesc: string | null = null;
 
-  if (localeIsDEorFR && translations) {
+  if (localeIsExtra && translations) {
     const tx = translations.get(row.id);
     if (tx) {
       translatedTitle = tx.title;
