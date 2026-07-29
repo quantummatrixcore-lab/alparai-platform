@@ -1,9 +1,52 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   type LinkedInBotResult,
   type LinkedInOutreachContact,
   runLinkedInOutreachBot,
 } from "../openchrome-linkedin-bot";
+
+vi.mock("ws", async () => {
+  const { EventEmitter } = await import("events");
+
+  class MockCDPWebSocket extends EventEmitter {
+    static instances: MockCDPWebSocket[] = [];
+    constructor(public url: string) {
+      super();
+      MockCDPWebSocket.instances.push(this);
+      setTimeout(() => this.emit("open"), 10);
+    }
+    send(data: string) {
+      const parsed = JSON.parse(data);
+      if (parsed.id === 100) {
+        // Mock Page.navigate response with frameId
+        setTimeout(() => {
+          this.emit(
+            "message",
+            Buffer.from(JSON.stringify({ id: 100, result: { frameId: "frame-123" } })),
+          );
+        }, 10);
+      } else if (parsed.id === 101) {
+        // Mock Runtime.evaluate response with post-send verified DOM signals
+        setTimeout(() => {
+          this.emit(
+            "message",
+            Buffer.from(
+              JSON.stringify({
+                id: 101,
+                result: { result: { value: { connected: true, messageSent: true } } },
+              }),
+            ),
+          );
+        }, 10);
+      }
+    }
+    close() {
+      this.emit("close");
+    }
+  }
+
+  return { default: MockCDPWebSocket };
+});
 
 describe("openchrome-linkedin-bot", () => {
   const sampleContacts: LinkedInOutreachContact[] = [
@@ -60,17 +103,40 @@ describe("openchrome-linkedin-bot", () => {
     expect(result.skippedCount).toBe(1);
   });
 
-  it("evaluates simulated DOM post-send modal state expression correctly", async () => {
-    // Synthetic DOM simulation test for the in-page JavaScript evaluation string
-    const simulatedDOM = {
-      connectBtnFound: true,
-      modalAppeared: true,
-      textareaFound: true,
-      sendClicked: true,
-      postStatePending: true,
-    };
+  it("executes real CDP WebSocket cycle and computes connectedCount & messageSentCount correctly", async () => {
+    // Mock global fetch for CDP port 9222 active tab response
+    const origFetch = global.fetch;
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => [
+        { type: "page", webSocketDebuggerUrl: "ws://127.0.0.1:9222/devtools/page/1" },
+      ],
+    } as unknown as Response);
 
-    expect(simulatedDOM.connectBtnFound).toBe(true);
-    expect(simulatedDOM.postStatePending).toBe(true);
+    try {
+      const activeContacts: LinkedInOutreachContact[] = [
+        {
+          id: "10",
+          fullName: "Geoffrey Hinton",
+          title: "Turing Award Winner",
+          profileUrl: "https://www.linkedin.com/in/geoffreyhinton",
+          messageTemplate: "Hello Geoffrey!",
+          status: "to_add",
+        },
+      ];
+
+      const result = await runLinkedInOutreachBot(activeContacts, "http://127.0.0.1:9222");
+
+      expect(result.processedCount).toBe(1);
+      expect(result.navigatedCount).toBe(1);
+      expect(result.connectedCount).toBe(1);
+      expect(result.messageSentCount).toBe(1);
+      expect(result.skippedCount).toBe(0);
+      expect(
+        result.logs.some((l) => l.includes("Connection request & customized note transmitted")),
+      ).toBe(true);
+    } finally {
+      global.fetch = origFetch;
+    }
   });
 });
