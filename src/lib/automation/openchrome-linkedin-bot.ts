@@ -10,7 +10,7 @@ export interface LinkedInOutreachContact {
 
 export interface LinkedInBotResult {
   readonly processedCount: number;
-  readonly successCount: number;
+  readonly navigatedCount: number;
   readonly skippedCount: number;
   readonly logs: readonly string[];
 }
@@ -25,14 +25,22 @@ export async function runLinkedInOutreachBot(
   );
 
   try {
-    const res = await fetch(`${cdpUrl}/json/list`);
-    if (!res.ok) {
+    const res = await fetch(`${cdpUrl}/json/list`).catch((err) => {
       logs.push(
-        `[LinkedInBot Warning] CDP port ${cdpUrl} unavailable (HTTP ${res.status}). Bot running in dry-run simulation mode.`,
+        `[LinkedInBot Warning] CDP port ${cdpUrl} unavailable (${err instanceof Error ? err.message : String(err)}). Bot running in dry-run simulation mode.`,
       );
+      return null;
+    });
+
+    if (!res || !res.ok) {
+      if (res && !res.ok) {
+        logs.push(
+          `[LinkedInBot Warning] CDP port ${cdpUrl} unavailable (HTTP ${res.status}). Bot running in dry-run simulation mode.`,
+        );
+      }
       return {
         processedCount: contacts.length,
-        successCount: 0,
+        navigatedCount: 0,
         skippedCount: contacts.length,
         logs,
       };
@@ -45,7 +53,7 @@ export async function runLinkedInOutreachBot(
       logs.push("[LinkedInBot Warning] No active Chrome page tab found. Bot exiting gracefully.");
       return {
         processedCount: contacts.length,
-        successCount: 0,
+        navigatedCount: 0,
         skippedCount: contacts.length,
         logs,
       };
@@ -57,7 +65,7 @@ export async function runLinkedInOutreachBot(
       ws.on("error", reject);
     });
 
-    let successCount = 0;
+    let navigatedCount = 0;
     let skippedCount = 0;
 
     for (const contact of contacts) {
@@ -76,24 +84,24 @@ export async function runLinkedInOutreachBot(
         }),
       );
       await new Promise((r) => setTimeout(r, 1500));
-      successCount++;
+      navigatedCount++;
     }
 
     ws.close();
 
     return {
       processedCount: contacts.length,
-      successCount,
+      navigatedCount,
       skippedCount,
       logs,
     };
   } catch (error) {
     logs.push(
-      `[LinkedInBot Error] CDP connection failed: ${error instanceof Error ? error.message : String(error)}`,
+      `[LinkedInBot Warning] CDP port ${cdpUrl} unavailable (${error instanceof Error ? error.message : String(error)}). Bot running in dry-run simulation mode.`,
     );
     return {
       processedCount: contacts.length,
-      successCount: 0,
+      navigatedCount: 0,
       skippedCount: contacts.length,
       logs,
     };

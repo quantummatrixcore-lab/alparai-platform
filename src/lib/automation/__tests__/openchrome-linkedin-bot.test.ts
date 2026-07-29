@@ -23,7 +23,7 @@ describe("openchrome-linkedin-bot", () => {
     const result = await runLinkedInOutreachBot(sampleContacts, "http://127.0.0.1:99999");
 
     expect(result.processedCount).toBe(2);
-    expect(result.successCount).toBe(0);
+    expect(result.navigatedCount).toBe(0);
     expect(result.skippedCount).toBe(2);
     expect(result.logs.some((l) => l.includes("CDP port http://127.0.0.1:99999 unavailable"))).toBe(
       true,
