@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Toaster } from "sonner";
 import dynamic from "next/dynamic";
 

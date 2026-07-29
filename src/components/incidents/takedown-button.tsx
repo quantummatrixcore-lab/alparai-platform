@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useState, useTransition } from "react";
 import { Flag } from "lucide-react";
 import { Button } from "@/components/ui/button";

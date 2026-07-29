@@ -15,7 +15,7 @@ const mockUpdate = vi.fn();
 const updateErrorMock = vi.fn().mockReturnValue(null);
 
 const mockSupabaseChain: any = {
-  select: vi.fn().mockImplementation((cols: string, opts?: any) => {
+  select: vi.fn().mockImplementation((_cols: string, opts?: any) => {
     if (opts?.count) {
       return mockCount();
     }

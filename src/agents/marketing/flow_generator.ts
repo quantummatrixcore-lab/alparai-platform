@@ -2,11 +2,7 @@ import { logger } from "@/lib/utils/logger";
 import { resolveApiKey } from "@/lib/ai/api-keys";
 
 export class FlowGenerator {
-  private readonly projectId: string;
-
-  constructor(projectId?: string) {
-    this.projectId = projectId || process.env.GOOGLE_CLOUD_PROJECT || "";
-  }
+  constructor(_projectId?: string) {}
 
   async generateVideo(prompt: string): Promise<string> {
     logger.info("[FlowGenerator] Generating video from prompt", { promptLength: prompt.length });

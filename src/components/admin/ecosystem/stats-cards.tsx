@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { useTranslations } from "next-intl";
 import { Globe, AlertTriangle, Sparkles, Clock, TrendingUp } from "lucide-react";
 

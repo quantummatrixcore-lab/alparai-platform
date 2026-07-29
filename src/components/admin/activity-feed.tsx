@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Clock, ShieldAlert, Cpu, UserCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
 

@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Container, Section } from "@/components/ui/layout";

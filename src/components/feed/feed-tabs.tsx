@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { Sparkles, Clock, Flame, UserCheck } from "lucide-react";

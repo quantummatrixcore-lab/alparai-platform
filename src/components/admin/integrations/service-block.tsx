@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CaretDown, CaretRight, ArrowsClockwise, Globe } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";

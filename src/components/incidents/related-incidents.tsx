@@ -1,4 +1,3 @@
-import * as React from "react";
 import { createServerClient } from "@/lib/supabase/server";
 import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";

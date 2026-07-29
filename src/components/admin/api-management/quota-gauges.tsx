@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Gauge } from "@/components/admin/premium/gauge";
 import type { Provider } from "./api-hub";
 

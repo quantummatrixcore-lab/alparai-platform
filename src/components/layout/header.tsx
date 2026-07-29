@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Link } from "@/i18n/routing";
 import { Wordmark } from "./wordmark";
 import { Nav } from "./nav";

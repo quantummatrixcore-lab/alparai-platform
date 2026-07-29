@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Activity, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";

@@ -1,4 +1,3 @@
-import * as React from "react";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";

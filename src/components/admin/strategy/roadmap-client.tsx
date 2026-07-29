@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Plus, Edit2, Trash2, X, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,7 @@ interface RoadmapClientProps {
 }
 
 export function RoadmapClient({ initialMilestones, isReadOnly, _locale }: RoadmapClientProps) {
+  void _locale;
   const t = useTranslations("admin");
 
   const [milestones, setMilestones] = useState<StrategyMilestone[]>(initialMilestones);

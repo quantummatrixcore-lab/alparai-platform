@@ -1,4 +1,3 @@
-import * as React from "react";
 import { IncidentCard } from "./incident-card";
 import { EmptyState, Skeleton } from "@/components/ui/feedback";
 import { useTranslations } from "next-intl";

@@ -3,7 +3,7 @@ import { createServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request: Request, context: { params: Promise<{ modelSlug: string }> }) {
+export async function GET(_request: Request, context: { params: Promise<{ modelSlug: string }> }) {
   try {
     const { modelSlug } = await context.params;
     const supabase = await createServerClient();

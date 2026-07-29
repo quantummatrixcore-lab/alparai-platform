@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { useTranslations } from "next-intl";
 import { Sparkles, ExternalLink, ShieldCheck } from "lucide-react";
 import type { Database } from "@/types/database";

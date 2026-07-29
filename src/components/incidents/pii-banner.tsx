@@ -1,4 +1,3 @@
-import * as React from "react";
 import { ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";

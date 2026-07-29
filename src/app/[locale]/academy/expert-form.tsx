@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useTranslations } from "next-intl";
 import { submitExpert } from "@/actions/experts";
 import { Button } from "@/components/ui/button";

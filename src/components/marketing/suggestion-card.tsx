@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Card } from "@/components/ui/card";
 import { ThumbsUp, MessageCircle } from "lucide-react";
 import { useTranslations } from "next-intl";

@@ -421,7 +421,7 @@ export function CrossAuditDashboardClient({ data }: CrossAuditDashboardClientPro
                       paddingAngle={5}
                       dataKey="value"
                     >
-                      {categoryDistribution.map((entry, index) => (
+                      {categoryDistribution.map((_entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>

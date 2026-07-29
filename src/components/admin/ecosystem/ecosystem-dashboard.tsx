@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { useTranslations } from "next-intl";
 import { StatsCards } from "./stats-cards";
 import { ApprovalQueue } from "./approval-queue";

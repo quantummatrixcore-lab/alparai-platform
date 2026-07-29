@@ -28,7 +28,7 @@ export interface ProviderResponseResult {
 }
 
 export async function submitProviderResponse(
-  prevState: unknown,
+  _prevState: unknown,
   formData: FormData,
 ): Promise<ProviderResponseResult> {
   try {
