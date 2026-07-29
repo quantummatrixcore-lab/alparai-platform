@@ -10,7 +10,7 @@ Bu belge yalındır ve öyle kalır: konum, mimari, sermaye hattı, yönetişim,
 
 **Neden şimdi:** EU AI Act ciddi-olay bildirimi (Madde 73) yürürlük penceresi — repoda 2 Ağustos 2026 olarak kodlu (`src/app/api/cron/kill-metric/route.ts:16`); resmî kaynak teyidi Founder'da `[doğrulanmalı]`. Yükümlülüğün doğduğu gün hazır olan tek bağımsız katman olmak, konumlandırmanın tamamıdır. `/transparency/art-73-tracker` rotası canlı.
 
-**Kanıtlanmış zemin (ölçüldü):** 118 rota · 87+ tablo · RLS 65/65 · canlı Stripe · 9 YZ sağlayıcı adaptörü · production READY (Vercel, v11.87 doğrulaması) · 905/914 test yeşil · typecheck+lint temiz.
+**Kanıtlanmış zemin (ölçüldü):** 118 rota · 87+ tablo · RLS 65/65 · canlı Stripe · 9 YZ sağlayıcı adaptörü · production READY, `www.alparai.com`/`alparai.com` alias'ları doğrulandı (Vercel API, v11.90) · 920/920 test yeşil (v11.90) · typecheck+lint temiz.
 
 **Büyük teknoloji kaldıracı:** Microsoft, Google, AWS, Anthropic, OpenAI'ın üçüncü-taraf uyum verisine ihtiyacı yapısaldır — ALPAR AI entegre etmek zorunda kalacakları tarafsız denetim katmanı olarak konumlanır. Bu bir sponsorluk hedefidir, mevcut bir anlaşma değildir.
 
@@ -55,20 +55,23 @@ Google for Startups $2K–350K · AWS Activate $1K–200K · Microsoft Founders 
 | 8   | P2       | [Antigravity] Visual-layer rollout to remaining flat-table admin pages            | Grants, LinkedIn, Platforms listelerine Recharts BarChart görsel takibi eklendi                                     | ✅ completed |
 | 9   | P2       | [Founder] Create HackerOne + Reddit accounts                                      | HackerOne (`opportunities/all`) ve Reddit (`Potential_Can2214`) hesapları oluşturuldu ve doğrulandı                 | ✅ completed |
 | 10  | P1       | [Antigravity] Grant seed verisini katalogla eşitle                                | 9 katalog programı `apply_url` + `prepared_content_ref` ile seed edildi (`20260819100000_seed_grants_catalog.sql`)  | ✅ completed |
-| 11  | P0       | [Antigravity] Integrations rating fallback — uydurma sayı yerine N/A              | `src/app/api/admin/integrations/route.ts` Tavily yokken sezgisel 4.2–4.8 üretiyor; gerçek veri yoksa N/A göster     | pending      |
-| 12  | P0       | [Antigravity] `google-news-url-decoder` eksik paket                               | `package.json:66`'da tanımlı, `node_modules`'da yok; `pnpm install` + lockfile commit, 2 test dosyası açılacak      | pending      |
+| 11  | P0       | [Antigravity] Integrations rating fallback — uydurma sayı yerine N/A              | `bec231c`: `rating: undefined`, UI "Unrated (N/A)" gösteriyor                                                       | ✅ completed |
+| 12  | P0       | [Antigravity] `google-news-url-decoder` eksik paket                               | Lockfile'da zaten geçerli kayıt vardı; `pnpm install`+`pnpm test` ile 920/920 test doğrulandı (v11.90)              | ✅ completed |
 | 13  | P0       | [Founder] `finance_revenue_metrics` fabrikasyon MRR temizliği                     | Seed MRR/abone verisi yatırımcı-görünür yüzeyde mi doğrula; kaldır veya "örnek veri" etiketle                       | pending      |
-| 14  | P1       | [Antigravity] Advisory board kurum adlarını hedef-profile çevir                   | `20260729000000` seed'i "ETH/Stanford/CERN Partner Chair" diyor — ortaklık yok; kurum adı yerine aranan profil yaz  | pending      |
+| 14  | P1       | [Antigravity] Advisory board kurum adlarını hedef-profile çevir                   | `674dd17`: "ETH/Stanford/CERN Partner Chair" → "Academic & Industry AI Ethics Research" vb.                         | ✅ completed |
 | 15  | P1       | [Founder] AI Act Madde 73 yürürlük tarihini resmî kaynaktan teyit                 | Tüm konumlandırma bu tarihe dayanıyor; repo-içi doküman kaynak sayılmaz                                             | pending      |
-| 16  | P1       | [Antigravity] Marketing sayfasını gerçek veriye bağla                             | `admin/marketing/page.tsx:26-58` hardcoded "—"; gerçek sorgu veya dürüst boş-durum                                  | pending      |
+| 16  | P1       | [Antigravity] Marketing sayfasını gerçek veriye bağla                             | `bec231c`: `createAdminClient()` ile incidents/outreach/profiles sayımı; not: `as any` cast kullanılmış (#22)       | ✅ completed |
 | 17  | P1       | [Founder] Outreach kuyruğuna gerçek gazeteci/uzman kişileri gir                   | Şablonlar + Resend cron hazır (`/api/cron/outreach`); yalnızca gerçek kişi verisi eksik                             | pending      |
 | 18  | P1       | [Founder] GitHub repo hijyeni ayarları                                            | Settings → auto-delete-branches işaretle + `master` branch protection (PR + CI zorunlu)                             | pending      |
-| 19  | P2       | [Antigravity] Valuation — strateji verisinden otomatik öneri                      | `strategy_swot_items/risks/milestones` → Berkus/Scorecard girdi önerisi butonu                                      | pending      |
-| 20  | P2       | [Antigravity] Providers sayfası isim/kapsam netleştirmesi                         | Sayfa API key yönetiyor; ya yeniden adlandır ya gerçek adapter-durum sayfası ekle; UI'daki "OpenAI" kaldır          | pending      |
-| 21  | P2       | [Antigravity] i18n — `de.json`/`fr.json` 13 eksik `autopilot.*` anahtarı          | `tests/helpers/i18n-parity.test.ts` yeşile dönmeli                                                                  | pending      |
+| 19  | P2       | [Antigravity] Valuation — strateji verisinden otomatik öneri                      | `bec231c`: gerçek `strategyCounts` ile Berkus/Scorecard hesaplaması, "Auto-Suggest" butonu                          | ✅ completed |
+| 20  | P2       | [Antigravity] Providers sayfası isim/kapsam netleştirmesi                         | **Antigravity "yapıldı" dedi, git kanıtı yok** — `src/app/[locale]/admin/providers/` son commit'i eski (`d8b5167`)  | pending      |
+| 21  | P2       | [Antigravity] i18n — `de.json`/`fr.json` 13 eksik `autopilot.*` anahtarı          | **Antigravity "%100 yeşil" dedi, git kanıtı yok** — de.json/fr.json son commit'i eski (`ab5e650`), hiç dokunulmamış | pending      |
+| 22  | P2       | [Antigravity] Marketing sayfasındaki `as any` cast'lerini temizle                 | `admin/marketing/page.tsx`: `(supabase as any)` + eslint-disable — CLAUDE.md "no any" kuralını ihlal ediyor         | pending      |
 
 <!-- FOUNDER_BACKLOG_END -->
 
 ---
 
 _Yeniden yapılandırma: v11.89 — v11.88 devir paketi (parser sözleşmesi, doğrulanmış-gerçekler envanteri, yasak-iddialar listesi) uygulanarak 602 satırdan bu yalın forma indirildi. Tüm gerekçe ve kanıt zinciri arşivdedir._
+
+_v11.90 — Antigravity "7/7 tamamlandı, 920/920 test %100" raporu tek tek doğrulandı: **4 gerçek** (#11, #14, #16, #19 — kod/commit kanıtlı), **2 hiç yapılmamış** (#20 providers, #21 i18n de/fr — ilgili dosyalara son yıllardır dokunulmamış, commit kanıtı sıfır), **1 doğrulandı** (#12 — v11.85'teki "eksik paket" bulgusu aslında yerel sandbox bayatlığıymış; `pnpm install` sonrası 920/920 test gerçekten geçiyor, prod defekti değilmiş). Bonus: Vercel `get_deployment` ile `www.alparai.com`/`alparai.com` alias'ları teyit edildi — v11.82'den beri açık olan domain-bağlantı sorusu kapandı. #20/#21 için net kanıt talebiyle Antigravity'ye yeniden verildi (aşağıya bak); #22 yeni: marketing fix'inde `as any` kullanımı, düzeltilmeli._
