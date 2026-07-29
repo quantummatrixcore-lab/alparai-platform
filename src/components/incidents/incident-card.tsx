@@ -59,18 +59,18 @@ export function IncidentCard({
   const tFeed = useTranslations("feed");
   const locale = useLocale();
 
-  const localeIsDEorFR = locale === "de" || locale === "fr";
+  const localeIsExtra = locale === "de" || locale === "fr" || locale === "ru";
 
   const displayTitle =
     locale === "tr" && incident.title_tr && incident.title_tr.length > 0
       ? incident.title_tr
-      : localeIsDEorFR && incident.translated_title && incident.translated_title.length > 0
+      : localeIsExtra && incident.translated_title && incident.translated_title.length > 0
         ? incident.translated_title
         : incident.title_masked;
   const displayDesc =
     locale === "tr" && incident.description_tr && incident.description_tr.length > 0
       ? incident.description_tr
-      : localeIsDEorFR &&
+      : localeIsExtra &&
           incident.translated_description &&
           incident.translated_description.length > 0
         ? incident.translated_description

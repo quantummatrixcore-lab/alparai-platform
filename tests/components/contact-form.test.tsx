@@ -9,9 +9,10 @@ vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
 }));
 
+import * as React from "react";
 // Mock react useActionState
 vi.mock("react", async () => {
-  const actual = await vi.importActual<typeof import("react")>("react");
+  const actual = await vi.importActual<typeof React>("react");
   return {
     ...actual,
     useActionState: vi.fn((fn, initial) => [initial, fn, false]),

@@ -2319,12 +2319,12 @@
   },
   "takedown": {
     "reasons": {
-      "defamation": "Defamation / libel",
-      "copyright": "Copyright violation",
-      "privacy": "Personal data exposure",
-      "factual_error": "Factual inaccuracy",
-      "legal_court_order": "Court order",
-      "other": "Other (explain in details)"
+      "defamation": "Клевета",
+      "copyright": "Нарушение авторских прав",
+      "privacy": "Раскрытие личных данных",
+      "factual_error": "Фактическая ошибка",
+      "legal_court_order": "Постановление суда",
+      "other": "Другое (укажите в подробностях)"
     }
   },
   "contact": {
@@ -2356,17 +2356,17 @@
   },
   "badge": {
     "severity": {
-      "low": "Low",
-      "medium": "Medium",
-      "high": "High",
-      "critical": "Critical"
+      "low": "Низкий",
+      "medium": "Средний",
+      "high": "Высокий",
+      "critical": "Критический"
     },
     "status": {
-      "pending_review": "Pending review",
-      "published": "Published",
-      "rejected": "Rejected",
-      "archived": "Archived",
-      "takedown": "Taken down"
+      "pending_review": "Ожидает проверки",
+      "published": "Опубликовано",
+      "rejected": "Отклонено",
+      "archived": "В архиве",
+      "takedown": "Удалено"
     }
   },
   "settings": {
