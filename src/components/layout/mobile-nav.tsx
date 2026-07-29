@@ -116,7 +116,7 @@ export function MobileNav({
             </Link>
             <div className="flex items-center justify-between">
               <span className="text-fg-muted text-xs">{t("language_switcher")}</span>
-              <LanguageSwitcher />
+              <LanguageSwitcher direction="up" />
             </div>
           </div>
         </div>

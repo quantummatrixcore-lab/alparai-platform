@@ -141,8 +141,10 @@ export function HeroSection({
                   <div className="border-brand-400/20 h-full w-full rounded-full border bg-neutral-900" />
                 </div>
                 <div>
-                  <p className="text-fg-primary text-xs font-bold">Ercüm</p>
-                  <p className="text-brand-400 text-[10px] font-medium">Founder, ALPAR AI</p>
+                  <p className="text-fg-primary text-xs font-bold">Ercüment ERDEN</p>
+                  <p className="text-brand-400 text-[10px] font-medium">
+                    {t("founder_role", { defaultValue: "Kurucu, ALPAR AI" })}
+                  </p>
                 </div>
               </div>
             </motion.div>

@@ -360,7 +360,8 @@
     "closing_good_news_title": "ALPAR AI'ın kaydettiği her rapor yapay zekayı daha güvenli kılar.",
     "closing_good_news_body": "Olaylar kalıcı kamuya açık kayıt haline geldiğinde yapay zeka şirketleri sistemlerini geliştirir. Sağlayıcılar resmi olarak yanıt verdiğinde halk yanıt alır. Mahkemeler ALPAR AI raporlarına atıfta bulunduğunda, hesap verebilirlik kanıta kavuşur. Kimse yapay zeka manipülasyonuyla yalnız kalmaz. Belgelenen her vaka, yapay zekanın sessizce zarar vermesine izin vermeyi refusden ilk kalıcı kaydın bir parçasıdır.",
     "closing_good_news_cta": "Kayda Ekle →",
-    "zero_tolerance": "Sıfır Tolerans. %100 Şeffaflık."
+    "zero_tolerance": "Sıfır Tolerans. %100 Şeffaflık.",
+    "founder_role": "Kurucu, ALPAR AI"
   },
   "incident": {
     "takedown": "Kaldırma / Düzeltme",
