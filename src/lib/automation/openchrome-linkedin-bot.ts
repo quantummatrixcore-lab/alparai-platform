@@ -5,6 +5,7 @@ export interface LinkedInOutreachContact {
   readonly fullName: string;
   readonly title: string;
   readonly profileUrl: string;
+  readonly messageTemplate?: string;
   readonly status: "to_add" | "contacted" | "skipped";
 }
 
@@ -12,6 +13,7 @@ export interface LinkedInBotResult {
   readonly processedCount: number;
   readonly navigatedCount: number;
   readonly connectedCount: number;
+  readonly messageSentCount: number;
   readonly skippedCount: number;
   readonly logs: readonly string[];
 }
@@ -43,6 +45,7 @@ export async function runLinkedInOutreachBot(
         processedCount: contacts.length,
         navigatedCount: 0,
         connectedCount: 0,
+        messageSentCount: 0,
         skippedCount: contacts.length,
         logs,
       };
@@ -57,6 +60,7 @@ export async function runLinkedInOutreachBot(
         processedCount: contacts.length,
         navigatedCount: 0,
         connectedCount: 0,
+        messageSentCount: 0,
         skippedCount: contacts.length,
         logs,
       };
@@ -70,6 +74,7 @@ export async function runLinkedInOutreachBot(
 
     let navigatedCount = 0;
     let connectedCount = 0;
+    let messageSentCount = 0;
     let skippedCount = 0;
 
     for (const contact of contacts) {
@@ -81,7 +86,6 @@ export async function runLinkedInOutreachBot(
 
       logs.push(`[LinkedInBot CDP] Navigating to ${contact.fullName} (${contact.profileUrl})...`);
 
-      // Send navigation command
       const navPromise = new Promise<boolean>((resolve) => {
         const handler = (data: WebSocket.Data) => {
           try {
@@ -110,21 +114,30 @@ export async function runLinkedInOutreachBot(
         navigatedCount++;
         await new Promise((r) => setTimeout(r, 2000));
 
-        // Evaluate DOM for Connect button click
-        const connectPromise = new Promise<boolean>((resolve) => {
-          const handler = (data: WebSocket.Data) => {
-            try {
-              const msg = JSON.parse(data.toString());
-              if (msg.id === 101) {
-                ws.off("message", handler);
-                resolve(Boolean(msg.result?.result?.value?.clicked));
+        // Evaluate DOM for Connect button + modal confirmation dialog + message dispatch
+        const noteText =
+          contact.messageTemplate ||
+          `Hello ${contact.fullName}, I'd love to connect regarding ALPAR AI trust infrastructure!`;
+
+        const connectPromise = new Promise<{ connected: boolean; messageSent: boolean }>(
+          (resolve) => {
+            const handler = (data: WebSocket.Data) => {
+              try {
+                const msg = JSON.parse(data.toString());
+                if (msg.id === 101) {
+                  ws.off("message", handler);
+                  resolve({
+                    connected: Boolean(msg.result?.result?.value?.connected),
+                    messageSent: Boolean(msg.result?.result?.value?.messageSent),
+                  });
+                }
+              } catch {
+                // ignore
               }
-            } catch {
-              // ignore
-            }
-          };
-          ws.on("message", handler);
-        });
+            };
+            ws.on("message", handler);
+          },
+        );
 
         ws.send(
           JSON.stringify({
@@ -135,11 +148,37 @@ export async function runLinkedInOutreachBot(
                 (() => {
                   const buttons = Array.from(document.querySelectorAll('button'));
                   const connectBtn = buttons.find(b => b.textContent?.trim().includes('Connect') || b.ariaLabel?.includes('Connect'));
-                  if (connectBtn) {
-                    connectBtn.click();
-                    return { clicked: true };
+                  if (!connectBtn) return { connected: false, messageSent: false, reason: 'Connect button not found' };
+
+                  connectBtn.click();
+                  
+                  // Modal confirmation check
+                  const modal = document.querySelector('div[role="dialog"], div.artdeco-modal');
+                  let messageSent = false;
+
+                  if (modal) {
+                    const modalButtons = Array.from(modal.querySelectorAll('button'));
+                    const addNoteBtn = modalButtons.find(b => b.textContent?.trim().includes('Add a note'));
+                    const sendWithoutNoteBtn = modalButtons.find(b => b.textContent?.trim().includes('Send without a note') || b.textContent?.trim() === 'Send');
+
+                    if (addNoteBtn) {
+                      addNoteBtn.click();
+                      const textarea = modal.querySelector('textarea');
+                      if (textarea) {
+                        textarea.value = ${JSON.stringify(noteText)};
+                        textarea.dispatchEvent(new Event('input', { bubbles: true }));
+                        const sendBtn = Array.from(modal.querySelectorAll('button')).find(b => b.textContent?.trim() === 'Send');
+                        if (sendBtn) {
+                          sendBtn.click();
+                          messageSent = true;
+                        }
+                      }
+                    } else if (sendWithoutNoteBtn) {
+                      sendWithoutNoteBtn.click();
+                    }
                   }
-                  return { clicked: false, reason: 'Connect button not found on DOM' };
+
+                  return { connected: true, messageSent };
                 })()
               `,
               returnByValue: true,
@@ -147,10 +186,17 @@ export async function runLinkedInOutreachBot(
           }),
         );
 
-        const clicked = await connectPromise;
-        if (clicked) {
+        const outcome = await connectPromise;
+        if (outcome.connected) {
           connectedCount++;
-          logs.push(`[LinkedInBot CDP] Triggered Connect DOM interaction for ${contact.fullName}.`);
+          if (outcome.messageSent) {
+            messageSentCount++;
+            logs.push(
+              `[LinkedInBot CDP] Connection request & customized note transmitted to ${contact.fullName}.`,
+            );
+          } else {
+            logs.push(`[LinkedInBot CDP] Connection request transmitted to ${contact.fullName}.`);
+          }
         } else {
           logs.push(
             `[LinkedInBot CDP] Navigated to ${contact.fullName}, Connect button pending DOM state.`,
@@ -165,6 +211,7 @@ export async function runLinkedInOutreachBot(
       processedCount: contacts.length,
       navigatedCount,
       connectedCount,
+      messageSentCount,
       skippedCount,
       logs,
     };
@@ -176,6 +223,7 @@ export async function runLinkedInOutreachBot(
       processedCount: contacts.length,
       navigatedCount: 0,
       connectedCount: 0,
+      messageSentCount: 0,
       skippedCount: contacts.length,
       logs,
     };

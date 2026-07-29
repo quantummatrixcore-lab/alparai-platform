@@ -8,6 +8,7 @@ describe("openchrome-linkedin-bot", () => {
       fullName: "Yann LeCun",
       title: "VP & Chief AI Scientist, Meta",
       profileUrl: "https://www.linkedin.com/in/yann-lecun",
+      messageTemplate: "Hi Yann, love to connect!",
       status: "to_add",
     },
     {
@@ -25,6 +26,7 @@ describe("openchrome-linkedin-bot", () => {
     expect(result.processedCount).toBe(2);
     expect(result.navigatedCount).toBe(0);
     expect(result.connectedCount).toBe(0);
+    expect(result.messageSentCount).toBe(0);
     expect(result.skippedCount).toBe(2);
     expect(result.logs.some((l) => l.includes("CDP port http://127.0.0.1:99999 unavailable"))).toBe(
       true,
