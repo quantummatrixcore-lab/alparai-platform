@@ -5,6 +5,9 @@ import { Megaphone } from "lucide-react";
 import { OutreachPageContent } from "./outreach-page-content";
 import { getTranslations } from "next-intl/server";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function OutreachAdminPage({
   params: { locale },
 }: {
