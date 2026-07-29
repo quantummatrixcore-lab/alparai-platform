@@ -162,11 +162,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     ).map((p) => [p.id, p]),
   );
 
-  const localeIsDEorFR = locale === "de" || locale === "fr";
+  const localeIsTranslated = locale === "de" || locale === "fr" || locale === "ru";
 
   let translationMap: TranslationMap | undefined;
   const rawHomeData = incidentsResult.data as Array<Record<string, unknown>> | null;
-  if (localeIsDEorFR && rawHomeData && rawHomeData.length > 0) {
+  if (localeIsTranslated && rawHomeData && rawHomeData.length > 0) {
     const incidentIds = rawHomeData.map((r) => r["id"] as string);
     const sb = supabase as unknown as {
       from: (t: string) => {
