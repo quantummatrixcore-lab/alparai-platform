@@ -85,7 +85,9 @@ const createRedisHandle = (redis: Redis): QueueHandle => {
         try {
           const parsed = JSON.parse(item) as QueueJob;
           jobs.push(parsed);
-        } catch {}
+        } catch (e) {
+          console.error("Ignored error:", e);
+        }
       }
       return jobs;
     },

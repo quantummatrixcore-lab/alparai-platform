@@ -257,7 +257,9 @@ export async function syncNewsAction(): Promise<{ ok: boolean; added?: number }>
     try {
       revalidatePath("/");
       revalidatePath("/incidents");
-    } catch {}
+    } catch (e) {
+      console.error("Ignored error:", e);
+    }
     return { ok: true, added: result.value.added };
   }
 

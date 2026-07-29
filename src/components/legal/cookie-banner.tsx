@@ -33,7 +33,9 @@ export function CookieBanner() {
     if (levels.analytics) {
       try {
         await import("@/actions/cookie-consent").then((mod) => mod.logCookieConsent("analytics"));
-      } catch {}
+      } catch (e) {
+        console.error("Ignored error:", e);
+      }
     }
   }, []);
 

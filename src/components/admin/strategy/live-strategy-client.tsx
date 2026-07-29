@@ -42,7 +42,9 @@ export function LiveStrategyClient({ context }: LiveStrategyClientProps) {
       let resData;
       try {
         resData = await res.json();
-      } catch (_e) {}
+      } catch (_e) {
+        console.error("Ignored error:", _e);
+      }
 
       if (!res.ok) {
         throw new Error(resData?.message || "Sunucu hatası");

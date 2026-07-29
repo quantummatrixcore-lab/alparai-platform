@@ -81,7 +81,9 @@ export async function submitWhistleblowerAction(
     if (result.kind === "ok") {
       try {
         revalidatePath("/admin");
-      } catch {}
+      } catch (e) {
+        console.error("Ignored error:", e);
+      }
       return { ok: true, submissionId: result.value.id };
     }
 

@@ -5,6 +5,7 @@ import { requireModerator } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import { Building2 } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 export default async function GrantsAdminPage({
   params: { locale },
@@ -18,8 +19,7 @@ export default async function GrantsAdminPage({
 
   const supabase = createAdminClient();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: grants, error } = await (supabase as any)
+  const { data: grants, error } = await (supabase as unknown as SupabaseClient)
     .from("grant_applications")
     .select("*")
     .order("phase", { ascending: true })

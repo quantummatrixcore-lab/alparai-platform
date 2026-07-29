@@ -270,7 +270,9 @@ export async function autoModerateIncidentAction(
     try {
       revalidatePath("/incidents");
       revalidatePath("/admin");
-    } catch {}
+    } catch (e) {
+      console.error("Ignored error:", e);
+    }
     return { ok: true, score: result.value.score, status: result.value.status };
   }
 
@@ -287,7 +289,9 @@ export async function autoModerateIncidentAction(
     try {
       revalidatePath("/incidents");
       revalidatePath("/admin");
-    } catch {}
+    } catch (e) {
+      console.error("Ignored error:", e);
+    }
   } catch (dbErr) {
     logger.error(
       "Failed to write auto-moderation failure to database",

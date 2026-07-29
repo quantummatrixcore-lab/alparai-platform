@@ -21,7 +21,9 @@ export function HealthDashboardClient({ initialReport }: HealthDashboardClientPr
       const res = await fetch("/api/health/unified");
       const data = await res.json();
       setReport(data);
-    } catch {}
+    } catch (e) {
+      console.error("Ignored error:", e);
+    }
     setRefreshing(false);
   };
 
