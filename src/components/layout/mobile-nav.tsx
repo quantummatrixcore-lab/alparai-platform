@@ -58,7 +58,7 @@ export function MobileNav({
   }, [pathname]);
 
   return (
-    <div className="xl:hidden">
+    <div className="lg:hidden">
       <button
         onClick={() => setOpen(true)}
         className="text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary focus-visible:ring-brand-500 inline-flex h-10 w-10 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:outline-none"
