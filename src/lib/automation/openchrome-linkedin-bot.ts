@@ -114,7 +114,7 @@ export async function runLinkedInOutreachBot(
         navigatedCount++;
         await new Promise((r) => setTimeout(r, 2000));
 
-        // Evaluate DOM for Connect button + modal confirmation dialog + message dispatch
+        // Evaluate DOM for Connect button + modal confirmation dialog + verified post-send DOM signal
         const noteText =
           contact.messageTemplate ||
           `Hello ${contact.fullName}, I'd love to connect regarding ALPAR AI trust infrastructure!`;
@@ -145,16 +145,18 @@ export async function runLinkedInOutreachBot(
             method: "Runtime.evaluate",
             params: {
               expression: `
-                (() => {
+                (async () => {
                   const buttons = Array.from(document.querySelectorAll('button'));
                   const connectBtn = buttons.find(b => b.textContent?.trim().includes('Connect') || b.ariaLabel?.includes('Connect'));
                   if (!connectBtn) return { connected: false, messageSent: false, reason: 'Connect button not found' };
 
+                  // Click initial connect button
                   connectBtn.click();
-                  
-                  // Modal confirmation check
+                  await new Promise(r => setTimeout(r, 800));
+
                   const modal = document.querySelector('div[role="dialog"], div.artdeco-modal');
                   let messageSent = false;
+                  let invitationTransmitted = false;
 
                   if (modal) {
                     const modalButtons = Array.from(modal.querySelectorAll('button'));
@@ -163,6 +165,7 @@ export async function runLinkedInOutreachBot(
 
                     if (addNoteBtn) {
                       addNoteBtn.click();
+                      await new Promise(r => setTimeout(r, 400));
                       const textarea = modal.querySelector('textarea');
                       if (textarea) {
                         textarea.value = ${JSON.stringify(noteText)};
@@ -170,17 +173,37 @@ export async function runLinkedInOutreachBot(
                         const sendBtn = Array.from(modal.querySelectorAll('button')).find(b => b.textContent?.trim() === 'Send');
                         if (sendBtn) {
                           sendBtn.click();
-                          messageSent = true;
+                          await new Promise(r => setTimeout(r, 1000));
+                          // Verify post-send state: modal closed or button changed to Pending
+                          const isModalClosed = !document.querySelector('div[role="dialog"], div.artdeco-modal');
+                          const isPendingNow = Array.from(document.querySelectorAll('button')).some(b => b.textContent?.trim().includes('Pending'));
+                          if (isModalClosed || isPendingNow) {
+                            messageSent = true;
+                            invitationTransmitted = true;
+                          }
                         }
                       }
                     } else if (sendWithoutNoteBtn) {
                       sendWithoutNoteBtn.click();
+                      await new Promise(r => setTimeout(r, 1000));
+                      const isModalClosed = !document.querySelector('div[role="dialog"], div.artdeco-modal');
+                      const isPendingNow = Array.from(document.querySelectorAll('button')).some(b => b.textContent?.trim().includes('Pending'));
+                      if (isModalClosed || isPendingNow) {
+                        invitationTransmitted = true;
+                      }
+                    }
+                  } else {
+                    // Direct connection without modal (rare direct connect)
+                    const isPendingNow = Array.from(document.querySelectorAll('button')).some(b => b.textContent?.trim().includes('Pending'));
+                    if (isPendingNow) {
+                      invitationTransmitted = true;
                     }
                   }
 
-                  return { connected: true, messageSent };
+                  return { connected: invitationTransmitted, messageSent };
                 })()
               `,
+              awaitPromise: true,
               returnByValue: true,
             },
           }),
@@ -199,7 +222,7 @@ export async function runLinkedInOutreachBot(
           }
         } else {
           logs.push(
-            `[LinkedInBot CDP] Navigated to ${contact.fullName}, Connect button pending DOM state.`,
+            `[LinkedInBot CDP] Navigated to ${contact.fullName}, Connect request pending DOM post-send verification.`,
           );
         }
       }
