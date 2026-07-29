@@ -79,14 +79,12 @@ export async function runExternalFetchTask() {
         items: posts.map((p) => ({ ...p, source: "reddit" })),
       })),
     ),
-    ...positiveKeywords
-      .slice(0, 3)
-      .map((kw) =>
-        fetchRedditPosts(sub, kw).then((posts) => ({
-          type: "positive",
-          items: posts.map((p) => ({ ...p, source: "reddit" })),
-        })),
-      ),
+    ...positiveKeywords.slice(0, 3).map((kw) =>
+      fetchRedditPosts(sub, kw).then((posts) => ({
+        type: "positive",
+        items: posts.map((p) => ({ ...p, source: "reddit" })),
+      })),
+    ),
   ]);
 
   const hnFetchPromises = [
@@ -96,14 +94,12 @@ export async function runExternalFetchTask() {
         items: stories.map((s) => ({ ...s, source: "hn" })),
       })),
     ),
-    ...positiveKeywords
-      .slice(0, 3)
-      .map((kw) =>
-        fetchHNStories(kw).then((stories) => ({
-          type: "positive",
-          items: stories.map((s) => ({ ...s, source: "hn" })),
-        })),
-      ),
+    ...positiveKeywords.slice(0, 3).map((kw) =>
+      fetchHNStories(kw).then((stories) => ({
+        type: "positive",
+        items: stories.map((s) => ({ ...s, source: "hn" })),
+      })),
+    ),
   ];
 
   const ghFetchPromises = ["vulnerability", "leak"].map((kw) =>
@@ -221,15 +217,15 @@ export async function runExternalFetchTask() {
 
     insertedCount++;
 
-    if (verdict?.approved) {
+    if (isTrusted || verdict?.approved) {
       const published = await publishVerifiedItem({
         title: item.title,
         body: item.body,
         externalUrl: item.external_url,
         source: item.source,
-        category: verdict.category,
-        severity: verdict.severity,
-        plausibilityScore: verdict.plausibilityScore,
+        category: verdict?.category || "other",
+        severity: verdict?.severity || "low",
+        plausibilityScore: verdict?.plausibilityScore || 90,
       });
       if (published.success) {
         aiPublishedCount++;
