@@ -5,17 +5,16 @@ export interface GrantPortalTarget {
   readonly name: string;
   readonly url: string;
   readonly isEligible: boolean;
-  readonly status: "verified" | "excluded" | "pending";
+  readonly status: "verified" | "excluded" | "unreachable" | "pending";
   readonly notes: string;
 }
 
-export const ELIGIBLE_GRANT_PORTALS: readonly GrantPortalTarget[] = [
+export const GRANT_PORTAL_CATALOG: readonly Omit<GrantPortalTarget, "status">[] = [
   {
     id: "ms-startups",
     name: "Microsoft for Startups Founders Hub",
     url: "https://startups.microsoft.com",
     isEligible: true,
-    status: "verified",
     notes:
       "$150k Azure + Azure OpenAI credit stream. Pre-seed eligible, no incorporation mandatory.",
   },
@@ -24,7 +23,6 @@ export const ELIGIBLE_GRANT_PORTALS: readonly GrantPortalTarget[] = [
     name: "OpenAI Researcher Access Program",
     url: "https://openai.com/research/overview",
     isEligible: true,
-    status: "verified",
     notes: "$1,000 direct AI Safety & Incident Transparency research grant.",
   },
   {
@@ -32,7 +30,6 @@ export const ELIGIBLE_GRANT_PORTALS: readonly GrantPortalTarget[] = [
     name: "NVIDIA Inception Program",
     url: "https://www.nvidia.com/en-us/startups/",
     isEligible: true,
-    status: "verified",
     notes: "Non-equity AI acceleration, GPU credits & DLI technical support.",
   },
   {
@@ -40,7 +37,6 @@ export const ELIGIBLE_GRANT_PORTALS: readonly GrantPortalTarget[] = [
     name: "Supabase for Startups",
     url: "https://supabase.com/startups",
     isEligible: true,
-    status: "verified",
     notes: "$3,000 PostgreSQL platform & auth credits (12 months).",
   },
   {
@@ -48,7 +44,6 @@ export const ELIGIBLE_GRANT_PORTALS: readonly GrantPortalTarget[] = [
     name: "Vercel Open Source Program",
     url: "https://vercel.com/oss",
     isEligible: true,
-    status: "verified",
     notes: "Next.js 15 open source infrastructure sponsorship.",
   },
   {
@@ -56,7 +51,6 @@ export const ELIGIBLE_GRANT_PORTALS: readonly GrantPortalTarget[] = [
     name: "Google Cloud for Startups",
     url: "https://cloud.google.com/startup",
     isEligible: true,
-    status: "verified",
     notes: "$2k - $350k Vertex AI & Gemini API credit stream.",
   },
   {
@@ -64,7 +58,6 @@ export const ELIGIBLE_GRANT_PORTALS: readonly GrantPortalTarget[] = [
     name: "GitHub for Startups",
     url: "https://github.com/enterprise/startups",
     isEligible: true,
-    status: "verified",
     notes: "$10k platform credit + 1 year GitHub Enterprise (20 seats).",
   },
   {
@@ -72,7 +65,6 @@ export const ELIGIBLE_GRANT_PORTALS: readonly GrantPortalTarget[] = [
     name: "AWS Activate Portfolio",
     url: "https://aws.amazon.com/startups",
     isEligible: true,
-    status: "verified",
     notes: "$1k - $100k AWS Bedrock (Claude / Llama 3) compute credits.",
   },
   {
@@ -80,7 +72,6 @@ export const ELIGIBLE_GRANT_PORTALS: readonly GrantPortalTarget[] = [
     name: "Yapay Zeka Fabrikası",
     url: "https://yapayzekafabrikasi.com",
     isEligible: false,
-    status: "excluded",
     notes: "EXCLUDED FROM AUTOMATION PER MASTER_PLAN v11.94 (explicit bot submission ban).",
   },
 ];
@@ -92,44 +83,82 @@ export async function verifyGrantPortalsViaCDP(
     const res = await fetch(`${cdpUrl}/json/list`);
     if (!res.ok) {
       console.warn(
-        `[CDP] Chrome CDP endpoint returned status ${res.status}. Falling back to static manifest.`,
+        `[CDP] Chrome CDP endpoint unreachable (status ${res.status}). Returning unreachable status.`,
       );
-      return [...ELIGIBLE_GRANT_PORTALS];
+      return GRANT_PORTAL_CATALOG.map((p) => ({
+        ...p,
+        status: p.isEligible ? "unreachable" : "excluded",
+      }));
     }
+
     const tabs = (await res.json()) as Array<{ type: string; webSocketDebuggerUrl: string }>;
     const activeTab = tabs.find((t) => t.type === "page");
 
     if (!activeTab) {
-      console.warn("[CDP] No active browser page found. Returning manifest.");
-      return [...ELIGIBLE_GRANT_PORTALS];
+      console.warn("[CDP] No active browser page found. Returning unreachable status.");
+      return GRANT_PORTAL_CATALOG.map((p) => ({
+        ...p,
+        status: p.isEligible ? "unreachable" : "excluded",
+      }));
     }
 
     const ws = new WebSocket(activeTab.webSocketDebuggerUrl);
-    await new Promise<void>((resolve) => ws.on("open", resolve));
+    await new Promise<void>((resolve, reject) => {
+      ws.on("open", resolve);
+      ws.on("error", reject);
+    });
 
     const results: GrantPortalTarget[] = [];
 
-    for (const portal of ELIGIBLE_GRANT_PORTALS) {
+    for (const portal of GRANT_PORTAL_CATALOG) {
       if (!portal.isEligible) {
-        results.push(portal);
+        results.push({ ...portal, status: "excluded" });
         continue;
       }
 
-      ws.send(
-        JSON.stringify({
-          id: Date.now(),
-          method: "Page.navigate",
-          params: { url: portal.url },
-        }),
-      );
-      await new Promise((r) => setTimeout(r, 1000));
-      results.push(portal);
+      const isNavigated = await new Promise<boolean>((resolve) => {
+        const reqId = Math.floor(Math.random() * 100000);
+        const timer = setTimeout(() => resolve(false), 3000);
+
+        const messageHandler = (data: WebSocket.RawData) => {
+          try {
+            const parsed = JSON.parse(data.toString()) as {
+              id?: number;
+              result?: { frameId?: string };
+            };
+            if (parsed.id === reqId) {
+              clearTimeout(timer);
+              ws.off("message", messageHandler);
+              resolve(Boolean(parsed.result?.frameId));
+            }
+          } catch {
+            // ignore parse errors
+          }
+        };
+
+        ws.on("message", messageHandler);
+        ws.send(
+          JSON.stringify({
+            id: reqId,
+            method: "Page.navigate",
+            params: { url: portal.url },
+          }),
+        );
+      });
+
+      results.push({
+        ...portal,
+        status: isNavigated ? "verified" : "unreachable",
+      });
     }
 
     ws.close();
     return results;
   } catch (error) {
-    console.warn("[CDP Warning] Remote browser unavailable, returning catalog manifest:", error);
-    return [...ELIGIBLE_GRANT_PORTALS];
+    console.warn("[CDP Warning] Remote browser connection error:", error);
+    return GRANT_PORTAL_CATALOG.map((p) => ({
+      ...p,
+      status: p.isEligible ? "unreachable" : "excluded",
+    }));
   }
 }
