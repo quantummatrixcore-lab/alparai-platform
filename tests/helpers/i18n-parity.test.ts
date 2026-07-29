@@ -3,6 +3,7 @@ import en from "../../messages/en.json";
 import tr from "../../messages/tr.json";
 import de from "../../messages/de.json";
 import fr from "../../messages/fr.json";
+import ru from "../../messages/ru.json";
 
 type Messages = Record<string, unknown>;
 
@@ -16,7 +17,7 @@ function flattenKeys(obj: Messages, prefix = ""): string[] {
   });
 }
 
-const locales: Record<string, Messages> = { en, tr, de, fr };
+const locales: Record<string, Messages> = { en, tr, de, fr, ru };
 
 describe("i18n translation file parity", () => {
   const enKeys = flattenKeys(en);
@@ -26,7 +27,7 @@ describe("i18n translation file parity", () => {
       const keys = flattenKeys(messages);
 
       it("has all keys present in en.json", () => {
-        const isPublicLocaleOnly = locale === "de" || locale === "fr";
+        const isPublicLocaleOnly = locale === "de" || locale === "fr" || locale === "ru";
         const missing = enKeys.filter((k) => {
           if (isPublicLocaleOnly && (k.startsWith("admin.") || k.startsWith("autopilot.")))
             return false;
