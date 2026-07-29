@@ -22,13 +22,9 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
     .from("incidents")
     .select("*", { count: "exact", head: true });
 
-  const outreachTable = supabase.from("outreach_queue" as never) as unknown as {
-    select: (
-      cols: string,
-      options: { count: "exact"; head: true },
-    ) => Promise<{ count: number | null }>;
-  };
-  const { count: outreachCount } = await outreachTable.select("*", { count: "exact", head: true });
+  const { count: outreachCount } = await supabase
+    .from("outreach_queue")
+    .select("*", { count: "exact", head: true });
 
   const { count: usersCount } = await supabase
     .from("users")
