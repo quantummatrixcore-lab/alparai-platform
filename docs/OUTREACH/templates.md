@@ -10,7 +10,7 @@ I am reaching out from ALPAR AI (https://alparai.com), an AGPL-3.0 open-source i
 
 As enterprise AI adoption expands, independent auditing data remains scarce. ALPAR AI provides:
 
-- Live AI Safety & Trust Scores (K-BENCHMARK) across 9 major model providers.
+- Live AI Safety & Trust Scores (K-BENCHMARK) across 7 major model providers (Anthropic, OpenAI, Google, NVIDIA, Meta, Alibaba, Mistral).
 - An open, PII-masked incident registry tracking real-world model failures.
 - Automated regulatory tracking for the upcoming EU AI Act Article 73 window.
 
