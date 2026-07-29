@@ -11,7 +11,7 @@ vi.mock("next-intl/middleware", () => ({
   default: () => (global as any).__mockIntlMiddleware,
 }));
 
-const mockUpdateSession = vi.fn().mockImplementation((req, res) => res);
+const mockUpdateSession = vi.fn().mockImplementation((_req, res) => res);
 vi.mock("@/lib/supabase/middleware", () => ({
   updateSession: (req: any, res: any) => mockUpdateSession(req, res),
 }));

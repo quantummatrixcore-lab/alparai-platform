@@ -1,4 +1,5 @@
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
@@ -9,29 +10,29 @@ import { Container, Section } from "@/components/ui/layout";
 import type { IncidentListItem, LeaderboardEntry } from "@/types";
 import { toIncidentListItems, type TranslationMap } from "@/lib/mappers";
 import { checkAndTriggerNewsSyncPassive } from "@/actions/autopilot-sync";
-import dynamic from "next/dynamic";
+import dynamicImport from "next/dynamic";
 import { logger } from "@/lib/utils/logger";
 
-const LiveStats = dynamic(() =>
+const LiveStats = dynamicImport(() =>
   import("@/components/marketing/live-stats").then((mod) => mod.LiveStats),
 );
 
-const WhyItMatters = dynamic(() =>
+const WhyItMatters = dynamicImport(() =>
   import("@/components/marketing/why-it-matters").then((mod) => mod.WhyItMatters),
 );
-const HowItWorks = dynamic(() =>
+const HowItWorks = dynamicImport(() =>
   import("@/components/marketing/how-it-works").then((mod) => mod.HowItWorks),
 );
-const LiveFeed = dynamic(() =>
+const LiveFeed = dynamicImport(() =>
   import("@/components/marketing/live-feed").then((mod) => mod.LiveFeed),
 );
-const LeaderboardPreview = dynamic(() =>
+const LeaderboardPreview = dynamicImport(() =>
   import("@/components/marketing/leaderboard-preview").then((mod) => mod.LeaderboardPreview),
 );
-const GetInvolved = dynamic(() =>
+const GetInvolved = dynamicImport(() =>
   import("@/components/marketing/get-involved").then((mod) => mod.GetInvolved),
 );
-const ClosingSection = dynamic(() =>
+const ClosingSection = dynamicImport(() =>
   import("@/components/marketing/closing-section").then((mod) => mod.ClosingSection),
 );
 
@@ -98,12 +99,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           "id, slug, name, logo_url, website_url, is_verified, trust_score, incident_count, response_count, is_verified_respondent",
         )
         .order("name"),
-      supabase
+      admin
         .from("incidents")
         .select("location_country")
         .eq("status", "published")
         .not("location_country", "is", null),
-      supabase.from("incidents").select("incident_source").eq("status", "published"),
+      admin.from("incidents").select("incident_source").eq("status", "published"),
     ]);
 
   if (incidentsCountResult.error) {

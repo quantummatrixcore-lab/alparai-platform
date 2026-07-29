@@ -1,10 +1,9 @@
-import { setRequestLocale, getTranslations } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import { requireAdmin } from "@/lib/auth/session";
 import { CronsDashboardClient } from "@/components/admin/crons-dashboard-client";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  const _t = await getTranslations({ locale, namespace: "admin" });
+  const { locale: _locale } = await params;
   return { title: "Cron Manager | ALPAR AI Admin" };
 }
 

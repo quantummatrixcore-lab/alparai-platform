@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { Upload, FileText, AlertTriangle, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { importIncidentsAction } from "@/actions/admin";

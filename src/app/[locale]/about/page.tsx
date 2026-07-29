@@ -5,6 +5,10 @@ import { Wordmark } from "@/components/layout/wordmark";
 import { Sparkles, Users, Shield, Globe, Linkedin, Award, Mail } from "lucide-react";
 import { FounderStory } from "@/components/marketing/founder-story";
 import { createServerClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -23,11 +27,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
   // Fetch dynamic stats
   const supabase = await createServerClient();
+  const admin = createAdminClient();
   const [incidentsCountResult, countriesResult, providersResult] = await Promise.all([
-    supabase
-      .from("incidents")
-      .select("id", { count: "exact", head: true })
-      .eq("status", "published"),
+    admin.from("incidents").select("id", { count: "exact", head: true }).eq("status", "published"),
     supabase
       .from("incidents")
       .select("location_country")

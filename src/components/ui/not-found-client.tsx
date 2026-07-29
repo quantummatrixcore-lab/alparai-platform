@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Link } from "@/i18n/routing";
 import { motion, type Variants } from "framer-motion";
 import { Container } from "@/components/ui/layout";

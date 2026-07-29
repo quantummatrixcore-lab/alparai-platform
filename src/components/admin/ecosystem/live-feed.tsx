@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useTransition } from "react";
+import { useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { archiveEcosystemNews } from "@/actions/ecosystem";
 import { Radio, Archive, ExternalLink, Globe } from "lucide-react";

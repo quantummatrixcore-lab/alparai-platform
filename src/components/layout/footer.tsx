@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { Wordmark } from "./wordmark";

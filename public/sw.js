@@ -1,4 +1,4 @@
-const CACHE_NAME = "alparai-pwa-v1";
+const CACHE_NAME = "alparai-pwa-v3";
 const STATIC_ASSETS = [
   "/manifest.webmanifest",
   "/favicon.png",
@@ -35,10 +35,11 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
 
-  // Network-first strategy for API routes, Server Actions, and admin data
+  // Network-first for ALL page navigations, APIs, and server actions
   if (
+    event.request.mode === "navigate" ||
     url.pathname.startsWith("/api") ||
-    url.pathname.startsWith("/_next/data") ||
+    url.pathname.startsWith("/_next") ||
     event.request.method !== "GET"
   ) {
     event.respondWith(
@@ -49,22 +50,20 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Cache-first strategy for static assets, fallback to network
+  // Network-first with cache fallback for static assets
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).then((response) => {
-        if (!response || response.status !== 200 || response.type !== "basic") {
-          return response;
+    fetch(event.request)
+      .then((response) => {
+        if (response && response.status === 200 && response.type === "basic") {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
         }
-        const responseToCache = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
         return response;
-      });
-    }),
+      })
+      .catch(() => {
+        return caches.match(event.request);
+      }),
   );
 });

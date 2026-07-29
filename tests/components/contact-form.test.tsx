@@ -1,5 +1,4 @@
 // @vitest-environment jsdom
-import * as React from "react";
 import { render, screen } from "@testing-library/react";
 import { expect, test, describe, vi } from "vitest";
 import { useActionState } from "react";
@@ -12,7 +11,7 @@ vi.mock("next-intl", () => ({
 
 // Mock react useActionState
 vi.mock("react", async () => {
-  const actual = await vi.importActual<typeof React>("react");
+  const actual = await vi.importActual<typeof import("react")>("react");
   return {
     ...actual,
     useActionState: vi.fn((fn, initial) => [initial, fn, false]),

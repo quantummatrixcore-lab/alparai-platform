@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Cpu, ShieldCheck, Warning } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/lib/utils";
 

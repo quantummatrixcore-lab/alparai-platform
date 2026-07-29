@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { motion } from "framer-motion";
 import { ShieldAlert, Award, TrendingUp } from "lucide-react";
 import { Link } from "@/i18n/routing";

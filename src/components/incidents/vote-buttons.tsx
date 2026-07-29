@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useState, useTransition } from "react";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { cn } from "@/lib/utils";

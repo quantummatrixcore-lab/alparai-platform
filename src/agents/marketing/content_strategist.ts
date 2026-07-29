@@ -11,7 +11,7 @@ export interface ContentPlan {
 }
 
 export class ContentStrategist {
-  constructor(private readonly llmConfig: Record<string, unknown>) {}
+  constructor(_llmConfig: Record<string, unknown>) {}
 
   async generateContentPlan(recentCommits: string[]): Promise<ContentPlan> {
     logger.info("[ContentStrategist] Analyzing recent updates...", {

@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Star, CheckCircle, XCircle } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import type { IntegrationAlternative } from "@/lib/integrations/types";

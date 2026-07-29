@@ -211,21 +211,6 @@ async function searchTavily(query: string): Promise<string | null> {
   }
 }
 
-async function _searchFallback(query: string): Promise<string | null> {
-  try {
-    const encoded = encodeURIComponent(query);
-    const res = await fetch(
-      `https://api.duckduckgo.com/?q=${encoded}&format=json&no_html=1&skip_disambig=1`,
-      { signal: AbortSignal.timeout(3000) },
-    );
-    if (!res.ok) return null;
-    const data = await res.json();
-    return (data.AbstractText || data.Result || null) as string | null;
-  } catch {
-    return null;
-  }
-}
-
 async function searchAlternatives(serviceId: string): Promise<IntegrationAlternative[]> {
   const svc = getServiceById(serviceId);
   if (!svc || svc.alternatives.length === 0) return [];

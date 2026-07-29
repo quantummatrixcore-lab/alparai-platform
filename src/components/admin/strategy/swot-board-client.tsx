@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Plus, Edit2, Trash2, Calendar, X, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { upsertSwotItemAction, deleteSwotItemAction } from "@/actions/strategy";

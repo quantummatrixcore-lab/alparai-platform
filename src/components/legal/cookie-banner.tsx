@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { X } from "lucide-react";
 import { Link } from "@/i18n/routing";

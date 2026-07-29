@@ -21,7 +21,13 @@ const LOCALE_OPTIONS: LocaleOption[] = [
   { code: "ru", flag: "🇷🇺", name: "Русский" },
 ].filter((opt) => SUPPORTED_LOCALES.includes(opt.code as Locale)) as LocaleOption[];
 
-export function LanguageSwitcher({ className }: { className?: string }) {
+export function LanguageSwitcher({
+  className,
+  direction = "down",
+}: {
+  className?: string;
+  direction?: "up" | "down";
+}) {
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
@@ -129,11 +135,15 @@ export function LanguageSwitcher({ className }: { className?: string }) {
       {!isAdmin && open && (
         <div
           className={cn(
-            "absolute top-full right-0 z-50 mt-1.5 min-w-[180px] overflow-hidden rounded-xl",
+            "absolute right-0 z-50 min-w-[180px] overflow-hidden rounded-xl",
+            direction === "up" ? "mb-1.5" : "top-full mt-1.5",
             "border border-white/[0.1] bg-[#0a0a0f]/95 backdrop-blur-xl",
             "shadow-[0_8px_32px_rgba(0,0,0,0.6)]",
           )}
-          style={{ animation: "fadeIn 0.15s ease-out" }}
+          style={{
+            animation: "fadeIn 0.15s ease-out",
+            ...(direction === "up" ? { bottom: "100%" } : {}),
+          }}
         >
           <div className="p-1">
             {availableOptions.map((opt) => (

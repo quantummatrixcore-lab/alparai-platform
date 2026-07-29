@@ -27,7 +27,7 @@ vi.mock("@/lib/utils/rate-limit", () => ({
   },
 }));
 vi.mock("@/lib/utils/provider-token", () => ({
-  consumeProviderTokenDb: vi.fn().mockImplementation(async (incidentId, email, token) => {
+  consumeProviderTokenDb: vi.fn().mockImplementation(async (_incidentId, _email, token) => {
     return token === "correct-token-placeholder-that-has-exactly-64-chars-long12345678";
   }),
 }));

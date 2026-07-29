@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import { expect, test, describe, vi, beforeEach } from "vitest";
 import { GoogleSignInButton, EmailMagicLinkForm } from "@/components/auth/auth-buttons";
 
@@ -52,8 +52,10 @@ describe("EmailMagicLinkForm", () => {
   test("shows validation error for invalid email", async () => {
     render(<EmailMagicLinkForm />);
     const input = screen.getByLabelText("email_label");
-    fireEvent.change(input, { target: { value: "invalid-email" } });
-    screen.getByRole("button", { name: "send" }).click();
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "invalid-email" } });
+      screen.getByRole("button", { name: "send" }).click();
+    });
     expect(await screen.findByRole("alert")).toBeDefined();
     expect(screen.getByText("invalid_email")).toBeDefined();
   });
@@ -63,8 +65,10 @@ describe("EmailMagicLinkForm", () => {
     vi.mocked(signInWithMagicLink).mockResolvedValueOnce({ ok: true });
     render(<EmailMagicLinkForm />);
     const input = screen.getByLabelText("email_label");
-    fireEvent.change(input, { target: { value: "test@example.com" } });
-    screen.getByRole("button", { name: "send" }).click();
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "test@example.com" } });
+      screen.getByRole("button", { name: "send" }).click();
+    });
     expect(await screen.findByText("magic_link_heading")).toBeDefined();
   });
 
@@ -73,8 +77,10 @@ describe("EmailMagicLinkForm", () => {
     vi.mocked(signInWithMagicLink).mockResolvedValueOnce({ ok: false, error: "Server error" });
     render(<EmailMagicLinkForm />);
     const input = screen.getByLabelText("email_label");
-    fireEvent.change(input, { target: { value: "test@example.com" } });
-    screen.getByRole("button", { name: "send" }).click();
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "test@example.com" } });
+      screen.getByRole("button", { name: "send" }).click();
+    });
     await vi.waitFor(() => expect(mockToast).toHaveBeenCalledWith("Server error"));
   });
 });

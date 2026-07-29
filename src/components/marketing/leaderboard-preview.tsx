@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Link } from "@/i18n/routing";
 import { Card, CardContent } from "@/components/ui/card";
 import { Trophy, TrendingDown, TrendingUp, Minus, ShieldCheck } from "lucide-react";

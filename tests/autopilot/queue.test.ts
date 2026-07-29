@@ -68,7 +68,7 @@ describe("Autopilot Queue", () => {
     const q = getQueue();
     expect(q.available).toBe(true);
 
-    const _jobId = await enqueueAutopilotJob("redis-action", createIdempotencyKey("key2"), {
+    await enqueueAutopilotJob("redis-action", createIdempotencyKey("key2"), {
       baz: "qux",
     });
     expect(mockRedis.rpush).toHaveBeenCalled();
@@ -101,7 +101,7 @@ describe("Autopilot Queue", () => {
     }));
 
     const { getQueue, enqueueAutopilotJob } = await import("@/lib/autopilot/queue");
-    const _q = getQueue();
+    getQueue();
     const _jobId = await enqueueAutopilotJob("redis-action", createIdempotencyKey("key3"), {});
     expect(_jobId).toBeNull();
     const { logger } = await import("@/lib/utils/logger");

@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Link, usePathname } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
@@ -58,7 +57,7 @@ export function MobileNav({
   }, [pathname]);
 
   return (
-    <div className="xl:hidden">
+    <div className="lg:hidden">
       <button
         onClick={() => setOpen(true)}
         className="text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary focus-visible:ring-brand-500 inline-flex h-10 w-10 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:outline-none"
@@ -116,7 +115,7 @@ export function MobileNav({
             </Link>
             <div className="flex items-center justify-between">
               <span className="text-fg-muted text-xs">{t("language_switcher")}</span>
-              <LanguageSwitcher />
+              <LanguageSwitcher direction="up" />
             </div>
           </div>
         </div>

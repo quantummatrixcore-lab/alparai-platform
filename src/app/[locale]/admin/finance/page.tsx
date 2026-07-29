@@ -1,4 +1,3 @@
-import * as React from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { requireCEO } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Plus, Edit2, Trash2, Calendar, Shield, X, HelpCircle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";

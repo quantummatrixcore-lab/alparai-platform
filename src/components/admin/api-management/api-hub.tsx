@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ProviderMatrix } from "./provider-matrix";
 import { ModelHealthChart } from "./model-health-chart";
 import { ApiKeyManager } from "./api-key-manager";

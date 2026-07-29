@@ -110,5 +110,8 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next|_vercel|auth/callback|.*\\..*).*)", "/api/((?!health|cron|webhook).*)"],
+  matcher: [
+    "/((?!_next/static|_next/image|_vercel|auth/callback|images/|icons/|fonts/|favicon\\.ico|robots\\.txt|sitemap\\.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|css|js|ico|woff|woff2|ttf|eot|json|xml|txt)).*)",
+    "/api/((?!health|cron|webhook).*)",
+  ],
 };

@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Pulse, ShieldCheck, Users } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
 

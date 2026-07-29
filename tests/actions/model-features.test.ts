@@ -20,7 +20,7 @@ vi.hoisted(() => {
     },
   }));
   vi.doMock("@/lib/autopilot", () => ({
-    withAutopilot: vi.fn().mockImplementation(async (policy, keys, workFn) => {
+    withAutopilot: vi.fn().mockImplementation(async (_policy, _keys, workFn) => {
       const outcome = await workFn({});
       if (outcome.kind === "success") {
         return { kind: "ok", value: outcome.value };

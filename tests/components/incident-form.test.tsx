@@ -107,10 +107,12 @@ describe("IncidentForm", () => {
       render(<IncidentForm providers={[]} models={[]} />);
     });
     const importInput = screen.getByPlaceholderText("https://chatgpt.com/share/...");
-    fireEvent.change(importInput, {
-      target: { value: "https://example.com/share/123" },
+    await act(async () => {
+      fireEvent.change(importInput, {
+        target: { value: "https://example.com/share/123" },
+      });
+      fireEvent.click(screen.getByText("Import"));
     });
-    fireEvent.click(screen.getByText("Import"));
     expect(
       await screen.findByText("Only ChatGPT, Claude, Grok, and Gemini share links are supported."),
     ).toBeDefined();
@@ -127,10 +129,12 @@ describe("IncidentForm", () => {
       render(<IncidentForm providers={[]} models={[]} />);
     });
     const importInput = screen.getByPlaceholderText("https://chatgpt.com/share/...");
-    fireEvent.change(importInput, {
-      target: { value: "https://chatgpt.com/share/abc" },
+    await act(async () => {
+      fireEvent.change(importInput, {
+        target: { value: "https://chatgpt.com/share/abc" },
+      });
+      fireEvent.click(screen.getByText("Import"));
     });
-    fireEvent.click(screen.getByText("Import"));
     await vi.waitFor(() =>
       expect(fetchMock).toHaveBeenCalledWith("/api/v1/extract", expect.any(Object)),
     );

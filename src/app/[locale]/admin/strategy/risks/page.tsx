@@ -1,5 +1,4 @@
 import { getTranslations } from "next-intl/server";
-import React from "react";
 import { setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
 import { requireAdvisor } from "@/lib/auth/session";

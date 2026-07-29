@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Check, X, Shield, ExternalLink } from "lucide-react";
 import { bulkApproveIncidents, bulkRejectIncidents } from "@/actions/admin";
 import { toast } from "sonner";

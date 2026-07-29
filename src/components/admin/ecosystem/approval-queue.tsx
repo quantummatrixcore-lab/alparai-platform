@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { approveQueueItem, rejectQueueItem } from "@/actions/ecosystem";
 import { Clock, Check, X, ExternalLink, Loader2 } from "lucide-react";
