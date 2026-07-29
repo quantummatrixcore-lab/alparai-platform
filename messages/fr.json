@@ -845,7 +845,20 @@
     "btn_disable": "Disable",
     "btn_enable": "Enable",
     "stats_cost": "Estimated Cost",
-    "stats_tokens": "Total Tokens"
+    "stats_tokens": "Total Tokens",
+    "stats_avg_latency": "Latence moyenne",
+    "stats_daily_tokens": "Jetons quotidiens",
+    "engines_title": "Statut des moteurs actifs",
+    "engines_col_name": "Moteur",
+    "engines_col_type": "Type",
+    "engines_col_status": "Statut",
+    "engines_col_heartbeat": "Dernier battement de cœur",
+    "cron_title": "Journaux d'exécution des tâches Cron",
+    "cron_empty": "Aucune exécution cron enregistrée pour le moment.",
+    "cron_col_name": "Cron",
+    "cron_col_status": "Statut",
+    "cron_col_started": "Démarré le",
+    "cron_col_error": "Erreur"
   },
   "takedown": {
     "reasons": {
