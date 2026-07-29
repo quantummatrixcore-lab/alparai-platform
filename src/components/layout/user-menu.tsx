@@ -89,7 +89,7 @@ export function UserMenu({ initialUser }: { initialUser: SessionUserShape | null
             <p className="text-fg-primary truncate text-sm font-semibold">
               {user.email === "quantum.matrix.core@gmail.com" ||
               user.email === "ercument.erden@alparai.com"
-                ? "Kurucu Ercüment ERDEN"
+                ? "Ercüment ERDEN"
                 : (user.fullName ?? user.email)}
             </p>
             <p className="text-fg-muted truncate text-xs">{user.email}</p>
