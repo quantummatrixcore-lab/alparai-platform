@@ -137,11 +137,11 @@ export function HeroSection({
                 &quot;
               </p>
               <div className="mt-1 flex items-center gap-3">
-                <div className="from-brand-500 to-brand-700 h-8 w-8 rounded-full bg-gradient-to-br p-0.5">
-                  <div className="border-brand-400/20 h-full w-full rounded-full border bg-neutral-900" />
+                <div className="from-brand-500 to-brand-700 border-brand-400/40 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border bg-gradient-to-br text-xs font-black text-white shadow-md">
+                  EE
                 </div>
                 <div>
-                  <p className="text-fg-primary text-xs font-bold">Ercüment ERDEN</p>
+                  <p className="text-fg-primary text-xs font-bold">Kurucu Ercüment ERDEN</p>
                   <p className="text-brand-400 text-[10px] font-medium">
                     {t("founder_role", { defaultValue: "Kurucu, ALPAR AI" })}
                   </p>
