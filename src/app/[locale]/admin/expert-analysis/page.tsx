@@ -1,4 +1,4 @@
-import { EXPERT_PERSONAS, type ExpertPersona } from "@/actions/admin/expert-analysis";
+import { EXPERT_PERSONAS, type ExpertPersona } from "@/lib/config/expert-personas";
 import {
   Users,
   Sparkles,
