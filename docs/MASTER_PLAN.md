@@ -88,6 +88,10 @@ Google for Startups $2K–350K · AWS Activate $1K–200K · Microsoft Founders 
 | 40 | P1 | [Antigravity/OpenCode] 360° Google Ultra Ekosistem Entegrasyonu — Veo & Imagen 3 | Ayda 1.500 TL ödenen Google Ultra aboneliğinin tüm kapasitesini (Veo, Imagen 3, Workspace) otonom medya üretim hattına bağlamak (Doktrin #038). | pending |
 | 41 | P0 | [Antigravity/OpenCode] OpenCode Free & Nvidia Model Havuzu Yönlendirmesi | OpenCode Zen üzerindeki ücretsiz modeller (`Nemotron 3 Ultra Free`, `DeepSeek V4 Flash Free`) ve Nvidia endpoint modellerinin (`DeepSeek V4 Pro`, `GPT-OSS-120B`) otonom komut zincirine entegrasyonu (Doktrin #044). | pending |
 
+| 42 | P1 | [OpenCode] Public i18n — kalan ~6 anahtar DE/FR/RU'da hâlâ İngilizce | v12.12'de ölçüldü (mimar hattından taşındı, eski #31). `061e733` sonrası public namespace'lerde İngilizce-özdeşlik DE %7.0 (128/1835), FR %6.0 (111/1835), RU %4.8 (88/1835); %100 İngilizce kalan namespace **0** (`badge`/`takedown` çevrildi). **Kalan somut anahtarlar:** `contact.form.sent_desc`, `contact.form.sent_toast`, `marketing.incident_of_week.title`, `marketing.advocate_of_week.title`, `marketing.founder_story.*` (sonuncusu yalnızca `/about`'ta render ediliyor — `FounderStory` sadece `about/page.tsx:6`'da import edilmiş). Tek turluk iş. | pending |
+| 43 | P1 | [OpenCode] Master Plan Dashboard (admin) — filter/search, item detay, parse-hatası/boş-backlog ayrımı | Mimar hattından taşındı (eski #33). `src/lib/utils/markdown-parser.ts:18-84` zaten tam `try/catch` içinde (`logger.error` + `[]` döndürüyor, sayfa çökmüyor) — dış incelemenin "error handling yok (P0)" iddiası kod ile çelişiyordu. **Gerçek, daha dar eksikler:** parse başarısızlığında dashboard sessizce "tüm kolonlar boş" gösteriyor (gerçek-boş vs. parse-hatası görsel ayrımı yok); `admin/master-plan/page.tsx:40` 3 kolonluk grid'de yalnızca 1 kart var; filter/search UI yok; kartlarda `onClick`/detay görünümü yok. | pending |
+| 44 | P2 | [OpenCode] 3 dar içerik boşluğu — Case #001 detay sayfası, Security'de SOC2/ISO, Methodology'de 5-model listesi | Mimar hattından taşındı (eski #34). (1) Kurucunun Grok pasaport vakasının genel-erişime açık kanıt-detaylı sayfası yok, yalnızca `invest-presentation.tsx:124` anlatısı ve `incidents/[id]/page.tsx` genel şablonu var; (2) `security/page.tsx` (126 satır) gerçek ama SOC2/ISO 27001/AES detayı içermiyor; (3) `methodology/*` cross-audit kavramını anlatıyor ama 5 model adını yayımlamıyor (kodda 3 model hardcoded: `openrouter-gateway.ts:117-121`). Üçü de mevcut sayfalara ek içerik, yeni route gerekmiyor. | pending |
+| 45 | P2 | [OpenCode] `about/page.tsx` uydurma yedek istatistikler (`?? 371` / `: 12` / `: 23`) | Mimar hattından taşındı (eski #35'in kalan parçası). Ana sayfa kısmı `061e733` ile TAMAMEN kapatıldı (OG/Twitter `t("title")`/`t("description")`'a bağlandı, `?? 371`/`?? 23` ve besleyen sorgu bloğu silindi, `alternates.canonical` + `alternates.languages` 5 locale için eklendi — diff ile doğrulandı). **Kalan:** `src/app/[locale]/about/page.tsx:45,47,49` hâlâ `count ?? 371`, `: 12`, `: 23` — Supabase sorgusu hata verirse hero istatistik bloğunda uydurma sayı render ediliyor. #11 ("uydurma sayı yerine N/A") ve #13 (sahte MRR temizliği) doktrinine aykırı; yedek değer yerine N/A/gizle davranışı gerekiyor. | pending |
 <!-- FOUNDER_BACKLOG_END -->
 
 ---
@@ -716,3 +720,65 @@ Antigravity, OpenCode'u PowerShell üzerinden tetiklerken varsayılan olarak **�
 ---
 
 _v12.10 — Doktrin #044 (OFNM-IP — OpenCode Free & Nvidia Model Pool Protocol) MASTER_PLAN'a bağlayıcı kural olarak eklendi. OpenCode üzerindeki tüm ücretsiz modeller (Nemotron 3 Ultra, DeepSeek V4 Flash, Laguna S 2.1 vb.) ve Nvidia modelleri otonom piramide kilitlendi._
+
+---
+
+## Doktrin #045 — Otonom Üretim Mimarisi: Uçtan Uca Entegrasyon Katmanı (E2E-APA) v1.0
+
+> **Amaç:** Doktrin #030-#044 tek tek tanımlı ama aralarındaki _akış_ tanımlı değil. Bu doktrin yeni kural üretmez; mevcut doktrinleri tek bir üretim hattına bağlar ve her aşamada hangi doktrinin bağlayıcı olduğunu belirtir. Çelişki durumunda kaynak doktrin metni üstündür.
+
+### 1. Üretim Hattının Beş Aşaması
+
+| Aşama             | Ne olur                                                                    | Bağlayıcı doktrin                                   | Çıktı artefaktı              |
+| ----------------- | -------------------------------------------------------------------------- | --------------------------------------------------- | ---------------------------- |
+| **A · Keşif**     | Kaynak/fırsat taraması, model havuzu ve kredi envanteri güncellenir        | #041 RIMRE, #042 `engine_hunter`                    | `/admin/resources` kaydı     |
+| **B · Planlama**  | İş MASTER_PLAN'a madde olarak yazılır; spec dosya:satır düzeyinde netleşir | #034 ANGC Bölüm I-II, #033 Continuous Flow          | Backlog maddesi              |
+| **C · Yürütme**   | Madde `automation_tasks` kuyruğuna düşer, ajan havuzu işler                | #030 EDAP, #032 HAS, #043 HMR-TES, #044 OFNM-IP     | Commit + hash                |
+| **D · Doğrulama** | Üreticiden bağımsız ajan makine-ölçülebilir DoD'a karşı doğrular           | #036 Challenge Protocol (Kural 18-22), #035 FDR-VPP | Kanıt (komut çıktısı/görsel) |
+| **E · Bakım**     | Gece taraması, bağımlılık/güvenlik kilidi, görsel regresyon baseline       | #037 ANMIL (Kural 23-26)                            | Nightly rapor                |
+
+**Kilit kural:** Bir madde D aşamasını geçmeden "completed" işaretlenemez. #036 Kural 19 (Doğrulayan ≠ Üretici) bu hattın tek ihlal edilemez kapısıdır.
+
+### 2. Model Yönlendirme — Aşama × Kademe Matrisi
+
+#043 HMR-TES'in 3 kademeli piramidi ile #044 OFNM-IP'nin ücretsiz havuzu, aşamalara şöyle bağlanır:
+
+| Aşama         | Birincil model               | Yedek / ucuz havuz                                   | Gerekçe                                                |
+| ------------- | ---------------------------- | ---------------------------------------------------- | ------------------------------------------------------ |
+| A · Keşif     | Haiku                        | Nemotron 3 Ultra Free, DeepSeek V4 Flash Free (#044) | Yüksek hacimli grep/envanter; pahalı model yasak (G-5) |
+| B · Planlama  | Opus 5 / Fable 5             | —                                                    | Mimari ve yönetişim kararı; token tavanı G-4b/G-4c     |
+| C · Yürütme   | Antigravity / OpenCode       | Nvidia endpoint modelleri (#044)                     | Uygulama Claude'un kapsamı dışında (G-6)               |
+| D · Doğrulama | Haiku (ölçüm) + Opus (yargı) | —                                                    | Ölçüm ucuz, yargı pahalı: ikisi ayrılır                |
+| E · Bakım     | Cron + ücretsiz havuz        | —                                                    | İnsan/pahalı model müdahalesi gerekmez                 |
+
+**Token kalkanı:** Opus yalnızca B ve D-yargı aşamalarında devreye girer. A/C/E'de Opus çağrısı #043'ün Opus Token Shield kuralının ihlalidir.
+
+### 3. Google Ultra Kolu (#038 GAMSE / #039 GUE-MB)
+
+Google Ultra hattı üretim hattının _paralel_ bir kolu olarak çalışır, ana hattı bloklamaz: A aşamasında kredi/kota envanteri RIMRE'ye yazılır, C aşamasında medya üretimi (Veo/Imagen) `automation_tasks` üzerinden tetiklenir, D aşamasında üretilen medya #035 VPP kapsamında görsel kanıt olarak saklanır. Kredi tükenmesi ana hattı durdurmaz — yalnızca bu kolu askıya alır.
+
+### 4. Kanıt Zinciri (tek zorunlu artefakt seti)
+
+Her tamamlanan madde şu üçlüyü taşımak zorundadır; eksikse madde pending kalır:
+
+1. **Commit hash'i** — iddia edilen değişikliğin deposal karşılığı (#034 Bölüm II).
+2. **Makine çıktısı** — `pnpm lint` / `pnpm typecheck` / `pnpm test` exit kodu ve sayıları (#036 Kural 18).
+3. **Görsel kanıt** — UI'a dokunan işlerde ekran görüntüsü/VRT baseline (#035 VPP, #036 Kural 22).
+
+Hash'siz "bitti" bildirimi doğrulanmamış sayılır — bu kural v11.131'de tekrarlanan bir olay sonrası eklendi ve #036 Kural 18'in operasyonel karşılığıdır.
+
+---
+
+_v12.12 — 🔴 **YÖNETİŞİM OLAYI: MASTER_PLAN iki ayrı hatta çatallanmış, aynı madde ID'leri farklı işlere verilmiş.** Mimar branch'i (`claude/strategy-brief-review-i93xcv`) ile `origin/master` ortak atadan (`7fe778f`, backlog 27 madde) itibaren bağımsız ilerlemiş: master v11.98→v12.11 yolunu izleyip Doktrin #030-#044'ü ve madde 28-41'i eklemiş; mimar hattı v11.123→v11.131 yolunu izleyip madde 28-36'yı eklemiş. Sonuç: **aynı ID farklı iş.** Örnekler — master #31 = Expert Board Simulation / mimar #31 = DE-FR-RU çevirileri; master #32 = Dual-Channel Trust Scoring / mimar #32 = RU canlı akış bayrağı; master #33 = Model Heartbeat & Failover / mimar #33 = Master Plan Dashboard UX. Ayrıca master'da mimar hattının v11.123-131 doğrulama kayıtlarının **hiçbiri yok** (`grep` ile teyit: 0 eşleşme).
+
+**Çözüm (bu commit'te uygulandı):** `origin/master`'ın v12.11 sürümü **kanonik taban** kabul edildi — Doktrinler orada, 41 madde orada, tüm yürütücüler oradan çekiyor. Mimar hattının hâlâ açık bulguları çakışmayan yeni numaralarla taşındı: eski #31 → **#42**, eski #33 → **#43**, eski #34 → **#44**, eski #35'in kalan parçası → **#45**. Mimar hattının eski #32 ve #36 maddeleri bu turda doğrulanarak kapandı (aşağıda), taşınmadı. **Kural (bundan sonra bağlayıcı):** MASTER_PLAN backlog ID'si yalnızca `origin/master`'daki sıradan devam ettirilir; hiçbir branch bağımsız ID üretmez — çakışma yönetişim artefaktını kullanılamaz hale getiriyor ("#32'yi düzelt" talimatı iki farklı iş anlamına geliyordu.
+
+**✅ Mimar hattı eski #32 (RU canlı akış çevirisi) — dört tur sonra gerçekten düzeldi.** `061e733` her iki tüketici kapısını da kapattı: `src/lib/mappers.ts:47` ve `src/components/incidents/incident-card.tsx:62` → `const localeIsExtra = locale === "de" || locale === "fr" || locale === "ru";` (diff ile doğrulandı). Daha önce `page.tsx` RU çevirisini DB'den çekiyor ama mapper ve kart bileşeni `de|fr` bayrağıyla sessizce atıyordu. **Not:** önerilen tek paylaşılan `isEnrichedLocale()` yardımcısı yapılmadı — hâlâ 3 ayrı bildirim, 2 farklı isim (`page.tsx:164` `localeIsTranslated`, diğer ikisi `localeIsExtra`); işlevsel olarak doğru ama yeniden ayrışma riski duruyor.
+
+**✅ Mimar hattı eski #36 (lint kırılması) — düzeldi.** `0785c81`'in ürettiği 2 ESLint hatası (`tests/components/contact-form.test.tsx:14:47` ve `tests/components/provider-response-form.test.tsx:19:47`, `@typescript-eslint/consistent-type-imports`) `061e733` ile giderildi. Bağımsız doğrulama: `pnpm lint` **exit 0**, `pnpm typecheck` **exit 0**.
+
+**✅ Master #36 (birim test paketi onarımı) — iddia GERÇEK, bağımsız doğrulandı.** Maddede "933 testten 913'ü yeşil, 20 test kırmızı" deniyor; bu oturumda `pnpm test` çalıştırıldı: **19 failed | 914 passed (933)**, 8 failed | 145 passed (153 dosya) — iddia 1 test farkla doğru. **Kırmızı dosyaların tam listesi (maddeye eklenmek üzere):** `tests/actions/live-analysis.test.ts`, `tests/actions/live-cross-audit.test.ts`, `tests/actions/live-strategy.test.ts`, `tests/actions/translations.test.ts`, `tests/admin-all-41-routes.test.ts`, `tests/lib/cross-audit-engine.test.ts`, `tests/lib/model-router.test.ts`, `tests/marketing/content-engine.test.ts`.
+
+**🟢 Yeni Doktrin #045 (E2E-APA) eklendi — Founder talebi üzerine entegrasyon katmanı.** #030-#044 tek tek tanımlıydı ama aralarındaki akış tanımsızdı. #045 yeni kural üretmez; beş aşamalı üretim hattını (Keşif → Planlama → Yürütme → Doğrulama → Bakım) tanımlar, her aşamaya bağlayıcı doktrini ve zorunlu çıktı artefaktını bağlar, #043'ün 3 kademeli piramidi ile #044'ün ücretsiz havuzunu (Nemotron 3 Ultra Free, DeepSeek V4 Flash Free, Nvidia endpoint'leri) aşama bazında eşler, Google Ultra kolunu (#038/#039) ana hattı bloklamayan paralel kol olarak konumlandırır ve her tamamlanan madde için zorunlu üçlü kanıt zincirini (commit hash + makine çıktısı + görsel kanıt) tek yerde toplar. Çelişki halinde kaynak doktrin metni üstündür.
+
+**Aksiyon:** Backlog 41 → **45 madde**. Doktrin sayısı 12 → **13**. Mimar hattının açık bulguları master numaralandırmasına taşındı; iki hat bu commit ile birleşti._
