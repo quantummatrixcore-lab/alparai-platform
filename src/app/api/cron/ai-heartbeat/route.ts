@@ -38,13 +38,13 @@ export async function GET(request: Request) {
     const supabase = createAdminClient();
     for (const res of heartbeatResults) {
       await supabase
-        .from("ai_free_models" as unknown as "incidents")
+        .from("ai_free_models")
         .update({
           status: res.status,
           latency_ms: res.latencyMs,
           last_ping_at: new Date().toISOString(),
-        } as never)
-        .filter("id" as unknown as "status", "eq", res.modelId);
+        })
+        .eq("id", res.modelId);
     }
   } catch {
     // Non-blocking in unit test environments
