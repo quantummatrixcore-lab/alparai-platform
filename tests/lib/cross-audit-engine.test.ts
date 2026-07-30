@@ -10,20 +10,17 @@ vi.mock("@/lib/supabase/admin", () => ({
   createAdminClient: vi.fn(),
 }));
 
-vi.mock("@/lib/ai/openrouter-gateway", () => ({
-  callModel: vi.fn(),
-  callWithFailover: vi.fn(),
-  isGatewayConfigured: vi.fn().mockReturnValue(true),
-  TRIAGE_SLOT_1_CHAIN: [
-    { id: "deepseek/deepseek-chat", provider: "openrouter", tier: "free", maxTokens: 2048 },
-  ],
-  TRIAGE_SLOT_2_CHAIN: [
-    { id: "meta-llama/llama-3.3-70b:free", provider: "openrouter", tier: "free", maxTokens: 2048 },
-  ],
-  SUPREME_COURT_CHAIN: [
-    { id: "anthropic/claude-3.5-sonnet", provider: "openrouter", tier: "premium", maxTokens: 4096 },
-  ],
-}));
+vi.hoisted(() => {
+  vi.doMock("@/lib/ai/openrouter-gateway", async (importOriginal) => {
+    const actual = await importOriginal<typeof import("@/lib/ai/openrouter-gateway")>();
+    return {
+      ...actual,
+      callModel: vi.fn(),
+      callWithFailover: vi.fn(),
+      isGatewayConfigured: vi.fn().mockReturnValue(true),
+    };
+  });
+});
 
 vi.mock("@/lib/utils/logger", () => ({
   logger: {

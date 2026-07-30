@@ -8,36 +8,42 @@ vi.mock("@/lib/supabase/admin", () => ({
   createAdminClient: () => mockAdminClient,
 }));
 
-const callWithFailoverMock = vi.fn().mockResolvedValue({
-  ok: true,
-  data: {
-    content: JSON.stringify({
-      x_post: "This is a tweet about the AI incident.",
-      linkedin_post: "This is a LinkedIn post about the AI incident.",
-      image_prompt: "An artistic high-quality 3D render of AI failure.",
-    }),
-  },
-});
-vi.mock("@/lib/ai/openrouter-gateway", () => ({
-  callWithFailover: () => callWithFailoverMock(),
-  TRIAGE_SLOT_1_CHAIN: [],
+const { callWithFailoverMock, generateImageMock, generateHfImageMock } = vi.hoisted(() => ({
+  callWithFailoverMock: vi.fn().mockResolvedValue({
+    ok: true,
+    data: {
+      content: JSON.stringify({
+        x_post: "This is a tweet about the AI incident.",
+        linkedin_post: "This is a LinkedIn post about the AI incident.",
+        image_prompt: "An artistic high-quality 3D render of AI failure.",
+      }),
+    },
+  }),
+  generateImageMock: vi.fn().mockResolvedValue({
+    ok: true,
+    base64: "dGVzdC1iYXNlNjQ=",
+    mimeType: "image/png",
+  }),
+  generateHfImageMock: vi.fn().mockResolvedValue({
+    ok: false,
+    error: "HUGGINGFACE_API_KEY is not configured.",
+  }),
 }));
 
-const generateImageMock = vi.fn().mockResolvedValue({
-  ok: true,
-  base64: "dGVzdC1iYXNlNjQ=", // "test-base64" in base64
-  mimeType: "image/png",
+vi.mock("@/lib/ai/openrouter-gateway", async (importOriginal: () => Promise<Record<string, unknown>>) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    callWithFailover: () => callWithFailoverMock(),
+  };
 });
+
 vi.mock("@/lib/ai/adapters/vertex-imagen", () => ({
   VertexImagenAdapter: vi.fn().mockImplementation(() => ({
     generateImage: generateImageMock,
   })),
 }));
 
-const generateHfImageMock = vi.fn().mockResolvedValue({
-  ok: false,
-  error: "HUGGINGFACE_API_KEY is not configured.",
-});
 vi.mock("@/lib/ai/adapters/huggingface", () => ({
   HuggingFaceAdapter: vi.fn().mockImplementation(() => ({
     generateImage: generateHfImageMock,

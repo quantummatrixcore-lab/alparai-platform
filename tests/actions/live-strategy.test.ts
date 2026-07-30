@@ -1,10 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import "../helpers/setup";
 
-vi.mock("@/lib/ai/openrouter-gateway", () => ({
-  callWithFailover: vi.fn(),
-  TRIAGE_SLOT_1_CHAIN: ["google/gemini-1.5-flash"],
-}));
+vi.hoisted(() => {
+  vi.doMock("@/lib/ai/openrouter-gateway", async (importOriginal: () => Promise<Record<string, unknown>>) => {
+    const actual = await importOriginal();
+    return {
+      ...actual,
+      callWithFailover: vi.fn(),
+    };
+  });
+});
 
 import { callWithFailover } from "@/lib/ai/openrouter-gateway";
 import { runLiveStrategyAnalysis } from "@/actions/admin/live-strategy";
