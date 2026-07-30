@@ -38,9 +38,7 @@ INSERT INTO public.ai_providers (slug, name, description, website_url, is_verifi
   ('assemblyai', 'AssemblyAI', 'Speech-to-text and audio intelligence APIs.', 'https://assemblyai.com', true, 81),
   ('lepton', 'Lepton AI', 'Developer-centric serverless AI deployment platform.', 'https://lepton.ai', false, 76),
   ('lightricks', 'Lightricks', 'AI creative studio, photography, and video generation apps.', 'https://lightricks.com', false, 73),
-  ('leonardo', 'Leonardo.ai', 'Creative production platform for generative image assets.', 'https://leonardo.ai', false, 74),
-  ('vasu', 'Vasu AI', 'Turkish local AI provider specializing in LLMs.', 'https://vasu.ai', false, 70),
-  ('trendyol', 'Trendyol', 'Turkish e-commerce giant producing local LLM Baklava models.', 'https://trendyol.com', true, 78)
+  ('leonardo', 'Leonardo.ai', 'Creative production platform for generative image assets.', 'https://leonardo.ai', false, 74)
 ON CONFLICT (slug) DO UPDATE SET
   name = EXCLUDED.name,
   description = EXCLUDED.description,
@@ -279,19 +277,6 @@ CROSS JOIN (VALUES
   ('Midjourney v8', 'v8', 'active', '2026-03-20')
 ) as m(name, version, status, released_at)
 WHERE p.slug = 'midjourney'
-AND NOT EXISTS (
-  SELECT 1 FROM public.ai_models WHERE provider_id = p.id AND name = m.name AND version = m.version
-);
-
--- Trendyol Models
-INSERT INTO public.ai_models (provider_id, name, version, status, released_at)
-SELECT p.id, m.name, m.version, m.status, m.released_at::date
-FROM public.ai_providers p
-CROSS JOIN (VALUES
-  ('Trendyol Baklava 7B', 'baklava-7b', 'active', '2024-02-01'),
-  ('Baklava 2 13B', 'baklava-2', 'active', '2025-05-15')
-) as m(name, version, status, released_at)
-WHERE p.slug = 'trendyol'
 AND NOT EXISTS (
   SELECT 1 FROM public.ai_models WHERE provider_id = p.id AND name = m.name AND version = m.version
 );

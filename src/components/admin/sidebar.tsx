@@ -367,21 +367,9 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
     {
       href: "/admin/api-management",
-      label: t("nav_apiManagement"),
+      label: t("nav_apiManagement") || "API Hub",
       icon: Zap,
       active: pathname.startsWith("/admin/api-management"),
-    },
-    {
-      href: "/admin/api-keys",
-      label: t("nav_apiKeys"),
-      icon: Lock,
-      active: pathname.startsWith("/admin/api-keys"),
-    },
-    {
-      href: "/admin/providers",
-      label: t("nav_providers"),
-      icon: Cpu,
-      active: pathname.startsWith("/admin/providers"),
     },
     {
       href: "/api-docs",

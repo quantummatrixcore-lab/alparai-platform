@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { Megaphone } from "lucide-react";
 import { OutreachPageContent } from "./outreach-page-content";
 import { getTranslations } from "next-intl/server";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -19,8 +20,8 @@ export default async function OutreachAdminPage({
   const t = await getTranslations({ locale, namespace: "admin" });
 
   const supabase = createAdminClient();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: queue, error } = await (supabase as any)
+
+  const { data: queue, error } = await (supabase as unknown as SupabaseClient)
     .from("outreach_queue")
     .select("*")
     .order("created_at", { ascending: false });

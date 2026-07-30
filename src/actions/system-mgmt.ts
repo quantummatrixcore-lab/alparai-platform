@@ -29,7 +29,9 @@ export async function getFeatureFlagsAction(): Promise<FeatureFlagItem[]> {
   try {
     const { data } = await db.from("feature_flags").select("*").order("key", { ascending: true });
     if (data && data.length > 0) return data;
-  } catch {}
+  } catch (e) {
+    console.error("Ignored error:", e);
+  }
 
   // Default fallback flags if table not seeded
   return [

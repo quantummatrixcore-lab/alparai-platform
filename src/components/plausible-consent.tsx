@@ -18,7 +18,9 @@ export function PlausibleWithConsent() {
       script.setAttribute("data-domain", domain);
       script.src = "https://plausible.io/js/script.js";
       document.head.appendChild(script);
-    } catch {}
+    } catch (e) {
+      console.error("Ignored error:", e);
+    }
   }, []);
 
   return null;

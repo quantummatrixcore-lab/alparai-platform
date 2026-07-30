@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { requireModerator } from "@/lib/auth/session";
 import { revalidatePath } from "next/cache";
 import { logger } from "@/lib/utils/logger";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 const updatePlatformSchema = z.object({
   id: z.string().uuid(),
@@ -24,8 +25,7 @@ export async function updatePlatformStatus(
     const { id, status } = parsed.data;
     const supabase = createAdminClient();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { error: updateError } = await (supabase as any)
+    const { error: updateError } = await (supabase as unknown as SupabaseClient)
       .from("platform_signups")
       .update({ status, updated_at: new Date().toISOString() })
       .eq("id", id);

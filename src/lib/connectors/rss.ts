@@ -1,5 +1,4 @@
 import { logger } from "@/lib/utils/logger";
-// @ts-expect-error google-news-url-decoder does not have types
 import { GoogleDecoder } from "google-news-url-decoder";
 
 const decoder = new GoogleDecoder();

@@ -120,6 +120,45 @@ export const SUPREME_COURT_CHAIN: readonly GatewayModel[] = [
   { id: "openai/gpt-4o", provider: "openrouter", tier: "premium", maxTokens: 4096 },
 ] as const;
 
+// -----------------------------------------------------------------------------
+// Capability-Based Routing Chains (Yetenek Bazlı Yönlendirme Zincirleri)
+// -----------------------------------------------------------------------------
+
+// 1. Math, Logic, Data Analysis (DeepSeek Optimized)
+export const MATH_LOGIC_CHAIN: readonly GatewayModel[] = [
+  { id: "deepseek-ai/deepseek-v3", provider: "nvidia", tier: "free", maxTokens: 4096 },
+  { id: "deepseek/deepseek-chat", provider: "openrouter", tier: "free", maxTokens: 4096 },
+  { id: "deepseek/deepseek-chat", provider: "deepseek", tier: "premium", maxTokens: 4096 },
+] as const;
+
+// 2. Creative, Marketing, Social Media Copy (Claude / Llama Optimized)
+export const CREATIVE_COPY_CHAIN: readonly GatewayModel[] = [
+  { id: "meta/llama-3.3-70b-instruct", provider: "nvidia", tier: "free", maxTokens: 4096 },
+  { id: "meta-llama/llama-3.3-70b:free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+  { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 4096 },
+  { id: "anthropic/claude-3.5-sonnet", provider: "openrouter", tier: "premium", maxTokens: 4096 },
+] as const;
+
+// 3. High-Risk Audit, Legal, Complex Reasoning (GPT-4o / Claude 3.5 Sonnet)
+// Directly uses SUPREME_COURT_CHAIN logic but named for capability domain
+export const RISK_AUDIT_CHAIN: readonly GatewayModel[] = [
+  { id: "openai/gpt-4o", provider: "openrouter", tier: "premium", maxTokens: 4096 },
+  { id: "anthropic/claude-3.5-sonnet", provider: "openrouter", tier: "premium", maxTokens: 4096 },
+  { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
+] as const;
+
+// 4. Fast Triage, Summarization, Classification (Qwen / Llama Optimized)
+export const FAST_TRIAGE_CHAIN: readonly GatewayModel[] = [
+  { id: "qwen/qwen2.5-72b-instruct", provider: "nvidia", tier: "free", maxTokens: 4096 },
+  { id: "qwen/qwen-2.5-72b:free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+  {
+    id: "meta-llama/llama-3.1-8b-instruct:free",
+    provider: "openrouter",
+    tier: "free",
+    maxTokens: 4096,
+  },
+] as const;
+
 // Instantiate adapters lazily or cache them
 const adapters: Record<string, ProviderAdapter> = {
   openrouter: new OpenRouterAdapter(),

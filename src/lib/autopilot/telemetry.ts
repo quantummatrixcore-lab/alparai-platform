@@ -100,5 +100,7 @@ export const safeCaptureException = (err: unknown, context: Record<string, unkno
   try {
     const message = err instanceof Error ? err.message : toErrorMessage(err);
     _sentry(message, { ...context, source: "autopilot" });
-  } catch {}
+  } catch (e) {
+    console.error("Ignored error:", e);
+  }
 };

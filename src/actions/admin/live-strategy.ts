@@ -1,6 +1,7 @@
 "use server";
 
-import { callWithFailover, TRIAGE_SLOT_1_CHAIN } from "@/lib/ai/openrouter-gateway";
+import { callWithFailover } from "@/lib/ai/openrouter-gateway";
+import { selectModelByCapability } from "@/lib/audit/model-router";
 import { logger } from "@/lib/utils/logger";
 
 export async function runLiveStrategyAnalysis(context: {
@@ -40,7 +41,7 @@ export async function runLiveStrategyAnalysis(context: {
         temperature: 0.7,
         responseFormat: "json",
       },
-      TRIAGE_SLOT_1_CHAIN,
+      selectModelByCapability("math_logic"),
     );
 
     if (!result.ok) {

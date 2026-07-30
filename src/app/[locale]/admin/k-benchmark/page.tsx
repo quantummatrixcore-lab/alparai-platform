@@ -1,4 +1,5 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { requireAdmin } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { Star } from "@phosphor-icons/react/dist/ssr";
@@ -215,8 +216,8 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
     console.error("Error fetching k_model_scores:", error);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const benchTrQuery = (supabase.from("bench_tr_evaluations" as never) as any)
+  const benchTrQuery = (supabase as unknown as SupabaseClient)
+    .from("bench_tr_evaluations")
     .select(
       "id, model_name, provider_slug, tr_grammar_score, tr_bias_score, tr_factuality_pct, eval_dataset_ver, created_at",
     )

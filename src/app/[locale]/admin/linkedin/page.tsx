@@ -5,6 +5,7 @@ import { requireModerator } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import { Users } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 export default async function LinkedinAdminPage({
   params: { locale },
@@ -18,8 +19,7 @@ export default async function LinkedinAdminPage({
 
   const supabase = createAdminClient();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: contacts, error } = await (supabase as any)
+  const { data: contacts, error } = await (supabase as unknown as SupabaseClient)
     .from("linkedin_contacts")
     .select("*")
     .order("status", { ascending: true })

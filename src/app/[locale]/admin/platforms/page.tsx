@@ -5,6 +5,7 @@ import { requireModerator } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import { Globe } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 export default async function PlatformsAdminPage({
   params: { locale },
@@ -18,8 +19,7 @@ export default async function PlatformsAdminPage({
 
   const supabase = createAdminClient();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: platforms, error } = await (supabase as any)
+  const { data: platforms, error } = await (supabase as unknown as SupabaseClient)
     .from("platform_signups")
     .select("*")
     .order("status", { ascending: true })

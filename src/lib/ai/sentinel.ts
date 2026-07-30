@@ -98,13 +98,17 @@ export function detectEncodeBypass(data: string): string[] {
     try {
       const decoded = Buffer.from(data, "base64").toString("utf-8");
       if (/[A-Za-z]/.test(decoded)) detections.push("base64");
-    } catch {}
+    } catch (e) {
+      console.error("Ignored error:", e);
+    }
   }
   if (/^(?:[0-9a-fA-F]{2})+$/.test(data) && data.length > 10) {
     try {
       const decoded = Buffer.from(data, "hex").toString("utf-8");
       if (/[A-Za-z]/.test(decoded)) detections.push("hex");
-    } catch {}
+    } catch (e) {
+      console.error("Ignored error:", e);
+    }
   }
   if (data.length > 3) {
     const rot13 = data.replace(/[a-zA-Z]/g, (c) => {
