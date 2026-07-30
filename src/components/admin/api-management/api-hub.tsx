@@ -6,6 +6,7 @@ import { ModelHealthChart } from "./model-health-chart";
 import { ApiKeyManager } from "./api-key-manager";
 import { QuotaGauges } from "./quota-gauges";
 import { UsageHeatmap } from "./usage-heatmap";
+import { StaticKeysList } from "./static-keys-list";
 import { RefreshCw, ShieldCheck } from "lucide-react";
 import { getApiTelemetryData, type RealProvider } from "@/actions/api-management";
 
@@ -118,6 +119,9 @@ export function ApiManagementHub() {
   const [providers, setProviders] = useState<Provider[]>(MOCK_PROVIDERS_FALLBACK);
   const [dailySpend, setDailySpend] = useState<number>(0.8);
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<"telemetry" | "ai-providers" | "system-keys">(
+    "telemetry",
+  );
   const [isRealTelemetry, setIsRealTelemetry] = useState(false);
   const [lastRefreshed, setLastRefreshed] = useState<string | null>(null);
 
@@ -187,64 +191,126 @@ export function ApiManagementHub() {
         </button>
       </div>
 
-      {/* Provider Matrix */}
-      <section>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-bold tracking-tight text-white">Provider Status Matrix</h2>
-          <span className="rounded border border-emerald-500/30 bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] text-emerald-300">
-            Live Env Key Audit
-          </span>
-        </div>
-        <ProviderMatrix providers={providers} />
-      </section>
+      {/* Tabs Header */}
+      <div className="flex border-b border-white/10">
+        <button
+          onClick={() => setActiveTab("telemetry")}
+          className={`px-4 py-3 text-sm font-medium transition-colors ${
+            activeTab === "telemetry"
+              ? "border-brand-400 border-b-2 text-white"
+              : "text-zinc-400 hover:text-white"
+          }`}
+        >
+          Telemetry & Health
+        </button>
+        <button
+          onClick={() => setActiveTab("ai-providers")}
+          className={`px-4 py-3 text-sm font-medium transition-colors ${
+            activeTab === "ai-providers"
+              ? "border-brand-400 border-b-2 text-white"
+              : "text-zinc-400 hover:text-white"
+          }`}
+        >
+          AI Providers
+        </button>
+        <button
+          onClick={() => setActiveTab("system-keys")}
+          className={`px-4 py-3 text-sm font-medium transition-colors ${
+            activeTab === "system-keys"
+              ? "border-brand-400 border-b-2 text-white"
+              : "text-zinc-400 hover:text-white"
+          }`}
+        >
+          System Keys
+        </button>
+      </div>
 
-      {/* Model Health Chart */}
-      <section>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-bold tracking-tight text-white">
-            Model Latency Trends (P95)
-          </h2>
-          <span className="rounded border border-white/5 bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-400">
-            Baseline Benchmark
-          </span>
-        </div>
-        <ModelHealthChart data={MOCK_LATENCY_TRENDS} />
-      </section>
+      {/* Tab Content */}
+      <div className="pt-4">
+        {activeTab === "telemetry" && (
+          <div className="animate-in fade-in space-y-8 duration-500">
+            {/* Provider Matrix */}
+            <section>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-lg font-bold tracking-tight text-white">
+                  Provider Status Matrix
+                </h2>
+                <span className="rounded border border-emerald-500/30 bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] text-emerald-300">
+                  Live Env Key Audit
+                </span>
+              </div>
+              <ProviderMatrix providers={providers} />
+            </section>
 
-      {/* Quota Gauges */}
-      <section>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-bold tracking-tight text-white">Quota Usage by Provider</h2>
-          <span className="rounded border border-white/5 bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-400">
-            Estimated Limits
-          </span>
-        </div>
-        <QuotaGauges providers={providers} />
-      </section>
+            {/* Model Health Chart */}
+            <section>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-lg font-bold tracking-tight text-white">
+                  Model Latency Trends (P95)
+                </h2>
+                <span className="rounded border border-white/5 bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-400">
+                  Baseline Benchmark
+                </span>
+              </div>
+              <ModelHealthChart data={MOCK_LATENCY_TRENDS} />
+            </section>
 
-      {/* Usage Heatmap */}
-      <section>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-bold tracking-tight text-white">
-            Daily Request Volume (24h Heatmap)
-          </h2>
-          <span className="rounded border border-white/5 bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-400">
-            Estimated Volume
-          </span>
-        </div>
-        <UsageHeatmap providers={providers} />
-      </section>
+            {/* Quota Gauges */}
+            <section>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-lg font-bold tracking-tight text-white">
+                  Quota Usage by Provider
+                </h2>
+                <span className="rounded border border-white/5 bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-400">
+                  Estimated Limits
+                </span>
+              </div>
+              <QuotaGauges providers={providers} />
+            </section>
 
-      {/* API Key Manager */}
-      <section>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-bold tracking-tight text-white">API Keys & Credentials</h2>
-          <span className="rounded border border-emerald-500/30 bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] text-emerald-300">
-            Live Masked Audit
-          </span>
-        </div>
-        <ApiKeyManager providers={providers} />
-      </section>
+            {/* Usage Heatmap */}
+            <section>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-lg font-bold tracking-tight text-white">
+                  Daily Request Volume (24h Heatmap)
+                </h2>
+                <span className="rounded border border-white/5 bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-400">
+                  Estimated Volume
+                </span>
+              </div>
+              <UsageHeatmap providers={providers} />
+            </section>
+          </div>
+        )}
+
+        {activeTab === "ai-providers" && (
+          <div className="animate-in fade-in space-y-8 duration-500">
+            <section>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-lg font-bold tracking-tight text-white">AI Model Providers</h2>
+                <span className="rounded border border-emerald-500/30 bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] text-emerald-300">
+                  Live Database Keys
+                </span>
+              </div>
+              <ApiKeyManager providers={providers} />
+            </section>
+          </div>
+        )}
+
+        {activeTab === "system-keys" && (
+          <div className="animate-in fade-in space-y-8 duration-500">
+            <section>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-lg font-bold tracking-tight text-white">Infrastructure Keys</h2>
+                <span className="rounded border border-purple-500/30 bg-purple-500/20 px-2 py-0.5 font-mono text-[10px] text-purple-300">
+                  Read-only .env Variables
+                </span>
+              </div>
+              <StaticKeysList />
+            </section>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
