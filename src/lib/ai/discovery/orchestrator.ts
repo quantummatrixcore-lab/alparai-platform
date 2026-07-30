@@ -8,7 +8,6 @@ export async function runOrchestrator() {
   try {
     const supabase = createAdminClient();
 
-    // @ts-expect-error table not in types
     const { data: models, error } = await supabase
       .from("ai_free_models")
       .select("*")
@@ -76,7 +75,6 @@ export async function runOrchestrator() {
     ];
 
     for (const chain of chains) {
-      // @ts-expect-error table not in types
       await supabase.from("ai_routing_chains").upsert(chain, { onConflict: "domain_name" });
     }
 

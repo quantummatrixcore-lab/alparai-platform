@@ -32,7 +32,6 @@ export async function selectModelByCapability(domain: TaskDomain): Promise<Model
   try {
     const supabase = createAdminClient();
 
-    // @ts-expect-error table not in types
     const { data, error } = await supabase
       .from("ai_routing_chains")
       .select("models")
