@@ -141,7 +141,7 @@ export function HeroSection({
                   EE
                 </div>
                 <div>
-                  <p className="text-fg-primary text-xs font-bold">Kurucu Ercüment ERDEN</p>
+                  <p className="text-fg-primary text-xs font-bold">Ercüment ERDEN</p>
                   <p className="text-brand-400 text-[10px] font-medium">
                     {t("founder_role", { defaultValue: "Kurucu, ALPAR AI" })}
                   </p>
