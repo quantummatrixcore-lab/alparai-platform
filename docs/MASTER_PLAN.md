@@ -244,3 +244,24 @@ _v11.99 — Öneri #031 (AZERA) Antigravity tarafından Founder talebiyle MASTER
 **Kritik Not (ToS & KVKK):** Her otomasyon görevi `tos_compliant: boolean` ve `kvkk_cleared: boolean` alanlarını zorunlu tutar. ToS'u açıkça ihlal eden platformlarda `requires_human_final_action: true` zorunludur.
 
 _v12.00 — Öneri #032 (HAS) Antigravity tarafından Founder talebiyle eklendi. Browser robotics + mail pipeline + form-filler daemon + sosyal medya zamanlaması + Admin Otomasyon Paneli'ni belgeler. AZERA (#031) ve EDAP (#030) üzerine inşa edilir._
+
+---
+
+## Doktrin #033 — Continuous Flow Architecture (Zaman Kısıtlarının İptali) v1.0
+
+**Kaynak:** Antigravity & Founder Direktifi — 2026-07-30. Tür: Bağlayıcı Süreç Doktrini.
+
+**Temel Kural:** Yapay zaman kısıtları, "X gün", "Y saat", "Z hafta" gibi deadline ve süre tahminleri **İPTAL EDİLMİŞTİR.** AI-native mühendislikte süreç zamana değil, **GÖREV BAŞARISINA VE KESİNTİSİZ AKIŞA (Continuous Flow)** dayanır.
+
+### Doktrin Prensipleri
+
+1. **Sıfır Bekleme (Continuous Queue Drain):** Ajan Görev N'i tamamlayıp test kapısını (L3 Quality Gate) yeşil geçtiği AN, hiçbir zaman kısıtı beklenmeden otonom olarak Görev N+1'e geçer.
+2. **Kriter Süre Değil, Kalitedir:** Bir görevin tamamlanma şartı zamanın dolması değil; `pnpm test && pnpm typecheck && pnpm lint` komutlarının **%100 hatasız/uyarısız** geçmesi ve RLS/PII kurallarının doğrulanmasıdır.
+3. **Kuyruk Sıfırlandığında Otonom Öz-Gelişim (Self-Evolution Loop):**
+   - Açık görev kuyruğu sıfırlandığında ajanlar "durmaz" veya "rakip çıkmasını beklemez".
+   - Sistem otomatik olarak **Otonom Öz-Gelişim Döngüsü** başlatır:
+     - Otomatik güvenlik ve bağımlılık açıklarını (Dependabot) tarar ve yamalar.
+     - Pazar/Rakip fark analizi (competitor feature differential) çalıştırır.
+     - Otomatik kod refactoring ve performans optimizasyonu (Lighthouse/Next.js) yapar.
+
+_v12.01 — Doktrin #033 (Continuous Flow Architecture) MASTER_PLAN'a bağlayıcı kural olarak eklendi. Tüm zaman bazlı kısıtlar kaldırıldı, kesintisiz akış ve otonom öz-gelişim kuralı getirildi._
