@@ -111,6 +111,8 @@ Google for Startups $2K–350K · AWS Activate $1K–200K · Microsoft Founders 
 | 62 | P1 | [Antigravity] Heartbeat failover'ı gerçekten devreye al — `DEGRADED` modeller yönlendirmeden düşsün | v12.22'de tespit edildi: `ai-heartbeat` cron'u model sağlığını ölçüp `DEGRADED` yazıyor ama bu durumu **yönlendirme tarafında kimse okumuyor** (`model-router.ts` ve `openrouter-gateway.ts`'te sıfır eşleşme); tek tüketici `observe-360` gösterge paneli. Yani bozuk model hâlâ trafik alıyor. **Spec:** model seçimi yapan her yol (`selectModelByCapability` dahil, madde #28) aday listesini filtrelerken `status = 'DEGRADED'` olanları atlar; hepsi degraded ise bir üst kademeye yükselir (Doktrin #044 escalation zinciri). **Kabul kriteri:** bir modeli elle `DEGRADED` işaretleyen ve yönlendirmenin onu seçmediğini doğrulayan bir test. | pending |
 | 63 | P2 | [Antigravity] `ai-heartbeat/route.ts:47` tip cast'ini temizle | `.filter("id" as unknown as "status", "eq", res.modelId)` — Supabase tipleme workaround'u. Bu desen madde #22/#23'te sitenin başka yerlerinde temizlenmişti, yeni kodla geri geldi. Düz `.eq("id", res.modelId)` veya doğru tiplenmiş sorgu ile değiştirilmeli; `pnpm typecheck` yeşil kalmalı. | pending |
 | 64 | P0 | [Founder] Altyapı gerçeği doktrin #041'le çelişiyor — GitHub Actions ve Vercel planları doğrulanmalı | 2026-07-30'da iki bağımsız kanıt: (1) Vercel _"Hobby accounts are limited to daily cron jobs"_ hatasıyla dağıtımı reddetti — oysa Doktrin #041 RIMRE envanteri **Vercel Pro ($20/ay)** diyor; (2) PR #62'de **10 job'un tamamı ~11 saniyede, log üretmeden** başarısız oldu (`build`, tüm güvenlik taramaları, VRT, preview) — bu, kod hatasının değil Actions kotasının/faturalandırmasının imzasıdır (depo **private**, private repo Actions dakikası tüketir). **Bu Doktrin #048'i doğrudan tehdit ediyor:** #048 doğruluğun tek otoritesini CI yapıyor, ama CI çalışamıyorsa hiçbir madde doğrulanamaz ve otopilot kalkamaz. **Founder'dan istenen:** github.com/settings/billing ve Vercel plan sayfasından gerçek planları teyit et; #041 envanteri gerçekle güncellenecek. | pending |
+| 65 | P0 | [Antigravity] GitHub operasyonlarını devral — PR #62 merge, VRT baseline seed, CI kotası | Founder GitHub işlerini yapmayacak. Antigravity'de GitHub token, `gh` CLI, MCP ve tarayıcı ajanı var; hangisi çalışıyorsa onunla yapar. **Sıra:** (1) PR #62'yi master'a merge et; (2) merge sonrası `vrt-baseline.yml` workflow'unu `workflow_dispatch` ile çalıştır, üretilen `visual-baselines-linux` artifact'ini indir, görselleri `ops/visual-baseline/` altına commit et; (3) CI kotası sorununu çöz (madde #64) — kota doluysa Founder'a tek cümlelik karar sorusu sor, kendi başına ödeme yapma. **Founder'a hiçbir adımda GitHub arayüzü gösterilmeyecek.** | pending |
+| 66 | P0 | [Antigravity] Ayakta doğrulama protokolü — her teslimatta mimara sormadan kendin koş | Bu maddeden sonra Antigravity her teslimattan ÖNCE şu diziyi kendisi koşar ve çıktısını commit mesajına yazar: `pnpm lint && pnpm typecheck && pnpm test && pnpm build`. Ardından **kendi iddiasını kendi kontrol eder:** maddenin adında geçen her yetenek için ("failover", "routing", "lock" vb.) o yeteneği KULLANAN tüketici kodun var olduğunu `grep` ile doğrular — üretilen dosyanın varlığı yeterli değildir. Geçmiş dersler (v12.17 `model-router.ts` boş çıktı, v12.22 `failover` hiç yoktu, v12.23 Vercel cron dağıtımı kırdı): **bir özellik, onu okuyan tüketici yoksa tamamlanmamıştır.** Mimara ancak bu dizi kırmızıysa veya iki kural çelişiyorsa gidilir. | pending |
 <!-- FOUNDER_BACKLOG_END -->
 
 ---
@@ -1066,3 +1068,33 @@ _v12.24 — ✅ **Madde #34 doğrulandı ve kapatıldı; ama bu onay Doktrin #04
 **Yöntemsel çekince:** Kural 35 bir maddenin `✅ completed` olabilmesi için o commit üzerinde **yeşil bir CI çalışması** şart koşuyor. CI şu an kota sınırı nedeniyle hiç çalışamıyor (madde #64), dolayısıyla bu onay yerel ölçüme dayanıyor. Kuralı bu turda esnetmek ile maddeyi süresiz askıda tutmak arasında seçim yapıldı; esnetme tercih edildi çünkü tıkanıklığın sebebi işin kalitesi değil faturalandırma. **Ama bu bir emsal değildir:** CI yeşile döndüğünde #33 ve #34 dahil bu dönemde yerel ölçümle kapatılan maddeler yeniden teyit edilmelidir. Kalıcı çözüm madde #64'tür.
 
 **Vercel dağıtımı düzeldi:** v12.23'teki cron düzeltmesinden sonra Vercel yeniden build almaya başladı ("Building"), ardından commit `[deploy]` etiketi taşımadığı için beklendiği gibi "Ignored" oldu — bu Doktrin #034 Kural 10'un doğru çalıştığının kanıtı, hata değil._
+
+---
+
+## Doktrin #049 — Doktrin Üretiminin Durdurulması ve Kendi Kendini Doğrulayan Teslimat (SDD — Self-Directed Delivery) v1.0
+
+**Kaynak:** Claude (Mimar) — 2026-07-30, Founder'ın "mimariyi öyle güncelle ki devamlı güncellemene gerek kalmasın, bile bile boşa token harcıyorsun" tespiti üzerine. Tür: **Bağlayıcı, ve bu serinin SON doktrini.**
+
+**Teşhis — mimar israfın kaynağı oldu.** #030'dan #048'e kadar 19 doktrin yazıldı. Founder'ın şikayeti haklı: her tur yeni kural üretmek, kuralların uygulanmasından daha kolay olduğu için sistem kural üretmeye kaydı. Doktrin #047 bunu "kural enflasyonu" diye teşhis etti ama teşhisi koyan tur bile yeni bir doktrin ekledi. **Bu doktrin o döngüyü kapatır.**
+
+### Kural 38 — Doktrin Moratoryumu
+
+Bu doktrinden sonra MASTER_PLAN'a **yeni doktrin eklenemez**. Tek istisna: daha önce hiç görülmemiş bir başarısızlık _sınıfı_ ortaya çıkarsa. Mevcut 19 doktrinin kapsadığı bir konuda yeni doktrin yazmak ihlaldir; o konu zaten kurallıdır, eksik olan uygulamadır. Mevcut doktrinlerin **düzeltilmesi** serbesttir, **çoğaltılması** değil.
+
+### Kural 39 — Teslimat Öncesi Kendi Kendini Doğrulama (mimara gitmeden)
+
+Antigravity her teslimattan önce şunu kendisi koşar ve sonucu commit mesajına yazar:
+
+```
+pnpm lint && pnpm typecheck && pnpm test && pnpm build
+```
+
+Ardından **iddia-tüketici kontrolü** yapar: maddenin adında geçen her yetenek için, o yeteneği _kullanan_ kodun varlığını `grep` ile doğrular. Geçmişin üç dersi bunu zorunlu kılıyor — v12.17'de model havuzu gateway'e girdi ama `model-router.ts` boştu; v12.22'de heartbeat yazıldı ama `DEGRADED` durumunu okuyan yönlendirici yoktu; v12.23'te heartbeat cron'u dağıtımı tamamen kırdı. **Kural: üretilen dosyanın varlığı tamamlanma kanıtı değildir; o üretimi okuyan tüketicinin varlığı kanıttır.**
+
+### Kural 40 — Mimar Yalnızca Üç Durumda Çağrılır
+
+(a) Kural 39 dizisi kırmızı ve sebebi anlaşılamıyorsa, (b) iki kural birbiriyle çelişiyorsa, (c) daha önce görülmemiş bir başarısızlık sınıfı çıktıysa. **"Maddeyi tamamlandı olarak işaretle" bir mimar işi değildir** — Antigravity Kural 39 dizisi yeşilse maddeyi kendisi `✅ completed` yapar ve kanıtı (komut çıktısı + tüketici grep sonucu) madde açıklamasına yazar. Mimarın rutin onayı bu noktadan sonra gereksiz bir tur maliyetidir.
+
+### Kural 41 — GitHub Operasyonları Executor'a Aittir
+
+Founder'a hiçbir GitHub arayüzü adımı gösterilmez. PR açma/merge, workflow tetikleme, artifact indirme, Issue yönetimi Antigravity'nin işidir; elindeki GitHub token, `gh` CLI, MCP sunucusu veya tarayıcı ajanından hangisi çalışıyorsa onunla yapar. Founder'a yalnızca **ödeme/plan kararı** gibi yetki gerektiren tek cümlelik sorular iletilir.
