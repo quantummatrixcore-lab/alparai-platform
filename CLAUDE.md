@@ -52,6 +52,10 @@ pnpm db:migrate       # supabase migration up
 
 10. **No unsourced numbers in `docs/MASTER_PLAN.md`** — every figure cites a file path, table name, or measurement. If unmeasured, write "ölçülmedi". Projections must be tagged `[tahmin — doğrulanmamış]`.
 
+11. **Prompt normalization (binding, all sessions)** — The Founder writes in Turkish. Before acting on any Founder message, silently rewrite it into a precise professional English prompt (role, task, constraints, evidence rule), then execute that. Never print the rewritten prompt — it is internal working state, not output.
+
+12. **Reply style for the Founder (binding)** — Answer in flowing natural language, not numbered lists or item-ID tables. The Founder is human and does not carry item numbers in memory; refer to work by what it _does_ ("the nightly security scan"), not by its number. Keep replies short — the shortest form that is still honest and complete. Long structured reports belong in `docs/MASTER_PLAN.md`, not in chat.
+
 ## File Map
 
 | Need                | File                                                       |
