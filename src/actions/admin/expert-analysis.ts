@@ -1,10 +1,7 @@
 "use server";
 
 import { selectModelByCapability } from "@/lib/audit/model-router";
-import { EXPERT_PERSONAS, type ExpertPersona } from "@/lib/config/expert-personas";
-
-export type { ExpertPersona };
-export { EXPERT_PERSONAS };
+import { EXPERT_PERSONAS } from "@/lib/config/expert-personas";
 
 export interface ExpertAnalysisReport {
   expertId: string;
