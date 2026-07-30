@@ -6,7 +6,8 @@ on:
   pull_request:
     branches: [master, main]
   schedule:
-    - cron: "0 6 * * 1"
+    # Doctrine #037 Rule 23 — nightly 03:00 UTC autonomous security & dependency scan
+    - cron: "0 3 * * *"
 
 permissions:
   contents: read
