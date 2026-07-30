@@ -38,8 +38,7 @@ INSERT INTO public.ai_providers (slug, name, description, website_url, is_verifi
   ('assemblyai', 'AssemblyAI', 'Speech-to-text and audio intelligence APIs.', 'https://assemblyai.com', true, 81),
   ('lepton', 'Lepton AI', 'Developer-centric serverless AI deployment platform.', 'https://lepton.ai', false, 76),
   ('lightricks', 'Lightricks', 'AI creative studio, photography, and video generation apps.', 'https://lightricks.com', false, 73),
-  ('leonardo', 'Leonardo.ai', 'Creative production platform for generative image assets.', 'https://leonardo.ai', false, 74),
-  ('vasu', 'Vasu AI', 'Turkish local AI provider specializing in LLMs.', 'https://vasu.ai', false, 70)
+  ('leonardo', 'Leonardo.ai', 'Creative production platform for generative image assets.', 'https://leonardo.ai', false, 74)
 ON CONFLICT (slug) DO UPDATE SET
   name = EXCLUDED.name,
   description = EXCLUDED.description,

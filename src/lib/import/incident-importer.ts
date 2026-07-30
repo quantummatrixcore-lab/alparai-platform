@@ -67,7 +67,7 @@ const providerKeywords = [
   { slug: "tencent", keywords: ["tencent", "hunyuan"] },
   { slug: "sambanova", keywords: ["sambanova"] },
   { slug: "cerebras", keywords: ["cerebras"] },
-  { slug: "vasu", keywords: ["vasu"] },
+  { slug: "alibaba", keywords: ["alibaba", "qwen"] },
 ];
 
 export interface ImportResult {
