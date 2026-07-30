@@ -32,25 +32,25 @@ export async function selectModelByCapability(domain: TaskDomain): Promise<Model
   try {
     const supabase = createAdminClient();
 
+    // @ts-expect-error table not in types
     const { data, error } = await supabase
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .from("ai_routing_chains" as any)
+      .from("ai_routing_chains")
       .select("models")
       .eq("domain_name", domain)
       .single();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (
       error ||
       !data ||
-      !(data as any).models ||
-      ((data as any).models as ModelChainItem[]).length === 0
+      typeof data !== "object" ||
+      !("models" in data) ||
+      !Array.isArray(data.models) ||
+      data.models.length === 0
     ) {
       return getFallbackChain(domain);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (data as any).models as ModelChainItem[];
+    return data.models as ModelChainItem[];
   } catch (err) {
     logger.error("[ModelRouter] Error fetching dynamic routing chain, falling back", {
       error: err,
