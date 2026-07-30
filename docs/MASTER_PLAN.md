@@ -483,3 +483,45 @@ _v12.04 — Doktrin #036 (BDM — Bağımsız Doğrulama Mimarisi) Mimar (Claude
 ---
 
 _v12.05 — Doktrin #037 (ANMIL — Automated Nightly Maintenance & Infrastructure Locking) GPT ve Gemini Flash senteziyle MASTER_PLAN'a bağlayıcı kural olarak eklendi. Gece güvenlik taraması, Issue-FD senkronizasyonu, canlı itibar panosu ve VRT CI kilitleri anayasalaştırıldı._
+
+---
+
+## Doktrin #038 — 360° Google Ultra & Autonomous Multi-Agent Social Engine (GAMSE) v1.0
+
+**Kaynak:** Founder Direktifi & Gemini Pro Architecture — 2026-07-30. Tür: **Bağlayıcı Ekosistem ve Medya Otomasyonu Doktrini.**
+
+**Amaç:** Ayda 1.500 TL ödenen **Google One Ultra / Gemini Advanced** aboneliğinin tüm kapasitesini (Veo video üretimi, Imagen 3, Workspace otomasyonu, Vertex AI) %100 verimle kullanmak ve `openchrome` tarayıcısı üzerinden sosyal medya paylaşımı, LinkedIn içerikleri ve Startup (YC, F6S, ProductHunt) başvurularını gece otonom olarak yürütmek.
+
+---
+
+### 1. Google Ultra Ekosistem Kullanım Haritası (360° Exploitation Architecture)
+
+| Ekosistem Bileşeni | Araç / Servis | Ajan Kullanım Senaryosu | Otomasyon Yöntemi |
+|---|---|---|---|
+| **Video Üretimi** | **Google Veo / Veo 2** | ALPAR AI tanıtım videoları, YouTube Shorts ve LinkedIn video gönderileri üretimi | `openchrome` üzerinden Veo / VideoFX arayüz otomasyonu |
+| **Görsel Tasarım** | **Imagen 3 / Stitch** | Blog kapak görselleri, sosyal medya post grafikler ve UI prototipleri | `generate_image` & StitchMCP |
+| **B2B & Yatırımcı Dokümanı** | **Google Workspace Labs (Slides/Docs)** | Otonom Pitch Deck güncellemesi, yatırımcı özet raporları ve PDF üretimi | Google Workspace API / Browser |
+| **İçerik Stratejisi** | **Gemini Ultra 1.5/2.0** | Derinlemesine pazar araştırması, rakip analizi ve teknik blog taslakları | `openchrome` / API |
+| **Bulut & Yapay Zeka Altyapısı** | **Vertex AI / GCP Credits** | Yüksek hacimli batch PII maskeleme ve KVKK uyumluluk taramaları | Cloud SDK / `gcloud` MCP |
+
+---
+
+### 2. Gece Otonom Sosyal Medya ve Startup Başvuru Motoru (Autonomous Distribution)
+
+Ajanlar gece yazılım geliştirme görevlerini tamamladıktan sonra otomatik olarak **Dağıtım ve Pazarlama Evresine (Distribution Phase)** geçerler:
+
+1. **LinkedIn & X (Twitter) Otomasyonu:**
+   - O gün tamamlanan özellik veya güvenlik güncellemesi hakkındaki içerik (metin + Imagen 3 görseli + Veo videosu) otomatik oluşturulur.
+   - `openchrome` (`quantum.matrix.core@gmail.com` oturumu) ile LinkedIn ve X üzerinde paylaşılır.
+
+2. **Startup & Hızlandırma Başvuruları (YC, F6S, ProductHunt):**
+   - ALPAR AI meta verileri (`docs/STARTUP_PITCH_KIT.md`) okunur.
+   - Y-Combinator, F6S, Crunchbase, ProductHunt formları `openchrome` ile otonom doldurulur ve taslak olarak hazırlanır / onaylı ise gönderilir.
+
+3. **Ajanlar Arası Gece Plan Güncelleme Döngüsü:**
+   - Görevler bittiğinde Antigravity, `openchrome` veya CLI üzerinden Claude Code (Mimar)'a sinyal gönderir: `"Görevler bitti, Faz N+1 planını güncelle"`.
+   - Claude Code `docs/MASTER_PLAN.md` backlog'unu yeniler ve otopilot döngüsü kesintisiz devam eder.
+
+---
+
+_v12.06 — Doktrin #038 (GAMSE — 360° Google Ultra & Autonomous Multi-Agent Social Engine) MASTER_PLAN'a bağlayıcı kural olarak eklendi. Google Ultra aboneliğinin tüm araçları (Veo, Imagen 3, Workspace, Vertex AI) ve otonom sosyal medya / startup başvuru akışları anayasalaştırıldı._
