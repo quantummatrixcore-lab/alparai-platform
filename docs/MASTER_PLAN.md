@@ -340,3 +340,32 @@ Bu doktrin, `MASTER_PLAN_ARCHIVE.md`'deki v1.0–v11.97 arasında belgelenmiş t
 ---
 
 _v12.02 — Doktrin #034 (ANGC — AI-Native Governance Constitution) Mimar (Claude) tarafından Founder direktifiyle ve `MASTER_PLAN_ARCHIVE.md` v1.0–v11.97 başarısızlık analizi sentezlenerek yazıldı. 17 kural, 5 bölüm. Bu doktrin sistemin nihai anayasasıdır; tüm önceki kuralları kapsar. Bir sonraki Mimar aktivasyonu ancak Bölüm I, Kural 2'deki 3 eşikten biri karşılandığında gerçekleşir._
+
+---
+
+## Doktrin #035 — Founder Directives & Visual Proof Protocol (FDR-VPP) v1.0
+
+**Kaynak:** Antigravity & Founder Direktifi — 2026-07-30. Tür: **Yalancı Tamamlanmayı (False Completion) ve Hata Tekrarlarını Engelleme Doktrini.**
+
+**Sorun:** Ajanların "yaptım/düzelttim" demesi ama koda dokunmaması, ad-hoc yüzeysel çözümler sunması veya düzeltilen bir hatanın daha sonra tekrar ortaya çıkması. Özellikle Admin Paneli görselliği gibi UI/UX taleplerinin kod testiyle doğrulanamadığı için gözden kaçması.
+
+### 1. Founder Talepleri Sicili (Founder Directives Registry - FDR)
+
+`MASTER_PLAN.md` içerisinde Founder tarafından bildirilen her bildirim, hata veya talep **FD-XXX** kimliğiyle bu tabloya kaydolur. Bir talep **somut kanıt gösterilmeden** `🟢 DOĞRULANDI` durumuna geçemez.
+
+| FD-ID | Talep / Hata Tanımı | Kaynak / Tarih | Durum | Zorunlu Kanıt Türü | Kanıt Çıktısı / Bağlantı |
+|---|---|---|---|---|---|
+| **FD-01** | Admin Paneli Görsel Yenileme (Rich Aesthetics & Visual UI) | Founder / 2026-07-30 | 🟡 İŞLENİYOR | Visual Screenshot (`openchrome`) | Bekleniyor (Visual Proof Şart) |
+| **FD-02** | Dependabot Security Vulnerabilities (16 Açık) | GitHub / 2026-07-30 | 🟡 İŞLENİYOR | `pnpm audit` Yeşil Raporu | Bekleniyor (`pnpm audit fix`) |
+
+### 2. Görsel Kanıt Protokolü (Visual Proof Protocol - VPP)
+
+- **UI/UX ve Görsel İşler İçin Kural:** Admin paneli, sayfa tasarımı veya görsel düzeltme taleplerinde yalnızca `pnpm test` geçmesi YETERLİ DEĞİLDİR.
+- **Ekran Görüntüsü Zorunluluğu:** Ajan, `openchrome` veya Playwright kullanarak canlı/yerel sayfanın **ekran görüntüsünü (screenshot)** alıp `artifacts/` klasörüne kaydetmek ve linkini rapora eklemek ZORUNDADIR. Ekran görüntüsü olmayan hiçbir görsel görev "tamamlandı" sayılamaz.
+
+### 3. Regresyon Kilidi (Regression Lock Protocol)
+
+- Founder bir hatayı bildirdiğinde, ajan düzeltmeyi yaparken aynı hatanın gelecekte tekrar ortaya çıkmasını engellemek için **otomatik bir test senaryosu (Regression Test)** eklemek zorundadır.
+- Bu test `tests/` klasörüne eklenir. Eğer gelecekte o hata tekrar ederse, GitHub Actions derlemeyi anında kilitler ve deploy'u durdurur.
+
+_v12.03 — Doktrin #035 (FDR-VPP) MASTER_PLAN'a bağlayıcı kural olarak eklendi. Founder taleplerinin somut kanıt ve ekran görüntüsü olmadan kapatılması yasaklandı._
