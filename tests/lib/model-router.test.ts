@@ -1,8 +1,18 @@
 import { describe, it, expect } from "vitest";
 import "../helpers/setup";
-import { selectModelTier } from "@/lib/audit/model-router";
+import { selectModelTier, selectModelByCapability } from "@/lib/audit/model-router";
 
 describe("selectModelTier router", () => {
+  it("filters out DEGRADED models during capability routing", async () => {
+    const chain = await selectModelByCapability("fast_triage");
+    expect(Array.isArray(chain)).toBe(true);
+    expect(chain.length).toBeGreaterThan(0);
+    // Ensure no DEGRADED model ID returned if any
+    const degradedIds = ["meta-llama/llama-3.3-70b-instruct:free"];
+    const containsDegraded = chain.some((m) => degradedIds.includes(m.id));
+    expect(containsDegraded).toBe(false);
+  });
+
   it("returns none tier and empty chains when auditTier is none", async () => {
     const res = await selectModelTier({
       title: "Short Title",

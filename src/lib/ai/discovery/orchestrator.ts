@@ -11,7 +11,8 @@ export async function runOrchestrator() {
     const { data: models, error } = await supabase
       .from("ai_free_models")
       .select("*")
-      .eq("is_active", true);
+      .eq("is_active", true)
+      .neq("status", "DEGRADED");
 
     let availableModels = (models as unknown as FreeModelRecord[]) || [];
 

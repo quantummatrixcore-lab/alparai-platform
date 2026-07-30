@@ -32,6 +32,19 @@ export async function selectModelByCapability(domain: TaskDomain): Promise<Model
   try {
     const supabase = createAdminClient();
 
+    let degradedIds = new Set<string>();
+    try {
+      const { data: degradedData } = await supabase
+        .from("ai_free_models")
+        .select("id")
+        .eq("status", "DEGRADED");
+      if (degradedData) {
+        degradedIds = new Set((degradedData as { id: string }[]).map((m) => m.id));
+      }
+    } catch {
+      // Non-blocking if table query fails
+    }
+
     const { data, error } = await supabase
       .from("ai_routing_chains")
       .select("models")
@@ -46,10 +59,15 @@ export async function selectModelByCapability(domain: TaskDomain): Promise<Model
       !Array.isArray(data.models) ||
       data.models.length === 0
     ) {
-      return getFallbackChain(domain);
+      return getFallbackChain(domain).filter((m) => !degradedIds.has(m.id));
     }
 
-    return data.models as ModelChainItem[];
+    const activeChain = (data.models as ModelChainItem[]).filter((m) => !degradedIds.has(m.id));
+    if (activeChain.length === 0) {
+      return getFallbackChain(domain).filter((m) => !degradedIds.has(m.id));
+    }
+
+    return activeChain;
   } catch (err) {
     logger.error("[ModelRouter] Error fetching dynamic routing chain, falling back", {
       error: err,

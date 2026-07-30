@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { collectDoraMetrics, getDoraMetricsHistory } from "@/lib/dora/dora-collector";
 
-export const revalidate = 60; // 60s cache
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   // Collect/update current day's metric
