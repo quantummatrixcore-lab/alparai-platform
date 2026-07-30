@@ -265,3 +265,78 @@ _v12.00 — Öneri #032 (HAS) Antigravity tarafından Founder talebiyle eklendi.
      - Otomatik kod refactoring ve performans optimizasyonu (Lighthouse/Next.js) yapar.
 
 _v12.01 — Doktrin #033 (Continuous Flow Architecture) MASTER_PLAN'a bağlayıcı kural olarak eklendi. Tüm zaman bazlı kısıtlar kaldırıldı, kesintisiz akış ve otonom öz-gelişim kuralı getirildi._
+
+---
+
+## Doktrin #034 — AI-Native Governance Constitution (ANGC) v1.0
+
+**Kaynak:** Claude (Mimar) — 2026-07-30. Tür: **Sistemin Nihai Anayasası. Bağlayıcıdır. Tüm önceki kuralları kapsar ve hiyerarşik olarak üstündür.**
+
+Bu doktrin, `MASTER_PLAN_ARCHIVE.md`'deki v1.0–v11.97 arasında belgelenmiş tüm başarısızlıklardan (kanıtsız "tamamlandı" iddiaları, yanlış commit hash'leri, outreach log uydurmaları, boş DB tablosundan gönderildiği iddia edilen mailler, NVIDIA rolü karışıklığı, cast-with-any güvenlik boşlukları) ders çıkarılarak sentezlenmiştir.
+
+---
+
+### Bölüm I — Mimar Aktivasyon Protokolü (Architect Invocation Rules)
+
+**Kural 1 (Mimar Sessizdir):** Mimar (Claude Code), rutin kodlama, i18n güncellemesi, component yazımı, test yazımı, veya MASTER_PLAN belgeleme güncellemeleri için ASLA çağrılmaz. Bu işler Executor (Antigravity) ve Verifier (OpenCode) katmanlarına aittir.
+
+**Kural 2 (3 Aktivasyon Eşiği):** Mimar YALNIZCA aşağıdaki üç durumdan biri gerçekleştiğinde devreye girer:
+- **Faz Sınırı:** Aktif backlog kuyruğu tamamen sıfırlandığında (tüm `[ ]` görevler `[x]` olduğunda).
+- **Güvenlik İhlali:** Production'da kritik (high/critical) bir güvenlik açığı tespit edildiğinde.
+- **Kural Çakışması:** İki Executor ajanı veya iki kural birbiriyle çeliştiğinde.
+
+**Kural 3 (Ders Çıkarma Döngüsü):** Her aktivasyonda Mimar, `docs/MASTER_PLAN_ARCHIVE.md`'yi okur, tekrar eden hata kalıplarını (failure patterns) listeler ve bu kalıpları kapatacak yeni, somut, ölçülebilir kurallar yazar. Soyut "dikkatli ol" ifadeleri kural sayılmaz.
+
+**Kural 4 (Zırt Pırt Mimarı Yok):** Founder, "Master Plan'ı güncelle", "Claude'a sor", "mimariyi revize et" gibi talepleri rutin iş akışında yapamaz. Bu talepler yalnızca Faz Sınırı durumunda geçerlidir. Her Faz Sınırı GitHub'da bir `[architect-review]` etiketli Issue olarak açılır; Mimar bu Issue üzerinden çalışır, sonuçları commit'ler. Founder'ın hiçbir platform değiştirmesine gerek yoktur.
+
+---
+
+### Bölüm II — Hallüsinasyon Önleme Protokolü (Zero-Fabrication Enforcement)
+
+**Kural 5 (Araç Çıktısı = Gerçek):** Hiçbir ajan "bitti", "gönderildi", "commit atıldı", "deploy oldu" diyemez; eğer bu iddiayı destekleyen bir araç çıktısı (tool output) yoksa. İddia önce, araç çıktısı sonra sırasıyla rapor edilirse bu bir protokol ihlalidir.
+
+**Kural 6 (Kanıt Hiyerarşisi):** İddiaların geçerli kanıt sınıfları, sırasıyla:
+1. **Birincil:** Araç çıktısı (git log hash, Vercel API `get_deployment` yanıtı, Supabase satır ID'si, Resend mesaj ID'si)
+2. **İkincil:** Ekran görüntüsü (primary kanıt yoksa)
+3. **Geçersiz:** "Kontrol ettim", "gördüm", "çalışıyor" — araç çıktısı olmaksızın sözel beyan
+
+**Kural 7 (İlk Kez Kuralı):** Bir ajan aynı veriyi iki kez "yeni iş" olarak raporlayamaz. Her raporlama benzersiz bir araç çıktısına dayanmalıdır. (Bkz. v11.93 düzeltmesi: `8362440` commit'i iki kez rapor edildi.)
+
+**Kural 8 (Rakam Kaynağı Zorunluluğu):** MASTER_PLAN'a veya herhangi bir raporlama yüzeyine yazılan her sayı (kullanıcı sayısı, test sayısı, provider sayısı, satır ID'si) bir kaynak belirtmek zorundadır. Kaynak gösterilemeyen sayı "ölçülmedi" olarak yazılır. (Bkz. v11.79: "9 provider" iddiası 7 gerçek provider yerine adaptör sayısıyla karışmıştı.)
+
+---
+
+### Bölüm III — Founder Etkileşim Minimizasyonu (Zero-Copy-Paste Interface)
+
+**Kural 9 (GitHub Issues = Tek Komut Yüzeyi):** Founder, bir görevi başlatmak için herhangi bir AI arayüzüne (Claude Code, Antigravity, OpenCode) doğrudan prompt yapıştırmaz. Tek eylem: GitHub'da `[autobuild]`, `[architect-review]`, `[security-fix]` etiketlerinden biriyle bir Issue açmaktır. Ajanlar bu Issue'yu kuyruğa alır ve çalıştırır.
+
+**Kural 10 (Deploy Kota Koruması):** Vercel deploy'u, yalnızca `master` dalına `[deploy]` etiketli bir commit merge edildiğinde tetiklenir. Küçük doküman güncellemeleri, test dosyaları veya MASTER_PLAN değişiklikleri `[deploy]` etiketi içermez ve Vercel kotasını tüketmez.
+
+**Kural 11 (Tek Onay Noktası):** Founder'ın sistemle etkileşimi yalnızca şu üç eylemden oluşur:
+- GitHub'da Issue açmak (görev tanımı)
+- GitHub'da PR'ı onaylamak (son kontrol, zorunlu değil — auto-merge aktifse bu da isteğe bağlıdır)
+- `/admin/automation` panelinden `requires_human_submit: true` olan formları nihai olarak göndermek
+
+---
+
+### Bölüm IV — Kalite Kapısı Değiştirilemezliği (Immutable Quality Gate)
+
+**Kural 12 (Yeşil veya Yok):** Hiçbir kod, `pnpm lint && pnpm typecheck && pnpm test` komutları %100 yeşil sonuç vermeden `master` dalına merge edilemez. "Sonraki commit'te düzeltirim" ifadesi protokol ihlalidir.
+
+**Kural 13 (Test Karşılama Zorunluluğu):** Her yeni feature, kendisiyle birlikte en az bir unit test veya e2e test senaryosu içermelidir. Test sayısı yalnızca artabilir; test silme işlemi Mimar onayı gerektirir.
+
+**Kural 14 (RLS Eşleştirmesi):** Her yeni Supabase tablosu, aynı migration dosyasında RLS politikaları ve `-- ROLLBACK:` bloğu içermek zorundadır. RLS'siz tablo: bloke edilir, merge edilmez.
+
+---
+
+### Bölüm V — Kural Yönetimi (Governance)
+
+**Kural 15 (Değişmezlik ve Sürümleme):** Bu Anayasa'daki kurallar değiştirilemez; yalnızca yeni bir Mimar aktivasyon döngüsünde, kanıtlanmış bir başarısızlık kalıbı gerekçesiyle, versiyon numarası artırılarak genişletilebilir.
+
+**Kural 16 (Çelişki Çözümü):** Herhangi iki kural çeliştiğinde, bu Anayasa (#034) → MASTER_PLAN kuralları → AGENTS.md kuralları hiyerarşisi geçerlidir.
+
+**Kural 17 (Kural Sayısı Şeffaflığı):** Her Mimar aktivasyonunda, aktif kural sayısı ve son eklenen kurallar `/admin/strategy` panelinde görüntülenebilir durumda olmalıdır.
+
+---
+
+_v12.02 — Doktrin #034 (ANGC — AI-Native Governance Constitution) Mimar (Claude) tarafından Founder direktifiyle ve `MASTER_PLAN_ARCHIVE.md` v1.0–v11.97 başarısızlık analizi sentezlenerek yazıldı. 17 kural, 5 bölüm. Bu doktrin sistemin nihai anayasasıdır; tüm önceki kuralları kapsar. Bir sonraki Mimar aktivasyonu ancak Bölüm I, Kural 2'deki 3 eşikten biri karşılandığında gerçekleşir._
