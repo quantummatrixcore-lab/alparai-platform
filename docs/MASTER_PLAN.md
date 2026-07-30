@@ -177,3 +177,70 @@ _v11.98 — Öneri #030 (EDAP) Antigravity tarafından Founder talebiyle MASTER_
 - **Graphify AST Indexing:** Pre-commit hook ile repo bilgi grafiğinin otomatik güncellenmesi; ajanların ham kod dosyalarını okuyarak token yakmasının engellenmesi.
 
 _v11.99 — Öneri #031 (AZERA) Antigravity tarafından Founder talebiyle MASTER_PLAN'a eklendi. Kaynak verimliliği ve insan müdahalesiz tam otomasyon stratejisini belgeler._
+
+---
+
+## Öneri #032 — Hyper-Automation Stack (HAS) v1.0
+
+**Kaynak:** Antigravity (Claude Sonnet/Thinking) — 2026-07-30. Öneri türü: Operasyonel Otomasyon Çerçevesi. Bağlayıcı değil.
+
+**Kök Sorun:** İnsan, sistemin dar boğazıdır (human-in-the-loop bottleneck). Mail göndermek, form doldurmak, startup başvurusu yapmak, LinkedIn mesajı atmak — bunların hiçbiri "düşünme" gerektirmiyor; hepsi pattern-match + data-fill işlemidir. Bu işleri insana bırakmak, CPU'ya hesap makinesi işleri yaptırmak kadar israftır.
+
+**Vizyon:** Founder **sadece onay verir** ("Bu 5 startup programına başvur" der). Sistem araştırır, form alanlarını doldurur, gönderir, kanıt loglar, bildirim atar.
+
+### Katman 1 — Browser Robotics (Form & Web Otomasyonu)
+
+**Mevcut Silah:** `openchrome` MCP + CDP tabanlı kimlik doğrulanmış Chrome oturumu (quantum.matrix.core@gmail.com). Headless browser + gerçek oturum = en güçlü kombinasyon.
+
+**Eksik Parça:** Otonom görev kuyruğu yok. Browser şu an reactive (insan tetikler), proactive (kuyruğu kendisi çeker) değil.
+
+Öneri — `automation_tasks` Supabase tablosu:
+- `type`: `startup_apply` / `grant_submit` / `linkedin_msg` / `form_fill`
+- `payload`: `{ "selector": "#company-name", "value": "ALPAR AI" }` şeklinde field map
+- `status`: `pending → running → done/failed`
+- `result`: Ekran görüntüsü yolu + HTTP yanıtı
+
+`src/workers/browser-daemon.ts` — 5 dakikada bir kuyruğu çeker, `openchrome` ile çalıştırır, sonucu DB'ye yazar.
+
+### Katman 2 — Mail Pipeline (Sıfır Manuel Gönderim)
+
+**Mevcut Silah:** Resend SDK + `outreach_queue` DB tablosu var. **Eksik:** Tablo boş, zamanlama worker yok.
+
+`src/workers/mail-dispatcher.ts` — 15 dakikada bir `status='pending' AND send_at<=NOW()` olanları çeker → Resend API ile gönderir → Resend mesaj ID'sini kanıt olarak kaydeder → `status='sent'` yapar.
+
+`src/lib/mail/template-engine.ts` — `{{name}}`, `{{organization}}`, `{{role}}` değişkenli 5 şablon tipi: outreach / grant / press / advisory / investor. Her gönderim PII Guardian'dan geçirilir.
+
+### Katman 3 — Startup & Grant Application Bot
+
+`src/lib/automation/form-filler.ts` — `openchrome` ile hedef URL'e gider → field map'i doldurur → ekran görüntüsü alır (kanıt) → opsiyonel olarak submit eder → `applications_log` tablosuna yazar.
+
+**ToS Compliance Kuralı:** Her program için `requires_human_submit: boolean` zorunlu. `true` ise bot formu doldurur, son "Gönder" tuşunu insan basar. `false` ise tam otonom (Founder onaylamış program).
+
+### Katman 4 — Sosyal Medya Zamanlaması
+
+| Platform | Araç | Mod |
+|----------|------|-----|
+| LinkedIn | openchrome (CDP) | Zamanlanmış gönderi, doğrulanmış oturum |
+| Twitter/X | Twitter API v2 Free Tier (17 yazma/ay) | Doğrudan API |
+| Instagram | Meta Graph API | Zamanlanmış medya gönderimi |
+| HN / Reddit | browser-daemon | Tek seferlik, Founder onayı zorunlu |
+
+`src/workers/social-scheduler.ts` — `social_posts` tablosundan `publish_at<=NOW()` olanları çeker → platform adaptörünü seçer → gönderir → kanıt loglar → başarısız ise retry queue'ya atar (3 deneme).
+
+### Katman 5 — Admin Otomasyon Paneli
+
+`/admin/automation` rotası — tüm kuyruklardaki görevler, gönderim durumları ve kanıt logları tek ekranda. Founder buradan bekleyen başvuruları onaylar/reddeder, mail kuyruğunu duraklatır, her gönderimin kanıtını görür.
+
+### Uygulama Önceliği
+
+| Öncelik | Görev | Süre Tahmini |
+|---------|-------|------|
+| **P0** | `automation_tasks` DB migration + RLS | 1 gün |
+| **P0** | `mail-dispatcher.ts` worker | 1 gün |
+| **P1** | `form-filler.ts` + openchrome entegrasyonu | 2 gün |
+| **P1** | `social-scheduler.ts` + LinkedIn adaptor | 2 gün |
+| **P2** | `/admin/automation` paneli | 3 gün |
+
+**Kritik Not (ToS & KVKK):** Her otomasyon görevi `tos_compliant: boolean` ve `kvkk_cleared: boolean` alanlarını zorunlu tutar. ToS'u açıkça ihlal eden platformlarda `requires_human_final_action: true` zorunludur.
+
+_v12.00 — Öneri #032 (HAS) Antigravity tarafından Founder talebiyle eklendi. Browser robotics + mail pipeline + form-filler daemon + sosyal medya zamanlaması + Admin Otomasyon Paneli'ni belgeler. AZERA (#031) ve EDAP (#030) üzerine inşa edilir._
