@@ -442,3 +442,44 @@ Playwright'ın `toHaveScreenshot()` özelliği ile her UI bileşeni için "altı
 Böylece Admin Paneli bir kez güzel hale getirildiğinde, o güzellik otomatik korunur.
 
 _v12.04 — Doktrin #036 (BDM — Bağımsız Doğrulama Mimarisi) Mimar (Claude / Thinking) tarafından yazıldı. 5 yeni kural (18-22). Separation of Verification, Definition of Done, Agent Reputation Score, Mandatory Human Gate ve Visual Regression Baseline sistemleri tanımlandı. Bu doktrin Doktrin #035'i altyapısal kilitlerle tamamlar ve sistemin "kurşun geçirmez" doğrulama katmanını oluşturur._
+
+---
+
+## Doktrin #037 — Automated Nightly Maintenance & Infrastructure Locking (ANMIL) v1.0
+
+**Kaynak:** GPT-OSS 120B & Gemini Flash Sentezi — 2026-07-30. Tür: **Bağlayıcı Otomasyon ve Altyapı Kilidi Doktrini.**
+
+**Amaç:** GPT'nin sunduğu 4 stratejik önerinin (CI VRT, Gece `pnpm audit fix`, GitHub Issue Eşleştirmesi ve Canlı İtibar Panosu) sisteme bağlayıcı otomasyon kuralı olarak işlenmesi.
+
+---
+
+### Kural 23 — Gece Otonom Güvenlik ve Bağımlılık Taraması (Nightly Security Cron)
+
+- Her gece 03:00 UTC'de GitHub Actions otomatik olarak bir `nightly-security-audit` işi tetikler.
+- Bu workflow `pnpm audit fix` komutunu çalıştırır, güvenlik açıklarını yamayı dener, otomatik testleri koşturur ve yeşil çıkarsa otomatik PR oluşturur.
+- İnsan müdahalesi olmadan güvenlik açıkları (Dependabot 11 high / 5 moderate) sürekli sıfırlanır.
+
+---
+
+### Kural 24 — Zorunlu GitHub Issue Sync (FD-XXX -> Issue Linking)
+
+- `MASTER_PLAN.md` içindeki her `FD-XXX` (Founder Directive) maddesi, oluşturulduğu an otomatik veya manuel olarak bir **GitHub Issue ID'sine (`#IssueID`)** bağlanır.
+- Bir PR veya commit `Fixes #IssueID` etiketini içermiyorsa ve o Issue GitHub üzerinde kapatılmamışsa, `FD-XXX` maddesi `🟢 DOĞRULANDI` statüsüne GÇEMEZ.
+
+---
+
+### Kural 25 — Canlı Ajan İtibar Panosu (Live Agent Reputation Scoreboard)
+
+- Kural 20'de tanımlanan Ajan İtibar Skoru, `docs/AGENT_REPUTATION.md` dosyasında saklanır ve `/admin/strategy` paneline canlı metrik olarak yansıtılır.
+- Başarısız/Yalancı tamamlanma sunan ajan doğrudan panoda **-3 / -5 puan** cezasıyla işaretlenir ve o alandaki yetkisi kısıtlanır.
+
+---
+
+### Kural 26 — CI/CD Görsel Regresyon Kilit Sistemi (Visual Regression Lock)
+
+- GitHub CI hattında `playwright-vrt` aşaması çalıştırılır. 
+- UI bileşenleri üzerindeki görsel değişiklikler baseline görsellerle karşılaştırılır. %5'in üzerindeki piksel sapmalarında deployment tamamen durdurulur ve PR otomatik reddedilir.
+
+---
+
+_v12.05 — Doktrin #037 (ANMIL — Automated Nightly Maintenance & Infrastructure Locking) GPT ve Gemini Flash senteziyle MASTER_PLAN'a bağlayıcı kural olarak eklendi. Gece güvenlik taraması, Issue-FD senkronizasyonu, canlı itibar panosu ve VRT CI kilitleri anayasalaştırıldı._
