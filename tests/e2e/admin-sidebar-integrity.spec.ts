@@ -9,6 +9,7 @@ test.describe("Item 147 — Admin Sidebar & Page Integrity", () => {
     "/admin/autopilot/analytics", // EXCEPTION: /admin/autopilot/analytics — sub-route of autopilot group, no sidebar needed
     "/admin/takedown", // EXCEPTION: /admin/takedown — moderation sub-tool, accessed via moderation queue
     "/admin/ai-orchestrator", // EXCEPTION: /admin/ai-orchestrator — stealth cross-audit arena dashboard, internal admin tool
+    "/admin/expert-analysis", // EXCEPTION: /admin/expert-analysis — multi-perspective expert board simulation dashboard, internal admin tool
   ];
 
   // Helper to discover all admin page routes
