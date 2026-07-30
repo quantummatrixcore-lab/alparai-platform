@@ -369,3 +369,76 @@ _v12.02 — Doktrin #034 (ANGC — AI-Native Governance Constitution) Mimar (Cla
 - Bu test `tests/` klasörüne eklenir. Eğer gelecekte o hata tekrar ederse, GitHub Actions derlemeyi anında kilitler ve deploy'u durdurur.
 
 _v12.03 — Doktrin #035 (FDR-VPP) MASTER_PLAN'a bağlayıcı kural olarak eklendi. Founder taleplerinin somut kanıt ve ekran görüntüsü olmadan kapatılması yasaklandı._
+
+---
+
+## Doktrin #036 — Challenge Protocol: Bağımsız Doğrulama Mimarisi (BDM) v1.0
+
+**Kaynak:** Claude (Mimar / Thinking Katmanı) — 2026-07-30. Tür: **Bağlayıcı Doğrulama Mimarisi.**
+
+**Kök Teşhis:** Doktrin #035 kuralları metin tabanlı tanımladı; bu doktrin o kuralları altyapısal kilitlerle uygulanabilir kılar. Sorun "yalancı ajan" değil, **sistemin aynı ajanın hem üretici hem doğrulayıcı olmasına izin vermesidir.** Bu, bir futbolcunun kendi golünü hakem olarak saymasıyla özdeştir. Hiçbir profesyonel mühendislik sisteminde bir taraf hem üretici hem doğrulayıcı olamaz.
+
+**Bozuk Mevcut Akış:**
+`Ajan iş yapar → Ajan kendi işini doğrular → Ajan "bitti" der → Hiç kimse kontrol etmez`
+
+**Düzeltilmiş Akış:**
+`Ajan iş yapar → Bağımsız sistem otomatik doğrular → Kanıt yoksa iddia reddedilir → Founder'a alarm`
+
+---
+
+### Kural 18 — Görev Tipine Göre Makine-Ölçülebilir Tamamlanma Kriteri (Definition of Done)
+
+"Düzelttim", "güncelledim", "profesyonel hale getirdim" gibi sözel beyanlar geçersizdir. Her görev tipi için CI/CD tarafından otomatik denetlenebilir bir tamamlanma kriteri zorunludur:
+
+| Görev Tipi | Geçerli Tamamlanma Kanıtı |
+|---|---|
+| **UI/UX değişikliği** | Playwright `toHaveScreenshot()` — baseline'dan piksel sapması < %5 |
+| **Kod hatası düzeltme** | O hata için regression test YEŞİL + commit diff'inde ilgili dosya değişmiş |
+| **DB migration** | RLS politikası MEVCUT + `-- ROLLBACK:` bloğu MEVCUT + `pnpm test` YEŞİL |
+| **Mail / Outreach gönderimi** | Resend `message_id` DB'de kayıtlı (sözel beyan değil) |
+| **Deploy** | Vercel `get_deployment` API → `READY` durumu doğrulandı |
+| **Güvenlik yaması** | `pnpm audit` → 0 high/critical çıktısı |
+
+---
+
+### Kural 19 — Doğrulayan = Üretici Olamaz (Separation of Verification)
+
+- Antigravity bir işi tamamladığını iddia ederse, doğrulama OpenCode veya GitHub Actions CI tarafından yapılır. Antigravity kendi iddiasını doğrulayamaz.
+- OpenCode bir işi tamamladığını iddia ederse, doğrulama GitHub Actions CI tarafından yapılır.
+- Hiçbir ajan kendi PR'ını merge edemez.
+
+---
+
+### Kural 20 — Ajan Güven Skoru (Agent Reputation Score)
+
+Her ajan tarihsel doğruluk sicili tutar. Sicil `docs/AGENT_REPUTATION.md` dosyasında tutulur:
+
+- ✅ Bağımsız doğrulamayı geçen tamamlama: +1 puan
+- ❌ CI/bağımsız doğrulama tarafından reddedilen iddia: -3 puan → Founder'a otomatik alarm
+- 🔁 Regresyon (düzeltilen hata tekrar çıkarsa): -5 puan → O ajan o görev tipinden bloke edilir
+
+---
+
+### Kural 21 — Founder Zorunlu Onay Kategorileri (Mandatory Human Gate)
+
+Aşağıdaki kategorilerdeki görevler ajan tarafından asla `🟢 DOĞRULANDI` statüsüne geçirilemez; Founder'ın açık onayı olmadan kilitlidir:
+
+- Kullanıcı arayüzü (UI/UX) değişiklikleri — Founder görmeden "tamamlandı" olamaz
+- Dışarıya gönderilen her şey: mail, sosyal medya paylaşımı, başvuru formu
+- Para, yasal belge, gizlilik politikası (KVKK) ile ilgili değişiklikler
+- Production veritabanına yapılan `DELETE` veya `UPDATE` işlemleri
+
+---
+
+### Kural 22 — Görsel Regresyon Baseline Sistemi
+
+Playwright'ın `toHaveScreenshot()` özelliği ile her UI bileşeni için "altın standart (golden baseline)" fotoğrafı saklanır. İleride herhangi bir ajan o tasarımı yanlışlıkla bozarsa:
+
+1. GitHub Actions derlemesi **otomatik kırmızıya döner**
+2. Deployment bloke edilir
+3. Hangi pikselin bozulduğunu gösteren diff raporu PR'a eklenir
+4. Founder bildirim alır
+
+Böylece Admin Paneli bir kez güzel hale getirildiğinde, o güzellik otomatik korunur.
+
+_v12.04 — Doktrin #036 (BDM — Bağımsız Doğrulama Mimarisi) Mimar (Claude / Thinking) tarafından yazıldı. 5 yeni kural (18-22). Separation of Verification, Definition of Done, Agent Reputation Score, Mandatory Human Gate ve Visual Regression Baseline sistemleri tanımlandı. Bu doktrin Doktrin #035'i altyapısal kilitlerle tamamlar ve sistemin "kurşun geçirmez" doğrulama katmanını oluşturur._
