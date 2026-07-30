@@ -1,6 +1,7 @@
 "use server";
 
-import { callWithFailover, TRIAGE_SLOT_1_CHAIN } from "@/lib/ai/openrouter-gateway";
+import { callWithFailover } from "@/lib/ai/openrouter-gateway";
+import { selectModelByCapability } from "@/lib/audit/model-router";
 import { logger } from "@/lib/utils/logger";
 
 export async function runLiveSystemAnalysis(): Promise<{
@@ -30,7 +31,7 @@ export async function runLiveSystemAnalysis(): Promise<{
         temperature: 0.7,
         responseFormat: "json",
       },
-      TRIAGE_SLOT_1_CHAIN,
+      selectModelByCapability("risk_audit"),
     );
 
     if (!result.ok) {

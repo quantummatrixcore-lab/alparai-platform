@@ -1,7 +1,8 @@
 "use server";
 
 import { createAdminClient } from "@/lib/supabase/admin";
-import { callWithFailover, TRIAGE_SLOT_1_CHAIN } from "@/lib/ai/openrouter-gateway";
+import { callWithFailover } from "@/lib/ai/openrouter-gateway";
+import { selectModelByCapability } from "@/lib/audit/model-router";
 import { logger } from "@/lib/utils/logger";
 
 interface TranslationResult {
@@ -58,7 +59,7 @@ Description: "${incident.description}"
         temperature: 0.1,
         responseFormat: "json",
       },
-      TRIAGE_SLOT_1_CHAIN,
+      selectModelByCapability("creative_copy"),
     );
 
     if (res.ok && res.data?.content) {

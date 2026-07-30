@@ -1,4 +1,5 @@
 export type ModelTier = "basic" | "deep" | "none";
+export type TaskDomain = "math_logic" | "creative_copy" | "risk_audit" | "fast_triage";
 
 export interface ModelChainItem {
   id: string;
@@ -15,30 +16,35 @@ export interface ModelRouterResult {
   supremeChain: ModelChainItem[];
 }
 
-const BASIC_CHAIN: ModelChainItem[] = [
-  {
-    id: "nvidia/llama-3.1-nemotron-70b-instruct",
-    provider: "nvidia",
-    tier: "free",
-    maxTokens: 2048,
-  },
-  { id: "deepseek-ai/deepseek-r1", provider: "nvidia", tier: "free", maxTokens: 2048 },
-  { id: "command-r", provider: "cohere", tier: "free", maxTokens: 2048 },
-  { id: "google/gemma-2-27b-it", provider: "nvidia", tier: "free", maxTokens: 2048 },
-];
+// Ensure these match the definitions in openrouter-gateway.ts exactly (or import them if possible, but keeping them here for decoupling if preferred. Actually, let's import them from openrouter-gateway).
+import { 
+  MATH_LOGIC_CHAIN, 
+  CREATIVE_COPY_CHAIN, 
+  RISK_AUDIT_CHAIN, 
+  FAST_TRIAGE_CHAIN 
+} from "../ai/openrouter-gateway";
 
-const BASIC_SUPREME: ModelChainItem[] = [
-  { id: "meta/llama-3.1-405b-instruct", provider: "nvidia", tier: "free", maxTokens: 4096 },
-  {
-    id: "nvidia/llama-3.1-nemotron-70b-instruct",
-    provider: "nvidia",
-    tier: "free",
-    maxTokens: 2048,
-  },
-  { id: "command-r", provider: "cohere", tier: "free", maxTokens: 2048 },
-  { id: "openai/gpt-4o-mini", provider: "openrouter", tier: "free", maxTokens: 2048 },
-];
+/**
+ * Capability-based single chain selector for specific tasks
+ */
+export function selectModelByCapability(domain: TaskDomain): readonly ModelChainItem[] {
+  switch (domain) {
+    case "math_logic":
+      return MATH_LOGIC_CHAIN;
+    case "creative_copy":
+      return CREATIVE_COPY_CHAIN;
+    case "risk_audit":
+      return RISK_AUDIT_CHAIN;
+    case "fast_triage":
+      return FAST_TRIAGE_CHAIN;
+    default:
+      return FAST_TRIAGE_CHAIN;
+  }
+}
 
+/**
+ * Multi-slot cross-audit selector (Legacy/Triage compatibility)
+ */
 export function selectModelTier(params: {
   title: string;
   description: string;
@@ -59,56 +65,22 @@ export function selectModelTier(params: {
   const useDeep = auditTier === "deep" || !isShort || isHighRisk;
 
   if (!useDeep) {
+    // For BASIC tier, we leverage different capabilities for a diverse cross-audit
     return {
       tier: "basic",
-      slot1Chain: BASIC_CHAIN,
-      slot2Chain: BASIC_CHAIN,
-      slot3Chain: BASIC_CHAIN,
-      supremeChain: BASIC_SUPREME,
+      slot1Chain: [...FAST_TRIAGE_CHAIN],
+      slot2Chain: [...CREATIVE_COPY_CHAIN],
+      slot3Chain: [...MATH_LOGIC_CHAIN],
+      supremeChain: [...RISK_AUDIT_CHAIN],
     };
   }
 
+  // For DEEP tier, we rely heavily on the Risk Audit (Premium) chain
   return {
     tier: "deep",
-    slot1Chain: [
-      {
-        id: "anthropic/claude-3.5-sonnet",
-        provider: "openrouter",
-        tier: "premium",
-        maxTokens: 4096,
-      },
-      { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
-      { id: "meta/llama-3.1-70b-instruct", provider: "nvidia", tier: "premium", maxTokens: 4096 },
-    ],
-    slot2Chain: [
-      {
-        id: "anthropic/claude-3.5-sonnet",
-        provider: "openrouter",
-        tier: "premium",
-        maxTokens: 4096,
-      },
-      { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
-      { id: "meta/llama-3.1-70b-instruct", provider: "nvidia", tier: "premium", maxTokens: 4096 },
-    ],
-    slot3Chain: [
-      {
-        id: "anthropic/claude-3.5-sonnet",
-        provider: "openrouter",
-        tier: "premium",
-        maxTokens: 4096,
-      },
-      { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
-      { id: "meta/llama-3.1-70b-instruct", provider: "nvidia", tier: "premium", maxTokens: 4096 },
-    ],
-    supremeChain: [
-      {
-        id: "anthropic/claude-3.5-sonnet",
-        provider: "openrouter",
-        tier: "premium",
-        maxTokens: 4096,
-      },
-      { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
-      { id: "meta/llama-3.1-70b-instruct", provider: "nvidia", tier: "premium", maxTokens: 4096 },
-    ],
+    slot1Chain: [...RISK_AUDIT_CHAIN],
+    slot2Chain: [...RISK_AUDIT_CHAIN],
+    slot3Chain: [...RISK_AUDIT_CHAIN],
+    supremeChain: [...RISK_AUDIT_CHAIN],
   };
 }

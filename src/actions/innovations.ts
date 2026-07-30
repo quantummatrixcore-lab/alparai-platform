@@ -5,7 +5,8 @@ import { requireAdmin } from "@/lib/auth/session";
 import { revalidatePath } from "next/cache";
 import type { ExternalIncidentQueueItem, StrategyInnovation } from "@/types";
 import type { Database } from "@/types/database";
-import { callWithFailover, TRIAGE_SLOT_1_CHAIN } from "@/lib/ai/openrouter-gateway";
+import { callWithFailover } from "@/lib/ai/openrouter-gateway";
+import { selectModelByCapability } from "@/lib/audit/model-router";
 import { logger } from "@/lib/utils/logger";
 
 export async function getExternalQueue(): Promise<ExternalIncidentQueueItem[]> {
@@ -264,7 +265,7 @@ Criteria: If the text describes a genuine AI incident (hallucination, data leak,
           temperature: 0.1,
           responseFormat: "json",
         },
-        TRIAGE_SLOT_1_CHAIN,
+        selectModelByCapability("fast_triage"),
       );
 
       if (!res.ok) continue;
