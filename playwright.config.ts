@@ -8,6 +8,12 @@ export default defineConfig({
   workers: 1,
   reporter: process.env.CI ? "github" : "list",
   snapshotDir: "./ops/visual-baseline",
+  expect: {
+    toHaveScreenshot: {
+      maxDiffPixelRatio: 0.05,
+      threshold: 0.2,
+    },
+  },
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:3000",
     trace: "on-first-retry",

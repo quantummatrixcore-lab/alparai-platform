@@ -5,6 +5,19 @@ vi.mock("@/lib/supabase/admin", () => ({
   createAdminClient: () => ({
     from: vi.fn().mockImplementation(() => ({
       upsert: vi.fn().mockResolvedValue({ error: null }),
+      insert: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: { id: "inc-1" }, error: null }),
+        }),
+      }),
+      select: vi.fn().mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: null, error: null }),
+        }),
+      }),
+      update: vi.fn().mockReturnValue({
+        eq: vi.fn().mockResolvedValue({ error: null }),
+      }),
     })),
   }),
 }));
@@ -19,6 +32,10 @@ vi.mock("@/lib/connectors/hackernews", () => ({
 
 vi.mock("@/lib/connectors/rss", () => ({
   fetchRSSFeed: vi.fn().mockResolvedValue([]),
+}));
+
+vi.mock("@/lib/connectors/github", () => ({
+  fetchGitHubIncidents: vi.fn().mockResolvedValue([]),
 }));
 
 import { GET } from "@/app/api/cron/fetch-external/route";

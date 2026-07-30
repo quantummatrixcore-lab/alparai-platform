@@ -32,18 +32,26 @@ vi.mock("@/lib/supabase/admin", () => ({
   }),
 }));
 
-vi.mock("@/lib/ai/openrouter-gateway", () => ({
-  callWithFailover: vi.fn().mockResolvedValue({
-    ok: true,
-    data: {
-      content: JSON.stringify({
-        title_tr: "Yapay Zeka Sızıntı Testi",
-        description_tr: "Yapay zeka sistemi kimlik bilgilerini sızdırdı",
-      }),
+vi.hoisted(() => {
+  vi.doMock(
+    "@/lib/ai/openrouter-gateway",
+    async (importOriginal: () => Promise<Record<string, unknown>>) => {
+      const actual = await importOriginal();
+      return {
+        ...actual,
+        callWithFailover: vi.fn().mockResolvedValue({
+          ok: true,
+          data: {
+            content: JSON.stringify({
+              title_tr: "Yapay Zeka Sızıntı Testi",
+              description_tr: "Yapay zeka sistemi kimlik bilgilerini sızdırdı",
+            }),
+          },
+        }),
+      };
     },
-  }),
-  TRIAGE_SLOT_1_CHAIN: [],
-}));
+  );
+});
 
 import { translateIncidentToTR, backfillIncidentsTR } from "@/actions/translations";
 

@@ -26,9 +26,9 @@ describe("selectModelTier router", () => {
     });
 
     expect(res.tier).toBe("basic");
-    expect(res.slot1Chain[0]?.provider).toBe("nvidia");
+    expect(res.slot1Chain[0]?.provider).toBe("openrouter");
     expect(res.slot2Chain[0]?.provider).toBe("nvidia");
-    expect(res.supremeChain[0]?.provider).toBe("nvidia");
+    expect(res.supremeChain[0]?.provider).toBe("openrouter");
   });
 
   it("routes to deep tier if auditTier is explicitly forced to deep", () => {
@@ -40,9 +40,9 @@ describe("selectModelTier router", () => {
     });
 
     expect(res.tier).toBe("deep");
-    expect(res.slot1Chain[0]?.id).toBe("anthropic/claude-3.5-sonnet");
-    expect(res.slot2Chain[0]?.id).toBe("anthropic/claude-3.5-sonnet");
-    expect(res.supremeChain[0]?.id).toBe("anthropic/claude-3.5-sonnet");
+    expect(res.slot1Chain[0]?.id).toBe("openai/gpt-4o");
+    expect(res.slot2Chain[0]?.id).toBe("openai/gpt-4o");
+    expect(res.supremeChain[0]?.id).toBe("openai/gpt-4o");
   });
 
   it("routes to deep tier for long descriptions even if severity is low", () => {
@@ -55,7 +55,7 @@ describe("selectModelTier router", () => {
     });
 
     expect(res.tier).toBe("deep");
-    expect(res.slot1Chain[0]?.id).toBe("anthropic/claude-3.5-sonnet");
+    expect(res.slot1Chain[0]?.id).toBe("openai/gpt-4o");
   });
 
   it("routes to deep tier for critical severity even if description is short", () => {
@@ -67,7 +67,7 @@ describe("selectModelTier router", () => {
     });
 
     expect(res.tier).toBe("deep");
-    expect(res.slot1Chain[0]?.id).toBe("anthropic/claude-3.5-sonnet");
+    expect(res.slot1Chain[0]?.id).toBe("openai/gpt-4o");
   });
 
   it("routes to deep tier for high severity even if description is short", () => {
@@ -79,6 +79,6 @@ describe("selectModelTier router", () => {
     });
 
     expect(res.tier).toBe("deep");
-    expect(res.slot1Chain[0]?.id).toBe("anthropic/claude-3.5-sonnet");
+    expect(res.slot1Chain[0]?.id).toBe("openai/gpt-4o");
   });
 });
