@@ -3,8 +3,18 @@ name: CI
 on:
   push:
     branches: [master]
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+      - "ops/visual-baseline/**"
+      - ".vscode/**"
   pull_request:
     branches: [master]
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+      - "ops/visual-baseline/**"
+      - ".vscode/**"
   workflow_call:
     inputs:
       force:
