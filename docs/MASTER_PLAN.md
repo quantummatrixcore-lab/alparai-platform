@@ -119,6 +119,8 @@ Google for Startups $2K–350K · AWS Activate $1K–200K · Microsoft Founders 
 | 70 | P0 | [Antigravity] `quota-snapshot` cron — gerçek sayıları satıcı API'lerinden çek | Günde 1 kez, gece güvenlik taramasıyla aynı pencerede (ek Actions maliyeti yok). **Kaynaklar:** GitHub Actions dakikaları → GitHub billing API'sinin `settings/billing/actions` uç noktası (token mevcut); Vercel → hâlihazırda çağrılan `api.vercel.com/v1/billing/charges` (`costs/route.ts:63`) + plan adı; Supabase → mevcut `get_database_size()` / `get_storage_size()` RPC'leri (`resources-client.tsx:59,66`); Resend/Upstash → plan limitleri `source='manual'`. **API vermeyen hiçbir değer uydurulmaz.** | pending |
 | 71 | P1 | [Antigravity] `/admin/resources`'a Kota & Tempo bloğu — yüzde DEĞİL, tempo göstergesi | Mevcut `resources-client.tsx`'e blok eklenir, yeni route açılmaz; mevcut `Gauge` kullanılır (eşikler: <%70 default, %70-90 warning, >%90 danger). **Profesyonel fark:** "%70 doldu" tek başına anlamsızdır. Her kart ayrıca **tempo sapması** gösterir: `kullanım% − ayın geçen kısmı%`. Ayın %40'ındayken kota %70 ise sapma +30 ve kırmızıdır; ayrıca "bu hızla ayın 22'sinde biter" projeksiyonu `[tahmin]` etiketiyle yazılır. Uçakta önemli olan yakıt seviyesi değil kalan menzildir. **2026-07-30'da Actions kotasının habersiz tükenmesini önleyecek gösterge tam olarak budur.** | pending |
 | 72 | P1 | [Antigravity] Otonom fren — `cost-alarm` cron'unu kota eşiklerine bağla | Mevcut `src/app/api/cron/cost-alarm/route.ts` yalnızca dolar bütçesine bakıyor; `vendor_quotas`'ı da okuyacak. **%75** → Founder'a tek bildirim. **%90 → otonom fren:** `[deploy]` durur, CI tam matris yerine yalnızca `lint+typecheck+test` koşar (VRT ve güvenlik taramaları ay sonuna ertelenir), yeni özellik işi durur, yalnızca hata düzeltme sürer. **%100** → tüm ücretli hat durur, iş yerel doğrulamayla devam eder. Bu, Doktrin #046 Kural 28'in kota boyutudur; kural zaten vardı, burada yaptırımı yazılıyor (Kural 31). | pending |
+| 73 | P0 | [Antigravity] Kural 42-44 yaptırımı — tırmanma rolleri + deneme defteri | Doktrin #049'a eklenen Kural 42/43/44'ün çalıştırılabilir karşılığı. `ops/opencode-runs/<ts>-<gorev>.json` şemasına eklenecek alanlar: `attempt_no`, `role` ('uygulayici'|'teshisci'|'dogrulayici'), `diagnosis` (tek cümle kök sebep), `gates` ({lint,typecheck,test,build} exit kodları), `model`. **Kabul kriteri:** 5 tur tavanına ulaşan bir görev, mimara giderken bu dosyaların tamamını referans verir. Kayıt yoksa tırmanma yapılmamış sayılır. | pending |
+| 74 | P1 | [Antigravity] Otonom döngü belgelendi — Founder'ın tanımladığı 4 adımlı çevrim | Founder'ın Antigravity'ye verdiği çalışma çevrimi kayda geçiriliyor: (1) güncel çalışmaları GitHub'a gönder, (2) Claude'a tarayıcı üzerinden yaz ve planı güncellettir — **ama yalnızca Kural 40'taki üç durumda**, rutin "maddeyi kapat" için değil, (3) Claude'un push ettiği planı çek, (4) plandaki görevleri sırayla yap, başa dön. **Mimarın eklediği şart:** 2. adıma gitmeden önce Kural 39 dizisi yerelde yeşil olmalı ve gerekiyorsa Kural 42 tırmanması tüketilmiş olmalı; aksi halde 2. adım mimarı teşhisçi olarak kullanır ki en pahalı kullanım şeklidir. | pending |
 <!-- FOUNDER_BACKLOG_END -->
 
 ---
@@ -1177,3 +1179,43 @@ _v12.31 — 🔴 **Madde #29: ikinci düzeltme lint'i açtı ama typecheck'i kı
 **Kök sebep bulundu ve kesin:** `ai_free_models` ve `ai_routing_chains` tabloları gerçek migration dosyalarında var, ama Supabase'in TypeScript tip tanımlarının tutulduğu `src/types/database.ts`'e hiç işlenmemiş. `as any` cast'i kaldırılınca tip sistemi bu iki tabloyu tanımadığı için sorgu sonucu `never` tipine düşüyor ve her alan erişimi (`.models`) hata veriyor. Cast eklemek geçici olarak lint'i susturur ama asıl eksik olan şema senkronizasyonudur — üç turdur (v12.29 lint kırık → v12.30 kırık → v12.31 lint düzeldi typecheck kırıldı) bu iki dosya arasında top gibi sıçrayan sorunun sebebi budur.
 
 **Kalıcı çözüm:** `database.ts`'e iki tablonun gerçek sütun tipleri eklenmeli (mevcut `bench_tr_evaluations` girdisi örnek alınabilir), sonra cast'ler zaten gereksiz kalır. Madde `pending` kalıyor; kapanması için hem `pnpm lint` hem `pnpm typecheck` aynı anda exit 0 vermeli — biri diğerini kırarak sırayla "tamam" denemez._
+
+### Kural 42 — Çok-Modelli Tırmanma: Teşhis Önce, Düzeltme Sonra
+
+Bir problem tek turda çözülmezse OpenCode havuzundaki başka modellere devredilir. **Ama sırayla farklı modellere aynı görevi vermek çözüm değildir** — her model aynı semptoma bakıp benzer yamayı üretir ve tur sayısı artar. Madde #29 bunun kanıtıdır: dört tur boyunca `as any` eklendi/çıkarıldı, `lint` ve `typecheck` sırayla kırıldı; asıl sebep (`ai_free_models`/`ai_routing_chains` tablolarının `src/types/database.ts`'te olmaması) ancak teşhis yapıldığında görüldü ve tek satırla çözüldü.
+
+Tırmanma sırası bu yüzden **rol bazlıdır, model bazlı değil**:
+
+| Tur | Rol                                               | Girdi olarak verilecek                              | Çıktı                                               |
+| --- | ------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------- |
+| 1   | **Uygulayıcı** (ücretsiz katman)                  | Görev spec'i                                        | Düzeltme denemesi + dört komut çıktısı              |
+| 2   | **Teşhisçi** (farklı model, tercihen farklı aile) | 1. turun **başarısız komut çıktısı** + ne denendiği | Yalnızca kök-sebep hipotezi. **Kod yazması yasak.** |
+| 3   | **Uygulayıcı**                                    | 2. turun teşhisi                                    | Teşhise göre düzeltme                               |
+| 4   | **Bağımsız doğrulayıcı** (üçüncü model)           | Değişen diff                                        | Onay veya itiraz gerekçesi                          |
+| 5   | **Son deneme** (Nvidia/pro katman)                | Tüm önceki turların özeti                           | Ya çözüm ya "çözemedim" raporu                      |
+
+**2. tura kod yazdırmamak kritiktir:** teşhis ile düzeltmeyi aynı modele yaptırmak, Doktrin #036'nın yasakladığı "üretici kendi işini doğrular" durumunun tekrarıdır.
+
+### Kural 43 — İki Modelin Teşhiste Anlaşması Şarttır
+
+Bir düzeltme uygulanmadan önce **iki bağımsız model aynı kök sebebi göstermelidir.** Anlaşamıyorlarsa hiçbiri uygulanmaz; üçüncü model hakem olarak çağrılır. Teşhis, semptom değil sebep olarak yazılır: "lint hata veriyor" teşhis değildir; "`database.ts`'te tablo tanımı yok, bu yüzden sorgu `never` tipine düşüyor" teşhistir.
+
+**Kabul kriteri her turda aynı ve bölünemez:** `pnpm lint && pnpm typecheck && pnpm test && pnpm build` **birlikte** yeşil. Biri diğerini kırarak sırayla "tamam" denemez (Kural 39).
+
+### Kural 44 — Deneme Defteri ve Tırmanma Tavanı
+
+Her tırmanma turu `ops/opencode-runs/` altına Kural 36'daki kayda ek olarak `attempt_no`, `role` (uygulayıcı/teşhisçi/doğrulayıcı), `diagnosis` (tek cümle kök sebep) ve `gates` (dört komutun exit kodları) yazar.
+
+**Tavan 5 turdur.** Beşinci tur da çözmezse mimara gidilir — ama "çalışmıyor" diye değil, şu üçüyle: (a) deneme defterinin tamamı, (b) her turun kök-sebep hipotezi ve neden yanlış çıktığı, (c) son başarısız komut çıktısı. **Bu paketle gelen bir soru mimarın tek turda cevaplayabileceği bir sorudur; paketsiz gelen soru mimarı sıfırdan teşhise zorlar ve pahalı katmanı boşa yakar.**
+
+_v12.34 — 🟢 **OpenCode çok-modelli tırmanma kurallaştırıldı (Kural 42-44, Doktrin #049'a eklendi — yeni doktrin YAZILMADI, Kural 38'e uyuldu).** Founder, Antigravity'ye verdiği otomasyon çevrimini ve "bir turda çözülmeyen problemi 3-4-5 modele çözdür" direktifini iletti; mimar bunu uygulanabilir bir tırmanma protokolüne çevirdi.
+
+**Founder'ın direktifi doğru, ama ham hali israf üretir.** "Aynı görevi sırayla beş modele ver" yaklaşımı, her modelin aynı semptoma bakıp benzer yamayı üretmesiyle sonuçlanır — tur sayısı artar, çözüm gelmez. **Madde #29 bunun kanıtlanmış örneğidir:** dört tur boyunca `as any` eklendi/çıkarıldı, `lint` ile `typecheck` sırayla kırıldı; asıl sebep (`ai_free_models`/`ai_routing_chains` tablolarının `src/types/database.ts`'te tanımlı olmaması) ancak teşhis yapıldığında görüldü ve **tek satırla** çözüldü. Beş model aynı semptoma saldırsaydı beşi de yamayı denerdi.
+
+**Bu yüzden tırmanma model bazlı değil rol bazlı kuruldu (Kural 42):** 1. tur uygulayıcı, **2. tur teşhisçi ve kod yazması yasak** (yalnızca kök-sebep hipotezi üretir), 3. tur teşhise göre uygulayıcı, 4. tur bağımsız doğrulayıcı, 5. tur son deneme. 2. tura kod yazdırmamak kritiktir: teşhis ile düzeltmeyi aynı modele yaptırmak, Doktrin #036'nın yasakladığı "üretici kendi işini doğrular" durumudur.
+
+**Kural 43 — iki modelin teşhiste anlaşması şart.** Düzeltme uygulanmadan önce iki bağımsız model **aynı kök sebebi** göstermeli; anlaşamazlarsa üçüncü model hakem olur. Teşhis semptom değil sebep olarak yazılır. Kabul kriteri her turda bölünemez: dört komut **birlikte** yeşil.
+
+**Kural 44 — deneme defteri ve 5 tur tavanı.** Her tur `ops/opencode-runs/` altına `attempt_no`, `role`, `diagnosis`, `gates` yazar. Beşinci tur da çözmezse mimara gidilir — ama "çalışmıyor" diye değil; deneme defteri, her turun kök-sebep hipotezi ve neden yanlış çıktığı, son başarısız komut çıktısıyla birlikte. **Bu paketle gelen soru mimarın tek turda cevaplayabileceği bir sorudur; paketsiz gelen soru mimarı sıfırdan teşhise zorlar — en pahalı kullanım şekli budur.** Token verimliliğinin asıl kaynağı mimara az gitmek değil, gidildiğinde hazır gitmektir.
+
+**Founder'ın 4 adımlı çevrimi de kayda geçirildi (madde #74)** — tek şartla: 2. adıma (mimara yaz) gitmeden önce Kural 39 dizisi yerelde yeşil olmalı ve gerekiyorsa Kural 42 tırmanması tüketilmiş olmalı._
