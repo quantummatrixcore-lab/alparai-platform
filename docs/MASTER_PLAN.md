@@ -1,4 +1,4 @@
-# ALPAR AI — Master Plan (v11.89, 2026-07-28)
+# ALPAR AI — Master Plan (v12.13, 2026-07-30)
 
 Bu belge yalındır ve öyle kalır: konum, mimari, sermaye hattı, yönetişim, yürütme kurulu. Geçmiş kayıtlar (v11.1–v11.88) `docs/MASTER_PLAN_ARCHIVE.md`'de. Canlı ilerleme `/admin/strategy/*` (DB-tabanlı) ve aşağıdaki Yürütme Kurulu tablosundadır — `parseMasterPlan()` yalnızca o tabloyu okur.
 
@@ -96,6 +96,7 @@ Google for Startups $2K–350K · AWS Activate $1K–200K · Microsoft Founders 
 | 47 | P0 | [Antigravity] Kural 26 görsel regresyon kilidi CI'ya hiç bağlı değil | `tests/e2e/visual/screenshot-diff.spec.ts` var ama `.github/workflows/` altındaki 11 workflow'un hiçbirinde `playwright-vrt` aşaması veya bu spec'e referans yok (grep ile doğrulandı). Doktrin #035 VPP, #036 Kural 22 ve #037 Kural 26'nın dayandığı "UI bir kez güzelleşince otomatik korunur" garantisi **fiilen yok** — hiçbir piksel sapması derlemeyi durdurmuyor. **Spec:** CI'ya `playwright-vrt` job'u ekle, baseline'ları depoya al, %5 üstü sapmada deploy'u blokla. Otopilot ön koşuludur. | pending |
 | 48 | P1 | [Antigravity] Kural 23 gece güvenlik taraması haftalık çalışıyor, gecelik değil | Doktrin #037 Kural 23 "her gece 03:00 UTC" diyor; `.github/workflows/security.yml:9` gerçekte `cron: "0 6 * * 1"` — **haftada bir, Pazartesi 06:00**. Ayrıca doktrindeki "16 açık (11 high / 5 moderate)" rakamı bu oturumda ölçüldü: `pnpm audit` → **2 high, 0 critical, 0 moderate**; rakam kaynaksız/bayat (Dependabot bandosu ile lockfile taraması farklı sayıyor). **Spec:** cron'u `0 3 * * *` yap, `pnpm audit fix` + test + otomatik PR akışını bağla, FD-02'deki rakamı ölçülen değerle güncelle. | pending |
 | 49 | P2 | [Antigravity] Doktrinlerin kendi Kural 8'ini (Rakam Kaynağı Zorunluluğu) ihlal eden kaynaksız rakamları | Doktrin #034 Kural 8 her rakamın kaynak göstermesini, gösteremiyorsa "ölçülmedi" yazılmasını zorunlu kılıyor. İhlal edenler: (1) Doktrin #041 RIMRE "Verimlilik Skoru" sütunu — %95/%98/%90/%100/%100/%75, hiçbirinin kaynağı veya ölçüm yöntemi yok; (2) Doktrin #043 "token harcaması %80 oranında düşürülür" — ölçülmemiş projeksiyon, `[tahmin — doğrulanmamış]` etiketi yok; (3) FD-02 "16 açık" (bkz. #48). **Spec:** her rakama kaynak ekle veya "ölçülmedi"ye çevir; projeksiyonları `[tahmin — doğrulanmamış]` ile etiketle. | pending |
+| 50 | P1 | [Founder/Antigravity] `plan-guard` kapısı fiilen çalışmıyor — Executor MASTER_PLAN'a yazabiliyor | Doktrin #030 §4 "MASTER_PLAN salt-okunur dashboard olur, Executor ajanlar buraya yazmaz" diyor ve `.husky/pre-commit` bu kuralı `ARCHITECT != 1` ise MASTER_PLAN.md commit'ini bloklayarak uygulamalı. Ancak Doktrin #030-#044'ün **tamamı** Executor (Antigravity) tarafından yazılıp master'a push edildi (`950f978`, `84892d3`, `0be909b`, `0052c14`, `4ef9561`, `e70ed05`, `a713e41`, `3efbf6f`, `6ba4c67`, `0de0935` — `git log` ile doğrulandı). Yani kapı ya `ARCHITECT=1` ile aşılıyor ya da hook devrede değil; her iki halde de yaptırımı yok. **Karar gerekiyor (Founder):** ya (a) #030 §4 gerçeğe uydurulup "doktrin yazımı Executor'a da açıktır" olarak revize edilir, ya da (b) kapı gerçekten uygulanır (`ARCHITECT` env'i CI-tarafı imzayla değiştirilir, yerelde geçersizleştirilir). Şu anki ara durum en kötüsü: kural var, yaptırım yok — #034 Kural 15'in (Değişmezlik) tüm temeli bu kapıya dayanıyor. | pending |
 <!-- FOUNDER_BACKLOG_END -->
 
 ---
@@ -259,6 +260,8 @@ _v11.99 — Öneri #031 (AZERA) Antigravity tarafından Founder talebiyle MASTER
 | **P1**  | `social-scheduler.ts` + LinkedIn adaptor   | 2 gün        |
 | **P2**  | `/admin/automation` paneli                 | 3 gün        |
 
+> **[v12.13 notu — Doktrin #033 gereği geçersiz]:** Yukarıdaki "Süre Tahmini" sütunu Doktrin #033 (Continuous Flow Architecture, v12.01) ile **iptal edilmiştir**. Sütun tarihsel kayıt olarak bırakıldı; bağlayıcı olan tek tamamlanma kriteri `pnpm lint && pnpm typecheck && pnpm test` yeşilidir. Sıralama (P0/P1/P2) geçerliliğini korur, süreler korumaz.
+
 **Kritik Not (ToS & KVKK):** Her otomasyon görevi `tos_compliant: boolean` ve `kvkk_cleared: boolean` alanlarını zorunlu tutar. ToS'u açıkça ihlal eden platformlarda `requires_human_final_action: true` zorunludur.
 
 _v12.00 — Öneri #032 (HAS) Antigravity tarafından Founder talebiyle eklendi. Browser robotics + mail pipeline + form-filler daemon + sosyal medya zamanlaması + Admin Otomasyon Paneli'ni belgeler. AZERA (#031) ve EDAP (#030) üzerine inşa edilir._
@@ -354,7 +357,7 @@ Bu doktrin, `MASTER_PLAN_ARCHIVE.md`'deki v1.0–v11.97 arasında belgelenmiş t
 
 **Kural 15 (Değişmezlik ve Sürümleme):** Bu Anayasa'daki kurallar değiştirilemez; yalnızca yeni bir Mimar aktivasyon döngüsünde, kanıtlanmış bir başarısızlık kalıbı gerekçesiyle, versiyon numarası artırılarak genişletilebilir.
 
-**Kural 16 (Çelişki Çözümü):** Herhangi iki kural çeliştiğinde, bu Anayasa (#034) → MASTER_PLAN kuralları → AGENTS.md kuralları hiyerarşisi geçerlidir.
+**Kural 16 (Çelişki Çözümü):** Herhangi iki kural çeliştiğinde, bu Anayasa (#034) → MASTER_PLAN kuralları → AGENTS.md kuralları hiyerarşisi geçerlidir. **[v12.13 düzeltmesi — Doktrin #046 Kural 30]:** bu sıralama `CLAUDE.md`'yi hiç anmıyor ve #034'ün kendisi MASTER_PLAN içinde olduğu için özyinelemeli. Geçerli sıra Kural 30'da tanımlıdır: `CLAUDE.md` → #034 ANGC → diğer Doktrinler (numara büyük olan üstün) → Öneriler (#030-#032, bağlayıcı değil) → `AGENTS.md`.
 
 **Kural 17 (Kural Sayısı Şeffaflığı):** Her Mimar aktivasyonunda, aktif kural sayısı ve son eklenen kurallar `/admin/strategy` panelinde görüntülenebilir durumda olmalıdır.
 
@@ -374,10 +377,10 @@ _v12.02 — Doktrin #034 (ANGC — AI-Native Governance Constitution) Mimar (Cla
 
 `MASTER_PLAN.md` içerisinde Founder tarafından bildirilen her bildirim, hata veya talep **FD-XXX** kimliğiyle bu tabloya kaydolur. Bir talep **somut kanıt gösterilmeden** `🟢 DOĞRULANDI` durumuna geçemez.
 
-| FD-ID     | Talep / Hata Tanımı                                        | Kaynak / Tarih       | Durum        | Zorunlu Kanıt Türü               | Kanıt Çıktısı / Bağlantı       |
-| --------- | ---------------------------------------------------------- | -------------------- | ------------ | -------------------------------- | ------------------------------ |
-| **FD-01** | Admin Paneli Görsel Yenileme (Rich Aesthetics & Visual UI) | Founder / 2026-07-30 | 🟡 İŞLENİYOR | Visual Screenshot (`openchrome`) | Bekleniyor (Visual Proof Şart) |
-| **FD-02** | Dependabot Security Vulnerabilities (16 Açık)              | GitHub / 2026-07-30  | 🟡 İŞLENİYOR | `pnpm audit` Yeşil Raporu        | Bekleniyor (`pnpm audit fix`)  |
+| FD-ID     | Talep / Hata Tanımı                                                                                                                                                                                                                         | Kaynak / Tarih                     | Durum        | Zorunlu Kanıt Türü               | Kanıt Çıktısı / Bağlantı               |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- | ------------ | -------------------------------- | -------------------------------------- |
+| **FD-01** | Admin Paneli Görsel Yenileme (Rich Aesthetics & Visual UI)                                                                                                                                                                                  | Founder / 2026-07-30               | 🟡 İŞLENİYOR | Visual Screenshot (`openchrome`) | Bekleniyor (Visual Proof Şart)         |
+| **FD-02** | Dependabot güvenlik açıkları — **ölçülen: 2 high, 0 critical, 0 moderate** (`pnpm audit`, 2026-07-30). "16 açık (11 high / 5 moderate)" rakamı GitHub Dependabot bandosundan alınmıştı, lockfile taramasıyla uyuşmuyor (bkz. madde #48/#49) | GitHub + `pnpm audit` / 2026-07-30 | 🟡 İŞLENİYOR | `pnpm audit` → 0 high/critical   | Bekleniyor — hedef PF-6 (Doktrin #046) |
 
 ### 2. Görsel Kanıt Protokolü (Visual Proof Protocol - VPP)
 
@@ -851,3 +854,13 @@ _v12.13 — 🔴 **Doktrin #030-#045 uçtan uca denetimi: ONAY VERİLMEDİ — o
 **🟡 Kendi v12.12 hatam düzeltildi:** Doktrin #045'in akış tablosunda C aşamasının bağlayıcı kaynakları arasında #030 EDAP ve #032 HAS'ı saymıştım; ikisi de metinlerinde açıkça "Öneri … bağlayıcı değil" diyor. Tablo düzeltildi — bunlar akış şablonu, kural kaynağı değil.
 
 **KARAR:** Otopilota geçiş için **onay verilmedi.** Gerekçe tek cümleyle: otopilotun uyacağı kalite kapısı şu an kırmızı ve onu denetleyecek üç mekanizma (itibar dosyası, VRT kilidi, gece taraması) depoda yok — bu haliyle otopilot kendi kurallarını doğrulayamaz. **Kalkış için kapatılması gereken sıra:** #36 (testler yeşile) → #46 (AGENT_REPUTATION.md) → #47 (VRT CI) → #48 (gece cron) → `pnpm audit` 0 high. Beşi kapandığında PF-1…PF-6 yeşil olur ve Kural 27 gereği otopilot başlatılabilir; bu tur insan gözetimli tek seferliktir. Backlog 45 → **49 madde**, doktrin 13 → **14**._
+
+_v12.14 — 🟡 **Mimar öz-denetimi: v12.13'te tespit edilip uygulanmayan 5 açık uç kapatıldı.** Founder "gerekli bütün güncellemeleri profesyonel olarak yaptın mı?" diye sordu. Kendi v12.13 çıktım gözden geçirildi ve **hayır** — analizde tespit edilip belgeye işlenmemiş beş iş bulundu. TOM kanıt kuralı kendi işim için de geçerli olduğundan, "yaptım" demek yerine tek tek kapatıldı:
+
+1. **Belge başlığı 24 sürüm geriydi** — satır 1 `v11.89, 2026-07-28` diyordu, belge fiilen v12.13'teydi. Yönetişim belgesinin kendi sürüm etiketinin yanlış olması, tüm sürüm disiplinini anlamsızlaştırır. `v12.13, 2026-07-30` olarak düzeltildi.
+2. **#032'nin süre tahminleri işaretsizdi** — v12.13'te "tabloya not düşülmeli" dedim ama düşmedim. #032'nin "Süre Tahmini" sütununun (`1 gün`/`2 gün`/`3 gün`) altına Doktrin #033 gereği geçersiz olduğu notu eklendi; P0/P1/P2 sıralaması geçerli kalır, süreler kalmaz.
+3. **#034 Kural 16 hâlâ yanlış hiyerarşiyi gösteriyordu** — Kural 30'u yazdım ama K16'nın kendi metnine çapraz referans koymadım; K16'yı okuyan biri düzeltmeden habersiz kalırdı. K16'ya `[v12.13 düzeltmesi — Doktrin #046 Kural 30]` bloğu eklendi.
+4. **FD-02'deki yanlış rakam FDR sicilinde duruyordu** — düzeltmeyi yalnızca madde #48'in spec'ine yazmıştım, sicilin kendisine değil. FD-02 satırı ölçülen değerle (`pnpm audit` → **2 high, 0 critical, 0 moderate**, 2026-07-30) güncellendi, "16 açık" rakamının kaynağı (Dependabot bandosu) ve lockfile taramasıyla uyuşmazlığı not edildi.
+5. **`plan-guard` yaptırım boşluğu sahipsizdi** — v12.13'te çelişki olarak belgelendi ama kimseye atanmadı. **Madde #50** açıldı: Doktrin #030 §4 "Executor MASTER_PLAN'a yazmaz" diyor, `.husky/pre-commit` bunu uygulamalı, ama #030-#044'ün tamamı Executor tarafından yazılıp push edildi (10 commit hash'i maddede listeli). Founder kararı gerekiyor: kural gerçeğe uydurulacak mı, yoksa kapı gerçekten uygulanacak mı. Ara durum en kötüsü — #034 Kural 15'in (Değişmezlik) tüm temeli bu kapıya dayanıyor.
+
+**Değişmeyen:** Otopilot kararı v12.13'teki gibidir — **onay verilmedi**, PF-1/PF-3/PF-4/PF-5/PF-6 hâlâ kırmızı. Bu tur yalnızca belge bütünlüğünü düzeltti, hiçbir kapıyı yeşile çevirmedi. Backlog 49 → **50 madde**._
