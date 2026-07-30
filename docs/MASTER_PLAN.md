@@ -97,6 +97,10 @@ Google for Startups $2K–350K · AWS Activate $1K–200K · Microsoft Founders 
 | 48 | P1 | [Antigravity] Kural 23 gece güvenlik taraması haftalık çalışıyor, gecelik değil | Doktrin #037 Kural 23 "her gece 03:00 UTC" diyor; `.github/workflows/security.yml:9` gerçekte `cron: "0 6 * * 1"` — **haftada bir, Pazartesi 06:00**. Ayrıca doktrindeki "16 açık (11 high / 5 moderate)" rakamı bu oturumda ölçüldü: `pnpm audit` → **2 high, 0 critical, 0 moderate**; rakam kaynaksız/bayat (Dependabot bandosu ile lockfile taraması farklı sayıyor). **Spec:** cron'u `0 3 * * *` yap, `pnpm audit fix` + test + otomatik PR akışını bağla, FD-02'deki rakamı ölçülen değerle güncelle. | pending |
 | 49 | P2 | [Antigravity] Doktrinlerin kendi Kural 8'ini (Rakam Kaynağı Zorunluluğu) ihlal eden kaynaksız rakamları | Doktrin #034 Kural 8 her rakamın kaynak göstermesini, gösteremiyorsa "ölçülmedi" yazılmasını zorunlu kılıyor. İhlal edenler: (1) Doktrin #041 RIMRE "Verimlilik Skoru" sütunu — %95/%98/%90/%100/%100/%75, hiçbirinin kaynağı veya ölçüm yöntemi yok; (2) Doktrin #043 "token harcaması %80 oranında düşürülür" — ölçülmemiş projeksiyon, `[tahmin — doğrulanmamış]` etiketi yok; (3) FD-02 "16 açık" (bkz. #48). **Spec:** her rakama kaynak ekle veya "ölçülmedi"ye çevir; projeksiyonları `[tahmin — doğrulanmamış]` ile etiketle. | pending |
 | 50 | P1 | [Founder/Antigravity] `plan-guard` kapısı fiilen çalışmıyor — Executor MASTER_PLAN'a yazabiliyor | Doktrin #030 §4 "MASTER_PLAN salt-okunur dashboard olur, Executor ajanlar buraya yazmaz" diyor ve `.husky/pre-commit` bu kuralı `ARCHITECT != 1` ise MASTER_PLAN.md commit'ini bloklayarak uygulamalı. Ancak Doktrin #030-#044'ün **tamamı** Executor (Antigravity) tarafından yazılıp master'a push edildi (`950f978`, `84892d3`, `0be909b`, `0052c14`, `4ef9561`, `e70ed05`, `a713e41`, `3efbf6f`, `6ba4c67`, `0de0935` — `git log` ile doğrulandı). Yani kapı ya `ARCHITECT=1` ile aşılıyor ya da hook devrede değil; her iki halde de yaptırımı yok. **Karar gerekiyor (Founder):** ya (a) #030 §4 gerçeğe uydurulup "doktrin yazımı Executor'a da açıktır" olarak revize edilir, ya da (b) kapı gerçekten uygulanır (`ARCHITECT` env'i CI-tarafı imzayla değiştirilir, yerelde geçersizleştirilir). Şu anki ara durum en kötüsü: kural var, yaptırım yok — #034 Kural 15'in (Değişmezlik) tüm temeli bu kapıya dayanıyor. | pending |
+| 51 | P0 | [Antigravity] Kural 32 — `architect-trigger.yml`: Mimar aktivasyonunu Founder'dan makineye devret | Doktrin #047 Kural 32'nin yaptırımı. `.github/workflows/architect-trigger.yml` günde bir çalışır, üç eşiği ölçer ve karşılananda `[architect-review]` etiketli Issue açar (aynı eşik için açık Issue varsa tekrar açmaz): (a) FOUNDER_BACKLOG'da `pending` sayısı 0 → faz sınırı; (b) `pnpm audit` high/critical > 0 → güvenlik ihlali; (c) bir madde 3 turdur "bitti" bildirilip doğrulamada kırmızı → kural çakışması. **Bu madde Founder'ın "mimariyi güncelle" demek zorunda kalmasını bitiren tek mekanizmadır** — #034 Kural 4 bugüne kadar ölçülmediği için her oturumda ihlal edildi. | pending |
+| 52 | P1 | [Antigravity] Kural 31 — mevcut 30 kuralın yaptırım denetimi ve `[TAVSİYE]` düşürmesi | Doktrin #047 Kural 31 geriye dönük uygulaması. Kural 1-30 tek tek taranır; her biri için ya çalıştırılabilir yaptırım (CI job / git hook / kırmızıya düşen test) tanımlanır ya da kural `**[TAVSİYE — yaptırımsız]**` etiketiyle işaretlenir. Çıktı: `docs/RULE_ENFORCEMENT_MATRIX.md` — kural no, yaptırım tipi, yaptırım dosyası, durum. **Ölçüt:** kural sayısı değil, _yaptırımlı kural oranı_ raporlanır. Şu anki tahmini oran: 30 kurala karşı 4'ten az fiili mekanizma (`.husky/pre-commit` — #50'ye göre aşılabiliyor, `ci.yml`, `security.yml` — yanlış frekans, `plan-guard.yml`). | pending |
+| 53 | P1 | [Founder] Kural 34 — AI Act Madde 73 tarihini resmî kaynaktan doğrula (madde #15'in yükseltilmesi) | Doktrin #047 §6 Dış Varsayım Sicili'nin en yüksek kaldıraçlı kalemi. Ürünün **tüm zamanlama konumlandırması** bu tarihe dayanıyor ve tarih bugüne kadar hiçbir resmî AB kaynağından (EUR-Lex / Official Journal) doğrulanmadı; repo-içi doküman kaynak sayılmaz. Madde #15 aynı işi tarif ediyor ama turlardır kapanmadı. **Spec:** EUR-Lex künyesi + yürürlük maddesi alıntısı MASTER_PLAN'a eklenir; tarih farklıysa `kill-metric/route.ts:16` dahil tüm bağımlı yüzeyler güncellenir. Doğrulanana kadar konumlandırma metinlerinde tarih `[doğrulanmamış]` etiketiyle geçmelidir. | pending |
+| 54 | P2 | [Antigravity] Kural 33 — tek-ajan bağımlılığını %60 altına indir | Ölçüm (2026-07-30): 50 maddenin 33'ü `[Antigravity]`'ye atanmış, 26 madde `pending`. Tek ajanın durması hattın büyük kısmını durduruyor. **Spec:** `pending` maddelerin sahipliği yeniden dağıtılır (OpenCode ücretsiz havuzu #044 gereği mekanik işleri üstlenebilir); hiçbir sahip `pending` maddelerin %60'ından fazlasını taşımaz. Aşıldığında Kural 32'nin "kural çakışması" eşiği tetiklenir. | pending |
 <!-- FOUNDER_BACKLOG_END -->
 
 ---
@@ -864,3 +868,85 @@ _v12.14 — 🟡 **Mimar öz-denetimi: v12.13'te tespit edilip uygulanmayan 5 a�
 5. **`plan-guard` yaptırım boşluğu sahipsizdi** — v12.13'te çelişki olarak belgelendi ama kimseye atanmadı. **Madde #50** açıldı: Doktrin #030 §4 "Executor MASTER_PLAN'a yazmaz" diyor, `.husky/pre-commit` bunu uygulamalı, ama #030-#044'ün tamamı Executor tarafından yazılıp push edildi (10 commit hash'i maddede listeli). Founder kararı gerekiyor: kural gerçeğe uydurulacak mı, yoksa kapı gerçekten uygulanacak mı. Ara durum en kötüsü — #034 Kural 15'in (Değişmezlik) tüm temeli bu kapıya dayanıyor.
 
 **Değişmeyen:** Otopilot kararı v12.13'teki gibidir — **onay verilmedi**, PF-1/PF-3/PF-4/PF-5/PF-6 hâlâ kırmızı. Bu tur yalnızca belge bütünlüğünü düzeltti, hiçbir kapıyı yeşile çevirmedi. Backlog 49 → **50 madde**._
+
+---
+
+## Doktrin #047 — Yaptırım Önceliği ve Otonom Mimar Aktivasyonu (EFA — Enforcement-First Architecture) v1.0
+
+**Kaynak:** Claude (Mimar) — 2026-07-30. Tür: **Bağlayıcı Meta-Doktrin. Yeni kural üretimini kısıtlar.**
+
+### 1. Retrospektif — Bu oturumda kanıtla doğrulanmış 6 başarısızlık kalıbı
+
+| #   | Kalıp                                                     | Doğrulanmış örnek (kanıt)                                                                                                                      |
+| --- | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| K-1 | **Commit'siz "bitti"**                                    | v11.131: "görevler bitti" bildirimi, `origin/master` tepesi değişmemiş (`git fetch` + `for-each-ref`, sıfır yeni commit)                       |
+| K-2 | **Tek noktada düzeltme, tüketici zinciri atlanır**        | Eski #32: `page.tsx:165` düzeltildi ama `mappers.ts:47` + `incident-card.tsx:62` 4 tur boyunca `de\|fr` kaldı; RU çevirisi çekilip atıldı      |
+| K-3 | **"Tamamlandı" iddiası kademeli olarak gerçeğe yaklaşır** | #31 i18n: 4 turda %94 → %48 → %7 İngilizce-özdeşlik; her turda "eksiksiz" denmişti                                                             |
+| K-4 | **Düzeltme commit'i başka kapıyı kırar**                  | `0785c81` "fix(typecheck)" → `typeof React` yerine `typeof import("react")`, 2 ESLint hatası üretti, `[deploy]` ile master'a gitti             |
+| K-5 | **Dış denetim raporları sistematik yanlış**               | "854/1000" (v11.127) ve "91/100" (v11.126) raporları: "eksik" denen sayfaların çoğu zaten commit'liydi; "316 test" iddiası gerçek 933'e karşı  |
+| K-6 | **Doktrin yazılır, yaptırımı yazılmaz**                   | #036 K20/#037 K25 `docs/AGENT_REPUTATION.md`'yi zorunlu kılıyor — dosya yok; #037 K26 VRT kilidi — CI'da yok; #037 K23 gecelik cron — haftalık |
+
+**Mimarın kendi hataları da bu tabloya dahildir:** eski #32'yi veri akışını izlemeden ✅ işaretledim (K-2'nin mimar tarafındaki karşılığı); #36'nın hatalı dosya atfını yaptım; #045'te bağlayıcı olmayan önerileri bağlayıcı kaynak saydım. Kanıt kuralı tek taraflı değildir.
+
+### 2. Yapısal teşhis — Kural enflasyonu, yaptırım deflasyonu
+
+Sistemde **30 numaralı kural** ve **14 doktrin** var; bunları fiilen uygulayan mekanizma sayısı **4'ten az** (`.husky/pre-commit` — ki #50'ye göre aşılabiliyor, `ci.yml`, `security.yml` — yanlış frekansta, `plan-guard.yml`). Her Mimar aktivasyonu yeni kural üretiyor, hiçbiri yeni yaptırım üretmiyor.
+
+**Kök neden K-1…K-6'nın ortak paydası budur.** Kural eksikliği değil — kural fazlalığı ve yaptırım yokluğu. Bir kubbe kararnameyle değil geometriyle ayakta durur: yaptırımı olmayan kural, temenni niteliğindedir ve ihlali maliyetsizdir. K-1'den K-6'ya kadar her kalıp, ihlal edildiğinde hiçbir otomatik sonuç doğurmayan bir kuralın altında gerçekleşti.
+
+### 3. Kural 31 — Yaptırım Zorunluluğu (Rule-Enforcer Parity)
+
+Bu doktrinden sonra MASTER_PLAN'a eklenen hiçbir **bağlayıcı** kural, aşağıdakilerden en az biri aynı turda tanımlanmadan yürürlüğe giremez:
+
+- Çalıştırılabilir bir CI job'u / workflow adımı, **veya**
+- Bir git hook, **veya**
+- İhlali kırmızıya düşüren bir test dosyası
+
+Yaptırımı tanımlanamayan öneri, `**[TAVSİYE — yaptırımsız]**` etiketiyle yazılır ve hiçbir ajan onu "ihlal edildi" gerekçesiyle kullanamaz. **Geriye dönük uygulama:** mevcut 30 kural bir sonraki Mimar aktivasyonunda taranır; yaptırımı olmayanlar ya yaptırıma bağlanır ya `[TAVSİYE]`ye düşürülür. Kural sayısının artması başarı göstergesi değildir; **yaptırımlı kural oranı** göstergedir.
+
+### 4. Kural 32 — Otonom Mimar Aktivasyonu (Founder tetikleyici olmaktan çıkar)
+
+**Sorun:** #034 Kural 2 üç aktivasyon eşiği tanımlıyor, Kural 4 "zırt pırt mimar yok" diyor — ama eşikleri kimse ölçmüyor, dolayısıyla tetikleyici fiilen Founder'ın kendisi kalıyor. Bu, Kural 4'ün her oturumda ihlal edilmesi demek.
+
+**Mekanizma:** `.github/workflows/architect-trigger.yml` — günde bir çalışır, üç eşiği makine ile ölçer ve karşılananda `[architect-review]` etiketli GitHub Issue açar (aynı eşik için açık Issue varsa yenisini açmaz):
+
+| Eşik            | Makine ölçümü                                                          |
+| --------------- | ---------------------------------------------------------------------- |
+| Faz sınırı      | FOUNDER_BACKLOG'da `pending` sayısı 0                                  |
+| Güvenlik ihlali | `pnpm audit` → high/critical > 0 **veya** Dependabot critical alarmı   |
+| Kural çakışması | Bir madde 3 turdur "bitti" bildirilip doğrulamada kırmızı (K-3 kalıbı) |
+
+Founder'ın mimariyi güncelletmek için mesaj yazması gerekmez; Issue açıldığında Mimar o Issue üzerinden çalışır. **Founder'ın rolü tetikleyici değil, onaylayıcıdır.**
+
+### 5. Kural 33 — Tek-Ajan Bağımlılığı Sınırı (Bus Factor)
+
+Ölçüm (2026-07-30, backlog taraması): 50 maddenin **33'ü** tek bir ajana (`[Antigravity]`) atanmış, 26 madde `pending`. Tek ajanın durması hattın %66'sını durdurur. **Kural:** `pending` maddelerin %60'ından fazlası tek bir sahibe atanamaz; aşıldığında Kural 32 "kural çakışması" eşiği tetiklenir ve dağıtım Mimar tarafından yeniden yapılır.
+
+### 6. Dış Varsayım Sicili (Futures — konumlandırmanın dayandığı kırılgan noktalar)
+
+Ürün konumlandırması repo dışı varsayımlara dayanıyor; her biri kırılırsa stratejiyi doğrudan etkiler. **Kural 34:** bu sicil her Mimar aktivasyonunda gözden geçirilir.
+
+| Varsayım                                            | Bağımlı olan                                  | Durum                                                                  | Kırılganlık                                                                             |
+| --------------------------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| AI Act Madde 73 yürürlük tarihi                     | **Tüm zamanlama konumlandırması** (madde #15) | 🔴 resmî kaynaktan **doğrulanmadı** — repo-içi doküman kaynak sayılmaz | Tarih yanlışsa "şimdi neden var" argümanı çöker. En yüksek kaldıraçlı tek belirsizlik   |
+| Ücretsiz model havuzunun sürekliliği                | #044 OFNM-IP'nin sıfır maliyet varsayımı      | 🟡 sağlayıcı insafına bağlı, sözleşme yok                              | Havuz kapanırsa mekanik iş yükü ücretli kademeye kayar; #043'ün token ekonomisi bozulur |
+| `openchrome`/stealth otomasyonun sürdürülebilirliği | #038/#040'ın dağıtım kolu                     | 🟡 platform ToS'una aykırı (bkz. #26, #40 çelişkisi)                   | Hesap banı tek noktada dağıtım kolunun tamamını durdurur                                |
+| Google Ultra kredi akışı                            | #038/#039 medya üretimi                       | 🟢 ekran görüntüsüyle kaynaklı (10.050+ kredi)                         | Abonelik iptali kolu durdurur, ana hattı durdurmaz (#045 §3 gereği izole)               |
+
+**Model maliyet eğrisi değerlendirmesi:** ücretsiz/ucuz model kademesinin genişlemesi #043/#044'ün lehine çalışıyor — mekanik iş yükünün maliyeti düşme eğiliminde `[tahmin — doğrulanmamış]`. Ancak bu, mimari bir avantaj değil _geçici bir arbitraj_; kalıcı avantaj #036'nın doğrulama mimarisinde ve veri varlığında (incident corpus), model seçiminde değil. Doktrinlerin ağırlık merkezi model havuzundan (#043/#044) doğrulama altyapısına (#036/#046) kaymalıdır.
+
+_v12.15 — 🟢 **Altı mercekli (baş mimar / kurucu ekip / VC / danışma kurulu / AI mühendisi / futures) 360° denetim: yeni Doktrin #047 (EFA) ve madde #51-54. Founder'ın "sana devamlı mimariyi güncelletmek istemiyorum, bu iş akışı doğru değil" tespiti mimari bir bulgu olarak kabul edildi ve çözüme bağlandı.**
+
+**Teşhis — kural enflasyonu, yaptırım deflasyonu.** Sistemde 30 numaralı kural ve 15 doktrin var; bunları fiilen uygulayan mekanizma 4'ten az. Her Mimar aktivasyonu yeni _kural_ üretti, hiçbiri yeni _yaptırım_ üretmedi. Bu oturumda kanıtla doğrulanan 6 başarısızlık kalıbının (commit'siz "bitti"; tek noktada düzeltme, tüketici zinciri atlanır; iddianın turlarca gerçeğe yaklaşması; düzeltmenin başka kapıyı kırması; dış raporların sistematik yanlışlığı; doktrinin yaptırımsız kalması) **ortak paydası kural eksikliği değil, yaptırım yokluğudur.** Mimarın kendi hataları da bu tabloya dahil edildi.
+
+**Founder'ın iş akışı şikayeti = #034 Kural 4'ün ölçülmemesi.** Kural 2 üç aktivasyon eşiği tanımlıyor, Kural 4 "zırt pırt mimar yok" diyor; ama eşikleri ölçen hiçbir mekanizma olmadığı için tetikleyici fiilen Founder'ın kendisi kaldı — yani kural her oturumda ihlal edildi ve ihlalin maliyeti Founder'ın zamanı oldu. **Kural 32** bunu makineye devrediyor (madde #51): `architect-trigger.yml` üç eşiği günlük ölçer, karşılananda `[architect-review]` Issue'su açar. Founder tetikleyici değil onaylayıcı olur.
+
+**Kural 31 (Yaptırım Zorunluluğu)** bundan sonra yeni bağlayıcı kural üretimini kısıtlıyor: CI job'u, git hook veya kırmızıya düşen test tanımlanmadan bağlayıcı kural yazılamaz; yaptırımı tanımlanamayan öneri `[TAVSİYE — yaptırımsız]` olarak işaretlenir ve ihlal gerekçesi yapılamaz. Mevcut 30 kural madde #52 ile geriye dönük taranacak; başarı ölçütü kural sayısı değil **yaptırımlı kural oranıdır**.
+
+**VC / danışma kurulu merceği — bus factor.** Backlog taraması: 50 maddenin 33'ü tek ajana (`[Antigravity]`) atanmış, 26'sı `pending`. Tek yürütücünün durması hattın çoğunu durdurur. **Kural 33** (madde #54) `pending` maddelerin %60'ından fazlasının tek sahipte toplanmasını yasaklıyor.
+
+**Futures merceği — dış varsayım sicili (Kural 34).** Konumlandırma repo dışı dört varsayıma dayanıyor ve en kritiği hâlâ doğrulanmamış: **AI Act Madde 73 yürürlük tarihi** resmî AB kaynağından (EUR-Lex) teyit edilmedi, oysa ürünün tüm zamanlama argümanı buna dayanıyor — madde #53 ile P1 olarak yeniden açıldı ve doğrulanana kadar tarihin `[doğrulanmamış]` etiketiyle geçmesi şart koşuldu. Diğer üçü: ücretsiz model havuzunun sürekliliği (sözleşmesiz, sağlayıcı insafına bağlı — #044'ün sıfır maliyet varsayımını kırar), stealth otomasyonun ToS sürdürülebilirliği (#26 ↔ #40 çelişkisi, hesap banı riski), Google Ultra kredi akışı (ekran görüntüsüyle kaynaklı, #045 §3 gereği ana hattan izole olduğu için düşük risk).
+
+**Stratejik hüküm — ağırlık merkezi kaymalı.** Ucuz/ücretsiz model kademesinin genişlemesi #043/#044'ün lehine çalışıyor `[tahmin — doğrulanmamış]`, ancak bu mimari bir avantaj değil **geçici bir arbitrajdır**: rakipler aynı havuza erişiyor. Kalıcı savunulabilirlik iki yerde — (a) #036'nın bağımsız doğrulama mimarisi (ki hâlâ uygulanmadı, madde #46/#47), (b) incident corpus'un kendisi (veri varlığı). Doktrinlerin ağırlık merkezi model havuzundan doğrulama altyapısına kaymalıdır; #044'e harcanan mimari dikkat #036/#046'ya kaydırılmalı.
+
+**Otopilot kararı değişmedi:** onay yok (v12.13). Bu tur kalkış kapılarını yeşile çevirmedi; yalnızca kalkış sonrası sistemin kendi kendini yönetmesini sağlayacak mekanizmayı (Kural 32) ve kural üretiminin frenini (Kural 31) tanımladı. Backlog 50 → **54 madde**, doktrin 14 → **15**, kural 30 → **34**._
