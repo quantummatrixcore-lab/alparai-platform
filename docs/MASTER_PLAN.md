@@ -137,3 +137,43 @@ _v11.97 — Founder "Max otomasyon, otopilotta uygula" direktifiyle tam yetki ve
 **Bağımlılık:** Bu önerinin hayata geçirilmesi #035 (Codebase Hijyen) ile paralel yürütülmelidir — ajanların kafasını karıştıran dosya sayısı azaldıkça Pull modeli daha verimli çalışır.
 
 _v11.98 — Öneri #030 (EDAP) Antigravity tarafından Founder talebiyle MASTER_PLAN'a eklendi. Bağlayıcı değil; Mimar (Claude Code) tarafından bir sonraki phase planlamasında değerlendirmeye alınması önerilir._
+
+---
+
+## Öneri #031 — Autonomous Zero-Touch Engineering & Resource Arbitrage Framework (AZERA) v1.0
+
+**Kaynak:** Antigravity (Gemini Flash/Pro 3.6 Sentezi) — 2026-07-30. Öneri türü: Mimari, Kaynak Orkestrasyonu ve Tam Otomasyon Standardı.
+
+**Temel Amaç:** İnsan müdahalesini (kopyala-yapıştır, platformlar arası pencere geçişi, manuel prompt taşıma) tamamen ortadan kaldırmak; eldeki tüm abonelik ve ücretsiz kaynakları (Claude Pro, Google Ultra, GitHub Pro, OpenRouter 17 Free Tier) %100 kapasite ve minimum maliyet/token harcamasıyla özerk çalıştırmak.
+
+### 1. Kaynak Arbitraj Matrisi (Resource Arbitrage Matrix)
+
+| Kaynak / Abonelik | Rolü ve Doğru Kullanım Alanı | Maliyet / Token Stratejisi |
+|-------------------|------------------------------|----------------------------|
+| **OpenRouter Free Tier (17 Model)** | Rutin kodlama, refactor, i18n çevirileri, birim test yazımı, tip düzeltmeleri | **0$ (Sıfır Token Maliyeti)** — Ağır mekanik yük buraya yıkılır. |
+| **Google Ultra (Gemini Pro/Flash 1.5/2.0)** | 1M-2M dev bağlam pencereli repo analizi, çok dosyalı sentez, büyük kod birleştirmeleri | **Yüksek Bağlam Limiti** — Tüm repo AST / Graphify verisiyle çalışır. |
+| **Claude Pro (Opus/Sonnet)** | Yalnızca L1 Mimarlık, Phase planlaması, Master Plan güncellemeleri, Güvenlik Denetimi | **Kota Korumalı (Strict Capped)** — Aşırı pahalı/kotalı. Sadece Phase başı/sonu 1-2 turn. |
+| **GitHub Pro & Actions CI/CD** | Otomatik test çalıştırma, lint denetimi, otomatik PR doğrulama ve paketleme | **Sınırsız İşlem Gücü** — Yerel makinede/GitHub sunucusunda 0-token ile çalışır. |
+
+### 2. Sıfır-Temas (Zero-Touch) Otomasyon Akışı (Silikon Vadisi Standartları)
+
+```
+[İnsan / Founder] ──(Sadece GitHub Issue açar/etiketler)──► [GitHub Issues]
+                                                                  │
+                                                        (WebHook / Daemon)
+                                                                  ▼
+[Vercel Auto-Deploy] ◄──(Merge)── [GitHub Actions CI] ◄──(PR)── [Headless CLI Ajan]
+```
+
+1. **İnsan Müdahalesiz Tetikleme (Issue-Driven):** Founder hiçbir ajanın arayüzünü açmaz. Sadece GitHub'da `[autobuild]` etiketli bir Issue tanımlar.
+2. **Headless CLI Ajan Orkestrasyonu:** Arka planda çalışan headless CLI daemon (`claude -p` / `antigravity background daemon` / `gh workflow`) Issue'yu çeker.
+3. **Otomatik Yerel Test Kapısı:** Ajan kodu ürettikten sonra insan girdisi beklemeden yerel ortamda `pnpm test && pnpm typecheck && pnpm lint` komutlarını çalıştırır.
+4. **Sıfır-Kopyalama PR & Merge:** Testler yeşil geçtiği anda ajan doğrudan git commit atar (`[deploy]`), PR açar ve GitHub Auto-Merge ile birleştirir.
+5. **Otomatik Canlıya Alma (Vercel):** Merge sonrası Vercel otomatik production build alır. Founder sadece bildirim alır, hiçbir kopya-yapıştır işlemi yapmaz.
+
+### 3. Ekosistem Araç ve Açık Kaynak Sentezi (360° Benchmark)
+- **Aider & OpenCode Headless Loops:** Terminal tabanlı otonom ajan döngüleri.
+- **GitHub CLI (`gh`) Entegrasyonu:** Ajanların web tarayıcısına girmeden Issue/PR yönetebilmesi.
+- **Graphify AST Indexing:** Pre-commit hook ile repo bilgi grafiğinin otomatik güncellenmesi; ajanların ham kod dosyalarını okuyarak token yakmasının engellenmesi.
+
+_v11.99 — Öneri #031 (AZERA) Antigravity tarafından Founder talebiyle MASTER_PLAN'a eklendi. Kaynak verimliliği ve insan müdahalesiz tam otomasyon stratejisini belgeler._
