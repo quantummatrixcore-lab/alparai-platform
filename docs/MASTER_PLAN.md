@@ -106,6 +106,8 @@ Google for Startups $2K–350K · AWS Activate $1K–200K · Microsoft Founders 
 | 57 | P1 | [Antigravity] Doktrin #044 escalation zincirini `model-router.ts`'e tamamla | v12.17'de tespit edildi, hâlâ açık: OpenCode Zen Free / Nvidia NIM havuzu `src/lib/ai/openrouter-gateway.ts`'e girdi (34 eşleşme) ama `src/lib/audit/model-router.ts`'te sıfır eşleşme var. Doktrin #044'ün "önce ücretsiz, yetersizse üst kademeye otomatik geçiş" zinciri yalnızca gateway tarafında çalışıyor; router tarafı hâlâ eski yönlendirmeyi kullanıyor. Madde #28'in (capability routing) üzerine inşa edilmeli, onunla çakışmamalı. | pending |
 | 58 | P1 | [Antigravity] `/api/dora/metrics` build-zamanı prerender kırılganlığını gider | v12.20 yan bulgusu. `src/app/api/dora/metrics/route.ts:4` `export const revalidate = 60` taşıyor; bu, Next.js'in rotayı build sırasında prerender etmesine ve `SUPABASE_SERVICE_ROLE_KEY`'in build zamanında okunmasına yol açıyor. Vercel'de secret mevcut olduğu için build geçiyor, ama servis anahtarının build yüzeyine girmesi gereksiz risk ve secret'sız her ortamda (fork, CI, yerel) build'i kırıyor. **Spec:** satır `export const dynamic = "force-dynamic";` ile değiştirilir; `pnpm build` secret'sız ortamda geçmeli. | pending |
 | 59 | P2 | [Antigravity] AI Act Madde 5 "nudifier"/CSAM yasağını olay taksonomisine ekle | v12.18'de doğrulanan Regulation (EU) 2026/1744, AI Act Madde 5'e rıza dışı mahrem görüntü ve CSAM üretimi yasağı ekledi (Aralık 2026'da yürürlükte). Platformun temel iddiası taksonomiyi güncel tutmak olduğu için bu doğrudan ürün fırsatı. **Spec:** `incident_categories` içine yeni kategori, `messages/*.json` 5 dilde etiket, `/ai-act` sayfasına açıklama bölümü, PII Guardian tarafında bu kategoriye özel içerik uyarısı. | pending |
+| 60 | P1 | [Antigravity] OpenCode delegasyonu için makine-okunur çalışma kaydı (`ops/opencode-runs/`) | Founder'ın sorusu: "Antigravity gerçekten OpenCode'u açıp çalıştırıyor mu, bilmiyorum." Doktrin #048'in yaptırımı. Her OpenCode delegasyonu `ops/opencode-runs/<UTC-timestamp>-<gorev>.json` yazar: `model` (kullanılan model kimliği), `command`, `exit_code`, `duration_ms`, `git_sha` (çalıştığı commit), `task_ref` (backlog madde no). **Kabul kriteri:** dosya var, `git_sha` gerçekten depoda mevcut bir commit, `exit_code` alanı dolu. Kayıt yoksa "OpenCode'a yaptırdım" ifadesi raporlarda kullanılamaz — ama bu bir kalite kapısı DEĞİL, maliyet/verimlilik kaydıdır (bkz. Doktrin #048). | pending |
+| 61 | P2 | [Antigravity] Aylık model-kullanım verimlilik raporu (`/admin/resources` canlı metriği) | `ops/opencode-runs/` kayıtlarından türetilir: hangi görev tipinin hangi kademede (ücretsiz / Nvidia pro / pahalı) koştuğu, ücretsiz katmanın toplam iş içindeki payı. Doktrin #043'ün "%80 yük 1. kademede" hedefi bugüne kadar **ölçülmedi**; bu rapor onu ilk kez ölçülebilir yapar ve #041 RIMRE'nin kaynaksız "verimlilik skoru" sütununu gerçek veriyle değiştirir (madde #49 ile bağlantılı). | pending |
 <!-- FOUNDER_BACKLOG_END -->
 
 ---
@@ -1010,3 +1012,28 @@ _v12.21 — 🟢 **Executor teslimatı: beş özellik maddesinin beşi de gerçe
 **Sonraki faz — 5 yeni madde (#55-#59) açıldı.** İkisi kalkışın kalan iki adımı: üst akış yükseltmesiyle güvenlik açığının gerçekten kapatılması ve VRT linux baseline seed'inin tetiklenmesi. Üçü ileri vizyon: Doktrin #044 escalation zincirinin `model-router.ts` tarafının tamamlanması (v12.17'den beri açık), `/api/dora/metrics` build-zamanı prerender kırılganlığının giderilmesi, ve **AI Act Madde 5'e yeni eklenen "nudifier"/CSAM yasağının olay taksonomisine işlenmesi** — v12.18'de doğrulanan regülasyon değişikliğinin doğrudan ürün fırsatına çevrilmesi.
 
 **Ön-uçuş durumu:** PF-1 🟢 (943/943) · PF-2 🟢 · PF-4 🟡 (job doğru, baseline seed bekliyor — madde #56) · PF-5 🟢 · PF-6 🔴 (2 high, madde #55). **Founder'dan istenen tek şey madde #56'daki tek tuş: baseline workflow'unu tetikleyip görselleri onaylamak.**_
+
+---
+
+## Doktrin #048 — Delegasyon Kanıtı ve Doğruluk Otoritesinin Ayrımı (DPA — Delegation Proof & Authority Separation) v1.0
+
+**Kaynak:** Claude (Mimar) — 2026-07-30, Founder'ın "Antigravity gerçekten OpenCode'u açıp testleri yaptırıyor mu, bilmiyorum" sorusu üzerine. Tür: **Bağlayıcı Doğrulama Doktrini.**
+
+### 1. Teşhis — İki ayrı soru birbirine karıştırılıyor
+
+Founder'ın endişesi haklı ama iki farklı soruyu tek soru sanıyor:
+
+- **(A) Kod doğru mu?** — "OpenCode gerçekten çalıştı mı" sorusunun bu soruya **etkisi yoktur**. GitHub Actions her push'ta `pnpm lint`, `typecheck`, `test` ve VRT'yi kendi temiz ortamında **yeniden** koşuyor. Antigravity yerelde hiç test çalıştırmasa bile CI kırmızıysa iş geçmez, yeşilse iş doğrudur. **Doğruluğun tek otoritesi CI'dır**; yerel çalıştırma iddiası doğruluk kanıtı olarak ne gereklidir ne yeterlidir.
+- **(B) Kaynak verimli kullanılıyor mu?** — Asıl ölçülmesi gereken soru budur. Doktrin #043 iş yükünün %80'inin ücretsiz kademede koşmasını, #044 ücretsiz havuzun önce denenmesini şart koşuyor. Bunların hiçbiri bugüne kadar **ölçülmedi**. Antigravity'nin OpenCode'u hangi modelle, hangi görev için çağırdığı bilinmiyor.
+
+### 2. Kural 35 — Doğruluk Otoritesi Yalnızca CI'dır
+
+Hiçbir ajanın yerel çalıştırma beyanı (yerel `pnpm test`, yerel OpenCode oturumu, yerel tarayıcı kontrolü) bir maddeyi `✅ completed` yapmaya yetmez. Tek geçerli kanıt, o commit SHA'sı üzerinde **yeşil CI çalışmasıdır**. Bu kural, "yerel test yaptım" iddialarını doğrulama yükünden tamamen çıkarır — tartışmaya gerek yoktur, CI zaten yeniden koşar.
+
+### 3. Kural 36 — Delegasyon Kaydı Zorunluluğu (maliyet kaydı, kalite kapısı değil)
+
+Antigravity OpenCode'a iş devrettiğinde `ops/opencode-runs/<UTC-timestamp>-<gorev>.json` yazar: `model`, `command`, `exit_code`, `duration_ms`, `git_sha`, `task_ref`. **Bu bir kalite kapısı değildir** (kalite CI'nın işi); amacı Doktrin #043/#044'ün kademe hedeflerinin ölçülebilir olmasıdır. Kaydı olmayan delegasyon raporlarda "OpenCode'a yaptırdım" diye anılamaz — ölçülemeyen tasarruf, tasarruf sayılmaz (#034 Kural 8).
+
+### 4. Kural 37 — Yetenek Bazlı Devir Serbestisi
+
+Antigravity, OpenCode havuzundaki modelleri görev tipine göre serbestçe seçebilir ve seçmelidir (mekanik iş → ücretsiz katman, ağır refactor → Nvidia/pro katman; Doktrin #044 piramidi). Bu seçim için Mimar veya Founder onayı gerekmez. **Tek şart Kural 36'daki kaydın yazılmasıdır** — serbestlik ölçülebilirlik karşılığındadır.
