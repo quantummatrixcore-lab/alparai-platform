@@ -565,3 +565,59 @@ _v12.06 — Doktrin #038 (GAMSE — 360° Google Ultra & Autonomous Multi-Agent 
 ---
 
 _v12.07 — Doktrin #039 (GUE-MB — Google Ultra 360° Ecosystem Master Blueprint) MASTER_PLAN'a bağlayıcı kural olarak eklendi. Ekran görüntüsündeki 10.050 Flow kredisi, Gemini Omni Flash, ImageFX, MusicFX, Opal, Pomelli, NotebookLM ve Workspace 360 entegrasyonu envantere katıldı._
+
+---
+
+## Doktrin #040 — Anti-Bot Stealth Browser Architecture (ABSBA) v1.0
+
+**Kaynak:** Founder Direktifi & Güvenlik Standardı — 2026-07-30. Tür: **Bağlayıcı Tarayıcı Güvenliği Doktrini.**
+
+**Sorun:** Otomatik tarayıcı işlemlerinin (LinkedIn, Google Flow, X, YC formları) Cloudflare, Akamai veya platform bot tespit sistemlerine yakalanarak hesapların engellenme (ban) riski.
+
+### 1. İnsansı Tarayıcı Kuralları (Stealth Rules)
+
+- **Canvas & WebGL Spoofing:** `openchrome` ve Playwright sürücüleri gerçek kullanıcı cihaz parmak izini (fingerprint) taklit eder. Standart otomasyon flag'leri (`navigator.webdriver: true`) tamamen gizlenir.
+- **Rastgele İnsansı Yazma Cadence'i (Human Typing Cadence):** Klavye girdileri insan biyolojisine uygun olarak karakter başına 45ms ile 180ms arasında değişken gecikmelerle simüle edilir.
+- **Bezier Eğrisi Fare Hareketleri (Bezier Mouse Trajectory):** Fare imleci düz çizgiler halinde değil, doğal insan el hareketini taklit eden kavisli (Bezier curve) ve ivmeli ivmesiz yollar izler.
+- **Gerçek Oturum Kalıcılığı (Session Reuse):** Hesap açma/kapama yapılmaz. `quantum.matrix.core@gmail.com` oturumu doğrudan varsayılan Chrome profilinden (`User Data`) çalıştırılarak hesap riski sıfırlanır.
+
+---
+
+## Doktrin #041 — Resource Inventory & Maximum ROI Engine (RIMRE) v1.0
+
+**Kaynak:** Founder Direktifi & Verimlilik Standardı — 2026-07-30. Tür: **Bağlayıcı Kaynak Yönetimi Doktrini.**
+
+**Sorun:** Şirketin elindeki paralı/ücretsiz abonelik ve kaynakların (Google Ultra, Claude Pro, OpenCode, Antigravity, NVIDIA NIM, Hugging Face vb.) aktif envanterinin takip edilmemesi ve verimlilik oranının ölçülmemesi.
+
+### 1. `/admin/resources` Paneli Zorunluluğu
+
+Proje admin panelinde `/admin/resources` isimli canlı bir **Kaynak ve Abonelik Yönetim Paneli** oluşturulur. Bu panelde aşağıdaki aktif varlıklar anlık izlenir:
+
+| Kaynak / Abonelik | Aylık Maliyet / Hak | Aktif Model / Kredi Durumu | Otomasyon Entegrasyon Statüsü | Verimlilik Skoru (%) |
+|---|---|---|---|---|
+| **Google One Ultra** | 1.500 TL / Ay | 10.050+ Flow Kredisi + Gemini Omni Flash + API Keys | 🟢 Tam Entegre (`openchrome` + `labs.google`) | %95 |
+| **Claude Code (Pro)** | $20 / Ay | Opus 5 & Sonnet 4.6 (Mimar Katmanı) | 🟢 Tam Entegre (`docs/MASTER_PLAN.md`) | %98 |
+| **NVIDIA NIM API** | Ücretsiz (Free Tier) | Llama 3.3 70B & DeepSeek R1 Endpoints | 🟢 Entegre (API Key Active) | %90 |
+| **Google AI Studio API** | Ücretsiz (Free Tier) | Gemini 2.0 Flash / 1.5 Pro (2M Context) | 🟢 Entegre (MCP Server) | %100 |
+| **OpenCode & Antigravity**| Ücretsiz (Local) | Gemini 3.6 Flash / Execution Engines | 🟢 Tam Entegre (Local Agent Pipeline) | %100 |
+| **OpenRouter / Hugging Face**| Ücretsiz Krediler | Mistral, Qwen, DeepSeek Fallbacks | 🟡 Kısmi Entegre | %75 |
+
+---
+
+## Doktrin #042 — Autonomous AI Ecosystem Hunter (`engine_hunter`) v1.0
+
+**Kaynak:** Founder Direktifi & Otonom Keşif Standardı — 2026-07-30. Tür: **Bağlayıcı Subagent ve Fırsat Avcısı Doktrini.**
+
+### 1. `engine_hunter` (AI Kaynak Avcısı) Subagent Tanımı
+
+Yapay zeka ekosisteminde yeni çıkan ücretsiz modelleri, dağıtılan bedava API kredilerini (NVIDIA, AWS Bedrock, Together AI, Groq, Replicate) ve yeni araçları otonom olarak tarayan özel bir **Hunter Subagent** tanımlanmıştır.
+
+### 2. Avcının Günlük Çalışma Rutini (Hunter Loop)
+
+1. **Ekosistem Taraması:** `engine_hunter` her gün otonom olarak Hugging Face, Reddit (r/LocalLLaMA), ProductHunt, Twitter/X ve NVIDIA NIM duyurularını tarar.
+2. **Fırsat Tespiti:** Bedava API kredisi veya yüksek performanslı yeni bir açık kaynak model çıktığında (Örn: "AWS 500$ bedava credit verdi" veya "Groq Llama-3.3'ü ücretsiz sundu") hemen tespiti yapar.
+3. **Otomatik Öneri & Entegrasyon Raporu:** `docs/PROPOSALS/` altına yeni bir entegrasyon teklifi yazar ve `/admin/resources` paneline **"Yeni Fırsat Bulundu"** uyarısı düşürür.
+
+---
+
+_v12.08 — Doktrin #040 (ABSBA - Stealth Tarayıcı), Doktrin #041 (RIMRE - Kaynak Paneli /admin/resources) ve Doktrin #042 (engine_hunter - AI Kaynak Avcısı) MASTER_PLAN'a bağlayıcı kural olarak eklendi. Tüm şirket kaynakları ve stealth otomasyon anayasalaştırıldı._
