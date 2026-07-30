@@ -20,10 +20,6 @@
     {
       "path": "/api/cron/fetch-external",
       "schedule": "0 0 * * *"
-    },
-    {
-      "path": "/api/cron/ai-heartbeat",
-      "schedule": "*/5 * * * *"
     }
   ]
 }
