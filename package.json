@@ -123,7 +123,6 @@
     ]
   },
   "overrides": {
-    "brace-expansion": ">=5.0.8",
     "minimatch": "^9.0.9",
     "postcss": "^8.5.22",
     "shell-quote": "^1.10.0",
