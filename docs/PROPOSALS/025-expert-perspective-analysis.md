@@ -30,6 +30,8 @@ The following expert perspectives will be integrated into the analysis engine:
 9. **OSINT Analyst (Açık Kaynak İstihbarat Analisti) — *Suggested Addition***
    - *Focus:* Real-time reputation intelligence. Continuously scans Reddit, HackerNews, GitHub Issues, LinkedIn, and X/Twitter for public mentions of ALPAR AI, competitor moves, or emerging community sentiment.
    - *Goal:* Surface reputational risks and competitive threats before they escalate. Operates as the project's external early-warning radar.
+10. **Social Media & Viral Growth Strategist (Sosyal Medya ve Viral İletişim Stratejisti) — *Suggested Addition***
+    - *Focus:* Multi-channel launch & viral growth mechanics. Orchestrates X/Twitter threads, B2B LinkedIn connections, HackerNews/Reddit community launch posts, Instagram infographics, and tech journalist outreach pipelines. Converts complex AI trust data into viral public narratives.
 
 ## 3. Implementation Logic
 - **UI Element:** A dedicated dashboard in the Admin Panel (`/admin/expert-analysis`).
