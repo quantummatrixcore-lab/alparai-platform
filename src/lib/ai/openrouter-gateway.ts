@@ -147,11 +147,30 @@ export const RISK_AUDIT_CHAIN: readonly GatewayModel[] = [
   { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
 ] as const;
 
-// 4. Fast Triage, Summarization, Classification (Qwen / Llama Optimized)
+// 4. Fast Triage, Summarization, Classification (Qwen / Llama / OpenCode Free Optimized)
 export const FAST_TRIAGE_CHAIN: readonly GatewayModel[] = [
+  { id: "opencode/deepseek-v4-flash-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+  { id: "opencode/nemotron-3-ultra-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
   { id: "qwen/qwen2.5-72b-instruct", provider: "nvidia", tier: "free", maxTokens: 4096 },
   { id: "qwen/qwen-2.5-72b:free", provider: "openrouter", tier: "free", maxTokens: 4096 },
   { id: "meta-llama/llama-3.1-8b-instruct:free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+] as const;
+
+// Doktrin #044: OpenCode Zen Free & Nvidia NIM Model Pools
+export const OPENCODE_FREE_MODELS: readonly GatewayModel[] = [
+  { id: "opencode/deepseek-v4-flash-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+  { id: "opencode/nemotron-3-ultra-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+  { id: "opencode/laguna-s-2.1-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+  { id: "opencode/ling-3.0-flash-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+  { id: "opencode/mimo-v2.5-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+  { id: "opencode/north-mini-code-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+] as const;
+
+export const NVIDIA_NIM_MODELS: readonly GatewayModel[] = [
+  { id: "nvidia/deepseek-ai/deepseek-v4-pro", provider: "nvidia", tier: "free", maxTokens: 4096 },
+  { id: "nvidia/z-ai/glm-5.2", provider: "nvidia", tier: "free", maxTokens: 4096 },
+  { id: "nvidia/openai/gpt-oss-120b", provider: "nvidia", tier: "free", maxTokens: 4096 },
+  { id: "nvidia/google/gemma-4-31b-it", provider: "nvidia", tier: "free", maxTokens: 4096 },
 ] as const;
 
 // Instantiate adapters lazily or cache them

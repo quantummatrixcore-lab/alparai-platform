@@ -26,7 +26,7 @@ describe("selectModelTier router", () => {
     });
 
     expect(res.tier).toBe("basic");
-    expect(res.slot1Chain[0]?.provider).toBe("nvidia");
+    expect(res.slot1Chain[0]?.provider).toBe("openrouter");
     expect(res.slot2Chain[0]?.provider).toBe("nvidia");
     expect(res.supremeChain[0]?.provider).toBe("openrouter");
   });
