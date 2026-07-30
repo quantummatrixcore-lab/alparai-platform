@@ -35,7 +35,7 @@ export async function runLiveCrossAuditTest(text: string) {
         temperature: 0.7,
         responseFormat: "json",
       },
-      selectModelByCapability("risk_audit"),
+      await selectModelByCapability("risk_audit"),
     );
 
     if (!result.ok) {

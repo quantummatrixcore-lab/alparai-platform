@@ -170,7 +170,7 @@ async function runCrossAuditPipelineOnce(incidentId: string): Promise<TruthScore
     estimatedOutputTokens: costEst.outputTokens,
   });
 
-  const routerResult = selectModelTier({
+  const routerResult = await selectModelTier({
     title: safeTitle,
     description: safeDescription,
     severity: incident.severity,

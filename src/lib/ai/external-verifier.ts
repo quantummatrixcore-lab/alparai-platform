@@ -54,7 +54,7 @@ export async function verifyExternalItem(title: string, body: string): Promise<V
   const { masked: safeTitle } = maskPII(title);
   const { masked: safeBody } = maskPII(body);
 
-  const routerResult = selectModelTier({
+  const routerResult = await selectModelTier({
     title: safeTitle,
     description: safeBody,
     severity: "low",

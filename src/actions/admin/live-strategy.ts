@@ -41,7 +41,7 @@ export async function runLiveStrategyAnalysis(context: {
         temperature: 0.7,
         responseFormat: "json",
       },
-      selectModelByCapability("math_logic"),
+      await selectModelByCapability("math_logic"),
     );
 
     if (!result.ok) {

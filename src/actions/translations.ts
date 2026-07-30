@@ -59,7 +59,7 @@ Description: "${incident.description}"
         temperature: 0.1,
         responseFormat: "json",
       },
-      selectModelByCapability("creative_copy"),
+      await selectModelByCapability("creative_copy"),
     );
 
     if (res.ok && res.data?.content) {
