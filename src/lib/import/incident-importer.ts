@@ -52,7 +52,6 @@ const providerKeywords = [
   { slug: "lepton", keywords: ["lepton"] },
   { slug: "lightricks", keywords: ["lightricks"] },
   { slug: "leonardo", keywords: ["leonardo.ai", "leonardo ai"] },
-  { slug: "trendyol", keywords: ["trendyol", "baklava"] },
   { slug: "nvidia", keywords: ["nvidia"] },
   { slug: "groq", keywords: ["groq"] },
   { slug: "ai21", keywords: ["ai21"] },
