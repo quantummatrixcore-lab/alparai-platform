@@ -661,3 +661,45 @@ _v12.08 — Doktrin #040 (ABSBA - Stealth Tarayıcı), Doktrin #041 (RIMRE - Kay
 ---
 
 _v12.09 — Doktrin #043 (HMR-TES — Hierarchical Model Routing & Token Economy Standard) MASTER_PLAN'a bağlayıcı kural olarak eklendi. Haiku -> Sonnet -> Opus 3 kademeli yönlendirme piramidi ve %80 token tasarruf kuralı anayasalaştırıldı._
+
+---
+
+## Doktrin #044 — OpenCode Free & Nvidia Model Pool Protocol (OFNM-IP v1.0)
+
+**Kaynak:** Founder Direktifi & Gemini Pro Architecture — 2026-07-30. Tür: **Bağlayıcı Model Havuzu ve Ücretsiz Kaynak Otomasyonu Doktrini.**
+
+**Amaç:** OpenCode altyapısındaki ücretsiz (Free) modelleri ve Nvidia endpoint modellerini maksimum verimlilikle otonom boru hattına dahil etmek, sıfır maliyetli mekanik icraatı garantiye almak.
+
+---
+
+### 1. OpenCode Model Envanteri & Kullanım Piramidi
+
+```
+        ┌─────────────────────────────────────────┐
+        │ 3. GÖRSEL ÜRETİM: FLUX.1-Kontext-dev     │  ← UI Grafik & Medya Üretimi
+        ├─────────────────────────────────────────┤
+        │ 2. NVIDIA & PRO TIER: DeepSeek V4 Pro,  │  ← Kompleks Kodlama, Server Actions,
+        │    GPT-OSS-120B, Gemma-4-31B-IT, GLM-5.2│     Refactoring & Hata Çözümü
+        ├─────────────────────────────────────────┤
+        │ 1. ÜCRETSİZ KATMAN (OpenCode Zen Free): │  ← %85 Yük (Mekanik Kodlama, Arama,
+        │    Nemotron 3 Ultra, DeepSeek V4 Flash, │     Grep, Formatlama, Keşif)
+        │    Laguna S 2.1, Ling-3.0-flash, MiMo,  │
+        │    North Mini Code                      │
+        └─────────────────────────────────────────┘
+```
+
+| Modeli Kapsamı | Modeller | Görev Dağılımı | Maliyet |
+|---|---|---|---|
+| **Ücretsiz Katman (OpenCode Zen Free)** | `Nemotron 3 Ultra Free`, `DeepSeek V4 Flash Free`, `Laguna S 2.1 Free`, `Ling-3.0-flash Free`, `MiMo V2.5 Free`, `North Mini Code Free` | Mekanik kod yazımı, dosya taramaları, `grep`, formatlama, i18n doldurma, test senaryosu hazırlığı. | **ÜCRETSİZ ($0)** |
+| **Nvidia & Pro Endpoints** | `DeepSeek V4 Pro`, `GPT-OSS-120B`, `Gemma-4-31B-IT`, `GLM-5.2`, `Inkling` | Ağır refactoring, karmaşık iş mantıkları, Next.js Server Actions, Zod doğrulama şemaları. | **Optimized / Nvidia Pool** |
+| **Görsel & Medya Üretimi** | `FLUX.1-Kontext-dev` | Pazarlama görselleri, sosyal medya grafikleri ve UI varlık üretimi. | **Varlık Katmanı** |
+
+---
+
+### 2. Otonom Komut Entegrasyonu
+
+Antigravity, OpenCode'u PowerShell üzerinden tetiklerken varsayılan olarak **Önce Ücretsiz modelleri (`--model nemotron-3-ultra-free` veya `--model deepseek-v4-flash-free`)** kullanır. Yetersiz kaldığı durumda otomatik olarak `DeepSeek V4 Pro` veya `GPT-OSS-120B` modellerine geçiş yapar (Escalation Chain).
+
+---
+
+_v12.10 — Doktrin #044 (OFNM-IP — OpenCode Free & Nvidia Model Pool Protocol) MASTER_PLAN'a bağlayıcı kural olarak eklendi. OpenCode üzerindeki tüm ücretsiz modeller (Nemotron 3 Ultra, DeepSeek V4 Flash, Laguna S 2.1 vb.) ve Nvidia modelleri otonom piramide kilitlendi._
