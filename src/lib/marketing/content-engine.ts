@@ -1,6 +1,7 @@
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { callWithFailover, TRIAGE_SLOT_1_CHAIN } from "@/lib/ai/openrouter-gateway";
+import { callWithFailover } from "@/lib/ai/openrouter-gateway";
+import { selectModelByCapability } from "@/lib/audit/model-router";
 import { HuggingFaceAdapter } from "@/lib/ai/adapters/huggingface";
 import { VertexImagenAdapter } from "@/lib/ai/adapters/vertex-imagen";
 import { logger } from "@/lib/utils/logger";
@@ -89,7 +90,7 @@ Output your response strictly as a JSON object:
         temperature: 0.2,
         responseFormat: "json",
       },
-      TRIAGE_SLOT_1_CHAIN,
+      selectModelByCapability("creative_copy"),
     );
     if (res.ok && res.data?.content) {
       const parsed = JSON.parse(res.data.content);
@@ -331,7 +332,7 @@ Output your response strictly as a JSON object:
         temperature: 0.2,
         responseFormat: "json",
       },
-      TRIAGE_SLOT_1_CHAIN,
+      selectModelByCapability("creative_copy"),
     );
     if (res.ok && res.data?.content) {
       const parsed = JSON.parse(res.data.content);
