@@ -621,3 +621,43 @@ Yapay zeka ekosisteminde yeni çıkan ücretsiz modelleri, dağıtılan bedava A
 ---
 
 _v12.08 — Doktrin #040 (ABSBA - Stealth Tarayıcı), Doktrin #041 (RIMRE - Kaynak Paneli /admin/resources) ve Doktrin #042 (engine_hunter - AI Kaynak Avcısı) MASTER_PLAN'a bağlayıcı kural olarak eklendi. Tüm şirket kaynakları ve stealth otomasyon anayasalaştırıldı._
+
+---
+
+## Doktrin #043 — Hierarchical Model Routing & Token Economy Standard (HMR-TES) v1.0
+
+**Kaynak:** Founder Direktifi & Token Ekonomisi Standardı — 2026-07-30. Tür: **Bağlayıcı Model Yönlendirme ve Bütçe Kuralı.**
+
+**Sorun:** Pahalı modellerin (Claude Opus / Gemini Pro) dosya arama, kod tarama, web araştırması veya rutin metin düzeltme gibi amele işlerinde çalıştırılarak token bütçesinin ve API kredilerinin heba edilmesi.
+
+---
+
+### 1. 3 Kademeli Model Hiyerarşisi (Model Routing Pyramid)
+
+```
+        ┌─────────────────────────────────────────┐
+        │  3. KADEME: Claude Opus / Gemini Pro    │  ← %5 Yük (Yalnızca Mimari Hüküm, Güvenlik & Son Onay)
+        ├─────────────────────────────────────────┤
+        │  2. KADEME: Claude Sonnet / Gemini Pro  │  ← %15 Yük (Karmaşık Kod Yazımı & PR Taslağı)
+        ├─────────────────────────────────────────┤
+        │  1. KADEME: Haiku / Gemini Flash        │  ← %80 Yük (Arama, Okuma, Taramalar, Rutin Metinler)
+        └─────────────────────────────────────────┘
+```
+
+| Kademe | Model | Görev Kapsamı | Token Maliyet Oranı |
+|---|---|---|---|
+| **1. Kademe (Keşif & Mekanik Execution)** | **Haiku / Gemini 3.6 Flash** | Dosya ve kod arama (grep/glob), ilk web araştırmaları, metin/i18n doldurma, basit formatlama, log tarama. | **~%90 Ucuz** |
+| **2. Kademe (Kodlama & Taslak Üretimi)** | **Claude Sonnet / Gemini Pro** | Karmaşık bileşen ve Server Action yazımı, test dosyalarının oluşturulması, PR tanımları. | **Standart** |
+| **3. Kademe (Mimari Hüküm & Denetim)** | **Claude Opus** | `docs/MASTER_PLAN.md` anayasa onayları, yüksek seviye mimari kararlar, nihai güvenlik denetimi. | **Kıdemli / Stratejik** |
+
+---
+
+### 2. Pahalı Model Kısıtlama Kuralları (Opus Token Shield)
+
+- **Doğrudan Taramaya Yasak:** Claude Opus asla 10KB'tan büyük ham kod dosyalarını veya logları doğrudan okuyamaz. Ön araştırmayı Haiku/Flash yapar ve Opus'a 1 sayfalık özet sunar.
+- **Fail-Over Kuralı:** Bir iş Haiku ile yapılabiliyorsa Sonnet'e geçilemez. Haiku yetersiz kalırsa (error verir veya karmaşıklığı çözemezse) bir üst kademeye otomatik aktarılır (Escalation Protocol).
+- **Maksimum Token Tasarrufu:** Bu kural sayesinde Mimar katmanının token harcaması **%80 oranında düşürülür** ve abonelik kotaları ay sonuna kadar maksimum verimle korunur.
+
+---
+
+_v12.09 — Doktrin #043 (HMR-TES — Hierarchical Model Routing & Token Economy Standard) MASTER_PLAN'a bağlayıcı kural olarak eklendi. Haiku -> Sonnet -> Opus 3 kademeli yönlendirme piramidi ve %80 token tasarruf kuralı anayasalaştırıldı._
