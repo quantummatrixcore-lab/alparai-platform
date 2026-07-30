@@ -131,7 +131,7 @@ export async function runExpertAnalysisAction(
     throw new Error(`Invalid expert persona: ${expertId}`);
   }
 
-  const chain = selectModelByCapability(persona.capabilityDomain);
+  const chain = await selectModelByCapability(persona.capabilityDomain);
   const modelId = chain[0]?.id ?? "google/gemini-2.5-flash";
 
   const critique = `1. [${persona.name} Evaluation]: Evaluated context "${contextPrompt ?? "ALPAR AI Infrastructure"}".\n2. Key Domain Focus: ${persona.focusArea}\n3. Action Item: Route through ${persona.capabilityDomain} capability chain (${modelId}). Strategic alignment verified.`;

@@ -2,20 +2,32 @@ import { discoverFreeModels } from "@/lib/ai/discovery/fetch-models";
 import { getTrustScoresAction, type TrustScoreRecord } from "@/actions/admin/ai-orchestrator";
 import { Cpu, ShieldCheck, Zap, Layers } from "lucide-react";
 
+import { createAdminClient } from "@/lib/supabase/admin";
+import { OrchestratorTriggerButton } from "./trigger-button";
+
 export default async function AiOrchestratorAdminPage() {
   const freeModels = await discoverFreeModels();
   const trustScores = await getTrustScoresAction();
 
+  const supabase = createAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: chains } = await supabase.from("ai_routing_chains" as any).select("*");
+
   return (
     <div className="space-y-8 p-6 text-white">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="flex items-center gap-3 text-3xl font-bold tracking-tight text-white">
+            <Cpu className="h-8 w-8 text-emerald-400" />
+            AI Orchestrator & Cross-Audit Arena
+          </h1>
+          <p className="mt-2 text-slate-400">
+            Stealth multi-agent cross-audit & trust-based autonomous model routing (Admin-Only).
+          </p>
+        </div>
+      </div>
       <div>
-        <h1 className="flex items-center gap-3 text-3xl font-bold tracking-tight text-white">
-          <Cpu className="h-8 w-8 text-emerald-400" />
-          AI Orchestrator & Cross-Audit Arena
-        </h1>
-        <p className="mt-2 text-slate-400">
-          Stealth multi-agent cross-audit & trust-based autonomous model routing (Admin-Only).
-        </p>
+        <OrchestratorTriggerButton />
       </div>
 
       {/* Free Tier Inventory Stats */}
@@ -91,6 +103,33 @@ export default async function AiOrchestratorAdminPage() {
           </table>
         </div>
       </div>
+
+      {/* Dynamic Chains Table */}
+      {chains && chains.length > 0 && (
+        <div className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/80 p-6">
+          <h2 className="text-xl font-semibold text-white">Active Routing Chains</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            {chains.map((chain: any) => (
+              <div
+                key={chain.domain_name}
+                className="rounded border border-slate-700 bg-slate-800/50 p-4"
+              >
+                <h3 className="font-semibold text-emerald-400">{chain.domain_name}</h3>
+                <ul className="mt-2 space-y-1">
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  {chain.models.map((m: any, idx: number) => (
+                    <li key={idx} className="text-sm text-slate-300">
+                      {idx + 1}. {m.id}{" "}
+                      <span className="text-xs text-slate-500">({m.provider})</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Trust Ledger Table */}
       {trustScores.length > 0 && (

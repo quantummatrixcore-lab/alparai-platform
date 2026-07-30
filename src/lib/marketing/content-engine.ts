@@ -90,7 +90,7 @@ Output your response strictly as a JSON object:
         temperature: 0.2,
         responseFormat: "json",
       },
-      selectModelByCapability("creative_copy"),
+      await selectModelByCapability("creative_copy"),
     );
     if (res.ok && res.data?.content) {
       const parsed = JSON.parse(res.data.content);
@@ -332,7 +332,7 @@ Output your response strictly as a JSON object:
         temperature: 0.2,
         responseFormat: "json",
       },
-      selectModelByCapability("creative_copy"),
+      await selectModelByCapability("creative_copy"),
     );
     if (res.ok && res.data?.content) {
       const parsed = JSON.parse(res.data.content);

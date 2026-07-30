@@ -3,8 +3,8 @@ import "../helpers/setup";
 import { selectModelTier } from "@/lib/audit/model-router";
 
 describe("selectModelTier router", () => {
-  it("returns none tier and empty chains when auditTier is none", () => {
-    const res = selectModelTier({
+  it("returns none tier and empty chains when auditTier is none", async () => {
+    const res = await selectModelTier({
       title: "Short Title",
       description: "Short Description",
       severity: "low",
@@ -17,8 +17,8 @@ describe("selectModelTier router", () => {
     expect(res.supremeChain).toEqual([]);
   });
 
-  it("routes to basic tier for short descriptions and low/medium severity", () => {
-    const res = selectModelTier({
+  it("routes to basic tier for short descriptions and low/medium severity", async () => {
+    const res = await selectModelTier({
       title: "Short Title",
       description: "A very short description that is less than 1200 characters.",
       severity: "low",
@@ -31,8 +31,8 @@ describe("selectModelTier router", () => {
     expect(res.supremeChain[0]?.provider).toBe("openrouter");
   });
 
-  it("routes to deep tier if auditTier is explicitly forced to deep", () => {
-    const res = selectModelTier({
+  it("routes to deep tier if auditTier is explicitly forced to deep", async () => {
+    const res = await selectModelTier({
       title: "Short Title",
       description: "A very short description that is less than 1200 characters.",
       severity: "low",
@@ -45,9 +45,9 @@ describe("selectModelTier router", () => {
     expect(res.supremeChain[0]?.id).toBe("openai/gpt-4o");
   });
 
-  it("routes to deep tier for long descriptions even if severity is low", () => {
+  it("routes to deep tier for long descriptions even if severity is low", async () => {
     const longDesc = "A".repeat(1200);
-    const res = selectModelTier({
+    const res = await selectModelTier({
       title: "Short Title",
       description: longDesc,
       severity: "low",
@@ -58,8 +58,8 @@ describe("selectModelTier router", () => {
     expect(res.slot1Chain[0]?.id).toBe("openai/gpt-4o");
   });
 
-  it("routes to deep tier for critical severity even if description is short", () => {
-    const res = selectModelTier({
+  it("routes to deep tier for critical severity even if description is short", async () => {
+    const res = await selectModelTier({
       title: "Short Title",
       description: "Short Description",
       severity: "critical",
@@ -70,8 +70,8 @@ describe("selectModelTier router", () => {
     expect(res.slot1Chain[0]?.id).toBe("openai/gpt-4o");
   });
 
-  it("routes to deep tier for high severity even if description is short", () => {
-    const res = selectModelTier({
+  it("routes to deep tier for high severity even if description is short", async () => {
+    const res = await selectModelTier({
       title: "Short Title",
       description: "Short Description",
       severity: "high",

@@ -265,7 +265,7 @@ Criteria: If the text describes a genuine AI incident (hallucination, data leak,
           temperature: 0.1,
           responseFormat: "json",
         },
-        selectModelByCapability("fast_triage"),
+        await selectModelByCapability("fast_triage"),
       );
 
       if (!res.ok) continue;

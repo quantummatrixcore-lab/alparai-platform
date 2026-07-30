@@ -1,3 +1,12 @@
+import { createAdminClient } from "@/lib/supabase/admin";
+import { logger } from "@/lib/utils/logger";
+import {
+  MATH_LOGIC_CHAIN as FALLBACK_MATH_LOGIC,
+  CREATIVE_COPY_CHAIN as FALLBACK_CREATIVE_COPY,
+  RISK_AUDIT_CHAIN as FALLBACK_RISK_AUDIT,
+  FAST_TRIAGE_CHAIN as FALLBACK_FAST_TRIAGE,
+} from "../ai/openrouter-gateway";
+
 export type ModelTier = "basic" | "deep" | "none";
 export type TaskDomain = "math_logic" | "creative_copy" | "risk_audit" | "fast_triage";
 
@@ -16,42 +25,65 @@ export interface ModelRouterResult {
   supremeChain: ModelChainItem[];
 }
 
-// Ensure these match the definitions in openrouter-gateway.ts exactly (or import them if possible, but keeping them here for decoupling if preferred. Actually, let's import them from openrouter-gateway).
-import {
-  MATH_LOGIC_CHAIN,
-  CREATIVE_COPY_CHAIN,
-  RISK_AUDIT_CHAIN,
-  FAST_TRIAGE_CHAIN,
-} from "../ai/openrouter-gateway";
-
 /**
- * Capability-based single chain selector for specific tasks
+ * Capability-based single chain selector for specific tasks (Now Dynamic from DB)
  */
-export function selectModelByCapability(domain: TaskDomain): readonly ModelChainItem[] {
+export async function selectModelByCapability(domain: TaskDomain): Promise<ModelChainItem[]> {
+  try {
+    const supabase = createAdminClient();
+
+    const { data, error } = await supabase
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .from("ai_routing_chains" as any)
+      .select("models")
+      .eq("domain_name", domain)
+      .single();
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (
+      error ||
+      !data ||
+      !(data as any).models ||
+      ((data as any).models as ModelChainItem[]).length === 0
+    ) {
+      return getFallbackChain(domain);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (data as any).models as ModelChainItem[];
+  } catch (err) {
+    logger.error("[ModelRouter] Error fetching dynamic routing chain, falling back", {
+      error: err,
+    });
+    return getFallbackChain(domain);
+  }
+}
+
+function getFallbackChain(domain: TaskDomain): ModelChainItem[] {
   switch (domain) {
     case "math_logic":
-      return MATH_LOGIC_CHAIN;
+      return [...FALLBACK_MATH_LOGIC];
     case "creative_copy":
-      return CREATIVE_COPY_CHAIN;
+      return [...FALLBACK_CREATIVE_COPY];
     case "risk_audit":
-      return RISK_AUDIT_CHAIN;
+      return [...FALLBACK_RISK_AUDIT];
     case "fast_triage":
-      return FAST_TRIAGE_CHAIN;
+      return [...FALLBACK_FAST_TRIAGE];
     default:
-      return FAST_TRIAGE_CHAIN;
+      return [...FALLBACK_FAST_TRIAGE];
   }
 }
 
 /**
  * Multi-slot cross-audit selector (Legacy/Triage compatibility)
  */
-export function selectModelTier(params: {
+export async function selectModelTier(params: {
   title: string;
   description: string;
   severity: string;
   severityScore?: number;
   auditTier?: ModelTier;
-}): ModelRouterResult {
+}): Promise<ModelRouterResult> {
   const auditTier = params.auditTier || "basic";
 
   if (auditTier === "none") {
@@ -68,19 +100,20 @@ export function selectModelTier(params: {
     // For BASIC tier, we leverage different capabilities for a diverse cross-audit
     return {
       tier: "basic",
-      slot1Chain: [...FAST_TRIAGE_CHAIN],
-      slot2Chain: [...CREATIVE_COPY_CHAIN],
-      slot3Chain: [...MATH_LOGIC_CHAIN],
-      supremeChain: [...RISK_AUDIT_CHAIN],
+      slot1Chain: await selectModelByCapability("fast_triage"),
+      slot2Chain: await selectModelByCapability("creative_copy"),
+      slot3Chain: await selectModelByCapability("math_logic"),
+      supremeChain: await selectModelByCapability("risk_audit"),
     };
   }
 
   // For DEEP tier, we rely heavily on the Risk Audit (Premium) chain
+  const riskAuditChain = await selectModelByCapability("risk_audit");
   return {
     tier: "deep",
-    slot1Chain: [...RISK_AUDIT_CHAIN],
-    slot2Chain: [...RISK_AUDIT_CHAIN],
-    slot3Chain: [...RISK_AUDIT_CHAIN],
-    supremeChain: [...RISK_AUDIT_CHAIN],
+    slot1Chain: [...riskAuditChain],
+    slot2Chain: [...riskAuditChain],
+    slot3Chain: [...riskAuditChain],
+    supremeChain: [...riskAuditChain],
   };
 }
