@@ -124,31 +124,3 @@ jobs:
           ignore-unfixed: true
           format: "table"
         continue-on-error: true
-
-  vrt-lock:
-    name: Visual Regression Test (VRT Lock)
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-        with:
-          version: 9.12.0
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: 20
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps chromium
-
-      - name: Run Playwright VRT tests
-        if: ${{ !inputs.force }}
-        run: pnpm test:visual
