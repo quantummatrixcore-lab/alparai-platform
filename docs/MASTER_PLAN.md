@@ -92,6 +92,10 @@ Google for Startups $2K–350K · AWS Activate $1K–200K · Microsoft Founders 
 | 43 | P1 | [OpenCode] Master Plan Dashboard (admin) — filter/search, item detay, parse-hatası/boş-backlog ayrımı | Mimar hattından taşındı (eski #33). `src/lib/utils/markdown-parser.ts:18-84` zaten tam `try/catch` içinde (`logger.error` + `[]` döndürüyor, sayfa çökmüyor) — dış incelemenin "error handling yok (P0)" iddiası kod ile çelişiyordu. **Gerçek, daha dar eksikler:** parse başarısızlığında dashboard sessizce "tüm kolonlar boş" gösteriyor (gerçek-boş vs. parse-hatası görsel ayrımı yok); `admin/master-plan/page.tsx:40` 3 kolonluk grid'de yalnızca 1 kart var; filter/search UI yok; kartlarda `onClick`/detay görünümü yok. | pending |
 | 44 | P2 | [OpenCode] 3 dar içerik boşluğu — Case #001 detay sayfası, Security'de SOC2/ISO, Methodology'de 5-model listesi | Mimar hattından taşındı (eski #34). (1) Kurucunun Grok pasaport vakasının genel-erişime açık kanıt-detaylı sayfası yok, yalnızca `invest-presentation.tsx:124` anlatısı ve `incidents/[id]/page.tsx` genel şablonu var; (2) `security/page.tsx` (126 satır) gerçek ama SOC2/ISO 27001/AES detayı içermiyor; (3) `methodology/*` cross-audit kavramını anlatıyor ama 5 model adını yayımlamıyor (kodda 3 model hardcoded: `openrouter-gateway.ts:117-121`). Üçü de mevcut sayfalara ek içerik, yeni route gerekmiyor. | pending |
 | 45 | P2 | [OpenCode] `about/page.tsx` uydurma yedek istatistikler (`?? 371` / `: 12` / `: 23`) | Mimar hattından taşındı (eski #35'in kalan parçası). Ana sayfa kısmı `061e733` ile TAMAMEN kapatıldı (OG/Twitter `t("title")`/`t("description")`'a bağlandı, `?? 371`/`?? 23` ve besleyen sorgu bloğu silindi, `alternates.canonical` + `alternates.languages` 5 locale için eklendi — diff ile doğrulandı). **Kalan:** `src/app/[locale]/about/page.tsx:45,47,49` hâlâ `count ?? 371`, `: 12`, `: 23` — Supabase sorgusu hata verirse hero istatistik bloğunda uydurma sayı render ediliyor. #11 ("uydurma sayı yerine N/A") ve #13 (sahte MRR temizliği) doktrinine aykırı; yedek değer yerine N/A/gizle davranışı gerekiyor. | pending |
+| 46 | P0 | [Antigravity] Kural 19/20/25 uygulanamaz durumda — `docs/AGENT_REPUTATION.md` hiç yok | Doktrin #036 Kural 20 ve #037 Kural 25 ajan itibar skorunun `docs/AGENT_REPUTATION.md`'de tutulmasını ZORUNLU kılıyor; dosya depoda **yok** (`ls` ile doğrulandı). Dolayısıyla Kural 19'un (Doğrulayan ≠ Üretici) yaptırımı, Kural 20'nin puanlaması ve Kural 25'in `/admin/strategy` panosu yalnızca metin — hiçbiri çalışmıyor. **Spec:** dosyayı ajan başına satırla oluştur (+1/-3/-5 kayıtları), CI'da her doğrulama sonucunda güncelle, `/admin/strategy`'ye canlı bağla. Otopilot ön koşuludur. | pending |
+| 47 | P0 | [Antigravity] Kural 26 görsel regresyon kilidi CI'ya hiç bağlı değil | `tests/e2e/visual/screenshot-diff.spec.ts` var ama `.github/workflows/` altındaki 11 workflow'un hiçbirinde `playwright-vrt` aşaması veya bu spec'e referans yok (grep ile doğrulandı). Doktrin #035 VPP, #036 Kural 22 ve #037 Kural 26'nın dayandığı "UI bir kez güzelleşince otomatik korunur" garantisi **fiilen yok** — hiçbir piksel sapması derlemeyi durdurmuyor. **Spec:** CI'ya `playwright-vrt` job'u ekle, baseline'ları depoya al, %5 üstü sapmada deploy'u blokla. Otopilot ön koşuludur. | pending |
+| 48 | P1 | [Antigravity] Kural 23 gece güvenlik taraması haftalık çalışıyor, gecelik değil | Doktrin #037 Kural 23 "her gece 03:00 UTC" diyor; `.github/workflows/security.yml:9` gerçekte `cron: "0 6 * * 1"` — **haftada bir, Pazartesi 06:00**. Ayrıca doktrindeki "16 açık (11 high / 5 moderate)" rakamı bu oturumda ölçüldü: `pnpm audit` → **2 high, 0 critical, 0 moderate**; rakam kaynaksız/bayat (Dependabot bandosu ile lockfile taraması farklı sayıyor). **Spec:** cron'u `0 3 * * *` yap, `pnpm audit fix` + test + otomatik PR akışını bağla, FD-02'deki rakamı ölçülen değerle güncelle. | pending |
+| 49 | P2 | [Antigravity] Doktrinlerin kendi Kural 8'ini (Rakam Kaynağı Zorunluluğu) ihlal eden kaynaksız rakamları | Doktrin #034 Kural 8 her rakamın kaynak göstermesini, gösteremiyorsa "ölçülmedi" yazılmasını zorunlu kılıyor. İhlal edenler: (1) Doktrin #041 RIMRE "Verimlilik Skoru" sütunu — %95/%98/%90/%100/%100/%75, hiçbirinin kaynağı veya ölçüm yöntemi yok; (2) Doktrin #043 "token harcaması %80 oranında düşürülür" — ölçülmemiş projeksiyon, `[tahmin — doğrulanmamış]` etiketi yok; (3) FD-02 "16 açık" (bkz. #48). **Spec:** her rakama kaynak ekle veya "ölçülmedi"ye çevir; projeksiyonları `[tahmin — doğrulanmamış]` ile etiketle. | pending |
 <!-- FOUNDER_BACKLOG_END -->
 
 ---
@@ -729,13 +733,13 @@ _v12.10 — Doktrin #044 (OFNM-IP — OpenCode Free & Nvidia Model Pool Protocol
 
 ### 1. Üretim Hattının Beş Aşaması
 
-| Aşama             | Ne olur                                                                    | Bağlayıcı doktrin                                   | Çıktı artefaktı              |
-| ----------------- | -------------------------------------------------------------------------- | --------------------------------------------------- | ---------------------------- |
-| **A · Keşif**     | Kaynak/fırsat taraması, model havuzu ve kredi envanteri güncellenir        | #041 RIMRE, #042 `engine_hunter`                    | `/admin/resources` kaydı     |
-| **B · Planlama**  | İş MASTER_PLAN'a madde olarak yazılır; spec dosya:satır düzeyinde netleşir | #034 ANGC Bölüm I-II, #033 Continuous Flow          | Backlog maddesi              |
-| **C · Yürütme**   | Madde `automation_tasks` kuyruğuna düşer, ajan havuzu işler                | #030 EDAP, #032 HAS, #043 HMR-TES, #044 OFNM-IP     | Commit + hash                |
-| **D · Doğrulama** | Üreticiden bağımsız ajan makine-ölçülebilir DoD'a karşı doğrular           | #036 Challenge Protocol (Kural 18-22), #035 FDR-VPP | Kanıt (komut çıktısı/görsel) |
-| **E · Bakım**     | Gece taraması, bağımlılık/güvenlik kilidi, görsel regresyon baseline       | #037 ANMIL (Kural 23-26)                            | Nightly rapor                |
+| Aşama             | Ne olur                                                                    | Bağlayıcı doktrin                                                                                                   | Çıktı artefaktı              |
+| ----------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| **A · Keşif**     | Kaynak/fırsat taraması, model havuzu ve kredi envanteri güncellenir        | #041 RIMRE, #042 `engine_hunter`                                                                                    | `/admin/resources` kaydı     |
+| **B · Planlama**  | İş MASTER_PLAN'a madde olarak yazılır; spec dosya:satır düzeyinde netleşir | #034 ANGC Bölüm I-II, #033 Continuous Flow                                                                          | Backlog maddesi              |
+| **C · Yürütme**   | Madde `automation_tasks` kuyruğuna düşer, ajan havuzu işler                | #043 HMR-TES, #044 OFNM-IP (bağlayıcı); #030 EDAP / #032 HAS yalnızca **öneri** — akış şablonu, kural kaynağı değil | Commit + hash                |
+| **D · Doğrulama** | Üreticiden bağımsız ajan makine-ölçülebilir DoD'a karşı doğrular           | #036 Challenge Protocol (Kural 18-22), #035 FDR-VPP                                                                 | Kanıt (komut çıktısı/görsel) |
+| **E · Bakım**     | Gece taraması, bağımlılık/güvenlik kilidi, görsel regresyon baseline       | #037 ANMIL (Kural 23-26)                                                                                            | Nightly rapor                |
 
 **Kilit kural:** Bir madde D aşamasını geçmeden "completed" işaretlenemez. #036 Kural 19 (Doğrulayan ≠ Üretici) bu hattın tek ihlal edilemez kapısıdır.
 
@@ -782,3 +786,68 @@ _v12.12 — 🔴 **YÖNETİŞİM OLAYI: MASTER_PLAN iki ayrı hatta çatallanmı
 **🟢 Yeni Doktrin #045 (E2E-APA) eklendi — Founder talebi üzerine entegrasyon katmanı.** #030-#044 tek tek tanımlıydı ama aralarındaki akış tanımsızdı. #045 yeni kural üretmez; beş aşamalı üretim hattını (Keşif → Planlama → Yürütme → Doğrulama → Bakım) tanımlar, her aşamaya bağlayıcı doktrini ve zorunlu çıktı artefaktını bağlar, #043'ün 3 kademeli piramidi ile #044'ün ücretsiz havuzunu (Nemotron 3 Ultra Free, DeepSeek V4 Flash Free, Nvidia endpoint'leri) aşama bazında eşler, Google Ultra kolunu (#038/#039) ana hattı bloklamayan paralel kol olarak konumlandırır ve her tamamlanan madde için zorunlu üçlü kanıt zincirini (commit hash + makine çıktısı + görsel kanıt) tek yerde toplar. Çelişki halinde kaynak doktrin metni üstündür.
 
 **Aksiyon:** Backlog 41 → **45 madde**. Doktrin sayısı 12 → **13**. Mimar hattının açık bulguları master numaralandırmasına taşındı; iki hat bu commit ile birleşti._
+
+---
+
+## Doktrin #046 — Otopilot Ön-Uçuş Kontrolü ve Otonom Durdurma Kuralları (APH — Autopilot Pre-flight & Halt) v1.0
+
+**Kaynak:** Claude (Mimar) — 2026-07-30, Founder'ın "üretime/otopilota geçelim" talebi üzerine yapılan #030-#045 denetiminin çıktısı. Tür: **Bağlayıcı Üretime Geçiş Kapısı.**
+
+**Kök teşhis:** #033-#044 arası doktrinler _ne yapılacağını_ tanımlıyor, ancak hiçbiri **otopilotun ne zaman başlayamayacağını** ve **çalışırken kendini ne zaman durdurması gerektiğini** tanımlamıyor. Otopilot, kendi kalite kapısı kırmızıyken başlatılırsa Doktrin #034 Kural 12'yi ihlal ederek çalışır ve her döngüde ihlali büyütür.
+
+### 1. Ön-Uçuş Kontrol Listesi (Pre-flight — hepsi yeşil olmadan otopilot başlatılamaz)
+
+| #    | Kapı                    | Ölçüm komutu                      | Geçme kriteri                 | Bu denetimdeki durum (2026-07-30)         |
+| ---- | ----------------------- | --------------------------------- | ----------------------------- | ----------------------------------------- |
+| PF-1 | Test paketi             | `pnpm test`                       | 933/933 yeşil                 | 🔴 **19 failed / 914 passed** (madde #36) |
+| PF-2 | Lint + tip              | `pnpm lint && pnpm typecheck`     | exit 0                        | 🟢 ikisi de exit 0                        |
+| PF-3 | Doğrulayıcı yaptırımı   | `docs/AGENT_REPUTATION.md` mevcut | dosya var + CI yazıyor        | 🔴 **dosya yok** (madde #46)              |
+| PF-4 | Görsel regresyon kilidi | CI'da `playwright-vrt` job'u      | baseline'lı, deploy bloklayan | 🔴 **CI'ya bağlı değil** (madde #47)      |
+| PF-5 | Gece güvenlik taraması  | `security.yml` cron               | `0 3 * * *`                   | 🔴 **`0 6 * * 1` (haftalık)** (madde #48) |
+| PF-6 | Güvenlik açığı          | `pnpm audit`                      | 0 high/critical               | 🔴 **2 high**                             |
+
+**Kural 27 (Kırmızı Kapıyla Kalkış Yasağı):** PF-1…PF-6'dan biri kırmızıyken otopilot başlatılamaz. Yeşil olmayan kapıyı kapatan iş, otopilotun _ilk_ görevi olamaz — çünkü o işin kendisi doğrulanamaz. Kapılar insan gözetimli tek seferlik turda kapatılır, sonra otopilot devreye alınır.
+
+### 2. Otonom Durdurma Koşulları (Halt Conditions — çalışırken)
+
+**Kural 28 (Kendi Kendini Durdurma):** Otopilot aşağıdakilerden biri gerçekleşirse yeni görev almayı durdurur, açık işi bitirir ve Founder'a alarm bırakır:
+
+- Arka arkaya 2 döngüde CI kırmızı (geçici hata değil, kalıcı regresyon sinyali)
+- `pnpm audit` yeni high/critical üretti
+- Aynı backlog maddesi 3 turdur "bitti" bildirilip doğrulamada kırmızı çıktı (bkz. eski #32 örneği: 4 tur sürdü)
+- VRT baseline'ında %5 üstü sapma
+- Production DB'de `DELETE`/`UPDATE` gerektiren bir iş kuyruğa düştü (#036 Kural 21 zaten insan kapısı koyuyor)
+
+**Kural 29 (Geri Alma Yolu Zorunluluğu):** Otopilotun ürettiği her deploy için geri alma yolu önceden tanımlı olmalıdır. `.github/workflows/rollback.yml` mevcuttur; otopilot bir deploy'u `READY` doğrulayamazsa bu workflow'u tetiklemek zorundadır — "sonraki commit'te düzeltirim" #034 Kural 12 gereği geçersizdir.
+
+### 3. Doktrin Çelişkilerinin Çözüm Sırası
+
+**Kural 30 (Genişletilmiş Hiyerarşi):** #034 Kural 16 hiyerarşiyi `#034 → MASTER_PLAN → AGENTS.md` olarak tanımlıyor ama `CLAUDE.md`'yi hiç anmıyor ve #034'ün kendisi MASTER_PLAN içinde olduğu için özyinelemeli. Düzeltilmiş sıra: **`CLAUDE.md` (oturum-seviyesi G-kuralları) → #034 ANGC → diğer Doktrinler (numara büyük olan üstün) → Öneriler (#030-#032, bağlayıcı değil) → AGENTS.md.** Çelişki halinde üstteki kazanır ve çelişki bir sonraki Mimar aktivasyonunda yazılı olarak çözülür.
+
+---
+
+_v12.13 — 🔴 **Doktrin #030-#045 uçtan uca denetimi: ONAY VERİLMEDİ — otopilot 4 kırmızı kapıyla başlatılamaz.** Founder "son bir kez analiz et, eklenecek bir şey yoksa onay ver ve otopilota geçelim" dedi. Doktrinlerin tam metni (50.493 karakter, satır 121-725) bu oturumda ilk kez uçtan uca okundu ve her iddia edilen altyapı bileşeni dosya sisteminde arandı. Sonuç: **doktrinler tutarlı bir vizyon tanımlıyor ama dayandıkları yaptırım altyapısının önemli bir kısmı depoda yok.**
+
+**🔴 Otopilotu bloklayan 4 bulgu (yeni madde #46-#49 + mevcut #36):**
+
+1. **`docs/AGENT_REPUTATION.md` hiç yok** (madde #46) — Doktrin #036 Kural 20 ve #037 Kural 25 bu dosyayı ZORUNLU kılıyor. Yokluğunda Kural 19'un (Doğrulayan ≠ Üretici) hiçbir yaptırımı yok. Bu, tüm doğrulama mimarisinin taşıyıcı kolonu — #036'nın kendi teşhisiyle "sistemin aynı ajanın hem üretici hem doğrulayıcı olmasına izin vermesi" sorunu **hâlâ açık**.
+2. **Görsel regresyon kilidi CI'ya bağlı değil** (madde #47) — `tests/e2e/visual/screenshot-diff.spec.ts` var ama 11 workflow'un hiçbiri onu çalıştırmıyor. #035 VPP, #036 Kural 22, #037 Kural 26'nın tamamı bu kilide dayanıyor; fiiliyatta hiçbir piksel sapması deploy'u durdurmuyor.
+3. **Gece taraması gecelik değil** (madde #48) — #037 Kural 23 "her gece 03:00 UTC" diyor, `security.yml:9` gerçekte `0 6 * * 1` (haftada bir).
+4. **Kalite kapısı şu an kırmızı** (mevcut madde #36) — `pnpm test` → **19 failed / 914 passed**. Doktrin #034 Kural 12 ("Yeşil veya Yok") şu anda master üzerinde ihlal ediliyor. Otopilot bu durumda başlatılırsa her döngüde ihlali büyütür.
+
+**🔴 Doktrinler arası dört gerçek çelişki (çözüm Kural 30 ile getirildi):**
+
+- **#034 Kural 1 ↔ CLAUDE.md G-5/G-6:** Kural 1 "Mimar MASTER_PLAN belgeleme güncellemeleri için ASLA çağrılmaz" diyor; G-6 ise Claude'un yazabileceği **tek** dosya grubunun MASTER_PLAN/CLAUDE/AGENTS olduğunu söylüyor. İkisi birlikte uygulanırsa Mimar hiçbir şey yapamaz. #034 Kural 16'nın hiyerarşisi `CLAUDE.md`'yi hiç anmıyor.
+- **#030 §4 ↔ fiili durum:** "MASTER_PLAN salt-okunur dashboard olur, Executor ajanlar buraya yazmaz" deniyor; oysa #030-#044 doktrinlerinin tamamı Executor (Antigravity) tarafından yazılıp master'a push edildi (`950f978`, `84892d3`, `0be909b` vb.). `.husky/pre-commit` plan-guard'ı bunu bloklamalıydı; landing gerçekleştiğine göre kapı fiilen çalışmıyor.
+- **#033 ↔ #032:** #033 zaman kısıtlarını "İPTAL EDİLMİŞTİR" ilan ediyor; #032'nin "Uygulama Önceliği" tablosu hâlâ "1 gün / 2 gün / 3 gün" tahminleri taşıyor. #033 sonraki ve bağlayıcı olduğundan bu tahminler geçersiz — tabloya not düşülmeli.
+- **#040 ABSBA ↔ #032 ToS katmanı ve madde #26:** #040 canvas/WebGL fingerprint spoofing, `navigator.webdriver` gizleme ve insansı yazma/fare simülasyonunu bağlayıcı kural yapıyor — yani platform bot tespitinden kaçınma. #032 ise `requires_human_submit` ile ToS uyumunu, madde #26 ise LinkedIn ToS'unun otomasyonu yasakladığını kayıt altına almıştı. **Not:** bu, ürünü "AI hesap verebilirliği / güven altyapısı" olarak konumlandıran bir şirket için ayrıca itibar riski taşıyor; teknik risk (hesap banı) ile birlikte Founder'ın bilinçli kararı olarak kayda geçiriliyor — doktrin değiştirilmedi, yalnızca çelişki belgelendi.
+
+**🟡 Doktrinlerin kendi Kural 8'ini ihlal eden kaynaksız rakamlar (madde #49):** #041 RIMRE'nin "Verimlilik Skoru" sütunu (%95/%98/%90/%100/%100/%75) kaynaksız; #043'ün "%80 token tasarrufu" ölçülmemiş projeksiyon; FD-02'nin "16 açık" rakamı bu oturumda ölçülen `pnpm audit` çıktısıyla (**2 high, 0 critical, 0 moderate**) uyuşmuyor.
+
+**🟢 Doğrulanan sağlam bileşenler:** `/admin/resources` sayfası gerçekten var (#041'in dayanağı); `rollback.yml` dahil 11 GitHub workflow mevcut; VRT spec dosyası yazılmış (yalnızca CI'ya bağlanmamış); `pnpm lint` ve `pnpm typecheck` exit 0; #039'un Google Ultra envanteri ekran görüntüsü kaynağıyla #034 Kural 6'nın ikincil kanıt sınıfına uygun.
+
+**🟢 Yeni Doktrin #046 (APH) eklendi** — eksik olan tek şey buydu: otopilotun **ne zaman başlayamayacağı** ve **çalışırken kendini ne zaman durduracağı**. 6 maddelik ön-uçuş kontrol listesi (PF-1…PF-6, her biri komutla ölçülebilir), Kural 27 (kırmızı kapıyla kalkış yasağı), Kural 28 (5 otonom durdurma koşulu), Kural 29 (geri alma yolu zorunluluğu) ve Kural 30 (CLAUDE.md'yi de içeren düzeltilmiş çelişki hiyerarşisi).
+
+**🟡 Kendi v12.12 hatam düzeltildi:** Doktrin #045'in akış tablosunda C aşamasının bağlayıcı kaynakları arasında #030 EDAP ve #032 HAS'ı saymıştım; ikisi de metinlerinde açıkça "Öneri … bağlayıcı değil" diyor. Tablo düzeltildi — bunlar akış şablonu, kural kaynağı değil.
+
+**KARAR:** Otopilota geçiş için **onay verilmedi.** Gerekçe tek cümleyle: otopilotun uyacağı kalite kapısı şu an kırmızı ve onu denetleyecek üç mekanizma (itibar dosyası, VRT kilidi, gece taraması) depoda yok — bu haliyle otopilot kendi kurallarını doğrulayamaz. **Kalkış için kapatılması gereken sıra:** #36 (testler yeşile) → #46 (AGENT_REPUTATION.md) → #47 (VRT CI) → #48 (gece cron) → `pnpm audit` 0 high. Beşi kapandığında PF-1…PF-6 yeşil olur ve Kural 27 gereği otopilot başlatılabilir; bu tur insan gözetimli tek seferliktir. Backlog 45 → **49 madde**, doktrin 13 → **14**._
