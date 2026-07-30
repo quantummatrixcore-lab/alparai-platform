@@ -525,3 +525,43 @@ Ajanlar gece yazılım geliştirme görevlerini tamamladıktan sonra otomatik ol
 ---
 
 _v12.06 — Doktrin #038 (GAMSE — 360° Google Ultra & Autonomous Multi-Agent Social Engine) MASTER_PLAN'a bağlayıcı kural olarak eklendi. Google Ultra aboneliğinin tüm araçları (Veo, Imagen 3, Workspace, Vertex AI) ve otonom sosyal medya / startup başvuru akışları anayasalaştırıldı._
+
+---
+
+## Doktrin #039 — Google Ultra 360° Ecosystem Master Blueprint (GUE-MB) v1.0
+
+**Kaynak:** Founder Direktifi & Ekran Görüntüsü Analizi (`quantum.matrix.core@gmail.com`) — 2026-07-30. Tür: **Bağlayıcı Varlık ve Ekosistem Kullanım Doktrini.**
+
+**Tespiti Yapılan Varlık:** 10.050+ Aktif Google Flow Kredisi + Günlük 50 Bonus + Gemini Omni Flash Sinematik Video Modeli + Google FX Suite Tam Erişimi.
+
+---
+
+### 1. Google Ultra & Labs 360° Araç Envanteri ve Ajan Görev Matrisi
+
+| # | Araç / Servis Kodu | Ekosistem Katmanı | Model / Altyapı | ALPAR AI Otonom Kullanım Amacı | Otomasyon Metodu |
+|---|---|---|---|---|---|
+| **1** | **Google Flow** (`labs.google/fx/tools/flow`) | Generative FX | **Gemini Omni Flash** & Veo 2 | **Sinematik Tanıtım Videoları:** ALPAR AI güven altyapısı ve KVKK modülü reklam/lansman videoları üretimi | `openchrome` + Flow Credit Auto-Drain |
+| **2** | **ImageFX** (`labs.google/fx/tools/imagefx`) | Generative FX | **Imagen 3** | **Ultra-HD Medya Görselleri:** Blog kapakları, sosyal medya post kartları ve UI illüstrasyonları | `openchrome` / ImageFX API |
+| **3** | **MusicFX** (`labs.google/fx/tools/musicfx`) | Generative Audio | MusicLM | **Otonom Reklam Müzikleri:** Video içerikleri için telifsiz arka plan müzikleri | AudioFX Auto-Generate |
+| **4** | **TextFX** (`labs.google/fx/tools/textfx`) | Creative Writing | PaLM/Gemini | **Kreatif Reklam Metinleri:** LinkedIn ve X için vurucu slogan ve lansman başlıkları | Creative Text Prompting |
+| **5** | **Google Opal** | No-Code AI Workflows | Opal Engine | **Otonom Mini Funnel:** Potansiyel B2B müşteriler için otomatik yapay zeka analiz akışları | Opal API / Web |
+| **6** | **Google Pomelli** | Ad Creative Engine | Google Marketing AI | **Reklam Kampanyaları:** Google Ads ve Sosyal Medya performans reklam banner'ı üretimi | Ad Campaign Auto-Gen |
+| **7** | **NotebookLM** (`notebooklm.google.com`) | Grounded AI & Audio | Gemini 1.5 Pro | **Podcast Overviews & Whitepaper:** KVKK/AI Act mevzuat özetleri ve AI Podcast ses kayıtları üretimi | Audio Overview Exporter |
+| **8** | **Google AI Studio** (`aistudio.google.com`) | Developer Stack | **Gemini 2.0 Flash / 1.5 Pro** | 2 Milyon token bağlamlı büyük kod/veri analizi ve ücretsiz API çağrıları | Direct Native API (`mcp`) |
+| **9** | **Gemini in Google Docs** | Workspace Labs | Gemini Ultra | Otonom kurumsal teklif, basın bülteni ve KVKK rapor şablonları | Workspace API / Browser |
+| **10**| **Gemini in Google Slides** | Workspace Labs | Gemini Ultra | Y-Combinator / VC Yatırımcı Sunumu (Pitch Deck) görsel ve slayt üretimi | Slides Auto-Presenter |
+| **11**| **Gemini in Google Sheets** | Workspace Labs | Gemini Ultra | Pazar araştırması, rakip fiyatlandırma matrisi ve lead analizi | Sheets Auto-Formula |
+| **12**| **Vertex AI & GCP** | Cloud Infra | PaLM / Imagen / Codey | Büyük hacimli veri işleme ve güvenli PII tarama akışları | `gcloud` MCP |
+| **13**| **Google Colab Enterprise** | ML Sandbox | GPU / TPU Accelerators | K-BENCHMARK testleri ve özel model performans ölçümleri | Jupyter Automation |
+
+---
+
+### 2. Kredi ve Kaynak İttifakı Kuralı (Credit Drain & ROI Enforcement)
+
+- **Boşa Kredi Yasaktır:** `quantum.matrix.core@gmail.com` hesabındaki 10.050+ Google Flow kredisi ve günlük 50 bonus kredi, ajanlar tarafından her hafta otonom olarak tüketilir.
+- **İçerik Fabrikası:** Kredilerle haftalık 5 adet **Gemini Omni Flash** destekli sinematik video ve 20 adet **Imagen 3** görseli üretilip `public/marketing/` klasörüne arşivlenir.
+- **Podcast Üretimi:** NotebookLM kullanılarak ALPAR AI'ın haftalık teknik özetleri **Audio Overview (İki kişilik AI Podcast)** formatına dönüştürülür ve Spotify/YouTube'a aktarılmaya hazır hale getirilir.
+
+---
+
+_v12.07 — Doktrin #039 (GUE-MB — Google Ultra 360° Ecosystem Master Blueprint) MASTER_PLAN'a bağlayıcı kural olarak eklendi. Ekran görüntüsündeki 10.050 Flow kredisi, Gemini Omni Flash, ImageFX, MusicFX, Opal, Pomelli, NotebookLM ve Workspace 360 entegrasyonu envantere katıldı._
