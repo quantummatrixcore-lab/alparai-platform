@@ -1393,3 +1393,19 @@ _v12.45 — 🟢 Yukarıdaki toplu görev bloğu ve Kural 45 eklendi. #86 bu tur
 **Sonuç — G-5/Rule 9'a yeni bir kural eklenmiyor, mevcut kuralın gerekçesi güçlendiriliyor.** Proje `CLAUDE.md` Rule 9 tablosu zaten "Architecture decisions, strategy, security analysis... → Opus 5 / Fable 5" diyor — Fable'ı en zor/en kritik karara ayırmak doktrinde vardı. Bu ölçüm o sınırlamayı **rakamla doğruluyor**: Fable'ı gerekçesiz sohbet/keşif turlarında ana model olarak çalıştırmak, aynı işi Sonnet'te yapmanın ~6 katı, Haiku'da yapmanın ~29 katı nakit maliyete mal oluyor. Yeni bir doktrin maddesi yazmıyorum — bu zaten var olan "Fable yalnızca en zor karar" ilkesinin kaynaklı, dolar cinsinden kanıtı.
 
 **Metodoloji şerhi (Rule 10 uyumlu).** Cache-write çarpanı (1,25×) 5 dakikalık TTL varsayımına dayanıyor; oturumdaki gerçek TTL dağılımı (5dk/1sa karışımı) ölçülmedi, bu yüzden mutlak dolar rakamı ±birkaç yüzde sapabilir — ama modeller-arası **oransal** kıyas (Fable'ın Haiku'ya oranı) bu belirsizlikten bağımsız çünkü aynı varsayım tüm modellere eşit uygulandı. Sonnet 5'in $2/$10 tanıtım fiyatı 2026-08-31'de sona eriyor; o tarihten sonra aynı kullanım deseni Sonnet payını %50 artıracak — bu bir `[tahmin — doğrulanmamış]` projeksiyondur, bugünün rakamı değil.
+
+---
+
+## v12.48 — Devretme eşiği: G-5'in sınırı çizildi
+
+**Founder tespiti.** v12.46'da G-5'in devretme zorunluluğu Sonnet'e genişletildikten sonra kural fazla geniş kaldı: her iş alt-ajana gidecekmiş gibi okunuyordu. Founder, mimarın zaten elinde olan bir yeteneği gereksiz yere alt modele devretmemesi gerektiğini belirtti.
+
+**Karar — yeni doktrin değil, mevcut G-5'in sınırı.** `CLAUDE.md` Rule 9 altına "G-5 delegation threshold (v12.48)" eklendi. Kural şu ayrımı yapıyor:
+
+- **Devret:** kapsam bilinmiyor veya çok dosyaya yayılıyor — depo geneli keşif, "X nerede tanımlı", envanter taraması, çok yollu tekrarlayan düzenleme.
+- **Devretme:** dosya yolları zaten belliyse ve kapsam 1-2 dosyaysa, ya da iş oturumun bağlamında **zaten mevcut** veri üzerinde analiz/hesaplama ise (örnek: transkriptteki `usage` alanlarını maliyet tablosuna toplamak). Bu durumda istisna kaydı da gerekmez.
+- **Çakışma halinde genişlik karar verir:** kapsam bilinmiyorsa devret, dar ve belliyse doğrudan yürüt.
+
+**Gerekçe.** Devretmenin kendi maliyeti var: alt-ajan soğuk başlar ve çağıranın zaten taşıdığı bağlamı yeniden türetir. Birkaç araç çağrısıyla bitecek bir iş için alt-ajan açmak, tasarruf ettiğinden fazlasına mal olur. Bu, kullanıcı düzeyi TOM kuralı 2 (devretme eşiği) ile aynı mantığın projeye yansıtılmasıdır.
+
+**Kapsam.** Yalnızca `CLAUDE.md` Rule 9 metni. G-5'in kendisi ve v12.46 genişletmesi kaldırılmadı — üzerine sınır çizildi.
