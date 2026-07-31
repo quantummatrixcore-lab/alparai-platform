@@ -141,33 +141,30 @@ export function maskPII(input: string): PiiScanResult {
   let totalRedactions = 0;
 
   for (const { name, re, mask, luhn, tcKimlik, ibanMod97 } of PATTERNS) {
-    re.lastIndex = 0;
-    const matches = [...input.matchAll(re)];
-    if (matches.length === 0) continue;
-
-    let validMatches = matches;
-    if (luhn) validMatches = validMatches.filter((m) => isLuhnValid(m[0]));
-    if (tcKimlik) validMatches = validMatches.filter((m) => isTcKimlikValid(m[0]));
-    if (ibanMod97) validMatches = validMatches.filter((m) => isIbanMod97Valid(m[0]));
-    if (validMatches.length === 0) continue;
-
+    let currentMatchCount = 0;
     const samples: string[] = [];
-    for (const m of validMatches.slice(0, 3)) {
-      samples.push(truncateSample(m[0]));
-    }
 
-    detectionMap.set(name, {
-      type: name,
-      count: validMatches.length,
-      samples,
+    masked = masked.replace(re, (match) => {
+      let valid = true;
+      if (luhn) valid = isLuhnValid(match);
+      else if (tcKimlik) valid = isTcKimlikValid(match);
+      else if (ibanMod97) valid = isIbanMod97Valid(match);
+
+      if (valid) {
+        currentMatchCount++;
+        totalRedactions++;
+        if (samples.length < 3) samples.push(truncateSample(match));
+        return mask;
+      }
+      return match;
     });
 
-    // Replace only the Luhn-valid/TC/IBAN-valid matches (re-create regex to avoid global state)
-    for (const m of validMatches) {
-      const escaped = m[0].replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      const single = new RegExp(escaped);
-      masked = masked.replace(single, mask);
-      totalRedactions++;
+    if (currentMatchCount > 0) {
+      detectionMap.set(name, {
+        type: name,
+        count: currentMatchCount,
+        samples,
+      });
     }
   }
 
