@@ -330,7 +330,8 @@ const runSubmitWork = async (
     logger.info("Resend email simulation (no RESEND_API_KEY configuration)", { incidentId });
   }
 
-  await translateIncidentToTR(incidentId).catch((err) => {
+  // Fire-and-forget translation
+  translateIncidentToTR(incidentId).catch((err) => {
     logger.error("Failed to auto-translate incident", { incidentId, err });
   });
 
