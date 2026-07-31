@@ -1,21 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { isEmailAllowed } from "@/lib/email/cap";
+import { checkRateLimit } from "@/lib/utils/rate-limit";
 
-const mockSelect = vi.fn();
-const mockInsert = vi.fn();
-
-vi.mock("@/lib/supabase/admin", () => ({
-  createAdminClient: () => ({
-    from: vi.fn().mockImplementation((table: string) => {
-      if (table === "email_sent_logs") {
-        return {
-          select: mockSelect,
-          insert: mockInsert,
-        };
-      }
-      return {};
-    }),
-  }),
+vi.mock("@/lib/utils/rate-limit", () => ({
+  checkRateLimit: vi.fn(),
+  RATE_LIMIT_KEYS: {
+    email_notification: "ratelimit:email_notification",
+  },
 }));
 
 describe("isEmailAllowed", () => {
@@ -24,40 +15,36 @@ describe("isEmailAllowed", () => {
   });
 
   it("should return true and log the send if count is less than 3", async () => {
-    // Mock select returning count = 1
-    mockSelect.mockReturnValue({
-      eq: vi.fn().mockReturnValue({
-        gte: vi.fn().mockResolvedValue({ count: 1, error: null }),
-      }),
+    // Mock rate limit returning success
+    vi.mocked(checkRateLimit).mockResolvedValue({
+      ok: true,
+      limit: 3,
+      remaining: 2,
+      reset: Date.now() + 10000,
     });
-    // Mock insert returning success
-    mockInsert.mockResolvedValue({ error: null });
 
     const result = await isEmailAllowed("test@example.com", "test_type");
     expect(result).toBe(true);
-    expect(mockInsert).toHaveBeenCalled();
+    expect(checkRateLimit).toHaveBeenCalled();
   });
 
   it("should return false and skip logging if count is 3 or more", async () => {
-    // Mock select returning count = 3
-    mockSelect.mockReturnValue({
-      eq: vi.fn().mockReturnValue({
-        gte: vi.fn().mockResolvedValue({ count: 3, error: null }),
-      }),
+    // Mock rate limit failing
+    vi.mocked(checkRateLimit).mockResolvedValue({
+      ok: false,
+      limit: 3,
+      remaining: 0,
+      reset: Date.now() + 10000,
     });
 
     const result = await isEmailAllowed("test@example.com", "test_type");
     expect(result).toBe(false);
-    expect(mockInsert).not.toHaveBeenCalled();
+    expect(checkRateLimit).toHaveBeenCalled();
   });
 
   it("should return false (fail-closed) if database query fails", async () => {
-    // Mock select returning error
-    mockSelect.mockReturnValue({
-      eq: vi.fn().mockReturnValue({
-        gte: vi.fn().mockResolvedValue({ count: null, error: { message: "DB Error" } }),
-      }),
-    });
+    // Mock rate limit throwing an error
+    vi.mocked(checkRateLimit).mockRejectedValue(new Error("Redis Error"));
 
     const result = await isEmailAllowed("test@example.com", "test_type");
     expect(result).toBe(false);
