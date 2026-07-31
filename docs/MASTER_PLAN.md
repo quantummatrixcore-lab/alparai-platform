@@ -1482,3 +1482,30 @@ v1'de 3 KPI izlenir (yukarıdaki gerçek-ölçülebilir liste): kullanıcı kayd
 4. **Kapsam dışı, karıştırılmasın:** `investor-portal/page.tsx`'teki sahte `uptime`/`growthRate` fallback'i, MRR/TAM-SAM-SOM tablosu ve `status/page.tsx`'teki sahte uptime — bunlar madde #45'in kapsamında, bu maddenin değil.
 
 **Aksiyon:** Yeni madde **#87** (P1) backlog'a eklendi, pending. Backlog: 87 madde, 48'i tamamlanmış._
+
+---
+
+## v12.51 — Yeni madde #88: Yatırım/hibe alma oranı (%) — v12.50'ye ek KPI
+
+**Founder talebi:** "Yatırım alma oranını da % olarak hesaplamalıyız" — madde #87'nin (Startup Başarı Skoru) 3 büyüme-KPI'sine ek olarak, fonlama/yatırım tarafı da ölçülsün.
+
+**Keşif (salt-okunur, 3 migration dosyası, kapsam belliydi — devretme eşiği v12.48 gereği doğrudan yapıldı):** Daha önce görülmemiş iki gerçek, zaten var olan fonlama-pipeline tablosu bulundu:
+
+1. **`public.grant_applications`** (`supabase/migrations/20260818000000_founder_cockpit_tables.sql`) — bulut/AI kredi hibeleri (Google, Microsoft, AWS, Anthropic, NVIDIA, OpenAI, GitHub, Vercel, Supabase). `status`: `not_started | drafting | submitted_pending_review | approved | rejected | accepted_by_program`. Seed'de (`20260819100000_seed_grants_catalog.sql`) 9 program, **hepsi `not_started`**.
+2. **`public.strategy_state_support`** (`supabase/migrations/20260711000001_strategy_state_support.sql`) — devlet/AB hibe-özkaynak programları (TÜBİTAK 2239-A, EIC Accelerator, UK AISI vb.). `status`: `open | applied | awarded | closed | rejected`. Seed'de (`20260711000002_seed_state_support.sql`) 12 program, **hepsi `open`**.
+
+**Dürüstlük notu (Rule 10):** Migration/seed dosyalarına göre iki tabloda da henüz hiçbir kayıt "alındı" durumunda değil — statik dosya taramasına göre gerçek oran muhtemelen **%0**. Bu bir eksiklik değil, dürüst bir başlangıç durumu (revenue'daki gelir-öncesi durumla aynı sınıf). **Ama bu yalnızca dosya taraması** — canlı veritabanında seed sonrası kayıtlar elle güncellenmiş olabilir; Antigravity gerçek `count()` sorgusuyla teyit etmeden %0 yazmayacak.
+
+**Tasarım — v12.50'den farklı bir doğa:** Bu, ay-bazlı büyüme oranı değil, statik bir **dönüşüm/pipeline oranı**:
+
+> **Yatırım/Hibe Alma Oranı = (approved + accepted_by_program + awarded durumundaki başvuru sayısı) / (iki tablodaki toplam başvuru sayısı) × 100**
+
+İki tablo ayrı ayrı da gösterilir (hibe dönüşümü vs devlet desteği dönüşümü). `rejected` durumu paydaya girer (gerçek başarısızlık oranı gizlenmez); `not_started`/`open`/`drafting`/`applied`/`submitted_pending_review` "beklemede" olarak ayrıca sayılır. **v12.50'nin yönelim-sağlığı formülüne (kaç KPI pozitif) karıştırılmaz** — admin panelde ayrı, "Yatırım/Hibe Dönüşüm Oranı" başlıklı bir kart olarak yan yana gösterilir.
+
+**Uygulama spesifikasyonu (Antigravity/OpenCode için):**
+
+1. `src/actions/admin/startup-health.ts`'e ek fonksiyon veya ayrı `src/actions/admin/funding-conversion.ts` — iki tablodan gerçek `count()` sorgusu.
+2. Admin UI'da madde #87'nin kartının yanına yeni kart: büyük % + "X/Y başvuru sonuçlandı" alt metni + iki tablo bazlı kırılım.
+3. **Zorunlu not:** bu turdaki %0 tahmini yalnızca migration dosyası taramasına dayanıyor; canlı DB'den gerçek sayım zorunlu, sessizce %0 yazılmayacak.
+
+**Aksiyon:** Yeni madde **#88** (P1) backlog'a eklendi, pending. Backlog: 88 madde, 48'i tamamlanmış._
