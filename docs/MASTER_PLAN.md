@@ -1509,3 +1509,52 @@ v1'de 3 KPI izlenir (yukarıdaki gerçek-ölçülebilir liste): kullanıcı kayd
 3. **Zorunlu not:** bu turdaki %0 tahmini yalnızca migration dosyası taramasına dayanıyor; canlı DB'den gerçek sayım zorunlu, sessizce %0 yazılmayacak.
 
 **Aksiyon:** Yeni madde **#88** (P1) backlog'a eklendi, pending. Backlog: 88 madde, 48'i tamamlanmış._
+
+---
+
+## v12.52 — #87 ve #88'in formülleri düzeltildi (Opus incelemesi): üç kusur + bir veri hatası
+
+**Bağlam.** Founder, #87 (Startup Başarı Skoru) ve #88 (yatırım alma oranı) formüllerinin daha derin bir incelemeden geçirilmesini istedi. İnceleme her iki formülde de **yatırımcı önünde savunulamayacak** birer kusur buldu; ayrıca tutar alanlarını kontrol ederken gerçek bir veri-bütünlüğü hatası çıktı. Maddeler silinmiyor — formülleri bu bölümde değiştiriliyor.
+
+### Kusur 1 — #87 ölü bir şirkete %100 verir
+
+Eski formül "pozitif **veya durağan** KPI sayısı / toplam KPI" idi. Sıfırdan sıfıra giden bir KPI "durağan" sayıldığı için, **hiç kullanıcısı, hiç incident'ı, hiç abonesi olmayan bir şirket %100 skor alır.** Bu tek başına formülü kullanılamaz kılıyor.
+
+İkinci sorun: 3 KPI ile üretilebilecek tek değerler %0, %33, %67, %100. Bu bir yüzde değil, yüzde kılığına girmiş 4 kademeli bir trafik ışığı. Küçük hacimlerde tek bir kayıt bir KPI'yi çevirip skoru 33 puan oynatır.
+
+**Düzeltme — hacim kapısı + açık ön-traksiyon durumu:**
+
+- Sıfır→sıfır artık **pozitif değil**, `no_signal` sayılır.
+- Her KPI'nin bir **asgari aylık hacim eşiği** vardır; altında kalan KPI bir sayı üretmez, `insufficient_data` döndürür. Varsayılan eşik **30/ay** — bu ölçülmüş bir değer değil, **seçilmiş bir konvansiyondur** (bir oranın istikrar kazanması için yaygın istatistiksel pratik); konfigüre edilebilir olmalı ve panelde bu şerhle gösterilmelidir.
+- **En az 2 KPI eşiği geçmiyorsa panel yüzde göstermez.** Yerine "Ön-traksiyon — henüz ölçülebilir değil" + ham sayılar gösterilir. Bugünkü gerçek durum büyük olasılıkla budur.
+
+Gerekçe: 4 kullanıcısı olan bir panoda "Başarı: %100" yazması, panonun tam da inandırmak için yapıldığı kitlenin gözünde güvenilirliği yok eder. Ölçemediğini söylemek, uydurmaktan iyidir.
+
+### Kusur 2 — #88'in paydası bir dilek listesiydi
+
+Eski formül "kazanılan / **katalogdaki tüm programlar**" idi. Katalogdaki 21 kayıt, birinin araştırıp girdiği bir fırsat listesi — bir başvuru hattı değil. Yarın 100 program daha eklenirse, işte hiçbir şey değişmeden oran çöker. Yani formül **araştırmayı ve iddiayı cezalandırıyordu.** Ayrıca dün gönderilmiş, henüz cevaplanmamış bir başvuru paydada durup başarısızlık gibi sayılıyordu.
+
+**Düzeltme — tek oran yerine iki dürüst oran (ikisi de yüzde):**
+
+> **Kazanma oranı = kazanılan / (kazanılan + reddedilen) × 100**
+> _Yalnızca **sonuçlanmış** başvurular. Bekleyenler paydaya girmez — henüz başarısızlık değiller._
+
+> **Hat aktivasyonu = başvurulmuş (ve ötesi) / katalogdaki toplam program × 100**
+> _Tespit edilen fırsatların kaçına fiilen başvuruldu. "Deniyor muyuz" sorusunun cevabı._
+
+Sonuçlanmış hiç başvuru yoksa kazanma oranı **%0 değil, tanımsızdır** — panelde `—` gösterilir, sıfır değil. Bugün gerçek durum muhtemelen: kazanma oranı `—`, hat aktivasyonu ≈%0. İkisi çok farklı şeyler söyler ve ikisi de dürüsttür.
+
+### Kusur 3 — tüm kazanımlar eşit sayılıyordu, ve tutar sütunu bozuk
+
+$2.000'lık GitHub kredisi ile €2,5M'luk EIC Accelerator eski formülde aynı ağırlıktaydı. Tutar-ağırlıklı bir oran doğru olurdu — **ama bugün hesaplanamaz, çünkü:**
+
+1. `grant_applications.funding_amount` **serbest metin** (`'$2,000 - $350,000'`) — ayrıştırılamaz.
+2. `strategy_state_support.max_amount_eur` `integer` ama **sütun adı yalan söylüyor**: seed'de `550000, 'GBP'`, `200000, 'USD'`, `500000, 'USD'`, `680000, 'USD'`, `1500000, 'USD'` kayıtları var; 3 kayıt da `NULL, 'TRY'`. Bu sütunu toplayan herhangi bir "toplam fon" rakamı GBP+USD+EUR'yu aynı birimmiş gibi toplar ve **sessizce yanlış çıkar.**
+
+**Karar:** tutar-ağırlıklı oran, şema düzeltilene kadar **hesaplanmaz** (uydurma bir birleştirme yapılmaz). Ön koşul olarak ayrı bir düzeltme gerekir: `grant_applications`'a sayısal `amount_min`/`amount_max`+`currency` sütunları; `strategy_state_support.max_amount_eur` → `max_amount` olarak yeniden adlandırma ve para birimi normalizasyonu. Bu, madde #45'in (sahte/bozuk veri temizliği) kapsamına giren ayrı bir iştir.
+
+### Ek — ölçüm kapsama oranı (panonun kendi kör noktası)
+
+Panoya üçüncü bir dürüst yüzde eklenir: **şu an sayılabilen boyut / tanımlanmış toplam boyut × 100.** Bugün tanımlı 9 boyuttan 5'inin veri kaynağı var (kullanıcı, incident, newsletter büyümesi + iki fonlama oranı ≈ **%56**); 4'ünün yok (gelir — gerçekten gelir öncesi; uptime geçmişi; i18n tamamlanma %'si; analitik). Üstelik büyüme boyutları ancak yukarıdaki hacim eşiğini geçtiklerinde sayı üretir. Bu rakam, enstrümantasyon geldikçe kendiliğinden yükselir ve panonun neyi göremediğini görünür kılar.
+
+**Aksiyon:** #87 ve #88 pending kalıyor; formülleri bu bölümdeki hâlleriyle uygulanacak (eski formüller geçersiz). Tutar-ağırlıklandırma ön koşulu #45'e bağlandı. Backlog: 88 madde, 48'i tamamlanmış._
