@@ -245,7 +245,7 @@
   "nav": {
     "home": "Accueil",
     "feed": "Fil d'actualite",
-    "incidents": "Инценденты",
+    "incidents": "Incidents",
     "leaderboard": "Classement",
     "report": "Signaler un incident",
     "suggestions": "Suggestions",
@@ -3110,7 +3110,7 @@
     "shareOnWhatsApp": "Partager sur WhatsApp",
     "truthScore": "Score de vérité",
     "upvote": "Approuver",
-    "downvote": "Сontre"
+    "downvote": "Contre"
   },
   "forms": {
     "submitting": "Soumission...",
