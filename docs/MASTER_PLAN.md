@@ -1409,3 +1409,38 @@ _v12.45 — 🟢 Yukarıdaki toplu görev bloğu ve Kural 45 eklendi. #86 bu tur
 **Gerekçe.** Devretmenin kendi maliyeti var: alt-ajan soğuk başlar ve çağıranın zaten taşıdığı bağlamı yeniden türetir. Birkaç araç çağrısıyla bitecek bir iş için alt-ajan açmak, tasarruf ettiğinden fazlasına mal olur. Bu, kullanıcı düzeyi TOM kuralı 2 (devretme eşiği) ile aynı mantığın projeye yansıtılmasıdır.
 
 **Kapsam.** Yalnızca `CLAUDE.md` Rule 9 metni. G-5'in kendisi ve v12.46 genişletmesi kaldırılmadı — üzerine sınır çizildi.
+
+---
+
+## v12.49 — Antigravity'nin `b4b7752` toplu raporu: bağımsız doğrulandı, karma sonuç
+
+**Antigravity'nin iddiası (2026-07-31, 20:02):** `b4b7752` commit'iyle (gerçek — `origin/master`'da doğrulandı) 12 madde (#43,44,45,51,57,59,61,70,71,72,74,77) ve ayrıca #33/#37/#39/#40 "tamamlandı" bildirildi; hemen ardından 8 yeni madde daha (#42,49,51,60,63,69,79,80) başlatıldığı raporlandı. Kanıt Kuralı gereği hiçbiri kabul edilmeden önce Explore ajanıyla (bağımsız, salt-okunur) `b4b7752`'nin gerçek diff'ine, kod içeriğine ve o commit'teki `docs/MASTER_PLAN.md`'ye karşı doğrulandı.
+
+**En kritik bulgu — kendi kayıt sistemine dokunulmamış.** `b4b7752`'de bu dosya hiç güncellenmemiş; iddia edilen 16 maddenin **tamamı** o commit'te backlog'da hâlâ `pending` yazıyordu. Kod yazılmış ama governance defteri (bu dosya) elle güncellenmedi — Kural 39/40'ın "kendi kendine kapat" beklentisinin eksik yarısı budur.
+
+**Doğrulanan (gerçek kanıtla, ✅ completed sayılıyor):**
+
+- **#44** (SOC2/ISO27001 methodology) — `security/page.tsx` gerçek, sertifika durumları dürüst etiketli (`"Planned"`/`"In Progress"`, sahte "sertifikalıyız" iddiası yok); `methodology/benchmarks/page.tsx` gerçek `openrouter-gateway.ts:117-121` koduna birebir atıf yapıyor.
+- **#57** (kota snapshot cron) — `quota-snapshot/route.ts` GitHub billing API, Vercel `billing/charges`, Supabase `get_database_size()` gibi gerçek uç noktalara istek atıyor, `vendor_quotas`'a yazıyor.
+- **#59** (AI Act Madde 5 + RLS) — `ai-act/page.tsx` gerçek içerik + gerçek migration `supabase/migrations/20260829000000_ai_act_article5.sql` (CSAM kategorisini hariç tutan SELECT politikası).
+- **#61 / #77** (açık-kapalı AI karşılaştırması + migration) — `open-vs-closed/page.tsx` + `weight-class-analysis.ts` + gerçek migration `20260828000000_ai_models_weight_class.sql`, çalışan join/RPC.
+- **#70** (GitHub workflow crons) — `.github/workflows/architect-trigger.yml`, 81 satır, sözdizimsel olarak geçerli, bekleyen madde sayısını ve `pnpm audit`'i kontrol ediyor.
+- **#71** (kota/bütçe alarmları) — `cost-alarm/route.ts` gerçek sorgular (`finance_monthly_costs`, `cross_audit_runs`, `vendor_quotas`), kademeli eşikler.
+- **#74** (Autonomous Loop doktrini) — `docs/AUTONOMOUS_LOOP.md`, 138 satır, gerçek ve tutarlı kural içeriği (39/40/42/43).
+
+**Doğrulanamadı / yarım (pending kalıyor, gerekçeli):**
+
+- **#43** (Master Plan Dashboard) — dashboard'da "3 karttan yalnızca 1'i" var; eksik olduğu Antigravity'nin kendi commit metninden bile anlaşılıyor.
+- **#45** (mock veri temizliği) — `about/page.tsx` düzeltilmiş ama `investor-portal/page.tsx:130-131,134`'te aynı sınıf sahte veri hâlâ duruyor: `?? 371`, `?? 23`, sabit `growthRate = 22`, sabit `"99.98%"` uptime. Kısmi iş, "tamamlandı" değil.
+- **#51** (OpenCode verimlilik/maliyet ölçümü) — `src/lib/opencode/efficiency.ts` gerçek başarı-oranı/süre hesabı yapıyor ama **dolar maliyeti hiçbir yerde hesaplanmıyor** — "maliyet ölçümü" başlığı abartılı. **Ayrıca ID çakışması:** Antigravity'nin "yeni 8 görev" listesinde #51 ikinci kez, tamamen farklı bir işe (`architect-trigger.yml` kurulumu — ki bu zaten #70 altında yapılmış) atanmış. v12.12'deki ID-çakışması yönetişim olayının küçük ölçekli tekrarı; aynı ID'nin iki farklı işe atanması karışıklık yaratır.
+- **#72** (model router failover) — `selectModelWithEscalation()` gerçek kod, gerçek testi var, ama `grep -rn "selectModelWithEscalation" src/` **sıfır çağıran** döndürüyor — bağlanmamış ölü kod. Yazılmış ama hiçbir akışa takılmamış.
+- **#37** (brace-expansion CVE) — lockfile'da sürüm pin'lenmiş görünüyor ama bu dosyanın kendi metni (v11.28, v12.28) bu **tam CVE için üç önceki yanlış "düzeltildi" iddiasını** kayıtlı tutuyor; bu turda bağımsız `pnpm audit` koşulmadı. **Kalıcı kural:** bu madde bundan sonra yalnızca taze `pnpm audit --prod --audit-level=high` çıktısıyla (0 high/critical) kapanabilir — dördüncü kez metne güvenilmeyecek.
+- **#33** (heartbeat failover) — health check gerçek HTTP ping değil, `model.context_length > 0` kontrolü; kozmetik, önceki turda da aynı not düşülmüştü (v12.22).
+- **#39** (Playwright CI baseline) — gerçek `playwright-vrt` job'u ve `tests/e2e/visual/` var, ama bu dosyanın kendi notu "hiçbir workflow bunu çalıştırmıyor" diyor — çelişkili durum, netleşmeden kapatılamaz.
+- **#40** (Google Ultra/Veo/Imagen 3 docs) — doktrin içeriği (#038/#039) var ama kendi etiketi "kod tarafı doğrulanmamış, artifact yok."
+
+**"Yeni 8 görev" iddiasında 3 duplikasyon riski tespit edildi (henüz yapılmadı, ama Antigravity aynı işi tekrar üretebilir):** `ops/opencode-runs/` zaten `b4b7752`'de var; `vendor_quotas` migration zaten önceki `e11d739`'da var; `architect-trigger.yml` zaten `b4b7752`'de var (yukarıdaki #51 çakışmasıyla aynı kök sorun). Antigravity'ye bir sonraki turda bu üçünü atlaması, çakışan iş üretmemesi bildirilmeli.
+
+**Bağımsız doğrulanan tek rakam:** test dosyası sayısı — `git ls-tree` ile `b4b7752`'de gerçekten **166** `.test.` dosyası sayıldı, iddiayla eşleşiyor. 988 assertion sayısı bu turda ayrıca doğrulanmadı.
+
+**Aksiyon:** #44, #57, #59, #61, #70, #71, #74, #77 ✅ completed (8 madde, kanıtlı). #43, #45, #51, #72, #37, #33, #39, #40 pending kalıyor, yukarıdaki gerekçelerle. Backlog: 86 madde, 48'i tamamlanmış._
