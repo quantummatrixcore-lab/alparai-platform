@@ -176,6 +176,35 @@ export default async function SecurityPage({ params }: { params: Promise<{ local
         </div>
       </div>
 
+      {/* Detailed Standards Section */}
+      <div className="space-y-10">
+        <div className="mx-auto max-w-xl text-center">
+          <h2 className="text-fg-primary text-2xl font-bold tracking-tight">
+            {t("standards_detail_title")}
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <Card className="border-border-subtle bg-bg-secondary/40">
+            <CardContent className="space-y-4 p-6">
+              <h3 className="text-fg-primary text-lg font-bold">{t("standards_soc2_title")}</h3>
+              <p className="text-fg-muted text-sm leading-relaxed">{t("standards_soc2_desc")}</p>
+            </CardContent>
+          </Card>
+          <Card className="border-border-subtle bg-bg-secondary/40">
+            <CardContent className="space-y-4 p-6">
+              <h3 className="text-fg-primary text-lg font-bold">{t("standards_iso_title")}</h3>
+              <p className="text-fg-muted text-sm leading-relaxed">{t("standards_iso_desc")}</p>
+            </CardContent>
+          </Card>
+          <Card className="border-border-subtle bg-bg-secondary/40">
+            <CardContent className="space-y-4 p-6">
+              <h3 className="text-fg-primary text-lg font-bold">{t("standards_aes_title")}</h3>
+              <p className="text-fg-muted text-sm leading-relaxed">{t("standards_aes_desc")}</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
       {/* Responsible Disclosure */}
       <Card className="border-danger-500/20 bg-danger-500/5 mx-auto max-w-3xl">
         <CardContent className="space-y-4 p-8 text-center">

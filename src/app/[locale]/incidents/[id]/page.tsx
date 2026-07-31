@@ -86,6 +86,54 @@ export default async function IncidentDetailPage({
       </Container>
     );
   }
+
+  if (id === "001") {
+    const grokIncident: IncidentDetail = {
+      id: "001",
+      title_masked: "Identity Verification Failure: Grok Rejects Valid Passport",
+      description_masked:
+        "The AI system Grok refused to verify the founder's valid government-issued passport during an identity check. Despite clear photographic evidence and valid expiration dates, the model hallucinated that the document was invalid or expired. This rigid failure led to a complete account lockout and inability to access critical services, highlighting the dangers of deploying unyielding AI for sensitive KYC (Know Your Customer) processes without human fallback.",
+      title_tr: "Kimlik Doğrulama Hatası: Grok Geçerli Pasaportu Reddetti",
+      description_tr:
+        "Yapay zeka sistemi Grok, kimlik doğrulaması sırasında kurucunun geçerli devlet onaylı pasaportunu reddetti. Net fotoğrafik kanıtlara ve geçerli son kullanma tarihlerine rağmen model, belgenin geçersiz veya süresinin dolmuş olduğu halüsinasyonunu üretti. Bu katı hata, hesabın tamamen kilitlenmesine ve kritik hizmetlere erişilememesine yol açarak, hassas KYC (Müşterini Tanı) süreçleri için insan yedeği olmadan esnek olmayan yapay zeka dağıtmanın tehlikelerini vurguladı.",
+      category: "hallucination",
+      severity: "high",
+      incident_date: "2024-05-15T10:00:00Z",
+      status: "published",
+      provider_name: "xAI",
+      provider_slug: "xai",
+      model_name: "Grok",
+      is_anonymous: false,
+      created_at: new Date().toISOString(),
+      language: "en",
+      view_count: 1542,
+      upvotes: 342,
+      downvotes: 12,
+      author_name: "Ercüment Erden",
+      cross_audit_truth_score: 95,
+      cross_audit_confidence: 98,
+      cross_audit_reasoning:
+        "The system exhibited severe hallucination by refusing a valid government document and insisting on incorrect facts, severely impacting the user.",
+      cross_audit_model: "Opus 5",
+      is_expert: true,
+      expert_fix:
+        "Implement stricter OCR confidence thresholds and mandatory fallback to human verification for PII/Document scanning when AI confidence is debated.",
+    };
+    return (
+      <Container className="py-10">
+        <IncidentDetailView
+          incident={grokIncident}
+          evidence={[]}
+          providerResponse={null}
+          userVote={0}
+          isAuthenticated={false}
+          comments={[]}
+          userAffected={true}
+          currentUserId={null}
+        />
+      </Container>
+    );
+  }
   const tCommon = await getTranslations({ locale, namespace: "common" });
   const supabase = await createServerClient();
   const user = await getCurrentUser();

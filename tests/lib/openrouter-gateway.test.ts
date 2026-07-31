@@ -297,7 +297,7 @@ describe("OpenRouter API Gateway", () => {
       vi.mocked(getDailyCost).mockResolvedValue(50.0); // > $45
 
       openaiMock.chat.completions.create.mockResolvedValueOnce({
-        model: "opencode/nemotron-3-ultra-free",
+        model: "opencode/deepseek-v4-flash-free",
         choices: [{ message: { content: "escalation-fallback" } }],
       });
 
@@ -317,7 +317,7 @@ describe("OpenRouter API Gateway", () => {
       );
 
       expect(res.ok).toBe(true);
-      expect(res.attemptedModels[0]).toContain("openrouter:opencode/nemotron-3-ultra-free");
+      expect(res.attemptedModels[0]).toContain("openrouter:opencode/deepseek-v4-flash-free");
     });
   });
 });

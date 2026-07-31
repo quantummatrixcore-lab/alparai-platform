@@ -55,8 +55,12 @@ describe("selectModelWithEscalation", () => {
 
     expect(result.escalated).toBe(false);
     expect(result.chain.map((m) => m.id)).toEqual([
-      "opencode/nemotron-3-ultra-free",
       "opencode/deepseek-v4-flash-free",
+      "opencode/nemotron-3-ultra-free",
+      "opencode/laguna-s-2.1-free",
+      "opencode/ling-3.0-flash-free",
+      "opencode/mimo-v2.5-free",
+      "opencode/north-mini-code-free",
     ]);
   });
 
@@ -66,18 +70,36 @@ describe("selectModelWithEscalation", () => {
     const result = await selectModelWithEscalation();
 
     expect(result.escalated).toBe(false);
-    expect(result.chain.map((m) => m.id)).toEqual(["opencode/deepseek-v4-flash-free"]);
+    expect(result.chain.map((m) => m.id)).toEqual([
+      "opencode/deepseek-v4-flash-free",
+      "opencode/laguna-s-2.1-free",
+      "opencode/ling-3.0-flash-free",
+      "opencode/mimo-v2.5-free",
+      "opencode/north-mini-code-free",
+    ]);
   });
 
   it("escalates to the paid tier when every free-tier model is DEGRADED", async () => {
     setupMock({
-      degradedIds: ["opencode/nemotron-3-ultra-free", "opencode/deepseek-v4-flash-free"],
+      degradedIds: [
+        "opencode/deepseek-v4-flash-free",
+        "opencode/nemotron-3-ultra-free",
+        "opencode/laguna-s-2.1-free",
+        "opencode/ling-3.0-flash-free",
+        "opencode/mimo-v2.5-free",
+        "opencode/north-mini-code-free",
+      ],
     });
 
     const result = await selectModelWithEscalation();
 
     expect(result.escalated).toBe(true);
-    expect(result.chain.map((m) => m.id)).toEqual(["nvidia/deepseek-ai/deepseek-v4-pro"]);
+    expect(result.chain.map((m) => m.id)).toEqual([
+      "nvidia/deepseek-ai/deepseek-v4-pro",
+      "nvidia/z-ai/glm-5.2",
+      "nvidia/openai/gpt-oss-120b",
+      "nvidia/google/gemma-4-31b-it",
+    ]);
   });
 });
 
@@ -94,7 +116,14 @@ describe("selectModelWithEscalation — gateway integration contract", () => {
 
   it("escalates and returns paid chain when all free-tier models are DEGRADED", async () => {
     setupMock({
-      degradedIds: ["opencode/nemotron-3-ultra-free", "opencode/deepseek-v4-flash-free"],
+      degradedIds: [
+        "opencode/deepseek-v4-flash-free",
+        "opencode/nemotron-3-ultra-free",
+        "opencode/laguna-s-2.1-free",
+        "opencode/ling-3.0-flash-free",
+        "opencode/mimo-v2.5-free",
+        "opencode/north-mini-code-free",
+      ],
     });
 
     const result = await selectModelWithEscalation();

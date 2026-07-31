@@ -2101,7 +2101,37 @@
     "stat_positive_developments": "Positive Developments",
     "stat_governance_subtext": "Governance & alignment wins",
     "stat_review_queue": "Review Queue",
-    "stat_pending_subtext": "Pending moderator review"
+    "stat_pending_subtext": "Pending moderator review",
+    "resources_quota_tempo_title": "Quota & Tempo",
+    "resources_quota_tempo_subtitle": "Vendor usage vs. expected pace. Tempo deviation = usage% − elapsed% of billing period.",
+    "resources_quota_usage": "Usage",
+    "resources_quota_tempo_deviation": "Tempo Deviation",
+    "resources_quota_tempo_ahead": "ahead of pace",
+    "resources_quota_tempo_behind": "behind pace",
+    "resources_quota_projected_depletion": "Projected Depletion",
+    "resources_quota_projected_tag": "[tahmin]",
+    "resources_quota_not_measured": "ölçülmedi",
+    "resources_quota_loading": "Fetching quota & tempo data...",
+    "resources_quota_empty": "No quota records found.",
+    "resources_quota_error": "Could not load quota & tempo data.",
+    "resources_quota_metric_minutes": "Minutes",
+    "resources_quota_metric_bandwidth_gb": "Bandwidth (GB)",
+    "resources_quota_metric_db_size_gb": "DB Size (GB)",
+    "resources_quota_metric_messages": "Messages",
+    "resources_efficiency_title": "AI Efficiency Report",
+    "resources_efficiency_subtitle": "Agent run telemetry from ops/opencode-runs/*.json, grouped by model tier.",
+    "resources_efficiency_total_runs": "Total Runs",
+    "resources_efficiency_free_pct": "Free Tier Share",
+    "resources_efficiency_avg_duration": "Avg Duration",
+    "resources_efficiency_success_rate": "Success Rate",
+    "resources_efficiency_tier": "Tier",
+    "resources_efficiency_runs": "Runs",
+    "resources_efficiency_tier_free": "Free",
+    "resources_efficiency_tier_paid": "Paid",
+    "resources_efficiency_estimated_tag": "[tahmin — doğrulanmamış]",
+    "resources_efficiency_loading": "Fetching efficiency report...",
+    "resources_efficiency_empty": "No run telemetry found in ops/opencode-runs/.",
+    "resources_efficiency_error": "Could not load AI efficiency report."
   },
   "footer": {
     "tagline": "Wo die Welt KI zur Rechenschaft verpflichtet.",
@@ -2366,18 +2396,18 @@
     "officeText": "Wird im Impressum bekannt gegeben, sobald die juristische Person registriert ist.",
     "form": {
       "name": "Name",
-      "email": "Email",
-      "category": "Category",
-      "category_general": "General",
-      "category_press": "Press",
-      "category_partnership": "Partnership",
+      "email": "E-Mail",
+      "category": "Kategorie",
+      "category_general": "Allgemein",
+      "category_press": "Presse",
+      "category_partnership": "Partnerschaft",
       "category_investor": "Investor",
-      "category_security": "Security",
-      "category_legal": "Legal",
-      "subject": "Subject",
-      "message": "Message",
-      "submit": "Send Message",
-      "sent_title": "Message sent!",
+      "category_security": "Sicherheit",
+      "category_legal": "Rechtliches",
+      "subject": "Betreff",
+      "message": "Nachricht",
+      "submit": "Nachricht senden",
+      "sent_title": "Nachricht gesendet!",
       "sent_desc": "Vielen Dank, dass Sie uns kontaktiert haben. Wir melden uns in Kürze bei Ihnen.",
       "sent_toast": "Nachricht erfolgreich gesendet"
     },
@@ -2806,12 +2836,12 @@
     "incident_of_week": {
       "title": "Vorfall der Woche",
       "provider": "Anbieter",
-      "views": "views"
+      "views": "Aufrufe"
     },
     "advocate_of_week": {
       "title": "Fürsprecher der Woche",
-      "rep": "Rep",
-      "pioneer": "Pioneer"
+      "rep": "Ruf",
+      "pioneer": "Pionier"
     },
     "founder_story": {
       "title": "Warum ich das gebaut habe",
@@ -3274,7 +3304,14 @@
     "crypto_3_desc": "Daten im Ruhezustand werden mit AES-256 verschlüsselt: Geheimnisse werden in einem AES-256-GCM-Vault auf Anwendungsebene aufbewahrt, und die Infrastruktur wird vom Hosting-Anbieter im Ruhezustand verschlüsselt.",
     "crypto_4_title": "TLS 1.3",
     "crypto_4_status": "Aktiv",
-    "crypto_4_desc": "Daten während der Übertragung werden in der Hosting-Infrastruktur der Plattform mit TLS 1.3 geschützt."
+    "crypto_4_desc": "Daten während der Übertragung werden in der Hosting-Infrastruktur der Plattform mit TLS 1.3 geschützt.",
+    "standards_detail_title": "Detailed Security Architecture",
+    "standards_soc2_title": "SOC 2 Type II Preparation",
+    "standards_soc2_desc": "ALPAR AI is building its infrastructure in accordance with AICPA's Trust Services Criteria, focusing on Security, Availability, Processing Integrity, Confidentiality, and Privacy. We enforce strict access controls, continuous monitoring, and comprehensive audit logs across all our operational environments.",
+    "standards_iso_title": "ISO/IEC 27001 Alignment",
+    "standards_iso_desc": "Our Information Security Management System (ISMS) is designed following ISO/IEC 27001 standards. We employ a risk-based approach to managing people, processes, and IT systems, ensuring the confidentiality and integrity of all whistleblower and incident reports.",
+    "standards_aes_title": "AES-256 Cryptography",
+    "standards_aes_desc": "All sensitive data at rest, including PII-masked incident records and user credentials, is protected using AES-256 encryption. Our database volumes are encrypted by default, and application-level secrets are stored in a secure, AES-256-GCM vault with strict role-based access."
   },
   "dmca": {
     "title": "DMCA-Urheberrechtsrichtlinie – ALPAR AI",
@@ -3555,7 +3592,9 @@
     "k12_title": "K12-Metriktitel",
     "k12_desc": "K12-Metrikbeschreibung",
     "subtitle": "So berechnen wir den Trust Score",
-    "intro": "Unsere proprietäre Methodik sorgt für unvoreingenommene und transparente Rankings."
+    "intro": "Unsere proprietäre Methodik sorgt für unvoreingenommene und transparente Rankings.",
+    "model_4_label": "meta-llama/llama-3.1-70b-instruct (OpenRouter, premium)",
+    "model_5_label": "mistralai/mistral-large (OpenRouter, premium)"
   },
   "system-status": {
     "title": "Systemstatus",
