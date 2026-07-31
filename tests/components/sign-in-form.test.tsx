@@ -1,11 +1,16 @@
 // @vitest-environment jsdom
 import * as React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { expect, test, describe, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import { expect, test, describe, vi, beforeEach, afterEach } from "vitest";
 
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
 }));
+
+afterEach(() => {
+  cleanup();
+});
+
 
 vi.mock("@/actions/auth", () => ({
   signInWithGoogle: vi.fn(),
