@@ -305,7 +305,30 @@ export function AdminHQDashboard({
       </div>
 
       {/* ROW 2: Core Operations */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
+        {/* Backlog Velocity */}
+        <SectionCard title="Backlog Velocity">
+          <div className="grid h-full grid-cols-2 gap-2">
+            {[
+              { label: "Closed Tasks", value: "142", icon: CheckCircle2 },
+              { label: "Open P0s", value: "3", icon: AlertTriangle },
+              { label: "Deployments", value: "28", icon: Send },
+              { label: "Velocity", value: "High", icon: Activity },
+            ].map((stat) => (
+              <div
+                key={stat.label}
+                className="flex flex-col items-start justify-center rounded-lg border border-white/5 bg-white/5 p-3 transition-colors hover:bg-white/10"
+              >
+                <span className="mb-2 flex items-center justify-center rounded-md bg-white/5 p-1.5">
+                  <stat.icon className="h-4 w-4 text-white/70" />
+                </span>
+                <span className="text-xl font-bold text-white">{stat.value}</span>
+                <span className="text-[10px] text-white/60 uppercase">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+        </SectionCard>
+
         {/* Master Plan Progress */}
         <SectionCard title={t("plan_progress")} href={`/${locale}/admin/master-plan`}>
           <div className="flex items-center gap-6">
