@@ -240,8 +240,17 @@ export async function checkRateLimit(key: string): Promise<{
 }> {
   try {
     const limiters = getLimiters();
-    const parts = key.split(":");
-    const baseKey = parts.length >= 2 ? `${parts[0]}:${parts[1]}` : key;
+
+    // Fast path for key extraction: ratelimit:action:identifier
+    const firstColon = key.indexOf(":");
+    let baseKey = key;
+    if (firstColon !== -1) {
+      const secondColon = key.indexOf(":", firstColon + 1);
+      if (secondColon !== -1) {
+        baseKey = key.slice(0, secondColon);
+      }
+    }
+
     const limiter = limiters[baseKey];
     if (!limiter) {
       return { ok: true };
