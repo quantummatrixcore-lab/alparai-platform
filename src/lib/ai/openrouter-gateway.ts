@@ -15,6 +15,7 @@
  */
 
 import "server-only";
+import { selectModelWithEscalation } from "@/lib/audit/model-router";
 import { logger } from "@/lib/utils/logger";
 import type {
   GatewayModel,
@@ -277,7 +278,8 @@ export async function callWithFailover(
   let activeModels = models;
 
   if (dailyCost > 45) {
-    activeModels = FREE_TRIAGE_MODELS;
+    const escalation = await selectModelWithEscalation();
+    activeModels = escalation.chain as unknown as readonly GatewayModel[];
   } else if (dailyCost > 30) {
     activeModels = TRIAGE_SLOT_1_CHAIN;
   }

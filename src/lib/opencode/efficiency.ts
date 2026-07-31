@@ -4,6 +4,8 @@ export interface OpenCodeRunRecord {
   model: string;
   exitCode: number;
   durationMs: number;
+  inputTokens?: number;
+  outputTokens?: number;
 }
 
 export interface TierEfficiency {
@@ -25,6 +27,27 @@ export interface OpenCodeEfficiencyReport {
 }
 
 export const MIN_RUNS_FOR_MEASURED = 5;
+
+/**
+ * Per-million-token pricing table (input / output in USD).
+ * Source: Anthropic pricing page, accessed 2026-07.
+ */
+export const COST_PRICING_TABLE: Record<string, { inputPerM: number; outputPerM: number }> = {
+  "anthropic/claude-sonnet-5": { inputPerM: 2, outputPerM: 10 },
+  "anthropic/claude-3.5-sonnet": { inputPerM: 3, outputPerM: 15 },
+  default: { inputPerM: 0, outputPerM: 0 },
+};
+
+/**
+ * Estimates the USD cost of a single model call.
+ * Returns 0 for models not listed in COST_PRICING_TABLE (free / unknown).
+ */
+export function estimateCost(inputTokens: number, outputTokens: number, model: string): number {
+  const pricing = COST_PRICING_TABLE[model] ?? COST_PRICING_TABLE["default"]!;
+  return (
+    (inputTokens / 1_000_000) * pricing.inputPerM + (outputTokens / 1_000_000) * pricing.outputPerM
+  );
+}
 
 export function classifyTier(model: string): EfficiencyTier {
   return /free/i.test(model) ? "free" : "paid";

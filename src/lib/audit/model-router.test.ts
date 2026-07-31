@@ -81,6 +81,30 @@ describe("selectModelWithEscalation", () => {
   });
 });
 
+describe("selectModelWithEscalation — gateway integration contract", () => {
+  it("does not include a manually DEGRADED model in the escalation chain", async () => {
+    setupMock({ degradedIds: ["opencode/nemotron-3-ultra-free"] });
+
+    const result = await selectModelWithEscalation();
+
+    const ids = result.chain.map((m) => m.id);
+    expect(ids).not.toContain("opencode/nemotron-3-ultra-free");
+    expect(result.escalated).toBe(false);
+  });
+
+  it("escalates and returns paid chain when all free-tier models are DEGRADED", async () => {
+    setupMock({
+      degradedIds: ["opencode/nemotron-3-ultra-free", "opencode/deepseek-v4-flash-free"],
+    });
+
+    const result = await selectModelWithEscalation();
+
+    expect(result.escalated).toBe(true);
+    expect(result.chain.every((m) => m.tier === "premium")).toBe(true);
+    expect(result.chain.some((m) => m.id === "nvidia/deepseek-ai/deepseek-v4-pro")).toBe(true);
+  });
+});
+
 describe("selectModelByCapability", () => {
   it("excludes DEGRADED models from the routing chain", async () => {
     setupMock({

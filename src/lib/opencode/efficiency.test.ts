@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { buildEfficiencyReport, classifyTier, type OpenCodeRunRecord } from "./efficiency";
+import {
+  buildEfficiencyReport,
+  classifyTier,
+  estimateCost,
+  type OpenCodeRunRecord,
+} from "./efficiency";
 
 function record(model: string, exitCode: number, durationMs: number): OpenCodeRunRecord {
   return { model, exitCode, durationMs };
@@ -86,5 +91,27 @@ describe("buildEfficiencyReport", () => {
       expect(tier.successRate).toBe(0);
       expect(tier.estimated).toBe(true);
     }
+  });
+});
+
+describe("estimateCost", () => {
+  it("computes cost for Claude Sonnet 5 at $2/$10 per 1M tokens", () => {
+    const cost = estimateCost(1_000_000, 1_000_000, "anthropic/claude-sonnet-5");
+    expect(cost).toBeCloseTo(12);
+  });
+
+  it("returns 0 for an unknown/free model", () => {
+    const cost = estimateCost(500_000, 500_000, "opencode/deepseek-v4-flash-free");
+    expect(cost).toBe(0);
+  });
+
+  it("returns 0 when token counts are zero", () => {
+    const cost = estimateCost(0, 0, "anthropic/claude-sonnet-5");
+    expect(cost).toBe(0);
+  });
+
+  it("computes cost for Claude 3.5 Sonnet at $3/$15 per 1M tokens", () => {
+    const cost = estimateCost(2_000_000, 500_000, "anthropic/claude-3.5-sonnet");
+    expect(cost).toBeCloseTo(13.5);
   });
 });
