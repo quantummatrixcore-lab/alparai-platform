@@ -1374,3 +1374,22 @@ _v12.45 — 🟢 Yukarıdaki toplu görev bloğu ve Kural 45 eklendi. #86 bu tur
 **Karar.** G-5'in devretme zorunluluğu Sonnet 5 oturumlarını da Opus 5 / Fable 5 ile aynı şekilde bağlar. Haiku satırındaki bir iş tipi (kod arama, dosya konumu, envanter, grep/glob keşfi, rutin/mekanik yürütme) önce Haiku alt-ajanına (`model: "haiku"`) verilmeye çalışılır; Sonnet/Opus/Fable'ın doğrudan yürütmesi, gerekçesi bu dosyaya tek satır olarak yazılan bir istisna gerektirir. Kural metni `CLAUDE.md` Rule 9 altında "G-5 amendment (v12.46, data-driven)" başlığıyla yazıldı.
 
 **Takip.** Bu tablo bir temel ölçümdür (baseline). Aynı yöntem — transkriptteki `usage` alanlarının model bazında toplanması — sonraki bir turda tekrarlanıp Haiku'nun tur payının %9,2'den yukarı çıkıp çıkmadığı buraya kıyaslanacak. Şu an için sonraki ölçüm yapılmadı; bir tasarruf oranı iddia edilmiyor.
+
+---
+
+## v12.47 — Dolar cinsinden maliyet: turdan daha keskin bir kanıt
+
+**Kaynak ve yöntem.** Aynı transkript, aynı gerçek `usage` alanları; bu kez Anthropic'in güncel liste fiyatlarıyla (claude-api skill, `shared/live-sources.md` üzerinden doğrulanmış — Sonnet 5 için 2026-08-31'e kadar geçerli tanıtım fiyatı $2/$10 kullanıldı, o tarihten sonra $3/$15'e döner) çarpıldı: `input_tokens` tam fiyat, `output_tokens` tam fiyat, `cache_creation_input_tokens` × 1,25 (5 dk TTL varsayımı — gerçek TTL karışık olabilir, bu bir yaklaşıklık), `cache_read_input_tokens` × 0,10. Toplam oturum maliyeti: **$1.758,89** (2026-07-03 → 2026-07-31 kümülatif).
+
+| Model     | Tur payı | Maliyet payı | Toplam $ | **Tur başına $** |
+| --------- | -------- | ------------ | -------- | ---------------- |
+| Fable 5   | %12,7    | **%41,0**    | $722,02  | **$0,5503**      |
+| Sonnet    | %56,7    | %29,2        | $513,56  | $0,0874          |
+| Opus      | %21,3    | %28,7        | $504,97  | $0,2285          |
+| Haiku 4.5 | %9,3     | **%1,0**     | $18,34   | **$0,0191**      |
+
+**Bulgu — v12.46'daki tur-sayımı bulgusunu tersine çeviriyor, daha keskin bir hedef gösteriyor.** Tur sayısına göre en "pahalı" görünen model Sonnet'ti (turların %56,7'si). Ama dolar bazında tablo başka bir hikaye anlatıyor: **Fable 5, turların yalnızca %12,7'sini oluşturup toplam harcamanın %41'ini tek başına tüketiyor** — tur başına ortalama maliyeti Haiku'nun **~28,8 katı**, Sonnet'in **~6,3 katı**. Sonnet, tur sayısında en büyük pay olmasına rağmen dolar payında Opus'un gerisinde kalıyor (%29,2 vs %28,7) çünkü tur başına maliyeti düşük ($0,0874). Haiku ise hem tur payında (%9,2) hem dolar payında (%1,0) en küçük dilimde — devretme kuralının hedeflediği doğru yön, ama hacmi hâlâ yetersiz.
+
+**Sonuç — G-5/Rule 9'a yeni bir kural eklenmiyor, mevcut kuralın gerekçesi güçlendiriliyor.** Proje `CLAUDE.md` Rule 9 tablosu zaten "Architecture decisions, strategy, security analysis... → Opus 5 / Fable 5" diyor — Fable'ı en zor/en kritik karara ayırmak doktrinde vardı. Bu ölçüm o sınırlamayı **rakamla doğruluyor**: Fable'ı gerekçesiz sohbet/keşif turlarında ana model olarak çalıştırmak, aynı işi Sonnet'te yapmanın ~6 katı, Haiku'da yapmanın ~29 katı nakit maliyete mal oluyor. Yeni bir doktrin maddesi yazmıyorum — bu zaten var olan "Fable yalnızca en zor karar" ilkesinin kaynaklı, dolar cinsinden kanıtı.
+
+**Metodoloji şerhi (Rule 10 uyumlu).** Cache-write çarpanı (1,25×) 5 dakikalık TTL varsayımına dayanıyor; oturumdaki gerçek TTL dağılımı (5dk/1sa karışımı) ölçülmedi, bu yüzden mutlak dolar rakamı ±birkaç yüzde sapabilir — ama modeller-arası **oransal** kıyas (Fable'ın Haiku'ya oranı) bu belirsizlikten bağımsız çünkü aynı varsayım tüm modellere eşit uygulandı. Sonnet 5'in $2/$10 tanıtım fiyatı 2026-08-31'de sona eriyor; o tarihten sonra aynı kullanım deseni Sonnet payını %50 artıracak — bu bir `[tahmin — doğrulanmamış]` projeksiyondur, bugünün rakamı değil.
