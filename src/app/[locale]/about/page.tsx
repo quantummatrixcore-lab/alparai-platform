@@ -42,11 +42,11 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       .not("ai_provider_id", "is", null),
   ]);
 
-  const totalIncidents = incidentsCountResult.count ?? 371;
+  const totalIncidents = incidentsCountResult.count;
   const countries = new Set((countriesResult.data ?? []).map((r) => r.location_country));
-  const totalCountries = countries.size > 0 ? countries.size : 12;
+  const totalCountries = countries.size > 0 ? countries.size : null;
   const providers = new Set((providersResult.data ?? []).map((r) => r.ai_provider_id));
-  const totalProviders = providers.size > 0 ? providers.size : 23;
+  const totalProviders = providers.size > 0 ? providers.size : null;
 
   return (
     <div>
@@ -65,7 +65,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           <div className="grid grid-cols-1 gap-8 text-center sm:grid-cols-3">
             <div className="space-y-2">
               <span className="text-brand-400 block text-5xl font-black tracking-tight">
-                {totalIncidents}+
+                {totalIncidents != null ? `${totalIncidents}+` : "—"}
               </span>
               <span className="text-fg-muted text-xs font-bold tracking-wider uppercase">
                 {t("statsVerified")}
@@ -73,7 +73,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             </div>
             <div className="space-y-2">
               <span className="text-brand-400 block text-5xl font-black tracking-tight">
-                {totalProviders}
+                {totalProviders != null ? totalProviders : "—"}
               </span>
               <span className="text-fg-muted text-xs font-bold tracking-wider uppercase">
                 {t("statsProviders")}
@@ -81,7 +81,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             </div>
             <div className="space-y-2">
               <span className="text-brand-400 block text-5xl font-black tracking-tight">
-                {totalCountries}
+                {totalCountries != null ? totalCountries : "—"}
               </span>
               <span className="text-fg-muted text-xs font-bold tracking-wider uppercase">
                 {t("statsCountries")}

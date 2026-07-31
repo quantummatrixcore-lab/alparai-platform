@@ -12,10 +12,26 @@ export interface PlanItem {
   owner?: string;
 }
 
+export type MasterPlanParseError = "read" | "markers";
+
+export interface MasterPlanParseResult {
+  items: PlanItem[];
+  error: MasterPlanParseError | null;
+}
+
 const BACKLOG_START = "<!-- FOUNDER_BACKLOG_START -->";
 const BACKLOG_END = "<!-- FOUNDER_BACKLOG_END -->";
 
-export function parseMasterPlan(): PlanItem[] {
+function cleanMarkdown(value: string): string {
+  return value
+    .replace(/<[^>]*>?/gm, "")
+    .replace(/\[(.*?)\]\(.*?\)/g, "$1")
+    .replace(/`/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function parseMasterPlan(): MasterPlanParseResult {
   try {
     const filePath = path.join(process.cwd(), "docs", "MASTER_PLAN.md");
     const content = fs.readFileSync(filePath, "utf-8");
@@ -26,7 +42,7 @@ export function parseMasterPlan(): PlanItem[] {
 
     if (startIdx === -1 || endIdx === -1 || endIdx <= startIdx) {
       logger.error("parseMasterPlan: FOUNDER_BACKLOG markers not found — returning empty list");
-      return [];
+      return { items: [], error: "markers" };
     }
 
     const backlogLines = lines.slice(startIdx + 1, endIdx);
@@ -43,13 +59,12 @@ export function parseMasterPlan(): PlanItem[] {
       const id = parts[1];
       const priority = parts[2] || "";
       const rawTitle = parts[3] || "";
+      const rawDescription = parts[4] || "";
       const statusRaw = parts[5] || "";
 
       if (!id || !/^\d+$/.test(id)) continue;
 
-      const cleanTitle = rawTitle
-        ? rawTitle.replace(/<[^>]*>?/gm, "").replace(/\[(.*?)\]\(.*?\)/g, "$1")
-        : "";
+      const cleanTitle = cleanMarkdown(rawTitle);
 
       let owner: string | undefined;
       const ownerMatch = rawTitle.match(/^\[(\w+)\]/);
@@ -64,22 +79,25 @@ export function parseMasterPlan(): PlanItem[] {
         status = "paused";
       }
 
+      const description = cleanMarkdown(rawDescription);
+
       items.push({
         id,
         priority,
         title: cleanTitle || "",
         status,
         owner,
+        description: description || undefined,
       });
     }
 
-    return items;
+    return { items, error: null };
   } catch (error) {
     logger.error(
       "Error reading MASTER_PLAN.md",
       undefined,
       error instanceof Error ? error : undefined,
     );
-    return [];
+    return { items: [], error: "read" };
   }
 }

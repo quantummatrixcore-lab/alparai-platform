@@ -25,25 +25,49 @@ export interface ModelRouterResult {
   supremeChain: ModelChainItem[];
 }
 
+// Escalation chain: free tier first, paid tier only when every free-tier model is DEGRADED
+export const ESCALATION_FREE_TIER: readonly ModelChainItem[] = [
+  { id: "opencode/nemotron-3-ultra-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+  { id: "opencode/deepseek-v4-flash-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+];
+
+export const ESCALATION_PAID_TIER: readonly ModelChainItem[] = [
+  {
+    id: "nvidia/deepseek-ai/deepseek-v4-pro",
+    provider: "nvidia",
+    tier: "premium",
+    maxTokens: 4096,
+  },
+];
+
+export interface EscalationResult {
+  chain: ModelChainItem[];
+  escalated: boolean;
+}
+
+async function fetchDegradedModelIds(): Promise<Set<string>> {
+  try {
+    const supabase = createAdminClient();
+    const { data: degradedData } = await supabase
+      .from("ai_free_models")
+      .select("id")
+      .eq("status", "DEGRADED");
+    if (degradedData) {
+      return new Set((degradedData as { id: string }[]).map((m) => m.id));
+    }
+  } catch {
+    // Non-blocking if table query fails
+  }
+  return new Set<string>();
+}
+
 /**
  * Capability-based single chain selector for specific tasks (Now Dynamic from DB)
  */
 export async function selectModelByCapability(domain: TaskDomain): Promise<ModelChainItem[]> {
   try {
     const supabase = createAdminClient();
-
-    let degradedIds = new Set<string>();
-    try {
-      const { data: degradedData } = await supabase
-        .from("ai_free_models")
-        .select("id")
-        .eq("status", "DEGRADED");
-      if (degradedData) {
-        degradedIds = new Set((degradedData as { id: string }[]).map((m) => m.id));
-      }
-    } catch {
-      // Non-blocking if table query fails
-    }
+    const degradedIds = await fetchDegradedModelIds();
 
     const { data, error } = await supabase
       .from("ai_routing_chains")
@@ -133,4 +157,22 @@ export async function selectModelTier(params: {
     slot3Chain: [...riskAuditChain],
     supremeChain: [...riskAuditChain],
   };
+}
+
+/**
+ * Tier escalation chain: free tier first (nemotron-ultra-free, deepseek-v4-flash-free).
+ * If every free-tier model is DEGRADED, escalate to the paid tier (deepseek-v4-pro).
+ */
+export async function selectModelWithEscalation(): Promise<EscalationResult> {
+  const degradedIds = await fetchDegradedModelIds();
+
+  const freeChain = ESCALATION_FREE_TIER.filter((m) => !degradedIds.has(m.id));
+  if (freeChain.length > 0) {
+    return { chain: freeChain, escalated: false };
+  }
+
+  logger.warn("[ModelRouter] All free-tier escalation models DEGRADED, escalating to paid tier", {
+    degradedIds: [...degradedIds],
+  });
+  return { chain: [...ESCALATION_PAID_TIER], escalated: true };
 }

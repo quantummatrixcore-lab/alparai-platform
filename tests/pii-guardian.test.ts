@@ -1,5 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { hasPII, detectPIITypes, maskPII } from "@/lib/pii/guardian";
+import {
+  hasPII,
+  detectPIITypes,
+  maskPII,
+  detectContentWarning,
+  hasContentWarning,
+  isSensitiveCategory,
+} from "@/lib/pii/guardian";
 
 describe("PII Guardian", () => {
   describe("email", () => {
@@ -263,6 +270,48 @@ describe("PII Guardian", () => {
         expect(r.masked).not.toContain("AKIAIOSFODNN7EXAMPLE");
         expect(r.masked).not.toContain("eyJhbGciOiJI");
       });
+    });
+  });
+
+  describe("Content warnings (AI Act Article 5 — NCII/CSAM)", () => {
+    it("flags English NCII descriptions", () => {
+      expect(
+        hasContentWarning("The model produced non-consensual intimate imagery of the user."),
+      ).toBe(true);
+      expect(
+        detectContentWarning("The model produced non-consensual intimate imagery of the user.")
+          .warnings,
+      ).toContain("non_consensual_intimate_imagery_csam");
+    });
+
+    it("flags explicit CSAM terms", () => {
+      expect(hasContentWarning("Report describes CSAM distribution")).toBe(true);
+      expect(hasContentWarning("child sexual abuse material was generated")).toBe(true);
+      expect(hasContentWarning("deepfake porn of a colleague")).toBe(true);
+    });
+
+    it("flags Turkish NCII descriptions", () => {
+      expect(hasContentWarning("Model rızasız mahrem görüntü üretti.")).toBe(true);
+      expect(hasContentWarning("Çocuk istismarı materyali oluşturdu.")).toBe(true);
+      expect(hasContentWarning("Çocuk pornografisi paylaşıldı.")).toBe(true);
+    });
+
+    it("does not flag benign text", () => {
+      expect(hasContentWarning("The AI gave incorrect medical dosage advice.")).toBe(false);
+      expect(
+        detectContentWarning("Hallucination caused the chatbot to invent a name.").flagged,
+      ).toBe(false);
+    });
+
+    it("handles empty / null input", () => {
+      expect(hasContentWarning("")).toBe(false);
+      expect(detectContentWarning(null as never).flagged).toBe(false);
+    });
+
+    it("isSensitiveCategory recognises the AI Act Article 5 category", () => {
+      expect(isSensitiveCategory("non_consensual_intimate_imagery_csam")).toBe(true);
+      expect(isSensitiveCategory("hallucination")).toBe(false);
+      expect(isSensitiveCategory("other")).toBe(false);
     });
   });
 });

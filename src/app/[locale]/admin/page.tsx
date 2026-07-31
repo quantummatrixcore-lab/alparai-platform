@@ -94,7 +94,7 @@ export default async function AdminDashboardPage({
   }
   const incidentsByDay = Object.entries(incidentsByDayMap).map(([day, count]) => ({ day, count }));
 
-  const planItems = parseMasterPlan();
+  const planItems = parseMasterPlan().items;
   const planCompleted = planItems.filter((i) => i.status === "completed").length;
 
   interface SafeUserItem {

@@ -15,12 +15,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function MasterPlanPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "admin" });
 
   // Authenticate user & check admin access
   await requireAdmin();
 
   // Parse the markdown file
-  const items = parseMasterPlan();
+  const { items, error } = parseMasterPlan();
 
   return (
     <div className="min-h-screen py-8">
@@ -30,16 +31,14 @@ export default async function MasterPlanPage({ params }: { params: Promise<{ loc
             <div className="flex items-center gap-2">
               <Compass className="text-brand-400 h-6 w-6" />
               <h1 className="text-2xl font-extrabold tracking-tight text-white md:text-3xl">
-                Master Plan Dashboard
+                {t("master_plan_title")}
               </h1>
             </div>
-            <p className="text-fg-muted mt-1 text-sm">
-              Live progress tracking mapped directly from MASTER_PLAN.md
-            </p>
+            <p className="text-fg-muted mt-1 text-sm">{t("master_plan_subtitle")}</p>
           </div>
         </div>
 
-        <MasterPlanClient items={items} />
+        <MasterPlanClient items={items} error={error} />
       </Container>
     </div>
   );

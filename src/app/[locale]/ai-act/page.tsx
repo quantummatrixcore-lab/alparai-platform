@@ -42,6 +42,7 @@ export default async function AIActTrackerPage({
 
   const t = await getTranslations({ locale, namespace: "ai-act" });
   const tCommon = await getTranslations({ locale, namespace: "common" });
+  const tCat = await getTranslations({ locale, namespace: "categories" });
   const { risk, page } = await searchParams;
 
   const pageNum = Math.max(1, parseInt(page || "1", 10));
@@ -299,6 +300,27 @@ export default async function AIActTrackerPage({
                   <div>
                     <h5 className="text-fg-primary font-bold">{t("obligationsDate")}</h5>
                     <p className="mt-0.5">{t("obligationsSubDesc")}</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-red-500/20 bg-red-950/5">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-sm font-bold text-red-400">
+                <AlertTriangle className="h-4 w-4" />
+                {t("article5")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-fg-secondary space-y-4 text-xs leading-relaxed">
+              <p>{t("article5Desc")}</p>
+              <div className="space-y-3 border-t border-red-500/10 pt-4">
+                <div className="flex gap-2">
+                  <Shield className="h-4 w-4 shrink-0 text-red-400" />
+                  <div>
+                    <h5 className="text-fg-primary font-bold">{t("article5")}</h5>
+                    <p className="mt-0.5">{tCat("non_consensual_intimate_imagery_csam")}</p>
                   </div>
                 </div>
               </div>

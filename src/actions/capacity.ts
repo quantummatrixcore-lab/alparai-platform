@@ -146,3 +146,57 @@ export async function getLiveCapacityMetrics(): Promise<CapacityMetrics> {
     },
   };
 }
+
+export interface VendorQuota {
+  vendor: string;
+  metric: string;
+  unit: string;
+  planName: string | null;
+  limit: number | null;
+  used: number | null;
+  periodStart: string;
+  periodEnd: string;
+}
+
+export async function getVendorQuotas(): Promise<VendorQuota[]> {
+  await requireAdmin();
+  const db = createAdminClient();
+
+  const { data, error } = await db
+    .from("vendor_quotas" as never)
+    .select("vendor, metric, unit, plan_name, limit_value, used_value, period_start, period_end")
+    .order("period_start", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const rows = (data ?? []) as {
+    vendor: string;
+    metric: string;
+    unit: string;
+    plan_name: string | null;
+    limit_value: number | string | null;
+    used_value: number | string | null;
+    period_start: string;
+    period_end: string;
+  }[];
+
+  const latest = new Map<string, VendorQuota>();
+  for (const row of rows) {
+    const key = `${row.vendor}__${row.metric}`;
+    if (latest.has(key)) continue;
+    latest.set(key, {
+      vendor: row.vendor,
+      metric: row.metric,
+      unit: row.unit,
+      planName: row.plan_name ?? null,
+      limit: row.limit_value == null ? null : Number(row.limit_value),
+      used: row.used_value == null ? null : Number(row.used_value),
+      periodStart: row.period_start,
+      periodEnd: row.period_end,
+    });
+  }
+
+  return Array.from(latest.values());
+}

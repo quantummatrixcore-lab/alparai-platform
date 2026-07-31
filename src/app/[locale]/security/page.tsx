@@ -1,7 +1,17 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent } from "@/components/ui/card";
-import { Shield, Lock, CheckCircle, Server, Globe, Activity, Mail } from "lucide-react";
+import {
+  Shield,
+  Lock,
+  CheckCircle,
+  Server,
+  Globe,
+  Activity,
+  Mail,
+  ShieldCheck,
+  FileCheck2,
+} from "lucide-react";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -30,6 +40,41 @@ export default async function SecurityPage({ params }: { params: Promise<{ local
     { key: "q3", date: "2026 Q3" },
     { key: "q4", date: "2026 Q4" },
     { key: "q1", date: "2027 Q1" },
+  ];
+
+  const cryptoItems = [
+    {
+      key: "1",
+      icon: ShieldCheck,
+      color: "text-warning-400",
+      titleKey: "crypto_1_title",
+      statusKey: "crypto_1_status",
+      descKey: "crypto_1_desc",
+    },
+    {
+      key: "2",
+      icon: FileCheck2,
+      color: "text-warning-400",
+      titleKey: "crypto_2_title",
+      statusKey: "crypto_2_status",
+      descKey: "crypto_2_desc",
+    },
+    {
+      key: "3",
+      icon: Lock,
+      color: "text-success-400",
+      titleKey: "crypto_3_title",
+      statusKey: "crypto_3_status",
+      descKey: "crypto_3_desc",
+    },
+    {
+      key: "4",
+      icon: Globe,
+      color: "text-brand-400",
+      titleKey: "crypto_4_title",
+      statusKey: "crypto_4_status",
+      descKey: "crypto_4_desc",
+    },
   ];
 
   return (
@@ -98,6 +143,36 @@ export default async function SecurityPage({ params }: { params: Promise<{ local
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Encryption & Compliance Status */}
+      <div className="space-y-10">
+        <div className="mx-auto max-w-xl text-center">
+          <h2 className="text-fg-primary text-2xl font-bold tracking-tight">{t("crypto_title")}</h2>
+          <p className="text-fg-muted mt-2 text-sm">{t("crypto_subtitle")}</p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {cryptoItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Card key={item.key} className="border-border-subtle bg-bg-secondary/40">
+                <CardContent className="space-y-4 p-6">
+                  <div className="flex items-center justify-between">
+                    <div className={`w-fit rounded-lg bg-white/5 p-3 ${item.color}`}>
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <span className="border-border-subtle bg-bg-elevated text-fg-muted rounded-full border px-3 py-1 text-[10px] font-bold tracking-wider uppercase">
+                      {t(item.statusKey)}
+                    </span>
+                  </div>
+                  <h3 className="text-fg-primary text-lg font-bold">{t(item.titleKey)}</h3>
+                  <p className="text-fg-muted text-xs leading-relaxed">{t(item.descKey)}</p>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </div>
 

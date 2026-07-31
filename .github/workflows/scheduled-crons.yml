@@ -72,9 +72,10 @@ jobs:
             trigger_cron "/api/cron/hard-delete"
           fi
 
-          # 4:00 UTC (fetch-external)
+          # 4:00 UTC (fetch-external, quota-snapshot)
           if [ "$HOUR" = "04" ]; then
             trigger_cron "/api/cron/fetch-external"
+            trigger_cron "/api/cron/quota-snapshot"
           fi
 
           # 5:00 UTC (retro-audit)

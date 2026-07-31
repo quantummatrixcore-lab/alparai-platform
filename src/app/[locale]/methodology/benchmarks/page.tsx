@@ -83,13 +83,30 @@ export default async function MethodologyPage({ params }: { params: Promise<{ lo
             <GitCompare className="h-6 w-6 text-[#00FF88]" />
             <span>Cross-Model Debate Adjudication</span>
           </h2>
-          <p className="text-sm leading-relaxed text-slate-400">
-            Unlike traditional benchmarking setups that simply verify raw responses against static
-            tokens, ALPAR AI employs a dynamic cross-model debate. Under this framework, 5 model
-            providers review and evaluate each other's outputs, adjudicating discrepancies through
-            iterative consensus rounds. This minimizes static scoring bias and provides robust,
-            peer-reviewed evaluation metrics.
-          </p>
+          <p className="text-sm leading-relaxed text-slate-400">{t("adjudication_text")}</p>
+        </section>
+
+        {/* Adjudication Chain Models */}
+        <section className="space-y-4">
+          <h2 className="flex items-center space-x-2 border-b border-slate-800 pb-3 text-2xl font-bold text-white">
+            <GitCompare className="h-6 w-6 text-[#00FF88]" />
+            <span>{t("adjudication_title")}</span>
+          </h2>
+          <p className="text-sm leading-relaxed text-slate-400">{t("adjudication_intro")}</p>
+
+          <div className="space-y-2">
+            {(["model_1_label", "model_2_label", "model_3_label"] as const).map((k) => (
+              <div
+                key={k}
+                className="flex items-center gap-3 rounded-lg border border-slate-800 bg-slate-950 px-4 py-3"
+              >
+                <span className="h-2 w-2 shrink-0 rounded-full bg-[#00FF88]" />
+                <code className="text-sm font-semibold text-[#00FF88]">{t(k)}</code>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-xs leading-relaxed text-slate-500">{t("adjudication_note")}</p>
         </section>
 
         {/* Statistical Rigor */}

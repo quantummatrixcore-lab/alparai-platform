@@ -76,6 +76,15 @@ describe("logger", () => {
     });
   });
 
+  it("logs critical messages and reports to Sentry as fatal", () => {
+    logger.critical("some critical");
+    expect(errorSpy).toHaveBeenCalled();
+    expect(Sentry.captureMessage).toHaveBeenCalledWith("some critical", {
+      level: "fatal",
+      extra: undefined,
+    });
+  });
+
   it("sends exceptions to Sentry on error with exception object", () => {
     const err = new Error("exception error");
     logger.error("some error text", { foo: "bar" }, err);

@@ -471,6 +471,7 @@ export function IncidentForm({
       manipulation: 0,
       inaccessibility: 0,
       copyright: 0,
+      non_consensual_intimate_imagery_csam: 0,
       other: 0,
     }) as IncidentCategory[]
   ).map((c) => ({ value: c, label: tCat(c) }));

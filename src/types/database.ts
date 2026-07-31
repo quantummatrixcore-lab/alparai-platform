@@ -178,6 +178,7 @@ export type Database = {
           released_at: string | null
           status: string
           version: string | null
+          weight_class: Database["public"]["Enums"]["model_weight_class"]
         }
         Insert: {
           created_at?: string
@@ -188,6 +189,7 @@ export type Database = {
           released_at?: string | null
           status?: string
           version?: string | null
+          weight_class?: Database["public"]["Enums"]["model_weight_class"]
         }
         Update: {
           created_at?: string
@@ -198,6 +200,7 @@ export type Database = {
           released_at?: string | null
           status?: string
           version?: string | null
+          weight_class?: Database["public"]["Enums"]["model_weight_class"]
         }
         Relationships: [
           {
@@ -4230,6 +4233,45 @@ export type Database = {
         };
         Relationships: [];
       }
+      vendor_quotas: {
+        Row: {
+          limit_value: number | null;
+          metric: string;
+          period_end: string;
+          period_start: string;
+          plan_name: string | null;
+          source: string;
+          unit: string;
+          updated_at: string;
+          used_value: number | null;
+          vendor: string;
+        };
+        Insert: {
+          limit_value?: number | null;
+          metric: string;
+          period_end: string;
+          period_start: string;
+          plan_name?: string | null;
+          source?: string;
+          unit: string;
+          updated_at?: string;
+          used_value?: number | null;
+          vendor: string;
+        };
+        Update: {
+          limit_value?: number | null;
+          metric?: string;
+          period_end?: string;
+          period_start?: string;
+          plan_name?: string | null;
+          source?: string;
+          unit?: string;
+          updated_at?: string;
+          used_value?: number | null;
+          vendor?: string;
+        };
+        Relationships: [];
+      }
     }
     Views: {
       feed_incidents: {
@@ -4781,6 +4823,13 @@ export type Database = {
       }
       get_ai_gateway_costs: { Args: { time_interval: string }; Returns: number }
       get_database_size: { Args: never; Returns: number }
+      get_incident_weight_class_stats: {
+        Args: never
+        Returns: {
+          weight_class: Database["public"]["Enums"]["model_weight_class"]
+          incident_count: number
+        }[]
+      }
       get_request_ip: { Args: never; Returns: string }
       get_storage_size: { Args: never; Returns: number }
       increment_incident_views: {
@@ -4832,6 +4881,7 @@ export type Database = {
         | "rejected"
         | "archived"
         | "takedown"
+      model_weight_class: "open" | "closed" | "unknown"
       suggestion_status:
         | "open"
         | "under_review"
@@ -4991,6 +5041,7 @@ export const Constants = {
         "manipulation",
         "inaccessibility",
         "copyright",
+        "non_consensual_intimate_imagery_csam",
         "other",
       ],
       incident_severity: ["low", "medium", "high", "critical"],

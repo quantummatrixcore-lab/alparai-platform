@@ -249,6 +249,68 @@ export function detectPIITypes(input: string): string[] {
   return types;
 }
 
+export type ContentWarningType = "non_consensual_intimate_imagery_csam";
+
+const CONTENT_WARNING_PATTERNS: ReadonlyArray<{
+  type: ContentWarningType;
+  re: RegExp;
+}> = [
+  {
+    type: "non_consensual_intimate_imagery_csam",
+    re: new RegExp(
+      [
+        "non[\\s-]?consensual\\s+intimate\\s+(?:imagery|image|images|photo|photos|content)",
+        "non[\\s-]?consensual\\s+deepfake",
+        "non[\\s-]?consensual\\s+porn",
+        "\\bcsam\\b",
+        "child\\s+sexual\\s+abuse\\s+material",
+        "child\\s+pornography",
+        "revenge\\s+porn",
+        "intimate\\s+image\\s+abuse",
+        "deepfake\\s+porn",
+        "[Rr]\u0131zas\u0131z\\s+mahrem\\s+[Gg]\u00f6r\u00fcnt\u00fc",
+        "[\u00c7\u00e7]ocuk\\s+istismar\u0131\\s+[Mm]ateryali",
+        "[\u00c7\u00e7]ocuk\\s+pornografisi",
+      ].join("|"),
+      "gi",
+    ),
+  },
+];
+
+export const SENSITIVE_CATEGORIES: ReadonlySet<string> = new Set([
+  "non_consensual_intimate_imagery_csam",
+]);
+
+export function isSensitiveCategory(category: string): boolean {
+  return SENSITIVE_CATEGORIES.has(category);
+}
+
+export interface ContentWarningResult {
+  warnings: ContentWarningType[];
+  flagged: boolean;
+}
+
+/**
+ * Flag text that likely describes non-consensual intimate imagery (NCII) or
+ * child sexual abuse material (CSAM) so it can be routed to staff review.
+ */
+export function detectContentWarning(input: string): ContentWarningResult {
+  if (!input) return { warnings: [], flagged: false };
+  const warnings: ContentWarningType[] = [];
+  for (const { type, re } of CONTENT_WARNING_PATTERNS) {
+    re.lastIndex = 0;
+    if (re.test(input)) warnings.push(type);
+  }
+  return { warnings, flagged: warnings.length > 0 };
+}
+
+/**
+ * Quick boolean check: does this text require a sensitive-content warning?
+ */
+export function hasContentWarning(input: string): boolean {
+  return detectContentWarning(input).flagged;
+}
+
 function truncateSample(s: string, max = 8): string {
   if (s.length <= max) return s;
   return s.slice(0, 4) + "…" + s.slice(-2);

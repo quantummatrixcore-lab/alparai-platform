@@ -1,6 +1,7 @@
 import { withCronLogger } from "@/lib/utils/cron-logger";
 import { type NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getResendClient } from "@/lib/email/resend";
 import { Redis } from "@upstash/redis";
 import { logger } from "@/lib/utils/logger";
 
@@ -77,6 +78,102 @@ async function getHandler(request: NextRequest) {
       logger.error("Failed to query daily LLM costs", {}, e instanceof Error ? e : undefined);
     }
 
+    // Read API vendor quotas and compute utilization alerts
+    const { data: vendorQuotas, error: quotasError } = await admin
+      .from("vendor_quotas" as never)
+      .select("vendor, metric, limit_value, used_value, unit")
+      .not("limit_value", "is", null)
+      .eq("source", "api");
+
+    if (quotasError) {
+      throw new Error(`Failed to fetch vendor_quotas: ${quotasError.message}`);
+    }
+
+    const typedQuotas = (vendorQuotas || []) as {
+      vendor?: string;
+      metric?: string;
+      limit_value?: number | string | null;
+      used_value?: number | string | null;
+      unit?: string;
+    }[];
+
+    const warningVendors: string[] = [];
+    const criticalVendors: string[] = [];
+    const exhaustedVendors: string[] = [];
+
+    for (const row of typedQuotas) {
+      const limit = Number(row.limit_value);
+      const used = Number(row.used_value || 0);
+      if (!Number.isFinite(limit) || limit <= 0 || !row.vendor) continue;
+      const ratio = used / limit;
+
+      if (ratio >= 1) {
+        exhaustedVendors.push(row.vendor);
+        logger.error(`AUTONOMOUS BRAKE: quota exhausted for ${row.vendor}`, {
+          vendor: row.vendor,
+          metric: row.metric,
+          used,
+          limit,
+          ratio: Number(ratio.toFixed(4)),
+        });
+      } else if (ratio >= 0.9) {
+        criticalVendors.push(row.vendor);
+        logger.critical(`AUTONOMOUS BRAKE: quota at 90%+ for ${row.vendor}`, {
+          vendor: row.vendor,
+          metric: row.metric,
+          used,
+          limit,
+          ratio: Number(ratio.toFixed(4)),
+        });
+      } else if (ratio >= 0.75) {
+        warningVendors.push(row.vendor);
+      }
+    }
+
+    // Single admin email when any vendor reaches 75%+ utilization
+    const vendorsOver75 = [
+      ...new Set([...warningVendors, ...criticalVendors, ...exhaustedVendors]),
+    ];
+    if (vendorsOver75.length > 0) {
+      try {
+        const resend = getResendClient();
+        if (resend) {
+          const rowsHtml = typedQuotas
+            .filter((r) => r.vendor && vendorsOver75.includes(r.vendor))
+            .map((r) => {
+              const limit = Number(r.limit_value);
+              const used = Number(r.used_value || 0);
+              const pct = limit > 0 ? Math.round((used / limit) * 100) : 0;
+              return `<li>${r.vendor} (${r.metric}): ${used} / ${limit} ${r.unit || ""} (${pct}%)</li>`;
+            })
+            .join("");
+
+          await resend.emails.send({
+            from: "ALPAR AI Alerts <alerts@alparai.com>",
+            to: process.env.ADMIN_ALERT_EMAIL || "quantum.matrix.core@gmail.com",
+            subject: `[ALERT] Vendor quota ≥75% for ${vendorsOver75.length} vendor(s)`,
+            html: `
+              <p>ALPAR AI autonomous cost guard detected vendor quota utilization of ≥75%.</p>
+              <ul>${rowsHtml}</ul>
+              <p>90%+ triggers an AUTONOMOUS BRAKE CRITICAL log; 100%+ triggers an AUTONOMOUS BRAKE ERROR log.</p>
+              <p>Best regards,<br/>ALPAR AI Cost Alarm</p>
+            `,
+          });
+          logger.info(`[CostAlarm] Quota warning email sent for: ${vendorsOver75.join(", ")}`);
+        } else {
+          logger.warn("[CostAlarm] Quota ≥75% detected but RESEND_API_KEY not configured", {
+            vendorsOver75,
+          });
+        }
+      } catch (emailErr) {
+        logger.error(
+          "Failed to send quota warning email",
+          {},
+          emailErr instanceof Error ? emailErr : undefined,
+        );
+      }
+    }
+
     // Default defaults for cost thresholds (configurable via env)
     const dailyWarningThreshold = Number(process.env.COST_WARNING_DAILY ?? 50); // >$50 warning
     const dailyLimitThreshold = Number(process.env.COST_LIMIT_DAILY ?? 100); // >$100 auto-throttle / kill-switch
@@ -140,6 +237,11 @@ async function getHandler(request: NextRequest) {
       estimatedDailyCost: Number(estimatedDailyCost.toFixed(2)),
       killSwitchActive,
       reason: alarmReason || "Under limits",
+      quotaAlerts: {
+        warningVendors,
+        criticalVendors,
+        exhaustedVendors,
+      },
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error during cost alarm cron";

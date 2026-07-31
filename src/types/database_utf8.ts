@@ -3395,6 +3395,7 @@ export const Constants = {
         "manipulation",
         "inaccessibility",
         "copyright",
+        "non_consensual_intimate_imagery_csam",
         "other",
       ],
       incident_severity: ["low", "medium", "high", "critical"],

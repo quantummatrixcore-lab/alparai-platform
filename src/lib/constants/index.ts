@@ -37,6 +37,7 @@ export const INCIDENT_CATEGORIES = [
   { value: "manipulation", label: "Manipulation" },
   { value: "inaccessibility", label: "Inaccessibility" },
   { value: "copyright", label: "Copyright" },
+  { value: "non_consensual_intimate_imagery_csam", label: "NCII / CSAM (Art. 5)" },
   { value: "other", label: "Other" },
 ] as const;
 export type IncidentCategory = (typeof INCIDENT_CATEGORIES)[number]["value"];

@@ -266,6 +266,13 @@ export function HeroSection({
               <p className="text-fg-muted text-xs font-bold tracking-wider uppercase">
                 {t("founder_signature", { defaultValue: "— Ercüment Erden, Founder" })}
               </p>
+              <Link
+                href="/incidents/fa11aab1-fa11-4700-8000-000000000031"
+                className="text-brand-400 hover:text-brand-300 mt-3 inline-flex items-center gap-1 text-xs font-bold transition-colors"
+              >
+                {t("founder_cta")}
+                <ArrowRight className="h-3 w-3" />
+              </Link>
             </div>
           </div>
 
