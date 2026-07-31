@@ -1355,3 +1355,22 @@ _v12.44 — 🟢 **#67 gerçekten kapandı — beş ekran görüntüsü de gerç
 **Kural 45 — Tek-Madde Talebi Reddi:** Mimar, Kural 40'ın yukarıdaki üç istisnasından birine girmeyen tek-maddelik "şunu tamamlandı işaretle" taleplerini işlemez. Böyle bir talep gelirse mimar, talebi Kural 39/40'a yönlendirip toplu rapor bekler — kendi başına git fetch + doğrulama + commit döngüsüne girmez. Bu kural mimarın kendi geçmiş davranışını (v12.30-v12.44 arası tek-madde döngüsü) bağlayıcı şekilde durdurur.
 
 _v12.45 — 🟢 Yukarıdaki toplu görev bloğu ve Kural 45 eklendi. #86 bu turda Antigravity tarafından bağımsız kapatıldı (161 dosya/951 test, lint/typecheck yeşil) — mimar yalnızca doğruladı, ayrı bir tur açmadı. Bundan sonraki tur, Antigravity'nin TEK konsolide raporunu bekliyor._
+
+---
+
+## v12.46 — Model kullanım temel ölçümü ve G-5'in Sonnet'e genişletilmesi
+
+**Kaynak:** `~/.claude/projects/-home-user-Alparai-com/eae2cdac-362e-5bbb-abee-7bf22929f4b1.jsonl` — oturum transkriptindeki her asistan turunun gerçek `usage` alanları toplanarak hesaplandı (25.931 satır, 10.313 asistan turu, 2026-07-03 → 2026-07-31 kümülatif). Tahmin değil, ham ölçüm.
+
+| Model               | Tur   | Tur payı | Output token | Cache-read token |
+| ------------------- | ----- | -------- | ------------ | ---------------- |
+| Sonnet 5            | 5.838 | %56,6    | ~5,47M       | ~1,32 milyar     |
+| Opus (tüm sürümler) | 2.184 | %21,2    | ~2,36M       | ~389M            |
+| Fable 5             | 1.312 | %12,7    | ~1,50M       | ~225M            |
+| Haiku 4.5           | 954   | **%9,2** | ~0,56M       | ~72M             |
+
+**Bulgu — kural ile pratik çelişiyor.** `CLAUDE.md` 9. kuralındaki yönlendirme tablosu keşif ve mekanik işi Haiku'ya atıyor, G-5 ise yalnızca Opus 5 ve Fable 5 oturumlarını devretmeye zorluyordu. Ölçüm gösteriyor ki fiilen en çok turu tüketen model **Sonnet 5** — G-5 metninde hiç anılmayan model — ve tablonun keşif/mekanik iş için atadığı Haiku, dört model arasında **en az** kullanılan. Yani devretme zorunluluğunun kapsamadığı bir katman, iş yükünün yarısından fazlasını taşıyor.
+
+**Karar.** G-5'in devretme zorunluluğu Sonnet 5 oturumlarını da Opus 5 / Fable 5 ile aynı şekilde bağlar. Haiku satırındaki bir iş tipi (kod arama, dosya konumu, envanter, grep/glob keşfi, rutin/mekanik yürütme) önce Haiku alt-ajanına (`model: "haiku"`) verilmeye çalışılır; Sonnet/Opus/Fable'ın doğrudan yürütmesi, gerekçesi bu dosyaya tek satır olarak yazılan bir istisna gerektirir. Kural metni `CLAUDE.md` Rule 9 altında "G-5 amendment (v12.46, data-driven)" başlığıyla yazıldı.
+
+**Takip.** Bu tablo bir temel ölçümdür (baseline). Aynı yöntem — transkriptteki `usage` alanlarının model bazında toplanması — sonraki bir turda tekrarlanıp Haiku'nun tur payının %9,2'den yukarı çıkıp çıkmadığı buraya kıyaslanacak. Şu an için sonraki ölçüm yapılmadı; bir tasarruf oranı iddia edilmiyor.
