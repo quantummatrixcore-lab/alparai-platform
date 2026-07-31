@@ -65,7 +65,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           <div className="grid grid-cols-1 gap-8 text-center sm:grid-cols-3">
             <div className="space-y-2">
               <span className="text-brand-400 block text-5xl font-black tracking-tight">
-                {totalIncidents != null ? `${totalIncidents}+` : "—"}
+                {totalIncidents != null ? `${totalIncidents}+` : "N/A"}
               </span>
               <span className="text-fg-muted text-xs font-bold tracking-wider uppercase">
                 {t("statsVerified")}
@@ -73,7 +73,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             </div>
             <div className="space-y-2">
               <span className="text-brand-400 block text-5xl font-black tracking-tight">
-                {totalProviders != null ? totalProviders : "—"}
+                {totalProviders != null ? totalProviders : "N/A"}
               </span>
               <span className="text-fg-muted text-xs font-bold tracking-wider uppercase">
                 {t("statsProviders")}
@@ -81,7 +81,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             </div>
             <div className="space-y-2">
               <span className="text-brand-400 block text-5xl font-black tracking-tight">
-                {totalCountries != null ? totalCountries : "—"}
+                {totalCountries != null ? totalCountries : "N/A"}
               </span>
               <span className="text-fg-muted text-xs font-bold tracking-wider uppercase">
                 {t("statsCountries")}
