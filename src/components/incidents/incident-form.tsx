@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useActionState } from "react";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useDeferredValue } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
@@ -151,6 +151,9 @@ export function IncidentForm({
     expertFix: string;
     anonymousEmail: string;
   };
+
+  const deferredTitle = useDeferredValue(title);
+  const deferredDescription = useDeferredValue(description);
 
   const draftValues = useMemo<IncidentDraft>(
     () => ({
@@ -324,21 +327,21 @@ export function IncidentForm({
 
   useEffect(() => {
     let active = true;
-    const timer = setTimeout(async () => {
-      const { hasPII } = await import("@/lib/pii/guardian");
-      const text = `${title} ${description}`;
+    const checkPII = async () => {
+      const text = `${deferredTitle} ${deferredDescription}`;
       if (!text.trim()) {
         if (active) setPiiDetected(false);
         return;
       }
+      const { hasPII } = await import("@/lib/pii/guardian");
       const has = hasPII(text);
       if (active) setPiiDetected(has);
-    }, 500);
+    };
+    checkPII();
     return () => {
       active = false;
-      clearTimeout(timer);
     };
-  }, [title, description]);
+  }, [deferredTitle, deferredDescription]);
 
   if (state.ok) {
     if (processingStage) {
