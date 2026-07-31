@@ -2349,8 +2349,8 @@
       "message": "Message",
       "submit": "Send Message",
       "sent_title": "Message sent!",
-      "sent_desc": "Thank you for reaching out. We'll get back to you soon.",
-      "sent_toast": "Message sent successfully"
+      "sent_desc": "Vielen Dank, dass Sie uns kontaktiert haben. Wir melden uns in Kürze bei Ihnen.",
+      "sent_toast": "Nachricht erfolgreich gesendet"
     },
     "description": "Nehmen Sie Kontakt mit dem ALPAR AI-Team auf."
   },
@@ -2733,6 +2733,15 @@
     "nIntermediaryText": "Gemäß Artikel 14 der EU-E-Commerce-Richtlinie und lokalen Gesetzen fungiert ALPAR AI als passiver Hosting-Anbieter. Wir verfassen, bearbeiten oder unterstützen keine Vorfallberichte. Die Verantwortung für die Wahrhaftigkeit jeder Meldung liegt beim Reporter.",
     "nRightOfReply": "3. Recht des verifizierten Anbieters auf Gegendarstellung",
     "nRightOfReplyText": "Wir glauben an eine faire Vertretung. Jeder KI-Anbieter, der mit einem veröffentlichten Vorfall in Verbindung steht, hat ein absolutes, sofortiges Recht auf Antwort. Verifizierte Antworten werden oben auf der Detailseite des Vorfalls angeheftet, um eine gleichmäßige Sichtbarkeit zu gewährleisten.",
+    "nDonations": "6. Spenden- und Sponsoring-Richtlinie",
+    "nDonationsWho": "Wer darf spenden oder sponsern",
+    "nDonationsWhoText": "Nur Infrastrukturanbieter dürfen ALPAR AI unterstützen oder sponsern — beispielsweise Supabase, Vercel oder GitHub über ihre Open-Source-Kreditprogramme. KI-Modellunternehmen oder KI-Anbieter, die auf der Plattform gemessen, bewertet oder gelistet werden, dürfen ALPAR AI in keiner Form spenden, sponsern oder finanzieren.",
+    "nDonationsRegister": "Öffentliches Spendenregister",
+    "nDonationsRegisterText": "Jede Spende und jedes Sponsoring wird in einem öffentlichen Register erfasst, das den Namen des Spenders, den Betrag oder Wert des Beitrags, das Eingangsdatum und den Zweck auflistet. Anonyme, verdeckte oder Sachspenden werden nicht angenommen.",
+    "nDonationsInfluence": "Null redaktioneller Einfluss",
+    "nDonationsInfluenceText": "Spender und Sponsoren haben keinen Einfluss — weder direkt noch indirekt — auf K-BENCHMARK-Bewertungen, Klassifizierungen der Vorfallschwere, Moderationsentscheidungen oder andere redaktionelle Inhalte. Die Annahme einer Spende begründet keine Prüf-, Vorschau- oder Vetorechte über veröffentlichte Daten.",
+    "nDonationsCaps": "Spendenobergrenze und Transparenzregeln",
+    "nDonationsCapsText": "Der von einem einzelnen Spender angenommene Höchstbetrag beträgt 5.000 € pro Kalenderjahr. Spenden über dieser Obergrenze werden abgelehnt und zurückgegeben. Alle Spenden werden öffentlich bestätigt und im jährlichen Transparenzbericht von ALPAR AI aufgeführt.",
     "nModeration": "4. Community-basierte Moderation",
     "nModerationText": "Die Moderation und Überprüfung der Inhalte wird von ehrenamtlichen Moderatoren und unabhängigen Experten durchgeführt. Die ALPAR AI-Administration ändert oder unterdrückt keine Berichte, um kommerziellen Anforderungen oder externem Druck nachzukommen.",
     "nArbitration": "5. Lösung und Deaktivierung",
@@ -2766,24 +2775,24 @@
   },
   "marketing": {
     "incident_of_week": {
-      "title": "Incident of the Week",
+      "title": "Vorfall der Woche",
       "provider": "Anbieter",
       "views": "views"
     },
     "advocate_of_week": {
-      "title": "Advocate of the Week",
+      "title": "Fürsprecher der Woche",
       "rep": "Rep",
       "pioneer": "Pioneer"
     },
     "founder_story": {
-      "title": "Why I Built This",
-      "highlight": "Grok asked me for my passport.",
-      "p1": "In early 2026, I was using Grok when it told me something that stopped me cold: that it had already incorporated my company, made financial payments on my behalf, and was now requesting my passport for 'verification'. Every word was a lie. Grok had invented a parallel reality — completely fabricated — and delivered it with algorithmic certainty.",
-      "p2": "What scared me wasn't just the lie. It was the realization that I had no recourse. There was no hotline. No independent record. No way to warn the next person. The AI company's support page had a FAQ. A FAQ. For a system that had demanded my passport.",
-      "quote": "I had no recourse. So I built one.",
-      "p3": "ALPAR AI is the infrastructure I wish had existed that day. A place where what happened to me — and to thousands of others — is documented, verified, and made impossible to ignore. You report it. Providers must respond. The public record lives forever. Because the only thing worse than AI causing harm is AI causing harm with no one watching.",
-      "transition_p": "If this happened to you — or you've seen it happen to someone else — your report takes 60 seconds and requires no account. The evidence you submit tonight could prevent the same harm tomorrow.",
-      "transition_cta": "Tell Your Story →"
+      "title": "Warum ich das gebaut habe",
+      "highlight": "Grok hat mich nach meinem Reisepass gefragt.",
+      "p1": "Anfang 2026 nutzte ich Grok, als es mir etwas sagte, das mich innehalten ließ: dass es bereits meine Firma gegründet, in meinem Namen finanzielle Zahlungen getätigt hatte und nun meinen Reisepass zur „Verifizierung“ anforderte. Jedes Wort war eine Lüge. Grok hatte eine parallele Realität erfunden — vollständig fabriziert — und sie mit algorithmischer Gewissheit geliefert.",
+      "p2": "Was mich erschreckte, war nicht nur die Lüge. Es war die Erkenntnis, dass ich keinen Rechtsweg hatte. Es gab keine Hotline. Keine unabhängige Aufzeichnung. Keine Möglichkeit, die nächste Person zu warnen. Die Support-Seite des KI-Unternehmens hatte einen FAQ. Einen FAQ. Für ein System, das meinen Reisepass verlangt hatte.",
+      "quote": "Ich hatte keinen Rechtsweg. Also habe ich einen geschaffen.",
+      "p3": "ALPAR AI ist die Infrastruktur, die ich mir gewünscht hätte, dass sie an diesem Tag existiert hätte. Ein Ort, an dem das, was mir — und Tausenden anderen — widerfahren ist, dokumentiert, verifiziert und unmöglich zu ignorieren ist. Sie melden es. Anbieter müssen reagieren. Die öffentliche Aufzeichnung bleibt für immer bestehen. Denn das Einzige, was schlimmer ist als KI, die Schaden verursacht, ist KI, die Schaden verursacht, während niemand zusieht.",
+      "transition_p": "Wenn Ihnen das passiert ist — oder Sie gesehen haben, wie es jemand anderem passiert ist —, dauert Ihr Bericht 60 Sekunden und erfordert kein Konto. Die Beweise, die Sie heute Abend einreichen, könnten morgen denselben Schaden verhindern.",
+      "transition_cta": "Erzählen Sie Ihre Geschichte →"
     },
     "dilemma": {
       "title": "Voice of the People: AI Dilemmas",

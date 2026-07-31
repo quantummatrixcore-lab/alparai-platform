@@ -3,12 +3,14 @@ module.exports = {
     readPackage(pkg) {
       if (pkg.name === 'minimatch') {
         if (pkg.dependencies) {
-          if (pkg.version.startsWith('3.')) {
-            pkg.dependencies['brace-expansion'] = '^1.1.17';
-          } else {
-            pkg.dependencies['brace-expansion'] = '^2.1.3';
-          }
+          pkg.dependencies['brace-expansion'] = '^5.0.9';
         }
+      }
+      if (pkg.dependencies && pkg.dependencies['minimatch']) {
+        pkg.dependencies['minimatch'] = '^10.2.6';
+      }
+      if (pkg.devDependencies && pkg.devDependencies['minimatch']) {
+        pkg.devDependencies['minimatch'] = '^10.2.6';
       }
       if (pkg.dependencies && pkg.dependencies['sharp']) {
         pkg.dependencies['sharp'] = '^0.35.3';

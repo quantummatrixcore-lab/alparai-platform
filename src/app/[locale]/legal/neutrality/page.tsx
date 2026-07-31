@@ -39,6 +39,20 @@ export default async function NeutralityCharterPage({
 
       <h2>{t("nRightOfReply")}</h2>
       <p>{t("nRightOfReplyText")}</p>
+
+      <h2>{t("nDonations")}</h2>
+
+      <h3>{t("nDonationsWho")}</h3>
+      <p>{t("nDonationsWhoText")}</p>
+
+      <h3>{t("nDonationsRegister")}</h3>
+      <p>{t("nDonationsRegisterText")}</p>
+
+      <h3>{t("nDonationsInfluence")}</h3>
+      <p>{t("nDonationsInfluenceText")}</p>
+
+      <h3>{t("nDonationsCaps")}</h3>
+      <p>{t("nDonationsCapsText")}</p>
     </LegalLayout>
   );
 }

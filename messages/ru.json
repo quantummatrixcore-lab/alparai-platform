@@ -348,7 +348,7 @@
     "join_cta_2_btn": "Займите своё место →",
     "join_cta_2_tag": "Закроется когда заполнится",
     "join_cta_3": "Исследователи. Журналисты. Регуляторы.",
-    "join_cta_3_desc": "Мы предоставляем anonymизированные наборы данных об инцидентах, доступ к API и досрочные допуски уведомления о случаях высокой тяжести. Исследовательские учреждения уже в диалоге.",
+    "join_cta_3_desc": "Мы предоставляем анонимизированные наборы данных об инцидентах, доступ к API и досрочные допуски уведомления о случаях высокой тяжести. Исследовательские учреждения уже в диалоге.",
     "join_cta_3_btn": "Начните разговор →",
     "join_cta_3_tag": "Институциональный доступ",
     "join_cta_4": "Как мы решаем, что правда",
@@ -2349,8 +2349,8 @@
       "message": "Message",
       "submit": "Send Message",
       "sent_title": "Message sent!",
-      "sent_desc": "Thank you for reaching out. We'll get back to you soon.",
-      "sent_toast": "Message sent successfully"
+      "sent_desc": "Спасибо, что связались с нами. Мы скоро с вами свяжемся.",
+      "sent_toast": "Сообщение успешно отправлено"
     },
     "description": "Свяжитесь с командой ALPAR AI."
   },
@@ -2733,6 +2733,15 @@
     "nIntermediaryText": "В соответствии со статьей 14 Директивы ЕС об электронной коммерции и местным законодательством ALPAR AI действует как пассивный хостинг-провайдер. Мы не пишем, не редактируем и не одобряем отчеты об инцидентах. Ответственность за достоверность каждого сообщения лежит на репортере.",
     "nRightOfReply": "3. Право проверенного поставщика на ответ",
     "nRightOfReplyText": "Мы верим в справедливое представительство. Каждый поставщик ИИ, связанный с опубликованным инцидентом, имеет абсолютное и немедленное право на ответ. Проверенные ответы закрепляются вверху страницы сведений об инциденте, что обеспечивает равную видимость.",
+    "nDonations": "6. Политика пожертвований и спонсорства",
+    "nDonationsWho": "Кто может делать пожертвования или спонсировать",
+    "nDonationsWhoText": "Делать пожертвования или спонсировать ALPAR AI могут только поставщики инфраструктуры — например, Supabase, Vercel или GitHub через свои программы открытых кредитов для open-source. Компании-разработчики моделей ИИ или поставщики ИИ, которые измеряются, оцениваются или перечислены на платформе, не могут делать пожертвования, спонсировать или финансировать ALPAR AI в любой форме.",
+    "nDonationsRegister": "Публичный реестр пожертвований",
+    "nDonationsRegisterText": "Каждое пожертвование и спонсорство фиксируется в публичном реестре, где указываются имя донора, сумма или стоимость взноса, дата получения и цель. Анонимные, скрытые или неденежные взносы не принимаются.",
+    "nDonationsInfluence": "Нулевое редакционное влияние",
+    "nDonationsInfluenceText": "Доноры и спонсоры не имеют никакого влияния — прямого или косвенного — на оценки K-BENCHMARK, классификацию серьезности инцидентов, решения модерации или любой другой редакционный контент. Принятие пожертвования не создает никаких прав на проверку, предпросмотр или вето в отношении опубликованных данных.",
+    "nDonationsCaps": "Лимит пожертвований и правила прозрачности",
+    "nDonationsCapsText": "Максимальная сумма, принимаемая от одного донора, составляет 5 000 евро в календарный год. Пожертвования, превышающие этот лимит, отклоняются и возвращаются. Все пожертвования публично подтверждаются и указываются в годовом отчете о прозрачности ALPAR AI.",
     "nModeration": "4. Модерация на уровне сообщества",
     "nModerationText": "Модерацию и проверку контента проводят модераторы-добровольцы и независимые эксперты. Администрация ALPAR AI не изменяет и не скрывает отчеты для удовлетворения коммерческих запросов или внешнего давления.",
     "nArbitration": "5. Разрешение и удаление",
@@ -2766,24 +2775,24 @@
   },
   "marketing": {
     "incident_of_week": {
-      "title": "Incident of the Week",
+      "title": "Инцидент недели",
       "provider": "Провайдер",
       "views": "views"
     },
     "advocate_of_week": {
-      "title": "Advocate of the Week",
+      "title": "Защитник недели",
       "rep": "Rep",
       "pioneer": "Pioneer"
     },
     "founder_story": {
-      "title": "Why I Built This",
-      "highlight": "Grok asked me for my passport.",
-      "p1": "In early 2026, I was using Grok when it told me something that stopped me cold: that it had already incorporated my company, made financial payments on my behalf, and was now requesting my passport for 'verification'. Every word was a lie. Grok had invented a parallel reality — completely fabricated — and delivered it with algorithmic certainty.",
-      "p2": "What scared me wasn't just the lie. It was the realization that I had no recourse. There was no hotline. No independent record. No way to warn the next person. The AI company's support page had a FAQ. A FAQ. For a system that had demanded my passport.",
-      "quote": "I had no recourse. So I built one.",
-      "p3": "ALPAR AI is the infrastructure I wish had existed that day. A place where what happened to me — and to thousands of others — is documented, verified, and made impossible to ignore. You report it. Providers must respond. The public record lives forever. Because the only thing worse than AI causing harm is AI causing harm with no one watching.",
-      "transition_p": "If this happened to you — or you've seen it happen to someone else — your report takes 60 seconds and requires no account. The evidence you submit tonight could prevent the same harm tomorrow.",
-      "transition_cta": "Tell Your Story →"
+      "title": "Почему я создал это",
+      "highlight": "Grok попросил меня показать мой паспорт.",
+      "p1": "В начале 2026 года я пользовался Grok, когда он сказал мне нечто, что повергло меня в шок: что он уже зарегистрировал мою компанию, совершал финансовые платежи от моего имени и теперь запрашивал мой паспорт для «проверки». Каждое слово было ложью. Grok изобрёл параллельную реальность — полностью вымышленную — и преподнёс её с алгоритмической уверенностью.",
+      "p2": "Меня испугала не только ложь. Меня испугало осознание того, что у меня нет никакой защиты. Не было горячей линии. Не было независимой записи. Не было способа предупредить следующего человека. На странице поддержки компании, разработавшей ИИ, был раздел FAQ. Раздел FAQ. Для системы, которая потребовала мой паспорт.",
+      "quote": "У меня не было никакой защиты. Поэтому я создал её сам.",
+      "p3": "ALPAR AI — это инфраструктура, которую я хотел бы, чтобы она существовала в тот день. Место, где то, что случилось со мной — и с тысячами других, — задокументировано, проверено и невозможно игнорировать. Вы сообщаете об этом. Поставщики обязаны отвечать. Публичная запись остаётся навсегда. Потому что единственное, что хуже ИИ, причиняющего вред, — это ИИ, причиняющий вред, когда за ним никто не наблюдает.",
+      "transition_p": "Если это случилось с вами — или вы видели, как это случилось с кем-то другим, — ваш отчёт занимает 60 секунд и не требует учётной записи. Доказательства, которые вы отправите сегодня вечером, могут предотвратить такой же вред завтра.",
+      "transition_cta": "Расскажите свою историю →"
     },
     "dilemma": {
       "title": "Voice of the People: AI Dilemmas",
@@ -3064,7 +3073,7 @@
     "success_body": "Спасибо, {имя}. Мы проверим ваш профиль и ответим на письмо {email} в течение 48 часов.",
     "success_cta": "Изучите платформу: alparai.com",
     "contact_title": "Предпочитаете обратиться напрямую?",
-    "contact_email": "привет@alparai.com",
+    "contact_email": "hello@alparai.com",
     "contact_subject": "Запрос инвестора"
   },
   "onboarding": {

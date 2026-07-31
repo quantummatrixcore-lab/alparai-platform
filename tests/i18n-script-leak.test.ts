@@ -2,35 +2,60 @@ import { describe, expect, it } from "vitest";
 import fs from "fs";
 import path from "path";
 
+const messagesDir = path.join(process.cwd(), "messages");
+const cyrillicRegex = /[\u0400-\u04FF]/;
+const latinRegex = /[A-Za-z]/;
+
+function loadLocale(locale: string): Record<string, unknown> {
+  const filePath = path.join(messagesDir, `${locale}.json`);
+  return JSON.parse(fs.readFileSync(filePath, "utf-8")) as Record<string, unknown>;
+}
+
+function* iterateStrings(
+  obj: Record<string, unknown>,
+  prefix = "",
+): Generator<{ key: string; value: string }> {
+  for (const [key, value] of Object.entries(obj)) {
+    const currentKey = prefix ? `${prefix}.${key}` : key;
+    if (typeof value === "string") {
+      yield { key: currentKey, value };
+    } else if (typeof value === "object" && value !== null) {
+      yield* iterateStrings(value as Record<string, unknown>, currentKey);
+    }
+  }
+}
+
 describe("i18n script leak prevention", () => {
   const nonCyrillicLocales = ["en", "tr", "fr", "de"];
 
   it("should not contain Cyrillic characters in non-Russian locale files", () => {
-    const cyrillicRegex = /[\u0400-\u04FF]/;
     const leakedKeys: string[] = [];
 
     for (const locale of nonCyrillicLocales) {
-      const filePath = path.join(process.cwd(), "messages", `${locale}.json`);
-      if (!fs.existsSync(filePath)) continue;
+      if (!fs.existsSync(path.join(messagesDir, `${locale}.json`))) continue;
 
-      const content = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-
-      const scanObject = (obj: Record<string, unknown>, prefix = "") => {
-        for (const [key, value] of Object.entries(obj)) {
-          const currentKey = prefix ? `${prefix}.${key}` : key;
-          if (typeof value === "string") {
-            if (cyrillicRegex.test(value)) {
-              leakedKeys.push(`[${locale}] ${currentKey}: "${value}"`);
-            }
-          } else if (typeof value === "object" && value !== null) {
-            scanObject(value as Record<string, unknown>, currentKey);
-          }
+      for (const { key, value } of iterateStrings(loadLocale(locale))) {
+        if (cyrillicRegex.test(value)) {
+          leakedKeys.push(`[${locale}] ${key}: "${value}"`);
         }
-      };
-
-      scanObject(content);
+      }
     }
 
     expect(leakedKeys).toEqual([]);
+  });
+
+  it("should not mix Latin and Cyrillic within a single word in the Russian locale", () => {
+    const mixedTokens: string[] = [];
+
+    for (const { key, value } of iterateStrings(loadLocale("ru"))) {
+      const tokens = value.split(/[^\p{L}\p{N}]+/u);
+      for (const token of tokens) {
+        if (cyrillicRegex.test(token) && latinRegex.test(token)) {
+          mixedTokens.push(`[ru] ${key}: "${value}" (mixed token "${token}")`);
+        }
+      }
+    }
+
+    expect(mixedTokens).toEqual([]);
   });
 });

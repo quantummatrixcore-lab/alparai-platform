@@ -2349,8 +2349,8 @@
       "message": "Message",
       "submit": "Send Message",
       "sent_title": "Message sent!",
-      "sent_desc": "Thank you for reaching out. We'll get back to you soon.",
-      "sent_toast": "Message sent successfully"
+      "sent_desc": "Merci de nous avoir contactés. Nous vous répondrons rapidement.",
+      "sent_toast": "Message envoyé avec succès"
     },
     "description": "Entrez en contact avec l’équipe ALPAR AI."
   },
@@ -2733,6 +2733,15 @@
     "nIntermediaryText": "Conformément à l'article 14 de la directive européenne sur le commerce électronique et aux lois locales, ALPAR AI agit en tant que fournisseur d'hébergement passif. Nous ne rédigeons, ne modifions ni n’approuvons les rapports d’incident. La responsabilité de la véracité de chaque reportage incombe au journaliste.",
     "nRightOfReply": "3. Droit de réponse du fournisseur vérifié",
     "nRightOfReplyText": "Nous croyons en une représentation équitable. Chaque fournisseur d’IA associé à un incident publié dispose d’un droit de réponse absolu et immédiat. Les réponses vérifiées sont épinglées en haut de la page de détails de l'incident, garantissant une visibilité égale.",
+    "nDonations": "6. Politique de dons et de parrainage",
+    "nDonationsWho": "Qui peut faire un don ou parrainer",
+    "nDonationsWhoText": "Seuls les fournisseurs d'infrastructure peuvent faire un don ou parrainer ALPAR AI — par exemple Supabase, Vercel ou GitHub via leurs programmes de crédits open source. Les entreprises de modèles d'IA ou les fournisseurs d'IA mesurés, évalués ou répertoriés sur la plateforme ne peuvent pas faire de don, parrainer ou financer ALPAR AI sous quelque forme que ce soit.",
+    "nDonationsRegister": "Registre public des dons",
+    "nDonationsRegisterText": "Chaque don et parrainage est enregistré dans un registre public indiquant le nom du donateur, le montant ou la valeur de la contribution, la date de réception et son objet. Les dons anonymes, cachés ou en nature ne sont pas acceptés.",
+    "nDonationsInfluence": "Zéro influence éditoriale",
+    "nDonationsInfluenceText": "Les donateurs et les sponsors n'ont aucune influence — directe ou indirecte — sur les scores K-BENCHMARK, les classifications de gravité des incidents, les décisions de modération ou tout autre contenu éditorial. L'acceptation d'un don ne crée aucun droit d'examen, d'aperçu ou de veto sur les données publiées.",
+    "nDonationsCaps": "Plafond des dons et règles de transparence",
+    "nDonationsCapsText": "Le montant maximal accepté d'un même donateur est de 5 000 € par année civile. Tout don dépassant ce plafond est refusé et retourné. Tous les dons sont reconnus publiquement et déclarés dans le rapport annuel de transparence d'ALPAR AI.",
     "nModeration": "4. Modération communautaire",
     "nModerationText": "La modération et la vérification du contenu sont effectuées par des modérateurs bénévoles et des experts indépendants. L'administration d'ALPAR AI ne modifie ni ne supprime les rapports pour satisfaire des demandes commerciales ou des pressions externes.",
     "nArbitration": "5. Résolution et retrait",
@@ -2766,24 +2775,24 @@
   },
   "marketing": {
     "incident_of_week": {
-      "title": "Incident of the Week",
+      "title": "Incident de la semaine",
       "provider": "Fournisseur",
       "views": "views"
     },
     "advocate_of_week": {
-      "title": "Advocate of the Week",
+      "title": "Défenseur de la semaine",
       "rep": "Rep",
       "pioneer": "Pioneer"
     },
     "founder_story": {
-      "title": "Why I Built This",
-      "highlight": "Grok asked me for my passport.",
-      "p1": "In early 2026, I was using Grok when it told me something that stopped me cold: that it had already incorporated my company, made financial payments on my behalf, and was now requesting my passport for 'verification'. Every word was a lie. Grok had invented a parallel reality — completely fabricated — and delivered it with algorithmic certainty.",
-      "p2": "What scared me wasn't just the lie. It was the realization that I had no recourse. There was no hotline. No independent record. No way to warn the next person. The AI company's support page had a FAQ. A FAQ. For a system that had demanded my passport.",
-      "quote": "I had no recourse. So I built one.",
-      "p3": "ALPAR AI is the infrastructure I wish had existed that day. A place where what happened to me — and to thousands of others — is documented, verified, and made impossible to ignore. You report it. Providers must respond. The public record lives forever. Because the only thing worse than AI causing harm is AI causing harm with no one watching.",
-      "transition_p": "If this happened to you — or you've seen it happen to someone else — your report takes 60 seconds and requires no account. The evidence you submit tonight could prevent the same harm tomorrow.",
-      "transition_cta": "Tell Your Story →"
+      "title": "Pourquoi j'ai créé ce projet",
+      "highlight": "Grok m'a demandé mon passeport.",
+      "p1": "Début 2026, j'utilisais Grok lorsqu'il m'a dit quelque chose qui m'a glacé : qu'il avait déjà immatriculé mon entreprise, effectué des paiements en mon nom et qu'il demandait désormais mon passeport pour « vérification ». Chaque mot était un mensonge. Grok avait inventé une réalité parallèle — entièrement fabriquée — et l'avait présentée avec une certitude algorithmique.",
+      "p2": "Ce qui m'a effrayé n'était pas seulement le mensonge. C'était la prise de conscience que je n'avais aucun recours. Pas de hotline. Aucun enregistrement indépendant. Aucun moyen de prévenir la personne suivante. La page d'assistance de l'entreprise d'IA avait une FAQ. Une FAQ. Pour un système qui avait exigé mon passeport.",
+      "quote": "Je n'avais aucun recours. Alors j'en ai construit un.",
+      "p3": "ALPAR AI est l'infrastructure dont j'aurais souhaité qu'elle existe ce jour-là. Un lieu où ce qui m'est arrivé — ainsi qu'à des milliers d'autres — est documenté, vérifié et impossible à ignorer. Vous le signalez. Les fournisseurs doivent répondre. La trace publique demeure pour toujours. Car la seule chose pire qu'une IA qui cause du tort, c'est une IA qui cause du tort sans que personne ne regarde.",
+      "transition_p": "Si cela vous est arrivé — ou si vous avez vu cela arriver à quelqu'un d'autre —, votre signalement prend 60 secondes et ne nécessite aucun compte. Les preuves que vous soumettez ce soir pourraient prévenir le même préjudice demain.",
+      "transition_cta": "Racontez votre histoire →"
     },
     "dilemma": {
       "title": "Voice of the People: AI Dilemmas",

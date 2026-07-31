@@ -4,7 +4,6 @@ packages:
 overrides:
   sharp: "^0.35.3"
   postcss: "^8.5.18"
-  minimatch: "^9.0.9"
   shell-quote: "^1.10.0"
   form-data: "^4.0.2"
   js-yaml: "^4.1.0"
