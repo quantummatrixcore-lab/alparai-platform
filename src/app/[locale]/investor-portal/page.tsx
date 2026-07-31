@@ -121,17 +121,17 @@ export default async function InvestorPortalPage({ params, searchParams }: Inves
 
   const curMonthCount = thisMonthIncidents ?? 0;
   const prevMonthCount = lastMonthIncidents ?? 0;
-  let growthRate = 22;
-  if (prevMonthCount > 0) {
-    growthRate = Math.round(((curMonthCount - prevMonthCount) / prevMonthCount) * 100);
-  }
+  const growthRateValue =
+    prevMonthCount > 0
+      ? `${Math.round(((curMonthCount - prevMonthCount) / prevMonthCount) * 100) >= 0 ? "+" : ""}${Math.round(((curMonthCount - prevMonthCount) / prevMonthCount) * 100)}%`
+      : "ölçülmedi";
 
   const statsList = [
-    { label: t("stat_total_incidents"), value: totalIncidents ?? 371 },
-    { label: t("stat_providers"), value: totalProviders ?? 23 },
-    { label: t("stat_countries"), value: totalCountries > 0 ? totalCountries : 8 },
-    { label: t("stat_growth"), value: `${growthRate >= 0 ? "+" : ""}${growthRate}%` },
-    { label: t("stat_uptime"), value: "99.98%" },
+    { label: t("stat_total_incidents"), value: totalIncidents ?? "—" },
+    { label: t("stat_providers"), value: totalProviders ?? "—" },
+    { label: t("stat_countries"), value: totalCountries > 0 ? totalCountries : "—" },
+    { label: t("stat_growth"), value: growthRateValue },
+    { label: t("stat_uptime"), value: "—" },
   ];
 
   return (
@@ -275,13 +275,13 @@ export default async function InvestorPortalPage({ params, searchParams }: Inves
                   <tbody className="divide-y divide-slate-800 bg-[#0F1E2E]">
                     <tr>
                       <td className="px-6 py-4 font-medium text-slate-300">{t("row_mrr")}</td>
-                      <td className="px-6 py-4 font-bold text-emerald-400">$5,000</td>
+                      <td className="px-6 py-4 text-slate-500 italic">{t("pre_revenue")}</td>
                       <td className="px-6 py-4 font-bold text-emerald-400">$50,000</td>
                       <td className="px-6 py-4 font-bold text-emerald-400">$200,000</td>
                     </tr>
                     <tr>
                       <td className="px-6 py-4 font-medium text-slate-300">{t("row_arr")}</td>
-                      <td className="px-6 py-4 font-semibold text-white">$60,000</td>
+                      <td className="px-6 py-4 text-slate-500 italic">{t("pre_revenue")}</td>
                       <td className="px-6 py-4 font-semibold text-white">$600,000</td>
                       <td className="px-6 py-4 font-bold text-emerald-400">$2,400,000</td>
                     </tr>
