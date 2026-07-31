@@ -1444,3 +1444,41 @@ _v12.45 — 🟢 Yukarıdaki toplu görev bloğu ve Kural 45 eklendi. #86 bu tur
 **Bağımsız doğrulanan tek rakam:** test dosyası sayısı — `git ls-tree` ile `b4b7752`'de gerçekten **166** `.test.` dosyası sayıldı, iddiayla eşleşiyor. 988 assertion sayısı bu turda ayrıca doğrulanmadı.
 
 **Aksiyon:** #44, #57, #59, #61, #70, #71, #74, #77 ✅ completed (8 madde, kanıtlı). #43, #45, #51, #72, #37, #33, #39, #40 pending kalıyor, yukarıdaki gerekçelerle. Backlog: 86 madde, 48'i tamamlanmış._
+
+---
+
+## v12.50 — Yeni madde #87: Alparai için gerçek "Startup Başarı Skoru" (admin panel, %)
+
+**Founder talebi:** Proje için bir başarı metriği, % olarak, admin panelde gösterilsin. Netleştirme turunda üç mevcut teknik metrik (backlog tamamlanma %, K-BENCHMARK model güven puanı, OpenCode ajan başarı oranı) sunuldu — Founder hiçbirini değil, **"startup olarak Alparai'ın başarı oranı"**nı istedi. Bu, kodda henüz hiç var olmayan yeni bir kavram.
+
+**Keşif bulguları (iki Explore taraması, salt-okunur):** `src/app/[locale]/investor-portal/page.tsx` (dikkat — `/admin/` altında DEĞİL) bu kavrama en yakın mevcut sayfa, ama rakamlarının yarısı sahte: `uptime` tamamen hardcode `"99.98%"` (satır ~134), `growthRate` sıfır-önceki-ay durumunda sahte fallback `22`'ye düşüyor (satır ~124), ve altındaki MRR/ARR/TAM-SAM-SOM iş modeli tablosu (satır ~276-299) salt i18n metni — hiçbir sorguya dayanmıyor. Bu, madde #45'in (mock veri temizliği) kapsamına giriyor ama ayrı ele alınıyor (aşağıda).
+
+**Gerçekten ölçülebilir (bugün, gerçek Supabase sorgusuyla):**
+
+- Kullanıcı kaydı büyümesi — `public.users.created_at` (`supabase/migrations/20260605000001_initial_schema.sql:55-70`, `auth.users`'tan trigger'la otomatik dolduruluyor)
+- Yayınlanan incident hacmi — `incidents.published_at` (investor-portal zaten kısmen kullanıyor, satır 85-127)
+- Newsletter/waitlist büyümesi — `newsletter_subscribers.subscribed_at` (`20260619000001_newsletter_subscribers.sql`)
+
+**Gerçekten ölçülemeyen (Rule 10 gereği "ölçülmedi" olarak ayrıca gösterilir, skora girmez, yeni enstrümantasyon olmadan bu turda eklenmiyor):**
+
+- **Gelir** — `finance_revenue_metrics` kasıtlı olarak boş; `20260729210000_cleanup_mock_mrr.sql` sahte MRR verisini ($12k-$34k) sildi ve tabloyu "gerçek Stripe entegrasyonuna kadar boş kalacak" notuyla bıraktı. Alparai gerçekten gelir-öncesi — bu bir eksiklik değil, doğru durum. Skora hiç girmez.
+- **Uptime geçmişi** — yalnızca anlık ping var (`src/app/api/health/route.ts`), zaman serisi kaydı yok. `src/app/[locale]/status/page.tsx` da tamamen sahte ("99.99% son 90 gün" hardcode, satır 18) — bu ayrı bir mock-veri sorunu, kapsamda değil ama not düşülüyor.
+- **i18n tamamlanma %'si** — `scripts/check-i18n.mjs` yalnızca ikili (var/yok) kontrol yapıyor, yüzde hesaplamıyor.
+- **Sayfa görüntüleme/analitik** — hiçbir tablo yok.
+
+**Tasarım kararı — "Yönelim Sağlığı Skoru" (Directional Health Score), keyfi ağırlık YOK:**
+
+> **Startup Başarı Skoru = (bu ay pozitif/durağan trend gösteren KPI sayısı) / (izlenen toplam KPI sayısı) × 100**
+
+v1'de 3 KPI izlenir (yukarıdaki gerçek-ölçülebilir liste): kullanıcı kaydı MoM, incident hacmi MoM, newsletter kaydı MoM. 3'ü de büyüyorsa %100; 2'si büyüyor 1'i düşüyorsa %66,7. **Neden bu yöntem:** erken aşamada mutlak sayılar küçük (2→4 kullanıcı = +%100 görünür ama gürültü); büyüklük yerine yön (arttı/azaldı/durgun) daha dürüst bir sinyal. Bu bir olgunluk endeksi değil, bir yönelim endeksidir — panelde bu cümleyle birlikte gösterilecek.
+
+**Destekleyici bağlam kartları (skora girmez, ayrı gösterilir):** toplam kullanıcı sayısı, toplam incident sayısı, izlenen AI sağlayıcı/model sayısı, ulaşılan ülke sayısı.
+
+**Uygulama spesifikasyonu (Antigravity/OpenCode için — mimar G-6 gereği kod yazmıyor):**
+
+1. Yeni Supabase RPC/view `startup_health_kpis` — `public.users`, `incidents`, `newsletter_subscribers` üzerinden `date_trunc('month', created_at)` ile bu-ay/geçen-ay karşılaştırması tek sorguda.
+2. Yeni server action `src/actions/admin/startup-health.ts` — RPC'yi çağırır, oranı hesaplar, gelir/uptime/i18n için `measured: false` alanlarını sessizce atlamadan döndürür.
+3. Yeni admin UI kartı — mevcut `/admin/master-plan` panosuna (zaten backlog % kartı var) ya da yeni `/admin/startup-health` sayfasına: büyük % + "3 KPI'den kaçı pozitif" alt metni + 4 destekleyici mutlak-sayı kartı + "ölçülmedi: gelir (gelir öncesi), uptime geçmişi, i18n %" notu.
+4. **Kapsam dışı, karıştırılmasın:** `investor-portal/page.tsx`'teki sahte `uptime`/`growthRate` fallback'i, MRR/TAM-SAM-SOM tablosu ve `status/page.tsx`'teki sahte uptime — bunlar madde #45'in kapsamında, bu maddenin değil.
+
+**Aksiyon:** Yeni madde **#87** (P1) backlog'a eklendi, pending. Backlog: 87 madde, 48'i tamamlanmış._
