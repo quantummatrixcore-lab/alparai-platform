@@ -1404,7 +1404,7 @@
     "questionnaire_no_answers": "Henüz yanıt yok.",
     "questionnaire_no_runs": "Henüz çalıştırma yok. Model seçin ve Değerlendirmeyi Başlat'a tıklayın.",
     "questionnaire_question": "Soru",
-    "questionnaire_questions_count": "8 bölümde {count} soru",
+    "questionnaire_questions_count": "8 bölümde {total} soru",
     "questionnaire_run_again_button": "Tekrar Çalıştır",
     "questionnaire_run_button": "Değerlendirmeyi Başlat",
     "questionnaire_running": "Çalıştırılıyor...",

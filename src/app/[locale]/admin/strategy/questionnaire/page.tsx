@@ -105,7 +105,7 @@ export default async function QuestionnairePage({
           tokens: t("questionnaire_tokens"),
           latency: t("questionnaire_latency"),
           selectAll: t("questionnaire_select_all"),
-          questionsCount: t("questionnaire_questions_count", { count: QUESTIONS.length }),
+          questionsCount: t("questionnaire_questions_count", { total: QUESTIONS.length }),
           modelsLabel: t("questionnaire_models"),
           close: t("questionnaire_close"),
           error: t("questionnaire_error"),

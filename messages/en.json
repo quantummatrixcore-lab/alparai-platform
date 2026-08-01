@@ -1405,7 +1405,7 @@
     "questionnaire_no_answers": "No answers yet.",
     "questionnaire_no_runs": "No runs yet. Select models and click Run Questionnaire.",
     "questionnaire_question": "Question",
-    "questionnaire_questions_count": "{count} questions across 8 sections",
+    "questionnaire_questions_count": "{total} questions across 8 sections",
     "questionnaire_run_again_button": "Run Again",
     "questionnaire_run_button": "Run Questionnaire",
     "questionnaire_running": "Running...",
