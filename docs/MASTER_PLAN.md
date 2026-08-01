@@ -1670,3 +1670,18 @@ Bu bir suçlama değil, rutin bir denge kontrolü — aynı standart Antigravity
 **Aksiyon.** Dört yeni madde: #91 (uydurmanın geri alınması, P0, acil), #92 (Founder'ın kendisi en az bir sağlayıcıya geçerli anahtar eklemeli, P0), #93 (kalan sahte alanların gerçek sorgulara bağlanması, P1), #94 (providers sayfasının tamamlanması, P1). Hepsi G-6 kapsamında Antigravity/OpenCode'a spesifiye edildi; bu oturumda `src/**` koduna dokunulmadı.
 
 **Panelin gerçek durumu:** 94 madde, **71 tamamlanmış → %76**. (4 yeni madde hepsi `pending` olarak eklendi.)
+
+---
+
+## v12.75 — yeniden doğrulama turu: #90/#91/#92 hâlâ açık, taze kanıtla teyit edildi
+
+**Kapsam.** Founder'ın "master planı profesyonel şekilde güncelle" talebi üzerine, v12.74'te açılan maddeler taze kanıtla yeniden doğrulandı. Tek dosya, bilinen 5 madde — G-5 eşiğine göre dar kapsam, doğrudan yürütüldü.
+
+**Bulgular (hepsi son birkaç dakika içinde doğrudan API'lardan):**
+
+- Master'da v12.74 merge'inden (`ebf9ebe`) bu yana yeni commit yok — kimse #90/#91/#92'ye dokunmamış.
+- `live-cross-audit.ts` ve `live-analysis.ts` hâlâ aynı uydurma veriyi içeriyor (satır 20-25, 50-69 / 50, 54) — **#91 geri alınmamış.**
+- `masterplan-consistency.yml`, en son master run'ında (`ebf9ebe`) yine `conclusion: failure` — **#90 hâlâ kırık.**
+- Vercel `get_runtime_errors` (son 2 saat): `GoogleAdapter` "API key not valid" en son bugün 14:40'ta, `OpenRouterAdapter` 401 aynı dakikada — **#92 hâlâ çözülmemiş**, Founder henüz Vercel'e geçerli anahtar eklemedi.
+
+**Sonuç.** #40, #89, #90, #91, #92 hepsi `pending` kalıyor. Durum değişmedi; bu da doğrulanmış bir bulgu — kanıt kuralı gereği sessizce atlanmadı, kayda geçirildi. Backlog tablosunda satır değişikliği yok.
