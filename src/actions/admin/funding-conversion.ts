@@ -8,12 +8,21 @@ export interface FundingConversionResult {
   grantWon: number;
   grantRejected: number;
   grantWinRate: number | null;
+  grantApplied: number;
+  grantTotal: number;
+  grantActivationRate: number | null;
   stateWon: number;
   stateRejected: number;
   stateWinRate: number | null;
+  stateApplied: number;
+  stateTotal: number;
+  stateActivationRate: number | null;
   combinedWon: number;
   combinedRejected: number;
   combinedWinRate: number | null;
+  combinedApplied: number;
+  combinedTotal: number;
+  combinedActivationRate: number | null;
   hasData: boolean;
 }
 
@@ -30,10 +39,17 @@ async function countByStatus(
   return count;
 }
 
-function winRate(won: number, rejected: number): number | null {
-  const total = won + rejected;
-  if (total === 0) return null;
-  return Math.round((won / total) * 100);
+async function countTotal(db: SupabaseClient, table: string): Promise<number> {
+  const { count, error } = await (db as SupabaseClient)
+    .from(table)
+    .select("id", { count: "exact", head: true });
+  if (error || count === null) return 0;
+  return count;
+}
+
+function calculateRate(numerator: number, denominator: number): number | null {
+  if (denominator === 0) return null;
+  return Math.round((numerator / denominator) * 100);
 }
 
 export async function getFundingConversion(): Promise<FundingConversionResult | null> {
@@ -42,29 +58,66 @@ export async function getFundingConversion(): Promise<FundingConversionResult | 
 
   const db = createAdminClient();
 
-  const wonStatuses = ["approved", "accepted_by_program", "awarded"];
-  const rejectedStatuses = ["rejected"];
+  const grantWonStatuses = ["approved", "accepted_by_program"];
+  const grantRejectedStatuses = ["rejected"];
+  const grantAppliedStatuses = [
+    "submitted_pending_review",
+    "approved",
+    "rejected",
+    "accepted_by_program",
+  ];
 
-  const [grantWon, grantRejected, stateWon, stateRejected] = await Promise.all([
-    countByStatus(db, "grant_applications", wonStatuses),
-    countByStatus(db, "grant_applications", rejectedStatuses),
-    countByStatus(db, "strategy_state_support", ["awarded"]),
-    countByStatus(db, "strategy_state_support", ["rejected"]),
+  const stateWonStatuses = ["awarded"];
+  const stateRejectedStatuses = ["rejected"];
+  const stateAppliedStatuses = ["applied", "awarded", "rejected"];
+
+  const [
+    grantWon,
+    grantRejected,
+    grantApplied,
+    grantTotal,
+    stateWon,
+    stateRejected,
+    stateApplied,
+    stateTotal,
+  ] = await Promise.all([
+    countByStatus(db, "grant_applications", grantWonStatuses),
+    countByStatus(db, "grant_applications", grantRejectedStatuses),
+    countByStatus(db, "grant_applications", grantAppliedStatuses),
+    countTotal(db, "grant_applications"),
+    countByStatus(db, "strategy_state_support", stateWonStatuses),
+    countByStatus(db, "strategy_state_support", stateRejectedStatuses),
+    countByStatus(db, "strategy_state_support", stateAppliedStatuses),
+    countTotal(db, "strategy_state_support"),
   ]);
 
   const combinedWon = grantWon + stateWon;
   const combinedRejected = grantRejected + stateRejected;
+  const combinedApplied = grantApplied + stateApplied;
+  const combinedTotal = grantTotal + stateTotal;
 
   return {
     grantWon,
     grantRejected,
-    grantWinRate: winRate(grantWon, grantRejected),
+    grantWinRate: calculateRate(grantWon, grantWon + grantRejected),
+    grantApplied,
+    grantTotal,
+    grantActivationRate: calculateRate(grantApplied, grantTotal),
+
     stateWon,
     stateRejected,
-    stateWinRate: winRate(stateWon, stateRejected),
+    stateWinRate: calculateRate(stateWon, stateWon + stateRejected),
+    stateApplied,
+    stateTotal,
+    stateActivationRate: calculateRate(stateApplied, stateTotal),
+
     combinedWon,
     combinedRejected,
-    combinedWinRate: winRate(combinedWon, combinedRejected),
-    hasData: combinedWon + combinedRejected > 0,
+    combinedWinRate: calculateRate(combinedWon, combinedWon + combinedRejected),
+    combinedApplied,
+    combinedTotal,
+    combinedActivationRate: calculateRate(combinedApplied, combinedTotal),
+
+    hasData: combinedTotal > 0,
   };
 }

@@ -1541,6 +1541,7 @@
     "resources_efficiency_loading": "Fetching efficiency report...",
     "resources_efficiency_empty": "No run telemetry found in ops/opencode-runs/.",
     "resources_efficiency_error": "Could not load AI efficiency report.",
+    "resources_efficiency_score": "Efficiency Score (80% Target)",
     "retried_runs": "Retried",
     "review_incidents_from_external_data_stre": "Review incidents from external data streams and manage developmental ideas.",
     "review_takedowns": "Review takedowns",

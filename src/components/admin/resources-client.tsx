@@ -582,7 +582,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
           </div>
         ) : (
           <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
               <div className="bg-bg-tertiary/20 rounded-xl border border-white/5 p-4">
                 <span className="text-fg-muted block text-xs font-bold tracking-wide uppercase">
                   {t("resources_efficiency_total_runs")}
@@ -598,6 +598,23 @@ export function ResourcesClient({ locale }: { locale: string }) {
                 <span className="mt-1 block font-mono text-2xl font-black text-white">
                   {efficiency.freePct.toFixed(1)}%
                 </span>
+              </div>
+              <div className="bg-bg-tertiary/20 rounded-xl border border-white/5 p-4">
+                <span className="text-fg-muted block text-xs font-bold tracking-wide uppercase">
+                  {t("resources_efficiency_score")}
+                </span>
+                <div className="mt-1 flex items-center gap-2">
+                  <span className="block font-mono text-2xl font-black text-white">
+                    {efficiency.efficiencyScore.toFixed(1)}
+                  </span>
+                  {efficiency.targetDistancePct > 0 ? (
+                    <span className="font-mono text-[10px] text-amber-400">
+                      (-{efficiency.targetDistancePct.toFixed(1)}%)
+                    </span>
+                  ) : (
+                    <span className="font-mono text-[10px] text-emerald-400">(Hedefte)</span>
+                  )}
+                </div>
               </div>
               <div className="bg-bg-tertiary/20 rounded-xl border border-white/5 p-4">
                 <span className="text-fg-muted block text-xs font-bold tracking-wide uppercase">

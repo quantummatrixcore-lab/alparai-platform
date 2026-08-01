@@ -32,6 +32,8 @@ export interface OpenCodeEfficiencyReport {
   totalRuns: number;
   freeRuns: number;
   freePct: number;
+  targetDistancePct: number;
+  efficiencyScore: number;
   avgDurationMs: number;
   successRate: number;
   tiers: TierEfficiency[];
@@ -87,11 +89,15 @@ export function buildEfficiencyReport(records: OpenCodeRunRecord[]): OpenCodeEff
     };
   };
 
+  const freePct = totalRuns > 0 ? (freeRuns / totalRuns) * 100 : 0;
+
   return {
     timestamp: new Date().toISOString(),
     totalRuns,
     freeRuns,
-    freePct: totalRuns > 0 ? (freeRuns / totalRuns) * 100 : 0,
+    freePct,
+    targetDistancePct: 80 - freePct,
+    efficiencyScore: Math.min((freePct / 80) * 100, 100),
     avgDurationMs: Math.round(mean(records.map((r) => r.durationMs))),
     successRate: totalRuns > 0 ? successCount / totalRuns : 0,
     tiers: [tierStats("free"), tierStats("paid")],

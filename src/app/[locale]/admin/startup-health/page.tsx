@@ -123,22 +123,51 @@ export default async function StartupHealthPage({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-end justify-between">
+              <div className="flex flex-col gap-4">
                 {fundingData?.hasData ? (
                   <>
-                    <div>
-                      <span className="text-3xl font-bold">{fundingData.combinedWinRate}%</span>
-                      <span className="text-muted-foreground mt-1 block text-xs">
-                        won: {fundingData.combinedWon} / total:{" "}
-                        {fundingData.combinedWon + fundingData.combinedRejected}
-                      </span>
+                    <div className="flex items-end justify-between">
+                      <div>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-3xl font-bold">
+                            {fundingData.combinedWinRate !== null
+                              ? `${fundingData.combinedWinRate}%`
+                              : "—"}
+                          </span>
+                          <span className="text-muted-foreground text-sm font-medium">
+                            Win Rate
+                          </span>
+                        </div>
+                        <span className="text-muted-foreground mt-1 block text-xs">
+                          won: {fundingData.combinedWon} / resolved:{" "}
+                          {fundingData.combinedWon + fundingData.combinedRejected}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-end justify-between border-t pt-2">
+                      <div>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-2xl font-bold">
+                            {fundingData.combinedActivationRate !== null
+                              ? `${fundingData.combinedActivationRate}%`
+                              : "—"}
+                          </span>
+                          <span className="text-muted-foreground text-sm font-medium">
+                            Activation
+                          </span>
+                        </div>
+                        <span className="text-muted-foreground mt-1 block text-xs">
+                          applied: {fundingData.combinedApplied} / catalog:{" "}
+                          {fundingData.combinedTotal}
+                        </span>
+                      </div>
                     </div>
                   </>
                 ) : (
-                  <>
+                  <div className="flex items-end justify-between">
                     <span className="text-3xl font-bold">—</span>
-                    <span className="text-muted-foreground text-xs">No resolved apps</span>
-                  </>
+                    <span className="text-muted-foreground text-xs">No data</span>
+                  </div>
                 )}
               </div>
             </CardContent>

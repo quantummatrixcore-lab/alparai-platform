@@ -1540,6 +1540,7 @@
     "resources_efficiency_loading": "Verimlilik raporu yükleniyor...",
     "resources_efficiency_empty": "ops/opencode-runs/ içinde çalıştırma telemetrisi bulunamadı.",
     "resources_efficiency_error": "AI verimlilik raporu yüklenemedi.",
+    "resources_efficiency_score": "Verimlilik Skoru (Hedef %80)",
     "retried_runs": "Yeniden Denenen",
     "review_incidents_from_external_data_stre": "Harici veri kaynaklarından gelen olayları onaylayın ve geleceğe yönelik geliştirme fikirlerini yönetin.",
     "review_takedowns": "Kaldırma taleplerini incele",
