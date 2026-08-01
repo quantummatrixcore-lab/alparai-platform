@@ -1,26 +1,43 @@
 # Rule Enforcement Matrix
 
-Maps every AGENTS.md / Opus doctrine rule to its concrete CI enforcement mechanism.
+Doktrin Kural 31 uyarınca, mevcut Kural 1-30 taranmış ve yaptırımı olmayan kurallar işaretlenmiştir.
 
-| Rule                           | Description                               | Enforcement Mechanism                                  | File / Command                                     |
-| ------------------------------ | ----------------------------------------- | ------------------------------------------------------ | -------------------------------------------------- |
-| **no-any**                     | `any` keyword forbidden                   | ESLint `@typescript-eslint/no-explicit-any`            | `.eslintrc` / `pnpm lint`                          |
-| **noUncheckedIndexedAccess**   | Strict indexed access                     | TypeScript strict mode                                 | `tsconfig.json` / `pnpm typecheck`                 |
-| **server-only mutations**      | No client-side `supabase.from().insert()` | ESLint `no-restricted-imports` (server-only) + Vitest  | `pnpm lint` / `pnpm test`                          |
-| **RLS**                        | Every migration ships RLS policies        | Manual review (PR checklist) + Supabase migration lint | `supabase/migrations/*.sql`                        |
-| **PII Guardian**               | User free-text masked before DB insert    | Vitest unit tests                                      | `tests/lib/pii/`                                   |
-| **i18n parity**                | EN ↔ TR key parity                        | Vitest                                                 | `tests/i18n/missing-keys.test.ts`                  |
-| **rate-limit**                 | All endpoints behind rate limiter         | Vitest + manual                                        | `src/lib/utils/rate-limit.ts`                      |
-| **secrets via .env**           | No hardcoded secrets                      | ESLint `no-restricted-syntax` + GitHub secret scanning | `pnpm lint` / GitHub                               |
-| **ROLLBACK block**             | Every migration has `-- ROLLBACK:`        | Manual review                                          | `supabase/migrations/*.sql`                        |
-| **Rule logger**                | Agent violations logged via rule-logger   | `pnpm typecheck` (type-safe interface)                 | `src/lib/audit/rule-logger.ts`                     |
-| **Autonomous loop**            | Documented agent orchestration            | Manual review                                          | `docs/AUTONOMOUS_LOOP.md`                          |
-| **MASTER_PLAN Architect-only** | No executor writes to MASTER_PLAN.md      | Pre-commit hook                                        | `.git/hooks/pre-commit`                            |
-| **Single branch (master)**     | No branching / PRs                        | GitHub branch protection                               | GitHub settings                                    |
-| **[deploy] marker**            | Deploys gated on commit marker            | Vercel + `architect-trigger.yml`                       | `.github/workflows/architect-trigger.yml`          |
-| **Free tier first**            | Cheap models for auxiliary tasks          | AGENTS.md doctrine (manual)                            | `AGENTS.md`                                        |
-| **PII hash logging**           | No raw IP/email in logs                   | ESLint + Vitest                                        | `src/lib/utils/hash.ts` / `tests/lib/hash.test.ts` |
-| **Security audit**             | Dependencies scanned for CVEs             | `pnpm audit` + `architect-trigger.yml`                 | `.github/workflows/architect-trigger.yml`          |
-| **Test gate**                  | No commit with failing tests              | Vitest CI                                              | `.github/workflows/ci.yml`                         |
-| **Lint gate**                  | No commit with lint errors                | ESLint CI                                              | `.github/workflows/ci.yml`                         |
-| **Typecheck gate**             | No commit with type errors                | tsc CI                                                 | `.github/workflows/ci.yml`                         |
+| Kural No | Açıklama                                         | Yaptırım Tipi     | Yaptırım Dosyası                          | Durum                       |
+| -------- | ------------------------------------------------ | ----------------- | ----------------------------------------- | --------------------------- |
+| Kural 1  | Push before report                               | -                 | -                                         | **[TAVSİYE — yaptırımsız]** |
+| Kural 2  | Out-of-scope commit yasak (PROPOSALS/)           | -                 | -                                         | **[TAVSİYE — yaptırımsız]** |
+| Kural 3  | no-any (`any` kullanımı yasak)                   | ESLint            | `.eslintrc` / `pnpm lint`                 | YAPTIRIMLI                  |
+| Kural 4  | Strict indexed access (noUncheckedIndexedAccess) | TypeScript        | `tsconfig.json` / `pnpm typecheck`        | YAPTIRIMLI                  |
+| Kural 5  | Client-side `supabase.from().insert()` yasak     | ESLint / Vitest   | `pnpm lint` / `pnpm test`                 | YAPTIRIMLI                  |
+| Kural 6  | İletişim onayı (External communications)         | -                 | -                                         | **[TAVSİYE — yaptırımsız]** |
+| Kural 7  | Her tablo RLS politikası içermeli                | -                 | -                                         | **[TAVSİYE — yaptırımsız]** |
+| Kural 8  | Kaynak zorunluluğu                               | -                 | -                                         | **[TAVSİYE — yaptırımsız]** |
+| Kural 9  | PII Guardian (Free-text maskeleme)               | Vitest            | `tests/lib/pii/`                          | YAPTIRIMLI                  |
+| Kural 10 | Veriler (figures) kaynak göstermeli              | -                 | -                                         | **[TAVSİYE — yaptırımsız]** |
+| Kural 11 | Yedekleme (Backup snapshots)                     | -                 | -                                         | **[TAVSİYE — yaptırımsız]** |
+| Kural 12 | Migration'larda `-- ROLLBACK:` bloğu             | -                 | -                                         | **[TAVSİYE — yaptırımsız]** |
+| Kural 13 | i18n parity (EN ↔ TR tam kapsam)                 | Vitest            | `tests/i18n/missing-keys.test.ts`         | YAPTIRIMLI                  |
+| Kural 14 | MASTER_PLAN.md'yi Executor değiştiremez          | Pre-commit Hook   | `.git/hooks/pre-commit`                   | YAPTIRIMLI                  |
+| Kural 15 | Tek dal (`master`) ve PR yasak                   | Branch Protection | `GitHub Settings`                         | YAPTIRIMLI                  |
+| Kural 16 | Tüm endpoint'lerde rate-limit                    | -                 | -                                         | **[TAVSİYE — yaptırımsız]** |
+| Kural 17 | v1 API auth (sha256 + timingSafeEqual)           | -                 | -                                         | **[TAVSİYE — yaptırımsız]** |
+| Kural 18 | Sırlar .env üzerinden yönetilir                  | Secret Scanning   | `GitHub / pnpm lint`                      | YAPTIRIMLI                  |
+| Kural 19 | Numeric honesty                                  | -                 | -                                         | **[TAVSİYE — yaptırımsız]** |
+| Kural 20 | Maliyet alarm cron (Cost budget alarm)           | Cron Job          | `src/app/api/cron/cost-alarm/route.ts`    | YAPTIRIMLI                  |
+| Kural 21 | Rule logger ile ihlal kaydı                      | tsc / Vitest      | `src/lib/audit/rule-logger.ts`            | YAPTIRIMLI                  |
+| Kural 22 | Otonom döngü takibi                              | -                 | -                                         | **[TAVSİYE — yaptırımsız]** |
+| Kural 23 | Post-launch kuyrukta tarih kullanılmaz           | -                 | -                                         | **[TAVSİYE — yaptırımsız]** |
+| Kural 24 | Verified-Against hash bildirimi zorunlu          | -                 | -                                         | **[TAVSİYE — yaptırımsız]** |
+| Kural 25 | Executor kendini Architect imzalayamaz           | -                 | -                                         | **[TAVSİYE — yaptırımsız]** |
+| Kural 26 | PII loglanamaz (Hash ile loglanır)               | Vitest            | `tests/lib/hash.test.ts`                  | YAPTIRIMLI                  |
+| Kural 27 | Dependency güvenlik taraması                     | CI Job            | `.github/workflows/architect-trigger.yml` | YAPTIRIMLI                  |
+| Kural 28 | Otonom durdurma (Kota aşımlarında)               | Cron Job          | `src/app/api/cron/cost-alarm/route.ts`    | YAPTIRIMLI                  |
+| Kural 29 | İngilizce profesyonel dil kullanımı              | -                 | -                                         | **[TAVSİYE — yaptırımsız]** |
+| Kural 30 | "Done" = Onaylı + Güvenli + Gerçek veri          | -                 | -                                         | **[TAVSİYE — yaptırımsız]** |
+
+### Özet Analiz
+
+- **Toplam Kural:** 30
+- **Yaptırımlı Kural Sayısı:** 12
+- **Yaptırımsız Kural Sayısı:** 18
+- **Yaptırımlı Kural Oranı:** %40
