@@ -1,17 +1,36 @@
-import { discoverFreeModels } from "@/lib/ai/discovery/fetch-models";
 import { getTrustScoresAction, type TrustScoreRecord } from "@/actions/admin/ai-orchestrator";
 import { Cpu, ShieldCheck, Zap, Layers } from "lucide-react";
 
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createServerClient } from "@/lib/supabase/server";
 import { OrchestratorTriggerButton } from "./trigger-button";
 
 export default async function AiOrchestratorAdminPage() {
-  const freeModels = await discoverFreeModels();
+  const supabase = await createServerClient();
   const trustScores = await getTrustScoresAction();
 
-  const supabase = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: chains } = await supabase.from("ai_routing_chains" as any).select("*");
+
+  const { data: dbModels } = await supabase
+    .from("ai_models" as unknown as never) // workaround for missing table type
+    .select(
+      `
+      id,
+      name,
+      status,
+      provider:ai_providers(name)
+    `,
+    )
+    .eq("status", "active")
+    .limit(10);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const freeModels = ((dbModels as any[]) || []).map((m: any) => ({
+    id: m.id,
+    name: m.name,
+    provider: m.provider?.name || "Unknown Provider",
+    context_length: 128000, // mock length since DB doesn't have it
+  }));
 
   return (
     <div className="space-y-8 p-6 text-white">
@@ -55,8 +74,8 @@ export default async function AiOrchestratorAdminPage() {
             <span>Active Capability Chains</span>
             <Layers className="h-5 w-5 text-cyan-400" />
           </div>
-          <p className="mt-2 text-3xl font-bold text-cyan-400">4</p>
-          <p className="mt-1 text-xs text-slate-500">Math, Creative, Risk, Fast Triage</p>
+          <p className="mt-2 text-3xl font-bold text-cyan-400">{chains?.length || 0}</p>
+          <p className="mt-1 text-xs text-slate-500">Dynamic DB routing chains</p>
         </div>
 
         <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-6">
@@ -73,12 +92,12 @@ export default async function AiOrchestratorAdminPage() {
 
       {/* Free Models Arsenal Table */}
       <div className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/80 p-6">
-        <h2 className="text-xl font-semibold text-white">Live Free-Tier Inventory</h2>
+        <h2 className="text-xl font-semibold text-white">Live AI Models</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-slate-300">
             <thead className="bg-slate-800/60 text-xs text-slate-400 uppercase">
               <tr>
-                <th className="p-3">Model ID</th>
+                <th className="p-3">Model Name</th>
                 <th className="p-3">Provider</th>
                 <th className="p-3">Context Window</th>
                 <th className="p-3">Prompt Cost</th>
@@ -88,7 +107,7 @@ export default async function AiOrchestratorAdminPage() {
             <tbody className="divide-y divide-slate-800">
               {freeModels.map((m) => (
                 <tr key={m.id} className="hover:bg-slate-800/40">
-                  <td className="p-3 font-mono text-emerald-400">{m.id}</td>
+                  <td className="p-3 font-mono text-emerald-400">{m.name}</td>
                   <td className="p-3">{m.provider}</td>
                   <td className="p-3 font-mono">{m.context_length.toLocaleString()} tokens</td>
                   <td className="p-3 font-mono text-emerald-400">$0.00 / 1M</td>
@@ -118,10 +137,10 @@ export default async function AiOrchestratorAdminPage() {
                 <h3 className="font-semibold text-emerald-400">{chain.domain_name}</h3>
                 <ul className="mt-2 space-y-1">
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                  {chain.models.map((m: any, idx: number) => (
+                  {(chain.models || []).map((m: any, idx: number) => (
                     <li key={idx} className="text-sm text-slate-300">
-                      {idx + 1}. {m.id}{" "}
-                      <span className="text-xs text-slate-500">({m.provider})</span>
+                      {idx + 1}. {m.id || m}{" "}
+                      {m.provider && <span className="text-xs text-slate-500">({m.provider})</span>}
                     </li>
                   ))}
                 </ul>

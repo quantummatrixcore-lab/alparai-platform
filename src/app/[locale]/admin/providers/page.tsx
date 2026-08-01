@@ -1,6 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { requireAdmin } from "@/lib/auth/session";
 import { Cpu } from "lucide-react";
+import { createServerClient } from "@/lib/supabase/server";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -14,14 +15,74 @@ export default async function ProvidersPage({ params }: { params: Promise<{ loca
   await requireAdmin();
   const t = await getTranslations({ locale, namespace: "admin" });
 
+  const supabase = await createServerClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: providers } = await supabase
+    .from("ai_providers" as any)
+    .select("*")
+    .order("name");
+
   return (
-    <div className="animate-in fade-in space-y-8 duration-500">
+    <div className="animate-in fade-in space-y-8 p-6 duration-500">
       <div>
         <h1 className="flex items-center gap-2 text-3xl font-black tracking-tight text-white drop-shadow-md">
           <Cpu className="text-brand-400 h-8 w-8" />
           {t("api_mgmt_h1")}
         </h1>
         <p className="mt-2 text-sm text-zinc-400">{t("api_mgmt_subtitle")}</p>
+      </div>
+
+      <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-6">
+        <h2 className="mb-4 text-xl font-semibold text-white">AI Providers Database</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm text-slate-300">
+            <thead className="bg-slate-800/60 text-xs text-slate-400 uppercase">
+              <tr>
+                <th className="p-3">Name</th>
+                <th className="p-3">Slug</th>
+                <th className="p-3">Website</th>
+                <th className="p-3">Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-800">
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {((providers as any[]) || []).map((provider: any) => (
+                <tr key={provider.id} className="hover:bg-slate-800/40">
+                  <td className="p-3 font-semibold text-white">{provider.name}</td>
+                  <td className="p-3 font-mono text-slate-400">{provider.slug}</td>
+                  <td className="p-3 text-cyan-400">
+                    {provider.website_url ? (
+                      <a
+                        href={provider.website_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="hover:underline"
+                      >
+                        {new URL(provider.website_url).hostname.replace("www.", "")}
+                      </a>
+                    ) : (
+                      "—"
+                    )}
+                  </td>
+                  <td className="p-3">
+                    {provider.is_verified ? (
+                      <span className="inline-flex items-center rounded border border-emerald-800 bg-emerald-950 px-2 py-0.5 text-xs font-medium text-emerald-400">
+                        VERIFIED
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center rounded border border-slate-700 bg-slate-800 px-2 py-0.5 text-xs font-medium text-slate-400">
+                        PENDING
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {(!providers || providers.length === 0) && (
+            <div className="p-6 text-center text-slate-500">No AI providers found.</div>
+          )}
+        </div>
       </div>
     </div>
   );

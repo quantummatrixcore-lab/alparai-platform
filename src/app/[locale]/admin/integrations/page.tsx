@@ -77,14 +77,37 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
   );
   const totalServices = React.useMemo(() => activeServiceIds.size, [activeServiceIds]);
 
-  const mockZeroCostServices = [
-    { name: "Supabase", monthlyCost: 0, freeLimit: "500MB DB", usedPercent: 76 },
-    { name: "Vercel", monthlyCost: 0, freeLimit: "100GB Bandwidth", usedPercent: 23 },
-    { name: "Upstash", monthlyCost: 0, freeLimit: "10k req/day", usedPercent: 41 },
-    { name: "Resend", monthlyCost: 0, freeLimit: "3k emails/mo", usedPercent: 7 },
-    { name: "Sentry", monthlyCost: 0, freeLimit: "5k events/mo", usedPercent: 37 },
-    { name: "Cloudflare", monthlyCost: 0, freeLimit: "Unlimited", usedPercent: 12 },
-  ];
+  const [aiProviders, setAiProviders] = React.useState<
+    { name: string; monthlyCost: number; freeLimit: string; usedPercent: number }[]
+  >([]);
+
+  const fetchProviders = React.useCallback(async () => {
+    const { createBrowserClient } = await import("@supabase/ssr");
+    const supabase = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data } = await supabase
+      .from("ai_providers" as any)
+      .select("name")
+      .limit(6);
+    if (data) {
+      setAiProviders(
+        data.map((p: { name: string }) => ({
+          name: p.name,
+          monthlyCost: 0,
+          freeLimit: "Unlimited",
+          usedPercent: 0,
+        })),
+      );
+    }
+  }, []);
+
+  React.useEffect(() => {
+    fetchData();
+    fetchProviders();
+  }, [fetchData, fetchProviders]);
 
   if (loading && !data) {
     return (
@@ -157,7 +180,7 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
       />
 
       {/* Zero Cost Banner Shield */}
-      <ZeroCostBanner services={mockZeroCostServices} totalSaved="$347.00 / mo" locale={locale} />
+      <ZeroCostBanner services={aiProviders} totalSaved="$347.00 / mo" locale={locale} />
 
       <div className="mt-8 space-y-8">
         {CATEGORIES.map((cat) => {
