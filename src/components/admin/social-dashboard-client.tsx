@@ -1682,7 +1682,7 @@ export function SocialDashboardClient({
                     * Save the post as a draft first to enable image generation.
                   </p>
                 )}
-                {formImageUrl && (
+                {formImageUrl ? (
                   <div className="border-border-subtle relative mt-2 aspect-square max-w-[120px] overflow-hidden rounded-xl border">
                     <img
                       src={formImageUrl}
@@ -1696,6 +1696,10 @@ export function SocialDashboardClient({
                     >
                       <X className="h-3.5 w-3.5" />
                     </button>
+                  </div>
+                ) : (
+                  <div className="border-border-subtle bg-bg-secondary text-fg-muted mt-2 flex aspect-square max-w-[120px] items-center justify-center rounded-xl border border-dashed text-[10px] font-bold tracking-wider uppercase">
+                    Ölçülmedi
                   </div>
                 )}
               </div>
