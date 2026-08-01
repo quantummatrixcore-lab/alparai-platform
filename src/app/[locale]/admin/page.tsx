@@ -37,6 +37,8 @@ export default async function AdminDashboardPage({
   const admin = createAdminClient();
   // eslint-disable-next-line react-hooks/purity
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  // eslint-disable-next-line react-hooks/purity
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
 
   const [
     { count: total },
@@ -45,6 +47,9 @@ export default async function AdminDashboardPage({
     { data: recentUsersRaw },
     { data: recentIncidents },
     dsarResult,
+    { count: users30 },
+    { count: incidents30 },
+    { count: newsletter30 },
   ] = await Promise.all([
     admin.from("incidents").select("*", { count: "exact", head: true }),
     admin
@@ -73,6 +78,18 @@ export default async function AdminDashboardPage({
         return { count: 0 };
       }
     })(),
+    admin
+      .from("users")
+      .select("*", { count: "exact", head: true })
+      .gte("created_at", thirtyDaysAgo),
+    admin
+      .from("incidents")
+      .select("*", { count: "exact", head: true })
+      .gte("published_at", thirtyDaysAgo),
+    admin
+      .from("newsletter_subscribers")
+      .select("*", { count: "exact", head: true })
+      .gte("subscribed_at", thirtyDaysAgo),
   ]);
 
   const pendingDsar = dsarResult.count;
@@ -124,6 +141,11 @@ export default async function AdminDashboardPage({
         incidentsByDay={incidentsByDay}
         pendingDsar={pendingDsar}
         locale={locale}
+        startupHealthMetrics={{
+          users: users30 ?? 0,
+          incidents: incidents30 ?? 0,
+          newsletter: newsletter30 ?? 0,
+        }}
       />
     </AdminContainer>
   );

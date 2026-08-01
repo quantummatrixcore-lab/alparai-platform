@@ -534,12 +534,27 @@ export function ResourcesClient({ locale }: { locale: string }) {
                   )}
 
                   {stats.measured && (
-                    <div className="text-fg-muted mt-2 flex items-center justify-between font-mono text-xs">
-                      <span>{t("resources_quota_projected_depletion")}</span>
-                      <span className="text-white">
-                        {stats.depletion ?? "—"}{" "}
-                        <span className="text-brand-400">{t("resources_quota_projected_tag")}</span>
-                      </span>
+                    <div className="mt-2 flex flex-col gap-1 font-mono text-xs">
+                      <div className="text-fg-muted flex items-center justify-between">
+                        <span>{t("resources_quota_projected_depletion")}</span>
+                        <span className="text-white">
+                          {stats.depletion ?? "—"}{" "}
+                          <span className="text-brand-400">
+                            {t("resources_quota_projected_tag")}
+                          </span>
+                        </span>
+                      </div>
+                      {stats.deviation > 5 && stats.depletion && (
+                        <div className="mt-1 flex items-start gap-2 rounded-md border border-rose-500/20 bg-rose-500/10 p-2 text-rose-400">
+                          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                          <span>
+                            {t("resources_quota_projected_warning", { date: stats.depletion })}{" "}
+                            <span className="ml-1 opacity-80">
+                              {t("resources_quota_projected_tag")}
+                            </span>
+                          </span>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -567,7 +582,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
           </div>
         ) : (
           <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
               <div className="bg-bg-tertiary/20 rounded-xl border border-white/5 p-4">
                 <span className="text-fg-muted block text-xs font-bold tracking-wide uppercase">
                   {t("resources_efficiency_total_runs")}
@@ -583,6 +598,23 @@ export function ResourcesClient({ locale }: { locale: string }) {
                 <span className="mt-1 block font-mono text-2xl font-black text-white">
                   {efficiency.freePct.toFixed(1)}%
                 </span>
+              </div>
+              <div className="bg-bg-tertiary/20 rounded-xl border border-white/5 p-4">
+                <span className="text-fg-muted block text-xs font-bold tracking-wide uppercase">
+                  {t("resources_efficiency_score")}
+                </span>
+                <div className="mt-1 flex items-center gap-2">
+                  <span className="block font-mono text-2xl font-black text-white">
+                    {efficiency.efficiencyScore.toFixed(1)}
+                  </span>
+                  {efficiency.targetDistancePct > 0 ? (
+                    <span className="font-mono text-[10px] text-amber-400">
+                      (-{efficiency.targetDistancePct.toFixed(1)}%)
+                    </span>
+                  ) : (
+                    <span className="font-mono text-[10px] text-emerald-400">(Hedefte)</span>
+                  )}
+                </div>
               </div>
               <div className="bg-bg-tertiary/20 rounded-xl border border-white/5 p-4">
                 <span className="text-fg-muted block text-xs font-bold tracking-wide uppercase">

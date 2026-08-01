@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useActionState } from "react";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useDeferredValue } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
@@ -23,7 +23,9 @@ import type { AIProvider, AIModel, IncidentCategory, IncidentSeverity } from "@/
 import { trackEvent } from "@/lib/analytics";
 import { logger } from "@/lib/utils/logger";
 import { getFingerprint } from "@/lib/utils/fingerprint";
+import { incidentSubmissionSchema } from "@/lib/validation/schemas";
 
+type ClientErrors = Record<string, string[]>;
 const initialState: SubmitIncidentState = { ok: false };
 
 export function IncidentForm({
@@ -42,6 +44,7 @@ export function IncidentForm({
   const tCommon = useTranslations("common");
   const router = useRouter();
   const [state, formAction] = useActionState(submitIncident, initialState);
+  const [clientErrors, setClientErrors] = useState<ClientErrors>({});
   const [processingStage, setProcessingStage] = useState<string | null>(null);
   const [piiDetected, setPiiDetected] = useState(false);
   const [visitorId, setVisitorId] = useState("");
@@ -148,6 +151,9 @@ export function IncidentForm({
     expertFix: string;
     anonymousEmail: string;
   };
+
+  const deferredTitle = useDeferredValue(title);
+  const deferredDescription = useDeferredValue(description);
 
   const draftValues = useMemo<IncidentDraft>(
     () => ({
@@ -321,20 +327,21 @@ export function IncidentForm({
 
   useEffect(() => {
     let active = true;
-    (async () => {
-      const { hasPII } = await import("@/lib/pii/guardian");
-      const text = `${title} ${description}`;
+    const checkPII = async () => {
+      const text = `${deferredTitle} ${deferredDescription}`;
       if (!text.trim()) {
         if (active) setPiiDetected(false);
         return;
       }
+      const { hasPII } = await import("@/lib/pii/guardian");
       const has = hasPII(text);
       if (active) setPiiDetected(has);
-    })();
+    };
+    checkPII();
     return () => {
       active = false;
     };
-  }, [title, description]);
+  }, [deferredTitle, deferredDescription]);
 
   if (state.ok) {
     if (processingStage) {
@@ -525,6 +532,53 @@ export function IncidentForm({
 
   const canSubmit = allConsents && selectedProvider && title.trim() && description.trim();
 
+  const handleClientAction = (formData: FormData) => {
+    const isUuid = (v: string) =>
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v);
+
+    const provider_id = String(formData.get("provider_id") ?? "");
+    const model_id = String(formData.get("model_id") ?? "");
+
+    const input = {
+      title: String(formData.get("title") ?? ""),
+      description: String(formData.get("description") ?? ""),
+      category: String(formData.get("category") ?? "") as IncidentCategory,
+      severity: String(formData.get("severity") ?? "") as IncidentSeverity,
+      aiProviderId: provider_id && isUuid(provider_id) ? provider_id : null,
+      aiModelId: model_id && isUuid(model_id) ? model_id : null,
+      incidentDate: String(formData.get("incident_date") ?? "") || "2024-01-01", // Default for validation
+      language: "en" as const,
+      isAnonymous: formData.get("is_anonymous") === "on",
+      isExpert: formData.get("is_expert") === "on",
+      expertFix: String(formData.get("expert_fix") ?? "") || null,
+      sourceUrl: String(formData.get("source_url") ?? "") || undefined,
+      consent: {
+        truthfulness: true as const,
+        anonymousPublication: true as const,
+        age18Plus: true as const,
+        termsOfService: true as const,
+      },
+    };
+
+    const parsed = incidentSubmissionSchema.safeParse(input);
+    if (!parsed.success) {
+      setClientErrors(parsed.error.flatten().fieldErrors);
+      return;
+    }
+
+    if (provider_id === "custom:other" && !formData.get("provider_custom")) {
+      setClientErrors({
+        provider_id: [
+          t("custom_provider_required", { defaultValue: "Lütfen sağlayıcı adını yazın." }),
+        ],
+      });
+      return;
+    }
+
+    setClientErrors({});
+    formAction(formData);
+  };
+
   if (processingStage) {
     return (
       <div className="flex flex-col items-center justify-center space-y-6 py-16 text-center">
@@ -560,7 +614,7 @@ export function IncidentForm({
   }
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={handleClientAction} className="space-y-6">
       {totalIncidents !== undefined && (
         <div className="bg-bg-secondary/40 border-border-subtle text-fg-secondary rounded-lg border p-3 text-center text-sm font-semibold">
           {t("submit_live_counter", { count: totalIncidents, verified: totalIncidents })}
@@ -637,7 +691,7 @@ export function IncidentForm({
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         hint={`${title.length}/200`}
-        error={state.fieldErrors?.title?.[0]}
+        error={clientErrors.title?.[0] || state.fieldErrors?.title?.[0]}
       />
 
       <Textarea
@@ -649,7 +703,7 @@ export function IncidentForm({
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         hint={`${description.length}/5000`}
-        error={state.fieldErrors?.description?.[0]}
+        error={clientErrors.description?.[0] || state.fieldErrors?.description?.[0]}
       />
 
       <div className="border-border-subtle bg-bg-secondary/30 space-y-4 rounded-md border p-4">
@@ -668,7 +722,7 @@ export function IncidentForm({
               onChange={handleProviderChange}
               options={providerOptions}
               placeholder={t("select_provider")}
-              error={state.fieldErrors?.provider_id?.[0]}
+              error={clientErrors.provider_id?.[0] || state.fieldErrors?.provider_id?.[0]}
             />
             {selectedProvider === "custom:other" && (
               <Input
@@ -695,7 +749,7 @@ export function IncidentForm({
               onChange={handleModelChange}
               options={modelOptions}
               placeholder={t("select_model")}
-              error={state.fieldErrors?.model_id?.[0]}
+              error={clientErrors.model_id?.[0] || state.fieldErrors?.model_id?.[0]}
               disabled={!selectedProvider}
             />
             {selectedModel === "custom:other" && (
@@ -724,14 +778,14 @@ export function IncidentForm({
             required
             placeholder="—"
             options={categoryOptions}
-            error={state.fieldErrors?.category?.[0]}
+            error={clientErrors.category?.[0] || state.fieldErrors?.category?.[0]}
           />
           <Input
             name="incident_date"
             type="datetime-local"
             label={t("incident_date")}
             required
-            error={state.fieldErrors?.incident_date?.[0]}
+            error={clientErrors.incident_date?.[0] || state.fieldErrors?.incident_date?.[0]}
           />
         </div>
 
@@ -769,8 +823,10 @@ export function IncidentForm({
           </div>
           <input type="hidden" name="severity" value={severity} />
           {importUrl && <input type="hidden" name="source_url" value={importUrl} />}
-          {state.fieldErrors?.severity?.[0] && (
-            <p className="text-danger-400 mt-1 text-xs">{state.fieldErrors.severity[0]}</p>
+          {(clientErrors.severity?.[0] || state.fieldErrors?.severity?.[0]) && (
+            <p className="text-danger-400 mt-1 text-xs">
+              {clientErrors.severity?.[0] || state.fieldErrors?.severity?.[0]}
+            </p>
           )}
         </div>
       </div>
@@ -795,7 +851,7 @@ export function IncidentForm({
               value={expertFix}
               onChange={(e) => setExpertFix(e.target.value)}
               hint={`${expertFix.length}/5000`}
-              error={state.fieldErrors?.expertFix?.[0]}
+              error={clientErrors.expertFix?.[0] || state.fieldErrors?.expertFix?.[0]}
             />
           </div>
         )}

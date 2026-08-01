@@ -95,7 +95,15 @@ export default async function MethodologyPage({ params }: { params: Promise<{ lo
           <p className="text-sm leading-relaxed text-slate-400">{t("adjudication_intro")}</p>
 
           <div className="space-y-2">
-            {(["model_1_label", "model_2_label", "model_3_label"] as const).map((k) => (
+            {(
+              [
+                "model_1_label",
+                "model_2_label",
+                "model_3_label",
+                "model_4_label",
+                "model_5_label",
+              ] as const
+            ).map((k) => (
               <div
                 key={k}
                 className="flex items-center gap-3 rounded-lg border border-slate-800 bg-slate-950 px-4 py-3"

@@ -25,20 +25,35 @@ export interface ModelRouterResult {
   supremeChain: ModelChainItem[];
 }
 
-// Escalation chain: free tier first, paid tier only when every free-tier model is DEGRADED
-export const ESCALATION_FREE_TIER: readonly ModelChainItem[] = [
-  { id: "opencode/nemotron-3-ultra-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
-  { id: "opencode/deepseek-v4-flash-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
-];
+function getEscalationFreeTier(): ModelChainItem[] {
+  return [
+    {
+      id: "opencode/deepseek-v4-flash-free",
+      provider: "openrouter",
+      tier: "free",
+      maxTokens: 4096,
+    },
+    { id: "opencode/nemotron-3-ultra-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+    { id: "opencode/laguna-s-2.1-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+    { id: "opencode/ling-3.0-flash-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+    { id: "opencode/mimo-v2.5-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+    { id: "opencode/north-mini-code-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+  ];
+}
 
-export const ESCALATION_PAID_TIER: readonly ModelChainItem[] = [
-  {
-    id: "nvidia/deepseek-ai/deepseek-v4-pro",
-    provider: "nvidia",
-    tier: "premium",
-    maxTokens: 4096,
-  },
-];
+function getEscalationPaidTier(): ModelChainItem[] {
+  return [
+    {
+      id: "nvidia/deepseek-ai/deepseek-v4-pro",
+      provider: "nvidia",
+      tier: "premium",
+      maxTokens: 4096,
+    },
+    { id: "nvidia/z-ai/glm-5.2", provider: "nvidia", tier: "premium", maxTokens: 4096 },
+    { id: "nvidia/openai/gpt-oss-120b", provider: "nvidia", tier: "premium", maxTokens: 4096 },
+    { id: "nvidia/google/gemma-4-31b-it", provider: "nvidia", tier: "premium", maxTokens: 4096 },
+  ];
+}
 
 export interface EscalationResult {
   chain: ModelChainItem[];
@@ -166,7 +181,7 @@ export async function selectModelTier(params: {
 export async function selectModelWithEscalation(): Promise<EscalationResult> {
   const degradedIds = await fetchDegradedModelIds();
 
-  const freeChain = ESCALATION_FREE_TIER.filter((m) => !degradedIds.has(m.id));
+  const freeChain = getEscalationFreeTier().filter((m) => !degradedIds.has(m.id));
   if (freeChain.length > 0) {
     return { chain: freeChain, escalated: false };
   }
@@ -174,5 +189,5 @@ export async function selectModelWithEscalation(): Promise<EscalationResult> {
   logger.warn("[ModelRouter] All free-tier escalation models DEGRADED, escalating to paid tier", {
     degradedIds: [...degradedIds],
   });
-  return { chain: [...ESCALATION_PAID_TIER], escalated: true };
+  return { chain: [...getEscalationPaidTier()], escalated: true };
 }

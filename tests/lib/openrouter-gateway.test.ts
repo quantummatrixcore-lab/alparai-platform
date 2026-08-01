@@ -293,51 +293,31 @@ describe("OpenRouter API Gateway", () => {
       }
     });
 
-    it("downgrades failover chain to FREE_TRIAGE_MODELS when cost > $45", async () => {
+    it("downgrades failover chain to escalation models when cost > $45", async () => {
       vi.mocked(getDailyCost).mockResolvedValue(50.0); // > $45
 
-      const originalFetch = globalThis.fetch;
-      globalThis.fetch = vi.fn().mockResolvedValue({
-        status: 200,
-        ok: true,
-        json: async () => ({
-          choices: [
-            {
-              message: { content: "free-fallback" },
-            },
-          ],
-          candidates: [
-            {
-              content: {
-                parts: [{ text: "free-fallback" }],
-              },
-            },
-          ],
-          usage: { prompt_tokens: 5, completion_tokens: 10, total_tokens: 15 },
-        }),
-      }) as any;
+      openaiMock.chat.completions.create.mockResolvedValueOnce({
+        model: "opencode/deepseek-v4-flash-free",
+        choices: [{ message: { content: "escalation-fallback" } }],
+      });
 
-      try {
-        const res = await callWithFailover(
+      const res = await callWithFailover(
+        {
+          systemPrompt: "sys",
+          userMessage: "usr",
+        },
+        [
           {
-            systemPrompt: "sys",
-            userMessage: "usr",
+            id: "anthropic/claude-3.5-sonnet",
+            provider: "openrouter",
+            tier: "premium",
+            maxTokens: 4096,
           },
-          [
-            {
-              id: "anthropic/claude-3.5-sonnet",
-              provider: "openrouter",
-              tier: "premium",
-              maxTokens: 4096,
-            },
-          ],
-        );
+        ],
+      );
 
-        expect(res.ok).toBe(true);
-        expect(res.attemptedModels[0]).toContain("google:gemini-1.5-flash");
-      } finally {
-        globalThis.fetch = originalFetch;
-      }
+      expect(res.ok).toBe(true);
+      expect(res.attemptedModels[0]).toContain("openrouter:opencode/deepseek-v4-flash-free");
     });
   });
 });

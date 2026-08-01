@@ -77,6 +77,11 @@ export interface AdminHQDashboardProps {
   incidentsByDay: { day: string; count: number }[];
   pendingDsar: number;
   locale: string;
+  startupHealthMetrics: {
+    users: number;
+    incidents: number;
+    newsletter: number;
+  };
 }
 
 const ALL_NAV_ITEMS = [
@@ -151,7 +156,7 @@ function HeroMetricCard({
   suffix,
 }: {
   label: string;
-  value: number | string;
+  value: number | string | React.ReactNode;
   variant?: "default" | "success" | "warning" | "danger";
   suffix?: string;
 }) {
@@ -220,6 +225,7 @@ export function AdminHQDashboard({
   incidentsByDay,
   pendingDsar,
   locale,
+  startupHealthMetrics,
 }: AdminHQDashboardProps) {
   const t = useTranslations("admin");
   const [systemHealth, setSystemHealth] = useState(87);
@@ -272,6 +278,61 @@ export function AdminHQDashboard({
 
   void groups;
 
+  const th = 30;
+  let startupHealthDisplay: React.ReactNode;
+  let startupHealthVariant: "default" | "success" | "warning" | "danger" = "default";
+
+  if (
+    !startupHealthMetrics ||
+    (startupHealthMetrics.users === 0 &&
+      startupHealthMetrics.incidents === 0 &&
+      startupHealthMetrics.newsletter === 0)
+  ) {
+    startupHealthDisplay = (
+      <span className="text-xl font-medium tracking-tight text-white/40">no_signal</span>
+    );
+    startupHealthVariant = "default";
+  } else if (
+    startupHealthMetrics.users < th &&
+    startupHealthMetrics.incidents < th &&
+    startupHealthMetrics.newsletter < th
+  ) {
+    startupHealthDisplay = (
+      <span className="text-xl font-medium tracking-tight text-amber-400">insufficient_data</span>
+    );
+    startupHealthVariant = "warning";
+  } else {
+    const passedCount =
+      (startupHealthMetrics.users >= th ? 1 : 0) +
+      (startupHealthMetrics.incidents >= th ? 1 : 0) +
+      (startupHealthMetrics.newsletter >= th ? 1 : 0);
+    if (passedCount < 2) {
+      const rawNum =
+        startupHealthMetrics.users +
+        startupHealthMetrics.incidents +
+        startupHealthMetrics.newsletter;
+      startupHealthDisplay = (
+        <span className="flex flex-col leading-none">
+          <span className="text-xl font-medium text-sky-400">ön-traksiyon</span>
+          <span className="mt-1 text-[10px] font-normal tracking-widest text-sky-400/70 uppercase">
+            +{rawNum} ham sayı
+          </span>
+        </span>
+      );
+      startupHealthVariant = "default";
+    } else {
+      const pct = Math.round(
+        ((Math.min(startupHealthMetrics.users, th) +
+          Math.min(startupHealthMetrics.incidents, th) +
+          Math.min(startupHealthMetrics.newsletter, th)) /
+          (th * 3)) *
+          100,
+      );
+      startupHealthDisplay = <span className="text-emerald-400">{pct}%</span>;
+      startupHealthVariant = "success";
+    }
+  }
+
   const healthGaugeVariant: "default" | "success" | "warning" | "danger" =
     systemHealth >= 85 ? "success" : systemHealth >= 70 ? "warning" : "danger";
   const healthPulseStatus: "healthy" | "warning" | "danger" =
@@ -282,7 +343,12 @@ export function AdminHQDashboard({
   return (
     <div className="space-y-6">
       {/* ROW 1: Hero KPIs */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        <HeroMetricCard
+          label="Başarı Skoru"
+          value={startupHealthDisplay}
+          variant={startupHealthVariant}
+        />
         <HeroMetricCard label={t("metric_incident_volume")} value={totalIncidents} />
         <HeroMetricCard
           label={t("metric_queue_load")}
