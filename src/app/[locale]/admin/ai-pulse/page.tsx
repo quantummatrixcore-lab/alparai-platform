@@ -2,37 +2,37 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Radio, Cpu, Pulse } from "@phosphor-icons/react/dist/ssr";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MetricCard } from "@/components/admin/metric-card";
+import { createServerClient } from "@/lib/supabase/server";
 
 export default async function AiPulsePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "admin" });
 
-  const { FREE_TRIAGE_MODELS, NVIDIA_NIM_MODELS, SUPREME_COURT_CHAIN } =
-    await import("@/lib/ai/openrouter-gateway");
+  const supabase = await createServerClient();
+  const { data: dbModels } = await supabase
+    .from("ai_models")
+    .select(
+      `
+      id,
+      name,
+      provider_id,
+      ai_providers ( name )
+    `,
+    )
+    .eq("status", "active")
+    .order("created_at", { ascending: false })
+    .limit(8);
 
-  const baseModels = [...SUPREME_COURT_CHAIN, ...NVIDIA_NIM_MODELS, ...FREE_TRIAGE_MODELS];
-  const uniqueModels = Array.from(new Map(baseModels.map((m) => [m.id, m])).values()).slice(0, 8);
+  const models = (dbModels || []).map((m) => {
+    const providerObj = Array.isArray(m.ai_providers) ? m.ai_providers[0] : m.ai_providers;
+    const providerName = providerObj?.name || m.provider_id || "Unknown";
 
-  const models = uniqueModels.map((m) => {
-    const hash = m.id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const latency = 150 + (hash % 300);
     return {
-      name:
-        m.id
-          .replace(/:free$/, "")
-          .split("/")
-          .pop() || m.id,
-      provider:
-        m.provider === "openrouter"
-          ? "OpenRouter"
-          : m.provider === "nvidia"
-            ? "NVIDIA NGC"
-            : m.provider === "google"
-              ? "Google AI"
-              : "Blackbox",
+      name: m.name || m.id.split("/").pop() || m.id,
+      provider: providerName,
       status: t("operational"),
-      latency: `${latency}ms`,
+      latency: "-",
     };
   });
 
