@@ -115,3 +115,40 @@ export async function discoverFreeModels(): Promise<FreeModelRecord[]> {
     return FALLBACK_FREE_MODELS;
   }
 }
+
+export async function discoverAllModels(): Promise<FreeModelRecord[]> {
+  try {
+    const response = await fetch("https://openrouter.ai/api/v1/models", {
+      headers: {
+        "HTTP-Referer": "https://alparai.com",
+        "X-Title": "ALPAR AI",
+      },
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) {
+      return FALLBACK_FREE_MODELS;
+    }
+
+    const json = (await response.json()) as { data?: OpenRouterModel[] };
+    const models = json.data ?? [];
+
+    const allModels: FreeModelRecord[] = models.map((m) => {
+      const providerName = m.id.split("/")[0] ?? "Unknown";
+      return {
+        id: m.id,
+        name: m.name,
+        provider: providerName.charAt(0).toUpperCase() + providerName.slice(1),
+        context_length: m.context_length ?? 0,
+        pricing_prompt: Number(m.pricing?.prompt ?? 0),
+        pricing_completion: Number(m.pricing?.completion ?? 0),
+        is_active: true,
+        last_checked_at: new Date().toISOString(),
+      };
+    });
+
+    return allModels.length > 0 ? allModels : FALLBACK_FREE_MODELS;
+  } catch {
+    return FALLBACK_FREE_MODELS;
+  }
+}

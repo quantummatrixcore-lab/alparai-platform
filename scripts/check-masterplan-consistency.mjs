@@ -5,49 +5,69 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const content = fs.readFileSync(path.join(__dirname, '../docs/MASTER_PLAN.md'), 'utf-8');
-
-const tableRows = content.split('\n').filter(l => l.trim().startsWith('|'));
-const tableTasks = new Map();
-let duplicateIdError = false;
-
-tableRows.forEach(row => {
-  const cols = row.split('|').map(c => c.trim());
-  if (cols.length > 3 && /^\d+$/.test(cols[1])) {
-    const id = parseInt(cols[1], 10);
-    const isCompleted = cols.some(c => c.toLowerCase() === 'tamamlandı' || c.toLowerCase() === 'done' || c.includes('✅') || c.includes('tamamlandı'));
-    
-    // Ignore small IDs (1-5) as they might be from the "Uygulayıcı, Teşhisçi" table at the bottom
-    // The main backlog IDs go up to 90+. If we see the same ID twice, it's an error.
-    if (tableTasks.has(id)) {
-      if (id > 10) { // Only log error for actual backlog items
-        console.error(`ERROR: Task ID ${id} appears multiple times in the MASTER_PLAN.md table.`);
-        duplicateIdError = true;
-      }
-    }
-    tableTasks.set(id, isCompleted);
-  }
-});
-
-let consistencyError = false;
-const proseLines = content.split('\n').filter(l => !l.trim().startsWith('|'));
-proseLines.forEach((line, index) => {
-  // Only strictly match "#N ✅ completed"
-  const match = line.match(/#(\d+)\s*✅\s*completed/i);
-  if (match) {
-    const id = parseInt(match[1], 10);
-    if (tableTasks.has(id)) {
-      const isTableCompleted = tableTasks.get(id);
-      if (!isTableCompleted) {
-        console.error(`ERROR: Prose on line ${index + 1} claims task #${id} ✅ completed, but the table says it is pending.`);
-        consistencyError = true;
-      }
-    }
-  }
-});
-
-if (duplicateIdError || consistencyError) {
+const mdPath = path.join(process.cwd(), 'docs/MASTER_PLAN.md');
+if (!fs.existsSync(mdPath)) {
+  console.error(`File not found: ${mdPath}`);
   process.exit(1);
 }
 
-console.log("MASTER_PLAN.md consistency check passed.");
+const content = fs.readFileSync(mdPath, 'utf8');
+
+const tableStartMarker = '<!-- FOUNDER_BACKLOG_START -->';
+const tableEndMarker = '<!-- FOUNDER_BACKLOG_END -->';
+
+const tableStartIndex = content.indexOf(tableStartMarker);
+const tableEndIndex = content.indexOf(tableEndMarker);
+
+if (tableStartIndex === -1 || tableEndIndex === -1) {
+  console.error("Table markers not found in MASTER_PLAN.md.");
+  process.exit(1);
+}
+
+const tableContent = content.substring(tableStartIndex + tableStartMarker.length, tableEndIndex);
+const proseContent = content.substring(0, tableStartIndex) + content.substring(tableEndIndex + tableEndMarker.length);
+
+const lines = tableContent.split('\n');
+const idStatusMap = new Map();
+
+for (const line of lines) {
+  // Parse rows starting with "| <number> |"
+  const match = line.match(/^\|\s*(\d+)\s*\|(?:.*?\|){3}\s*([^|]+?)\s*\|$/);
+  if (match) {
+    const id = match[1];
+    const status = match[2].trim();
+    
+    if (idStatusMap.has(id)) {
+      console.error(`Error: ID #${id} appears multiple times in the table.`);
+      process.exit(1);
+    }
+    idStatusMap.set(id, status);
+  }
+}
+
+let hasError = false;
+const proseLines = proseContent.split('\n');
+for (let i = 0; i < proseLines.length; i++) {
+  const line = proseLines[i];
+  if (line.includes('✅ completed')) {
+    const idMatches = [...line.matchAll(/#(\d+)/g)];
+    for (const match of idMatches) {
+      const id = match[1];
+      if (idStatusMap.has(id)) {
+        const statusInTable = idStatusMap.get(id);
+        if (!statusInTable.includes('✅ completed')) {
+          console.error(`Error: ID #${id} is mentioned with '✅ completed' in prose, but status in table is '${statusInTable}'.`);
+          hasError = true;
+        }
+      }
+    }
+  }
+}
+
+if (hasError) {
+  console.error("Consistency check failed.");
+  process.exit(1);
+}
+
+console.log("Master plan consistency check passed.");
+process.exit(0);

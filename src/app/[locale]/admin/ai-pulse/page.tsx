@@ -3,6 +3,8 @@ import { Radio, Cpu, Pulse } from "@phosphor-icons/react/dist/ssr";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MetricCard } from "@/components/admin/metric-card";
 import { createServerClient } from "@/lib/supabase/server";
+import { discoverAllModels } from "@/lib/ai/discovery/fetch-models";
+import { LiveModelsDirectory } from "@/components/admin/ai-pulse/live-models-directory";
 
 export default async function AiPulsePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -10,6 +12,8 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
   const t = await getTranslations({ locale, namespace: "admin" });
 
   const supabase = await createServerClient();
+  const allModels = await discoverAllModels();
+
   const { data: dbModels } = await supabase
     .from("ai_models")
     .select(
@@ -182,6 +186,7 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
           </CardContent>
         </Card>
       </div>
+      <LiveModelsDirectory initialModels={allModels} />
     </div>
   );
 }
