@@ -4,6 +4,7 @@ import { requireAdmin } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { Star } from "@phosphor-icons/react/dist/ssr";
 import { Award, BarChart3 } from "lucide-react";
+import Image from "next/image";
 import { MetricCard } from "@/components/admin/metric-card";
 import { BenchTrRunButton } from "@/components/admin/bench-tr-run-button";
 
@@ -16,6 +17,21 @@ interface BenchTrRow {
   tr_factuality_pct: number;
   eval_dataset_ver: string;
   created_at: string;
+}
+
+function getProviderLogo(providerName: string): string {
+  if (!providerName) return "/logos/providers/other.svg";
+  const name = providerName.toLowerCase();
+  if (name.includes("openai")) return "/logos/providers/openai.svg";
+  if (name.includes("anthropic")) return "/logos/providers/anthropic.svg";
+  if (name.includes("google")) return "/logos/providers/google.svg";
+  if (name.includes("deepseek")) return "/logos/providers/deepseek.svg";
+  if (name.includes("meta") || name.includes("facebook")) return "/logos/providers/meta.svg";
+  if (name.includes("alibaba") || name.includes("qwen")) return "/logos/providers/alibaba.svg";
+  if (name.includes("mistral")) return "/logos/providers/mistral.svg";
+  if (name.includes("cohere")) return "/logos/providers/cohere.svg";
+  if (name.includes("perplexity")) return "/logos/providers/perplexity.svg";
+  return "/logos/providers/other.svg";
 }
 
 const DEFAULT_REAL_MODELS = [
@@ -296,12 +312,28 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
                       {score.model_id || t("kbench_unknown_model")}
                     </div>
                     <span className="mt-1 inline-flex items-center gap-1 rounded border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-[11px] font-semibold text-amber-300">
-                      {((score as Record<string, unknown>).provider_name as string) ||
-                        (
-                          (score as Record<string, unknown>).ai_models as
-                            { ai_providers?: { name?: string } } | undefined
-                        )?.ai_providers?.name ||
-                        "AI Provider"}
+                      {(() => {
+                        const providerName =
+                          ((score as Record<string, unknown>).provider_name as string) ||
+                          (
+                            (score as Record<string, unknown>).ai_models as
+                              { ai_providers?: { name?: string } } | undefined
+                          )?.ai_providers?.name ||
+                          "AI Provider";
+
+                        return (
+                          <>
+                            <Image
+                              src={getProviderLogo(providerName)}
+                              alt={providerName}
+                              width={12}
+                              height={12}
+                              className="opacity-80"
+                            />
+                            {providerName}
+                          </>
+                        );
+                      })()}
                     </span>
                   </td>
                   <td className="text-brand-400 px-6 py-4 font-mono text-lg font-bold">
@@ -348,7 +380,16 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
                     <td className="px-6 py-4 font-mono text-xs text-white">
                       {row.model_name}
                       <br />
-                      <span className="text-fg-muted">{row.provider_slug}</span>
+                      <span className="text-fg-muted mt-1 flex items-center gap-1">
+                        <Image
+                          src={getProviderLogo(row.provider_slug)}
+                          alt={row.provider_slug}
+                          width={12}
+                          height={12}
+                          className="opacity-80"
+                        />
+                        {row.provider_slug}
+                      </span>
                     </td>
                     <td className="text-brand-400 px-6 py-4 font-mono text-sm font-bold">
                       {row.tr_grammar_score}
