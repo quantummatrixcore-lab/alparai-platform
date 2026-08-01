@@ -534,12 +534,27 @@ export function ResourcesClient({ locale }: { locale: string }) {
                   )}
 
                   {stats.measured && (
-                    <div className="text-fg-muted mt-2 flex items-center justify-between font-mono text-xs">
-                      <span>{t("resources_quota_projected_depletion")}</span>
-                      <span className="text-white">
-                        {stats.depletion ?? "—"}{" "}
-                        <span className="text-brand-400">{t("resources_quota_projected_tag")}</span>
-                      </span>
+                    <div className="mt-2 flex flex-col gap-1 font-mono text-xs">
+                      <div className="text-fg-muted flex items-center justify-between">
+                        <span>{t("resources_quota_projected_depletion")}</span>
+                        <span className="text-white">
+                          {stats.depletion ?? "—"}{" "}
+                          <span className="text-brand-400">
+                            {t("resources_quota_projected_tag")}
+                          </span>
+                        </span>
+                      </div>
+                      {stats.deviation > 5 && stats.depletion && (
+                        <div className="mt-1 flex items-start gap-2 rounded-md border border-rose-500/20 bg-rose-500/10 p-2 text-rose-400">
+                          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                          <span>
+                            {t("resources_quota_projected_warning", { date: stats.depletion })}{" "}
+                            <span className="ml-1 opacity-80">
+                              {t("resources_quota_projected_tag")}
+                            </span>
+                          </span>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

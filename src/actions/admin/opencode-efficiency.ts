@@ -13,6 +13,17 @@ const RUN_SCHEMA = z.object({
   model: z.string().min(1),
   exit_code: z.number(),
   duration_ms: z.number(),
+  attempt_no: z.number().optional(),
+  role: z.enum(["uygulayici", "teshisci", "dogrulayici"]).optional(),
+  diagnosis: z.string().optional(),
+  gates: z
+    .object({
+      lint: z.number(),
+      typecheck: z.number(),
+      test: z.number(),
+      build: z.number(),
+    })
+    .optional(),
 });
 
 export async function getOpenCodeEfficiencyAction(): Promise<OpenCodeEfficiencyReport> {
@@ -30,6 +41,10 @@ export async function getOpenCodeEfficiencyAction(): Promise<OpenCodeEfficiencyR
             model: parsed.data.model,
             exitCode: parsed.data.exit_code,
             durationMs: parsed.data.duration_ms,
+            attemptNo: parsed.data.attempt_no,
+            role: parsed.data.role,
+            diagnosis: parsed.data.diagnosis,
+            gates: parsed.data.gates,
           });
         }
       } catch {

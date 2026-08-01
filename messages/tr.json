@@ -1516,6 +1516,7 @@
     "resources_quota_tempo_ahead": "temponun üzerinde",
     "resources_quota_tempo_behind": "temponun altında",
     "resources_quota_projected_depletion": "Tahmini Tükenme",
+    "resources_quota_projected_warning": "Bu hızla {date} tarihinde biter",
     "resources_quota_projected_tag": "[tahmin]",
     "resources_quota_not_measured": "ölçülmedi",
     "resources_quota_loading": "Kota & tempo verileri yükleniyor...",

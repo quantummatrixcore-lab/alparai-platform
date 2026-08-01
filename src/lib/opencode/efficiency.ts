@@ -1,11 +1,22 @@
 export type EfficiencyTier = "free" | "paid";
 
+export type OpenCodeRole = "uygulayici" | "teshisci" | "dogrulayici";
+
 export interface OpenCodeRunRecord {
   model: string;
   exitCode: number;
   durationMs: number;
   inputTokens?: number;
   outputTokens?: number;
+  attemptNo?: number;
+  role?: OpenCodeRole;
+  diagnosis?: string;
+  gates?: {
+    lint: number;
+    typecheck: number;
+    test: number;
+    build: number;
+  };
 }
 
 export interface TierEfficiency {

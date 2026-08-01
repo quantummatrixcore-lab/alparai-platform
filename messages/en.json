@@ -1517,6 +1517,7 @@
     "resources_quota_tempo_ahead": "ahead of pace",
     "resources_quota_tempo_behind": "behind pace",
     "resources_quota_projected_depletion": "Projected Depletion",
+    "resources_quota_projected_warning": "At this pace, it will deplete on {date}",
     "resources_quota_projected_tag": "[tahmin]",
     "resources_quota_not_measured": "ölçülmedi",
     "resources_quota_loading": "Fetching quota & tempo data...",
