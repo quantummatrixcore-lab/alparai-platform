@@ -21,6 +21,7 @@ interface ApiMetricsProps {
     avgLatency: number;
     errorRate: number;
     p99Latency: number;
+    totalTokens: number;
   };
   trafficData?: { hour: string; requests: number; errors: number }[];
   endpoints?: {
@@ -34,7 +35,7 @@ interface ApiMetricsProps {
 }
 
 export function ApiMetricsClient({
-  metrics = { requests24h: 0, avgLatency: 0, errorRate: 0, p99Latency: 0 },
+  metrics = { requests24h: 0, avgLatency: 0, errorRate: 0, p99Latency: 0, totalTokens: 0 },
   trafficData = [],
   endpoints = [],
 }: ApiMetricsProps) {
@@ -43,7 +44,7 @@ export function ApiMetricsClient({
   return (
     <div className="space-y-8">
       {/* Metric Gauges */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
         <AdminSectionCard>
           <div className="flex flex-col items-center gap-2 p-4">
             <Gauge
@@ -55,6 +56,20 @@ export function ApiMetricsClient({
               {t("api_requests_24h") || "Requests (24h)"}
             </span>
             <AnimatedCounter value={metrics.requests24h} className="text-xl text-white" />
+          </div>
+        </AdminSectionCard>
+        <AdminSectionCard>
+          <div className="flex flex-col items-center gap-2 p-4">
+            <Gauge
+              value={Math.min((metrics.totalTokens / 50000) * 100, 100)}
+              size="md"
+              sublabel="/ 50K"
+              variant="success"
+            />
+            <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
+              {t("api_total_tokens") || "Total Tokens"}
+            </span>
+            <AnimatedCounter value={metrics.totalTokens} className="text-xl text-white" />
           </div>
         </AdminSectionCard>
         <AdminSectionCard>

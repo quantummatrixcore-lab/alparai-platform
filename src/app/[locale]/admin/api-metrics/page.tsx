@@ -1,17 +1,38 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { ApiMetricsClient } from "@/components/admin/api-metrics-client";
+import { createServerClient } from "@/lib/supabase/server";
 
 export default async function ApiMetricsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "admin" });
 
-  // Realistic mock data
-  const mockMetrics = {
-    requests24h: 12450,
-    avgLatency: 145,
-    errorRate: 0.24,
-    p99Latency: 380,
+  const supabase = await createServerClient();
+  const { data: quotas, error } = await supabase.from("vendor_quotas").select("metric, used_value");
+
+  let requests24h = 0;
+  let totalTokens = 0;
+  let avgLatency = 0;
+  let errorRate = 0;
+  let p99Latency = 0;
+
+  if (quotas && !error) {
+    quotas.forEach((q) => {
+      const val = Number(q.used_value || 0);
+      if (q.metric === "requests") requests24h += val;
+      else if (q.metric === "messages" || q.metric === "tokens") totalTokens += val;
+      else if (q.metric === "latency_avg") avgLatency += val;
+      else if (q.metric === "error_rate") errorRate += val;
+      else if (q.metric === "latency_p99") p99Latency += val;
+    });
+  }
+
+  const dbMetrics = {
+    requests24h,
+    totalTokens,
+    avgLatency: avgLatency || 0, // Fallback if 0
+    errorRate: errorRate || 0, // Fallback if 0
+    p99Latency: p99Latency || 0, // Fallback if 0
   };
 
   const mockTraffic = Array.from({ length: 24 }).map((_, i) => ({
@@ -64,7 +85,7 @@ export default async function ApiMetricsPage({ params }: { params: Promise<{ loc
         <p className="text-fg-secondary mt-2">{t("api_metrics_subtitle")}</p>
       </div>
 
-      <ApiMetricsClient metrics={mockMetrics} trafficData={mockTraffic} endpoints={mockEndpoints} />
+      <ApiMetricsClient metrics={dbMetrics} trafficData={mockTraffic} endpoints={mockEndpoints} />
     </div>
   );
 }
