@@ -45,24 +45,13 @@ export async function runLiveStrategyAnalysis(context: {
     );
 
     if (!result.ok) {
-      logger.warn("Live Strategy API key missing or gateway error, returning fallback", {
+      logger.error("Live Strategy API key missing or gateway error", {
         error: result.error,
       });
       return {
-        success: true,
-        data: {
-          health_score: 91,
-          executive_summary:
-            "Mevcut stratejik göstergeler olumlu bir ivme sergiliyor. Kilometre taşları plana uygun ilerlerken, güçlü yönler pazar konumlandırmasını destekliyor.",
-          strategic_gaps: [
-            "Zayıf yönler ve dış tehditler birleştiğinde operasyonel ölçeklenme riskleri oluşabilir.",
-            "Yeni fırsat alanlarına yönelik Ar-Ge süreçleri henüz hedeflenen hızda değil.",
-          ],
-          recommendations: [
-            "Aktif risklerin etkilerini azaltmak için ikincil önlem (mitigation) planlarını devreye sokun.",
-            "Kilometre taşları tamamlanırken mevcut pazar fırsatlarına öncelik verecek şekilde kaynak tahsisini optimize edin.",
-          ],
-        },
+        success: false,
+        error:
+          "Yapay zeka analizi gerçekleştirilemedi. Lütfen daha sonra tekrar deneyin veya API bağlantılarını kontrol edin.",
       };
     }
 

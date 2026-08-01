@@ -33,7 +33,7 @@ describe("Live Strategy Analysis", () => {
     vi.clearAllMocks();
   });
 
-  it("returns fallback data when gateway returns error", async () => {
+  it("returns error data when gateway returns error", async () => {
     vi.mocked(callWithFailover).mockResolvedValue({
       ok: false,
       error: {
@@ -46,10 +46,8 @@ describe("Live Strategy Analysis", () => {
 
     const result = await runLiveStrategyAnalysis(MOCK_CONTEXT);
 
-    expect(result.success).toBe(true);
-    expect(result.data?.executive_summary).toContain(
-      "Mevcut stratejik göstergeler olumlu bir ivme sergiliyor.",
-    );
+    expect(result.success).toBe(false);
+    expect(result.error).toContain("Yapay zeka analizi gerçekleştirilemedi");
   });
 
   it("returns success with strategic analysis data", async () => {

@@ -5,6 +5,7 @@ import { ClipboardList } from "lucide-react";
 import { AdminContainer, AdminPageHeader } from "@/components/admin/admin-design-kit";
 import { QuestionnaireClient } from "@/components/admin/questionnaire-client";
 import { QUESTIONNAIRE_MODELS } from "@/lib/ai/openrouter-gateway";
+import { QUESTIONS } from "@/lib/strategy/questions";
 import type { GatewayModel } from "@/lib/ai/openrouter-gateway";
 
 interface RunRow {
@@ -104,7 +105,7 @@ export default async function QuestionnairePage({
           tokens: t("questionnaire_tokens"),
           latency: t("questionnaire_latency"),
           selectAll: t("questionnaire_select_all"),
-          questionsCount: t("questionnaire_questions_count", { count: 35 }),
+          questionsCount: t("questionnaire_questions_count", { count: QUESTIONS.length }),
           modelsLabel: t("questionnaire_models"),
           close: t("questionnaire_close"),
           error: t("questionnaire_error"),

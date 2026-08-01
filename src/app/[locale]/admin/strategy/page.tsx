@@ -7,6 +7,7 @@ import { HealthGauge } from "@/components/admin/strategy/health-gauge";
 import { LiveStrategyClient } from "@/components/admin/strategy/live-strategy-client";
 import { Link } from "@/i18n/routing";
 import { STRATEGY_METRICS_DEFAULTS, DEFAULT_VALUATION_PRE_MONEY } from "@/lib/constants";
+import { QUESTIONS } from "@/lib/strategy/questions";
 import {
   ShieldAlert,
   TrendingUp,
@@ -372,9 +373,11 @@ export default async function StrategyOverviewPage({
                 </p>
                 <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-2 text-center text-xs">
                   <span className="text-fg-muted block text-[9px] font-bold tracking-wider uppercase">
-                    Soru Havuzu
+                    {t("question_pool") || "Soru Havuzu"}
                   </span>
-                  <span className="text-lg font-extrabold text-white">35 Aktif Soru</span>
+                  <span className="text-lg font-extrabold text-white">
+                    {QUESTIONS.length} {t("active_questions") || "Aktif Soru"}
+                  </span>
                 </div>
               </div>
               <Link

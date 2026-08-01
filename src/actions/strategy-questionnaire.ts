@@ -8,7 +8,7 @@ import { callModel, QUESTIONNAIRE_MODELS, type GatewayModel } from "@/lib/ai/ope
 import { QUESTIONS } from "@/lib/strategy/questions";
 import { isCostKillSwitchActive } from "@/lib/ai/cost-guard";
 
-const SYSTEM_PROMPT = `You are a senior strategy consultant evaluating an AI-accountability platform. You will receive 35 questions in 8 sections. Rules:
+const SYSTEM_PROMPT = `You are a senior strategy consultant evaluating an AI-accountability platform. You will receive ${QUESTIONS.length} questions. Rules:
 
 1. Start with your model name as a heading: ## [Your Model Name]
 2. Answer in English, every question, in order, numbered.
@@ -77,7 +77,7 @@ export async function runQuestionnaire(modelIds?: string[]): Promise<{
         const q = allQuestions[qi]!;
         const questionBlock = allQuestions.map((qq) => `${qq.id}. ${qq.text}`).join("\n\n");
 
-        const userMessage = `Answer ALL 35 questions below. Each answer: verdict first, then 1-2 sentences.\n\n${questionBlock}`;
+        const userMessage = `Answer ALL ${allQuestions.length} questions below. Each answer: verdict first, then 1-2 sentences.\n\n${questionBlock}`;
 
         const startTime = performance.now();
 
