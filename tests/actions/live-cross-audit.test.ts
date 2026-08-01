@@ -35,8 +35,8 @@ describe("Live Cross-Audit Test", () => {
 
     const result = await runLiveCrossAuditTest("test incident");
 
-    expect(result.success).toBe(true);
-    expect(result.data?.models[0]?.name).toBe("Sistem-Güvenlik-Modu");
+    expect(result.success).toBe(false);
+    expect(result.error).toBeDefined();
   });
 
   it("returns success with model stances and judge verdict", async () => {

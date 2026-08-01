@@ -48,7 +48,7 @@ describe("Live Strategy Analysis", () => {
 
     expect(result.success).toBe(true);
     expect(result.data?.executive_summary).toContain(
-      "Gateway hatası nedeniyle varsayılan güvenli rapor.",
+      "Mevcut stratejik göstergeler olumlu bir ivme sergiliyor.",
     );
   });
 

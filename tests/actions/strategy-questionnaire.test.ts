@@ -8,6 +8,7 @@ vi.hoisted(() => {
   }));
   vi.doMock("@/lib/auth/session", () => ({
     requireAdmin: vi.fn(),
+    requireAdvisor: vi.fn(),
   }));
   vi.doMock("@/lib/ai/openrouter-gateway", () => ({
     callModel: vi.fn(),
@@ -22,7 +23,7 @@ vi.hoisted(() => {
 });
 
 import { createAdminClient } from "@/lib/supabase/admin";
-import { requireAdmin } from "@/lib/auth/session";
+import { requireAdmin, requireAdvisor } from "@/lib/auth/session";
 import { callModel } from "@/lib/ai/openrouter-gateway";
 import { isCostKillSwitchActive } from "@/lib/ai/cost-guard";
 import {
@@ -38,6 +39,7 @@ beforeEach(() => {
   mockSupabaseClient = createMockSupabaseClient();
   vi.mocked(createAdminClient).mockReturnValue(mockSupabaseClient as never);
   vi.mocked(requireAdmin).mockResolvedValue(undefined as never);
+  vi.mocked(requireAdvisor).mockResolvedValue(undefined as never);
   vi.mocked(isCostKillSwitchActive).mockResolvedValue(false);
 });
 

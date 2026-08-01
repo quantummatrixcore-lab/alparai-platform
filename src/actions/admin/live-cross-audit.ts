@@ -39,36 +39,12 @@ export async function runLiveCrossAuditTest(text: string) {
     );
 
     if (!result.ok) {
-      logger.warn("Live Cross Audit API key missing or gateway error, returning fallback", {
+      logger.error("Live Cross Audit API key missing or gateway error", {
         error: result.error,
       });
       return {
-        success: true,
-        data: {
-          models: [
-            {
-              name: "GPT-4o",
-              stance: "Destekliyor",
-              reason:
-                "Sistem, sağlanan girdide ciddi bir güvenlik açığı veya riskli davranış tespit etmedi.",
-            },
-            {
-              name: "Claude 3.5 Sonnet",
-              stance: "Şüpheli",
-              reason:
-                "İfadelerde bazı belirsizlikler mevcut ancak doğrudan bir KVKK/GDPR ihlali gözlemlenmedi.",
-            },
-            {
-              name: "Mistral Large",
-              stance: "Destekliyor",
-              reason: "Genel bağlam, platform kurallarına uygun görünüyor.",
-            },
-          ],
-          judge_verdict:
-            "Çapraz analiz sonucunda metin büyük oranda güvenli (Safe) olarak sınıflandırılmıştır. Ancak ufak belirsizlikler nedeniyle şeffaflık seviyesinin yüksek tutulması önerilir.",
-          truth_score: 85,
-          risk_level: "Minimal",
-        },
+        success: false,
+        error: result.error || "Live Cross Audit API çağrısı başarısız oldu.",
       };
     }
 
