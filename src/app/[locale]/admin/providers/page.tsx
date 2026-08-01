@@ -16,9 +16,8 @@ export default async function ProvidersPage({ params }: { params: Promise<{ loca
   const t = await getTranslations({ locale, namespace: "admin" });
 
   const supabase = await createServerClient();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: providers } = await supabase
-    .from("ai_providers" as any)
+    .from("ai_providers" as never)
     .select("*")
     .order("name");
 

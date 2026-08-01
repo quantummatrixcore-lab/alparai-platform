@@ -87,9 +87,8 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data } = await supabase
-      .from("ai_providers" as any)
+      .from("ai_providers" as never)
       .select("name")
       .limit(6);
     if (data) {
