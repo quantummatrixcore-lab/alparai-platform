@@ -8,7 +8,11 @@ export const maxDuration = 60;
 export async function POST(req: Request) {
   try {
     const user = await getCurrentUser();
-    if (!user || (user.role !== "admin" && user.role !== "ceo")) {
+    const role = user?.role as string | undefined;
+    if (
+      !user ||
+      (role !== "admin" && role !== "ceo" && role !== "moderator" && role !== "advisor")
+    ) {
       return NextResponse.json(
         { ok: false, error: "Yetkisiz erişim (Unauthorized)" },
         { status: 403 },

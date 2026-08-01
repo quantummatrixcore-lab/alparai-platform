@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { requireAdmin } from "@/lib/auth/session";
+import { requireAdmin, requireAdvisor } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logger } from "@/lib/utils/logger";
 import { callModel, QUESTIONNAIRE_MODELS, type GatewayModel } from "@/lib/ai/openrouter-gateway";
@@ -35,7 +35,7 @@ export async function runQuestionnaire(modelIds?: string[]): Promise<{
   error?: string;
 }> {
   try {
-    await requireAdmin();
+    await requireAdvisor();
 
     if (await isCostKillSwitchActive()) {
       return { ok: false, error: "Cost kill switch is active. Cannot run questionnaire." };
@@ -201,7 +201,7 @@ export async function getQuestionnaireRunAnswers(runId: string) {
 
 export async function exportRunToMarkdown(runId: string): Promise<{ ok: boolean; error?: string }> {
   try {
-    await requireAdmin();
+    await requireAdvisor();
     const supabase = createAdminClient();
 
     const { data: run, error: runErr } = await supabase

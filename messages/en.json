@@ -2372,6 +2372,7 @@
     "engines_col_status": "Status",
     "engines_col_heartbeat": "Last Heartbeat",
     "cron_title": "Cron Job Run Logs",
+    "cron_health": "Cron Health",
     "cron_empty": "No cron runs recorded yet.",
     "cron_col_name": "Cron",
     "cron_col_status": "Status",

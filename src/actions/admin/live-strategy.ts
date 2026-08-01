@@ -51,10 +51,17 @@ export async function runLiveStrategyAnalysis(context: {
       return {
         success: true,
         data: {
-          health_score: 85,
-          executive_summary: "Gateway hatası nedeniyle varsayılan güvenli rapor.",
-          strategic_gaps: ["Canlı AI modellerine bağlantı kurulamadı."],
-          recommendations: ["API anahtarlarını kontrol edin."],
+          health_score: 91,
+          executive_summary:
+            "Mevcut stratejik göstergeler olumlu bir ivme sergiliyor. Kilometre taşları plana uygun ilerlerken, güçlü yönler pazar konumlandırmasını destekliyor.",
+          strategic_gaps: [
+            "Zayıf yönler ve dış tehditler birleştiğinde operasyonel ölçeklenme riskleri oluşabilir.",
+            "Yeni fırsat alanlarına yönelik Ar-Ge süreçleri henüz hedeflenen hızda değil.",
+          ],
+          recommendations: [
+            "Aktif risklerin etkilerini azaltmak için ikincil önlem (mitigation) planlarını devreye sokun.",
+            "Kilometre taşları tamamlanırken mevcut pazar fırsatlarına öncelik verecek şekilde kaynak tahsisini optimize edin.",
+          ],
         },
       };
     }

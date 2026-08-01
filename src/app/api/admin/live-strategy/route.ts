@@ -6,7 +6,11 @@ import { logger } from "@/lib/utils/logger";
 export async function POST(req: Request) {
   try {
     const user = await getCurrentUser();
-    if (!user || (user.role !== "admin" && user.role !== "ceo")) {
+    const role = user?.role as string | undefined;
+    if (
+      !user ||
+      (role !== "admin" && role !== "ceo" && role !== "moderator" && role !== "advisor")
+    ) {
       return NextResponse.json(
         { success: false, message: "Yetkisiz erişim (Unauthorized)" },
         { status: 403 },

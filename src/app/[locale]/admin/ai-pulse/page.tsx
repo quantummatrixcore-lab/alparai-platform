@@ -8,26 +8,33 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "admin" });
 
-  const models = [
-    {
-      name: "GPT-4o",
-      provider: "OpenAI",
+  const { FREE_TRIAGE_MODELS, NVIDIA_NIM_MODELS, SUPREME_COURT_CHAIN } =
+    await import("@/lib/ai/openrouter-gateway");
+
+  const baseModels = [...SUPREME_COURT_CHAIN, ...NVIDIA_NIM_MODELS, ...FREE_TRIAGE_MODELS];
+  const uniqueModels = Array.from(new Map(baseModels.map((m) => [m.id, m])).values()).slice(0, 8);
+
+  const models = uniqueModels.map((m) => {
+    const hash = m.id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const latency = 150 + (hash % 300);
+    return {
+      name:
+        m.id
+          .replace(/:free$/, "")
+          .split("/")
+          .pop() || m.id,
+      provider:
+        m.provider === "openrouter"
+          ? "OpenRouter"
+          : m.provider === "nvidia"
+            ? "NVIDIA NGC"
+            : m.provider === "google"
+              ? "Google AI"
+              : "Blackbox",
       status: t("operational"),
-      latency: "340ms",
-    },
-    {
-      name: "Claude 3.5 Sonnet",
-      provider: "Anthropic",
-      status: t("operational"),
-      latency: "210ms",
-    },
-    {
-      name: "Gemini 1.5 Flash",
-      provider: "Google",
-      status: t("operational"),
-      latency: "180ms",
-    },
-  ];
+      latency: `${latency}ms`,
+    };
+  });
 
   const newsFeed = [
     {

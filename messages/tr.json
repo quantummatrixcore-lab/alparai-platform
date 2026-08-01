@@ -2372,6 +2372,7 @@
     "engines_col_status": "Durum",
     "engines_col_heartbeat": "Son Kalp Atışı",
     "cron_title": "Cron İş Günlükleri",
+    "cron_health": "Cron Sağlık Durumu",
     "cron_empty": "Henüz cron çalışması kaydedilmemiş.",
     "cron_col_name": "Cron",
     "cron_col_status": "Durum",

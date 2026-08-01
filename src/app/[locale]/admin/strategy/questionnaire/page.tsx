@@ -1,5 +1,5 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
-import { requireAdmin } from "@/lib/auth/session";
+import { requireAdvisor } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { ClipboardList } from "lucide-react";
 import { AdminContainer, AdminPageHeader } from "@/components/admin/admin-design-kit";
@@ -47,7 +47,7 @@ export default async function QuestionnairePage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  await requireAdmin();
+  await requireAdvisor();
   const t = await getTranslations({ locale, namespace: "admin" });
 
   const supabase = createAdminClient();
@@ -104,7 +104,7 @@ export default async function QuestionnairePage({
           tokens: t("questionnaire_tokens"),
           latency: t("questionnaire_latency"),
           selectAll: t("questionnaire_select_all"),
-          questionsCount: t("questionnaire_questions_count"),
+          questionsCount: t("questionnaire_questions_count", { count: 35 }),
           modelsLabel: t("questionnaire_models"),
           close: t("questionnaire_close"),
           error: t("questionnaire_error"),
