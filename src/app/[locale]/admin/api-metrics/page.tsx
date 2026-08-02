@@ -37,7 +37,7 @@ export default async function ApiMetricsPage({ params }: { params: Promise<{ loc
 
   const trafficData: { hour: string; requests: number; errors: number }[] = []; // ÖLÇÜLMEDİ
 
-  const endpointsData: { name: string; method: string; status: "healthy" | "warning" | "error"; latency: string; rps: string; uptime: number }[] = []; // ÖLÇÜLMEDİ
+  const endpointsData: { name: string; method: string; status: "healthy" | "warning" | "critical"; latency: string; rps: string; uptime: number }[] = []; // ÖLÇÜLMEDİ
 
   return (
     <div className="animate-in fade-in space-y-8 duration-500">
