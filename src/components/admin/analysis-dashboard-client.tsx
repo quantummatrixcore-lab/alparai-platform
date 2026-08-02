@@ -152,7 +152,7 @@ export function AnalysisDashboardClient({ registryData }: Props) {
     setLiveResult(null);
     toast.loading("Yapay zeka analiz yapıyor (gpt-4o-mini)...", { id: "live-analysis" });
     try {
-      const res = await fetch("/api/admin/live-analysis", {
+      const res = await fetch("/api/admin/live-analysis", { cache: 'no-store', 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

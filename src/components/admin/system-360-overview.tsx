@@ -72,7 +72,7 @@ export function System360Overview() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/health")
+    fetch("/api/health", { cache: 'no-store',  cache: 'no-store' })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => setHealth(data))
       .catch(() => setHealth(null))

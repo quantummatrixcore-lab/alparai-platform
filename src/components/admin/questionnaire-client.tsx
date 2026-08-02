@@ -97,7 +97,7 @@ export function QuestionnaireClient({
   async function handleRun() {
     setRunning(true);
     try {
-      const response = await fetch("/api/admin/strategy-questionnaire", {
+      const response = await fetch("/api/admin/strategy-questionnaire", { cache: 'no-store', 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ selectedModels }),

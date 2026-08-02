@@ -32,7 +32,7 @@ export function LiveStrategyClient({ context }: LiveStrategyClientProps) {
   const handleAnalyze = async () => {
     setIsAnalyzing(true);
     try {
-      const res = await fetch("/api/admin/live-strategy", {
+      const res = await fetch("/api/admin/live-strategy", { cache: 'no-store', 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ context }),
