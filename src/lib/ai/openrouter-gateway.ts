@@ -211,7 +211,7 @@ export async function callModel(request: GatewayRequest): Promise<GatewayResult>
 
   if (dailyCost > 45) {
     // daily cost > $45: Free-tier / local models (T0)
-    if (modelToCall.tier === "premium") {
+    if (modelToCall.tier !== "free") {
       modelToCall = FREE_TRIAGE_MODELS[0]!;
     }
   } else if (dailyCost > 30) {
@@ -277,11 +277,15 @@ export async function callWithFailover(
   let activeModels = models;
 
   if (dailyCost > 45) {
-    const { selectModelWithEscalation } = await import("@/lib/audit/model-router");
-    const escalation = await selectModelWithEscalation();
-    activeModels = escalation.chain as unknown as readonly GatewayModel[];
+    if (activeModels.some((m) => m.tier !== "free")) {
+      const { selectModelWithEscalation } = await import("@/lib/audit/model-router");
+      const escalation = await selectModelWithEscalation();
+      activeModels = escalation.chain as unknown as readonly GatewayModel[];
+    }
   } else if (dailyCost > 30) {
-    activeModels = TRIAGE_SLOT_1_CHAIN;
+    if (activeModels.some((m) => m.tier === "premium")) {
+      activeModels = TRIAGE_SLOT_1_CHAIN;
+    }
   }
 
   const attemptedModels: string[] = [];

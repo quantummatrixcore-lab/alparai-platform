@@ -47,7 +47,7 @@ export function SloDashboardClient({
   useEffect(() => {
     if (initialDora.current) return;
     let cancelled = false;
-    fetch("/api/dora/metrics", { cache: 'no-store',  cache: 'no-store' })
+    fetch("/api/dora/metrics", { cache: 'no-store' })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (!cancelled && data) setDora(data);

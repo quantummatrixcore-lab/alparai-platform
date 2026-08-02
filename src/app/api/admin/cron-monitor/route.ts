@@ -8,7 +8,7 @@ export async function GET() {
   const auth = await requireAdmin();
   if (auth instanceof NextResponse) return auth;
 
-  const report = getRegistryReport();
+  const report = await getRegistryReport();
   const crons = await getCronStatus();
 
   return NextResponse.json({

@@ -18,7 +18,7 @@ export function HealthDashboardClient({ initialReport }: HealthDashboardClientPr
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      const res = await fetch("/api/health/unified", { cache: 'no-store',  cache: 'no-store' });
+      const res = await fetch("/api/health/unified", { cache: 'no-store' });
       const data = await res.json();
       setReport(data);
     } catch (e) {

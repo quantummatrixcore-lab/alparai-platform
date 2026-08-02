@@ -116,7 +116,7 @@ export async function getAdminAutopilotSnapshot(limit = 100): Promise<AdminAutop
 
   // 2. Active engines status (from engine registry)
   const { getRegistryReport } = await import("@/lib/engine-registry");
-  const activeEngines = getRegistryReport().services;
+  const activeEngines = (await getRegistryReport()).services;
 
   // 3. Active daily token count (from cross_audit_runs last 24h)
   const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();

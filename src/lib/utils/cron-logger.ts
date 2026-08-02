@@ -18,14 +18,14 @@ export function withCronLogger<REQ extends Request, RES extends Response>(
       try {
         const response = await handler(request);
         const serviceId = `cron-${cronName.replace(/_/g, "-")}`;
-        recordHeartbeat(
+        await recordHeartbeat(
           serviceId,
           response.status >= 400 ? `Status ${response.status}` : undefined,
         );
         return response;
       } catch (err) {
         const serviceId = `cron-${cronName.replace(/_/g, "-")}`;
-        recordHeartbeat(serviceId, err instanceof Error ? err.message : String(err));
+        await recordHeartbeat(serviceId, err instanceof Error ? err.message : String(err));
         throw err;
       }
     }
@@ -69,7 +69,7 @@ export function withCronLogger<REQ extends Request, RES extends Response>(
       const status = response.status >= 400 ? "failed" : "success";
 
       const serviceId = `cron-${cronName.replace(/_/g, "-")}`;
-      recordHeartbeat(serviceId, response.status >= 400 ? `Status ${response.status}` : undefined);
+      await recordHeartbeat(serviceId, response.status >= 400 ? `Status ${response.status}` : undefined);
 
       if (logId) {
         await supabase
@@ -90,7 +90,7 @@ export function withCronLogger<REQ extends Request, RES extends Response>(
       const errorMessage = err instanceof Error ? err.message : String(err);
 
       const serviceId = `cron-${cronName.replace(/_/g, "-")}`;
-      recordHeartbeat(serviceId, errorMessage);
+      await recordHeartbeat(serviceId, errorMessage);
 
       logger.error(
         `[CronLogger] Cron ${cronName} failed`,
