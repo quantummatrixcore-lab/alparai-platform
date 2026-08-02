@@ -5,10 +5,11 @@ import { InfoIcon, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 export default async function StartupHealthPage({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   const t = await getTranslations("admin");
   const [healthData, fundingData] = await Promise.all([getStartupHealth(), getFundingConversion()]);
 
