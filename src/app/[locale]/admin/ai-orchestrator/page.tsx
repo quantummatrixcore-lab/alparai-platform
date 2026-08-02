@@ -32,6 +32,15 @@ export default async function AiOrchestratorAdminPage() {
     context_length: 128000, // mock length since DB doesn't have it
   }));
 
+  const avgTrustScore =
+    trustScores.length > 0
+      ? (
+          trustScores.reduce((acc, s) => acc + Number(s.trust_score), 0) / trustScores.length
+        ).toFixed(1)
+      : "0.0";
+
+  const totalAudits = trustScores.reduce((acc, s) => acc + (Number(s.total_audits) || 0), 0);
+
   return (
     <div className="space-y-8 p-6 text-white">
       <div className="flex items-center justify-between">
@@ -65,8 +74,8 @@ export default async function AiOrchestratorAdminPage() {
             <span>Average Trust Score</span>
             <ShieldCheck className="h-5 w-5 text-emerald-400" />
           </div>
-          <p className="mt-2 text-3xl font-bold text-emerald-400">92.8%</p>
-          <p className="mt-1 text-xs text-slate-500">Evaluated across 150+ cross-audits</p>
+          <p className="mt-2 text-3xl font-bold text-emerald-400">{avgTrustScore}%</p>
+          <p className="mt-1 text-xs text-slate-500">Evaluated across {totalAudits} cross-audits</p>
         </div>
 
         <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-6">

@@ -82,24 +82,50 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
   >([]);
 
   const fetchProviders = React.useCallback(async () => {
-    const { createBrowserClient } = await import("@supabase/ssr");
-    const supabase = createBrowserClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    );
-    const { data } = await supabase
-      .from("ai_providers" as never)
-      .select("name")
-      .limit(6);
-    if (data) {
-      setAiProviders(
-        data.map((p: { name: string }) => ({
-          name: p.name,
-          monthlyCost: 0,
-          freeLimit: "Unlimited",
-          usedPercent: 0,
-        })),
-      );
+    try {
+      const res = await fetch("/api/admin/costs", { cache: "no-store" });
+      if (res.ok) {
+        const json = await res.json();
+        const costServices = json.services || [];
+        setAiProviders(
+          costServices.map(
+            (s: {
+              name: string;
+              currentCost: number;
+              budgetLimit: number;
+              percentUsed: number;
+            }) => ({
+              name: s.name.charAt(0).toUpperCase() + s.name.slice(1),
+              monthlyCost: s.currentCost || 0,
+              freeLimit: s.budgetLimit > 0 ? `$${s.budgetLimit.toFixed(2)}` : "Unlimited",
+              usedPercent: s.percentUsed || 0,
+            }),
+          ),
+        );
+      } else {
+        // Fallback to ai_providers if costs API is not accessible by current user
+        const { createBrowserClient } = await import("@supabase/ssr");
+        const supabase = createBrowserClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        );
+        const { data } = await supabase
+          .from("ai_providers" as never)
+          .select("name")
+          .limit(6);
+        if (data) {
+          setAiProviders(
+            data.map((p: { name: string }) => ({
+              name: p.name,
+              monthlyCost: 0,
+              freeLimit: "Unlimited",
+              usedPercent: 0,
+            })),
+          );
+        }
+      }
+    } catch (_e) {
+      // Silently handle error
     }
   }, []);
 

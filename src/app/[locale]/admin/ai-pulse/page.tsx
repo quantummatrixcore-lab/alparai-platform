@@ -30,15 +30,57 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
     .order("created_at", { ascending: false })
     .limit(8);
 
+  const { data: incidents } = await supabase
+    .from("incidents")
+    .select("ai_model_id, created_at, title, description, severity")
+    .order("created_at", { ascending: false })
+    .limit(500);
+
+  const { data: crossRuns } = await supabase
+    .from("cross_audit_runs")
+    .select("model, latency_ms")
+    .order("created_at", { ascending: false })
+    .limit(500);
+
   const models = (dbModels || []).map((m) => {
     const providerObj = Array.isArray(m.ai_providers) ? m.ai_providers[0] : m.ai_providers;
     const providerName = providerObj?.name || m.provider_id || "Unknown";
 
+    const modelIncidents = (incidents || []).filter((inc) => inc.ai_model_id === m.id);
+    const has401 = modelIncidents.some(
+      (inc) =>
+        inc.title?.includes("401") ||
+        inc.description?.includes("401") ||
+        inc.title?.toLowerCase().includes("unauthorized"),
+    );
+    const latestIncident = modelIncidents[0];
+
+    let status = t("operational");
+    let statusClass = "text-emerald-400";
+
+    if (has401) {
+      status = "401 Unauthorized";
+      statusClass = "text-rose-400";
+    } else if (latestIncident && latestIncident.severity === "critical") {
+      status = `Error (${new Date(latestIncident.created_at).toLocaleDateString()})`;
+      statusClass = "text-rose-400";
+    }
+
+    const modelRuns = (crossRuns || []).filter((r) => r.model === m.id || r.model === m.name);
+    let latencyText = "-";
+    if (modelRuns.length > 0) {
+      const avgLatency = Math.round(
+        modelRuns.reduce((acc, r) => acc + r.latency_ms, 0) / modelRuns.length,
+      );
+      latencyText = `${avgLatency}ms`;
+    }
+
     return {
       name: m.name || m.id.split("/").pop() || m.id,
       provider: providerName,
-      status: t("operational"),
-      latency: "-",
+      status,
+      statusClass,
+      latency: latencyText,
     };
   });
 
@@ -157,7 +199,9 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
                   </div>
                   <div className="flex items-center gap-6">
                     <div className="text-right">
-                      <p className="font-mono text-xs text-emerald-400">{model.status}</p>
+                      <p className={`font-mono text-xs ${model.statusClass || "text-emerald-400"}`}>
+                        {model.status}
+                      </p>
                       <p className="text-fg-muted font-mono text-[10px]">{model.latency}</p>
                     </div>
                   </div>
