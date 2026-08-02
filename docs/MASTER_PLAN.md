@@ -1823,3 +1823,78 @@ _i18n:_ eksik `nav_*` anahtarları `messages/{en,tr}.json`'a eklenir, `t() || "F
 **Verification (Antigravity/OpenCode uygulayınca kanıtlanacak):** `pnpm lint && pnpm typecheck && pnpm test` yeşil; sıçrama kabul testi — `/admin/settings`'e kaydırıp tıkla, menü scroll pozisyonunda kalmalı ve grup açık kalmalı; akordiyon — bir grup açılınca diğeri kapanmalı, görünür liste ≤15 satır; registry↔route parite testi (56 href, gerçek `page.tsx` karşılığı, CI'da otomatikleştirilir); TR arayüzde ham `nav_*` anahtarı görünmemeli; rol kapıları (moderator→yalnızca operations, advisor→yalnızca growth) korunmalı.
 
 **Yetki sınırı (G-6):** Bu maddeyi ben uygulamıyorum — `src/**`/`messages/**` bana kapalı, spec Antigravity/OpenCode'a gidiyor.
+
+## v12.81 — Public tasarım dönüşümü: psikolojik segment analizi + #100 spec
+
+**Tetikleyici.** Founder: anasayfa ve tüm public sayfalar için tasarım dönüşüm planı; kullanıcı çekecek ve etkileşim alacak hale getirilsin; insan duygu/psikoloji analizi yapılsın; uzmanlar kısmına profesyonel tasarımcı eklensin. Keşif üç paralel Haiku ajanına devredildi (G-5), kritik iddialar bizzat `grep` ile doğrulandı.
+
+### Bulgu 0 (P0, tek satırlık kök neden) — sitede hiçbir web fontu yüklenmiyor
+
+`globals.css:151-153` dairesel kendine-referans içeriyor:
+
+```css
+--font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+--font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+--font-mono: var(--font-mono), ui-monospace, monospace;
+```
+
+`--font-sans` kendi değeriyle tanımlanıyor ve **onu ayarlayan hiçbir yer yok** — repoda `next/font` kullanımı sıfır, `@font-face` sıfır, `fonts.googleapis` `<link>` sıfır, `preconnect` sıfır (tümü `grep` ile doğrulandı). Sonuç: dikkatle kurulmuş perfect-fourth tip ölçeği (`--fs-xs`…`--fs-7xl`) ve display/sans/mono ayrımı **tek bir sistem fontuna çöküyor**. `globals.css:177` başlıkları `var(--font-display)`'e, `:192` gövdeyi `var(--font-sans)`'a bağlıyor — ikisi de aynı sistem fontuna düşüyor.
+
+**Neden bu en önemli bulgu:** ürünü _kredibilite_ olan bir platform, tarayıcının varsayılan fontuyla render ediliyor. Tipografi, algılanan otoritenin en büyük tek belirleyicisidir; hiçbir layout çalışması bunu telafi etmez. Düzeltme tek dosya (`layout.tsx` + `globals.css` tokenleri zaten bağlı) ve 70 sayfanın **tamamını** aynı anda yükseltir.
+
+### Bulgu 1 (P0, stratejik) — anasayfanın baskın CTA'sı ziyaretçilerin çoğunu dışlıyor
+
+Anasayfa (`src/app/[locale]/page.tsx`, 300 satır, 9 bölüm) `/submit`'i **dört ayrı yerde** birincil CTA olarak tekrarlıyor: `hero-section.tsx:103`, `live-feed.tsx:34`, `closing-section.tsx:30`, `get-involved.tsx:10-46`. Ama "olay bildir" eylemini **yalnızca AI sisteminden zarar görmüş biri** yapabilir. Zarar görmemiş ziyaretçi (gazeteci, araştırmacı, düzenleyici, öğrenci, sağlayıcı) için anasayfanın sunduğu tek eylem, yapamayacağı eylemdir → çıkış.
+
+Daha da keskin: `/dashboard/journalist`, `/dashboard/legal`, `/dashboard/compliance`, `/dashboard/safety` rotaları **zaten mevcut** ama anasayfa hiçbirine yönlendirmiyor. Segment-özel değer önerisi inşa edilmiş, sonra gömülmüş.
+
+### Psikolojik segment analizi (tasarım muhakemesi — ölçüm değil, enstrümantasyon gelene kadar hipotez)
+
+| Segment                                                 | Geliş duygusu                                      | İhtiyaç                                      | Mevcut karşılık                                                                  |
+| ------------------------------------------------------- | -------------------------------------------------- | -------------------------------------------- | -------------------------------------------------------------------------------- |
+| **Zarar görmüş**                                        | öfke, çaresizlik, izolasyon ("bir tek ben miyim?") | doğrulanma + düşük sürtünmeli ses            | `/submit` var ama duygusal köprü yok — anasayfa kurumsal sesle açıyor            |
+| **Bekçiler** (gazeteci/hukukçu/düzenleyici/araştırmacı) | şüphecilik, zaman kıtlığı                          | metodoloji, alıntılanabilir veri, export/API | 4 rol dashboard'u + `/methodology/*` + `/api-docs` var, **anasayfada görünmez**  |
+| **İnşacılar** (puanlanan AI şirketleri)                 | savunmacılık, tehdit algısı                        | cevap hakkı, tarafsızlık kanıtı              | `/incidents/[id]/respond` + `/legal/neutrality` var, **anasayfada görünmez**     |
+| **Hizalı meraklılar** (etik/öğrenci/katkıcı)            | aidiyet arayışı                                    | katılma basamağı                             | `/academy`, `/bounties`, `/dilemmas`, `/challenges` var, **anasayfada görünmez** |
+
+**Merkezi psikolojik teşhis — taahhüt merdiveninin ortası boş.** Site "oku" adımından doğrudan "olay bildir" adımına atlıyor; bu, mevcut en yüksek maliyetli eylem. Ara basamaklar (bir dilemma'ya oy ver, bir sağlayıcıyı takip et, bir modeli izle, bültene abone ol) sayfalar olarak **var** ama anasayfa akışında yok. Foot-in-the-door dizisi kurulmadan yüksek taahhüt istenirse dönüşüm düşer.
+
+**İkinci teşhis — marka rengi ile misyon arasında gerilim.** Palet neon menekşe (`--color-brand-500` #9333ea) + camgöbeği, lacivert üzerine (`globals.css:108-154`). Bu bir _AI-startup/kripto_ sinyali; oysa konumlandırma "onları hesaba çeken kurum". Öneri: paleti yeniden boyamak değil (70 sayfa, pahalı), **vurguyu kaydırmak** — menekşe aksan olarak kalır, üstüne editoryal/belgesel bir tipografi ve veri-görselleştirme katmanı gelir. Araştırmacı gazetecilik estetiği (ProPublica/Bellingcat sicili) bu misyonla, tech-startup gradyanlarından daha tutarlı.
+
+**Üçüncü teşhis — güven varlıkları gömülü.** `/methodology/corrections` (kendi hatamızı düzeltme politikası) ve `/legal/neutrality`, bir güven platformunun sahip olabileceği en değerli iki sayfa. İkisi de anasayfadan erişilemiyor. Bunlar savunma dokümanı değil, **ikna varlığı**.
+
+### Bulgu 2 (P1) — dönüşüm ölçülemiyor
+
+Plausible (rıza kapılı, `plausible-consent.tsx:19`) + Vercel Analytics/Speed Insights (`layout.tsx:16-17,81-83`) var. Ama **özel olay takibi sıfır** — `track(`/`gtag`/`posthog` public bileşenlerde yok. Yani hangi CTA'nın çalıştığı, huninin nerede sızdırdığı bilinmiyor. Enstrümantasyon olmadan yapılan yeniden tasarım **yanlışlanamaz** — CLAUDE.md #10'un ruhuna aykırı. Bu yüzden ölçüm, tasarımdan **önce veya onunla birlikte** gider, sonra değil.
+
+### Uzmanlar kısmı — Founder'ın açık talebi (iki okuma, ikisi de yapılacak)
+
+Keşif iki ayrı "uzman" sistemi buldu, ikisinde de tasarım rolü **yok**:
+
+1. **AI persona seti** — `src/lib/config/expert-personas.ts:12-112`, 10 persona (Ekosistem Mimarı, VC, Kırmızı Takım, OSINT, Büyüme Hacker'ı vb.). Tasarım/UX/psikoloji personası yok → analiz motorunun tasarım muhakemesi hiç yok. **Ekle: "Ürün Tasarımcısı & Davranış Psikoloğu"** — UX sürtünmesi, duygusal rezonans, erişilebilirlik ve _karanlık desen denetimi_ yapar. Misyonla uyumlu: hesap verebilirlik platformu kendi ikna tekniklerini denetlemeli.
+2. **İnsan uzman ağı** — public `/experts` sayfası + `expert_applications` / `expert_network` tabloları (`20260629000001`, `20260725000001`). Uzmanlık seçenekleri (`experts-form.tsx`): Hukuk, Tıp, Siber Güvenlik, Akademik, Etik, Politika, Diğer — **tasarım/HCI yok**. **Ekle: "Tasarım & İnsan-Bilgisayar Etkileşimi"** seçeneği + `expert_network.specialties`'e karşılığı.
+3. **Danışma kurulu** — `advisory_board_members` (`20260722000000`), açık koltuklar arasında tasarım yok. **Ekle: "Tasarım & İnsan Faktörleri Koltuğu"**. (Not: `MASTER_PLAN_ARCHIVE.md:272` zaten kurulun "design/UX" rehberliğine ihtiyacı olduğunu yazmış ama hiçbir yerde rol açılmamış — bu, kapatılmamış eski bir niyet.)
+
+### Spec — #100 (P1, dört faza bölünmüş; 70 public sayfa var, hepsi elle yeniden tasarlanamaz)
+
+**Faz A — Sistemik yükseltme (tek seferde 70 sayfayı birden etkiler, en yüksek kaldıraç):**
+Gerçek fontları yükle (`next/font` ile: başlık için editoryal otorite taşıyan bir display yüz, arayüz için temiz bir grotesk, veri/ID için mono) ve `globals.css:151-153`'teki dairesel referansı kır. Bu tek değişiklik hiçbir sayfa layout'una dokunmadan tüm sitenin algılanan kalitesini yükseltir. Beraberinde: `og-image.jpg` (458K) optimize edilir, tipografik ritim (satır yüksekliği/ölçü) token seviyesinde ayarlanır.
+
+**Faz B — Anasayfa duygusal yay dönüşümü (`page.tsx` + `src/components/marketing/*`):**
+Mevcut yay _açıklayıcı_ (Hero→İstatistik→Neden→Nasıl→Akış→Liderlik→Katıl→Kapanış = kurumsal broşür). Hedef yay _anlatısal_: **tanınma** ("bu senin başına da mı geldi?" — soyut istatistik değil, 3 saniyede kendini görme) → **doğrulanma** (canlı kanıt: "12 dakika önce bir olay bildirildi" — yakınlık/canlılık, toplam sayıdan daha güçlü sosyal kanıt) → **öfkeden faile** (liderlik tablosu: bu sistemlerin adı var) → **güven** (metodoloji + tarafsızlık + düzeltme politikası yüzeye çıkar) → **eylem** (segment-eşleşmeli) → **aidiyet**.
+Kritik yapısal değişiklik: tek `/submit` CTA'sı yerine **segment yönlendirici** — mevcut ama gömülü 4 rol dashboard'una (`/dashboard/{journalist,legal,compliance,safety}`) ve taahhüt merdiveninin ara basamaklarına (`/dilemmas` oylama, model takip, bülten) anasayfadan giriş açılır. `/submit` birincil olarak kalır ama artık tek yol değildir.
+
+**Faz C — Kredibilite sayfaları editoryal geçiş (Tier 2, ~8 sayfa):**
+`/methodology/*`, `/legal/neutrality`, `/transparency/*`, `/about`. Bunlar hukuki metin gibi değil, _yayın_ gibi görünmeli — bekçi segmentinin alıntılayacağı yüzey burası.
+
+**Faz D — Uzman sistemi (yukarıdaki üç madde):** persona ekleme, `/experts` uzmanlık seçeneği + DB `specialties`, danışma kurulu koltuğu. Küçük diff, yüksek stratejik değer.
+
+**Enstrümantasyon (A ile birlikte, D'den önce):** Plausible özel olayları — hero CTA tıklaması, segment yönlendirici seçimi, taahhüt merdiveni basamakları, submit huni adımları. Rıza kapısına saygılı kalır (`plausible-consent.tsx` mevcut deseni kullanılır). Bu olmadan Faz B'nin başarısı iddia edilemez, yalnızca hissedilir.
+
+**Kapsam dürüstlüğü:** 70 public sayfanın yalnızca ~13'ü elle dokunulur (anasayfa + dönüşüm-kritik 5 + kredibilite 8). Kalan ~57 sayfa Faz A'nın token/font yükseltmesinden **bedavaya** faydalanır. Tasarım-sistemi-öncelikli yaklaşımın bütün amacı budur.
+
+**Kritik dosyalar:** `src/app/layout.tsx` (font yükleme), `src/app/globals.css:151-153` (dairesel referans), `src/app/[locale]/page.tsx`, `src/components/marketing/*` (15 dosya, `hero-section.tsx` 419 satır en büyüğü), `src/lib/config/expert-personas.ts`, `src/components/marketing/experts-form.tsx`, `messages/{en,tr,de,fr,ru}.json` (public sayfa = 5 dil zorunlu, CLAUDE.md), yeni migration (`expert_network.specialties` + advisory board koltuğu).
+
+**Verification:** `pnpm lint && pnpm typecheck && pnpm test && pnpm test:e2e` yeşil. Font: DevTools'ta computed `font-family` sistem fontu **değil** (Faz A'nın tek kabul kriteri; bugün başarısız). Lighthouse erişilebilirlik + performans skoru Faz A öncesi/sonrası kaydedilir (rakamlar ölçülene kadar `[ölçülmedi]`). Kontrast: yeni tipografi tokenleri WCAG AA (mevcut danger/warning tokenleri zaten AA işaretli, `globals.css`). Segment yönlendirici: 4 dashboard rotasına anasayfadan erişilebilir olmalı. Enstrümantasyon: Plausible'da özel olaylar rıza verildikten sonra görünür, rıza yokken **hiç** ateşlenmez. i18n: yeni copy 5 dilde eksiksiz, ham anahtar sızmıyor.
+
+**Yetki sınırı (G-6):** `src/**`, `messages/**`, migration'lar bana kapalı — bu spec Antigravity/OpenCode'a gidiyor. Psikolojik segment tablosu tasarım muhakemesidir, ölçüm değil; enstrümantasyon geldikten sonra doğrulanmalı veya çürütülmelidir.
