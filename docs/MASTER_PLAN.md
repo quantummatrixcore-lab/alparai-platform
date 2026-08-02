@@ -1787,3 +1787,39 @@ Backlog tablosunda bu 4 madde `✅ completed` yapıldı, her biri commit hash + 
 **Panelin gerçek durumu (tablo sayımıyla doğrulandı):** 98 madde, **77 tamamlanmış → %79** (#96/#97 bu turdan önce, `f0b8cc1` ile zaten tamamlanmıştı — önceki `b700d86` anındaki 75'e göre +2; kanıt metni bu turda düzeltildi; #98 yeni ve pending).
 
 **Verification:** `git status --short` → yalnızca `docs/MASTER_PLAN.md`; `node scripts/check-masterplan-consistency.mjs` yerelde `passed`; push sonrası gerçek CI run'ı GitHub Actions'tan teyit edilecek.
+
+## v12.80 — Founder: admin sol menü "amatör", sıçrıyor ve önceliklendirme yok — #99 spec
+
+**Tetikleyici.** Founder: bir sayfaya tıklayınca sol menü aşağı iniyor/yukarı çıkıyor, ve menüde profesyonel önceliklendirme yok. Kod doğrudan okunarak (`src/components/admin/sidebar.tsx`, 770 satır) teşhis edildi, tahminle değil.
+
+**Ölçüm.** 56 nav kalemi, 7 grup, **7 grubun tamamı varsayılan açık** (`sidebar.tsx:81-89`) — bu bir menü değil, dikey site haritası. Ölü link yok: 56 href'in tamamı gerçek `page.tsx`'e karşılık geliyor (`comm` ile karşılaştırıldı), tek yetim route `/admin/autopilot/analytics`. Sorun bilgi mimarisi/etkileşim, veri bütünlüğü değil.
+
+**Sıçramanın 3 ayrı teknik sebebi (hepsi bağımsız düzeltilebilir):**
+
+1. `<nav className="scrollbar-hide flex-1 overflow-y-auto">` (`sidebar.tsx:663`) scroll pozisyonunu restore etmiyor — her route değişiminde menü tepeye zıplıyor.
+2. `expandedGroups` statik initializer (`sidebar.tsx:81-89`) localStorage okumuyor; hemen üstündeki `isCollapsed` **okuyor** (`sidebar.tsx:74-79`) — tutarsız kalıp. Kullanıcı grubu kapatıyor, gezinmede geri açılıyor.
+3. Genişletilmiş modda tüm gruplar `layoutId="sidebar-active-pill"` paylaşıyor (`sidebar.tsx:564`) — framer-motion pill'i uzak gruplar arasında uçuruyor. Daraltılmış mod bunu doğru yapıyor: `sidebar-active-pill-${id}` (`sidebar.tsx:506`).
+
+**Önceliklendirme yokluğu.** Gruplar konuya göre kurulmuş, kullanım kadansına göre değil: intelligence 13 kalem, system 16 kalem — çöp kutusuna dönmüş. Günlük kullanılan `/admin/health` ile ayda bir açılan `/admin/codebase-hygiene` aynı ağırlıkta.
+
+**Kaçırılmış fırsat.** Admin layout'ta zaten Cmd+K komut paleti var (`Manage360CommandPalette`, `manage-360-palette.tsx`, `layout.tsx:7,50`) ama 56 route'un yalnızca 13'ü hardcoded (`:150-270`). Sidebar ve palet aynı veriyi paylaşmıyor, ayrı ayrı çürüyor.
+
+**Yan bulgu (i18n).** ~10 etikette `t("nav_x") || "Fallback"` kalıbı var (`sidebar.tsx:139,196,202,208,394,424,430,436,442,448,454,460`) — next-intl eksik anahtarda falsy dönmediği için bu fallback pratikte çalışmaz, ekranda ham anahtar görünme riski taşır.
+
+**Spec — #99 (P1, iki ayrı commit'e bölünebilir):**
+
+_Faz 1 (sıçrama düzeltmeleri, bağımsız sevk edilebilir):_ `expandedGroups`'u `isCollapsed`'ın mevcut localStorage kalıbıyla kalıcı yap; `nav` scrollTop'ı `useLayoutEffect` ile mount öncesi restore et; `layoutId`'yi `sidebar-active-pill-${groupId}` olarak grup bazına al (daraltılmış moddaki mevcut doğru desen örnek alınır); aktif route'un grubunu mount'ta otomatik aç (kullanıcı elle kapatmadıysa).
+
+_Faz 2 (mimari):_ `src/lib/admin/nav-registry.ts` — yeni dosya, 56 kalemi tipli registry'ye taşı (`{href, labelKey, icon, group, tier: "pinned"|"standard"|"advanced", roles}`), fallback string yok. Hem `sidebar.tsx` hem `manage-360-palette.tsx` bu registry'yi tüketir — drift yapısal olarak biter, palet kapsamı 13'ten 56'ya çıkar.
+
+_Katmanlama:_ **pinned** (5, sabit üstte): `/admin`, `/admin/moderation`, `/admin/health`, `/admin/redaction-queue`, `/admin/takedown` — artı kullanıcının yıldızlayabileceği localStorage tabanlı özel pin. **standard** (akordiyon — aynı anda TEK grup açık, gruplar kadansa göre sıralı: operations→intelligence→growth→governance→strategy→system). **advanced** (sidebar'dan çıkar, yalnızca Cmd+K): `/admin/codebase-hygiene`, `/admin/modular-architecture`, `/admin/dual-channel-scoring`, `/admin/innovations`; `/api-docs` footer'a taşınır. Sonuç: ekranda aynı anda görünen kalem 56'dan ~15'e (5 pinned + tek açık grup) düşer.
+
+_Palet:_ mevcut 13 eylem-komutu korunur; registry'den gelen 56 gezinme-komutu ayrı "Sayfalar" bölümü olarak eklenir. Sidebar'da `⌘K` ipucu görünür yapılır.
+
+_i18n:_ eksik `nav_*` anahtarları `messages/{en,tr}.json`'a eklenir, `t() || "Fallback"` kalıbı tamamen kaldırılır.
+
+**Kritik dosyalar:** `src/lib/admin/nav-registry.ts` (yeni), `src/components/admin/sidebar.tsx` (~350 satır azalır), `src/components/admin/manage-360-palette.tsx`, `messages/en.json`, `messages/tr.json`.
+
+**Verification (Antigravity/OpenCode uygulayınca kanıtlanacak):** `pnpm lint && pnpm typecheck && pnpm test` yeşil; sıçrama kabul testi — `/admin/settings`'e kaydırıp tıkla, menü scroll pozisyonunda kalmalı ve grup açık kalmalı; akordiyon — bir grup açılınca diğeri kapanmalı, görünür liste ≤15 satır; registry↔route parite testi (56 href, gerçek `page.tsx` karşılığı, CI'da otomatikleştirilir); TR arayüzde ham `nav_*` anahtarı görünmemeli; rol kapıları (moderator→yalnızca operations, advisor→yalnızca growth) korunmalı.
+
+**Yetki sınırı (G-6):** Bu maddeyi ben uygulamıyorum — `src/**`/`messages/**` bana kapalı, spec Antigravity/OpenCode'a gidiyor.
