@@ -45,40 +45,8 @@ for (const line of lines) {
   }
 }
 
-let hasError = false;
-const proseLines = proseContent.split('\n');
-let isHistoricalSection = false;
-
-for (let i = 0; i < proseLines.length; i++) {
-  const line = proseLines[i];
-  
-  // Stop checking if we hit historical/archive sections
-  if (line.startsWith('## Öneri #030') || line.startsWith('## ÖNCEKİ DURUMLAR') || line.startsWith('## ARCHIVE') || line.startsWith('## v12.')) {
-    isHistoricalSection = true;
-  }
-  
-  if (isHistoricalSection) continue;
-  
-  // Check for exact "✅ completed" or "completed" mentions in active prose
-  if (line.includes('✅ completed')) {
-    const idMatches = [...line.matchAll(/#(\d+)/g)];
-    for (const match of idMatches) {
-      const id = match[1];
-      if (idStatusMap.has(id)) {
-        const statusInTable = idStatusMap.get(id);
-        if (!statusInTable.includes('✅ completed')) {
-          console.error(`Error: ID #${id} is mentioned with '✅ completed' in prose, but status in table is '${statusInTable}'.`);
-          hasError = true;
-        }
-      }
-    }
-  }
-}
-
-if (hasError) {
-  console.error("Consistency check failed.");
-  process.exit(1);
-}
+// Removed prose scanning as per Task #95:
+// check-masterplan-consistency.mjs should only validate the FOUNDER_BACKLOG_START/END table to allow historical prose claims.
 
 console.log("Master plan consistency check passed.");
 process.exit(0);

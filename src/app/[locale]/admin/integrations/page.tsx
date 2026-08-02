@@ -80,6 +80,7 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
   const [aiProviders, setAiProviders] = React.useState<
     { name: string; monthlyCost: number; freeLimit: string; usedPercent: number }[]
   >([]);
+  const [totalSavedStr, setTotalSavedStr] = React.useState<string>("$0.00 / mo");
 
   const fetchProviders = React.useCallback(async () => {
     try {
@@ -87,6 +88,7 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
       if (res.ok) {
         const json = await res.json();
         const costServices = json.services || [];
+        setTotalSavedStr(`$${(json.totalBudget || 0).toFixed(2)} / mo`);
         setAiProviders(
           costServices.map(
             (s: {
@@ -205,7 +207,7 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
       />
 
       {/* Zero Cost Banner Shield */}
-      <ZeroCostBanner services={aiProviders} totalSaved="$347.00 / mo" locale={locale} />
+      <ZeroCostBanner services={aiProviders} totalSaved={totalSavedStr} locale={locale} />
 
       <div className="mt-8 space-y-8">
         {CATEGORIES.map((cat) => {

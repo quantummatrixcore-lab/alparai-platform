@@ -12,6 +12,17 @@ vi.hoisted(() => {
       };
     },
   );
+  vi.doMock("@/lib/supabase/admin", () => ({
+    createAdminClient: vi.fn(() => ({
+      from: vi.fn(() => ({
+        select: vi.fn(() => ({
+          limit: vi.fn(() => ({
+            order: vi.fn().mockResolvedValue({ data: [] }),
+          })),
+        })),
+      })),
+    })),
+  }));
 });
 
 import { callWithFailover } from "@/lib/ai/openrouter-gateway";

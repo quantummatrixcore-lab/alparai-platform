@@ -79,7 +79,7 @@ export async function getApiTelemetryData(): Promise<ApiTelemetryData> {
       id: "google",
       name: "Google Gemini",
       status: hasGoogle ? "connected" : "offline",
-      models: ["Gemini 1.5 Pro", "Gemini 1.5 Flash", "Gemini Spark 24/7"],
+      models: ["Gemini 1.5 Pro", "Gemini 1.5 Flash", "Gemini Spark 24/7", "Veo", "Imagen 3"],
       health: hasGoogle ? 100 : 0,
       latencyMs: 156,
       dailyRequests: 24600,

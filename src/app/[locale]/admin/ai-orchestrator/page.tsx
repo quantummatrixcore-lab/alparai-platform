@@ -11,6 +11,11 @@ export default async function AiOrchestratorAdminPage() {
   const trustScores = await getTrustScoresAction();
 
   const { data: chains } = await supabase.from("ai_routing_chains").select("*");
+  const { data: costs } = await supabase
+    .from("finance_monthly_costs")
+    .select("budget_usd, amount_usd");
+  const costSavings = (costs || []).reduce((acc, c) => acc + (c.budget_usd - c.amount_usd), 0);
+  const costSavingsStr = costSavings > 0 ? `$${costSavings.toFixed(2)}` : "$0.00";
 
   const { data: dbModels } = await supabase
     .from("ai_models")
@@ -96,7 +101,7 @@ export default async function AiOrchestratorAdminPage() {
               100%
             </span>
           </div>
-          <p className="mt-2 text-3xl font-bold text-white">$0.00</p>
+          <p className="mt-2 text-3xl font-bold text-white">{costSavingsStr}</p>
           <p className="mt-1 text-xs text-slate-500">{t("zero_token_cost_on_internal_audits")}</p>
         </div>
       </div>

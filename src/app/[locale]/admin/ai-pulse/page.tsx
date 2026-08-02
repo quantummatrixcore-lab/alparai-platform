@@ -84,24 +84,24 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
     };
   });
 
-  const newsFeed = [
-    {
-      title: t("openai_announces_new_reasoning_capabilit"),
-      date: t("2_hours_ago"),
-    },
-    {
-      title: t("anthropic_expands_claude_3_5_api_context"),
-      date: t("5_hours_ago"),
-    },
-    {
-      title: t("google_deepmind_open_sources_new_protein"),
-      date: t("1_day_ago"),
-    },
-    {
-      title: t("eu_ai_act_implementation_phase_begins"),
-      date: t("2_days_ago"),
-    },
-  ];
+  const newsFeed: { title: string; date: string }[] = [];
+
+  // Group crossRuns by model for sparklines
+  const getSparkData = (modelNameContains: string) => {
+    const runs = (crossRuns || [])
+      .filter((r) => r.model.toLowerCase().includes(modelNameContains.toLowerCase()))
+      .slice(0, 6)
+      .reverse();
+    return runs.length > 0
+      ? runs.map((r) => ({ value: r.latency_ms }))
+      : Array(6)
+          .fill(0)
+          .map(() => ({ value: 0 }));
+  };
+
+  const gptSpark = getSparkData("gpt");
+  const claudeSpark = getSparkData("claude");
+  const geminiSpark = getSparkData("gemini");
 
   return (
     <div className="animate-in fade-in space-y-8 duration-500">
@@ -120,14 +120,7 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
           trend="neutral"
           trendLabel={t("ai_pulse_trend_stable")}
           accentColor="#10b981"
-          sparkData={[
-            { value: 310 },
-            { value: 345 },
-            { value: 320 },
-            { value: 360 },
-            { value: 330 },
-            { value: 340 },
-          ]}
+          sparkData={gptSpark}
           chartType="line"
         />
         <MetricCard
@@ -137,14 +130,7 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
           trend="down"
           trendLabel={t("ai_pulse_trend_improving")}
           accentColor="#6366f1"
-          sparkData={[
-            { value: 250 },
-            { value: 230 },
-            { value: 220 },
-            { value: 215 },
-            { value: 218 },
-            { value: 210 },
-          ]}
+          sparkData={claudeSpark}
           chartType="line"
         />
         <MetricCard
@@ -154,14 +140,7 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
           trend="down"
           trendLabel={t("ai_pulse_trend_fastest")}
           accentColor="#f59e0b"
-          sparkData={[
-            { value: 200 },
-            { value: 195 },
-            { value: 188 },
-            { value: 190 },
-            { value: 183 },
-            { value: 180 },
-          ]}
+          sparkData={geminiSpark}
           chartType="line"
         />
       </div>
@@ -219,16 +198,20 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4">
-            <div className="space-y-4">
-              {newsFeed.map((news, i) => (
-                <div key={i} className="group cursor-pointer">
-                  <h4 className="text-fg-primary group-hover:text-brand-300 line-clamp-2 text-sm transition-colors">
-                    {news.title}
-                  </h4>
-                  <p className="text-fg-muted mt-1 font-mono text-[10px]">{news.date}</p>
-                </div>
-              ))}
-            </div>
+            {newsFeed.length === 0 ? (
+              <p className="p-2 text-sm text-slate-500">{t("no_intelligence_data")}</p>
+            ) : (
+              <div className="space-y-4">
+                {newsFeed.map((news, i) => (
+                  <div key={i} className="group cursor-pointer">
+                    <h4 className="text-fg-primary group-hover:text-brand-300 line-clamp-2 text-sm transition-colors">
+                      {news.title}
+                    </h4>
+                    <p className="text-fg-muted mt-1 font-mono text-[10px]">{news.date}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

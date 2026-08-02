@@ -11,14 +11,34 @@ export async function runLiveSystemAnalysis(): Promise<{
   error?: string;
 }> {
   try {
+    // Fetch real context for the LLM
+    const { createAdminClient } = await import("@/lib/supabase/admin");
+    const supabase = createAdminClient();
+    const { data: runs } = await supabase
+      .from("cross_audit_runs")
+      .select("model, latency_ms, score, verdict")
+      .limit(5)
+      .order("created_at", { ascending: false });
+    const { data: costs } = await supabase
+      .from("finance_monthly_costs")
+      .select("service, budget_usd, amount_usd")
+      .limit(5)
+      .order("month", { ascending: false });
+
     const prompt = `
     Sen ALPAR AI platformunun 'Acımasız Testçisi' (QA Architect) olarak hareket eden bir yapay zeka modelisin.
-    Senden şu anki sistem durumunu ve genel yapıyı analiz edip sistem inceleme raporu oluşturmanı istiyorum.
+    Senden şu anki sistem metriklerini analiz edip sistem inceleme raporu oluşturmanı istiyorum.
+    
+    Güncel Performans (Son 5 Denetim):
+    ${JSON.stringify(runs, null, 2)}
+    
+    Güncel Maliyet (Son 5 Bütçe Kaydı):
+    ${JSON.stringify(costs, null, 2)}
     
     Lütfen şu 4 ana başlıkta bir JSON çıktısı dön:
     - overall_score (0-100 arası bir sayı)
     - executive_summary (Kısa bir özet)
-    - security_flaws (Tespit edilen 2-3 güvenlik açığı veya riski)
+    - security_flaws (Tespit edilen 2-3 açık veya risk)
     - recommendations (Tavsiye edilen 2 çözüm)
     
     Çıktın SADECE geçerli bir JSON olmalıdır. Başka hiçbir açıklama yazma.
