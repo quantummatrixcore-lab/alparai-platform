@@ -40,20 +40,8 @@ export async function runLiveSystemAnalysis(): Promise<{
         { error: result.error },
       );
       return {
-        success: true,
-        data: {
-          overall_score: 92,
-          executive_summary:
-            "Sistem mimarisi (Next.js 15 + Supabase + NVIDIA NIM Mesh) stabil durumda. PII Guardian ve RLS politikaları tam kapsamayla çalışıyor. Cross-Audit Engine aktif ve tüm istekler başarıyla yönlendiriliyor.",
-          security_flaws: [
-            "İkincil veri merkezine replikasyon senkronizasyonunda 2ms'lik minör gecikme tespit edildi.",
-            "Son 24 saat içerisinde 3 adet izinsiz (unauthorized) API erişim denemesi WAF tarafından engellendi.",
-          ],
-          recommendations: [
-            "Ağ performansını ve gecikmeleri izlemeye devam edin.",
-            "WAF kurallarını periyodik olarak güncelleyerek potansiyel yeni tehdit vektörlerini engelleyin.",
-          ],
-        },
+        success: false,
+        error: "Live System Analysis API key missing or gateway error.",
       };
     }
 
@@ -69,35 +57,15 @@ export async function runLiveSystemAnalysis(): Promise<{
     } catch (_parseErr) {
       logger.warn("Live Analysis JSON parse warning, structuring text output", { rawText });
       return {
-        success: true,
-        data: {
-          overall_score: 90,
-          executive_summary:
-            cleanText.slice(0, 300) || "Canlı yapay zeka analiz raporu başarıyla tamamlandı.",
-          security_flaws: [
-            "Canlı AI model çıktısı düz metin formatında alındı.",
-            "PII Guardian ve güvenlik katmanları aktif koruma sağlıyor.",
-          ],
-          recommendations: [
-            "AI Gateway failover zincirindeki model yanıtlarını izleyin.",
-            "Vercel üretim ortam değişkenlerini doğrulamaya devam edin.",
-          ],
-        },
+        success: false,
+        error: "Live Analysis JSON parse failed.",
       };
     }
   } catch (err: unknown) {
     logger.error("Live Analysis Error:", undefined, err instanceof Error ? err : undefined);
     return {
-      success: true,
-      data: {
-        overall_score: 88,
-        executive_summary: "Sistem analizi güvenli mimari modunda tamamlandı.",
-        security_flaws: [
-          "Canlı API servisi beklenmeyen bir durum bildirdi.",
-          "Sistem yedekli güvenlik protokolü devreye girdi.",
-        ],
-        recommendations: ["Vercel üzerindeki API anahtarlarının geçerliliğini kontrol edin."],
-      },
+      success: false,
+      error: "Live Analysis Error: " + (err instanceof Error ? err.message : "Unknown error"),
     };
   }
 }

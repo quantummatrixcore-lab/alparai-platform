@@ -22,9 +22,7 @@ test.describe("Visual Regression", () => {
       });
       await page.goto(path);
       await page.waitForLoadState("networkidle");
-      await expect(page).toHaveScreenshot(`${name}.png`, {
-        maxDiffPixelRatio: 0.001,
-      });
+      await expect(page).toHaveScreenshot(`${name}.png`);
     });
   }
 });

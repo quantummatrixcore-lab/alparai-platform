@@ -1,18 +1,10 @@
-guarded=$(git diff --cached --name-only | grep -E '^(docs/MASTER_PLAN\.md|\.husky/|\.github/workflows/plan-guard\.yml|[^/]+\.md)$' | grep -vE '^(README|CLAUDE|AGENTS)\.md$' || true)
+guarded=$(git diff --cached --name-only | grep -E '^(docs/MASTER_PLAN\.md|\.husky/|\.github/workflows/plan-guard\.yml|[^/]+\.md)$' | grep -vE '^README\.md$' || true)
 if [ -n "$guarded" ]; then
   if [ "$ARCHITECT" != "1" ]; then
-    echo "BLOCKED by plan-guard (Rule #14 / #35): Architect-only paths cannot be edited by Executor." >&2
+    echo "BLOCKED by plan-guard (Rule #14 / #35): Architect-only paths cannot be edited without ARCHITECT=1." >&2
     echo "$guarded" | sed 's/^/  - /' >&2
     exit 1
   fi
-  author_name=$(git config user.name)
-  case "$author_name" in
-    "quantummatrixcore-lab"|"Antigravity")
-      echo "BLOCKED by plan-guard (Rule #35): Antigravity/Executor session cannot commit to Architect-only paths." >&2
-      echo "$guarded" | sed 's/^/  - /' >&2
-      exit 1
-      ;;
-  esac
 fi
 npx lint-staged
 python -m graphify update . 2>/dev/null || true

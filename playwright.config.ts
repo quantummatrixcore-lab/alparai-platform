@@ -10,8 +10,12 @@ export default defineConfig({
   snapshotDir: "./ops/visual-baseline",
   expect: {
     toHaveScreenshot: {
-      maxDiffPixelRatio: 0.05,
-      threshold: 0.2,
+      maxDiffPixelRatio: 0,
+      threshold: 0,
+    },
+    toMatchSnapshot: {
+      maxDiffPixelRatio: 0,
+      threshold: 0,
     },
   },
   use: {

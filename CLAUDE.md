@@ -79,3 +79,5 @@ pnpm db:migrate       # supabase migration up
 - **i18n routing**: `src/middleware.ts` rewrites `/{locale}/...`.
 - **Incidents**: `submitIncident` server action → PII Guardian → Supabase insert.
 - **Ratings**: K-BENCHMARK model scoring via `k_model_scores` MAT view.
+ 
+ 

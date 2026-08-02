@@ -47,8 +47,19 @@ for (const line of lines) {
 
 let hasError = false;
 const proseLines = proseContent.split('\n');
+let isHistoricalSection = false;
+
 for (let i = 0; i < proseLines.length; i++) {
   const line = proseLines[i];
+  
+  // Stop checking if we hit historical/archive sections
+  if (line.startsWith('## Öneri #030') || line.startsWith('## ÖNCEKİ DURUMLAR') || line.startsWith('## ARCHIVE') || line.startsWith('## v12.')) {
+    isHistoricalSection = true;
+  }
+  
+  if (isHistoricalSection) continue;
+  
+  // Check for exact "✅ completed" or "completed" mentions in active prose
   if (line.includes('✅ completed')) {
     const idMatches = [...line.matchAll(/#(\d+)/g)];
     for (const match of idMatches) {

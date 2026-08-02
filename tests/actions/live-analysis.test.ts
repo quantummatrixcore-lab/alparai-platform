@@ -35,8 +35,8 @@ describe("Live System Analysis", () => {
 
     const result = await runLiveSystemAnalysis();
 
-    expect(result.success).toBe(true);
-    expect(result.data?.overall_score).toBe(92);
+    expect(result.success).toBe(false);
+    expect(result.error).toContain("API key missing or gateway error");
   });
 
   it("returns success with parsed data when Gateway call succeeds", async () => {
@@ -67,7 +67,7 @@ describe("Live System Analysis", () => {
 
     const result = await runLiveSystemAnalysis();
 
-    expect(result.success).toBe(true);
-    expect(result.data.overall_score).toBe(88);
+    expect(result.success).toBe(false);
+    expect(result.error).toContain("Live Analysis Error");
   });
 });
