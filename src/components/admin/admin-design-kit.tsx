@@ -3,9 +3,23 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { ShieldCheck, Sparkles, Search, X } from "lucide-react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Sparkles, ShieldCheck, Zap, Inbox } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Logo } from "@/components/layout/logo";
+
+export function AdminContainer({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("mx-auto max-w-[1600px] space-y-8 p-4 sm:p-6 lg:p-8", className)}>
+      {children}
+    </div>
+  );
+}
 
 export function AdminPageHeader({
   icon,
@@ -17,7 +31,7 @@ export function AdminPageHeader({
   lastUpdated,
   className,
 }: {
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   title: string;
   subtitle?: string;
   action?: React.ReactNode;
@@ -27,40 +41,100 @@ export function AdminPageHeader({
   className?: string;
 }) {
   const t = useTranslations("admin");
+
   return (
-    <header className={cn("mb-8 flex flex-col gap-3", className)}>
+    <header
+      className={cn(
+        "from-bg-secondary via-bg-tertiary to-bg-elevated relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-r p-6 shadow-2xl backdrop-blur-xl",
+        className,
+      )}
+    >
+      <div className="bg-brand-500/10 absolute top-0 right-0 -mt-10 -mr-10 h-40 w-40 rounded-full blur-3xl" />
+      <div className="bg-accent-500/10 absolute bottom-0 left-1/3 -mb-10 h-40 w-40 rounded-full blur-3xl" />
+
       {/* Breadcrumb Navigation */}
       {breadcrumb && (
-        <nav className="text-fg-muted mb-1 flex items-center gap-1.5 text-xs">
+        <nav className="text-fg-muted relative z-10 mb-2 flex items-center gap-1.5 text-xs">
           {breadcrumb.map((item, index) => (
             <React.Fragment key={item.href}>
-              <Link href={item.href} className="hover:text-fg-primary transition-colors">
+              <Link
+                href={item.href}
+                className="hover:text-fg-primary font-medium transition-colors"
+              >
                 {item.label}
               </Link>
-              {index < breadcrumb.length - 1 && <span className="text-white/10">/</span>}
+              {index < breadcrumb.length - 1 && <span className="text-white/20">/</span>}
             </React.Fragment>
           ))}
         </nav>
       )}
 
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-fg-primary inline-flex items-center gap-2.5 text-2xl font-black tracking-tight">
-            {icon}
-            <span>{title}</span>
-            {badge && <span className="shrink-0">{badge}</span>}
-          </h1>
-          {subtitle && <p className="text-fg-muted mt-1 text-sm">{subtitle}</p>}
-          {lastUpdated && (
-            <p className="text-fg-muted mt-1.5 font-mono text-[10px]">
-              {t("last_updated")}
-              {lastUpdated}
-            </p>
-          )}
+      <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="border-brand-500/30 bg-brand-500/10 flex h-12 w-12 items-center justify-center rounded-2xl border shadow-[0_0_20px_rgba(168,85,247,0.2)]">
+            {icon ?? <Logo className="text-brand-400 h-7 w-7" />}
+          </div>
+
+          <div>
+            <h1 className="text-fg-primary inline-flex items-center gap-3 text-2xl font-extrabold tracking-tight">
+              <span>{title}</span>
+              {badge ? (
+                <span className="shrink-0">{badge}</span>
+              ) : (
+                <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-400">
+                  <ShieldCheck className="h-3 w-3" /> Protected
+                </span>
+              )}
+            </h1>
+            {subtitle && <p className="text-fg-muted mt-1 text-xs font-medium">{subtitle}</p>}
+            {lastUpdated && (
+              <p className="text-fg-muted mt-1 font-mono text-[10px]">
+                {t("last_updated")}: {lastUpdated}
+              </p>
+            )}
+          </div>
         </div>
-        {action && <div className="flex items-center gap-3">{action}</div>}
+
+        {action && <div className="relative z-10 flex items-center gap-3">{action}</div>}
       </div>
     </header>
+  );
+}
+
+export function AdminSectionCard({
+  title,
+  subtitle,
+  action,
+  children,
+  className,
+}: {
+  title?: string;
+  subtitle?: string;
+  action?: React.ReactNode;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "from-bg-secondary/90 to-bg-tertiary/90 relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b p-6 shadow-xl backdrop-blur-xl transition duration-300 hover:border-white/20",
+        className,
+      )}
+    >
+      {title && (
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-white/5 pb-4">
+          <div>
+            <h3 className="flex items-center gap-2 text-base font-bold tracking-tight text-white">
+              <Sparkles className="text-brand-400 h-4 w-4" />
+              {title}
+            </h3>
+            {subtitle && <p className="text-fg-muted mt-0.5 text-xs">{subtitle}</p>}
+          </div>
+          {action && <div>{action}</div>}
+        </div>
+      )}
+      {children}
+    </div>
   );
 }
 
@@ -90,11 +164,18 @@ export function MetricCard({
   const [isHovered, setIsHovered] = React.useState(false);
 
   const colorClasses = {
-    default: "text-fg-primary",
+    default: "text-white",
     success: "text-emerald-400",
     warning: "text-amber-400",
     danger: "text-rose-400",
   };
+
+  const borderGlow = {
+    default: "border-brand-500/20 hover:border-brand-500/40 shadow-brand-500/5",
+    success: "border-emerald-500/20 hover:border-emerald-500/40 shadow-emerald-500/5",
+    warning: "border-amber-500/20 hover:border-amber-500/40 shadow-amber-500/5",
+    danger: "border-rose-500/20 hover:border-rose-500/40 shadow-rose-500/5",
+  }[variant];
 
   const glowRgb = {
     default: "168,85,247",
@@ -113,12 +194,15 @@ export function MetricCard({
     <>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-fg-muted text-xs font-bold tracking-wide uppercase" title={tooltip}>
+          <p
+            className="text-fg-muted text-[11px] font-bold tracking-wider uppercase"
+            title={tooltip}
+          >
             {label}
           </p>
           <p
             className={cn(
-              "mt-2.5 font-mono text-3xl font-black tracking-tight",
+              "mt-2 font-mono text-3xl font-extrabold tracking-tight",
               colorClasses[variant],
             )}
           >
@@ -126,21 +210,21 @@ export function MetricCard({
           </p>
         </div>
         {icon && (
-          <div className="text-fg-secondary rounded-lg border border-white/5 bg-white/5 p-2">
+          <div className="rounded-xl border border-white/10 bg-white/5 p-2.5 text-white/80 shadow-inner">
             {icon}
           </div>
         )}
       </div>
 
       {(delta || sparkline) && (
-        <div className="mt-4 flex items-center justify-between border-t border-white/[0.03] pt-3.5">
+        <div className="mt-4 flex items-center justify-between border-t border-white/5 pt-3">
           {delta && (
             <span
               className={cn(
-                "inline-flex items-center gap-1 rounded px-2 py-0.5 font-mono text-xs font-bold",
+                "inline-flex items-center gap-1 rounded-md px-2 py-0.5 font-mono text-xs font-bold",
                 delta.isPositive
-                  ? "bg-success-500/10 text-success-400 border-success-500/20 border"
-                  : "bg-danger-500/10 text-danger-400 border-danger-500/20 border",
+                  ? "border border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
+                  : "border border-rose-500/20 bg-rose-500/10 text-rose-400",
               )}
             >
               {delta.isPositive ? "+" : ""}
@@ -153,8 +237,8 @@ export function MetricCard({
               <path
                 d={`M ${sparkline.map((val, idx) => `${(idx / (sparkline.length - 1)) * 100} ${30 - val}`).join(" L ")}`}
                 fill="none"
-                stroke={delta ? (delta.isPositive ? "#27ae60" : "#e63946") : "#a855f7"}
-                strokeWidth="1.5"
+                stroke={delta ? (delta.isPositive ? "#10b981" : "#f43f5e") : "#c084fc"}
+                strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
@@ -166,10 +250,9 @@ export function MetricCard({
   );
 
   const classes = cn(
-    "bg-bg-secondary border-border-subtle relative overflow-hidden rounded-xl border p-6 transition-all duration-300",
-    href
-      ? "hover:border-brand-500/40 cursor-pointer hover:bg-neutral-900/40 hover:shadow-[0_0_20px_rgba(168,85,247,0.05)]"
-      : "",
+    "from-bg-secondary/90 via-bg-tertiary/90 to-bg-elevated/90 relative overflow-hidden rounded-2xl border bg-gradient-to-br p-5 shadow-xl backdrop-blur-xl transition-all duration-300",
+    borderGlow,
+    href ? "cursor-pointer hover:scale-[1.02]" : "",
     className,
   );
 
@@ -177,7 +260,7 @@ export function MetricCard({
     return (
       <Link href={href} className={classes}>
         {cardContent}
-        <ArrowUpRight className="text-fg-muted absolute top-3 right-3 h-3 w-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        <ArrowUpRight className="text-fg-muted absolute top-3 right-3 h-4 w-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       </Link>
     );
   }
@@ -194,97 +277,11 @@ export function MetricCard({
         <div
           className="pointer-events-none absolute -inset-px transition-opacity duration-500"
           style={{
-            background: `radial-gradient(400px circle at ${coords.x}px ${coords.y}px, rgba(${glowRgb},0.12), transparent 70%)`,
+            background: `radial-gradient(400px circle at ${coords.x}px ${coords.y}px, rgba(${glowRgb},0.15), transparent 70%)`,
           }}
         />
       )}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700"
-        style={{
-          opacity: isHovered ? 1 : 0,
-          background:
-            "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.02) 45%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.02) 55%, transparent 60%)",
-          backgroundSize: "200% 100%",
-          animation: isHovered ? "shimmer 2s infinite" : "none",
-        }}
-      />
-      <style>{`@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }`}</style>
       {cardContent}
-    </div>
-  );
-}
-
-export function GlowCard({
-  children,
-  glowColor = "success",
-  className,
-}: {
-  children: React.ReactNode;
-  glowColor?: "success" | "brand" | "danger" | "warning" | "accent";
-  className?: string;
-}) {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const [coords, setCoords] = React.useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = React.useState(false);
-
-  const glowClasses = {
-    brand: "shadow-[0_0_30px_rgba(168,85,247,0.06)] border-brand-500/20 hover:border-brand-500/35",
-    accent:
-      "shadow-[0_0_30px_rgba(6,182,212,0.06)] border-accent-500/20 hover:border-accent-500/35",
-    success:
-      "shadow-[0_0_25px_rgba(39,174,96,0.06)] border-success-500/20 hover:border-success-500/35",
-    danger:
-      "shadow-[0_0_25px_rgba(230,57,70,0.06)] border-danger-500/20 hover:border-danger-500/35",
-    warning:
-      "shadow-[0_0_25px_rgba(243,156,18,0.06)] border-warning-500/20 hover:border-warning-500/35",
-  };
-
-  const glowRgb = {
-    brand: "168,85,247",
-    accent: "6,182,212",
-    success: "39,174,96",
-    danger: "230,57,70",
-    warning: "243,156,18",
-  }[glowColor];
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    setCoords({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-  };
-
-  return (
-    <div
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className={cn(
-        "bg-bg-secondary relative overflow-hidden rounded-xl border p-6 transition-all duration-300 hover:scale-[1.002]",
-        glowClasses[glowColor],
-        className,
-      )}
-    >
-      {isHovered && (
-        <div
-          className="pointer-events-none absolute -inset-px transition-opacity duration-500"
-          style={{
-            background: `radial-gradient(500px circle at ${coords.x}px ${coords.y}px, rgba(${glowRgb},0.08), transparent 70%)`,
-          }}
-        />
-      )}
-      <div
-        className="pointer-events-none absolute inset-0 transition-opacity duration-700"
-        style={{
-          opacity: isHovered ? 1 : 0,
-          background:
-            "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.015) 45%, rgba(255,255,255,0.04) 50%, rgba(255,255,255,0.015) 55%, transparent 60%)",
-          backgroundSize: "200% 100%",
-          animation: isHovered ? "shimmer 2.5s infinite" : "none",
-        }}
-      />
-      <style>{`@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }`}</style>
-      {children}
     </div>
   );
 }
@@ -292,338 +289,66 @@ export function GlowCard({
 export function ZeroCostBanner({
   services,
   totalSaved,
-  locale = "en",
+  locale,
 }: {
-  services: { name: string; monthlyCost: number; freeLimit: string; usedPercent?: number }[];
+  services: unknown;
   totalSaved: string;
-  locale?: string;
+  locale: string;
 }) {
-  const isTr = locale === "tr";
+  void services;
+  void locale;
   return (
-    <GlowCard glowColor="success" className="border-success-500/20 relative overflow-hidden">
-      {/* Background subtle glowing accent */}
-      <div className="bg-success-500/10 pointer-events-none absolute -top-16 -right-16 h-32 w-32 rounded-full blur-3xl" />
-
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex items-start gap-4">
-          <div className="bg-success-500/10 text-success-400 border-success-500/20 rounded-lg border p-3 shadow-[0_0_15px_rgba(39,174,96,0.15)]">
-            <ShieldCheck className="h-6 w-6" />
+    <div className="via-bg-secondary to-bg-tertiary relative overflow-hidden rounded-2xl border border-emerald-500/30 bg-gradient-to-r from-emerald-950/40 p-6 shadow-2xl backdrop-blur-xl">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="rounded-xl border border-emerald-500/40 bg-emerald-500/20 p-3 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+            <Zap className="h-6 w-6" />
           </div>
           <div>
-            <h3 className="text-md flex items-center gap-1.5 font-bold tracking-wider text-white uppercase">
-              {isTr ? "Sıfır Maliyet Kalkanı Aktif" : "Zero Cost Shield Active"}
-              <Sparkles className="text-success-400 h-4 w-4 animate-pulse" />
-            </h3>
-            <p className="text-fg-muted mt-1 text-xs sm:text-sm">
-              {isTr
-                ? "Tüm platform altyapısı ücretsiz limitler dahilinde optimize edilmiştir."
-                : "All platform infrastructure is optimized to run fully within free tiers."}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-4 lg:text-right">
-          <div className="rounded-xl border border-white/5 bg-neutral-950/40 px-6 py-3 shadow-[inset_0_0_10px_rgba(0,0,0,0.3)]">
-            <p className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
-              {isTr ? "Toplam Aylık Tasarruf" : "Total Monthly Savings"}
-            </p>
-            <p className="text-success-400 mt-1 font-mono text-xl font-black drop-shadow-[0_0_8px_rgba(39,174,96,0.3)] sm:text-2xl">
-              {totalSaved}
+            <h3 className="text-base font-bold text-white">Zero Token Cost Tier Active</h3>
+            <p className="text-xs text-emerald-300">
+              Free open-source & provider tier allocation active ({totalSaved} saved)
             </p>
           </div>
         </div>
       </div>
-
-      {/* Mini services cost bars */}
-      <div className="mt-6 grid grid-cols-2 gap-4 border-t border-white/5 pt-5 sm:grid-cols-3 md:grid-cols-6">
-        {services.map((svc) => (
-          <div
-            key={svc.name}
-            className="space-y-1 rounded-lg border border-white/[0.02] bg-neutral-950/20 p-2.5"
-          >
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-fg-secondary truncate text-[10px] font-bold">{svc.name}</span>
-              <span className="text-success-400 bg-success-500/10 border-success-500/20 rounded border px-1.5 py-0.5 font-mono text-[9px] font-bold">
-                $0
-              </span>
-            </div>
-            <div className="text-fg-muted flex items-center justify-between text-[9px]">
-              <span>{svc.freeLimit}</span>
-              {svc.usedPercent !== undefined && <span>{svc.usedPercent}%</span>}
-            </div>
-            {svc.usedPercent !== undefined && (
-              <div className="h-1 w-full overflow-hidden rounded-full bg-white/5">
-                <div
-                  className="bg-success-500 h-full rounded-full"
-                  style={{ width: `${Math.min(svc.usedPercent, 100)}%` }}
-                />
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </GlowCard>
-  );
-}
-
-export function StatGrid({ children }: { children: React.ReactNode }) {
-  return <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">{children}</div>;
-}
-
-export function TabNav({
-  tabs,
-  active,
-  onChange,
-  className,
-}: {
-  tabs: { label: string; value: string; count?: number }[];
-  active: string;
-  onChange: (value: string) => void;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn("border-border-subtle flex gap-4 overflow-x-auto border-b pb-px", className)}
-    >
-      {tabs.map((tab) => {
-        const isActive = tab.value === active;
-        return (
-          <button
-            key={tab.value}
-            onClick={() => onChange(tab.value)}
-            className={cn(
-              "relative flex items-center gap-1.5 pb-3 text-sm font-semibold whitespace-nowrap transition-all duration-200 outline-none select-none",
-              isActive
-                ? "text-brand-400 border-brand-500 border-b-2 font-bold"
-                : "text-fg-muted hover:text-fg-primary",
-            )}
-          >
-            {tab.label}
-            {tab.count !== undefined && (
-              <span
-                className={cn(
-                  "rounded-full px-1.5 py-0.5 font-mono text-[10px] font-bold transition-colors duration-200",
-                  isActive
-                    ? "bg-brand-500/15 text-brand-300 border-brand-500/30 border"
-                    : "bg-bg-tertiary text-fg-muted border-border-subtle border",
-                )}
-              >
-                {tab.count}
-              </span>
-            )}
-          </button>
-        );
-      })}
     </div>
-  );
-}
-
-export function EmptyState({
-  icon,
-  title,
-  description,
-  action,
-  className,
-}: {
-  icon?: React.ReactNode;
-  title: string;
-  description: string;
-  action?: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "flex flex-col items-center justify-center rounded-xl border border-dashed border-white/10 bg-neutral-950/10 p-12 text-center",
-        className,
-      )}
-    >
-      {icon && <div className="text-fg-muted mb-4">{icon}</div>}
-      <h3 className="text-md font-bold tracking-wide text-white uppercase">{title}</h3>
-      <p className="text-fg-muted mt-1.5 max-w-sm text-sm">{description}</p>
-      {action && <div className="mt-5">{action}</div>}
-    </div>
-  );
-}
-
-export function FilterBar({
-  value,
-  onChange,
-  placeholder = "Search...",
-  filters,
-  activeFilter,
-  onFilterChange,
-  className,
-}: {
-  value: string;
-  onChange: (val: string) => void;
-  placeholder?: string;
-  filters?: { label: string; value: string }[];
-  activeFilter?: string;
-  onFilterChange?: (val: string) => void;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "flex flex-col items-stretch justify-between gap-4 sm:flex-row sm:items-center",
-        className,
-      )}
-    >
-      {/* Search Input */}
-      <div className="relative max-w-md flex-1">
-        <span className="text-fg-muted pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-          <Search className="h-4 w-4" />
-        </span>
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          className="border-border-subtle placeholder-fg-muted focus:border-brand-500 w-full rounded-lg border bg-neutral-950/40 py-2 pr-10 pl-10 text-sm text-white transition-colors focus:outline-none"
-        />
-        {value && (
-          <button
-            onClick={() => onChange("")}
-            className="text-fg-muted absolute inset-y-0 right-0 flex items-center pr-3 hover:text-white"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        )}
-      </div>
-
-      {/* Filter Chips */}
-      {filters && activeFilter && onFilterChange && (
-        <div className="flex flex-wrap gap-2">
-          {filters.map((f) => {
-            const isSelected = f.value === activeFilter;
-            return (
-              <button
-                key={f.value}
-                onClick={() => onFilterChange(f.value)}
-                className={cn(
-                  "rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all duration-150 select-none",
-                  isSelected
-                    ? "bg-brand-500/15 border-brand-500/30 text-brand-300 shadow-[0_0_10px_rgba(168,85,247,0.15)]"
-                    : "border-border-subtle text-fg-muted bg-neutral-950/20 hover:text-white",
-                )}
-              >
-                {f.label}
-              </button>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
-}
-
-export function AdminTable({
-  columns,
-  children,
-  className,
-}: {
-  columns: string[];
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={cn("overflow-x-auto", className)}>
-      <table className="w-full text-left text-sm">
-        <thead>
-          <tr className="border-border-subtle text-fg-muted border-b bg-neutral-950/20 text-xs font-bold tracking-wider uppercase">
-            {columns.map((c, i) => (
-              <th key={i} className="p-4 first:pl-6 last:pr-6">
-                {c}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-white/5">{children}</tbody>
-      </table>
-    </div>
-  );
-}
-
-export function AdminSectionCard({
-  title,
-  children,
-  className,
-}: {
-  title?: string;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "bg-bg-secondary border-border-subtle overflow-hidden rounded-xl border",
-        className,
-      )}
-    >
-      {title && (
-        <div className="border-border-subtle border-b px-6 py-4">
-          <h2 className="text-fg-primary text-sm font-bold tracking-wide uppercase">{title}</h2>
-        </div>
-      )}
-      {children}
-    </div>
-  );
-}
-
-export function AdminContainer({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={cn("mx-auto w-full space-y-8 px-4 py-10 sm:px-6 lg:px-8", className)}>
-      {children}
-    </div>
-  );
-}
-
-export function SkeletonLoader({
-  className,
-  height = "h-64",
-}: {
-  className?: string;
-  height?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "animate-pulse rounded-xl border border-white/10 bg-white/5",
-        height,
-        className,
-      )}
-    />
   );
 }
 
 export function EmptyStateIllustration({
   title,
   description,
-  icon: Icon,
-  className,
+  action,
+  icon: IconProp,
 }: {
   title: string;
-  description?: string;
-  icon?: React.ElementType;
-  className?: string;
+  description: string;
+  action?: React.ReactNode;
+  icon?: React.ElementType | React.ReactNode;
 }) {
+  const renderIcon = () => {
+    if (!IconProp) return <Inbox className="h-8 w-8" />;
+    if (
+      typeof IconProp === "function" ||
+      (typeof IconProp === "object" && IconProp !== null && "render" in IconProp)
+    ) {
+      const Comp = IconProp as React.ElementType;
+      return <Comp className="h-8 w-8" />;
+    }
+    return IconProp;
+  };
+
   return (
-    <div
-      className={cn(
-        "flex flex-col items-center justify-center rounded-xl border border-dashed border-white/10 bg-white/5 p-8 text-center",
-        className,
-      )}
-    >
-      {Icon && <Icon className="text-fg-muted/50 mb-4 h-10 w-10" />}
-      <h3 className="text-fg-primary text-sm font-bold tracking-wide">{title}</h3>
-      {description && <p className="text-fg-muted mt-2 max-w-sm text-sm">{description}</p>}
+    <div className="flex flex-col items-center justify-center space-y-4 rounded-2xl border border-white/5 bg-black/20 p-8 text-center">
+      <div className="text-fg-muted rounded-2xl border border-white/10 bg-white/5 p-4">
+        {renderIcon()}
+      </div>
+      <div>
+        <h4 className="text-sm font-bold text-white">{title}</h4>
+        <p className="text-fg-muted mt-1 max-w-sm text-xs">{description}</p>
+      </div>
+      {action && <div>{action}</div>}
     </div>
   );
 }

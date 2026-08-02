@@ -638,8 +638,21 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
         )}
       >
         <div className="flex h-16 shrink-0 items-center justify-between border-b border-white/5 px-6">
-          <Link href="/admin" className="flex items-center gap-3" onClick={() => setIsOpen(false)}>
-            {isCollapsed ? <Logo size="sm" /> : <Wordmark className="text-xl" />}
+          <Link
+            href="/admin"
+            className="group flex items-center gap-3"
+            onClick={() => setIsOpen(false)}
+          >
+            {isCollapsed ? (
+              <Logo size="sm" />
+            ) : (
+              <div className="flex items-center gap-2.5">
+                <div className="border-brand-500/30 bg-brand-500/10 flex h-8 w-8 items-center justify-center rounded-xl border shadow-[0_0_15px_rgba(168,85,247,0.25)] transition duration-300 group-hover:scale-105">
+                  <Logo size="sm" />
+                </div>
+                <Wordmark className="text-xl tracking-tight" />
+              </div>
+            )}
           </Link>
           <button
             onClick={() => setIsOpen(false)}

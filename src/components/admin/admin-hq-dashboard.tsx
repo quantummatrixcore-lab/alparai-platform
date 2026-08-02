@@ -96,28 +96,45 @@ function HeroMetricCard({
   value,
   variant = "default",
   suffix,
+  icon,
 }: {
   label: string;
   value: number | string | React.ReactNode;
   variant?: "default" | "success" | "warning" | "danger";
   suffix?: string;
+  icon?: React.ReactNode;
 }) {
   const variantClass: Record<string, string> = {
-    default: "border-white/10 text-white",
-    success: "border-emerald-500/30 text-emerald-400",
-    warning: "border-amber-500/30 text-amber-400",
-    danger: "border-red-500/30 text-red-400",
+    default:
+      "border-brand-500/20 bg-gradient-to-br from-bg-secondary/90 via-bg-tertiary/90 to-brand-950/20 text-white shadow-[0_0_20px_rgba(168,85,247,0.05)] hover:border-brand-500/40",
+    success:
+      "border-emerald-500/20 bg-gradient-to-br from-bg-secondary/90 via-bg-tertiary/90 to-emerald-950/20 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.05)] hover:border-emerald-500/40",
+    warning:
+      "border-amber-500/20 bg-gradient-to-br from-bg-secondary/90 via-bg-tertiary/90 to-amber-950/20 text-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.05)] hover:border-amber-500/40",
+    danger:
+      "border-rose-500/20 bg-gradient-to-br from-bg-secondary/90 via-bg-tertiary/90 to-rose-950/20 text-rose-400 shadow-[0_0_20px_rgba(244,63,94,0.05)] hover:border-rose-500/40",
   };
 
   return (
     <div
-      className={`rounded-xl border bg-black/40 p-5 backdrop-blur-sm transition-all hover:bg-white/5 ${variantClass[variant]}`}
+      className={`relative overflow-hidden rounded-2xl border p-5 backdrop-blur-xl transition-all duration-300 hover:scale-[1.02] ${variantClass[variant]}`}
     >
-      <p className="text-fg-muted mb-2 text-xs font-semibold tracking-widest uppercase">{label}</p>
-      <p className="text-3xl font-black tabular-nums">
-        {typeof value === "number" ? <AnimatedCounter value={value} /> : value}
-        {suffix && <span className="ml-1 text-lg font-medium opacity-70">{suffix}</span>}
-      </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <p className="text-fg-muted mb-1 text-[10px] font-bold tracking-wider uppercase">
+            {label}
+          </p>
+          <div className="font-mono text-3xl font-extrabold tracking-tight tabular-nums">
+            {typeof value === "number" ? <AnimatedCounter value={value} /> : value}
+            {suffix && <span className="ml-1 text-sm font-semibold opacity-80">{suffix}</span>}
+          </div>
+        </div>
+        {icon && (
+          <div className="rounded-xl border border-white/10 bg-white/5 p-2 text-white/80 shadow-inner">
+            {icon}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -136,20 +153,20 @@ function SectionCard({
   const t = useTranslations("admin");
   return (
     <div
-      className={`rounded-xl border border-white/10 bg-black/40 p-6 backdrop-blur-sm ${className ?? ""}`}
+      className={`from-bg-secondary/90 to-bg-tertiary/90 relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b p-6 shadow-xl backdrop-blur-xl transition-all duration-300 hover:border-white/20 ${className ?? ""}`}
     >
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="flex items-center gap-2 text-sm font-bold tracking-wide text-white uppercase">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+      <div className="mb-4 flex items-center justify-between border-b border-white/5 pb-3">
+        <h3 className="flex items-center gap-2 text-sm font-bold tracking-tight text-white">
+          <Sparkles className="text-brand-400 h-4 w-4" />
           {title}
-        </h2>
+        </h3>
         {href && (
           <Link
             href={href}
-            className="text-fg-muted flex items-center gap-1 text-xs transition-colors hover:text-white"
+            className="group text-brand-400 hover:text-brand-300 flex items-center gap-1 text-[11px] font-bold transition"
           >
-            {t("view_all")}
-            <ArrowUpRight className="h-3 w-3" />
+            <span>{t("view_all")}</span>
+            <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
         )}
       </div>
@@ -537,31 +554,45 @@ export function AdminHQDashboard({
           label={t("ba_ar_skoru")}
           value={startupHealthDisplay}
           variant={startupHealthVariant}
+          icon={<Target className="text-brand-400 h-5 w-5" />}
         />
-        <HeroMetricCard label={t("metric_incident_volume")} value={totalIncidents} />
+        <HeroMetricCard
+          label={t("metric_incident_volume")}
+          value={totalIncidents}
+          icon={<ShieldAlert className="h-5 w-5 text-sky-400" />}
+        />
         <HeroMetricCard
           label={t("metric_queue_load")}
           value={pendingQueue}
           variant={queueVariant}
+          icon={<Clock className="h-5 w-5 text-amber-400" />}
         />
-        <HeroMetricCard label={t("users")} value={totalUsers} variant="success" />
+        <HeroMetricCard
+          label={t("users")}
+          value={totalUsers}
+          variant="success"
+          icon={<Users className="h-5 w-5 text-emerald-400" />}
+        />
         <HeroMetricCard
           label={t("plan_completion")}
           value={planPercent}
           suffix="%"
           variant={planPercent >= 80 ? "success" : planPercent >= 50 ? "warning" : "default"}
+          icon={<CheckCircle2 className="h-5 w-5 text-purple-400" />}
         />
         <HeroMetricCard
           label={t("yat_r_m_hibe_d_n_m_oran")}
           value={grantConversionRate}
           suffix="%"
           variant={grantConversionVariant}
+          icon={<DollarSign className="h-5 w-5 text-pink-400" />}
         />
         <HeroMetricCard
           label={t("system_health_label")}
           value={systemHealth}
           suffix="%"
           variant={healthGaugeVariant}
+          icon={<Activity className="h-5 w-5 text-cyan-400" />}
         />
       </div>
 
