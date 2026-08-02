@@ -129,6 +129,8 @@ export const MATH_LOGIC_CHAIN: readonly GatewayModel[] = [
   { id: "deepseek-ai/deepseek-v3", provider: "nvidia", tier: "free", maxTokens: 4096 },
   { id: "deepseek/deepseek-chat", provider: "openrouter", tier: "free", maxTokens: 4096 },
   { id: "deepseek/deepseek-chat", provider: "openrouter", tier: "premium", maxTokens: 4096 },
+  { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
+  { id: "command-r", provider: "cohere", tier: "free", maxTokens: 4096 },
 ] as const;
 
 // 2. Creative, Marketing, Social Media Copy (Claude / Llama Optimized)
@@ -137,6 +139,13 @@ export const CREATIVE_COPY_CHAIN: readonly GatewayModel[] = [
   { id: "meta-llama/llama-3.3-70b:free", provider: "openrouter", tier: "free", maxTokens: 4096 },
   { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 4096 },
   { id: "anthropic/claude-3.5-sonnet", provider: "openrouter", tier: "premium", maxTokens: 4096 },
+  {
+    id: "meta-llama/Llama-3.3-70B-Instruct",
+    provider: "huggingface",
+    tier: "free",
+    maxTokens: 4096,
+  },
+  { id: "blackboxai", provider: "blackbox", tier: "free", maxTokens: 4096 },
 ] as const;
 
 // 3. High-Risk Audit, Legal, Complex Reasoning (GPT-4o / Claude 3.5 Sonnet)
@@ -152,6 +161,13 @@ export const RISK_AUDIT_CHAIN: readonly GatewayModel[] = [
   { id: "openai/gpt-4o", provider: "openrouter", tier: "premium", maxTokens: 4096 },
   { id: "anthropic/claude-3.5-sonnet", provider: "openrouter", tier: "premium", maxTokens: 4096 },
   { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },
+  { id: "command-r", provider: "cohere", tier: "free", maxTokens: 4096 },
+  {
+    id: "meta-llama/Llama-3.3-70B-Instruct",
+    provider: "huggingface",
+    tier: "free",
+    maxTokens: 4096,
+  },
 ] as const;
 
 // 4. Fast Triage, Summarization, Classification (Qwen / Llama / OpenCode Free Optimized)
@@ -166,6 +182,15 @@ export const FAST_TRIAGE_CHAIN: readonly GatewayModel[] = [
     tier: "free",
     maxTokens: 4096,
   },
+  { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 4096 },
+  { id: "blackboxai", provider: "blackbox", tier: "free", maxTokens: 4096 },
+  {
+    id: "meta-llama/Llama-3.3-70B-Instruct",
+    provider: "huggingface",
+    tier: "free",
+    maxTokens: 4096,
+  },
+  { id: "command-r", provider: "cohere", tier: "free", maxTokens: 4096 },
 ] as const;
 
 // Doktrin #044: OpenCode Zen Free & Nvidia NIM Model Pools
@@ -176,6 +201,14 @@ export const OPENCODE_FREE_MODELS: readonly GatewayModel[] = [
   { id: "opencode/ling-3.0-flash-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
   { id: "opencode/mimo-v2.5-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
   { id: "opencode/north-mini-code-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+  { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 4096 },
+  { id: "blackboxai", provider: "blackbox", tier: "free", maxTokens: 4096 },
+  {
+    id: "meta-llama/Llama-3.3-70B-Instruct",
+    provider: "huggingface",
+    tier: "free",
+    maxTokens: 4096,
+  },
 ] as const;
 
 export const NVIDIA_NIM_MODELS: readonly GatewayModel[] = [

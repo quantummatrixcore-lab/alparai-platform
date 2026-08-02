@@ -61,6 +61,9 @@ describe("selectModelWithEscalation", () => {
       "opencode/ling-3.0-flash-free",
       "opencode/mimo-v2.5-free",
       "opencode/north-mini-code-free",
+      "gemini-1.5-flash",
+      "blackboxai",
+      "meta-llama/Llama-3.3-70B-Instruct",
     ]);
   });
 
@@ -76,6 +79,9 @@ describe("selectModelWithEscalation", () => {
       "opencode/ling-3.0-flash-free",
       "opencode/mimo-v2.5-free",
       "opencode/north-mini-code-free",
+      "gemini-1.5-flash",
+      "blackboxai",
+      "meta-llama/Llama-3.3-70B-Instruct",
     ]);
   });
 
@@ -88,6 +94,9 @@ describe("selectModelWithEscalation", () => {
         "opencode/ling-3.0-flash-free",
         "opencode/mimo-v2.5-free",
         "opencode/north-mini-code-free",
+        "gemini-1.5-flash",
+        "blackboxai",
+        "meta-llama/Llama-3.3-70B-Instruct",
       ],
     });
 
@@ -123,6 +132,9 @@ describe("selectModelWithEscalation — gateway integration contract", () => {
         "opencode/ling-3.0-flash-free",
         "opencode/mimo-v2.5-free",
         "opencode/north-mini-code-free",
+        "gemini-1.5-flash",
+        "blackboxai",
+        "meta-llama/Llama-3.3-70B-Instruct",
       ],
     });
 

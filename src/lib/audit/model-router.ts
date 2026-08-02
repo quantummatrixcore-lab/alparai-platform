@@ -38,6 +38,14 @@ function getEscalationFreeTier(): ModelChainItem[] {
     { id: "opencode/ling-3.0-flash-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
     { id: "opencode/mimo-v2.5-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
     { id: "opencode/north-mini-code-free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+    { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 4096 },
+    { id: "blackboxai", provider: "blackbox", tier: "free", maxTokens: 4096 },
+    {
+      id: "meta-llama/Llama-3.3-70B-Instruct",
+      provider: "huggingface",
+      tier: "free",
+      maxTokens: 4096,
+    },
   ];
 }
 
