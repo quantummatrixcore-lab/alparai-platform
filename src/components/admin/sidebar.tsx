@@ -134,6 +134,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       icon: Import,
       active: pathname.startsWith("/admin/import"),
     },
+    {
+      href: "/admin/takedown",
+      label: t("nav_takedown") || "Takedowns",
+      icon: ShieldAlert,
+      active: pathname.startsWith("/admin/takedown"),
+    },
   ];
 
   const intelligenceItems = [
@@ -184,6 +190,24 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       label: t("autopilot"),
       icon: Cpu,
       active: pathname.startsWith("/admin/autopilot"),
+    },
+    {
+      href: "/admin/ai-orchestrator",
+      label: t("nav_ai_orchestrator") || "AI Orchestrator",
+      icon: BrainCircuit,
+      active: pathname.startsWith("/admin/ai-orchestrator"),
+    },
+    {
+      href: "/admin/expert-analysis",
+      label: t("nav_expert_analysis") || "Expert Analysis",
+      icon: Sparkles,
+      active: pathname.startsWith("/admin/expert-analysis"),
+    },
+    {
+      href: "/admin/dual-channel-scoring",
+      label: t("nav_dual_channel") || "Dual Channel",
+      icon: Activity,
+      active: pathname.startsWith("/admin/dual-channel-scoring"),
     },
     {
       href: "/admin/innovations",
@@ -394,6 +418,48 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       label: t("nav_crons"),
       icon: Clock,
       active: pathname.startsWith("/admin/crons"),
+    },
+    {
+      href: "/admin/cron-health",
+      label: t("nav_cron_health") || "Cron Health",
+      icon: Activity,
+      active: pathname.startsWith("/admin/cron-health"),
+    },
+    {
+      href: "/admin/startup-health",
+      label: t("nav_startup_health") || "Startup Health",
+      icon: Activity,
+      active: pathname.startsWith("/admin/startup-health"),
+    },
+    {
+      href: "/admin/api-keys",
+      label: t("nav_api_keys") || "API Keys",
+      icon: Lock,
+      active: pathname.startsWith("/admin/api-keys"),
+    },
+    {
+      href: "/admin/providers",
+      label: t("nav_ai_providers") || "AI Providers",
+      icon: Cpu,
+      active: pathname.startsWith("/admin/providers"),
+    },
+    {
+      href: "/admin/settings",
+      label: t("nav_settings") || "Settings",
+      icon: Settings,
+      active: pathname.startsWith("/admin/settings"),
+    },
+    {
+      href: "/admin/codebase-hygiene",
+      label: t("nav_codebase_hygiene") || "Codebase Hygiene",
+      icon: Shield,
+      active: pathname.startsWith("/admin/codebase-hygiene"),
+    },
+    {
+      href: "/admin/modular-architecture",
+      label: t("nav_modular_arch") || "Modular Arch.",
+      icon: Grid2X2,
+      active: pathname.startsWith("/admin/modular-architecture"),
     },
   ];
 

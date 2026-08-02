@@ -128,7 +128,7 @@ export const SUPREME_COURT_CHAIN: readonly GatewayModel[] = [
 export const MATH_LOGIC_CHAIN: readonly GatewayModel[] = [
   { id: "deepseek-ai/deepseek-v3", provider: "nvidia", tier: "free", maxTokens: 4096 },
   { id: "deepseek/deepseek-chat", provider: "openrouter", tier: "free", maxTokens: 4096 },
-  { id: "deepseek/deepseek-chat", provider: "deepseek", tier: "premium", maxTokens: 4096 },
+  { id: "deepseek/deepseek-chat", provider: "openrouter", tier: "premium", maxTokens: 4096 },
 ] as const;
 
 // 2. Creative, Marketing, Social Media Copy (Claude / Llama Optimized)

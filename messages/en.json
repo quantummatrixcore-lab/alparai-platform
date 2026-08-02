@@ -2687,7 +2687,17 @@
     "kurum_grantor": "Kurum / Grantor",
     "kategori_category": "Kategori / Category",
     "fit_score": "Fit Score",
-    "url": "URL"
+    "url": "URL",
+    "nav_takedown": "Takedowns",
+    "nav_ai_orchestrator": "AI Orchestrator",
+    "nav_expert_analysis": "Expert Analysis",
+    "nav_dual_channel": "Dual Channel Scoring",
+    "nav_cron_health": "Cron Health",
+    "nav_startup_health": "Startup Health",
+    "nav_api_keys": "API Keys",
+    "nav_settings": "Settings",
+    "nav_codebase_hygiene": "Codebase Hygiene",
+    "nav_modular_arch": "Modular Architecture"
   },
   "footer": {
     "tagline": "Where the world holds AI accountable.",

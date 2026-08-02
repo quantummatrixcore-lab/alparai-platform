@@ -51,6 +51,10 @@ import {
   Clock,
   ArrowUpRight,
   BookOpen,
+  Settings,
+  BrainCircuit,
+  ShieldAlert,
+  Lock,
 } from "lucide-react";
 import { AreaGradient } from "@/components/ui/chart-gradient";
 import { CHART_COLORS } from "@/lib/utils/chart-colors";
@@ -326,6 +330,66 @@ export function AdminHQDashboard({
       group: t("group_system"),
     },
     { href: "/admin/crons", label: t("nav_cron_jobs"), icon: Clock, group: t("group_system") },
+    {
+      href: "/admin/takedown",
+      label: t("nav_takedown") || "Takedowns",
+      icon: ShieldAlert,
+      group: t("group_operations"),
+    },
+    {
+      href: "/admin/ai-orchestrator",
+      label: t("nav_ai_orchestrator") || "AI Orchestrator",
+      icon: BrainCircuit,
+      group: t("group_intelligence"),
+    },
+    {
+      href: "/admin/expert-analysis",
+      label: t("nav_expert_analysis") || "Expert Analysis",
+      icon: Sparkles,
+      group: t("group_intelligence"),
+    },
+    {
+      href: "/admin/dual-channel-scoring",
+      label: t("nav_dual_channel") || "Dual Channel",
+      icon: Activity,
+      group: t("group_intelligence"),
+    },
+    {
+      href: "/admin/cron-health",
+      label: t("nav_cron_health") || "Cron Health",
+      icon: Activity,
+      group: t("group_system"),
+    },
+    {
+      href: "/admin/startup-health",
+      label: t("nav_startup_health") || "Startup Health",
+      icon: Activity,
+      group: t("group_system"),
+    },
+    {
+      href: "/admin/api-keys",
+      label: t("nav_api_keys") || "API Keys",
+      icon: Lock,
+      group: t("group_system"),
+    },
+    {
+      href: "/admin/settings",
+      label: t("nav_settings") || "Settings",
+      icon: Settings,
+      group: t("group_system"),
+    },
+    {
+      href: "/admin/codebase-hygiene",
+      label: t("nav_codebase_hygiene") || "Codebase Hygiene",
+      icon: Shield,
+      group: t("group_system"),
+    },
+    {
+      href: "/admin/modular-architecture",
+      label: t("nav_modular_arch") || "Modular Arch.",
+      icon: Grid2X2,
+      group: t("group_system"),
+    },
   ];
 
   // Map translations to colors

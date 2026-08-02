@@ -2687,7 +2687,17 @@
     "kurum_grantor": "Kurum / Grantor",
     "kategori_category": "Kategori / Category",
     "fit_score": "Fit Score",
-    "url": "URL"
+    "url": "URL",
+    "nav_takedown": "Kaldırma Talepleri",
+    "nav_ai_orchestrator": "AI Orkestratör",
+    "nav_expert_analysis": "Uzman Analizi",
+    "nav_dual_channel": "Çift Kanallı Skorlama",
+    "nav_cron_health": "Cron Sağlığı",
+    "nav_startup_health": "Sistem Sağlığı",
+    "nav_api_keys": "API Anahtarları",
+    "nav_settings": "Ayarlar",
+    "nav_codebase_hygiene": "Kod Tabanı Hijyeni",
+    "nav_modular_arch": "Modüler Mimari"
   },
   "footer": {
     "tagline": "Dünyanın AI'ı hesap verilebilir kıldığı yer.",
