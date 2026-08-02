@@ -1,6 +1,6 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { requireAdmin } from "@/lib/auth/session";
+import { requireModerator } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { Star } from "@phosphor-icons/react/dist/ssr";
 import { Award, BarChart3 } from "lucide-react";
@@ -219,7 +219,7 @@ const DEFAULT_BENCH_TR_ROWS: BenchTrRow[] = [
 export default async function KBenchmarkPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  await requireAdmin();
+  await requireModerator();
   const t = await getTranslations({ locale, namespace: "admin" });
 
   const supabase = await createServerClient();
@@ -305,49 +305,64 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {scores.map((score) => (
-                <tr key={score.id} className="transition-colors hover:bg-white/5">
-                  <td className="px-6 py-4 font-mono text-xs text-white">
-                    <div className="text-sm font-bold text-white">
-                      {score.model_id || t("kbench_unknown_model")}
-                    </div>
-                    <span className="mt-1 inline-flex items-center gap-1 rounded border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-[11px] font-semibold text-amber-300">
-                      {(() => {
-                        const providerName =
-                          ((score as Record<string, unknown>).provider_name as string) ||
-                          (
-                            (score as Record<string, unknown>).ai_models as
-                              { ai_providers?: { name?: string } } | undefined
-                          )?.ai_providers?.name ||
-                          "AI Provider";
+              {scores.map((score) => {
+                const modelDisplayName =
+                  ((score as Record<string, unknown>).model_name as string) ||
+                  (
+                    (score as Record<string, unknown>).ai_models as
+                      { name?: string; model_id?: string } | undefined
+                  )?.name ||
+                  (
+                    (score as Record<string, unknown>).ai_models as
+                      { name?: string; model_id?: string } | undefined
+                  )?.model_id ||
+                  score.model_id ||
+                  t("kbench_unknown_model");
 
-                        return (
-                          <>
-                            <Image
-                              src={getProviderLogo(providerName)}
-                              alt={providerName}
-                              width={12}
-                              height={12}
-                              className="opacity-80"
-                            />
-                            {providerName}
-                          </>
-                        );
-                      })()}
-                    </span>
-                  </td>
-                  <td className="text-brand-400 px-6 py-4 font-mono text-lg font-bold">
-                    <div className="flex items-center gap-1">
-                      {score.score !== null ? score.score : t("kbench_score_empty")}
-                      <Star weight="fill" className="h-4 w-4 text-amber-400" />
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 capitalize">{score.status || t("kbench_evaluated")}</td>
-                  <td className="text-fg-muted px-6 py-4 font-mono text-xs">
-                    {new Date(score.created_at).toLocaleDateString()}
-                  </td>
-                </tr>
-              ))}
+                return (
+                  <tr key={score.id} className="transition-colors hover:bg-white/5">
+                    <td className="px-6 py-4 font-mono text-xs text-white">
+                      <div className="text-sm font-bold text-white">{modelDisplayName}</div>
+                      <span className="mt-1 inline-flex items-center gap-1 rounded border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-[11px] font-semibold text-amber-300">
+                        {(() => {
+                          const providerName =
+                            ((score as Record<string, unknown>).provider_name as string) ||
+                            (
+                              (score as Record<string, unknown>).ai_models as
+                                { ai_providers?: { name?: string } } | undefined
+                            )?.ai_providers?.name ||
+                            "AI Provider";
+
+                          return (
+                            <>
+                              <Image
+                                src={getProviderLogo(providerName)}
+                                alt={providerName}
+                                width={12}
+                                height={12}
+                                className="opacity-80"
+                              />
+                              {providerName}
+                            </>
+                          );
+                        })()}
+                      </span>
+                    </td>
+                    <td className="text-brand-400 px-6 py-4 font-mono text-lg font-bold">
+                      <div className="flex items-center gap-1">
+                        {score.score !== null ? score.score : t("kbench_score_empty")}
+                        <Star weight="fill" className="h-4 w-4 text-amber-400" />
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 capitalize">
+                      {score.status || t("kbench_evaluated")}
+                    </td>
+                    <td className="text-fg-muted px-6 py-4 font-mono text-xs">
+                      {new Date(score.created_at).toLocaleDateString()}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
