@@ -1,4 +1,6 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
+export const dynamic = "force-dynamic";
+
 import { redirect } from "next/navigation";
 import { Shield } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth/session";

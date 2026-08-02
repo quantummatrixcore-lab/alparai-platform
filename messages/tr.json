@@ -2133,7 +2133,19 @@
     "stat_positive_developments": "Olumlu Gelişmeler",
     "stat_governance_subtext": "Yönetişim ve hizalama kazanımları",
     "stat_review_queue": "İnceleme Kuyruğu",
-    "stat_pending_subtext": "Moderatör incelemesi bekliyor"
+    "stat_pending_subtext": "Moderatör incelemesi bekliyor",
+    "billing_custom": "Özel Faturalandırma",
+    "billing_active": "Aktif",
+    "billing_unknown": "Bilinmeyen Durum",
+    "cron_health": "Cron Sağlığı",
+    "dsar_incident_prefix": "DSAR-",
+    "dsar_completed": "Tamamlandı",
+    "dsar_rejected": "Reddedildi",
+    "linkedin_title": "LinkedIn Entegrasyonu",
+    "platforms_title": "Platformlara Genel Bakış",
+    "question_pool": "Soru Havuzu",
+    "active_questions": "Aktif Sorular",
+    "no_users": "Kullanıcı Bulunamadı"
   },
   "footer": {
     "tagline": "Dünyanın AI'ı hesap verilebilir kıldığı yer.",

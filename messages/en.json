@@ -2133,7 +2133,19 @@
     "stat_positive_developments": "Positive Developments",
     "stat_governance_subtext": "Governance & alignment wins",
     "stat_review_queue": "Review Queue",
-    "stat_pending_subtext": "Pending moderator review"
+    "stat_pending_subtext": "Pending moderator review",
+    "billing_custom": "Custom Billing",
+    "billing_active": "Active",
+    "billing_unknown": "Unknown Status",
+    "cron_health": "Cron Health",
+    "dsar_incident_prefix": "DSAR-",
+    "dsar_completed": "Completed",
+    "dsar_rejected": "Rejected",
+    "linkedin_title": "LinkedIn Integration",
+    "platforms_title": "Platforms Overview",
+    "question_pool": "Question Pool",
+    "active_questions": "Active Questions",
+    "no_users": "No Users Found"
   },
   "footer": {
     "tagline": "Where the world holds AI accountable.",

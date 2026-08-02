@@ -1,4 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+export const dynamic = "force-dynamic";
+
 import { requireCEO } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { CostOverviewCard } from "@/components/admin/finance/cost-overview-card";
@@ -61,6 +63,7 @@ export default async function FinancePage({ params }: { params: Promise<{ locale
   if (vercelToken) {
     try {
       const res = await fetch("https://api.vercel.com/v1/billing/charges", {
+        cache: "no-store",
         headers: {
           Authorization: `Bearer ${vercelToken}`,
         },

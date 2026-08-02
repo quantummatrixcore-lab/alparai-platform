@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+export const dynamic = "force-dynamic";
+
 import { logger } from "@/lib/utils/logger";
 import { INTEGRATION_SERVICES, getServiceById } from "@/lib/integrations/registry";
 import type {

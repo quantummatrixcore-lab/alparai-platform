@@ -31,7 +31,7 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/admin/integrations");
+      const res = await fetch("/api/admin/integrations", { cache: "no-store" });
       if (!res.ok) throw new Error(`API error: ${res.status}`);
       const json = await res.json();
       setData(json);
