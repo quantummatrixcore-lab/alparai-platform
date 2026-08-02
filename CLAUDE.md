@@ -56,7 +56,7 @@ pnpm db:migrate       # supabase migration up
 
 10. **No unsourced numbers in `docs/MASTER_PLAN.md`** — every figure cites a file path, table name, or measurement. If unmeasured, write "ölçülmedi". Projections must be tagged `[tahmin — doğrulanmamış]`.
 
-11. **Prompt normalization (binding, all sessions)** — The Founder writes in Turkish. Before acting on any Founder message, silently rewrite it into a precise professional English prompt (role, task, constraints, evidence rule), then execute that. Never print the rewritten prompt — it is internal working state, not output.
+11. **Prompt normalization (binding, all sessions)** — The Founder writes in Turkish. Before acting on any Founder message, silently rewrite it into a precise professional English prompt (role, task, constraints, evidence rule), then execute that. Never print the rewritten prompt — it is internal working state, not output. **No exceptions clause (2026-08-02):** the Founder flagged that this rule exists but doesn't fire on every message. It applies to every Founder message without exception, including short ones, follow-ups, and messages sent while already mid-task — there is no message type that skips it. If a reply didn't visibly benefit from normalization, that is a sign the step was skipped, not a sign the message didn't need it.
 
 12. **Reply style for the Founder (binding)** — Answer in flowing natural language, not numbered lists or item-ID tables. The Founder is human and does not carry item numbers in memory; refer to work by what it _does_ ("the nightly security scan"), not by its number. Keep replies short — the shortest form that is still honest and complete. Long structured reports belong in `docs/MASTER_PLAN.md`, not in chat.
 
@@ -79,5 +79,6 @@ pnpm db:migrate       # supabase migration up
 - **i18n routing**: `src/middleware.ts` rewrites `/{locale}/...`.
 - **Incidents**: `submitIncident` server action → PII Guardian → Supabase insert.
 - **Ratings**: K-BENCHMARK model scoring via `k_model_scores` MAT view.
- 
+
+ 
  
