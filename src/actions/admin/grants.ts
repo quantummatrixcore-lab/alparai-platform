@@ -40,8 +40,7 @@ export async function updateGrantStatus(
 
     const supabase = createAdminClient();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { error: updateError } = await (supabase as any)
+    const { error: updateError } = await supabase
       .from("grant_applications")
       .update({
         status,
@@ -90,8 +89,7 @@ export async function markGrantSubmitted(
 
     const supabase = createAdminClient();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { error: updateError } = await (supabase as any)
+    const { error: updateError } = await supabase
       .from("grant_applications")
       .update({
         status: "submitted_pending_review",

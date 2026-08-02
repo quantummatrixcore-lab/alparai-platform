@@ -70,7 +70,7 @@ describe("Live System Analysis", () => {
     const result = await runLiveSystemAnalysis();
 
     expect(result.success).toBe(true);
-    expect(result.data.overall_score).toBe(85);
+    expect(result.data!.overall_score).toBe(85);
   });
 
   it("returns fallback analysis when API call throws", async () => {

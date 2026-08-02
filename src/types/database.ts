@@ -26,6 +26,8 @@ export type Database = {
             prepared_content_ref: string | null
             completed_by: string | null
             completed_at: string | null
+            approved_by: string | null
+            approved_at: string | null
             notes: string | null
             created_at: string
           }
@@ -40,6 +42,8 @@ export type Database = {
             prepared_content_ref?: string | null
             completed_by?: string | null
             completed_at?: string | null
+            approved_by?: string | null
+            approved_at?: string | null
             notes?: string | null
             created_at?: string
           }
@@ -54,6 +58,8 @@ export type Database = {
             prepared_content_ref?: string | null
             completed_by?: string | null
             completed_at?: string | null
+            approved_by?: string | null
+            approved_at?: string | null
             notes?: string | null
             created_at?: string
           }

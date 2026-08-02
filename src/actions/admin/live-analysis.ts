@@ -6,8 +6,10 @@ import { logger } from "@/lib/utils/logger";
 
 export async function runLiveSystemAnalysis(): Promise<{
   success: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data?: any;
+  data?: {
+    overall_score: number;
+    [key: string]: unknown;
+  };
   error?: string;
 }> {
   try {
