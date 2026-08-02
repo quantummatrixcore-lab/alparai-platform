@@ -59,9 +59,9 @@ export function UsersClient({ users, userRole, locale }: UsersClientProps) {
   return (
     <div className="space-y-6">
       <div className="grid gap-3 sm:grid-cols-3">
-        <MetricWidget icon={Users} label="Total Users" value={users.length} />
-        <MetricWidget icon={Shield} label="Admins" value={adminCount} />
-        <MetricWidget icon={ShieldCheck} label="Verified" value={verifiedCount} />
+        <MetricWidget icon={Users} label={t("total_users")} value={users.length} />
+        <MetricWidget icon={Shield} label={t("admins")} value={adminCount} />
+        <MetricWidget icon={ShieldCheck} label={t("verified")} value={verifiedCount} />
       </div>
 
       <QuickActionGrid actions={quickActions} columns={4} />

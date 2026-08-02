@@ -144,7 +144,7 @@ export function ImportQueueClient({ initialIncidents, locale: _locale }: ImportQ
       {/* 360° Observe: Queue Distribution Chart */}
       <div className="rounded-xl border border-white/5 bg-neutral-950/40 p-6">
         <h3 className="text-fg-primary mb-6 text-sm font-bold tracking-wide">
-          Queue Distribution (By Severity)
+          {t("queue_distribution_by_severity")}
         </h3>
         <div className="flex h-64 w-full items-center justify-center">
           {chartData.length > 0 ? (
@@ -179,8 +179,8 @@ export function ImportQueueClient({ initialIncidents, locale: _locale }: ImportQ
             </ResponsiveContainer>
           ) : (
             <EmptyStateIllustration
-              title="Empty Queue"
-              description="There are no incidents waiting for import approval."
+              title={t("empty_queue")}
+              description={t("there_are_no_incidents_waiting_for_impor")}
               icon={Shield}
             />
           )}
@@ -215,7 +215,7 @@ export function ImportQueueClient({ initialIncidents, locale: _locale }: ImportQ
                 : "text-fg-muted hover:text-white",
             )}
           >
-            AIAAIC
+            {t("aiaaic")}
           </button>
           <button
             onClick={() => setSourceFilter("aiid_import")}
@@ -226,7 +226,7 @@ export function ImportQueueClient({ initialIncidents, locale: _locale }: ImportQ
                 : "text-fg-muted hover:text-white",
             )}
           >
-            AIID
+            {t("aiid")}
           </button>
         </div>
       </div>
@@ -343,7 +343,10 @@ export function ImportQueueClient({ initialIncidents, locale: _locale }: ImportQ
                         </span>
                       )}
                       {incident.import_external_id && (
-                        <span className="font-mono">ID: {incident.import_external_id}</span>
+                        <span className="font-mono">
+                          {t("id")}
+                          {incident.import_external_id}
+                        </span>
                       )}
                     </div>
                   </div>

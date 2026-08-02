@@ -71,7 +71,7 @@ export function ModerationQueue({ incidents }: { incidents: IncidentListItem[] }
         </p>
         <Link href="/admin/strategy">
           <Button variant="outline" rightIcon={<ArrowRight className="h-4 w-4" />}>
-            Go to Strategy Board
+            {t("go_to_strategy_board")}
           </Button>
         </Link>
       </div>
@@ -83,21 +83,21 @@ export function ModerationQueue({ incidents }: { incidents: IncidentListItem[] }
       <div className="grid gap-3 sm:grid-cols-3">
         <MetricWidget
           icon={Inbox}
-          label="Total Pending"
+          label={t("total_pending")}
           value={incidents.length}
           trend={criticalCount > 0 ? "up" : "neutral"}
           trendValue={criticalCount > 0 ? `${criticalCount} critical` : "0 critical"}
         />
         <MetricWidget
           icon={AlertTriangle}
-          label="High / Critical"
+          label={t("high_critical")}
           value={criticalCount + highCount}
           trend={criticalCount + highCount > 0 ? "down" : "neutral"}
           trendValue={`${highCount} high`}
         />
         <MetricWidget
           icon={ShieldCheck}
-          label="Moderated Today"
+          label={t("moderated_today")}
           value={incidents.length - filtered.length}
           trend="neutral"
           trendValue="pending"
@@ -183,7 +183,9 @@ function ModerationCard({ incident }: { incident: IncidentListItem }) {
                 <Cpu className="h-3 w-3 text-cyan-400" />
                 {incident.provider_name}
               </Badge>
-              {incident.processing_stage === "failed" && <Badge variant="danger">FAILED</Badge>}
+              {incident.processing_stage === "failed" && (
+                <Badge variant="danger">{t("failed")}</Badge>
+              )}
             </div>
             <span className="text-fg-muted font-mono text-[10px] tracking-wider uppercase">
               {formatRelativeTime(new Date(incident.created_at), locale)}
@@ -210,12 +212,12 @@ function ModerationCard({ incident }: { incident: IncidentListItem }) {
           {/* AI Metrics quick summary mock (Ethics & Consensus) */}
           <div className="grid grid-cols-2 gap-2 rounded-xl border border-white/5 bg-neutral-950/40 p-3">
             <div className="flex items-center justify-between text-[11px]">
-              <span className="text-fg-muted">Ethics Score:</span>
+              <span className="text-fg-muted">{t("ethics_score")}</span>
               <span className="font-mono font-bold text-emerald-400">92%</span>
             </div>
             <div className="flex items-center justify-between text-[11px]">
-              <span className="text-fg-muted">Consensus Strength:</span>
-              <span className="font-mono font-bold text-cyan-400">High</span>
+              <span className="text-fg-muted">{t("consensus_strength")}</span>
+              <span className="font-mono font-bold text-cyan-400">{t("high")}</span>
             </div>
           </div>
 

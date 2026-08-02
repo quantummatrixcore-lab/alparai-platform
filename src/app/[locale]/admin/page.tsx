@@ -93,15 +93,7 @@ export default async function AdminDashboardPage({
       .from("newsletter_subscribers")
       .select("*", { count: "exact", head: true })
       .gte("subscribed_at", thirtyDaysAgo),
-    (
-      admin as unknown as {
-        from: (t: string) => {
-          select: (q: string) => Promise<{ data: { status: string }[] | null }>;
-        };
-      }
-    )
-      .from("grant_applications")
-      .select("status"),
+    admin.from("grant_applications").select("status"),
   ]);
 
   const pendingDsar = dsarResult.count;

@@ -208,7 +208,7 @@ export default async function StrategyOverviewPage({
                     <GridIcon className="h-5 w-5" />
                   </div>
                   <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
-                    Module 01
+                    {t("module_01")}
                   </span>
                 </div>
                 <h2 className="text-lg font-bold text-white">{t("swot_matrix")}</h2>
@@ -247,7 +247,7 @@ export default async function StrategyOverviewPage({
                     <ShieldAlert className="h-5 w-5" />
                   </div>
                   <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
-                    Module 02
+                    {t("module_02")}
                   </span>
                 </div>
                 <h2 className="text-lg font-bold text-white">{t("risk_analysis_matrix")}</h2>
@@ -257,13 +257,13 @@ export default async function StrategyOverviewPage({
                 <div className="mt-4 flex items-center gap-4 text-xs">
                   <div className="flex-1 rounded-lg border border-white/10 bg-white/5 p-2 text-center">
                     <span className="text-fg-muted block text-[9px] font-bold tracking-wider uppercase">
-                      Aktif Risk
+                      {t("aktif_risk")}
                     </span>
                     <span className="text-lg font-extrabold text-white">{activeRisksCount}</span>
                   </div>
                   <div className="flex-1 rounded-lg border border-red-500/20 bg-red-500/10 p-2 text-center text-red-400">
                     <span className="block text-[9px] font-bold tracking-wider uppercase">
-                      Yüksek Risk
+                      {t("y_ksek_risk")}
                     </span>
                     <span className="text-lg font-extrabold">{highRisksCount}</span>
                   </div>
@@ -286,7 +286,7 @@ export default async function StrategyOverviewPage({
                     <TrendingUp className="h-5 w-5" />
                   </div>
                   <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
-                    Module 03
+                    {t("module_03")}
                   </span>
                 </div>
                 <h2 className="text-lg font-bold text-white">{t("company_valuation")}</h2>
@@ -321,7 +321,7 @@ export default async function StrategyOverviewPage({
                     <Compass className="h-5 w-5" />
                   </div>
                   <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
-                    Module 04
+                    {t("module_04")}
                   </span>
                 </div>
                 <h2 className="text-lg font-bold text-white">{t("strategic_roadmap")}</h2>
@@ -361,7 +361,7 @@ export default async function StrategyOverviewPage({
                     <Cpu className="h-5 w-5" />
                   </div>
                   <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
-                    Module 05
+                    {t("module_05")}
                   </span>
                 </div>
                 <h2 className="text-lg font-bold text-white">

@@ -4,6 +4,7 @@ import React from "react";
 import { Bot, Loader2, Target, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface LiveStrategyClientProps {
   context: {
@@ -26,13 +27,15 @@ interface LiveStrategyResult {
 }
 
 export function LiveStrategyClient({ context }: LiveStrategyClientProps) {
+  const t = useTranslations("admin");
   const [isAnalyzing, setIsAnalyzing] = React.useState(false);
   const [result, setResult] = React.useState<LiveStrategyResult | null>(null);
 
   const handleAnalyze = async () => {
     setIsAnalyzing(true);
     try {
-      const res = await fetch("/api/admin/live-strategy", { cache: 'no-store', 
+      const res = await fetch("/api/admin/live-strategy", {
+        cache: "no-store",
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ context }),
@@ -97,10 +100,10 @@ export function LiveStrategyClient({ context }: LiveStrategyClientProps) {
             <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-4">
               <h2 className="flex items-center gap-2 text-xl font-bold text-white">
                 <Bot className="h-6 w-6 text-indigo-400" />
-                Canlı AI Strateji Raporu
+                {t("canl_ai_strateji_raporu")}
               </h2>
               <div className="flex items-center gap-2">
-                <span className="text-fg-muted font-mono text-sm">SAĞLIK SKORU:</span>
+                <span className="text-fg-muted font-mono text-sm">{t("sa_lik_skoru")}</span>
                 <span
                   className={cn("text-2xl font-black", getScoreColor(result.health_score || 0))}
                 >
@@ -112,7 +115,7 @@ export function LiveStrategyClient({ context }: LiveStrategyClientProps) {
             <div className="space-y-6">
               <div>
                 <h3 className="text-fg-secondary mb-2 text-xs font-semibold tracking-wider uppercase">
-                  Yönetici Özeti
+                  {t("y_netici_zeti")}
                 </h3>
                 <p className="text-sm leading-relaxed text-white/80">{result.executive_summary}</p>
               </div>
@@ -120,7 +123,7 @@ export function LiveStrategyClient({ context }: LiveStrategyClientProps) {
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-4">
                   <h3 className="mb-3 flex items-center gap-2 font-semibold text-rose-400">
-                    <AlertTriangle className="h-4 w-4" /> Stratejik Boşluklar
+                    <AlertTriangle className="h-4 w-4" /> {t("stratejik_bo_luklar")}
                   </h3>
                   <ul className="text-fg-primary list-inside list-disc space-y-2 text-sm">
                     {Array.isArray(result.strategic_gaps) ? (
@@ -133,7 +136,7 @@ export function LiveStrategyClient({ context }: LiveStrategyClientProps) {
 
                 <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4">
                   <h3 className="mb-3 flex items-center gap-2 font-semibold text-emerald-400">
-                    <Target className="h-4 w-4" /> Tavsiyeler
+                    <Target className="h-4 w-4" /> {t("tavsiyeler")}
                   </h3>
                   <ul className="text-fg-primary list-inside list-disc space-y-2 text-sm">
                     {Array.isArray(result.recommendations) ? (
@@ -151,7 +154,7 @@ export function LiveStrategyClient({ context }: LiveStrategyClientProps) {
                 onClick={() => setResult(null)}
                 className="text-fg-muted text-xs transition-colors hover:text-white"
               >
-                Kapat
+                {t("kapat")}
               </button>
             </div>
           </div>

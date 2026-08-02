@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AdminSectionCard } from "@/components/admin/admin-design-kit";
 import { triggerCronJobAction } from "@/actions/system-mgmt";
 import { Clock, Play, CheckCircle2, Network } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface CronJob {
   name: string;
@@ -14,6 +15,7 @@ interface CronJob {
 }
 
 export function CronsDashboardClient() {
+  const t = useTranslations("admin");
   const [jobs, setJobs] = useState<CronJob[]>([
     {
       name: "prune_old_telemetry",
@@ -78,7 +80,7 @@ export function CronsDashboardClient() {
         </div>
       )}
 
-      <AdminSectionCard title="Supabase pg_cron Active Schedules">
+      <AdminSectionCard title={t("supabase_pg_cron_active_schedules")}>
         <div className="divide-y divide-white/10 p-6">
           {jobs.map((job) => (
             <div
@@ -97,7 +99,10 @@ export function CronsDashboardClient() {
                   </span>
                 </div>
                 <p className="text-fg-muted text-xs">{job.target}</p>
-                <p className="text-fg-muted font-mono text-[10px]">Last Run: {job.lastRun}</p>
+                <p className="text-fg-muted font-mono text-[10px]">
+                  {t("last_run")}
+                  {job.lastRun}
+                </p>
               </div>
 
               <button
@@ -114,16 +119,12 @@ export function CronsDashboardClient() {
         </div>
       </AdminSectionCard>
 
-      <AdminSectionCard title="Cron Topology Map">
+      <AdminSectionCard title={t("cron_topology_map")}>
         <div className="text-fg-muted space-y-3 p-6 text-xs">
           <div className="flex items-center gap-2 font-semibold text-white">
-            <Network className="h-4 w-4 text-cyan-400" /> Re-homed to Supabase pg_cron
+            <Network className="h-4 w-4 text-cyan-400" /> {t("re_homed_to_supabase_pg_cron")}
           </div>
-          <p className="text-[11px]">
-            Vercel `crons: []` disabled in `vercel.json` to avoid Vercel hobby limits. Schedules
-            execute natively inside Supabase PostgreSQL `pg_cron` extension with timingSafeEqual
-            secret authorization.
-          </p>
+          <p className="text-[11px]">{t("vercel_crons_disabled_in_vercel_json_to_")}</p>
         </div>
       </AdminSectionCard>
     </div>

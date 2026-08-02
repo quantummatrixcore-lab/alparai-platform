@@ -114,7 +114,7 @@ export function LiveFeed({ items }: { items: EcosystemNews[] }) {
 
                   <button
                     onClick={() => handleArchive(item.id)}
-                    title="Archive Item"
+                    title={t("archive_item")}
                     className="flex h-8 w-8 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-zinc-400 transition-colors hover:border-rose-500/30 hover:bg-rose-500/10 hover:text-rose-400"
                   >
                     <Archive className="h-4 w-4" />

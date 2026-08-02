@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { AdminSectionCard } from "@/components/admin/admin-design-kit";
 import { Shield, Lock, Server, Save, CheckCircle2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function SettingsDashboardClient() {
+  const t = useTranslations("admin");
   const [settings, setSettings] = useState({
     piiGuardian: true,
     strictSsr: true,
@@ -24,16 +26,15 @@ export function SettingsDashboardClient() {
   return (
     <div className="space-y-8" data-testid="settings-dashboard">
       <form onSubmit={handleSave} className="space-y-8">
-        <AdminSectionCard title="Security & Privacy Policy Settings">
+        <AdminSectionCard title={t("security_privacy_policy_settings")}>
           <div className="space-y-6 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <span className="flex items-center gap-2 text-sm font-bold text-white">
-                  <Shield className="h-4 w-4 text-emerald-400" /> PII Guardian Sanitization
+                  <Shield className="h-4 w-4 text-emerald-400" /> {t("pii_guardian_sanitization")}
                 </span>
                 <p className="text-fg-muted mt-0.5 text-xs">
-                  Mask emails, phone numbers, and TC Identity numbers before database insertion
-                  (`src/lib/pii/guardian.ts`).
+                  {t("mask_emails_phone_numbers_and_tc_identit")}
                 </p>
               </div>
               <input
@@ -47,11 +48,10 @@ export function SettingsDashboardClient() {
             <div className="flex items-center justify-between border-t border-white/10 pt-4">
               <div>
                 <span className="flex items-center gap-2 text-sm font-bold text-white">
-                  <Lock className="h-4 w-4 text-cyan-400" /> SSRF Policy Strict Allowlist
+                  <Lock className="h-4 w-4 text-cyan-400" /> {t("ssrf_policy_strict_allowlist")}
                 </span>
                 <p className="text-fg-muted mt-0.5 text-xs">
-                  Enforce HTTPS-only and block internal IP addresses (169.254.169.254, 127.0.0.1) on
-                  external fetches.
+                  {t("enforce_https_only_and_block_internal_ip")}
                 </p>
               </div>
               <input
@@ -65,11 +65,11 @@ export function SettingsDashboardClient() {
             <div className="flex items-center justify-between border-t border-white/10 pt-4">
               <div>
                 <span className="flex items-center gap-2 text-sm font-bold text-white">
-                  <Server className="h-4 w-4 text-purple-400" /> Public Read-Only Incidents API
+                  <Server className="h-4 w-4 text-purple-400" />{" "}
+                  {t("public_read_only_incidents_api")}
                 </span>
                 <p className="text-fg-muted mt-0.5 text-xs">
-                  Expose `/api/public/incidents`, `/api/public/incidents.csv`, and
-                  `/api/public/dataset.json`.
+                  {t("expose_api_public_incidents_api_public_i")}
                 </p>
               </div>
               <input
@@ -82,11 +82,11 @@ export function SettingsDashboardClient() {
           </div>
         </AdminSectionCard>
 
-        <AdminSectionCard title="Rate Limiting & Operational Ceilings">
+        <AdminSectionCard title={t("rate_limiting_operational_ceilings")}>
           <div className="space-y-4 p-6">
             <div>
               <label className="text-fg-muted mb-1 block text-xs font-semibold">
-                Global Rate Limit (Requests / minute / IP)
+                {t("global_rate_limit_requests_minute_ip")}
               </label>
               <input
                 type="number"
@@ -105,12 +105,12 @@ export function SettingsDashboardClient() {
             type="submit"
             className="inline-flex items-center gap-2 rounded bg-emerald-500 px-5 py-2.5 text-xs font-bold text-black hover:bg-emerald-400"
           >
-            <Save className="h-4 w-4" /> Save System Settings
+            <Save className="h-4 w-4" /> {t("save_system_settings")}
           </button>
 
           {saved && (
             <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-400">
-              <CheckCircle2 className="h-4 w-4" /> System settings updated successfully
+              <CheckCircle2 className="h-4 w-4" /> {t("system_settings_updated_successfully")}
             </span>
           )}
         </div>

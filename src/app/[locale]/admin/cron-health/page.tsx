@@ -49,9 +49,9 @@ export default async function CronHealthPage({ params }: { params: Promise<{ loc
           <table className="w-full text-left text-sm">
             <thead className="border-b border-white/10 text-xs font-semibold text-white/40 uppercase">
               <tr>
-                <th className="pr-4 pb-3">Job Name</th>
-                <th className="pr-4 pb-3">Last Run</th>
-                <th className="pb-3">Status</th>
+                <th className="pr-4 pb-3">{t("job_name")}</th>
+                <th className="pr-4 pb-3">{t("last_run")}</th>
+                <th className="pb-3">{t("status")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
@@ -62,11 +62,11 @@ export default async function CronHealthPage({ params }: { params: Promise<{ loc
                   <td className="py-3">
                     {job.status === "Active" ? (
                       <span className="inline-flex items-center gap-1.5 rounded bg-emerald-500/10 px-2 py-1 text-xs font-bold text-emerald-400">
-                        <ShieldCheck className="h-3.5 w-3.5" /> Active
+                        <ShieldCheck className="h-3.5 w-3.5" /> {t("active")}
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1.5 rounded bg-red-500/10 px-2 py-1 text-xs font-bold text-red-400">
-                        <AlertCircle className="h-3.5 w-3.5" /> Degraded
+                        <AlertCircle className="h-3.5 w-3.5" /> {t("degraded")}
                       </span>
                     )}
                   </td>

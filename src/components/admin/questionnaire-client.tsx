@@ -13,6 +13,7 @@ import {
   AlertCircle,
   CheckCircle2,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface RunRow {
   id: string;
@@ -84,6 +85,7 @@ export function QuestionnaireClient({
   locale: string;
   i18n: I18nStrings;
 }) {
+  const t = useTranslations("admin");
   const [running, setRunning] = useState(false);
   const [exporting, setExporting] = useState<string | null>(null);
   const [selectedModels, setSelectedModels] = useState<string[]>(models.map((m) => m.id));
@@ -97,7 +99,8 @@ export function QuestionnaireClient({
   async function handleRun() {
     setRunning(true);
     try {
-      const response = await fetch("/api/admin/strategy-questionnaire", { cache: 'no-store', 
+      const response = await fetch("/api/admin/strategy-questionnaire", {
+        cache: "no-store",
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ selectedModels }),
@@ -285,10 +288,10 @@ export function QuestionnaireClient({
                       {new Date(run.started_at).toLocaleString(isTurkish ? "tr-TR" : "en-US")}
                     </span>
                     <span className="text-fg-muted ml-3 text-xs">
-                      {run.total_answers}/{run.total_questions} answers
+                      {run.total_answers}/{run.total_questions} {t("answers")}
                     </span>
                     <span className="text-fg-muted ml-3 text-xs">
-                      {run.model_ids.length} models
+                      {run.model_ids.length} {t("models")}
                     </span>
                   </div>
                 </div>

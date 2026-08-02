@@ -8,7 +8,7 @@ import { Check, X, Mail, Building2, Send, Clock, User, Plus } from "lucide-react
 import { updateOutreachStatus, createOutreachItem } from "@/actions/admin/outreach";
 import { toast } from "sonner";
 import { formatRelativeTime } from "@/lib/utils";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 export interface OutreachQueueItem {
   id: string;
@@ -24,6 +24,7 @@ export interface OutreachQueueItem {
 }
 
 export function OutreachQueueList({ initialQueue }: { initialQueue: OutreachQueueItem[] }) {
+  const t = useTranslations("admin");
   const locale = useLocale();
   const [filter, setFilter] = useState<"all" | "pending" | "approved" | "sent" | "failed">(
     "pending",
@@ -137,40 +138,40 @@ Ercüment`);
           className="bg-brand-500 hover:bg-brand-600 flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-bold text-white transition-colors"
         >
           <Plus className="h-4 w-4" />
-          Queue Outreach
+          {t("queue_outreach")}
         </button>
       </div>
 
       {showAddForm && (
         <Card className="border-brand-500/20 bg-[#0F1E2E]">
           <CardHeader>
-            <CardTitle className="text-white">Queue New Outreach Campaign Email</CardTitle>
+            <CardTitle className="text-white">{t("queue_new_outreach_campaign_email")}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleCreate} className="space-y-4">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                   <label className="mb-1 block text-xs font-semibold text-slate-400">
-                    Recipient Email *
+                    {t("recipient_email")}
                   </label>
                   <input
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="editor@techoutlet.com"
+                    placeholder={t("editor_techoutlet_com")}
                     className="focus:border-brand-500 w-full rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none"
                   />
                 </div>
                 <div>
                   <label className="mb-1 block text-xs font-semibold text-slate-400">
-                    Recipient Name
+                    {t("recipient_name")}
                   </label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Jane Doe"
+                    placeholder={t("jane_doe")}
                     className="focus:border-brand-500 w-full rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none"
                   />
                 </div>
@@ -179,19 +180,19 @@ Ercüment`);
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                   <label className="mb-1 block text-xs font-semibold text-slate-400">
-                    Company/Outlet
+                    {t("company_outlet")}
                   </label>
                   <input
                     type="text"
                     value={company}
                     onChange={(e) => setCompany(e.target.value)}
-                    placeholder="The Verge"
+                    placeholder={t("the_verge")}
                     className="focus:border-brand-500 w-full rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none"
                   />
                 </div>
                 <div>
                   <label className="mb-1 block text-xs font-semibold text-slate-400">
-                    Template Type
+                    {t("template_type")}
                   </label>
                   <div className="flex gap-2">
                     <button
@@ -203,7 +204,7 @@ Ercüment`);
                           : "bg-black/40 text-slate-400 hover:bg-black/60"
                       }`}
                     >
-                      Media Pitch
+                      {t("media_pitch")}
                     </button>
                     <button
                       type="button"
@@ -214,34 +215,36 @@ Ercüment`);
                           : "bg-black/40 text-slate-400 hover:bg-black/60"
                       }`}
                     >
-                      Expert Invite
+                      {t("expert_invite")}
                     </button>
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="mb-1 block text-xs font-semibold text-slate-400">Subject *</label>
+                <label className="mb-1 block text-xs font-semibold text-slate-400">
+                  {t("subject")}
+                </label>
                 <input
                   type="text"
                   required
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  placeholder="Embargoed Aug 2..."
+                  placeholder={t("embargoed_aug_2")}
                   className="focus:border-brand-500 w-full rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none"
                 />
               </div>
 
               <div>
                 <label className="mb-1 block text-xs font-semibold text-slate-400">
-                  Body Template *
+                  {t("body_template")}
                 </label>
                 <textarea
                   required
                   rows={6}
                   value={body}
                   onChange={(e) => setBody(e.target.value)}
-                  placeholder="Write message template here..."
+                  placeholder={t("write_message_template_here")}
                   className="focus:border-brand-500 w-full rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none"
                 />
               </div>
@@ -253,10 +256,10 @@ Ercüment`);
                   onClick={() => setShowAddForm(false)}
                   disabled={isPending}
                 >
-                  Cancel
+                  {t("cancel")}
                 </Button>
                 <Button type="submit" variant="primary" isLoading={isPending}>
-                  Add to Queue
+                  {t("add_to_queue")}
                 </Button>
               </div>
             </form>
@@ -267,7 +270,7 @@ Ercüment`);
       <div className="space-y-4">
         {filtered.length === 0 ? (
           <div className="text-fg-muted rounded-xl border border-white/10 bg-black/20 py-12 text-center">
-            No outreach items found in this filter.
+            {t("no_outreach_items_found_in_this_filter")}
           </div>
         ) : (
           filtered.map((item) => (
@@ -312,13 +315,15 @@ Ercüment`);
                       </span>
                     )}
                     <span className="rounded bg-white/5 px-1.5 py-0.5 text-xs text-slate-400">
-                      Template: {item.template_type}
+                      {t("template")}
+                      {item.template_type}
                     </span>
                   </div>
 
                   <div className="rounded border border-white/5 bg-black/20 p-3">
                     <div className="mb-2 text-xs font-semibold text-slate-400">
-                      Subject: {item.subject}
+                      {t("subject")}
+                      {item.subject}
                     </div>
                     <pre className="font-sans text-xs whitespace-pre-wrap text-slate-300">
                       {item.body_template.slice(0, 200)}
@@ -328,7 +333,8 @@ Ercüment`);
 
                   {item.sent_at && (
                     <div className="text-fg-muted text-xs">
-                      Sent at: {new Date(item.sent_at).toLocaleString()}
+                      {t("sent_at")}
+                      {new Date(item.sent_at).toLocaleString()}
                     </div>
                   )}
                 </div>
@@ -342,7 +348,7 @@ Ercüment`);
                       isLoading={isPending}
                       onClick={() => handleUpdateStatus(item.id, "approved")}
                     >
-                      Approve
+                      {t("approve")}
                     </Button>
                   )}
                   {item.status === "approved" && (
@@ -353,7 +359,7 @@ Ercüment`);
                       isLoading={isPending}
                       onClick={() => handleUpdateStatus(item.id, "pending")}
                     >
-                      Hold
+                      {t("hold")}
                     </Button>
                   )}
                   {item.status === "failed" && (
@@ -364,7 +370,7 @@ Ercüment`);
                       isLoading={isPending}
                       onClick={() => handleUpdateStatus(item.id, "approved")}
                     >
-                      Retry (Approve)
+                      {t("retry_approve")}
                     </Button>
                   )}
                 </div>

@@ -25,11 +25,10 @@ export default async function FeatureFlagsPage({
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-white">
-          {t("nav_featureFlags")} — Canlı Özellik Bayrakları Yönetimi
+          {t("nav_featureFlags")} {t("canl_zellik_bayraklar_y_netimi")}
         </h1>
         <p className="text-fg-muted mt-1 text-sm">
-          Sistem özelliklerini (PII Guardian, Sybil Shield, Cross-Audit, GEO Verifier) Upstash Redis
-          ~0ms edge önbellek dağıtımı ile anlık açıp kapatın.
+          {t("sistem_zelliklerini_pii_guardian_sybil_s")}
         </p>
       </div>
 

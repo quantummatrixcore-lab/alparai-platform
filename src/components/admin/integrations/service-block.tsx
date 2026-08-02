@@ -147,10 +147,11 @@ export function ServiceBlock({
             {status?.monthlyCost !== undefined && (
               <div className="text-right">
                 <p className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
-                  Cost
+                  {t("cost")}
                 </p>
                 <p className="text-success-400 bg-success-500/10 border-success-500/10 mt-0.5 rounded border px-1.5 py-0.5 font-mono text-xs font-bold">
-                  ${status.monthlyCost.toFixed(2)}/mo
+                  ${status.monthlyCost.toFixed(2)}
+                  {t("mo")}
                 </p>
               </div>
             )}
@@ -162,7 +163,7 @@ export function ServiceBlock({
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
                 className="text-fg-muted hover:text-fg-primary rounded-lg border border-transparent p-2 transition-all duration-200 hover:border-white/5 hover:bg-white/5"
-                title="Open dashboard"
+                title={t("open_dashboard")}
               >
                 <Globe weight="duotone" className="h-4 w-4" />
               </a>
@@ -192,12 +193,13 @@ export function ServiceBlock({
               <div className="space-y-3 p-5">
                 <div className="flex items-center justify-between">
                   <h4 className="text-fg-primary text-xs font-bold tracking-wider uppercase">
-                    Alternatives ({alternatives.length})
+                    {t("alternatives")}
+                    {alternatives.length})
                   </h4>
                   {alternatives.length > 0 && (
                     <span className="text-fg-muted flex items-center gap-1.5 font-mono text-[9px] tracking-wider uppercase">
                       <ArrowsClockwise weight="duotone" className="h-3 w-3 animate-pulse" />
-                      Live comparison data
+                      {t("live_comparison_data")}
                     </span>
                   )}
                 </div>
@@ -206,7 +208,7 @@ export function ServiceBlock({
                   <AlternativeCards alternatives={alternatives} />
                 ) : (
                   <p className="text-fg-muted py-4 text-center text-xs">
-                    No alternative providers configured for this tier.
+                    {t("no_alternative_providers_configured_for_")}
                   </p>
                 )}
               </div>

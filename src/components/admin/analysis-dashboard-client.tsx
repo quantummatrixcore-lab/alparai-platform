@@ -152,7 +152,8 @@ export function AnalysisDashboardClient({ registryData }: Props) {
     setLiveResult(null);
     toast.loading("Yapay zeka analiz yapıyor (gpt-4o-mini)...", { id: "live-analysis" });
     try {
-      const res = await fetch("/api/admin/live-analysis", { cache: 'no-store', 
+      const res = await fetch("/api/admin/live-analysis", {
+        cache: "no-store",
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -242,10 +243,10 @@ export function AnalysisDashboardClient({ registryData }: Props) {
             <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-4">
               <h2 className="flex items-center gap-2 text-xl font-bold text-white">
                 <Bot className="text-brand-400 h-6 w-6" />
-                Canlı QA Sistem Raporu
+                {t("canl_qa_sistem_raporu")}
               </h2>
               <div className="flex items-center gap-2">
-                <span className="text-fg-muted font-mono text-sm">SKOR:</span>
+                <span className="text-fg-muted font-mono text-sm">{t("skor")}</span>
                 <span
                   className={cn(
                     "text-2xl font-black",
@@ -260,7 +261,7 @@ export function AnalysisDashboardClient({ registryData }: Props) {
             <div className="space-y-6">
               <div>
                 <h3 className="text-fg-secondary mb-2 text-xs font-semibold tracking-wider uppercase">
-                  Yönetici Özeti
+                  {t("y_netici_zeti")}
                 </h3>
                 <p className="text-sm leading-relaxed text-white/80">
                   {liveResult.executive_summary}
@@ -270,7 +271,7 @@ export function AnalysisDashboardClient({ registryData }: Props) {
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-4">
                   <h3 className="mb-3 flex items-center gap-2 font-semibold text-rose-400">
-                    <AlertTriangle className="h-4 w-4" /> Güvenlik Açıkları
+                    <AlertTriangle className="h-4 w-4" /> {t("g_venlik_a_klar")}
                   </h3>
                   <ul className="text-fg-primary list-inside list-disc space-y-2 text-sm">
                     {Array.isArray(liveResult.security_flaws) ? (
@@ -285,7 +286,7 @@ export function AnalysisDashboardClient({ registryData }: Props) {
 
                 <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4">
                   <h3 className="mb-3 flex items-center gap-2 font-semibold text-emerald-400">
-                    <CheckCircle2 className="h-4 w-4" /> Tavsiyeler
+                    <CheckCircle2 className="h-4 w-4" /> {t("tavsiyeler")}
                   </h3>
                   <ul className="text-fg-primary list-inside list-disc space-y-2 text-sm">
                     {Array.isArray(liveResult.recommendations) ? (
@@ -305,7 +306,7 @@ export function AnalysisDashboardClient({ registryData }: Props) {
                 onClick={() => setLiveResult(null)}
                 className="text-fg-muted text-xs transition-colors hover:text-white"
               >
-                Kapat
+                {t("kapat")}
               </button>
             </div>
           </div>
@@ -622,7 +623,7 @@ export function AnalysisDashboardClient({ registryData }: Props) {
                 </div>
                 <div className="mt-3 flex items-center justify-between rounded border border-white/5 bg-neutral-900 p-2">
                   <code className="text-fg-muted font-mono text-xs tracking-widest">
-                    sk-prod-••••••••••••8f9a
+                    {t("sk_prod_8f9a")}
                   </code>
                   <button
                     onClick={() => handleCopyKey("sk-prod-a1b2c3d4e5f6g7h8j9k08f9a")}
@@ -648,7 +649,7 @@ export function AnalysisDashboardClient({ registryData }: Props) {
                 </div>
                 <div className="mt-3 flex items-center justify-between rounded border border-white/5 bg-neutral-900/50 p-2">
                   <code className="text-fg-disabled font-mono text-xs tracking-widest">
-                    sk-stag-••••••••••••2b1c
+                    {t("sk_stag_2b1c")}
                   </code>
                   <span className="text-fg-disabled px-1 font-mono text-[10px]">
                     {t("blocked")}
@@ -696,7 +697,9 @@ export function AnalysisDashboardClient({ registryData }: Props) {
                     {registryData.audits[carouselIndex]?.model_name}
                   </h4>
                   <p className="text-fg-secondary mt-3 line-clamp-3 text-xs leading-relaxed italic">
-                    &ldquo;{registryData.audits[carouselIndex]?.unique_insight}&rdquo;
+                    {t("ldquo")}
+                    {registryData.audits[carouselIndex]?.unique_insight}
+                    {t("rdquo")}
                   </p>
                 </div>
               </div>
@@ -890,19 +893,19 @@ export function AnalysisDashboardClient({ registryData }: Props) {
                 <div className="flex items-center justify-between rounded-lg border border-white/5 bg-neutral-950/40 p-3">
                   <span className="text-fg-secondary text-xs">{t("incident_rate_limit")}</span>
                   <span className="rounded border border-cyan-500/20 bg-cyan-500/10 px-2 py-0.5 text-[10px] font-bold text-cyan-400">
-                    Edge
+                    {t("edge")}
                   </span>
                 </div>
                 <div className="flex items-center justify-between rounded-lg border border-white/5 bg-neutral-950/40 p-3">
                   <span className="text-fg-secondary text-xs">{t("comment_rate_limit")}</span>
                   <span className="rounded border border-cyan-500/20 bg-cyan-500/10 px-2 py-0.5 text-[10px] font-bold text-cyan-400">
-                    Edge
+                    {t("edge")}
                   </span>
                 </div>
                 <div className="flex items-center justify-between rounded-lg border border-white/5 bg-neutral-950/40 p-3">
                   <span className="text-fg-secondary text-xs">{t("affected_rate_limit")}</span>
                   <span className="rounded border border-cyan-500/20 bg-cyan-500/10 px-2 py-0.5 text-[10px] font-bold text-cyan-400">
-                    Edge
+                    {t("edge")}
                   </span>
                 </div>
               </div>

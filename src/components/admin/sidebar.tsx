@@ -584,7 +584,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
           <button
             onClick={toggleCollapse}
             className="text-fg-muted hidden rounded-xl p-1.5 transition hover:bg-white/5 hover:text-white lg:block"
-            title="Toggle Sidebar (Ctrl+B)"
+            title={t("toggle_sidebar_ctrl_b")}
           >
             {isCollapsed ? (
               <ChevronRight className="h-4 w-4" />

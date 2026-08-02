@@ -324,11 +324,13 @@ export function Manage360CommandPalette() {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="360° Command Palette — search actions (Cmd+K)"
+                placeholder={t("360_command_palette_search_actions_cmd_k")}
                 className="ml-3 flex-1 bg-transparent text-sm text-white placeholder-zinc-500 focus:outline-none"
                 autoFocus
               />
-              <kbd className="rounded bg-zinc-800 px-2 py-0.5 text-xs text-zinc-400">ESC</kbd>
+              <kbd className="rounded bg-zinc-800 px-2 py-0.5 text-xs text-zinc-400">
+                {t("esc")}
+              </kbd>
             </div>
 
             {statusMsg && (
@@ -346,7 +348,7 @@ export function Manage360CommandPalette() {
             <div className="max-h-96 overflow-y-auto p-2">
               {filteredActions.length === 0 ? (
                 <div className="p-6 text-center text-xs text-zinc-500">
-                  No matching 360° actions found.
+                  {t("no_matching_360_actions_found")}
                 </div>
               ) : (
                 filteredActions.map((action) => {
@@ -372,8 +374,11 @@ export function Manage360CommandPalette() {
             </div>
 
             <div className="flex items-center justify-between border-t border-white/5 bg-zinc-950/80 px-4 py-2.5 text-[11px] text-zinc-500">
-              <span>ALPAR AI 360° Manage Surface • {allActions.length} actions</span>
-              <span className="font-mono text-zinc-400">Cmd + K / Ctrl + K</span>
+              <span>
+                {t("alpar_ai_360_manage_surface")}
+                {allActions.length} {t("actions")}
+              </span>
+              <span className="font-mono text-zinc-400">{t("cmd_k_ctrl_k")}</span>
             </div>
           </div>
         </div>

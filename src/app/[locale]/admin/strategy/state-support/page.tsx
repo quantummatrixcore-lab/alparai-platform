@@ -306,7 +306,7 @@ export default async function StateSupportPage({
             <div className="border-border-subtle flex items-center gap-2 border-b px-6 py-4">
               <Filter className="text-fg-muted h-4 w-4" />
               <span className="text-fg-secondary text-xs font-bold tracking-wider uppercase">
-                {programs.length} programs — sorted by Priority · Fit Score · Deadline
+                {programs.length} {t("programs_sorted_by_priority_fit_score_de")}
               </span>
             </div>
 
@@ -321,10 +321,10 @@ export default async function StateSupportPage({
                       {t("state_support_col_program")}
                     </th>
                     <th className="text-fg-muted px-4 py-3 text-left text-[10px] font-bold tracking-wider uppercase">
-                      Kurum / Grantor
+                      {t("kurum_grantor")}
                     </th>
                     <th className="text-fg-muted px-4 py-3 text-left text-[10px] font-bold tracking-wider uppercase">
-                      Kategori / Category
+                      {t("kategori_category")}
                     </th>
                     <th className="text-fg-muted px-4 py-3 text-right text-[10px] font-bold tracking-wider uppercase">
                       {t("state_support_col_amount")}
@@ -333,13 +333,13 @@ export default async function StateSupportPage({
                       {t("state_support_col_status")}
                     </th>
                     <th className="text-fg-muted px-4 py-3 text-left text-[10px] font-bold tracking-wider uppercase">
-                      Fit Score
+                      {t("fit_score")}
                     </th>
                     <th className="text-fg-muted px-4 py-3 text-left text-[10px] font-bold tracking-wider uppercase">
                       {t("state_support_col_timeline")}
                     </th>
                     <th className="text-fg-muted w-10 px-4 py-3 text-center text-[10px] font-bold tracking-wider uppercase">
-                      URL
+                      {t("url")}
                     </th>
                   </tr>
                 </thead>

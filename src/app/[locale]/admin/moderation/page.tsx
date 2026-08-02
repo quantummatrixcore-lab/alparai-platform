@@ -51,8 +51,7 @@ export default async function ModerationPage({ params }: { params: Promise<{ loc
           {t("moderation_queue")}
         </h1>
         <p className="mt-1 text-sm text-slate-400">
-          Review pending incident reports and grant Verified Respondent moderation badges to
-          official AI providers.
+          {t("review_pending_incident_reports_and_gran")}
         </p>
       </header>
 
@@ -73,7 +72,7 @@ export default async function ModerationPage({ params }: { params: Promise<{ loc
         <div>
           <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-white">
             <ShieldCheck className="h-5 w-5 text-emerald-400" />
-            Verified Respondent Badge Moderation
+            {t("verified_respondent_badge_moderation")}
           </h2>
           <VerifiedRespondentListClient providers={providers} />
         </div>

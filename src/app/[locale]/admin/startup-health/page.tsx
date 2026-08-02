@@ -2,19 +2,21 @@ import { getStartupHealth } from "@/actions/admin/startup-health";
 import { getFundingConversion } from "@/actions/admin/funding-conversion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { InfoIcon, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 export default async function StartupHealthPage({
   params: { locale },
 }: {
   params: { locale: string };
 }) {
+  const t = await getTranslations("admin");
   const [healthData, fundingData] = await Promise.all([getStartupHealth(), getFundingConversion()]);
 
   if (!healthData) {
     return (
       <div className="p-6">
-        <h1 className="mb-4 text-2xl font-bold tracking-tight">Startup Health Score</h1>
-        <p className="text-muted-foreground">No data available or insufficient permissions.</p>
+        <h1 className="mb-4 text-2xl font-bold tracking-tight">{t("startup_health_score")}</h1>
+        <p className="text-muted-foreground">{t("no_data_available_or_insufficient_permis")}</p>
       </div>
     );
   }
@@ -31,35 +33,37 @@ export default async function StartupHealthPage({
     <div className="mx-auto max-w-6xl space-y-6 p-6">
       <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Startup Health Score</h1>
-          <p className="text-muted-foreground">
-            Month-over-month growth metrics and overall startup health index.
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight">{t("startup_health_score")}</h1>
+          <p className="text-muted-foreground">{t("month_over_month_growth_metrics_and_over")}</p>
         </div>
         <div className="text-muted-foreground flex items-center gap-2 text-sm">
           <InfoIcon className="h-4 w-4" />
-          Measured: {new Date(measuredAt).toLocaleString(locale)}
+          {t("measured")}
+          {new Date(measuredAt).toLocaleString(locale)}
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
         <Card className="border-primary/20 bg-primary/5 md:col-span-1">
           <CardHeader>
-            <CardTitle>Health Score</CardTitle>
-            <CardDescription>Based on {totalKpis} key metrics</CardDescription>
+            <CardTitle>{t("health_score")}</CardTitle>
+            <CardDescription>
+              {t("based_on")}
+              {totalKpis} {t("key_metrics")}
+            </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center py-6">
             {showPercentages ? (
               <>
                 <span className="text-primary text-6xl font-black">{scorePct}%</span>
                 <span className="text-muted-foreground mt-2 text-sm font-medium">
-                  {passingKpis} of {totalKpis} KPIs growing
+                  {passingKpis} of {totalKpis} {t("kpis_growing")}
                 </span>
               </>
             ) : (
               <div className="space-y-2 text-center">
-                <span className="text-muted-foreground text-xl font-bold">Pre-Traction</span>
-                <p className="text-muted-foreground text-xs">Insufficient data for score</p>
+                <span className="text-muted-foreground text-xl font-bold">{t("pre_traction")}</span>
+                <p className="text-muted-foreground text-xs">{t("insufficient_data_for_score")}</p>
               </div>
             )}
           </CardContent>
@@ -78,7 +82,8 @@ export default async function StartupHealthPage({
                   <div>
                     <span className="text-3xl font-bold">{kpi.thisMonth}</span>
                     <span className="text-muted-foreground mt-1 block text-xs">
-                      prev: {kpi.lastMonth}
+                      {t("prev")}
+                      {kpi.lastMonth}
                     </span>
                   </div>
 
@@ -107,7 +112,7 @@ export default async function StartupHealthPage({
                     </div>
                   ) : (
                     <div className="rounded bg-amber-500/10 px-2 py-1 text-xs font-medium text-amber-500">
-                      Needs &ge;30/mo
+                      {t("needs_ge_30_mo")}
                     </div>
                   )}
                 </div>
@@ -119,7 +124,7 @@ export default async function StartupHealthPage({
           <Card className={!fundingData?.hasData ? "border-dashed opacity-50" : ""}>
             <CardHeader className="pb-2">
               <CardTitle className="text-muted-foreground text-sm font-medium">
-                Funding Conversion
+                {t("funding_conversion")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -135,11 +140,12 @@ export default async function StartupHealthPage({
                               : "—"}
                           </span>
                           <span className="text-muted-foreground text-sm font-medium">
-                            Win Rate
+                            {t("win_rate")}
                           </span>
                         </div>
                         <span className="text-muted-foreground mt-1 block text-xs">
-                          won: {fundingData.combinedWon} / resolved:{" "}
+                          {t("won")}
+                          {fundingData.combinedWon} {t("resolved")}{" "}
                           {fundingData.combinedWon + fundingData.combinedRejected}
                         </span>
                       </div>
@@ -153,12 +159,12 @@ export default async function StartupHealthPage({
                               : "—"}
                           </span>
                           <span className="text-muted-foreground text-sm font-medium">
-                            Activation
+                            {t("activation")}
                           </span>
                         </div>
                         <span className="text-muted-foreground mt-1 block text-xs">
-                          applied: {fundingData.combinedApplied} / catalog:{" "}
-                          {fundingData.combinedTotal}
+                          {t("applied")}
+                          {fundingData.combinedApplied} {t("catalog")} {fundingData.combinedTotal}
                         </span>
                       </div>
                     </div>
@@ -166,7 +172,7 @@ export default async function StartupHealthPage({
                 ) : (
                   <div className="flex items-end justify-between">
                     <span className="text-3xl font-bold">—</span>
-                    <span className="text-muted-foreground text-xs">No data</span>
+                    <span className="text-muted-foreground text-xs">{t("no_data")}</span>
                   </div>
                 )}
               </div>
@@ -176,25 +182,27 @@ export default async function StartupHealthPage({
           <Card className="border-dashed opacity-50">
             <CardHeader className="pb-2">
               <CardTitle className="text-muted-foreground text-sm font-medium">
-                Revenue MRR
+                {t("revenue_mrr")}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-end justify-between">
                 <span className="text-3xl font-bold">—</span>
-                <span className="text-muted-foreground text-xs">Unmeasured</span>
+                <span className="text-muted-foreground text-xs">{t("unmeasured")}</span>
               </div>
             </CardContent>
           </Card>
 
           <Card className="border-dashed opacity-50">
             <CardHeader className="pb-2">
-              <CardTitle className="text-muted-foreground text-sm font-medium">Uptime</CardTitle>
+              <CardTitle className="text-muted-foreground text-sm font-medium">
+                {t("uptime")}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-end justify-between">
                 <span className="text-3xl font-bold">—</span>
-                <span className="text-muted-foreground text-xs">Unmeasured</span>
+                <span className="text-muted-foreground text-xs">{t("unmeasured")}</span>
               </div>
             </CardContent>
           </Card>

@@ -75,10 +75,11 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
 
       <div className="flex flex-col items-center justify-center rounded-xl border border-white/10 bg-zinc-900/50 px-4 py-16 text-center">
         <TrendingUp className="text-brand-400 mb-3 h-10 w-10" strokeWidth={1.5} />
-        <h3 className="text-base font-semibold text-white">Real-Time Marketing Analytics Active</h3>
+        <h3 className="text-base font-semibold text-white">
+          {t("real_time_marketing_analytics_active")}
+        </h3>
         <p className="text-fg-muted mt-1 max-w-md text-xs">
-          Cataloged incident reports, outreach queue dispatches, and user registration conversion
-          are live-tracked.
+          {t("cataloged_incident_reports_outreach_queu")}
         </p>
       </div>
     </div>

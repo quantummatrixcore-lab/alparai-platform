@@ -248,7 +248,8 @@ export function RiskMatrixClient({
                 {t("risk_matrix_logs")}
                 {selectedCell && (
                   <span className="text-brand-400 ml-2 font-mono lowercase">
-                    {t("risk_filtered")} P{selectedCell.p} × I{selectedCell.i})
+                    {t("risk_filtered")} P{selectedCell.p} {t("i")}
+                    {selectedCell.i})
                   </span>
                 )}
               </h3>
@@ -338,7 +339,8 @@ export function RiskMatrixClient({
                         <span className="flex items-center gap-1">
                           <HelpCircle className="h-3 w-3" />
                           <span>
-                            P:{risk.probability} / I:{risk.impact}
+                            P:{risk.probability} {t("i")}
+                            {risk.impact}
                           </span>
                         </span>
                         <span

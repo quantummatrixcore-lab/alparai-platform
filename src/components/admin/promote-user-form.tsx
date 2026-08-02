@@ -114,7 +114,7 @@ export function PromoteUserForm({ currentUserRole }: PromoteUserFormProps) {
           id="promote-email"
           type="email"
           required
-          placeholder="user@example.com"
+          placeholder={t("user_example_com")}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="border-border-subtle bg-bg-primary focus:ring-brand-500 w-full rounded-md border px-3 py-2 text-sm focus:ring-2 focus:outline-none"

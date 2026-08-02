@@ -132,6 +132,7 @@ function SectionCard({
   className?: string;
   href?: string;
 }) {
+  const t = useTranslations("admin");
   return (
     <div
       className={`rounded-xl border border-white/10 bg-black/40 p-6 backdrop-blur-sm ${className ?? ""}`}
@@ -146,7 +147,8 @@ function SectionCard({
             href={href}
             className="text-fg-muted flex items-center gap-1 text-xs transition-colors hover:text-white"
           >
-            View all <ArrowUpRight className="h-3 w-3" />
+            {t("view_all")}
+            <ArrowUpRight className="h-3 w-3" />
           </Link>
         )}
       </div>
@@ -408,7 +410,7 @@ export function AdminHQDashboard({
       startupHealthMetrics.newsletter === 0)
   ) {
     startupHealthDisplay = (
-      <span className="text-xl font-medium tracking-tight text-white/40">no_signal</span>
+      <span className="text-xl font-medium tracking-tight text-white/40">{t("no_signal")}</span>
     );
     startupHealthVariant = "default";
   } else if (
@@ -417,7 +419,9 @@ export function AdminHQDashboard({
     startupHealthMetrics.newsletter < th
   ) {
     startupHealthDisplay = (
-      <span className="text-xl font-medium tracking-tight text-amber-400">insufficient_data</span>
+      <span className="text-xl font-medium tracking-tight text-amber-400">
+        {t("insufficient_data")}
+      </span>
     );
     startupHealthVariant = "warning";
   } else {
@@ -432,9 +436,9 @@ export function AdminHQDashboard({
         startupHealthMetrics.newsletter;
       startupHealthDisplay = (
         <span className="flex flex-col leading-none">
-          <span className="text-xl font-medium text-sky-400">ön-traksiyon</span>
+          <span className="text-xl font-medium text-sky-400">{t("n_traksiyon")}</span>
           <span className="mt-1 text-[10px] font-normal tracking-widest text-sky-400/70 uppercase">
-            +{rawNum} ham sayı
+            +{rawNum} {t("ham_say")}
           </span>
         </span>
       );
@@ -469,7 +473,7 @@ export function AdminHQDashboard({
       {/* ROW 1: Hero KPIs */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7">
         <HeroMetricCard
-          label="Başarı Skoru"
+          label={t("ba_ar_skoru")}
           value={startupHealthDisplay}
           variant={startupHealthVariant}
         />
@@ -487,7 +491,7 @@ export function AdminHQDashboard({
           variant={planPercent >= 80 ? "success" : planPercent >= 50 ? "warning" : "default"}
         />
         <HeroMetricCard
-          label="Yatırım/Hibe Dönüşüm Oranı"
+          label={t("yat_r_m_hibe_d_n_m_oran")}
           value={grantConversionRate}
           suffix="%"
           variant={grantConversionVariant}
@@ -548,7 +552,7 @@ export function AdminHQDashboard({
               </PieChart>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-2xl font-black text-emerald-400">{planPercent}%</span>
-                <span className="text-[9px] text-white/40 uppercase">done</span>
+                <span className="text-[9px] text-white/40 uppercase">{t("done")}</span>
               </div>
             </div>
             <div className="flex-1 space-y-2">
@@ -557,11 +561,11 @@ export function AdminHQDashboard({
                 <span className="font-bold text-emerald-400">{planCompleted}</span>
               </div>
               <div className="flex justify-between text-xs">
-                <span className="text-white/60">Total Items</span>
+                <span className="text-white/60">{t("total_items")}</span>
                 <span className="font-bold text-white">{planTotal}</span>
               </div>
               <div className="flex justify-between text-xs">
-                <span className="text-white/60">Remaining</span>
+                <span className="text-white/60">{t("remaining")}</span>
                 <span className="font-bold text-amber-400">{planTotal - planCompleted}</span>
               </div>
               <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
@@ -604,7 +608,7 @@ export function AdminHQDashboard({
             <div className="relative flex flex-col items-center">
               <Gauge value={systemHealth} size="md" variant={healthGaugeVariant} sublabel="%" />
               <div className="mt-2">
-                <LivePulseRing status={healthPulseStatus} size="sm" label="LIVE" />
+                <LivePulseRing status={healthPulseStatus} size="sm" label={t("live")} />
               </div>
             </div>
             <div className="w-full space-y-2">
@@ -618,7 +622,7 @@ export function AdminHQDashboard({
               </div>
               <div className="flex justify-between text-xs">
                 <span className="text-white/60">{t("metric_autopilot_guard")}</span>
-                <span className="font-bold text-emerald-400">ACTIVE</span>
+                <span className="font-bold text-emerald-400">{t("active")}</span>
               </div>
             </div>
           </div>
@@ -698,12 +702,13 @@ export function AdminHQDashboard({
             </div>
             <div className="w-full space-y-2">
               <div className="flex justify-between text-xs">
-                <span className="text-white/60">K-Benchmark</span>
+                <span className="text-white/60">{t("k_benchmark")}</span>
                 <Link
                   href={`/${locale}/admin/k-benchmark`}
                   className="flex items-center gap-1 font-bold text-violet-400 hover:text-violet-300"
                 >
-                  View <ArrowUpRight className="h-3 w-3" />
+                  {t("view")}
+                  <ArrowUpRight className="h-3 w-3" />
                 </Link>
               </div>
               <div className="flex justify-between text-xs">
@@ -722,7 +727,7 @@ export function AdminHQDashboard({
       {/* ROW 4: Strategy + SLO + Growth */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Strategy Quick Links */}
-        <SectionCard title="Strategy" href={`/${locale}/admin/strategy`}>
+        <SectionCard title={t("strategy")} href={`/${locale}/admin/strategy`}>
           <div className="grid grid-cols-2 gap-2">
             {[
               { href: `/admin/master-plan`, label: "Master Plan", icon: FileText },
@@ -851,10 +856,10 @@ export function AdminHQDashboard({
             <table className="w-full text-left text-xs">
               <thead className="border-b border-white/10 text-[10px] font-semibold text-white/40 uppercase">
                 <tr>
-                  <th className="pr-4 pb-2">Name</th>
-                  <th className="pr-4 pb-2">Email</th>
-                  <th className="pr-4 pb-2">Role</th>
-                  <th className="pb-2">Date</th>
+                  <th className="pr-4 pb-2">{t("name")}</th>
+                  <th className="pr-4 pb-2">{t("email")}</th>
+                  <th className="pr-4 pb-2">{t("role")}</th>
+                  <th className="pb-2">{t("date")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">

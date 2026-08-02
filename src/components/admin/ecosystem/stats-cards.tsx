@@ -78,7 +78,7 @@ export function StatsCards({ stats }: { stats: EcosystemStats }) {
               </span>
               <span className="flex items-center gap-1 text-[11px] font-medium text-zinc-400">
                 <TrendingUp className="h-3 w-3 text-emerald-400" />
-                Live
+                {t("live")}
               </span>
             </div>
 

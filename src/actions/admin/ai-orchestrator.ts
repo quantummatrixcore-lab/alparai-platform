@@ -55,7 +55,7 @@ export async function runCrossAuditArenaAction(_promptText: string): Promise<Are
 
   // 1. Fetch real anomalies from k_model_scores
   const { data: kScores } = await supabase
-    .from("k_model_scores" as never)
+    .from("k_model_scores")
     .select("model_id, score")
     .in("model_id", auditedModelIds)
     .lt("score", 0.5);

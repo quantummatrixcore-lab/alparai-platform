@@ -2,8 +2,10 @@
 
 import { CheckCircle2, AlertCircle, XCircle, Cpu } from "lucide-react";
 import type { Provider } from "./api-hub";
+import { useTranslations } from "next-intl";
 
 export function ProviderMatrix({ providers }: { providers: Provider[] }) {
+  const t = useTranslations("admin");
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "connected":
@@ -48,11 +50,11 @@ export function ProviderMatrix({ providers }: { providers: Provider[] }) {
           {/* Metrics Grid */}
           <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
             <div>
-              <p className="text-zinc-400">Health</p>
+              <p className="text-zinc-400">{t("health")}</p>
               <p className="mt-1 text-lg font-bold text-white">{provider.health}%</p>
             </div>
             <div>
-              <p className="text-zinc-400">Latency P95</p>
+              <p className="text-zinc-400">{t("latency_p95")}</p>
               <p className="mt-1 text-lg font-bold text-white">{provider.latencyMs}ms</p>
             </div>
           </div>
@@ -60,13 +62,13 @@ export function ProviderMatrix({ providers }: { providers: Provider[] }) {
           {/* Daily Activity */}
           <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3">
             <div className="text-xs">
-              <p className="text-zinc-400">Daily Requests</p>
+              <p className="text-zinc-400">{t("daily_requests")}</p>
               <p className="font-mono text-sm font-bold text-white">
                 {(provider.dailyRequests / 1000).toFixed(1)}K
               </p>
             </div>
             <div className="text-right text-xs">
-              <p className="text-zinc-400">Daily Cost</p>
+              <p className="text-zinc-400">{t("daily_cost")}</p>
               <p className="font-mono text-sm font-bold text-emerald-400">
                 ${provider.dailyCostUsd.toFixed(2)}
               </p>
@@ -77,7 +79,9 @@ export function ProviderMatrix({ providers }: { providers: Provider[] }) {
           {provider.respondentActive && (
             <div className="mt-2 flex items-center gap-1 rounded bg-blue-500/20 px-2 py-1">
               <Cpu className="h-3 w-3 text-blue-400" />
-              <span className="text-[10px] font-bold text-blue-400">VERIFIED RESPONDENT</span>
+              <span className="text-[10px] font-bold text-blue-400">
+                {t("verified_respondent")}
+              </span>
             </div>
           )}
         </div>

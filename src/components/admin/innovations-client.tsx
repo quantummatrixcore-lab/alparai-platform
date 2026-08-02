@@ -495,7 +495,10 @@ export function InnovationsClient({
                 </p>
 
                 <div className="text-fg-muted flex items-center justify-between border-t border-white/5 pt-2 font-mono text-[10px]">
-                  <span>Score: {item.source_score}</span>
+                  <span>
+                    {t("score")}
+                    {item.source_score}
+                  </span>
                   <a
                     href={item.external_url}
                     target="_blank"

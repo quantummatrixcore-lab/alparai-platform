@@ -123,6 +123,7 @@ export function SocialDashboardClient({
   initialAccounts,
   initialMarketingDrafts = [],
 }: Props) {
+  const t = useTranslations("admin");
   const tAdmin = useTranslations("admin");
   const [posts, setPosts] = useState<SocialPost[]>(initialPosts);
   const [marketingDrafts, setMarketingDrafts] = useState<MarketingDraft[]>(initialMarketingDrafts);
@@ -543,7 +544,7 @@ export function SocialDashboardClient({
       {/* 360° Observe: Social Performance Trend */}
       <div className="rounded-xl border border-white/5 bg-neutral-950/40 p-6">
         <h3 className="text-fg-primary mb-6 text-sm font-bold tracking-wide">
-          Social Performance Trend (Engagement)
+          {t("social_performance_trend_engagement")}
         </h3>
         <div className="h-64 w-full">
           {chartData.length > 0 ? (
@@ -601,8 +602,8 @@ export function SocialDashboardClient({
             </ResponsiveContainer>
           ) : (
             <EmptyStateIllustration
-              title="No Engagement Data"
-              description="There is no social post data to visualize for the current timeframe."
+              title={t("no_engagement_data")}
+              description={t("there_is_no_social_post_data_to_visualiz")}
               icon={BarChart3}
             />
           )}
@@ -649,7 +650,7 @@ export function SocialDashboardClient({
                   </div>
                 </div>
                 <button className="border-border-subtle bg-bg-tertiary rounded-md border px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/5">
-                  Manage
+                  {t("manage")}
                 </button>
               </div>
             </div>
@@ -657,7 +658,7 @@ export function SocialDashboardClient({
         })}
         {initialAccounts.length === 0 && (
           <div className="text-fg-muted border-border-subtle col-span-full rounded-xl border border-dashed py-4 text-center text-sm">
-            No social accounts connected.
+            {t("no_social_accounts_connected")}
           </div>
         )}
       </div>
@@ -769,7 +770,7 @@ export function SocialDashboardClient({
                       <div className="border-border-subtle/50 flex flex-col items-center justify-between gap-3 border-t pt-4 sm:flex-row">
                         <div className="text-fg-muted flex items-center gap-3 text-[10px] font-semibold">
                           <span>
-                            Characters:{" "}
+                            {t("characters")}{" "}
                             <span
                               className={cn(
                                 isOverLimit ? "text-danger-400 font-bold" : "text-fg-secondary",
@@ -779,14 +780,17 @@ export function SocialDashboardClient({
                             </span>
                             /{limit}
                           </span>
-                          <span>Created {new Date(post.created_at).toLocaleDateString()}</span>
+                          <span>
+                            {t("created")}
+                            {new Date(post.created_at).toLocaleDateString()}
+                          </span>
                         </div>
 
                         <div className="flex w-full items-center justify-end gap-2 sm:w-auto">
                           <button
                             onClick={() => handleCopy(post.id, post.body_text)}
                             className="text-fg-secondary hover:text-fg-primary rounded-lg border border-white/10 bg-white/5 p-2 transition-all hover:bg-white/10"
-                            title="Copy to Clipboard"
+                            title={t("copy_to_clipboard")}
                           >
                             {copiedId === post.id ? (
                               <Check className="text-success-400 h-4 w-4" />
@@ -797,7 +801,7 @@ export function SocialDashboardClient({
                           <button
                             onClick={() => handleOpenForm(post)}
                             className="text-fg-secondary hover:text-fg-primary rounded-lg border border-white/10 bg-white/5 p-2 transition-all hover:bg-white/10"
-                            title="Edit Draft"
+                            title={t("edit_draft")}
                           >
                             <Edit3 className="h-4 w-4" />
                           </button>
@@ -806,7 +810,7 @@ export function SocialDashboardClient({
                             className="from-success-600 to-success-500 hover:from-success-500 hover:to-success-400 flex items-center gap-2 rounded-xl bg-gradient-to-r px-4 py-2 text-xs font-bold text-white shadow-lg transition-all"
                           >
                             <Check className="h-3.5 w-3.5" />
-                            Approve & Post
+                            {t("approve_post")}
                           </button>
                         </div>
                       </div>
@@ -843,9 +847,9 @@ export function SocialDashboardClient({
                 <option value="all">
                   {tAdmin("allPlatforms", { defaultValue: "All Platforms" })}
                 </option>
-                <option value="linkedin">LinkedIn</option>
-                <option value="x">X / Twitter</option>
-                <option value="instagram">Instagram</option>
+                <option value="linkedin">{t("linkedin")}</option>
+                <option value="x">{t("x_twitter")}</option>
+                <option value="instagram">{t("instagram")}</option>
               </select>
             </div>
 
@@ -854,7 +858,7 @@ export function SocialDashboardClient({
               <div className="mb-6 space-y-4 border-b border-white/10 pb-6">
                 <h3 className="text-fg-primary flex items-center gap-2 text-sm font-bold">
                   <Linkedin className="text-brand-400 h-4 w-4" />
-                  LinkedIn Drafts (Pending Founder Approval)
+                  {t("linkedin_drafts_pending_founder_approval")}
                 </h3>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   {marketingDrafts
@@ -868,10 +872,10 @@ export function SocialDashboardClient({
                           <div className="mb-3 flex items-center justify-between">
                             <div className="text-fg-primary flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-bold">
                               <Linkedin className="text-brand-400 h-3 w-3" />
-                              <span>LinkedIn</span>
+                              <span>{t("linkedin")}</span>
                             </div>
                             <span className="rounded border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-400 uppercase">
-                              Pending Approval
+                              {t("pending_approval")}
                             </span>
                           </div>
                           <p className="text-fg-secondary border-border-subtle/50 line-clamp-6 rounded-lg border bg-black/20 p-3 font-mono text-xs whitespace-pre-wrap">
@@ -890,14 +894,17 @@ export function SocialDashboardClient({
 
                         <div className="border-border-subtle/50 mt-4 flex flex-col gap-3 border-t pt-4">
                           <div className="text-fg-muted flex items-center justify-between text-[10px] font-semibold">
-                            <span>Created {new Date(draft.created_at).toLocaleDateString()}</span>
+                            <span>
+                              {t("created")}
+                              {new Date(draft.created_at).toLocaleDateString()}
+                            </span>
                           </div>
 
                           <div className="flex items-center justify-end gap-2">
                             <button
                               onClick={() => handleCopy(draft.id, draft.content)}
                               className="text-fg-secondary hover:text-fg-primary rounded-lg border border-white/10 bg-white/5 p-2 transition-all hover:bg-white/10"
-                              title="Copy to Clipboard"
+                              title={t("copy_to_clipboard")}
                             >
                               {copiedId === draft.id ? (
                                 <Check className="text-success-400 h-4 w-4" />
@@ -955,7 +962,7 @@ export function SocialDashboardClient({
                       <div className="border-border-subtle/50 mt-4 flex flex-col gap-3 border-t pt-4">
                         <div className="text-fg-muted flex items-center justify-between text-[10px] font-semibold">
                           <span>
-                            Characters:{" "}
+                            {t("characters")}{" "}
                             <span
                               className={cn(
                                 isOverLimit ? "text-danger-400 font-bold" : "text-fg-secondary",
@@ -965,14 +972,17 @@ export function SocialDashboardClient({
                             </span>
                             /{limit}
                           </span>
-                          <span>Created {new Date(post.created_at).toLocaleDateString()}</span>
+                          <span>
+                            {t("created")}
+                            {new Date(post.created_at).toLocaleDateString()}
+                          </span>
                         </div>
 
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => handleCopy(post.id, post.body_text)}
                             className="text-fg-secondary hover:text-fg-primary rounded-lg border border-white/10 bg-white/5 p-2 transition-all hover:bg-white/10"
-                            title="Copy to Clipboard"
+                            title={t("copy_to_clipboard")}
                           >
                             {copiedId === post.id ? (
                               <Check className="text-success-400 h-4 w-4" />
@@ -986,7 +996,7 @@ export function SocialDashboardClient({
                             rel="noopener noreferrer"
                             onClick={() => handleQuickPublish(post)}
                             className="text-fg-secondary hover:text-fg-primary rounded-lg border border-white/10 bg-white/5 p-2 transition-all hover:bg-white/10"
-                            title="Open Platform"
+                            title={t("open_platform")}
                           >
                             <ExternalLink className="h-4 w-4" />
                           </a>
@@ -994,7 +1004,7 @@ export function SocialDashboardClient({
                             onClick={() => handleOpenForm(post)}
                             className="text-fg-primary flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold transition-all hover:bg-white/10"
                           >
-                            <Edit3 className="h-3 w-3" /> Edit
+                            <Edit3 className="h-3 w-3" /> {t("edit")}
                           </button>
                         </div>
                       </div>
@@ -1082,7 +1092,7 @@ export function SocialDashboardClient({
                             onClick={() => handleOpenForm(post)}
                             className="text-fg-primary flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs font-bold transition-all hover:bg-white/10"
                           >
-                            <Edit3 className="h-3 w-3" /> Edit
+                            <Edit3 className="h-3 w-3" /> {t("edit")}
                           </button>
                         </div>
                       </div>
@@ -1094,7 +1104,7 @@ export function SocialDashboardClient({
                 0 && (
                 <div className="py-6 text-center">
                   <p className="text-fg-muted text-xs">
-                    No scheduled or published timeline items found.
+                    {t("no_scheduled_or_published_timeline_items")}
                   </p>
                 </div>
               )}
@@ -1113,7 +1123,8 @@ export function SocialDashboardClient({
                 <div>
                   <div className="mb-3 flex items-center justify-between">
                     <span className="text-brand-400 bg-brand-500/10 border-brand-500/20 rounded-full border px-2.5 py-1 text-xs font-bold capitalize">
-                      Hook: {template.psychology_hook}
+                      {t("hook")}
+                      {template.psychology_hook}
                     </span>
                     <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
                       {template.content_type.replace("_", " ")}
@@ -1127,7 +1138,7 @@ export function SocialDashboardClient({
                   </div>
                   {template.example_output && (
                     <div className="text-fg-muted mt-2 text-[11px]">
-                      <span className="text-fg-secondary font-bold">Example Output:</span>
+                      <span className="text-fg-secondary font-bold">{t("example_output")}</span>
                       <p className="mt-1 line-clamp-2 italic">{template.example_output}</p>
                     </div>
                   )}
@@ -1137,7 +1148,7 @@ export function SocialDashboardClient({
                     onClick={() => handleUseTemplate(template)}
                     className="bg-brand-500 hover:bg-brand-400 flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold text-white shadow-[0_0_15px_rgba(168,85,247,0.3)] transition-all"
                   >
-                    <Sparkles className="h-3.5 w-3.5" /> Use Template
+                    <Sparkles className="h-3.5 w-3.5" /> {t("use_template")}
                   </button>
                 </div>
               </div>
@@ -1156,13 +1167,13 @@ export function SocialDashboardClient({
               <table className="w-full border-collapse text-left text-xs">
                 <thead>
                   <tr className="border-border-subtle text-fg-muted border-b text-[10px] font-bold tracking-wider uppercase">
-                    <th className="px-4 py-3">Post Title</th>
-                    <th className="px-4 py-3">Platform</th>
-                    <th className="px-4 py-3 text-right">Reach</th>
-                    <th className="px-4 py-3 text-right">Likes</th>
-                    <th className="px-4 py-3 text-right">Comments</th>
-                    <th className="px-4 py-3 text-right">Shares</th>
-                    <th className="px-4 py-3 text-right">Actions</th>
+                    <th className="px-4 py-3">{t("post_title")}</th>
+                    <th className="px-4 py-3">{t("platform")}</th>
+                    <th className="px-4 py-3 text-right">{t("reach")}</th>
+                    <th className="px-4 py-3 text-right">{t("likes")}</th>
+                    <th className="px-4 py-3 text-right">{t("comments")}</th>
+                    <th className="px-4 py-3 text-right">{t("shares")}</th>
+                    <th className="px-4 py-3 text-right">{t("actions")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-border-subtle/50 text-fg-primary divide-y">
@@ -1209,7 +1220,7 @@ export function SocialDashboardClient({
                             }}
                             className="rounded border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-bold transition-all hover:bg-white/10"
                           >
-                            Update
+                            {t("update")}
                           </button>
                         </td>
                       </tr>
@@ -1272,7 +1283,7 @@ export function SocialDashboardClient({
                       {isFetchingUrl ? (
                         <>
                           <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                          Fetching...
+                          {t("fetching")}
                         </>
                       ) : (
                         tAdmin("intelligenceFetchBtn", { defaultValue: "Fetch Content" })
@@ -1473,7 +1484,7 @@ export function SocialDashboardClient({
                   value={formTitle}
                   onChange={(e) => setFormTitle(e.target.value)}
                   className="bg-bg-primary border-border-subtle text-fg-primary focus:ring-brand-500 w-full rounded-xl border px-3 py-2 focus:ring-2 focus:outline-none"
-                  placeholder="Hook Post - Passport lie"
+                  placeholder={t("hook_post_passport_lie")}
                 />
               </div>
 
@@ -1487,10 +1498,10 @@ export function SocialDashboardClient({
                     onChange={(e) => setFormPlatform(e.target.value as SocialPost["platform"])}
                     className="bg-bg-primary border-border-subtle text-fg-primary w-full rounded-xl border px-3 py-2 focus:outline-none"
                   >
-                    <option value="linkedin">LinkedIn</option>
-                    <option value="x">X / Twitter</option>
-                    <option value="instagram">Instagram</option>
-                    <option value="facebook">Facebook</option>
+                    <option value="linkedin">{t("linkedin")}</option>
+                    <option value="x">{t("x_twitter")}</option>
+                    <option value="instagram">{t("instagram")}</option>
+                    <option value="facebook">{t("facebook")}</option>
                   </select>
                 </div>
                 <div className="space-y-1">
@@ -1546,7 +1557,7 @@ export function SocialDashboardClient({
                   value={formBody}
                   onChange={(e) => setFormBody(e.target.value)}
                   className="bg-bg-primary border-border-subtle text-fg-primary focus:ring-brand-500 w-full rounded-xl border px-3 py-2 font-mono whitespace-pre-wrap focus:ring-2 focus:outline-none"
-                  placeholder="I asked an AI for help with a passport application..."
+                  placeholder={t("i_asked_an_ai_for_help_with_a_passport_a")}
                 />
               </div>
 
@@ -1598,7 +1609,7 @@ export function SocialDashboardClient({
                       value={formExternalUrl}
                       onChange={(e) => setFormExternalUrl(e.target.value)}
                       className="bg-bg-primary border-border-subtle text-fg-primary w-full rounded-xl border px-3 py-2 focus:outline-none"
-                      placeholder="https://linkedin.com/posts/..."
+                      placeholder={t("https_linkedin_com_posts")}
                     />
                   </div>
                 )}
@@ -1606,7 +1617,7 @@ export function SocialDashboardClient({
 
               <div className="border-border-subtle/30 space-y-2 border-t pt-3">
                 <label className="text-fg-primary block text-sm font-semibold">
-                  AI Image Generation (Vertex Imagen 3)
+                  {t("ai_image_generation_vertex_imagen_3")}
                 </label>
                 <div className="flex gap-2">
                   <input
@@ -1614,7 +1625,7 @@ export function SocialDashboardClient({
                     value={formImagePrompt}
                     onChange={(e) => setFormImagePrompt(e.target.value)}
                     className="bg-bg-primary border-border-subtle text-fg-primary focus:ring-brand-500 flex-1 rounded-xl border px-3 py-2 text-xs focus:ring-2 focus:outline-none"
-                    placeholder="Enter prompt to generate image..."
+                    placeholder={t("enter_prompt_to_generate_image")}
                   />
                   {editingPost ? (
                     <button
@@ -1626,18 +1637,18 @@ export function SocialDashboardClient({
                       {isGeneratingImage ? (
                         <>
                           <RefreshCw className="h-3 w-3 animate-spin" />
-                          Generating...
+                          {t("generating")}
                         </>
                       ) : (
                         <>
                           <Sparkles className="h-3 w-3" />
-                          Generate
+                          {t("generate")}
                         </>
                       )}
                     </button>
                   ) : (
                     <span className="text-fg-muted self-center text-xs">
-                      Save post to enable image generation
+                      {t("save_post_to_enable_image_generation")}
                     </span>
                   )}
                 </div>
@@ -1645,7 +1656,9 @@ export function SocialDashboardClient({
                 {/* Aspect Ratio Selector */}
                 {editingPost && (
                   <div className="flex items-center gap-4 pt-1">
-                    <span className="text-fg-secondary text-xs font-semibold">Aspect Ratio:</span>
+                    <span className="text-fg-secondary text-xs font-semibold">
+                      {t("aspect_ratio")}
+                    </span>
                     <div className="flex gap-3">
                       {[
                         { value: "1:1", label: "1:1 Square" },
@@ -1679,7 +1692,7 @@ export function SocialDashboardClient({
                 )}
                 {!editingPost && (
                   <p className="text-fg-muted text-[10px]">
-                    * Save the post as a draft first to enable image generation.
+                    {t("save_the_post_as_a_draft_first_to_enable")}
                   </p>
                 )}
                 {formImageUrl ? (
@@ -1699,7 +1712,7 @@ export function SocialDashboardClient({
                   </div>
                 ) : (
                   <div className="border-border-subtle bg-bg-secondary text-fg-muted mt-2 flex aspect-square max-w-[120px] items-center justify-center rounded-xl border border-dashed text-[10px] font-bold tracking-wider uppercase">
-                    Ölçülmedi
+                    {t("l_lmedi")}
                   </div>
                 )}
               </div>
@@ -1710,7 +1723,7 @@ export function SocialDashboardClient({
                   onClick={() => setShowFormModal(false)}
                   className="text-fg-secondary rounded-xl bg-white/5 px-4 py-2 text-sm font-bold transition-all hover:bg-white/10"
                 >
-                  Cancel
+                  {t("cancel")}
                 </button>
                 <button
                   type="submit"

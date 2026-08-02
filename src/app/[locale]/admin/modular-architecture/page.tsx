@@ -11,6 +11,7 @@ import {
   Globe,
   Code,
 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 const ICON_MAP: Record<string, React.ReactNode> = {
   Eye: <Eye className="h-6 w-6 text-purple-400" />,
@@ -24,6 +25,7 @@ const ICON_MAP: Record<string, React.ReactNode> = {
 };
 
 export default async function ModularArchitectureAdminPage() {
+  const t = await getTranslations("admin");
   const data = await getModularArchitectureAction();
 
   return (
@@ -41,7 +43,7 @@ export default async function ModularArchitectureAdminPage() {
         <div className="flex flex-col items-start justify-center border-r border-slate-800 pr-6">
           <div className="flex items-center gap-2 text-sm text-slate-400">
             <Award className="h-5 w-5 text-amber-400" />
-            <span>GPT 360° Evaluation Score</span>
+            <span>{t("gpt_360_evaluation_score")}</span>
           </div>
           <div className="mt-2 flex items-baseline gap-2">
             <span className="text-5xl font-extrabold text-emerald-400">
@@ -50,13 +52,13 @@ export default async function ModularArchitectureAdminPage() {
             <span className="text-xl font-bold text-slate-500">/ {data.auditScore.maxScore}</span>
           </div>
           <p className="mt-2 text-xs text-slate-400">
-            Targeted roadmap optimization to reach 1000/1000
+            {t("targeted_roadmap_optimization_to_reach_1")}
           </p>
         </div>
 
         <div>
           <h3 className="mb-3 font-mono text-xs tracking-wider text-emerald-400 uppercase">
-            Top Strengths
+            {t("top_strengths")}
           </h3>
           <div className="grid grid-cols-2 gap-2 text-sm">
             {data.auditScore.strengths.map((s) => (
@@ -73,7 +75,7 @@ export default async function ModularArchitectureAdminPage() {
 
         <div>
           <h3 className="mb-3 font-mono text-xs tracking-wider text-amber-400 uppercase">
-            Growth Bottlenecks
+            {t("growth_bottlenecks")}
           </h3>
           <div className="space-y-2 text-sm">
             {data.auditScore.growthAreas.map((g) => (
@@ -91,7 +93,9 @@ export default async function ModularArchitectureAdminPage() {
 
       {/* 8 Modular Product Pillars */}
       <div>
-        <h2 className="mb-4 text-xl font-semibold text-white">The 8 Modular Product Pillars</h2>
+        <h2 className="mb-4 text-xl font-semibold text-white">
+          {t("the_8_modular_product_pillars")}
+        </h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {data.pillars.map((pillar) => (
             <div
@@ -103,7 +107,10 @@ export default async function ModularArchitectureAdminPage() {
                   <div className="rounded-lg border border-slate-700 bg-slate-800/60 p-2">
                     {ICON_MAP[pillar.iconName]}
                   </div>
-                  <span className="font-mono text-xs text-slate-500">Pillar 0{pillar.number}</span>
+                  <span className="font-mono text-xs text-slate-500">
+                    {t("pillar_0")}
+                    {pillar.number}
+                  </span>
                 </div>
                 <h3 className="mt-2 text-base font-bold text-white">{pillar.name}</h3>
                 <span className="inline-block rounded border border-cyan-800/60 bg-cyan-950/60 px-2 py-0.5 font-mono text-[11px] text-cyan-400">

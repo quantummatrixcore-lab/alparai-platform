@@ -4,12 +4,14 @@ import { useState } from "react";
 import { Search, Cpu, CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import type { FreeModelRecord } from "@/lib/ai/discovery/fetch-models";
+import { useTranslations } from "next-intl";
 
 interface LiveModelsDirectoryProps {
   initialModels: FreeModelRecord[];
 }
 
 export function LiveModelsDirectory({ initialModels }: LiveModelsDirectoryProps) {
+  const t = useTranslations("admin");
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<"all" | "free" | "paid">("all");
   const [sortField, setSortField] = useState<keyof FreeModelRecord>("name");
@@ -52,10 +54,11 @@ export function LiveModelsDirectory({ initialModels }: LiveModelsDirectoryProps)
       <CardHeader className="flex flex-col justify-between gap-4 border-b border-white/5 sm:flex-row sm:items-center">
         <div>
           <CardTitle className="text-fg-muted flex items-center gap-2 text-sm font-bold tracking-wider uppercase">
-            <Cpu className="h-4 w-4" /> Live AI Models Directory
+            <Cpu className="h-4 w-4" /> {t("live_ai_models_directory")}
           </CardTitle>
           <p className="text-fg-muted mt-1 text-xs">
-            Real-time synchronization with OpenRouter API. Total: {initialModels.length} models.
+            {t("real_time_synchronization_with_openroute")}
+            {initialModels.length} {t("models")}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -63,7 +66,7 @@ export function LiveModelsDirectory({ initialModels }: LiveModelsDirectoryProps)
             <Search className="text-fg-muted absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search models..."
+              placeholder={t("search_models")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="placeholder:text-fg-muted/50 focus:ring-brand-500 w-full rounded-md border border-white/10 bg-white/5 py-1.5 pr-4 pl-9 text-sm text-white transition-all focus:ring-2 focus:outline-none sm:w-64"
@@ -78,7 +81,7 @@ export function LiveModelsDirectory({ initialModels }: LiveModelsDirectoryProps)
                   : "text-fg-muted hover:text-white"
               }`}
             >
-              All
+              {t("all")}
             </button>
             <button
               onClick={() => setFilterType("free")}
@@ -88,7 +91,7 @@ export function LiveModelsDirectory({ initialModels }: LiveModelsDirectoryProps)
                   : "text-fg-muted hover:text-emerald-400"
               }`}
             >
-              Free
+              {t("free")}
             </button>
             <button
               onClick={() => setFilterType("paid")}
@@ -98,7 +101,7 @@ export function LiveModelsDirectory({ initialModels }: LiveModelsDirectoryProps)
                   : "text-fg-muted hover:text-brand-400"
               }`}
             >
-              Paid
+              {t("paid")}
             </button>
           </div>
         </div>
@@ -113,7 +116,7 @@ export function LiveModelsDirectory({ initialModels }: LiveModelsDirectoryProps)
                 onClick={() => toggleSort("name")}
               >
                 <div className="flex items-center gap-2">
-                  Model{" "}
+                  {t("model")}{" "}
                   {sortField === "name" &&
                     (sortAsc ? (
                       <ChevronUp className="h-3 w-3" />
@@ -128,7 +131,7 @@ export function LiveModelsDirectory({ initialModels }: LiveModelsDirectoryProps)
                 onClick={() => toggleSort("provider")}
               >
                 <div className="flex items-center gap-2">
-                  Provider{" "}
+                  {t("provider")}{" "}
                   {sortField === "provider" &&
                     (sortAsc ? (
                       <ChevronUp className="h-3 w-3" />
@@ -143,7 +146,7 @@ export function LiveModelsDirectory({ initialModels }: LiveModelsDirectoryProps)
                 onClick={() => toggleSort("context_length")}
               >
                 <div className="flex items-center justify-end gap-2">
-                  Context{" "}
+                  {t("context")}{" "}
                   {sortField === "context_length" &&
                     (sortAsc ? (
                       <ChevronUp className="h-3 w-3" />
@@ -158,7 +161,7 @@ export function LiveModelsDirectory({ initialModels }: LiveModelsDirectoryProps)
                 onClick={() => toggleSort("pricing_prompt")}
               >
                 <div className="flex items-center justify-end gap-2">
-                  Pricing (1M T){" "}
+                  {t("pricing_1m_t")}{" "}
                   {sortField === "pricing_prompt" &&
                     (sortAsc ? (
                       <ChevronUp className="h-3 w-3" />
@@ -196,7 +199,7 @@ export function LiveModelsDirectory({ initialModels }: LiveModelsDirectoryProps)
                   <td className="px-6 py-4 text-right">
                     {isFree ? (
                       <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 text-[11px] font-bold tracking-wider text-emerald-400 uppercase">
-                        <CheckCircle2 className="h-3 w-3" /> Free
+                        <CheckCircle2 className="h-3 w-3" /> {t("free")}
                       </span>
                     ) : (
                       <div className="text-xs">
@@ -206,7 +209,7 @@ export function LiveModelsDirectory({ initialModels }: LiveModelsDirectoryProps)
                         </div>
                         <div className="text-brand-300 font-mono">
                           ${(model.pricing_completion * 1000000).toFixed(2)}{" "}
-                          <span className="text-fg-muted text-[10px]">OUT</span>
+                          <span className="text-fg-muted text-[10px]">{t("out")}</span>
                         </div>
                       </div>
                     )}
@@ -217,7 +220,7 @@ export function LiveModelsDirectory({ initialModels }: LiveModelsDirectoryProps)
             {sorted.length === 0 && (
               <tr>
                 <td colSpan={4} className="text-fg-muted px-6 py-12 text-center">
-                  No models found matching your criteria.
+                  {t("no_models_found_matching_your_criteria")}
                 </td>
               </tr>
             )}

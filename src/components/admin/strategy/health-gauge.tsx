@@ -1,10 +1,12 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 interface HealthGaugeProps {
   score: number;
 }
 
 export function HealthGauge({ score }: HealthGaugeProps) {
+  const t = useTranslations("admin");
   const radius = 70;
   const strokeWidth = 12;
   const circumference = 2 * Math.PI * radius;
@@ -65,7 +67,7 @@ export function HealthGauge({ score }: HealthGaugeProps) {
         <div className="absolute flex flex-col items-center justify-center text-center">
           <span className="text-4xl font-extrabold tracking-tight text-white">{score}%</span>
           <span className="text-fg-muted mt-0.5 text-[9px] font-bold tracking-wider uppercase">
-            Health Score
+            {t("health_score")}
           </span>
         </div>
       </div>

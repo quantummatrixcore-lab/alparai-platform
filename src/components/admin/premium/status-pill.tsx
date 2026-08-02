@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { LivePulseRing } from "./live-pulse-ring";
+import { useTranslations } from "next-intl";
 
 interface StatusPillProps {
   name: string;
@@ -22,6 +23,7 @@ export function StatusPill({
   icon,
   className,
 }: StatusPillProps) {
+  const t = useTranslations("admin");
   const statusLabel = {
     healthy: "Operational",
     warning: "Degraded",
@@ -62,20 +64,24 @@ export function StatusPill({
       <div className="flex items-center gap-4 text-right">
         {uptime !== undefined && (
           <div>
-            <p className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">Uptime</p>
+            <p className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
+              {t("uptime")}
+            </p>
             <p className="font-mono text-sm font-bold text-white">{uptime}%</p>
           </div>
         )}
         {latency && (
           <div>
-            <p className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">Latency</p>
+            <p className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
+              {t("latency")}
+            </p>
             <p className="font-mono text-sm font-bold text-white">{latency}</p>
           </div>
         )}
         {lastIncident && (
           <div className="hidden sm:block">
             <p className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
-              Last Issue
+              {t("last_issue")}
             </p>
             <p className="text-fg-secondary text-xs">{lastIncident}</p>
           </div>

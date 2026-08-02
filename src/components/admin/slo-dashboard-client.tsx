@@ -47,7 +47,7 @@ export function SloDashboardClient({
   useEffect(() => {
     if (initialDora.current) return;
     let cancelled = false;
-    fetch("/api/dora/metrics", { cache: 'no-store' })
+    fetch("/api/dora/metrics", { cache: "no-store" })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (!cancelled && data) setDora(data);
@@ -120,7 +120,7 @@ export function SloDashboardClient({
             </div>
             <p className="mt-2 text-2xl font-black text-white">
               {dora.current?.lead_time_minutes ?? "—"}{" "}
-              <span className="text-fg-muted text-xs font-normal">min</span>
+              <span className="text-fg-muted text-xs font-normal">{t("min")}</span>
             </p>
             <p className="text-fg-muted mt-1 text-[10px]">
               {t("dora_commit_to_prod") || "Commit to production deploy"}
@@ -155,7 +155,7 @@ export function SloDashboardClient({
             </div>
             <p className="mt-2 text-2xl font-black text-white">
               {dora.current?.mttr_minutes ?? "—"}{" "}
-              <span className="text-fg-muted text-xs font-normal">min</span>
+              <span className="text-fg-muted text-xs font-normal">{t("min")}</span>
             </p>
             <p className="text-fg-muted mt-1 text-[10px]">
               {t("dora_mean_recovery") || "Mean time to recovery"}

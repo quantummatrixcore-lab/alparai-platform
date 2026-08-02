@@ -278,7 +278,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
                   </Badge>
                 </div>
                 <p className="text-fg-muted mt-1 font-mono text-xs">
-                  {(metrics.supabaseDb.usedBytes / 1024 / 1024).toFixed(2)} MB /{" "}
+                  {(metrics.supabaseDb.usedBytes / 1024 / 1024).toFixed(2)} {t("mb")}{" "}
                   {t("resources_db_size_limit")}
                 </p>
               </div>
@@ -300,7 +300,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
                   </Badge>
                 </div>
                 <p className="text-fg-muted mt-1 font-mono text-xs">
-                  {(metrics.supabaseStorage.usedBytes / 1024 / 1024).toFixed(2)} MB /{" "}
+                  {(metrics.supabaseStorage.usedBytes / 1024 / 1024).toFixed(2)} {t("mb")}{" "}
                   {t("resources_storage_limit")}
                 </p>
               </div>
@@ -612,7 +612,7 @@ export function ResourcesClient({ locale }: { locale: string }) {
                       (-{efficiency.targetDistancePct.toFixed(1)}%)
                     </span>
                   ) : (
-                    <span className="font-mono text-[10px] text-emerald-400">(Hedefte)</span>
+                    <span className="font-mono text-[10px] text-emerald-400">{t("hedefte")}</span>
                   )}
                 </div>
               </div>

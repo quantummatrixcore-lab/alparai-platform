@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { VerifiedRespondentToggle } from "./verified-respondent-toggle";
 import { ShieldCheck, Building2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface ProviderRow {
   id: string;
@@ -19,24 +20,22 @@ interface Props {
 }
 
 export function VerifiedRespondentListClient({ providers = [] }: Props) {
+  const t = useTranslations("admin");
   return (
     <Card className="border-white/10 bg-[#0F1E2E]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-base text-white">
           <ShieldCheck className="h-5 w-5 text-emerald-400" />
-          Verified Respondent Badge Management
+          {t("verified_respondent_badge_management")}
         </CardTitle>
-        <p className="text-xs text-slate-400">
-          Grant official Verified Respondent badges to AI providers to allow verified response
-          submissions to published incidents.
-        </p>
+        <p className="text-xs text-slate-400">{t("grant_official_verified_respondent_badge")}</p>
       </CardHeader>
 
       <CardContent>
         <div className="divide-y divide-white/5 rounded-lg border border-white/5 bg-[#08121C]">
           {providers.length === 0 ? (
             <div className="p-6 text-center text-xs text-slate-500">
-              No AI providers tracked yet.
+              {t("no_ai_providers_tracked_yet")}
             </div>
           ) : (
             providers.map((p) => {
@@ -56,13 +55,13 @@ export function VerifiedRespondentListClient({ providers = [] }: Props) {
                         <span className="font-mono text-xs text-slate-500">({p.slug})</span>
                         {isVerified && (
                           <Badge className="border-emerald-500/30 bg-emerald-500/10 text-[10px] text-emerald-400">
-                            Verified Respondent
+                            {t("verified_respondent")}
                           </Badge>
                         )}
                       </div>
                       {p.respondent_contact_email && (
                         <div className="mt-0.5 text-xs text-slate-400">
-                          Contact:{" "}
+                          {t("contact")}{" "}
                           <span className="font-mono text-slate-300">
                             {p.respondent_contact_email}
                           </span>

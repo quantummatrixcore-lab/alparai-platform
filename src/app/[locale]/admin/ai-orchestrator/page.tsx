@@ -3,22 +3,23 @@ import { Cpu, ShieldCheck, Zap, Layers } from "lucide-react";
 
 import { createServerClient } from "@/lib/supabase/server";
 import { OrchestratorTriggerButton } from "./trigger-button";
+import { getTranslations } from "next-intl/server";
 
 export default async function AiOrchestratorAdminPage() {
+  const t = await getTranslations("admin");
   const supabase = await createServerClient();
   const trustScores = await getTrustScoresAction();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: chains } = await supabase.from("ai_routing_chains" as any).select("*");
+  const { data: chains } = await supabase.from("ai_routing_chains").select("*");
 
   const { data: dbModels } = await supabase
-    .from("ai_models" as unknown as never) // workaround for missing table type
+    .from("ai_models")
     .select(
       `
       id,
       name,
       status,
-      provider:ai_providers(name)
+      provider:ai_providers!ai_models_provider_id_fkey(name)
     `,
     )
     .eq("status", "active")
@@ -47,11 +48,9 @@ export default async function AiOrchestratorAdminPage() {
         <div>
           <h1 className="flex items-center gap-3 text-3xl font-bold tracking-tight text-white">
             <Cpu className="h-8 w-8 text-emerald-400" />
-            AI Orchestrator & Cross-Audit Arena
+            {t("ai_orchestrator_cross_audit_arena")}
           </h1>
-          <p className="mt-2 text-slate-400">
-            Stealth multi-agent cross-audit & trust-based autonomous model routing (Admin-Only).
-          </p>
+          <p className="mt-2 text-slate-400">{t("stealth_multi_agent_cross_audit_trust_ba")}</p>
         </div>
       </div>
       <div>
@@ -62,55 +61,58 @@ export default async function AiOrchestratorAdminPage() {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
         <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-6">
           <div className="flex items-center justify-between text-sm text-slate-400">
-            <span>Free-Tier Inventory</span>
+            <span>{t("free_tier_inventory")}</span>
             <Zap className="h-5 w-5 text-amber-400" />
           </div>
           <p className="mt-2 text-3xl font-bold text-amber-400">{freeModels.length}</p>
-          <p className="mt-1 text-xs text-slate-500">Live active $0.00 pricing models</p>
+          <p className="mt-1 text-xs text-slate-500">{t("live_active_0_00_pricing_models")}</p>
         </div>
 
         <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-6">
           <div className="flex items-center justify-between text-sm text-slate-400">
-            <span>Average Trust Score</span>
+            <span>{t("average_trust_score")}</span>
             <ShieldCheck className="h-5 w-5 text-emerald-400" />
           </div>
           <p className="mt-2 text-3xl font-bold text-emerald-400">{avgTrustScore}%</p>
-          <p className="mt-1 text-xs text-slate-500">Evaluated across {totalAudits} cross-audits</p>
+          <p className="mt-1 text-xs text-slate-500">
+            {t("evaluated_across")}
+            {totalAudits} {t("cross_audits")}
+          </p>
         </div>
 
         <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-6">
           <div className="flex items-center justify-between text-sm text-slate-400">
-            <span>Active Capability Chains</span>
+            <span>{t("active_capability_chains")}</span>
             <Layers className="h-5 w-5 text-cyan-400" />
           </div>
           <p className="mt-2 text-3xl font-bold text-cyan-400">{chains?.length || 0}</p>
-          <p className="mt-1 text-xs text-slate-500">Dynamic DB routing chains</p>
+          <p className="mt-1 text-xs text-slate-500">{t("dynamic_db_routing_chains")}</p>
         </div>
 
         <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-6">
           <div className="flex items-center justify-between text-sm text-slate-400">
-            <span>API Cost Savings</span>
+            <span>{t("api_cost_savings")}</span>
             <span className="rounded border border-emerald-800 bg-emerald-950/60 px-2 py-0.5 text-xs font-semibold text-emerald-400 uppercase">
               100%
             </span>
           </div>
           <p className="mt-2 text-3xl font-bold text-white">$0.00</p>
-          <p className="mt-1 text-xs text-slate-500">Zero token cost on internal audits</p>
+          <p className="mt-1 text-xs text-slate-500">{t("zero_token_cost_on_internal_audits")}</p>
         </div>
       </div>
 
       {/* Free Models Arsenal Table */}
       <div className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/80 p-6">
-        <h2 className="text-xl font-semibold text-white">Live AI Models</h2>
+        <h2 className="text-xl font-semibold text-white">{t("live_ai_models")}</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-slate-300">
             <thead className="bg-slate-800/60 text-xs text-slate-400 uppercase">
               <tr>
-                <th className="p-3">Model Name</th>
-                <th className="p-3">Provider</th>
-                <th className="p-3">Context Window</th>
-                <th className="p-3">Prompt Cost</th>
-                <th className="p-3">Status</th>
+                <th className="p-3">{t("model_name")}</th>
+                <th className="p-3">{t("provider")}</th>
+                <th className="p-3">{t("context_window")}</th>
+                <th className="p-3">{t("prompt_cost")}</th>
+                <th className="p-3">{t("status")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800">
@@ -118,11 +120,13 @@ export default async function AiOrchestratorAdminPage() {
                 <tr key={m.id} className="hover:bg-slate-800/40">
                   <td className="p-3 font-mono text-emerald-400">{m.name}</td>
                   <td className="p-3">{m.provider}</td>
-                  <td className="p-3 font-mono">{m.context_length.toLocaleString()} tokens</td>
-                  <td className="p-3 font-mono text-emerald-400">$0.00 / 1M</td>
+                  <td className="p-3 font-mono">
+                    {m.context_length.toLocaleString()} {t("tokens")}
+                  </td>
+                  <td className="p-3 font-mono text-emerald-400">{t("0_00_1m")}</td>
                   <td className="p-3">
                     <span className="inline-flex items-center rounded border border-emerald-800 bg-emerald-950 px-2 py-0.5 text-xs font-medium text-emerald-400">
-                      ACTIVE
+                      {t("active")}
                     </span>
                   </td>
                 </tr>
@@ -135,7 +139,7 @@ export default async function AiOrchestratorAdminPage() {
       {/* Dynamic Chains Table */}
       {chains && chains.length > 0 && (
         <div className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/80 p-6">
-          <h2 className="text-xl font-semibold text-white">Active Routing Chains</h2>
+          <h2 className="text-xl font-semibold text-white">{t("active_routing_chains")}</h2>
           <div className="grid gap-4 md:grid-cols-2">
             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {chains.map((chain: any) => (
@@ -162,16 +166,16 @@ export default async function AiOrchestratorAdminPage() {
       {/* Trust Ledger Table */}
       {trustScores.length > 0 && (
         <div className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/80 p-6">
-          <h2 className="text-xl font-semibold text-white">Model Trust Scores Ledger</h2>
+          <h2 className="text-xl font-semibold text-white">{t("model_trust_scores_ledger")}</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-slate-300">
               <thead className="bg-slate-800/60 text-xs text-slate-400 uppercase">
                 <tr>
-                  <th className="p-3">Model ID</th>
-                  <th className="p-3">Provider</th>
-                  <th className="p-3">Trust Score</th>
-                  <th className="p-3">Hallucination Rate</th>
-                  <th className="p-3">Ethical Compliance</th>
+                  <th className="p-3">{t("model_id")}</th>
+                  <th className="p-3">{t("provider")}</th>
+                  <th className="p-3">{t("trust_score")}</th>
+                  <th className="p-3">{t("hallucination_rate")}</th>
+                  <th className="p-3">{t("ethical_compliance")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800">

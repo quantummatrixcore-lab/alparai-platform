@@ -32,15 +32,15 @@ export default async function ProvidersPage({ params }: { params: Promise<{ loca
       </div>
 
       <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-6">
-        <h2 className="mb-4 text-xl font-semibold text-white">AI Providers Database</h2>
+        <h2 className="mb-4 text-xl font-semibold text-white">{t("ai_providers_database")}</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-slate-300">
             <thead className="bg-slate-800/60 text-xs text-slate-400 uppercase">
               <tr>
-                <th className="p-3">Name</th>
-                <th className="p-3">Slug</th>
-                <th className="p-3">Website</th>
-                <th className="p-3">Status</th>
+                <th className="p-3">{t("name")}</th>
+                <th className="p-3">{t("slug")}</th>
+                <th className="p-3">{t("website")}</th>
+                <th className="p-3">{t("status")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800">
@@ -66,11 +66,11 @@ export default async function ProvidersPage({ params }: { params: Promise<{ loca
                   <td className="p-3">
                     {provider.is_verified ? (
                       <span className="inline-flex items-center rounded border border-emerald-800 bg-emerald-950 px-2 py-0.5 text-xs font-medium text-emerald-400">
-                        VERIFIED
+                        {t("verified")}
                       </span>
                     ) : (
                       <span className="inline-flex items-center rounded border border-slate-700 bg-slate-800 px-2 py-0.5 text-xs font-medium text-slate-400">
-                        PENDING
+                        {t("pending")}
                       </span>
                     )}
                   </td>
@@ -79,7 +79,7 @@ export default async function ProvidersPage({ params }: { params: Promise<{ loca
             </tbody>
           </table>
           {(!providers || providers.length === 0) && (
-            <div className="p-6 text-center text-slate-500">No AI providers found.</div>
+            <div className="p-6 text-center text-slate-500">{t("no_ai_providers_found")}</div>
           )}
         </div>
       </div>

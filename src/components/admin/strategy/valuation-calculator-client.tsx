@@ -227,10 +227,10 @@ export function ValuationCalculatorClient({
           <button
             onClick={handleAutoSuggestFromStrategy}
             className="flex items-center justify-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs font-bold text-amber-300 transition hover:bg-amber-500/20"
-            title="Auto-fill valuation multipliers based on SWOT, risks, and roadmap milestones"
+            title={t("auto_fill_valuation_multipliers_based_on")}
           >
             <Sparkles className="h-3.5 w-3.5 text-amber-400" />
-            Auto-Suggest from Strategy Data
+            {t("auto_suggest_from_strategy_data")}
           </button>
         </div>
 

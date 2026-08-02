@@ -117,7 +117,8 @@ export function StaticKeysList() {
                   <td className="text-fg-muted p-4 text-xs text-zinc-400">{prov.limit}</td>
                   <td className="p-4 text-right">
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold tracking-wider text-emerald-400 uppercase">
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400"></span> Connected
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>{" "}
+                      {t("connected")}
                     </span>
                   </td>
                 </tr>

@@ -47,17 +47,19 @@ export function RevenueDashboard({ data }: { data: RevenueMetric[] }) {
       <div className="mb-5 flex items-center justify-between border-b border-white/5 pb-3">
         <h2 className="text-md inline-flex items-center gap-2 font-semibold text-white">
           <CurrencyDollar weight="duotone" className="h-5 w-5 text-emerald-400" />
-          {t("finance")} (MRR / ARR)
+          {t("finance")} {t("mrr_arr")}
         </h2>
         <span className="text-brand-400 bg-brand-500/10 rounded-full px-2 py-1 text-xs font-medium">
-          Live (Stripe Sync)
+          {t("live_stripe_sync")}
         </span>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
         <div className="space-y-4 lg:col-span-1">
           <div className="rounded-lg border border-white/5 bg-neutral-800/40 p-4">
-            <p className="mb-1 text-sm font-medium text-neutral-400">Monthly Recurring Revenue</p>
+            <p className="mb-1 text-sm font-medium text-neutral-400">
+              {t("monthly_recurring_revenue")}
+            </p>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold text-white">${currentMrr.toLocaleString()}</span>
               {mrrChangePercent !== 0 && (
@@ -75,7 +77,7 @@ export function RevenueDashboard({ data }: { data: RevenueMetric[] }) {
           </div>
 
           <div className="rounded-lg border border-white/5 bg-neutral-800/40 p-4">
-            <p className="mb-1 text-sm font-medium text-neutral-400">Annual Run Rate (ARR)</p>
+            <p className="mb-1 text-sm font-medium text-neutral-400">{t("annual_run_rate_arr")}</p>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold text-white">${currentArr.toLocaleString()}</span>
               {mrrChangePercent !== 0 && (
@@ -93,7 +95,9 @@ export function RevenueDashboard({ data }: { data: RevenueMetric[] }) {
           </div>
 
           <div className="rounded-lg border border-white/5 bg-neutral-800/40 p-4">
-            <p className="mb-1 text-sm font-medium text-neutral-400">Active Pro/Enterprise Subs</p>
+            <p className="mb-1 text-sm font-medium text-neutral-400">
+              {t("active_pro_enterprise_subs")}
+            </p>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold text-white">{currentSubs.toLocaleString()}</span>
               <span className="ml-1 text-xs text-neutral-500">

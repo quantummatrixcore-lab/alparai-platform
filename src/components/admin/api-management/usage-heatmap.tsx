@@ -2,6 +2,7 @@
 
 import React from "react";
 import type { Provider } from "./api-hub";
+import { useTranslations } from "next-intl";
 
 interface HeatmapData {
   hour: number;
@@ -173,6 +174,7 @@ function getHeatmapColor(value: number, maxValue: number) {
 }
 
 export function UsageHeatmap({ providers }: { providers: Provider[] }) {
+  const t = useTranslations("admin");
   const allValues = MOCK_24H_USAGE.flatMap((row) => [
     row.openai,
     row.anthropic,
@@ -208,7 +210,7 @@ export function UsageHeatmap({ providers }: { providers: Provider[] }) {
           >
             {/* Header row with hours */}
             <div className="flex items-center justify-center text-xs font-semibold text-zinc-500">
-              Hour
+              {t("hour")}
             </div>
             {Array.from({ length: 24 }).map((_, i) => (
               <div
@@ -248,9 +250,9 @@ export function UsageHeatmap({ providers }: { providers: Provider[] }) {
 
         {/* Legend for intensity */}
         <div className="mt-6 border-t border-white/10 pt-4">
-          <p className="mb-3 text-xs font-semibold text-zinc-400">Intensity Scale</p>
+          <p className="mb-3 text-xs font-semibold text-zinc-400">{t("intensity_scale")}</p>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-zinc-500">Low</span>
+            <span className="text-xs text-zinc-500">{t("low")}</span>
             <div className="flex gap-1">
               {[
                 "bg-zinc-800",
@@ -263,7 +265,7 @@ export function UsageHeatmap({ providers }: { providers: Provider[] }) {
                 <div key={i} className={`h-4 w-4 rounded ${color}`} />
               ))}
             </div>
-            <span className="text-xs text-zinc-500">High</span>
+            <span className="text-xs text-zinc-500">{t("high")}</span>
           </div>
         </div>
 
@@ -283,7 +285,10 @@ export function UsageHeatmap({ providers }: { providers: Provider[] }) {
                   <p className="mt-1 text-sm font-bold text-white">
                     {totalRequests > 999 ? `${(totalRequests / 1000).toFixed(1)}K` : totalRequests}
                   </p>
-                  <p className="text-xs text-zinc-400">Avg: {avgRequests}/h</p>
+                  <p className="text-xs text-zinc-400">
+                    {t("avg")}
+                    {avgRequests}/h
+                  </p>
                 </div>
               );
             })}

@@ -162,7 +162,7 @@ export function GeoDashboardClient({
                 type="url"
                 value={form.cited_url}
                 onChange={(e) => setForm({ ...form, cited_url: e.target.value })}
-                placeholder="https://alparai.com/incidents/..."
+                placeholder={t("https_alparai_com_incidents")}
                 className="text-fg-primary w-full rounded border border-white/10 bg-black/40 px-3 py-2 text-xs focus:border-emerald-500 focus:outline-none"
                 required
               />
@@ -203,20 +203,20 @@ export function GeoDashboardClient({
             <div className="space-y-3">
               <div className="flex items-center justify-between border-b border-white/10 pb-2 text-xs">
                 <span className="flex items-center gap-2 font-bold text-white">
-                  <Award className="h-4 w-4 text-emerald-400" /> ALPAR AI
+                  <Award className="h-4 w-4 text-emerald-400" /> {t("alpar_ai")}
                 </span>
                 <span className="font-mono font-bold text-emerald-400">88.5 / 100</span>
               </div>
               <div className="text-fg-muted flex items-center justify-between border-b border-white/10 pb-2 text-xs">
-                <span>AI Incident Database (AIID)</span>
+                <span>{t("ai_incident_database_aiid")}</span>
                 <span className="font-mono">64.2 / 100</span>
               </div>
               <div className="text-fg-muted flex items-center justify-between border-b border-white/10 pb-2 text-xs">
-                <span>EU AI Observatory</span>
+                <span>{t("eu_ai_observatory")}</span>
                 <span className="font-mono">58.0 / 100</span>
               </div>
               <div className="text-fg-muted flex items-center justify-between text-xs">
-                <span>OECD AI Policy Observatory</span>
+                <span>{t("oecd_ai_policy_observatory")}</span>
                 <span className="font-mono">51.5 / 100</span>
               </div>
             </div>

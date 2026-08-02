@@ -63,7 +63,7 @@ export function OutreachPageContent({ initialQueue }: { initialQueue: OutreachQu
               : "text-slate-400 hover:bg-white/5 hover:text-white",
           )}
         >
-          Outreach Queue
+          {t("outreach_queue")}
         </button>
         <button
           onClick={() => setActiveTab("media")}
@@ -106,7 +106,9 @@ export function OutreachPageContent({ initialQueue }: { initialQueue: OutreachQu
         {activeTab === "media" && (
           <Card className="border-white/5 bg-[#0F1E2E]">
             <CardHeader className="flex flex-row items-center justify-between border-b border-white/5 bg-black/20 pb-4">
-              <CardTitle className="text-lg text-emerald-400">Embargoed Press Pitch (EN)</CardTitle>
+              <CardTitle className="text-lg text-emerald-400">
+                {t("embargoed_press_pitch_en")}
+              </CardTitle>
               <button
                 onClick={() => handleCopy(MEDIA_PITCH)}
                 className="flex items-center gap-2 rounded-lg bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-400 transition-colors hover:bg-emerald-500/20"
@@ -127,7 +129,7 @@ export function OutreachPageContent({ initialQueue }: { initialQueue: OutreachQu
           <Card className="border-white/5 bg-[#0F1E2E]">
             <CardHeader className="flex flex-row items-center justify-between border-b border-white/5 bg-black/20 pb-4">
               <CardTitle className="text-lg text-emerald-400">
-                Academic / Expert Invite (TR)
+                {t("academic_expert_invite_tr")}
               </CardTitle>
               <button
                 onClick={() => handleCopy(EXPERT_PITCH)}
@@ -143,7 +145,7 @@ export function OutreachPageContent({ initialQueue }: { initialQueue: OutreachQu
               </pre>
               <div className="mt-6 rounded-lg bg-white/5 p-4 text-xs text-slate-400">
                 <Info className="text-brand-400 mb-2 h-4 w-4" />
-                (EN sürümü aynı yapıda — TU München/ETH/Oxford için gerekirse eklenecektir.)
+                {t("en_s_r_m_ayn_yap_da_tu_m_nchen_eth_oxfor")}
               </div>
             </CardContent>
           </Card>
@@ -153,28 +155,25 @@ export function OutreachPageContent({ initialQueue }: { initialQueue: OutreachQu
           <div className="grid gap-6 md:grid-cols-2">
             <Card className="border-white/5 bg-[#0F1E2E]">
               <CardHeader className="border-b border-white/5 bg-black/20">
-                <CardTitle className="text-brand-300">Targeting & Strategy</CardTitle>
+                <CardTitle className="text-brand-300">{t("targeting_strategy")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4 pt-6 text-sm text-slate-300">
                 <div>
-                  <strong className="mb-1 block text-white">Expert Invites (This Week)</strong>
+                  <strong className="mb-1 block text-white">{t("expert_invites_this_week")}</strong>
                   <ul className="list-inside list-disc space-y-1 text-slate-400">
-                    <li>Target: 5 people at TR university AI ethics/law labs.</li>
-                    <li>Expected response rate: 20-40%.</li>
-                    <li>Value prop: Academic co-authorship for Q4 report.</li>
+                    <li>{t("target_5_people_at_tr_university_ai_ethi")}</li>
+                    <li>{t("expected_response_rate_20_40")}</li>
+                    <li>{t("value_prop_academic_co_authorship_for_q4")}</li>
                   </ul>
                 </div>
                 <div className="border-t border-white/5 pt-4">
-                  <strong className="mb-1 block text-white">Media Outlets (Embargoed)</strong>
+                  <strong className="mb-1 block text-white">{t("media_outlets_embargoed")}</strong>
                   <ul className="list-inside list-disc space-y-1 text-slate-400">
-                    <li>Send window: July 27-29.</li>
-                    <li>Too early = forgotten; too late = doesn't fit schedules.</li>
-                    <li>
-                      Targets: AI policy reporters (TechCrunch AI, The Verge policy, Politico Europe
-                      tech, MLex, Euractiv digital).
-                    </li>
-                    <li>Newsletters: Import AI, Transformer.</li>
-                    <li>TR Tech Press: Webrazzi, ShiftDelete (corporate).</li>
+                    <li>{t("send_window_july_27_29")}</li>
+                    <li>{t("too_early_forgotten_too_late_doesn_t_fit")}</li>
+                    <li>{t("targets_ai_policy_reporters_techcrunch_a")}</li>
+                    <li>{t("newsletters_import_ai_transformer")}</li>
+                    <li>{t("tr_tech_press_webrazzi_shiftdelete_corpo")}</li>
                   </ul>
                 </div>
               </CardContent>
@@ -184,7 +183,7 @@ export function OutreachPageContent({ initialQueue }: { initialQueue: OutreachQu
               <CardHeader className="border-b border-emerald-500/10 bg-emerald-500/10">
                 <CardTitle className="flex items-center gap-2 text-emerald-400">
                   <Info className="h-5 w-5" />
-                  Golden Rules
+                  {t("golden_rules")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-6">
@@ -192,17 +191,15 @@ export function OutreachPageContent({ initialQueue }: { initialQueue: OutreachQu
                   <li className="flex items-start gap-2">
                     <span className="mt-0.5 text-emerald-500">1.</span>
                     <p>
-                      <strong>Personalized First Line:</strong> Always send from a personal address
-                      with a highly personalized first sentence. A mass-email appearance is the
-                      "kiss of death".
+                      <strong>{t("personalized_first_line")}</strong>{" "}
+                      {t("always_send_from_a_personal_address_with")}
                     </p>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-0.5 text-emerald-500">2.</span>
                     <p>
-                      <strong>Do Not Guess Emails:</strong> Find the exact email or Twitter DM from
-                      the author's page on their outlet's site. 10-15 high-quality contacts are
-                      enough.
+                      <strong>{t("do_not_guess_emails")}</strong>{" "}
+                      {t("find_the_exact_email_or_twitter_dm_from_")}
                     </p>
                   </li>
                 </ul>

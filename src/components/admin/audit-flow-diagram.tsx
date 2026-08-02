@@ -1,15 +1,17 @@
 import { Cpu, ShieldCheck, Warning } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 export function AuditFlowDiagram() {
+  const t = useTranslations("admin");
   return (
     <div className="border-border-subtle bg-bg-secondary/40 flex h-full flex-col justify-between rounded-2xl border p-6 backdrop-blur-md">
       <div>
         <h3 className="mb-1 text-xs font-bold tracking-wider text-white uppercase">
-          Cross-Audit Consensus Flow
+          {t("cross_audit_consensus_flow")}
         </h3>
         <p className="text-fg-muted mb-6 text-[11px]">
-          Multi-agent verification pipeline showing real-time truth consensus checks.
+          {t("multi_agent_verification_pipeline_showin")}
         </p>
       </div>
 
@@ -107,7 +109,7 @@ export function AuditFlowDiagram() {
               <Warning className="h-6 w-6" />
             </div>
             <span className="text-fg-muted text-[9px] font-bold tracking-wider uppercase">
-              Report
+              {t("report")}
             </span>
           </div>
 
@@ -141,7 +143,7 @@ export function AuditFlowDiagram() {
               <ShieldCheck className="h-6 w-6 animate-pulse" />
             </div>
             <span className="text-[9px] font-bold tracking-wider text-emerald-400 uppercase">
-              Consensus
+              {t("consensus")}
             </span>
           </div>
         </div>

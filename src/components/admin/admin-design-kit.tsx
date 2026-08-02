@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ShieldCheck, Sparkles, Search, X } from "lucide-react";
 import { ArrowUpRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function AdminPageHeader({
   icon,
@@ -25,6 +26,7 @@ export function AdminPageHeader({
   lastUpdated?: string;
   className?: string;
 }) {
+  const t = useTranslations("admin");
   return (
     <header className={cn("mb-8 flex flex-col gap-3", className)}>
       {/* Breadcrumb Navigation */}
@@ -51,7 +53,8 @@ export function AdminPageHeader({
           {subtitle && <p className="text-fg-muted mt-1 text-sm">{subtitle}</p>}
           {lastUpdated && (
             <p className="text-fg-muted mt-1.5 font-mono text-[10px]">
-              Last updated: {lastUpdated}
+              {t("last_updated")}
+              {lastUpdated}
             </p>
           )}
         </div>

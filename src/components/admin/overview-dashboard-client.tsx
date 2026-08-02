@@ -182,7 +182,7 @@ export function OverviewDashboardClient({
                   <Cpu className="h-3.5 w-3.5 text-purple-400" />
                   {t("shield_guard_status") || "Shield Guard Status"}
                 </span>
-                <LivePulseRing status="healthy" size="sm" label="ONLINE" />
+                <LivePulseRing status="healthy" size="sm" label={t("online")} />
               </div>
 
               {initialLogs.length === 0 ? (

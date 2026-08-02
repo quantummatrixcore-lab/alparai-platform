@@ -146,7 +146,7 @@ function InvestorApplicationRow({ application }: { application: InvestorApplicat
                   rel="noopener noreferrer"
                   className="text-brand-400 hover:text-brand-300 inline-flex items-center gap-1 text-xs font-semibold"
                 >
-                  View LinkedIn Profile
+                  {t("view_linkedin_profile")}
                   <ExternalLink className="h-3.5 w-3.5" />
                 </a>
               )}
@@ -154,7 +154,7 @@ function InvestorApplicationRow({ application }: { application: InvestorApplicat
 
             {application.why_interested && (
               <div className="mt-2 max-w-2xl rounded border border-slate-800 bg-[#0E1F30] p-3 text-xs text-slate-300">
-                <p className="mb-1 font-semibold text-slate-400">Why Interested:</p>
+                <p className="mb-1 font-semibold text-slate-400">{t("why_interested")}</p>
                 <p className="italic">"{application.why_interested}"</p>
               </div>
             )}
@@ -169,7 +169,7 @@ function InvestorApplicationRow({ application }: { application: InvestorApplicat
                 isLoading={pending}
                 onClick={() => handleReview("approve")}
               >
-                Approve
+                {t("approve")}
               </Button>
               <Button
                 size="sm"
@@ -178,7 +178,7 @@ function InvestorApplicationRow({ application }: { application: InvestorApplicat
                 isLoading={pending}
                 onClick={() => handleReview("reject")}
               >
-                Reject
+                {t("reject")}
               </Button>
             </div>
           )}

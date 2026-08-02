@@ -80,7 +80,7 @@ export default async function RoadmapPage({ params }: { params: Promise<{ locale
               </p>
               <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-3">
                 <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
-                  Status
+                  {t("status")}
                 </span>
                 <span className="rounded border border-purple-500/20 bg-purple-500/10 px-2 py-0.5 text-[9px] font-black text-purple-400 uppercase">
                   {t("in_development_phase_2")}
@@ -104,7 +104,7 @@ export default async function RoadmapPage({ params }: { params: Promise<{ locale
               </p>
               <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-3">
                 <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
-                  Status
+                  {t("status")}
                 </span>
                 <span className="rounded border border-blue-500/20 bg-blue-500/10 px-2 py-0.5 text-[9px] font-black text-blue-400 uppercase">
                   {t("active_planning")}
@@ -126,7 +126,7 @@ export default async function RoadmapPage({ params }: { params: Promise<{ locale
               </p>
               <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-3">
                 <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
-                  Status
+                  {t("status")}
                 </span>
                 <span className="rounded border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[9px] font-black text-emerald-400 uppercase">
                   {t("planned")}

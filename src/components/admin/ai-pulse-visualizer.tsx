@@ -13,6 +13,7 @@ import {
 import { Pulse, TrendUp, Cpu, Lightning, Sparkle } from "@phosphor-icons/react";
 import { scoutNewAIIncidents } from "@/actions/scout";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 const INITIAL_DATA = Array.from({ length: 20 }, (_, i) => ({
   time: `${i}s`,
@@ -21,6 +22,7 @@ const INITIAL_DATA = Array.from({ length: 20 }, (_, i) => ({
 }));
 
 export function AIPulseVisualizer() {
+  const t = useTranslations("admin");
   const [data, _setData] = useState(INITIAL_DATA);
   const [isPending, startTransition] = useTransition();
 
@@ -46,7 +48,7 @@ export function AIPulseVisualizer() {
         <div className="flex items-center gap-4">
           <h2 className="inline-flex items-center gap-2 font-mono text-lg font-bold tracking-widest text-white uppercase">
             <Pulse weight="duotone" className="text-brand-400 h-6 w-6" />
-            AI Pulse Ecosystem
+            {t("ai_pulse_ecosystem")}
           </h2>
           <button
             onClick={handleScout}
@@ -60,10 +62,10 @@ export function AIPulseVisualizer() {
         </div>
         <div className="flex gap-4">
           <div className="text-brand-300 flex items-center gap-2 font-mono text-xs">
-            <Lightning weight="duotone" className="h-4 w-4" /> Throughput
+            <Lightning weight="duotone" className="h-4 w-4" /> {t("throughput")}
           </div>
           <div className="flex items-center gap-2 font-mono text-xs text-cyan-400">
-            <Cpu weight="duotone" className="h-4 w-4" /> Latency
+            <Cpu weight="duotone" className="h-4 w-4" /> {t("latency")}
           </div>
         </div>
       </div>
@@ -124,15 +126,19 @@ export function AIPulseVisualizer() {
 
       <div className="mt-4 grid grid-cols-3 gap-4 border-t border-white/5 pt-4">
         <div className="flex flex-col gap-1">
-          <span className="font-mono text-[10px] text-white/50 uppercase">Avg Throughput</span>
-          <span className="text-brand-300 font-mono text-lg font-bold">94.2 req/s</span>
+          <span className="font-mono text-[10px] text-white/50 uppercase">
+            {t("avg_throughput")}
+          </span>
+          <span className="text-brand-300 font-mono text-lg font-bold">{t("94_2_req_s")}</span>
         </div>
         <div className="flex flex-col gap-1 border-l border-white/5 pl-4">
-          <span className="font-mono text-[10px] text-white/50 uppercase">P99 Latency</span>
-          <span className="font-mono text-lg font-bold text-cyan-400">24ms</span>
+          <span className="font-mono text-[10px] text-white/50 uppercase">{t("p99_latency")}</span>
+          <span className="font-mono text-lg font-bold text-cyan-400">{t("24ms")}</span>
         </div>
         <div className="flex flex-col gap-1 border-l border-white/5 pl-4">
-          <span className="font-mono text-[10px] text-white/50 uppercase">Network Health</span>
+          <span className="font-mono text-[10px] text-white/50 uppercase">
+            {t("network_health")}
+          </span>
           <span className="inline-flex items-center gap-1 font-mono text-lg font-bold text-green-400">
             <TrendUp className="h-4 w-4" /> 99.9%
           </span>

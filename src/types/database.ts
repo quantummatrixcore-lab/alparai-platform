@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+        grant_applications: {
+          Row: {
+            id: string
+            program_name: string
+            funding_amount: string | null
+            apply_url: string | null
+            category: string | null
+            phase: number
+            status: string
+            prepared_content_ref: string | null
+            completed_by: string | null
+            completed_at: string | null
+            notes: string | null
+            created_at: string
+          }
+          Insert: {
+            id?: string
+            program_name: string
+            funding_amount?: string | null
+            apply_url?: string | null
+            category?: string | null
+            phase?: number
+            status?: string
+            prepared_content_ref?: string | null
+            completed_by?: string | null
+            completed_at?: string | null
+            notes?: string | null
+            created_at?: string
+          }
+          Update: {
+            id?: string
+            program_name?: string
+            funding_amount?: string | null
+            apply_url?: string | null
+            category?: string | null
+            phase?: number
+            status?: string
+            prepared_content_ref?: string | null
+            completed_by?: string | null
+            completed_at?: string | null
+            notes?: string | null
+            created_at?: string
+          }
+          Relationships: []
+        },
         feature_flags: {
           Row: {
             key: string

@@ -72,7 +72,7 @@ export function System360Overview() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/health", { cache: 'no-store' })
+    fetch("/api/health", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => setHealth(data))
       .catch(() => setHealth(null))
@@ -207,7 +207,7 @@ export function System360Overview() {
           </div>
           <div className="relative z-10 mt-4 flex items-end gap-2">
             <span className="text-3xl font-bold tracking-tight text-white">$342.50</span>
-            <span className="mb-1 font-mono text-xs font-semibold text-amber-400">/ mo</span>
+            <span className="mb-1 font-mono text-xs font-semibold text-amber-400">{t("mo")}</span>
           </div>
           <div className="relative z-10 mt-2 flex items-center gap-2">
             <div className="bg-bg-tertiary h-1.5 w-full overflow-hidden rounded-full">
@@ -224,15 +224,15 @@ export function System360Overview() {
         >
           <div className="bg-brand-500/10 absolute -top-4 -right-4 rounded-full p-6 blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
-            <h3 className="text-fg-secondary font-semibold">Cross-Audit Engine</h3>
+            <h3 className="text-fg-secondary font-semibold">{t("cross_audit_engine")}</h3>
             <ShieldCheck weight="duotone" className="text-brand-400 h-5 w-5" />
           </div>
           <div className="relative z-10 mt-4 flex items-end gap-2">
-            <span className="text-3xl font-bold tracking-tight text-white">Active</span>
+            <span className="text-3xl font-bold tracking-tight text-white">{t("active")}</span>
             <span className="mb-1 flex h-2 w-2 animate-pulse rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,1)]"></span>
           </div>
           <div className="text-fg-muted relative z-10 mt-2 text-xs">
-            <span className="text-white/60">Race Conditions:</span> 0 detected
+            <span className="text-white/60">{t("race_conditions")}</span> {t("0_detected")}
           </div>
         </motion.div>
 
@@ -243,15 +243,17 @@ export function System360Overview() {
         >
           <div className="absolute -top-4 -right-4 rounded-full bg-cyan-500/10 p-6 blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
-            <h3 className="text-fg-secondary font-semibold">Inference Load</h3>
+            <h3 className="text-fg-secondary font-semibold">{t("inference_load")}</h3>
             <Cpu weight="duotone" className="h-5 w-5 text-cyan-400" />
           </div>
           <div className="relative z-10 mt-4 flex items-end gap-2">
             <span className="text-3xl font-bold tracking-tight text-white">4.2</span>
-            <span className="text-fg-muted mb-1 font-mono text-xs font-semibold">req / sec</span>
+            <span className="text-fg-muted mb-1 font-mono text-xs font-semibold">
+              {t("req_sec")}
+            </span>
           </div>
           <div className="text-fg-muted relative z-10 mt-2 flex items-center gap-2 text-xs">
-            <span className="font-medium text-cyan-400">99.98%</span> uptime
+            <span className="font-medium text-cyan-400">99.98%</span> {t("uptime")}
           </div>
         </motion.div>
       </div>

@@ -83,7 +83,7 @@ export function AnalyticsDashboard({ snapshot, locale }: AnalyticsDashboardProps
           title={t("total_runs") || "Total Runs"}
           value={stats.total}
           icon={<Activity className="text-brand-400 h-5 w-5" />}
-          description="Accumulated execution logs"
+          description={t("accumulated_execution_logs")}
         />
         <StatCard
           title={t("success_runs") || "Succeeded"}
@@ -96,20 +96,20 @@ export function AnalyticsDashboard({ snapshot, locale }: AnalyticsDashboardProps
           title={t("failed_runs") || "Failed / Exhausted"}
           value={stats.failed}
           icon={<AlertTriangle className="text-danger-400 h-5 w-5" />}
-          description="Errors or circuit breaks"
+          description={t("errors_or_circuit_breaks")}
           colorClass="text-danger-400"
         />
         <StatCard
           title={t("total_tokens_used") || "Total Tokens Used"}
           value={stats.totalTokens.toLocaleString(locale)}
           icon={<Cpu className="text-brand-300 h-5 w-5" />}
-          description="LLM consumption"
+          description={t("llm_consumption")}
         />
         <StatCard
           title={t("estimated_cost_usd") || "Est. AI Cost"}
           value={`$${stats.estimatedCostUSD.toFixed(4)}`}
           icon={<Sparkles className="text-warning-400 h-5 w-5" />}
-          description="Est. $2.00 / 1M tokens"
+          description={t("est_2_00_1m_tokens")}
           colorClass="text-warning-400"
         />
       </div>
@@ -146,17 +146,17 @@ export function AnalyticsDashboard({ snapshot, locale }: AnalyticsDashboardProps
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                 <span className="text-2xl font-bold text-white">{successRate.toFixed(0)}%</span>
                 <span className="text-fg-muted text-[10px] tracking-wider uppercase">
-                  Reliability
+                  {t("reliability")}
                 </span>
               </div>
             </div>
             <div className="mt-6 grid w-full grid-cols-2 gap-4 text-center">
               <div>
-                <span className="text-fg-muted block text-xs">Succeeded</span>
+                <span className="text-fg-muted block text-xs">{t("succeeded")}</span>
                 <span className="text-success-400 text-lg font-semibold">{stats.succeeded}</span>
               </div>
               <div>
-                <span className="text-fg-muted block text-xs">Failed / Retried</span>
+                <span className="text-fg-muted block text-xs">{t("failed_retried")}</span>
                 <span className="text-danger-400 text-lg font-semibold">
                   {stats.failed + stats.retried}
                 </span>
@@ -192,7 +192,7 @@ export function AnalyticsDashboard({ snapshot, locale }: AnalyticsDashboardProps
                     />
                     {/* Tooltip */}
                     <div className="pointer-events-none absolute bottom-full z-10 mb-1 rounded border border-white/10 bg-black px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 shadow-xl transition-opacity duration-200 group-hover:opacity-100">
-                      {count} runs
+                      {count} {t("runs")}
                     </div>
                   </div>
                   <span
@@ -206,7 +206,7 @@ export function AnalyticsDashboard({ snapshot, locale }: AnalyticsDashboardProps
             })}
             {Object.keys(stats.byStatus).length === 0 && (
               <div className="text-fg-muted flex h-full w-full items-center justify-center text-sm">
-                No status data available
+                {t("no_status_data_available")}
               </div>
             )}
           </div>
@@ -224,7 +224,7 @@ export function AnalyticsDashboard({ snapshot, locale }: AnalyticsDashboardProps
           <div className="space-y-4">
             <div className="flex items-center justify-between rounded-lg border border-white/5 bg-white/[0.02] p-4">
               <div>
-                <p className="text-fg-muted text-xs tracking-wider uppercase">Queue state</p>
+                <p className="text-fg-muted text-xs tracking-wider uppercase">{t("queue_state")}</p>
                 <p className="mt-1 text-sm font-semibold text-white">
                   {queue.available
                     ? t("queue_active") || "Queue Active"
@@ -237,9 +237,11 @@ export function AnalyticsDashboard({ snapshot, locale }: AnalyticsDashboardProps
             </div>
             <div className="flex items-center justify-between rounded-lg border border-white/5 bg-white/[0.02] p-4">
               <div>
-                <p className="text-fg-muted text-xs tracking-wider uppercase">Pending tasks</p>
+                <p className="text-fg-muted text-xs tracking-wider uppercase">
+                  {t("pending_tasks")}
+                </p>
                 <p className="mt-1 text-sm font-semibold text-white">
-                  {queue.size} tasks in buffer
+                  {queue.size} {t("tasks_in_buffer")}
                 </p>
               </div>
               <span className="text-brand-400 text-lg font-bold">{queue.size}</span>
@@ -251,7 +253,7 @@ export function AnalyticsDashboard({ snapshot, locale }: AnalyticsDashboardProps
         <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6 backdrop-blur-md">
           <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-white">
             <Zap className="text-brand-400 h-4 w-4" />
-            Active Circuit Breakers
+            {t("active_circuit_breakers")}
           </h3>
           <div className="max-h-48 overflow-y-auto pr-1">
             <ul className="divide-y divide-white/5">
@@ -270,7 +272,10 @@ export function AnalyticsDashboard({ snapshot, locale }: AnalyticsDashboardProps
                     >
                       {snap?.state ?? "closed"}
                     </span>
-                    <span className="text-fg-muted text-xs">Failures: {snap?.failures ?? 0}</span>
+                    <span className="text-fg-muted text-xs">
+                      {t("failures")}
+                      {snap?.failures ?? 0}
+                    </span>
                   </span>
                 </li>
               ))}
@@ -289,7 +294,7 @@ export function AnalyticsDashboard({ snapshot, locale }: AnalyticsDashboardProps
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <caption className="sr-only">Autopilot Runs Observability Table</caption>
+              <caption className="sr-only">{t("autopilot_runs_observability_table")}</caption>
               <thead className="text-fg-muted border-b border-white/5 text-xs tracking-wider uppercase">
                 <tr>
                   <th className="pb-3 font-medium">{t("run_id") || "Run ID"}</th>

@@ -9,6 +9,7 @@ import { UsageHeatmap } from "./usage-heatmap";
 import { StaticKeysList } from "./static-keys-list";
 import { RefreshCw, ShieldCheck } from "lucide-react";
 import { getApiTelemetryData, type RealProvider } from "@/actions/api-management";
+import { useTranslations } from "next-intl";
 
 export type Provider = RealProvider;
 
@@ -116,6 +117,7 @@ const MOCK_LATENCY_TRENDS = [
 ];
 
 export function ApiManagementHub() {
+  const t = useTranslations("admin");
   const [providers, setProviders] = useState<Provider[]>(MOCK_PROVIDERS_FALLBACK);
   const [dailySpend, setDailySpend] = useState<number>(0.8);
   const [loading, setLoading] = useState(false);
@@ -155,13 +157,13 @@ export function ApiManagementHub() {
           <ShieldCheck className="h-5 w-5 shrink-0 text-emerald-400" />
           <div>
             <p className="font-semibold text-emerald-200">
-              Live Environment Audit & Baseline Benchmarks
+              {t("live_environment_audit_baseline_benchmar")}
             </p>
             <p className="text-xs text-emerald-400/80">
-              <strong className="text-emerald-300">Live:</strong> Provider credentials presence,
-              masked keys, and AI Gateway spend from RPC.{" "}
-              <strong className="text-zinc-300">Benchmark:</strong> Latency P95, request volume, and
-              quota limits are baseline benchmark estimates.
+              <strong className="text-emerald-300">{t("live")}</strong>{" "}
+              {t("provider_credentials_presence_masked_key")}{" "}
+              <strong className="text-zinc-300">{t("benchmark")}</strong>{" "}
+              {t("latency_p95_request_volume_and_quota_lim")}
             </p>
           </div>
         </div>
@@ -170,7 +172,10 @@ export function ApiManagementHub() {
             {isRealTelemetry ? "ENV AUDIT LIVE" : "INITIALIZING"}
           </span>
           {lastRefreshed && (
-            <span className="font-mono text-zinc-400">Updated: {lastRefreshed}</span>
+            <span className="font-mono text-zinc-400">
+              {t("updated")}
+              {lastRefreshed}
+            </span>
           )}
         </div>
       </div>
@@ -178,7 +183,7 @@ export function ApiManagementHub() {
       {/* Header Actions */}
       <div className="flex items-center justify-between rounded-lg border border-white/10 bg-zinc-900/50 px-4 py-3">
         <div>
-          <p className="text-xs text-zinc-400">Total Daily API Spend (AI Gateway RPC)</p>
+          <p className="text-xs text-zinc-400">{t("total_daily_api_spend_ai_gateway_rpc")}</p>
           <p className="text-2xl font-bold text-white">${totalDailyCost.toFixed(2)}</p>
         </div>
         <button
@@ -201,7 +206,7 @@ export function ApiManagementHub() {
               : "text-zinc-400 hover:text-white"
           }`}
         >
-          Telemetry & Health
+          {t("telemetry_health")}
         </button>
         <button
           onClick={() => setActiveTab("ai-providers")}
@@ -211,7 +216,7 @@ export function ApiManagementHub() {
               : "text-zinc-400 hover:text-white"
           }`}
         >
-          AI Providers
+          {t("ai_providers")}
         </button>
         <button
           onClick={() => setActiveTab("system-keys")}
@@ -221,7 +226,7 @@ export function ApiManagementHub() {
               : "text-zinc-400 hover:text-white"
           }`}
         >
-          System Keys
+          {t("system_keys")}
         </button>
       </div>
 
@@ -233,10 +238,10 @@ export function ApiManagementHub() {
             <section>
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-lg font-bold tracking-tight text-white">
-                  Provider Status Matrix
+                  {t("provider_status_matrix")}
                 </h2>
                 <span className="rounded border border-emerald-500/30 bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] text-emerald-300">
-                  Live Env Key Audit
+                  {t("live_env_key_audit")}
                 </span>
               </div>
               <ProviderMatrix providers={providers} />
@@ -246,10 +251,10 @@ export function ApiManagementHub() {
             <section>
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-lg font-bold tracking-tight text-white">
-                  Model Latency Trends (P95)
+                  {t("model_latency_trends_p95")}
                 </h2>
                 <span className="rounded border border-white/5 bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-400">
-                  Baseline Benchmark
+                  {t("baseline_benchmark")}
                 </span>
               </div>
               <ModelHealthChart data={MOCK_LATENCY_TRENDS} />
@@ -259,10 +264,10 @@ export function ApiManagementHub() {
             <section>
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-lg font-bold tracking-tight text-white">
-                  Quota Usage by Provider
+                  {t("quota_usage_by_provider")}
                 </h2>
                 <span className="rounded border border-white/5 bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-400">
-                  Estimated Limits
+                  {t("estimated_limits")}
                 </span>
               </div>
               <QuotaGauges providers={providers} />
@@ -272,10 +277,10 @@ export function ApiManagementHub() {
             <section>
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-lg font-bold tracking-tight text-white">
-                  Daily Request Volume (24h Heatmap)
+                  {t("daily_request_volume_24h_heatmap")}
                 </h2>
                 <span className="rounded border border-white/5 bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-400">
-                  Estimated Volume
+                  {t("estimated_volume")}
                 </span>
               </div>
               <UsageHeatmap providers={providers} />
@@ -287,9 +292,11 @@ export function ApiManagementHub() {
           <div className="animate-in fade-in space-y-8 duration-500">
             <section>
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-lg font-bold tracking-tight text-white">AI Model Providers</h2>
+                <h2 className="text-lg font-bold tracking-tight text-white">
+                  {t("ai_model_providers")}
+                </h2>
                 <span className="rounded border border-emerald-500/30 bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] text-emerald-300">
-                  Live Database Keys
+                  {t("live_database_keys")}
                 </span>
               </div>
               <ApiKeyManager providers={providers} />
@@ -301,9 +308,11 @@ export function ApiManagementHub() {
           <div className="animate-in fade-in space-y-8 duration-500">
             <section>
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-lg font-bold tracking-tight text-white">Infrastructure Keys</h2>
+                <h2 className="text-lg font-bold tracking-tight text-white">
+                  {t("infrastructure_keys")}
+                </h2>
                 <span className="rounded border border-purple-500/30 bg-purple-500/20 px-2 py-0.5 font-mono text-[10px] text-purple-300">
-                  Read-only .env Variables
+                  {t("read_only_env_variables")}
                 </span>
               </div>
               <StaticKeysList />

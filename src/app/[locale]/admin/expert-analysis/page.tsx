@@ -11,6 +11,7 @@ import {
   Radio,
   Share2,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const ICON_MAP: Record<string, React.ReactNode> = {
   "ai-ecosystem-architect": <Brain className="h-6 w-6 text-purple-400" />,
@@ -26,16 +27,15 @@ const ICON_MAP: Record<string, React.ReactNode> = {
 };
 
 export default function ExpertAnalysisAdminPage() {
+  const t = useTranslations("admin");
   return (
     <div className="space-y-8 p-6 text-white">
       <div>
         <h1 className="flex items-center gap-3 text-3xl font-bold tracking-tight text-white">
           <Users className="h-8 w-8 text-cyan-400" />
-          Multi-Perspective Expert Board Analysis
+          {t("multi_perspective_expert_board_analysis")}
         </h1>
-        <p className="mt-2 text-slate-400">
-          Simulated 10-persona C-Suite & Specialist Board for project stress-testing (Admin-Only).
-        </p>
+        <p className="mt-2 text-slate-400">{t("simulated_10_persona_c_suite_specialist_")}</p>
       </div>
 
       {/* Grid of 10 Expert Personas */}
@@ -60,14 +60,15 @@ export default function ExpertAnalysisAdminPage() {
 
             <div className="flex items-center justify-between border-t border-slate-800/80 pt-2">
               <span className="rounded border border-cyan-800/60 bg-cyan-950/60 px-2 py-0.5 font-mono text-[11px] text-cyan-400">
-                Chain: {persona.capabilityDomain}
+                {t("chain")}
+                {persona.capabilityDomain}
               </span>
               <button
                 type="button"
                 className="flex items-center gap-1.5 rounded-md bg-cyan-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-cyan-500"
               >
                 <Sparkles className="h-3.5 w-3.5" />
-                Trigger Analysis
+                {t("trigger_analysis")}
               </button>
             </div>
           </div>
