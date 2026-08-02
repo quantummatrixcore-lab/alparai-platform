@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { EXPERT_PERSONAS, type ExpertPersona } from "@/lib/config/expert-personas";
 import {
   runExpertAnalysisAction,
@@ -40,9 +40,14 @@ const ICON_MAP: Record<string, React.ReactNode> = {
 
 export function ExpertAnalysisBoard() {
   const t = useTranslations("admin");
+  const [mounted, setMounted] = useState(false);
   const [reports, setReports] = useState<Record<string, ExpertAnalysisReport>>({});
   const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
   const [isBatchRunning, setIsBatchRunning] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleRunSingle = async (expertId: string) => {
     setLoadingMap((prev) => ({ ...prev, [expertId]: true }));
@@ -90,14 +95,16 @@ export function ExpertAnalysisBoard() {
   };
 
   return (
-    <div className="space-y-8 p-6 text-white">
+    <div className="space-y-8 p-6 text-white" suppressHydrationWarning>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="flex items-center gap-3 text-3xl font-bold tracking-tight text-white">
             <Users className="h-8 w-8 text-cyan-400" />
-            {t("multi_perspective_expert_board_analysis")}
+            <span>{t("multi_perspective_expert_board_analysis")}</span>
           </h1>
-          <p className="mt-2 text-slate-400">{t("simulated_10_persona_c_suite_specialist_")}</p>
+          <p className="mt-2 text-slate-400">
+            <span>{t("simulated_10_persona_c_suite_specialist_")}</span>
+          </p>
         </div>
 
         <button
@@ -111,7 +118,7 @@ export function ExpertAnalysisBoard() {
           ) : (
             <Play className="h-4 w-4 fill-current text-white" />
           )}
-          {isBatchRunning ? (t("analyzing") ?? "Analyzing All...") : "Run All 10 Expert Analyses"}
+          <span>{isBatchRunning ? "Analyzing All..." : "Run All 10 Expert Analyses"}</span>
         </button>
       </div>
 
@@ -133,8 +140,12 @@ export function ExpertAnalysisBoard() {
                       {ICON_MAP[persona.id] ?? <Brain className="h-6 w-6 text-cyan-400" />}
                     </div>
                     <div>
-                      <h3 className="text-base font-bold text-white">{persona.name}</h3>
-                      <p className="font-mono text-xs text-slate-400">{persona.roleTitle}</p>
+                      <h3 className="text-base font-bold text-white">
+                        <span>{persona.name}</span>
+                      </h3>
+                      <p className="font-mono text-xs text-slate-400">
+                        <span>{persona.roleTitle}</span>
+                      </p>
                     </div>
                   </div>
                   {report && (
@@ -144,7 +155,9 @@ export function ExpertAnalysisBoard() {
                   )}
                 </div>
 
-                <p className="line-clamp-2 text-xs text-slate-300">{persona.focusArea}</p>
+                <p className="line-clamp-2 text-xs text-slate-300">
+                  <span>{persona.focusArea}</span>
+                </p>
 
                 {report && (
                   <div className="mt-3 space-y-2 rounded-lg border border-slate-800 bg-slate-950/80 p-3.5 text-xs">
@@ -154,11 +167,12 @@ export function ExpertAnalysisBoard() {
                       </span>
                       <span className="flex items-center gap-1">
                         <Clock className="h-3 w-3" />
-                        {new Date(report.timestamp).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          second: "2-digit",
-                        })}
+                        {mounted &&
+                          new Date(report.timestamp).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                          })}
                       </span>
                     </div>
                     <p className="font-sans leading-relaxed whitespace-pre-line text-slate-200">
@@ -170,7 +184,7 @@ export function ExpertAnalysisBoard() {
 
               <div className="flex items-center justify-between border-t border-slate-800/80 pt-3">
                 <span className="rounded border border-cyan-800/60 bg-cyan-950/60 px-2 py-0.5 font-mono text-[11px] text-cyan-400">
-                  {t("chain")} {persona.capabilityDomain}
+                  <span>{t("chain")}</span> <span>{persona.capabilityDomain}</span>
                 </span>
                 <button
                   type="button"
@@ -183,7 +197,7 @@ export function ExpertAnalysisBoard() {
                   ) : (
                     <Sparkles className="h-3.5 w-3.5" />
                   )}
-                  {isLoading ? (t("analyzing") ?? "Analyzing...") : t("trigger_analysis")}
+                  <span>{isLoading ? "Analyzing..." : "Trigger Analysis"}</span>
                 </button>
               </div>
             </div>
