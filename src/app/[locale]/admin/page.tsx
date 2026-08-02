@@ -52,6 +52,7 @@ export default async function AdminDashboardPage({
     { count: users30 },
     { count: incidents30 },
     { count: newsletter30 },
+    grantResult,
   ] = await Promise.all([
     admin.from("incidents").select("*", { count: "exact", head: true }),
     admin
@@ -92,6 +93,15 @@ export default async function AdminDashboardPage({
       .from("newsletter_subscribers")
       .select("*", { count: "exact", head: true })
       .gte("subscribed_at", thirtyDaysAgo),
+    (
+      admin as unknown as {
+        from: (t: string) => {
+          select: (q: string) => Promise<{ data: { status: string }[] | null }>;
+        };
+      }
+    )
+      .from("grant_applications")
+      .select("status"),
   ]);
 
   const pendingDsar = dsarResult.count;
@@ -115,6 +125,11 @@ export default async function AdminDashboardPage({
 
   const planItems = parseMasterPlan().items;
   const planCompleted = planItems.filter((i) => i.status === "completed").length;
+
+  const grants = grantResult?.data ?? [];
+  const grantApproved = grants.filter((g: { status: string }) => g.status === "approved").length;
+  const grantRejected = grants.filter((g: { status: string }) => g.status === "rejected").length;
+  const grantTotal = grants.length;
 
   interface SafeUserItem {
     id: string;
@@ -147,6 +162,11 @@ export default async function AdminDashboardPage({
           users: users30 ?? 0,
           incidents: incidents30 ?? 0,
           newsletter: newsletter30 ?? 0,
+        }}
+        grantStats={{
+          approved: grantApproved,
+          rejected: grantRejected,
+          total: grantTotal,
         }}
       />
     </AdminContainer>

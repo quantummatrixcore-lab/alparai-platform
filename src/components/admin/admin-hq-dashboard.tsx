@@ -83,6 +83,11 @@ export interface AdminHQDashboardProps {
     incidents: number;
     newsletter: number;
   };
+  grantStats: {
+    approved: number;
+    rejected: number;
+    total: number;
+  };
 }
 
 function HeroMetricCard({
@@ -162,6 +167,7 @@ export function AdminHQDashboard({
   pendingDsar,
   locale,
   startupHealthMetrics,
+  grantStats,
 }: AdminHQDashboardProps) {
   const t = useTranslations("admin");
 
@@ -453,10 +459,15 @@ export function AdminHQDashboard({
   const queueVariant: "default" | "success" | "warning" | "danger" =
     pendingQueue > 5 ? "danger" : pendingQueue > 0 ? "warning" : "success";
 
+  const grantConversionRate =
+    grantStats.total > 0 ? Math.round((grantStats.approved / grantStats.total) * 100) : 0;
+  const grantConversionVariant =
+    grantConversionRate >= 10 ? "success" : grantConversionRate > 0 ? "warning" : "default";
+
   return (
     <div className="space-y-6">
       {/* ROW 1: Hero KPIs */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7">
         <HeroMetricCard
           label="Başarı Skoru"
           value={startupHealthDisplay}
@@ -474,6 +485,12 @@ export function AdminHQDashboard({
           value={planPercent}
           suffix="%"
           variant={planPercent >= 80 ? "success" : planPercent >= 50 ? "warning" : "default"}
+        />
+        <HeroMetricCard
+          label="Yatırım/Hibe Dönüşüm Oranı"
+          value={grantConversionRate}
+          suffix="%"
+          variant={grantConversionVariant}
         />
         <HeroMetricCard
           label={t("system_health_label")}
