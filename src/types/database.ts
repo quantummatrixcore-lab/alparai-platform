@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+        feature_flags: {
+          Row: {
+            key: string
+            enabled: boolean
+            updated_at: string
+          }
+          Insert: {
+            key: string
+            enabled?: boolean
+            updated_at?: string
+          }
+          Update: {
+            key?: string
+            enabled?: boolean
+            updated_at?: string
+          }
+          Relationships: []
+        },
+        sla_alarms: {
+          Row: {
+            id: string
+            resolved: boolean
+            resolved_at: string | null
+          }
+          Insert: {
+            id?: string
+            resolved?: boolean
+            resolved_at?: string | null
+          }
+          Update: {
+            id?: string
+            resolved?: boolean
+            resolved_at?: string | null
+          }
+          Relationships: []
+        },
       admin_login_events: {
         Row: {
           created_at: string

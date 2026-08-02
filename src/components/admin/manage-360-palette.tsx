@@ -115,36 +115,36 @@ export function Manage360CommandPalette() {
   const staticActions = [
     {
       id: "crawl-trigger",
-      title: "Trigger AI Scraper & Ingestion Cron",
-      category: "Operations",
+      title: t("action_trigger_scraper") || "Trigger AI Scraper & Ingestion Cron",
+      category: t("group_operations") || "Operations",
       icon: Zap,
       action: handleCrawlerTrigger,
     },
     {
       id: "toggle-maintenance",
-      title: "Toggle Maintenance Mode Flag",
-      category: "Operations",
+      title: t("action_toggle_maintenance") || "Toggle Maintenance Mode Flag",
+      category: t("group_operations") || "Operations",
       icon: ToggleRight,
       action: () => handleToggleFlag("maintenance_mode", true),
     },
     {
       id: "toggle-registration",
-      title: "Toggle User Registration Flag",
-      category: "Operations",
+      title: t("action_toggle_registration") || "Toggle User Registration Flag",
+      category: t("group_operations") || "Operations",
       icon: ToggleRight,
       action: () => handleToggleFlag("user_registration_open", false),
     },
     {
       id: "resolve-alarms",
-      title: "Resolve All Open SLA Alarms",
-      category: "Operations",
+      title: t("action_resolve_alarms") || "Resolve All Open SLA Alarms",
+      category: t("group_operations") || "Operations",
       icon: Bell,
       action: () => handleResolveAlarm("all"),
     },
     {
       id: "moderation",
       title: t("moderation_queue") || "Moderation Queue (Approve / Reject)",
-      category: "Navigate",
+      category: t("group_navigate") || "Navigate",
       icon: Shield,
       action: () => {
         router.push("/admin/moderation");
@@ -154,7 +154,7 @@ export function Manage360CommandPalette() {
     {
       id: "feature-flags",
       title: t("nav_featureFlags") || "Feature Flags & Kill-Switch",
-      category: "Navigate",
+      category: t("group_navigate") || "Navigate",
       icon: ToggleRight,
       action: () => {
         router.push("/admin/feature-flags");
@@ -164,7 +164,7 @@ export function Manage360CommandPalette() {
     {
       id: "cost-alarm",
       title: "Cost Telemetry & Throttle Controls",
-      category: "Navigate",
+      category: t("group_navigate") || "Navigate",
       icon: DollarSign,
       action: () => {
         router.push("/admin/api-metrics");
@@ -174,7 +174,7 @@ export function Manage360CommandPalette() {
     {
       id: "redaction",
       title: "Redaction & Provider Privacy Queue",
-      category: "Navigate",
+      category: t("group_navigate") || "Navigate",
       icon: EyeOff,
       action: () => {
         router.push("/admin/redaction-queue");
@@ -184,7 +184,7 @@ export function Manage360CommandPalette() {
     {
       id: "takedown",
       title: "DSA Art. 14 Legal Takedowns",
-      category: "Navigate",
+      category: t("group_navigate") || "Navigate",
       icon: RotateCw,
       action: () => {
         router.push("/admin/takedown");
@@ -194,7 +194,7 @@ export function Manage360CommandPalette() {
     {
       id: "geo",
       title: t("nav_geo") || "GEO Engine Telemetry",
-      category: "Navigate",
+      category: t("group_navigate") || "Navigate",
       icon: Globe,
       action: () => {
         router.push("/admin/geo");
@@ -204,7 +204,7 @@ export function Manage360CommandPalette() {
     {
       id: "health",
       title: t("nav_systemHealth") || "System Health & SLO Alarms",
-      category: "Navigate",
+      category: t("group_navigate") || "Navigate",
       icon: Activity,
       action: () => {
         router.push("/admin/health");
@@ -214,7 +214,7 @@ export function Manage360CommandPalette() {
     {
       id: "audit",
       title: t("audit_log") || "Audit Log & System Tracing",
-      category: "Navigate",
+      category: t("group_navigate") || "Navigate",
       icon: FileText,
       action: () => {
         router.push("/admin/audit");
@@ -224,7 +224,7 @@ export function Manage360CommandPalette() {
     {
       id: "users",
       title: t("users") || "Users & Moderator Permissions",
-      category: "Navigate",
+      category: t("group_navigate") || "Navigate",
       icon: Users,
       action: () => {
         router.push("/admin/users");
@@ -234,7 +234,7 @@ export function Manage360CommandPalette() {
     {
       id: "dora",
       title: "DORA Metrics Dashboard",
-      category: "Navigate",
+      category: t("group_navigate") || "Navigate",
       icon: TrendingUp,
       action: () => {
         router.push("/admin/dora");
@@ -244,7 +244,7 @@ export function Manage360CommandPalette() {
     {
       id: "capacity",
       title: "Capacity & Infrastructure Monitor",
-      category: "Navigate",
+      category: t("group_navigate") || "Navigate",
       icon: HardDrive,
       action: () => {
         router.push("/admin/health");
@@ -254,7 +254,7 @@ export function Manage360CommandPalette() {
     {
       id: "kbenchmark",
       title: "K-BENCHMARK Model Ratings",
-      category: "Navigate",
+      category: t("group_navigate") || "Navigate",
       icon: Award,
       action: () => {
         router.push("/admin/k-benchmark");
@@ -264,7 +264,7 @@ export function Manage360CommandPalette() {
     {
       id: "flame",
       title: "Cost Alarm & Billing Monitor",
-      category: "Navigate",
+      category: t("group_navigate") || "Navigate",
       icon: Flame,
       action: () => {
         router.push("/admin/finance");

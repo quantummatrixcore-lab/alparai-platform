@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useTranslations } from "next-intl";
+import { getLiveHealthMetrics } from "@/actions/admin-health";
 import Link from "next/link";
 import {
   AreaChart,
@@ -84,71 +85,6 @@ export interface AdminHQDashboardProps {
   };
 }
 
-const ALL_NAV_ITEMS = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
-  { href: "/admin/moderation", label: "Moderation", icon: ShieldAlert, group: "Operations" },
-  { href: "/admin/k-benchmark", label: "K-Benchmark", icon: BarChart3, group: "Intelligence" },
-  { href: "/admin/analysis", label: "Analysis", icon: BrainCircuit, group: "Intelligence" },
-  { href: "/admin/autopilot", label: "Autopilot", icon: Cpu, group: "Intelligence" },
-  { href: "/admin/innovations", label: "AI Lab", icon: Sparkles, group: "Intelligence" },
-  { href: "/admin/geo", label: "GEO Engine", icon: Globe, group: "Intelligence" },
-  { href: "/admin/master-plan", label: "Master Plan", icon: FileText, group: "Strategy" },
-  { href: "/admin/strategy", label: "Strategy", icon: Target, group: "Strategy" },
-  { href: "/admin/strategy/swot", label: "SWOT", icon: Grid2X2, group: "Strategy" },
-  { href: "/admin/strategy/roadmap", label: "Roadmap", icon: Map, group: "Strategy" },
-  { href: "/admin/strategy/risks", label: "Risks", icon: AlertTriangle, group: "Strategy" },
-  {
-    href: "/admin/strategy/questionnaire",
-    label: "Questionnaire",
-    icon: ClipboardList,
-    group: "Strategy",
-  },
-  {
-    href: "/admin/strategy/state-support",
-    label: "State Support",
-    icon: Building2,
-    group: "Strategy",
-  },
-  {
-    href: "/admin/strategy/valuation",
-    label: "Valuation",
-    icon: Calculator,
-    group: "Strategy",
-  },
-  { href: "/admin/users", label: "Users", icon: Users, group: "Governance" },
-  { href: "/admin/experts", label: "Experts", icon: Award, group: "Governance" },
-  { href: "/admin/dsar", label: "DSAR", icon: Lock, group: "Governance" },
-  { href: "/admin/audit", label: "Audit Log", icon: FileText, group: "Governance" },
-  { href: "/admin/advisory-board", label: "Advisory Board", icon: Award, group: "Governance" },
-  { href: "/admin/outreach", label: "Outreach", icon: Send, group: "Growth" },
-  { href: "/admin/social", label: "Social Hub", icon: Share2, group: "Growth" },
-  { href: "/admin/marketing", label: "Marketing", icon: TrendingUp, group: "Growth" },
-  { href: "/admin/investors", label: "Investors", icon: DollarSign, group: "Growth" },
-  { href: "/admin/launch-signal", label: "Launch Signal", icon: Radio, group: "Growth" },
-  { href: "/admin/health", label: "System Health", icon: Activity, group: "System" },
-  { href: "/admin/billing", label: "Billing", icon: DollarSign, group: "System" },
-  { href: "/admin/finance", label: "Finance", icon: DollarSign, group: "System" },
-  { href: "/admin/resources", label: "Resources", icon: Server, group: "System" },
-  { href: "/admin/api-management", label: "API Hub", icon: Zap, group: "System" },
-  { href: "/admin/providers", label: "AI Providers", icon: Cpu, group: "System" },
-  { href: "/admin/integrations", label: "Integrations", icon: Plug, group: "System" },
-  { href: "/admin/feature-flags", label: "Feature Flags", icon: ToggleRight, group: "System" },
-  { href: "/api-docs", label: "API Docs", icon: BookOpen, group: "System" },
-  { href: "/admin/signals", label: "Signals", icon: Radio, group: "Intelligence" },
-  { href: "/admin/slo-dashboard", label: "SLO Dashboard", icon: Shield, group: "System" },
-  { href: "/admin/crons", label: "Cron Jobs", icon: Clock, group: "System" },
-] as const;
-
-const GROUP_COLORS: Record<string, string> = {
-  Overview: "text-sky-400 bg-sky-400/10",
-  Operations: "text-orange-400 bg-orange-400/10",
-  Intelligence: "text-violet-400 bg-violet-400/10",
-  Strategy: "text-blue-400 bg-blue-400/10",
-  Governance: "text-emerald-400 bg-emerald-400/10",
-  Growth: "text-pink-400 bg-pink-400/10",
-  System: "text-amber-400 bg-amber-400/10",
-};
-
 function HeroMetricCard({
   label,
   value,
@@ -228,6 +164,173 @@ export function AdminHQDashboard({
   startupHealthMetrics,
 }: AdminHQDashboardProps) {
   const t = useTranslations("admin");
+
+  const ALL_NAV_ITEMS = [
+    {
+      href: "/admin",
+      label: t("nav_dashboard"),
+      icon: LayoutDashboard,
+      group: t("group_overview"),
+    },
+    {
+      href: "/admin/moderation",
+      label: t("nav_moderation"),
+      icon: ShieldAlert,
+      group: t("group_operations"),
+    },
+    {
+      href: "/admin/k-benchmark",
+      label: t("nav_k_benchmark"),
+      icon: BarChart3,
+      group: t("group_intelligence"),
+    },
+    {
+      href: "/admin/analysis",
+      label: t("nav_analysis"),
+      icon: BrainCircuit,
+      group: t("group_intelligence"),
+    },
+    {
+      href: "/admin/autopilot",
+      label: t("nav_autopilot"),
+      icon: Cpu,
+      group: t("group_intelligence"),
+    },
+    {
+      href: "/admin/innovations",
+      label: t("nav_ai_lab"),
+      icon: Sparkles,
+      group: t("group_intelligence"),
+    },
+    { href: "/admin/geo", label: t("nav_geo_engine"), icon: Globe, group: t("group_intelligence") },
+    {
+      href: "/admin/master-plan",
+      label: t("nav_master_plan"),
+      icon: FileText,
+      group: t("group_strategy"),
+    },
+    { href: "/admin/strategy", label: t("nav_strategy"), icon: Target, group: t("group_strategy") },
+    {
+      href: "/admin/strategy/swot",
+      label: t("nav_swot"),
+      icon: Grid2X2,
+      group: t("group_strategy"),
+    },
+    {
+      href: "/admin/strategy/roadmap",
+      label: t("nav_roadmap"),
+      icon: Map,
+      group: t("group_strategy"),
+    },
+    {
+      href: "/admin/strategy/risks",
+      label: t("nav_risks"),
+      icon: AlertTriangle,
+      group: t("group_strategy"),
+    },
+    {
+      href: "/admin/strategy/questionnaire",
+      label: t("nav_questionnaire"),
+      icon: ClipboardList,
+      group: t("group_strategy"),
+    },
+    {
+      href: "/admin/strategy/state-support",
+      label: t("nav_state_support"),
+      icon: Building2,
+      group: t("group_strategy"),
+    },
+    {
+      href: "/admin/strategy/valuation",
+      label: t("nav_valuation"),
+      icon: Calculator,
+      group: t("group_strategy"),
+    },
+    { href: "/admin/users", label: t("nav_users"), icon: Users, group: t("group_governance") },
+    { href: "/admin/experts", label: t("nav_experts"), icon: Award, group: t("group_governance") },
+    { href: "/admin/dsar", label: t("nav_dsar"), icon: Lock, group: t("group_governance") },
+    {
+      href: "/admin/audit",
+      label: t("nav_audit_log"),
+      icon: FileText,
+      group: t("group_governance"),
+    },
+    {
+      href: "/admin/advisory-board",
+      label: t("nav_advisory_board"),
+      icon: Award,
+      group: t("group_governance"),
+    },
+    { href: "/admin/outreach", label: t("nav_outreach"), icon: Send, group: t("group_growth") },
+    { href: "/admin/social", label: t("nav_social_hub"), icon: Share2, group: t("group_growth") },
+    {
+      href: "/admin/marketing",
+      label: t("nav_marketing"),
+      icon: TrendingUp,
+      group: t("group_growth"),
+    },
+    {
+      href: "/admin/investors",
+      label: t("nav_investors"),
+      icon: DollarSign,
+      group: t("group_growth"),
+    },
+    {
+      href: "/admin/launch-signal",
+      label: t("nav_launch_signal"),
+      icon: Radio,
+      group: t("group_growth"),
+    },
+    {
+      href: "/admin/health",
+      label: t("nav_system_health"),
+      icon: Activity,
+      group: t("group_system"),
+    },
+    { href: "/admin/billing", label: t("nav_billing"), icon: DollarSign, group: t("group_system") },
+    { href: "/admin/finance", label: t("nav_finance"), icon: DollarSign, group: t("group_system") },
+    { href: "/admin/resources", label: t("nav_resources"), icon: Server, group: t("group_system") },
+    { href: "/admin/api-management", label: t("nav_api_hub"), icon: Zap, group: t("group_system") },
+    { href: "/admin/providers", label: t("nav_ai_providers"), icon: Cpu, group: t("group_system") },
+    {
+      href: "/admin/integrations",
+      label: t("nav_integrations"),
+      icon: Plug,
+      group: t("group_system"),
+    },
+    {
+      href: "/admin/feature-flags",
+      label: t("nav_feature_flags"),
+      icon: ToggleRight,
+      group: t("group_system"),
+    },
+    { href: "/api-docs", label: t("nav_api_docs"), icon: BookOpen, group: t("group_system") },
+    {
+      href: "/admin/signals",
+      label: t("nav_signals"),
+      icon: Radio,
+      group: t("group_intelligence"),
+    },
+    {
+      href: "/admin/slo-dashboard",
+      label: t("nav_slo_dashboard"),
+      icon: Shield,
+      group: t("group_system"),
+    },
+    { href: "/admin/crons", label: t("nav_cron_jobs"), icon: Clock, group: t("group_system") },
+  ];
+
+  // Map translations to colors
+  const GROUP_COLORS_DYN: Record<string, string> = {
+    [t("group_overview")]: "text-sky-400 bg-sky-400/10",
+    [t("group_operations")]: "text-orange-400 bg-orange-400/10",
+    [t("group_intelligence")]: "text-violet-400 bg-violet-400/10",
+    [t("group_strategy")]: "text-blue-400 bg-blue-400/10",
+    [t("group_governance")]: "text-emerald-400 bg-emerald-400/10",
+    [t("group_growth")]: "text-pink-400 bg-pink-400/10",
+    [t("group_system")]: "text-amber-400 bg-amber-400/10",
+  };
+
   const [systemHealth, setSystemHealth] = useState(87);
   const [uptime, setUptime] = useState(99.97);
   const [latency, setLatency] = useState(142);
@@ -242,12 +345,21 @@ export function AdminHQDashboard({
   }, [incidentsByDay]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setSystemHealth((h) => Math.min(100, Math.max(60, h + Math.floor(Math.random() * 5) - 2)));
-      setUptime((u) => Math.min(100, Math.max(99, u + Math.random() * 0.02 - 0.01)));
-      setLatency((l) => Math.min(300, Math.max(80, l + Math.floor(Math.random() * 20) - 10)));
-      setResourceEff((r) => Math.min(100, Math.max(50, r + Math.floor(Math.random() * 5) - 2)));
-    }, 8000);
+    const fetchMetrics = async () => {
+      try {
+        const metrics = await getLiveHealthMetrics();
+        setSystemHealth(metrics.systemHealth);
+        setUptime(metrics.uptime);
+        setLatency(metrics.latency);
+        setResourceEff(metrics.resourceEff);
+      } catch (_e) {
+        // ignore
+      }
+    };
+
+    fetchMetrics();
+    const interval = setInterval(fetchMetrics, 8000);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -268,12 +380,13 @@ export function AdminHQDashboard({
   ];
 
   const groups = useMemo(() => {
-    const grouped: Record<string, (typeof ALL_NAV_ITEMS)[number][]> = {};
+    const grouped: Record<string, typeof ALL_NAV_ITEMS> = {};
     for (const item of ALL_NAV_ITEMS) {
       if (!grouped[item.group]) grouped[item.group] = [];
       grouped[item.group]!.push(item);
     }
     return grouped;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   void groups;
@@ -373,13 +486,13 @@ export function AdminHQDashboard({
       {/* ROW 2: Core Operations */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
         {/* Backlog Velocity */}
-        <SectionCard title="Backlog Velocity">
+        <SectionCard title={t("chart_backlog_velocity")}>
           <div className="grid h-full grid-cols-2 gap-2">
             {[
-              { label: "Closed Tasks", value: "142", icon: CheckCircle2 },
-              { label: "Open P0s", value: "3", icon: AlertTriangle },
-              { label: "Deployments", value: "28", icon: Send },
-              { label: "Velocity", value: "High", icon: Activity },
+              { label: t("chart_closed_tasks"), value: "142", icon: CheckCircle2 },
+              { label: t("chart_open_p0s"), value: "3", icon: AlertTriangle },
+              { label: t("chart_deployments"), value: "28", icon: Send },
+              { label: t("chart_velocity"), value: t("status_high"), icon: Activity },
             ].map((stat) => (
               <div
                 key={stat.label}
@@ -423,7 +536,7 @@ export function AdminHQDashboard({
             </div>
             <div className="flex-1 space-y-2">
               <div className="flex justify-between text-xs">
-                <span className="text-white/60">Completed</span>
+                <span className="text-white/60">{t("label_completed")}</span>
                 <span className="font-bold text-emerald-400">{planCompleted}</span>
               </div>
               <div className="flex justify-between text-xs">
@@ -450,7 +563,7 @@ export function AdminHQDashboard({
             {pendingTasks.length === 0 ? (
               <div className="flex items-center gap-2 text-sm text-emerald-400">
                 <CheckCircle2 className="h-4 w-4" />
-                <span>All tasks completed!</span>
+                <span>{t("msg_all_tasks_completed")}</span>
               </div>
             ) : (
               pendingTasks.map((task) => (
@@ -775,7 +888,7 @@ export function AdminHQDashboard({
         <p className="text-fg-muted mb-4 text-xs">{t("quick_nav_subtitle")}</p>
         <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
           {ALL_NAV_ITEMS.map((item) => {
-            const colorClass = GROUP_COLORS[item.group] ?? "text-white/60 bg-white/5";
+            const colorClass = GROUP_COLORS_DYN[item.group] ?? "text-white/60 bg-white/5";
             return (
               <Link
                 key={item.href}

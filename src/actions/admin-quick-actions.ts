@@ -3,6 +3,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/auth/session";
 import { logger } from "@/lib/utils/logger";
+import { revalidatePath } from "next/cache";
 
 export async function approveIncident(
   incidentId: string,
@@ -15,6 +16,8 @@ export async function approveIncident(
     return { ok: false, message: `Failed: ${error.message}` };
   }
   logger.info("[QuickAction] Incident approved", { id: incidentId });
+  revalidatePath("/admin");
+  revalidatePath("/admin/moderation");
   return { ok: true, message: "Incident approved and published." };
 }
 
@@ -29,6 +32,8 @@ export async function rejectIncident(
     return { ok: false, message: `Failed: ${error.message}` };
   }
   logger.info("[QuickAction] Incident rejected", { id: incidentId });
+  revalidatePath("/admin");
+  revalidatePath("/admin/moderation");
   return { ok: true, message: "Incident rejected." };
 }
 
@@ -39,9 +44,9 @@ export async function toggleFeatureFlag(
   await requireAdmin();
   const db = createAdminClient();
   const { error } = await db
-    .from("feature_flags" as never)
-    .update({ enabled, updated_at: new Date().toISOString() } as never)
-    .eq("key" as never, key);
+    .from("feature_flags")
+    .update({ enabled, updated_at: new Date().toISOString() })
+    .eq("key", key);
   if (error) {
     logger.error("[QuickAction] toggleFeatureFlag failed", {
       key,
@@ -58,9 +63,9 @@ export async function resolveAlarm(alarmId: string): Promise<{ ok: boolean; mess
   await requireAdmin();
   const db = createAdminClient();
   const { error } = await db
-    .from("sla_alarms" as never)
-    .update({ resolved: true, resolved_at: new Date().toISOString() } as never)
-    .eq("id" as never, alarmId);
+    .from("sla_alarms")
+    .update({ resolved: true, resolved_at: new Date().toISOString() })
+    .eq("id", alarmId);
   if (error) {
     logger.error("[QuickAction] resolveAlarm failed", {
       id: alarmId,
