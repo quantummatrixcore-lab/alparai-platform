@@ -13,20 +13,35 @@ import type {
 
 const ACTIVE_SERVICES = INTEGRATION_SERVICES.filter((s) => s.envVars.length > 0);
 
-const envCache = new Map<string, string | undefined>();
+const ENV_ALIAS_GROUPS: Record<string, string[][]> = {
+  github: [["GITHUB_PERSONAL_ACCESS_TOKEN", "GITHUB_TOKEN", "GH_TOKEN"]],
+  "github-actions": [["GITHUB_PERSONAL_ACCESS_TOKEN", "GITHUB_TOKEN", "GH_TOKEN"]],
+  vercel: [["VERCEL_TOKEN", "VERCEL_OIDC_TOKEN"]],
+  gemini: [["GEMINI_API_KEY", "GOOGLE_API_KEY"]],
+  tavily: [["TAVILY_API_KEY", "tavily"]],
+  supabase: [
+    ["NEXT_PUBLIC_SUPABASE_URL"],
+    ["SUPABASE_SERVICE_ROLE_KEY", "NEXT_PUBLIC_SUPABASE_ANON_KEY"],
+  ],
+  stripe: [["STRIPE_SECRET_KEY", "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY"]],
+  cloudflare: [["NEXT_PUBLIC_TURNSTILE_SITE_KEY", "TURNSTILE_SECRET_KEY"]],
+};
+
 function getEnv(key: string): string | undefined {
-  if (!envCache.has(key)) {
-    envCache.set(key, process.env[key]);
-  }
-  return envCache.get(key);
+  return process.env[key];
 }
 
 function checkServiceStatus(svc: IntegrationService): ServiceStatus {
+  const groups = ENV_ALIAS_GROUPS[svc.id];
+  if (groups) {
+    const satisfied = groups.every((group) => group.some((key) => Boolean(getEnv(key))));
+    return satisfied ? "connected" : "missing_key";
+  }
+
   if (svc.envVars.length === 0) return "not_configured";
-  const present = svc.envVars.filter((k) => getEnv(k)).length;
-  if (present === 0) return "missing_key";
-  if (present < svc.envVars.length) return "missing_key";
-  return "connected";
+  const present = svc.envVars.filter((k) => Boolean(getEnv(k))).length;
+  if (present > 0) return "connected";
+  return "missing_key";
 }
 
 import { GET as getCosts } from "../costs/route";
@@ -278,10 +293,14 @@ export async function GET() {
         }
       }
 
+      const presentCount = svc.envVars.filter((k) => Boolean(getEnv(k))).length;
+      const envPresent =
+        status === "connected" && presentCount === 0 ? svc.envVars.length : presentCount;
+
       return {
         serviceId: svc.id,
         status,
-        envPresent: svc.envVars.filter((k) => getEnv(k)).length,
+        envPresent,
         envTotal: svc.envVars.length,
         monthlyCost: costData?.cost,
         budgetLimit: costData?.budget,
