@@ -73,9 +73,16 @@ export function parseMasterPlan(): MasterPlanParseResult {
       }
 
       let status: "completed" | "pending" | "paused" = "pending";
-      if (statusRaw.includes("✅") || statusRaw.includes("✓")) {
+      const sLower = statusRaw.toLowerCase();
+      if (
+        statusRaw.includes("✅") ||
+        statusRaw.includes("✓") ||
+        sLower.includes("completed") ||
+        sLower.includes("tamamlandı") ||
+        sLower.includes("closed")
+      ) {
         status = "completed";
-      } else if (statusRaw.includes("⏸")) {
+      } else if (statusRaw.includes("⏸") || sLower.includes("paused")) {
         status = "paused";
       }
 
