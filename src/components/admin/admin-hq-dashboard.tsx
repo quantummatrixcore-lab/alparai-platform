@@ -52,9 +52,6 @@ import {
   ArrowUpRight,
   BookOpen,
   Settings,
-  BrainCircuit,
-  ShieldAlert,
-  Lock,
 } from "lucide-react";
 import { AreaGradient } from "@/components/ui/chart-gradient";
 import { CHART_COLORS } from "@/lib/utils/chart-colors";
