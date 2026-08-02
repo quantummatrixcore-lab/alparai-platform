@@ -1,12 +1,15 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
-import { requireAdmin } from "@/lib/auth/session";
+import { requireModerator } from "@/lib/auth/session";
 import { ApiManagementHub } from "@/components/admin/api-management/api-hub";
+import { AdminContainer, AdminPageHeader } from "@/components/admin/admin-design-kit";
 import { Zap } from "lucide-react";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "admin" });
-  return { title: `${t("api_mgmt_meta_title")} | ALPAR AI Admin` };
+  return {
+    title: `${t("api_mgmt_meta_title") || "API & Model Gateway Management"} | ALPAR AI Admin`,
+  };
 }
 
 export default async function ApiManagementPage({
@@ -16,20 +19,25 @@ export default async function ApiManagementPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  await requireAdmin();
+  await requireModerator();
   const t = await getTranslations({ locale, namespace: "admin" });
 
   return (
-    <div className="animate-in fade-in space-y-8 duration-500">
-      <div>
-        <h1 className="flex items-center gap-2 text-3xl font-black tracking-tight text-white drop-shadow-md">
-          <Zap className="text-brand-400 h-8 w-8" />
-          {t("api_mgmt_h1")}
-        </h1>
-        <p className="mt-2 text-sm text-zinc-400">{t("api_mgmt_subtitle")}</p>
-      </div>
+    <AdminContainer>
+      <AdminPageHeader
+        icon={<Zap className="text-brand-400 h-6 w-6" />}
+        title={t("api_mgmt_h1") || "API Gateway & Model Management"}
+        subtitle={
+          t("api_mgmt_subtitle") ||
+          "Live AI model health, provider routing, telemetry heatmap, and static key inventory."
+        }
+        breadcrumb={[
+          { label: "Admin", href: "/admin" },
+          { label: "API Management", href: "/admin/api-management" },
+        ]}
+      />
 
       <ApiManagementHub />
-    </div>
+    </AdminContainer>
   );
 }
