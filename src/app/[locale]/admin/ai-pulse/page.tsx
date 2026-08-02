@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth/session";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 export const dynamic = "force-dynamic";
 
@@ -9,6 +10,7 @@ import { discoverAllModels } from "@/lib/ai/discovery/fetch-models";
 import { LiveModelsDirectory } from "@/components/admin/ai-pulse/live-models-directory";
 
 export default async function AiPulsePage({ params }: { params: Promise<{ locale: string }> }) {
+  await requireAdmin();
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "admin" });

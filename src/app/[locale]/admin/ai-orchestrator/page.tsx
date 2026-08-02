@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth/session";
 import { getTrustScoresAction, type TrustScoreRecord } from "@/actions/admin/ai-orchestrator";
 import { Cpu, ShieldCheck, Zap, Layers } from "lucide-react";
 
@@ -47,6 +48,7 @@ export default async function AiOrchestratorAdminPage() {
 
   const totalAudits = trustScores.reduce((acc, s) => acc + (Number(s.total_audits) || 0), 0);
 
+  await requireAdmin();
   return (
     <div className="space-y-8 p-6 text-white">
       <div className="flex items-center justify-between">

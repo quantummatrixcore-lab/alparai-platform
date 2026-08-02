@@ -1,8 +1,10 @@
+import { requireAdmin } from "@/lib/auth/session";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { ApiMetricsClient } from "@/components/admin/api-metrics-client";
 import { createServerClient } from "@/lib/supabase/server";
 
 export default async function ApiMetricsPage({ params }: { params: Promise<{ locale: string }> }) {
+  await requireAdmin();
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "admin" });
@@ -37,7 +39,14 @@ export default async function ApiMetricsPage({ params }: { params: Promise<{ loc
 
   const trafficData: { hour: string; requests: number; errors: number }[] = []; // ÖLÇÜLMEDİ
 
-  const endpointsData: { name: string; method: string; status: "healthy" | "warning" | "critical"; latency: string; rps: string; uptime: number }[] = []; // ÖLÇÜLMEDİ
+  const endpointsData: {
+    name: string;
+    method: string;
+    status: "healthy" | "warning" | "critical";
+    latency: string;
+    rps: string;
+    uptime: number;
+  }[] = []; // ÖLÇÜLMEDİ
 
   return (
     <div className="animate-in fade-in space-y-8 duration-500">

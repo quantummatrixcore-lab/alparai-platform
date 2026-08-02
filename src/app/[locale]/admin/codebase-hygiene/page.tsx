@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth/session";
 import { getCodebaseHygieneAction } from "@/actions/admin/codebase-hygiene";
 import { Sparkles, FileCode, FileText, Share2, CheckCircle2 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
@@ -6,6 +7,7 @@ export default async function CodebaseHygieneAdminPage() {
   const t = await getTranslations("admin");
   const report = await getCodebaseHygieneAction();
 
+  await requireAdmin();
   return (
     <div className="space-y-8 p-6 text-white">
       <div>

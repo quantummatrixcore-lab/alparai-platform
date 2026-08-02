@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth/session";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
 import { requireAdvisor } from "@/lib/auth/session";
@@ -17,6 +18,7 @@ import {
 } from "lucide-react";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  await requireAdmin();
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "admin" });
   return {

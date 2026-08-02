@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth/session";
 import { getTranslations } from "next-intl/server";
 import { setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
@@ -8,6 +9,7 @@ import { ShieldAlert } from "lucide-react";
 import type { StrategyRisk } from "@/types";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  await requireAdmin();
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "admin" });
   return { title: `${t("strategy_risks") || "Risk Matrix"} | ALPAR AI` };

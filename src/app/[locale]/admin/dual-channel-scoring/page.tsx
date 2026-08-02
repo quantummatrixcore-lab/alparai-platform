@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth/session";
 import { getScoringConfigAction } from "@/actions/admin/dual-channel-scoring";
 import { ShieldCheck, Scale, Lock, Sliders, Database } from "lucide-react";
 import { getTranslations } from "next-intl/server";
@@ -6,6 +7,7 @@ export default async function DualChannelScoringAdminPage() {
   const t = await getTranslations("admin");
   const config = await getScoringConfigAction();
 
+  await requireAdmin();
   return (
     <div className="space-y-8 p-6 text-white">
       <div>

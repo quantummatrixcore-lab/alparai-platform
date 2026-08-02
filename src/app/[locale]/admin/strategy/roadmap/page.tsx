@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth/session";
 import { getTranslations } from "next-intl/server";
 import { setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
@@ -9,6 +10,7 @@ import { Compass } from "lucide-react";
 import type { StrategyMilestone, StrategyTodo } from "@/types";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  await requireAdmin();
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "admin" });
   return { title: `${t("strategy_roadmap") || "OKR Roadmap"} | ALPAR AI` };

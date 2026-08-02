@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth/session";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
 import { requireAdvisor } from "@/lib/auth/session";
@@ -7,6 +8,7 @@ import { Grid as GridIcon } from "lucide-react";
 import type { SwotItem } from "@/types";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  await requireAdmin();
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "admin" });
   return { title: `${t("swot_title") || "SWOT Analysis"} | ALPAR AI` };

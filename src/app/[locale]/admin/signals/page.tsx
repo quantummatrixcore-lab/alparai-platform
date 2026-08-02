@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth/session";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { SignalsClient } from "@/components/admin/signals-client";
 import { getSystemSignalsAction } from "@/actions/admin/signals";
@@ -5,6 +6,7 @@ import { AdminContainer, AdminPageHeader } from "@/components/admin/admin-design
 import { Activity } from "lucide-react";
 
 export default async function SignalsPage({ params }: { params: Promise<{ locale: string }> }) {
+  await requireAdmin();
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "admin" });

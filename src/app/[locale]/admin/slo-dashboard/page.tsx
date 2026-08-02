@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth/session";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { SloDashboardClient } from "@/components/admin/slo-dashboard-client";
 
@@ -6,6 +7,7 @@ export default async function SloDashboardPage({
 }: {
   params: Promise<{ locale: string }>;
 }) {
+  await requireAdmin();
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "admin" });

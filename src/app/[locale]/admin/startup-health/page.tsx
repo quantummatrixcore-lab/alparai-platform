@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth/session";
 import { getStartupHealth } from "@/actions/admin/startup-health";
 import { getFundingConversion } from "@/actions/admin/funding-conversion";
 import {
@@ -23,6 +24,7 @@ export default async function StartupHealthPage({
 }: {
   params: Promise<{ locale: string }>;
 }) {
+  await requireAdmin();
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "admin" });
   const [healthData, fundingData] = await Promise.all([getStartupHealth(), getFundingConversion()]);

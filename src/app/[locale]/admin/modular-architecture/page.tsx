@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth/session";
 import { getModularArchitectureAction } from "@/actions/admin/modular-architecture";
 import {
   Layers,
@@ -28,6 +29,7 @@ export default async function ModularArchitectureAdminPage() {
   const t = await getTranslations("admin");
   const data = await getModularArchitectureAction();
 
+  await requireAdmin();
   return (
     <div className="space-y-8 p-6 text-white">
       <div>
