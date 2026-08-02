@@ -561,7 +561,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
                 >
                   {item.active && (
                     <motion.div
-                      layoutId="sidebar-active-pill"
+                      layoutId="admin-sidebar-active-pill"
                       className="bg-brand-500/15 border-brand-500 pointer-events-none absolute inset-0 rounded-xl border-l-2 shadow-[inset_0_0_12px_rgba(168,85,247,0.15)]"
                       transition={{ type: "spring" as const, stiffness: 350, damping: 30 }}
                     />

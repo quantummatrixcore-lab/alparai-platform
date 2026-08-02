@@ -17,10 +17,25 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import "../globals.css";
+import { Inter, Outfit, JetBrains_Mono } from "next/font/google";
 
-const sans = { variable: "font-sans" };
-const display = { variable: "font-display" };
-const mono = { variable: "font-mono" };
+const sans = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const display = Outfit({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
