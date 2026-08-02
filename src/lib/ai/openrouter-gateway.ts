@@ -142,6 +142,13 @@ export const CREATIVE_COPY_CHAIN: readonly GatewayModel[] = [
 // 3. High-Risk Audit, Legal, Complex Reasoning (GPT-4o / Claude 3.5 Sonnet)
 // Directly uses SUPREME_COURT_CHAIN logic but named for capability domain
 export const RISK_AUDIT_CHAIN: readonly GatewayModel[] = [
+  { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 4096 },
+  {
+    id: "nvidia/llama-3.1-nemotron-70b-instruct",
+    provider: "nvidia",
+    tier: "free",
+    maxTokens: 4096,
+  },
   { id: "openai/gpt-4o", provider: "openrouter", tier: "premium", maxTokens: 4096 },
   { id: "anthropic/claude-3.5-sonnet", provider: "openrouter", tier: "premium", maxTokens: 4096 },
   { id: "gemini-1.5-pro", provider: "google", tier: "premium", maxTokens: 4096 },

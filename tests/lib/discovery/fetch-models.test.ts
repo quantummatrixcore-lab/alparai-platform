@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { discoverFreeModels, FALLBACK_FREE_MODELS } from "@/lib/ai/discovery/fetch-models";
+import {
+  discoverFreeModels,
+  FALLBACK_FREE_MODELS,
+  MULTI_PROVIDER_STATIC_MODELS,
+} from "@/lib/ai/discovery/fetch-models";
 
 describe("Free Models Discovery Engine", () => {
   beforeEach(() => {
@@ -33,7 +37,7 @@ describe("Free Models Discovery Engine", () => {
     );
 
     const models = await discoverFreeModels();
-    expect(models).toHaveLength(1);
+    expect(models).toHaveLength(1 + MULTI_PROVIDER_STATIC_MODELS.length);
     expect(models[0]?.id).toBe("meta-llama/llama-3-8b-instruct:free");
     expect(models[0]?.pricing_prompt).toBe(0);
   });
@@ -42,6 +46,6 @@ describe("Free Models Discovery Engine", () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("Network error")));
 
     const models = await discoverFreeModels();
-    expect(models).toEqual(FALLBACK_FREE_MODELS);
+    expect(models).toEqual([...FALLBACK_FREE_MODELS, ...MULTI_PROVIDER_STATIC_MODELS]);
   });
 });

@@ -64,6 +64,79 @@ export const FALLBACK_FREE_MODELS: FreeModelRecord[] = [
   },
 ];
 
+export const MULTI_PROVIDER_STATIC_MODELS: FreeModelRecord[] = [
+  {
+    id: "gemini-1.5-flash",
+    name: "Gemini 1.5 Flash",
+    provider: "Google",
+    context_length: 1000000,
+    pricing_prompt: 0,
+    pricing_completion: 0,
+    is_active: true,
+    last_checked_at: new Date().toISOString(),
+  },
+  {
+    id: "gemini-1.5-pro",
+    name: "Gemini 1.5 Pro",
+    provider: "Google",
+    context_length: 2000000,
+    pricing_prompt: 0,
+    pricing_completion: 0,
+    is_active: true,
+    last_checked_at: new Date().toISOString(),
+  },
+  {
+    id: "nvidia/llama-3.1-nemotron-70b-instruct",
+    name: "Llama 3.1 Nemotron 70B",
+    provider: "Nvidia",
+    context_length: 131072,
+    pricing_prompt: 0,
+    pricing_completion: 0,
+    is_active: true,
+    last_checked_at: new Date().toISOString(),
+  },
+  {
+    id: "command-r",
+    name: "Command R",
+    provider: "Cohere",
+    context_length: 128000,
+    pricing_prompt: 0,
+    pricing_completion: 0,
+    is_active: true,
+    last_checked_at: new Date().toISOString(),
+  },
+  {
+    id: "command-r-plus",
+    name: "Command R+",
+    provider: "Cohere",
+    context_length: 128000,
+    pricing_prompt: 0,
+    pricing_completion: 0,
+    is_active: true,
+    last_checked_at: new Date().toISOString(),
+  },
+  {
+    id: "blackboxai",
+    name: "Blackbox AI",
+    provider: "Blackbox",
+    context_length: 32768,
+    pricing_prompt: 0,
+    pricing_completion: 0,
+    is_active: true,
+    last_checked_at: new Date().toISOString(),
+  },
+  {
+    id: "meta-llama/Llama-3.3-70B-Instruct",
+    name: "Llama 3.3 70B",
+    provider: "HuggingFace",
+    context_length: 131072,
+    pricing_prompt: 0,
+    pricing_completion: 0,
+    is_active: true,
+    last_checked_at: new Date().toISOString(),
+  },
+];
+
 export async function discoverFreeModels(): Promise<FreeModelRecord[]> {
   try {
     const response = await fetch("https://openrouter.ai/api/v1/models", {
@@ -98,21 +171,23 @@ export async function discoverFreeModels(): Promise<FreeModelRecord[]> {
       });
 
     if (freeModels.length === 0) {
-      return FALLBACK_FREE_MODELS;
+      return [...FALLBACK_FREE_MODELS, ...MULTI_PROVIDER_STATIC_MODELS];
     }
+
+    const combinedModels = [...freeModels, ...MULTI_PROVIDER_STATIC_MODELS];
 
     try {
       const supabase = createAdminClient();
       await supabase
         .from("ai_free_models" as unknown as "incidents")
-        .upsert(freeModels as unknown as never[], { onConflict: "id" } as never);
+        .upsert(combinedModels as unknown as never[], { onConflict: "id" } as never);
     } catch {
       // Non-blocking DB write failure
     }
 
-    return freeModels;
+    return combinedModels;
   } catch {
-    return FALLBACK_FREE_MODELS;
+    return [...FALLBACK_FREE_MODELS, ...MULTI_PROVIDER_STATIC_MODELS];
   }
 }
 
@@ -127,7 +202,7 @@ export async function discoverAllModels(): Promise<FreeModelRecord[]> {
     });
 
     if (!response.ok) {
-      return FALLBACK_FREE_MODELS;
+      return [...FALLBACK_FREE_MODELS, ...MULTI_PROVIDER_STATIC_MODELS];
     }
 
     const json = (await response.json()) as { data?: OpenRouterModel[] };
@@ -147,8 +222,11 @@ export async function discoverAllModels(): Promise<FreeModelRecord[]> {
       };
     });
 
-    return allModels.length > 0 ? allModels : FALLBACK_FREE_MODELS;
+    const combinedModels = [...allModels, ...MULTI_PROVIDER_STATIC_MODELS];
+    return combinedModels.length > 0
+      ? combinedModels
+      : [...FALLBACK_FREE_MODELS, ...MULTI_PROVIDER_STATIC_MODELS];
   } catch {
-    return FALLBACK_FREE_MODELS;
+    return [...FALLBACK_FREE_MODELS, ...MULTI_PROVIDER_STATIC_MODELS];
   }
 }
