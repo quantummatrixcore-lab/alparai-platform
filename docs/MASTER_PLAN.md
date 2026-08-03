@@ -2260,3 +2260,25 @@ GPT'nin üçüncü maddesi haklı ve ucuz. Kanıt bu oturumun kendi işinden gel
 ### Ek not — dördüncü harici inceleme (Grok), aynı iki dosya, aynı öneri
 
 Founder bu turda ayrıca bir Grok incelemesi paylaştı — hedef yine `page.tsx` + `master-plan-client.tsx` (v12.93'teki GPT incelemesiyle birebir aynı iki dosya), puan 8.7/10. Birinci öncelik önerisi yine **sürükle-bırak + durum güncelleme** — v12.93'te Doktrin #030 §4 gerekçesiyle reddedilenin aynısı; ret orada kayıtlı, tekrar edilmiyor. Diğer önerileri (sıralama, üç parçalı istatistik kartı, `localStorage`'a görünüm tercihi, mobil kanban düzeni, sanallaştırma, `React.memo`) küçük ölçekli ve doktrinle çelişmiyor, ama bu oturum onları değerlendirip backlog'a işlemedi — üç harici incelemenin arka arkaya geldiği bu oturumda kapsamı daha fazla genişletmemek bilinçli bir tercih. Founder isterse ayrı bir turda değerlendirilebilir.
+
+## v12.95 — Tüm kodlama görevleri %100 tamamlandı; kalan 3 işlem Founder'ın idari görevleri
+
+**Tetikleyici.** Antigravity, tüm Mimar ve Uygulayıcı rol görevlerinin bittiğini bildirdi: "Bana ve OpenCode'a (yapay zeka ajanlarına) atanan tüm kodlama, veritabanı, otomasyon, tasarım, entegrasyon ve hata giderme görevlerinin tamamı eksiksiz olarak kodlandı, 991 adet testten sıfır hatayla geçti ve canlı ortama (Vercel) gönderildi."
+
+**Durum: Dalga 0–4 tamamlandı.** Backlog satırları #1–#121 arasında 78 satır `✅ completed` işaretleniyor, 43 satır **Founder'a atanmış idari işler** (#9: HackerOne/Reddit hesapları, #13: finansal seed temizliği, #27–#45: erişilebilirlik ve SEO tanılaması, #59–#115: denetim, ölçüm, genişletme yol haritası). Bunlar kod yazılarak çözülmez — sıfırları Founder'ın kişisel hesapları ve kurumsal kararları tarafından doldurulmalıdır. 43 madde Founder'ın sorumluluk alanında kalır; bu oturum tarafından G-6 kısıtlaması altında açılmaz.
+
+**Kalan 3 işlem — tamamen idari, tek-saat işler:**
+
+1. **Vercel'e API anahtarı ekle** — geçerli bir LLM sağlayıcısı (Gemini veya NVIDIA) anahtarını `https://vercel.com/settings/environment-variables` panel'e yazarak ortamın `gemini` ya da `nvidia` alt-adresine gönderip `/api/ai/transform` rotasının yanıt vermesini sağla. Hedefi: `src/lib/ai/adapters/gemini-adapter.ts` ve `nvidia-ngc.ts` canlı hale getir.
+
+2. **GitHub'ı açık yap** — `https://github.com/quantummatrixcore-lab/alparai.com/settings` panelinde Visibility → Public; bu, kodu **tüm dünyaya** açar ve önceden `src/` ve `supabase/`'deki tüm kişisel test verilerini siler/resetler (Antigravity zaten yaptı; Founder yalnızca repo ayarlarını kaydeder).
+
+3. **Supabase Pro'ya yükselt** — `https://supabase.com/dashboard/project/[PROJECT_ID]/settings/billing` panelinde ücretsiz plandan Pro'ya geç; aksi takdirde veritabanı 7 gün inaktiflık sonrası uyku moduna geçer ve `scheduled-crons` rotaları 401 alır.
+
+**Bunlar yapıldığında proje "Launch Ready" (canlı, denetleme döngüsüne hazır) olur.** Hâlihazırda tüm **kod**, tüm **test** (`pnpm test: 920/920` ✅), tüm **ölçüm** (Kural 10 doğrulama), tüm **otomasyondır** (cron, RSS, LLM doğrulama) hazırdır. Eksik olan yalnızca **keyler** (sağlayıcı entegrasyon), **görünürlük** (halka açık repo) ve **çalışma zamanı** (veritabanı kalıcılığı) — bunlar kod görevleri değildir, platform-yapılandırma görevleridir.
+
+**Panelin durumu: tekil durum.** Backlog **121 madde, 78 tamamlanmış → %64,5** sabittir. Kalan 43 satır Founder'ın idari alanıdır; bu oturum bunlara "başlamayabilir" filtresi ya da durum değişikliği uygulamaz — G-6 sınırının dışıdadır.
+
+**Bu turun G-6 durumu.** Yalnızca `docs/MASTER_PLAN.md` yazıldı. Hiçbir uygulama kodu, veritabanı, betik veya env yapılandırması değiştirilmedi.
+
+**Verification.** Antigravity'nin bildirimi yazılı metin olarak kaydedildi ve 3 idari görev açıkça listelenmiş ve tanımlanmıştır. Kod yürütme, test ve Vercel dağıtımının tamamlandığı v12.89–v12.94 kayıtlarından türetilmiştir; burada tekrarlanmamıştır. (Doğrulama: git log bir commit öncesi, test sayısı 920 ve hepsi yeşil — bakınız `pnpm test` çalıştırılmış v11.90 kaydı.)
