@@ -13,6 +13,7 @@ import {
   List,
   Search,
   X,
+  PlayCircle,
 } from "lucide-react";
 import type { MasterPlanParseError, PlanItem } from "@/lib/utils/markdown-parser";
 
@@ -39,10 +40,12 @@ function PlanCard({
   item,
   compact,
   onOpen,
+  pendingDependencies,
 }: {
   item: PlanItem;
   compact?: boolean;
   onOpen: (item: PlanItem) => void;
+  pendingDependencies?: string[];
 }) {
   const t = useTranslations("admin");
 
@@ -77,6 +80,14 @@ function PlanCard({
       {!compact && item.description && (
         <p className="text-fg-muted line-clamp-2 text-xs leading-relaxed">{item.description}</p>
       )}
+      {pendingDependencies && pendingDependencies.length > 0 && (
+        <div className="mt-1 flex w-fit items-center gap-1.5 rounded border border-amber-500/20 bg-amber-500/10 px-2 py-1">
+          <AlertTriangle className="h-3 w-3 text-amber-400" />
+          <span className="text-[10px] font-bold tracking-wider text-amber-400 uppercase">
+            {pendingDependencies.map((d) => `#${d}`).join(", ")} BEKLENİYOR
+          </span>
+        </div>
+      )}
       <div className="flex items-center justify-between">
         {item.owner ? (
           <span className="text-fg-muted text-[10px] font-semibold tracking-wider uppercase">
@@ -107,18 +118,56 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
   const [viewMode, setViewMode] = useState<"list" | "kanban">("kanban");
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<PlanItem | null>(null);
+  const [showStartableOnly, setShowStartableOnly] = useState(false);
+
+  const completedIds = useMemo(
+    () => new Set(items.filter((i) => i.status === "completed").map((i) => i.id)),
+    [items],
+  );
+
+  const effectiveDependsOn = useMemo(() => {
+    const deps = new Map<string, Set<string>>();
+    items.forEach((i) => {
+      if (!deps.has(i.id)) deps.set(i.id, new Set());
+      if (i.dependsOn) {
+        i.dependsOn.forEach((d) => deps.get(i.id)!.add(d));
+      }
+      if (i.blocks) {
+        i.blocks.forEach((b) => {
+          if (!deps.has(b)) deps.set(b, new Set());
+          deps.get(b)!.add(i.id);
+        });
+      }
+    });
+    return deps;
+  }, [items]);
 
   const filteredItems = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return items;
-    return items.filter(
-      (i) =>
-        i.title.toLowerCase().includes(q) ||
-        i.id.toLowerCase().includes(q) ||
-        i.priority.toLowerCase().includes(q) ||
-        (i.owner ?? "").toLowerCase().includes(q),
-    );
-  }, [items, query]);
+    let res = items;
+    if (q) {
+      res = res.filter(
+        (i) =>
+          i.title.toLowerCase().includes(q) ||
+          i.id.toLowerCase().includes(q) ||
+          i.priority.toLowerCase().includes(q) ||
+          (i.owner ?? "").toLowerCase().includes(q),
+      );
+    }
+
+    if (showStartableOnly) {
+      res = res.filter((i) => {
+        if (i.status !== "pending") return false;
+        const myDeps = effectiveDependsOn.get(i.id);
+        if (!myDeps || myDeps.size === 0) return true;
+        for (const depId of myDeps) {
+          if (!completedIds.has(depId)) return false;
+        }
+        return true;
+      });
+    }
+    return res;
+  }, [items, query, showStartableOnly, effectiveDependsOn, completedIds]);
 
   const { pendingItems, completedItems, pausedItems, progress, completedCount, activeTotal } =
     useMemo(() => {
@@ -241,6 +290,14 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                   </button>
                 )}
               </div>
+              <button
+                onClick={() => setShowStartableOnly(!showStartableOnly)}
+                aria-pressed={showStartableOnly}
+                className={`focus:ring-brand-500/50 flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-semibold transition-all focus:ring-2 focus:outline-none ${showStartableOnly ? "bg-brand-500/10 border-brand-500/30 text-brand-400 shadow-sm" : "bg-bg-tertiary border-border-subtle text-fg-muted hover:text-white"}`}
+              >
+                <PlayCircle className="h-4 w-4" />
+                Başlanabilir
+              </button>
               <div className="bg-bg-tertiary border-border-subtle flex items-center gap-1 rounded-lg border p-1">
                 <button
                   onClick={() => setViewMode("list")}
@@ -301,7 +358,14 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                       ) : (
                         <AnimatePresence initial={false}>
                           {pendingItems.map((item) => (
-                            <PlanCard key={item.id} item={item} onOpen={setSelected} />
+                            <PlanCard
+                              key={item.id}
+                              item={item}
+                              onOpen={setSelected}
+                              pendingDependencies={Array.from(
+                                effectiveDependsOn.get(item.id) || [],
+                              ).filter((d) => !completedIds.has(d))}
+                            />
                           ))}
                         </AnimatePresence>
                       )}
@@ -328,7 +392,14 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                       ) : (
                         <AnimatePresence initial={false}>
                           {pausedItems.map((item) => (
-                            <PlanCard key={item.id} item={item} onOpen={setSelected} />
+                            <PlanCard
+                              key={item.id}
+                              item={item}
+                              onOpen={setSelected}
+                              pendingDependencies={Array.from(
+                                effectiveDependsOn.get(item.id) || [],
+                              ).filter((d) => !completedIds.has(d))}
+                            />
                           ))}
                         </AnimatePresence>
                       )}
@@ -355,7 +426,15 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                       ) : (
                         <AnimatePresence initial={false}>
                           {completedItems.map((item) => (
-                            <PlanCard key={item.id} item={item} compact onOpen={setSelected} />
+                            <PlanCard
+                              key={item.id}
+                              item={item}
+                              compact
+                              onOpen={setSelected}
+                              pendingDependencies={Array.from(
+                                effectiveDependsOn.get(item.id) || [],
+                              ).filter((d) => !completedIds.has(d))}
+                            />
                           ))}
                         </AnimatePresence>
                       )}
@@ -531,7 +610,22 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                     <p className="text-fg-muted mb-1 text-xs font-bold tracking-wider uppercase">
                       {t("plan_detail_commit")}
                     </p>
-                    <p className="font-mono text-sm text-white">{selected.commitHash ?? "—"}</p>
+                    <p className="font-mono text-sm text-white">
+                      {selected.commitHash ??
+                        (selected.closedBy
+                          ? `${selected.closedBy.sha}@${selected.closedBy.branch}`
+                          : "—")}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-fg-muted mb-1 text-xs font-bold tracking-wider uppercase">
+                      Bağımlılıklar
+                    </p>
+                    <p className="text-sm font-semibold text-white">
+                      {Array.from(effectiveDependsOn.get(selected.id) || [])
+                        .map((d) => `#${d}`)
+                        .join(", ") || "—"}
+                    </p>
                   </div>
                 </div>
               </div>

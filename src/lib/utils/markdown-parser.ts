@@ -10,6 +10,9 @@ export interface PlanItem {
   commitHash?: string;
   description?: string;
   owner?: string;
+  dependsOn?: string[];
+  blocks?: string[];
+  closedBy?: { sha: string; branch: string };
 }
 
 export type MasterPlanParseError = "read" | "markers";
@@ -88,6 +91,26 @@ export function parseMasterPlan(): MasterPlanParseResult {
 
       const description = cleanMarkdown(rawDescription);
 
+      const dependsOn: string[] = [];
+      const dependsRegex = /depends:#(\d+)/g;
+      let dMatch;
+      while ((dMatch = dependsRegex.exec(rawDescription)) !== null) {
+        if (dMatch[1]) dependsOn.push(dMatch[1]);
+      }
+
+      const blocks: string[] = [];
+      const blocksRegex = /blocks:#(\d+)/g;
+      let bMatch;
+      while ((bMatch = blocksRegex.exec(rawDescription)) !== null) {
+        if (bMatch[1]) blocks.push(bMatch[1]);
+      }
+
+      let closedBy: { sha: string; branch: string } | undefined;
+      const closedMatch = rawDescription.match(/closed-by:([a-f0-9]+|legacy)@([a-zA-Z0-9_\-\/]+)/i);
+      if (closedMatch && closedMatch[1] && closedMatch[2]) {
+        closedBy = { sha: closedMatch[1], branch: closedMatch[2] };
+      }
+
       items.push({
         id,
         priority,
@@ -95,6 +118,9 @@ export function parseMasterPlan(): MasterPlanParseResult {
         status,
         owner,
         description: description || undefined,
+        dependsOn: dependsOn.length > 0 ? dependsOn : undefined,
+        blocks: blocks.length > 0 ? blocks : undefined,
+        closedBy,
       });
     }
 
