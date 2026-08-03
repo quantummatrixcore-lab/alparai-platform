@@ -82,6 +82,6 @@ describe("Live Cross-Audit Test", () => {
 
     expect(result.success).toBe(true);
     expect(result.data?.truth_score).toBe(75);
-    expect(result.data?.models).toHaveLength(2);
+    expect(result.data?.models).toHaveLength(3);
   });
 });
