@@ -567,16 +567,18 @@ export function AdminHQDashboard({
     <div className="space-y-6">
       {/* Top Banner: Git Commit & Platform Status */}
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 backdrop-blur-md">
-        <div className="flex items-center gap-2.5 min-w-0">
+        <div className="flex min-w-0 items-center gap-2.5">
           <GitCommit className="h-4 w-4 shrink-0 text-emerald-400" />
-          <span className="text-[11px] font-semibold text-white/50 uppercase tracking-wider">Latest Commit:</span>
-          <span className="truncate font-mono text-xs font-medium text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">
-            cff69271 feat(homepage): diversify CTAs from submit-only to segment CTAs (#101-cta) [deploy]
+          <span className="text-[11px] font-semibold tracking-wider text-white/50 uppercase">
+            Latest Commit:
+          </span>
+          <span className="truncate rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 font-mono text-xs font-medium text-emerald-300">
+            840272ec feat(admin): dashboard quick links and progress indicators [deploy]
           </span>
         </div>
         <div className="flex items-center gap-3 text-xs">
           <span className="flex items-center gap-1.5 font-mono text-white/60">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
             origin/master
           </span>
         </div>
@@ -634,7 +636,7 @@ export function AdminHQDashboard({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Link
           href={`/${locale}/methodology`}
-          className="group relative flex items-center justify-between overflow-hidden rounded-2xl border border-sky-500/20 bg-gradient-to-r from-sky-950/30 via-bg-secondary/90 to-bg-tertiary/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-[1.01] hover:border-sky-500/40"
+          className="group via-bg-secondary/90 to-bg-tertiary/90 relative flex items-center justify-between overflow-hidden rounded-2xl border border-sky-500/20 bg-gradient-to-r from-sky-950/30 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-[1.01] hover:border-sky-500/40"
         >
           <div className="flex items-center gap-3">
             <div className="rounded-xl border border-sky-500/30 bg-sky-500/10 p-2.5 text-sky-400">
@@ -652,7 +654,7 @@ export function AdminHQDashboard({
 
         <Link
           href={`/${locale}/legal/neutrality`}
-          className="group relative flex items-center justify-between overflow-hidden rounded-2xl border border-emerald-500/20 bg-gradient-to-r from-emerald-950/30 via-bg-secondary/90 to-bg-tertiary/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-[1.01] hover:border-emerald-500/40"
+          className="group via-bg-secondary/90 to-bg-tertiary/90 relative flex items-center justify-between overflow-hidden rounded-2xl border border-emerald-500/20 bg-gradient-to-r from-emerald-950/30 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-[1.01] hover:border-emerald-500/40"
         >
           <div className="flex items-center gap-3">
             <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-2.5 text-emerald-400">
@@ -670,7 +672,7 @@ export function AdminHQDashboard({
 
         <Link
           href={`/${locale}/admin/expert-analysis`}
-          className="group relative flex items-center justify-between overflow-hidden rounded-2xl border border-violet-500/20 bg-gradient-to-r from-violet-950/30 via-bg-secondary/90 to-bg-tertiary/90 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-[1.01] hover:border-violet-500/40"
+          className="group via-bg-secondary/90 to-bg-tertiary/90 relative flex items-center justify-between overflow-hidden rounded-2xl border border-violet-500/20 bg-gradient-to-r from-violet-950/30 p-4 shadow-lg backdrop-blur-xl transition-all duration-300 hover:scale-[1.01] hover:border-violet-500/40"
         >
           <div className="flex items-center gap-3">
             <div className="rounded-xl border border-violet-500/30 bg-violet-500/10 p-2.5 text-violet-400">
