@@ -261,7 +261,7 @@ export interface StrategyRisk {
 
 export interface StrategyValuation {
   id: string;
-  method: "berkus" | "scorecard" | "vc" | "average";
+  method: "berkus" | "scorecard" | "vc" | "revenue" | "average";
   inputs: Record<string, unknown>;
   result_pre_money: number;
   notes: string | null;

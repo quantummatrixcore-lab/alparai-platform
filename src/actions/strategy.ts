@@ -143,7 +143,7 @@ export async function deleteRiskAction(id: string): Promise<{ success: boolean }
  * Valuation Actions
  */
 export async function saveValuationAction(data: {
-  method: "berkus" | "scorecard" | "vc" | "average";
+  method: "berkus" | "scorecard" | "vc" | "revenue" | "average";
   inputs: Json;
   result_pre_money: number;
   notes: string | null;

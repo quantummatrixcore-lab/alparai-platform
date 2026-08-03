@@ -24,11 +24,16 @@ export default async function ValuationPage({ params }: { params: Promise<{ loca
 
   const supabase = await createServerClient();
 
-  const [dataRes, swotRes, risksRes, milestonesRes] = await Promise.all([
+  const [dataRes, swotRes, risksRes, milestonesRes, revenueRes] = await Promise.all([
     supabase.from("strategy_valuations").select("*").order("snapshot_date", { ascending: false }),
     supabase.from("strategy_swot_items").select("*", { count: "exact", head: true }),
     supabase.from("strategy_risks").select("*", { count: "exact", head: true }),
     supabase.from("strategy_milestones").select("*", { count: "exact", head: true }),
+    supabase
+      .from("finance_revenue_metrics")
+      .select("*")
+      .order("month", { ascending: false })
+      .limit(1),
   ]);
 
   const initialValuations = (dataRes.data ?? []) as StrategyValuation[];
@@ -37,6 +42,14 @@ export default async function ValuationPage({ params }: { params: Promise<{ loca
     risks: risksRes.count ?? 0,
     milestones: milestonesRes.count ?? 0,
   };
+
+  const latestRevenue = revenueRes?.data?.[0];
+  const revenueMetrics = {
+    mrr: latestRevenue?.mrr_usd ?? 0,
+    arr: latestRevenue?.arr_usd ?? 0,
+    activeSubs: latestRevenue?.active_subs ?? 0,
+  };
+
   const t = await getTranslations({ locale, namespace: "admin" });
 
   return (
@@ -64,6 +77,7 @@ export default async function ValuationPage({ params }: { params: Promise<{ loca
         <ValuationCalculatorClient
           initialValuations={initialValuations}
           strategyCounts={strategyCounts}
+          revenueMetrics={revenueMetrics}
           isReadOnly={isReadOnly}
           locale={locale}
         />

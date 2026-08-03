@@ -16,6 +16,11 @@ interface ValuationCalculatorClientProps {
     risks: number;
     milestones: number;
   };
+  revenueMetrics?: {
+    mrr: number;
+    arr: number;
+    activeSubs: number;
+  };
   isReadOnly: boolean;
   locale: string;
 }
@@ -23,12 +28,15 @@ interface ValuationCalculatorClientProps {
 export function ValuationCalculatorClient({
   initialValuations,
   strategyCounts = { swot: 0, risks: 0, milestones: 0 },
+  revenueMetrics = { mrr: 0, arr: 0, activeSubs: 0 },
   isReadOnly,
   locale,
 }: ValuationCalculatorClientProps) {
   const t = useTranslations("admin");
   const [valuations, setValuations] = useState<StrategyValuation[]>(initialValuations);
-  const [activeTab, setActiveTab] = useState<"berkus" | "scorecard" | "vc" | "history">("berkus");
+  const [activeTab, setActiveTab] = useState<
+    "berkus" | "scorecard" | "vc" | "revenue" | "average" | "history"
+  >("berkus");
   const [isSaving, setIsSaving] = useState(false);
   const [notes, setNotes] = useState("");
 
@@ -75,8 +83,24 @@ export function ValuationCalculatorClient({
   const vcPostMoney = Math.round(vcExitValue / vcTargetRoi);
   const vcValuation = vcPostMoney - vcInvestment;
 
-  // 4. Consolidated Average
-  const averageValuation = Math.round((berkusValuation + scorecardValuation + vcValuation) / 3);
+  // 4. Revenue Multiplier State
+  const [revenueMultiplier, setRevenueMultiplier] = useState(10);
+  const hasRevenue = revenueMetrics.arr > 0;
+  const revenueValuation = hasRevenue ? Math.round(revenueMetrics.arr * revenueMultiplier) : 0;
+
+  // 5. Consolidated Weighted Average
+  const averageValuation = hasRevenue
+    ? Math.round(
+        berkusValuation * 0.3 +
+          scorecardValuation * 0.3 +
+          vcValuation * 0.2 +
+          revenueValuation * 0.2,
+      )
+    : Math.round(berkusValuation * 0.4 + scorecardValuation * 0.4 + vcValuation * 0.2);
+
+  const lowValuation = Math.round(berkusValuation);
+  const baseValuation = averageValuation;
+  const highValuation = Math.max(vcValuation, revenueValuation);
 
   const formatCurrency = (val: number) => {
     return new Intl.NumberFormat(locale === "tr" ? "tr-TR" : "en-US", {
@@ -86,7 +110,9 @@ export function ValuationCalculatorClient({
     }).format(val);
   };
 
-  const handleSaveSnapshot = async (method: "berkus" | "scorecard" | "vc" | "average") => {
+  const handleSaveSnapshot = async (
+    method: "berkus" | "scorecard" | "vc" | "revenue" | "average",
+  ) => {
     if (isReadOnly) return;
     setIsSaving(true);
 
@@ -102,12 +128,16 @@ export function ValuationCalculatorClient({
     } else if (method === "vc") {
       val = vcValuation;
       inputsObj = { exitValue: vcExitValue, targetRoi: vcTargetRoi, investment: vcInvestment };
+    } else if (method === "revenue") {
+      val = revenueValuation;
+      inputsObj = { arr: revenueMetrics.arr, multiplier: revenueMultiplier };
     } else {
       val = averageValuation;
       inputsObj = {
         berkus: berkusValuation,
         scorecard: scorecardValuation,
         vc: vcValuation,
+        revenue: revenueValuation,
       };
     }
 
@@ -210,6 +240,28 @@ export function ValuationCalculatorClient({
               )}
             >
               {t("val_vc_exit_method")}
+            </button>
+            <button
+              onClick={() => setActiveTab("revenue")}
+              className={cn(
+                "flex-1 rounded-xl px-4 py-2 text-xs font-bold tracking-wider uppercase transition duration-300",
+                activeTab === "revenue"
+                  ? "bg-brand-500/15 text-brand-300 border-brand-500/20 border shadow-[inset_0_0_12px_rgba(168,85,247,0.1)]"
+                  : "text-fg-muted hover:bg-white/5 hover:text-white",
+              )}
+            >
+              {t("val_revenue_multiplier_method")}
+            </button>
+            <button
+              onClick={() => setActiveTab("average")}
+              className={cn(
+                "flex-1 rounded-xl px-4 py-2 text-xs font-bold tracking-wider uppercase transition duration-300",
+                activeTab === "average"
+                  ? "bg-brand-500/15 text-brand-300 border-brand-500/20 border shadow-[inset_0_0_12px_rgba(168,85,247,0.1)]"
+                  : "text-fg-muted hover:bg-white/5 hover:text-white",
+              )}
+            >
+              {t("val_consolidated_title")}
             </button>
             <button
               onClick={() => setActiveTab("history")}
@@ -443,6 +495,117 @@ export function ValuationCalculatorClient({
           </div>
         )}
 
+        {/* TAB 4: REVENUE MULTIPLIER FORM */}
+        {activeTab === "revenue" && (
+          <div className="border-border-subtle bg-bg-secondary/40 space-y-4 rounded-2xl border p-6 backdrop-blur-md">
+            <h3 className="border-b border-white/5 pb-2 text-sm font-bold tracking-wider text-white uppercase">
+              {t("val_revenue_title")}
+            </h3>
+            <p className="text-fg-muted text-xs leading-relaxed">{t("val_revenue_desc")}</p>
+
+            <div className="space-y-4 pt-2">
+              <div className="flex justify-between border-b border-white/5 pb-3 text-xs">
+                <span className="text-fg-muted">{t("val_mrr_usd")}</span>
+                <span className="font-mono font-bold text-white">
+                  {formatCurrency(revenueMetrics.mrr)}
+                </span>
+              </div>
+              <div className="flex justify-between border-b border-white/5 pb-3 text-xs">
+                <span className="text-fg-muted">{t("val_arr_usd")}</span>
+                <span className="font-mono font-bold text-white">
+                  {formatCurrency(revenueMetrics.arr)}
+                </span>
+              </div>
+              <div className="flex justify-between border-b border-white/5 pb-3 text-xs">
+                <span className="text-fg-muted">{t("val_active_subs")}</span>
+                <span className="font-mono font-bold text-white">{revenueMetrics.activeSubs}</span>
+              </div>
+
+              {hasRevenue ? (
+                <div className="flex flex-col justify-between gap-2 border-b border-white/5 pb-3 sm:flex-row sm:items-center">
+                  <span className="text-xs font-semibold text-white/90">
+                    {t("val_revenue_multiplier")}
+                  </span>
+                  <input
+                    type="number"
+                    value={revenueMultiplier}
+                    onChange={(e) => setRevenueMultiplier(Math.max(1, Number(e.target.value)))}
+                    className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-3 py-1.5 text-right font-mono text-sm text-white focus:ring-1 focus:outline-none sm:w-36"
+                  />
+                </div>
+              ) : (
+                <div className="rounded-xl border border-amber-500/10 bg-amber-500/5 p-4 text-center text-xs text-amber-300">
+                  {t("val_pre_revenue_status")}
+                </div>
+              )}
+            </div>
+
+            {hasRevenue && (
+              <div className="mt-4 flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4">
+                <span className="text-sm font-extrabold text-white">{t("val_revenue_title")}</span>
+                <span className="font-mono text-2xl font-black text-emerald-400">
+                  {formatCurrency(revenueValuation)}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 5: CONSOLIDATED WEIGHTED DETAILS */}
+        {activeTab === "average" && (
+          <div className="border-border-subtle bg-bg-secondary/40 space-y-4 rounded-2xl border p-6 backdrop-blur-md">
+            <h3 className="border-b border-white/5 pb-2 text-sm font-bold tracking-wider text-white uppercase">
+              {t("val_consolidated_title")}
+            </h3>
+            <p className="text-fg-muted text-xs leading-relaxed">
+              {locale === "tr"
+                ? "Düşük (Berkus), Orta (Ağırlıklı Blend) ve Yüksek (Büyüme/VC) değerleme aralıkları."
+                : "Low (Berkus), Base (Weighted Blend), and High (Growth/VC) valuation ranges."}
+            </p>
+
+            <div className="space-y-4 pt-2">
+              <div className="flex justify-between border-b border-white/5 pb-3 text-xs">
+                <span className="text-fg-muted">{t("val_low_range")}</span>
+                <span className="font-mono font-bold text-white">
+                  {formatCurrency(lowValuation)}
+                </span>
+              </div>
+              <div className="flex justify-between border-b border-white/5 pb-3 text-xs">
+                <span className="text-fg-muted">{t("val_base_range")}</span>
+                <span className="text-brand-300 font-mono font-bold">
+                  {formatCurrency(baseValuation)}
+                </span>
+              </div>
+              <div className="flex justify-between border-b border-white/5 pb-3 text-xs">
+                <span className="text-fg-muted">{t("val_high_range")}</span>
+                <span className="font-mono font-bold text-emerald-400">
+                  {formatCurrency(highValuation)}
+                </span>
+              </div>
+            </div>
+
+            <div className="text-fg-muted rounded-xl border border-white/5 bg-neutral-900/40 p-4 text-[10px] leading-relaxed">
+              {locale === "tr" ? (
+                <>
+                  <strong>Ağırlıklı Ortalama Formülü:</strong>
+                  <br />
+                  {hasRevenue
+                    ? "Berkus (%30) + Scorecard (%30) + VC (%20) + Gelir Çarpanı (%20)"
+                    : "Berkus (%40) + Scorecard (%40) + VC (%20)"}
+                </>
+              ) : (
+                <>
+                  <strong>Weighted Average Formula:</strong>
+                  <br />
+                  {hasRevenue
+                    ? "Berkus (30%) + Scorecard (30%) + VC (20%) + Revenue Multiplier (20%)"
+                    : "Berkus (40%) + Scorecard (40%) + VC (20%)"}
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* TAB 4: VALUATION HISTORY LOG */}
         {activeTab === "history" && (
           <div className="border-border-subtle bg-bg-secondary/40 space-y-4 rounded-2xl border p-6 backdrop-blur-md">
@@ -525,14 +688,32 @@ export function ValuationCalculatorClient({
                   {formatCurrency(vcValuation)}
                 </span>
               </div>
+              {hasRevenue && (
+                <div className="flex justify-between border-b border-white/5 pb-2 text-xs">
+                  <span className="text-fg-muted">{t("val_revenue_method_label")}</span>
+                  <span className="font-mono font-bold text-white">
+                    {formatCurrency(revenueValuation)}
+                  </span>
+                </div>
+              )}
 
               <div className="mt-6 rounded-xl border border-emerald-500/10 bg-emerald-500/5 p-4 text-center">
                 <span className="text-fg-muted block text-[10px] font-bold tracking-wider uppercase">
                   {t("val_consolidated_avg_label")}
                 </span>
                 <span className="mt-1 block font-mono text-2xl font-black text-emerald-400">
-                  {formatCurrency(averageValuation)}
+                  {formatCurrency(baseValuation)}
                 </span>
+                <div className="text-fg-muted mt-2 flex justify-around border-t border-emerald-500/10 pt-2 text-[10px]">
+                  <div>
+                    <span className="block font-bold">{t("val_low_range")}</span>
+                    <span className="font-mono text-white">{formatCurrency(lowValuation)}</span>
+                  </div>
+                  <div>
+                    <span className="block font-bold">{t("val_high_range")}</span>
+                    <span className="font-mono text-white">{formatCurrency(highValuation)}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

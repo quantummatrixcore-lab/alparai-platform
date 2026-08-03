@@ -300,7 +300,7 @@ export function HeroSection({
             <div className="mt-6 pl-14">
               <Link
                 href="/bounties"
-                className="bg-warning-500 hover:bg-warning-400 focus-visible:ring-warning-500 inline-flex h-9 items-center gap-2 rounded-lg px-4 text-xs font-bold text-white shadow-lg transition-all hover:scale-105"
+                className="bg-warning-500 hover:bg-warning-400 focus-visible:ring-warning-500 inline-flex h-9 items-center gap-2 rounded-lg px-4 text-xs font-bold text-neutral-950 shadow-lg transition-all hover:scale-105"
               >
                 {t("bug_bounty_badge", { defaultValue: "Bug Bounty" })} {t("view_all") ?? "→"}
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -315,7 +315,7 @@ export function HeroSection({
 
 function AnimatedValue({ value }: { value: number | string }) {
   const numVal = typeof value === "number" ? value : 0;
-  const [count, setCount] = React.useState(0);
+  const [count, setCount] = React.useState(numVal);
   const ref = React.useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.1 });
 

@@ -1,61 +1,176 @@
 "use server";
 
-import { callWithFailover } from "@/lib/ai/openrouter-gateway";
-import { selectModelByCapability } from "@/lib/audit/model-router";
+import { selectModelTier } from "@/lib/audit/model-router";
+import {
+  runInitialEvaluation,
+  runChallenge,
+  runRebuttal,
+  runSupremeCourtAdjudication,
+} from "@/lib/ai/cross-audit/debate-runner";
+import { isGatewayConfigured } from "@/lib/ai/openrouter-gateway";
+import { maskPII } from "@/lib/pii/guardian";
 import { logger } from "@/lib/utils/logger";
+import { requireAdmin } from "@/lib/auth/session";
 
 export async function runLiveCrossAuditTest(text: string) {
   try {
-    const prompt = `
-    Sen bir 'Cross-Audit Engine' (Çapraz Sorgu Motoru) simülasyonusun.
-    Kullanıcı aşağıdaki olayı veya metni girdi:
-    "${text}"
+    await requireAdmin();
 
-    Bunu 3 farklı bağımsız denetçi model (Auditor Alpha, Auditor Beta, Auditor Gamma) analiz ediyormuş gibi sentezle.
-    Her modelin kendi görüşü (Analysis), ve en son "Hakem (Judge)" modelinin nihai kararı olsun.
-    
-    Çıktın AŞAĞIDAKİ JSON FORMATINDA olmalıdır ve başka hiçbir metin içermemelidir:
-    {
-      "models": [
-        { "name": "Auditor Alpha", "stance": "Destekliyor / Şüpheli / Reddediyor", "reason": "Kısa açıklama..." },
-        { "name": "Auditor Beta", "stance": "...", "reason": "..." },
-        { "name": "Auditor Gamma", "stance": "...", "reason": "..." }
-      ],
-      "judge_verdict": "Nihai Karar Özeti",
-      "truth_score": 85,
-      "risk_level": "Minimal | Specific Transparency | High Risk | Unacceptable Risk"
-    }
-    `;
-
-    const result = await callWithFailover(
-      {
-        systemPrompt:
-          "Sen bir 'Cross-Audit Engine' simülasyonusun. Çıktıyı yalnızca JSON formatında vermelisin.",
-        userMessage: prompt,
-        temperature: 0.7,
-        responseFormat: "json",
-      },
-      await selectModelByCapability("risk_audit"),
-    );
-
-    if (!result.ok) {
-      logger.error("Live Cross Audit API key missing or gateway error", {
-        error: result.error,
-      });
+    if (!isGatewayConfigured()) {
+      logger.error("Live Cross Audit OpenRouter API key missing");
       return {
         success: false,
-        error: result.error || "Live Cross Audit API çağrısı başarısız oldu.",
+        error: "OpenRouter API anahtarı yapılandırılmamış.",
       };
     }
 
-    const rawText = result.data.content.trim();
-    const cleanText = rawText
-      .replace(/^```(?:json)?\s*/i, "")
-      .replace(/\s*```$/i, "")
-      .trim();
+    const masked = maskPII(text).masked;
+    const safeTitle = masked.slice(0, 80);
+    const safeDescription = masked;
 
-    const parsed = JSON.parse(cleanText);
-    return { success: true, data: parsed };
+    const routerResult = await selectModelTier({
+      title: safeTitle,
+      description: safeDescription,
+      severity: "medium",
+      auditTier: "basic",
+    });
+
+    if (routerResult.tier === "none") {
+      return {
+        success: false,
+        error: "Debate routing tier is inactive.",
+      };
+    }
+
+    const { slot1Chain, slot2Chain, supremeChain } = routerResult;
+
+    // Turn 1: Initial Evaluations
+    const [initA, initB] = await Promise.all([
+      runInitialEvaluation(slot1Chain, safeTitle, safeDescription, "General", "Medium"),
+      runInitialEvaluation(slot2Chain, safeTitle, safeDescription, "General", "Medium"),
+    ]);
+
+    if (!initA || !initB) {
+      throw new Error("Triage models failed to generate initial assessments.");
+    }
+
+    // Turn 2: Challenges
+    const [challengeA, challengeB] = await Promise.all([
+      runChallenge(slot1Chain, safeTitle, safeDescription, "General", "Medium", initB),
+      runChallenge(slot2Chain, safeTitle, safeDescription, "General", "Medium", initA),
+    ]);
+
+    const safeChallengeA = challengeA || {
+      critique: "Model timed out during challenge.",
+      questions: [],
+      model: initA.model,
+    };
+    const safeChallengeB = challengeB || {
+      critique: "Model timed out during challenge.",
+      questions: [],
+      model: initB.model,
+    };
+
+    // Turn 3: Rebuttals
+    const [rebuttalA, rebuttalB] = await Promise.all([
+      runRebuttal(
+        slot1Chain,
+        safeTitle,
+        safeDescription,
+        "General",
+        "Medium",
+        initA,
+        safeChallengeB,
+      ),
+      runRebuttal(
+        slot2Chain,
+        safeTitle,
+        safeDescription,
+        "General",
+        "Medium",
+        initB,
+        safeChallengeA,
+      ),
+    ]);
+
+    const fallbackRebuttal = {
+      answers: "Model timed out during rebuttal.",
+      model: "",
+      finalPlausibilityScore: 0,
+      finalCategoryAccuracy: 0,
+      finalAdversarialRisk: 0,
+      finalReasoning: "",
+    };
+
+    const safeRebuttalA = rebuttalA || {
+      ...fallbackRebuttal,
+      finalPlausibilityScore: initA.plausibilityScore,
+      finalCategoryAccuracy: initA.categoryAccuracy,
+      finalAdversarialRisk: initA.adversarialRisk,
+      finalReasoning: initA.reasoning,
+      model: initA.model,
+    };
+
+    const safeRebuttalB = rebuttalB || {
+      ...fallbackRebuttal,
+      finalPlausibilityScore: initB.plausibilityScore,
+      finalCategoryAccuracy: initB.categoryAccuracy,
+      finalAdversarialRisk: initB.adversarialRisk,
+      finalReasoning: initB.reasoning,
+      model: initB.model,
+    };
+
+    const transcript = {
+      modelA: {
+        name: initA.model,
+        initial: initA,
+        challenge: safeChallengeA,
+        rebuttal: safeRebuttalA,
+      },
+      modelB: {
+        name: initB.model,
+        initial: initB,
+        challenge: safeChallengeB,
+        rebuttal: safeRebuttalB,
+      },
+    };
+
+    // Turn 4: Supreme Court Adjudication
+    const supremeResult = await runSupremeCourtAdjudication(
+      supremeChain,
+      safeTitle,
+      safeDescription,
+      "General",
+      "Medium",
+      transcript,
+    );
+
+    if (!supremeResult) {
+      throw new Error("Supreme Court referee model returned no response.");
+    }
+
+    const stanceA = initA.plausibilityScore >= 70 ? "Plausible" : "Unlikely";
+    const stanceB = initB.plausibilityScore >= 70 ? "Plausible" : "Unlikely";
+
+    const formatted = {
+      truth_score: supremeResult.truthScore,
+      risk_level: supremeResult.euActRiskCategory || "Minimal",
+      judge_verdict: supremeResult.reasoning,
+      models: [
+        {
+          name: initA.model.split("/").pop() || initA.model,
+          stance: stanceA,
+          reason: `Initial plausibility: ${initA.plausibilityScore}%. Final: ${safeRebuttalA.finalReasoning}`,
+        },
+        {
+          name: initB.model.split("/").pop() || initB.model,
+          stance: stanceB,
+          reason: `Initial plausibility: ${initB.plausibilityScore}%. Final: ${safeRebuttalB.finalReasoning}`,
+        },
+      ],
+    };
+
+    return { success: true, data: formatted };
   } catch (err: unknown) {
     logger.error("Live Cross Audit Error:", undefined, err instanceof Error ? err : undefined);
     return {

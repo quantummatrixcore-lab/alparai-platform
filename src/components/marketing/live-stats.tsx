@@ -12,7 +12,7 @@ interface CounterProps {
 }
 
 function AnimatedNumber({ value }: CounterProps) {
-  const [count, setCount] = React.useState(0);
+  const [count, setCount] = React.useState(value);
   const ref = React.useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.1 });
 

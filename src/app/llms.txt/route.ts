@@ -24,11 +24,11 @@ ALPAR AI indexes, verifies, and analyzes AI incidents worldwide. Our public data
 - License: AGPL-3.0
 
 ## Core Documentation & Resources
-- Incidents Registry: https://www.alparai.com/en/incidents
-- Submit Incident: https://www.alparai.com/en/submit
-- K-Benchmark: https://www.alparai.com/en/k-benchmark
-- Legal Imprint: https://www.alparai.com/legal/imprint
-- Full Text Feed: https://www.alparai.com/llms-full.txt
+- [Incidents Registry](https://www.alparai.com/en/incidents)
+- [Submit Incident](https://www.alparai.com/en/submit)
+- [K-Benchmark](https://www.alparai.com/en/k-benchmark)
+- [Legal Imprint](https://www.alparai.com/legal/imprint)
+- [Full Text Feed](https://www.alparai.com/llms-full.txt)
 
 ## Data Access
 Public API and RSS feeds available. All incidents include structured JSON-LD (ClaimReview & Dataset) schema tags.
