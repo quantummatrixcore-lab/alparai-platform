@@ -898,7 +898,7 @@
     "ff_controls_title": "Runtime Feature Flag Controls",
     "ff_disabled": "DISABLED",
     "ff_edge_cache": "Edge Cache Speed",
-    "ff_edge_cache_desc": "Flags are cached in Upstash Redis (ff:<key>) for 60s with ~0ms edge evaluation.",
+    "ff_edge_cache_desc": "Flags are cached in Upstash Redis (ff:[key]) for 60s with ~0ms edge evaluation.",
     "ff_off": "OFF",
     "ff_on": "ON",
     "ff_rls_protection": "RLS Protection",

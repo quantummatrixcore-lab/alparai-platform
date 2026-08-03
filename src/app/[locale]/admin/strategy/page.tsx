@@ -376,7 +376,10 @@ export default async function StrategyOverviewPage({
                     />
                   </div>
                   <span className="text-fg-muted mt-1.5 block text-[10px]">
-                    {t("donemilestones_of_totalmilestones_milest")}
+                    {t("donemilestones_of_totalmilestones_milest", {
+                      doneMilestones,
+                      totalMilestones,
+                    })}
                   </span>
                 </div>
               </div>

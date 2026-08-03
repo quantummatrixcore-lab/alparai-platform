@@ -10,10 +10,11 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default async function OutreachAdminPage({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   const user = await requireModerator();
   if (!user) redirect(`/${locale}/login`);
 

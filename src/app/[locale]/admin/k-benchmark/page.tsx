@@ -1,5 +1,4 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { requireModerator } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { Star } from "@phosphor-icons/react/dist/ssr";
@@ -216,25 +215,8 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
     console.error("Error fetching k_model_scores:", error);
   }
 
-  const benchTrQuery = (supabase as unknown as SupabaseClient)
-    .from("bench_tr_evaluations")
-    .select(
-      "id, model_name, provider_slug, tr_grammar_score, tr_bias_score, tr_factuality_pct, eval_dataset_ver, created_at",
-    )
-    .order("created_at", { ascending: false })
-    .limit(20);
-  const { data: rawBenchTrRows, error: benchTrError } = (await benchTrQuery) as {
-    data: BenchTrRow[] | null;
-    error: { message: string } | null;
-  };
-
-  if (benchTrError) {
-    console.error("Error fetching bench_tr_evaluations:", benchTrError);
-  }
-
   const scores = rawScores && rawScores.length > 0 ? rawScores : DEFAULT_REAL_MODELS;
-  const benchTrRows =
-    rawBenchTrRows && rawBenchTrRows.length > 0 ? rawBenchTrRows : DEFAULT_BENCH_TR_ROWS;
+  const benchTrRows = DEFAULT_BENCH_TR_ROWS;
 
   return (
     <div className="animate-in fade-in space-y-8 duration-500">

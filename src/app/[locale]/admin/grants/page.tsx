@@ -7,11 +7,8 @@ import { Building2 } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-export default async function GrantsAdminPage({
-  params: { locale },
-}: {
-  params: { locale: string };
-}) {
+export default async function GrantsAdminPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "admin" });
   const user = await requireModerator();

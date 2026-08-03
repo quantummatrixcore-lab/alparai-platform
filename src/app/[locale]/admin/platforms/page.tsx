@@ -8,10 +8,11 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export default async function PlatformsAdminPage({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "admin" });
   const user = await requireModerator();

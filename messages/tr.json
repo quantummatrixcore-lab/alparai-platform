@@ -898,7 +898,7 @@
     "ff_controls_title": "Çalışma Zamanı Özellik Bayrak Kontrolleri",
     "ff_disabled": "DEVRİ DIŞI",
     "ff_edge_cache": "Edge Önbellek Hızı",
-    "ff_edge_cache_desc": "Bayraklar, Upstash Redis'te (ff:<key>) 60 saniye ve ~0ms edge değerlendirmesiyle önbelleğe alınır.",
+    "ff_edge_cache_desc": "Bayraklar, Upstash Redis'te (ff:[key]) 60 saniye ve ~0ms edge değerlendirmesiyle önbelleğe alınır.",
     "ff_off": "KAPALI",
     "ff_on": "AÇIK",
     "ff_rls_protection": "RLS Koruması",
