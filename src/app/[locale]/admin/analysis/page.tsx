@@ -25,8 +25,24 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
 
   const supabase = await createServerClient();
   const { data: aiModels } = await supabase.from("ai_models").select("*, ai_providers(name)");
+  const { data: freeModels } = await supabase.from("ai_free_models").select("*");
 
-  const models = aiModels || [];
+  const paidModels = (aiModels || []).map((model) => ({
+    ...model,
+    is_free: false,
+  }));
+
+  const freeModelsList = (freeModels || []).map((model) => ({
+    id: model.id,
+    name: model.model_name,
+    created_at: model.created_at,
+    ai_providers: { name: model.provider },
+    is_free: true,
+  }));
+
+  const allModels = [...paidModels, ...freeModelsList];
+  const uniqueModels = Array.from(new Map(allModels.map((m) => [m.name, m])).values());
+  const models = uniqueModels;
 
   const registryData = {
     metadata: {
@@ -46,6 +62,7 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
         provider: (model.ai_providers as { name: string } | null)?.name || "Unknown",
         audit_date: new Date().toISOString().slice(0, 10),
         audit_type: "Dynamic DB Audit",
+        is_free: (model as { is_free?: boolean }).is_free || false,
         scores: {
           vision_mission: randomScore(),
           message_content: randomScore(),
