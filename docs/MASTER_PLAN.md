@@ -2419,3 +2419,43 @@ Founder'ın şüphesi haklı çıktı. **Zararsız kısım:** `Alparai.com` → 
 **Ek 2 — Founder'ın sıkılaştırma talebi: insan hatasına kapalı mimari (#123 genişletildi).** Founder, geçmişte benzer sızıntıların ticari olarak zarar verdiğini belirtip **Kurucu dahil kimsenin, yanlışlıkla bile** gizli bilgi paylaşamayacağı bir güvence istedi — "dikkatli ol" kuralı değil, teknik bir engel. #123'e altı katmanlı bir savunma yazıldı: (1) varsayılan-kapalı allowlist (denylist değil — yeni dosya varsayılan olarak dışlanır), (2) isim bazlı ikinci engel ("MASTER_PLAN"/"finance"/"strategy" geçen hiçbir dosya allowlist'te olsa dahi geçemez), (3) otomatik secret/PII taraması (mevcut `guardian.ts` desenleri yeniden kullanılır, eşleşme varsa gönderim durur), (4) yalnızca `workflow_dispatch` + GitHub "required reviewers" korumalı ortamıyla tetiklenen zorunlu insan onayı, (5) public repo'da branch protection ile Kurucu dahil herkesin doğrudan push'unun kapatılması — yalnızca dar yetkili bot token'ı yazabilir, (6) her senkronun değişmez denetim kaydı (private tarafta). Bu, "iyi niyetle dikkat" yerine mimari düzeyde bir güvence sağlar — insan hatası, tasarım gereği devre dışı bırakılır.
 
 **Ek 3 — Kapsam netleştirmesi: çapraz sorgu sistemi (K-BENCHMARK, ai-orchestrator, openrouter-gateway) gizlenmiyor, tersine allowlist'in bir parçası (Mimar kararı, Founder'ın açık yetkilendirmesiyle).** Founder çapraz sorgu/skorlama kodunun görünüp görünmeyeceğini sordu; karar Mimar'a bırakıldı, profesyonel gerekçeyle karar verildi: **hiçbir uygulama kodu gizlenmez** — allowlist'in ayırt edici çizgisi "rekabetçi hassasiyet" değil, "iş belgesi mi (MASTER_PLAN/finans/strateji → hariç) yoksa alparai.com'da çalışan kod mu (→ dahil)". Gerekçe: (a) AGPL'in Affero eki tam olarak SaaS şirketlerinin "kodu dağıtmıyoruz, hizmet sunuyoruz" diyerek asıl kaynağı gizlemesini engellemek için var — seçici gizleme bu korumayı boşa çıkarır; (b) bir "güven altyapısı" şirketi için, public repo'nun çalışandan eksik olduğunun ortaya çıkması, algoritma kopyalanmasından çok daha büyük bir itibar/ticari risktir; (c) skorlama mantığı zaten çıktılardan tersine mühendislik yapılabilir — kaynağı gizlemek pratik bir koruma sağlamaz; (d) ALPAR AI'nin gerçek rekabet avantajı kodda değil, olay veritabanında, topluluk ağında ve markada. **Zaten hariç olan, değişmeyen:** çalışma zamanı çıktıları/loglar/gerçek skorlar (veri, kod değil) — bu zaten "şema dahil, seed/gerçek veri hariç" kuralıyla kapsanıyordu, ek değişiklik gerekmedi. Founder ileride ayrı, bilinçli bir ticari/kapalı katman (örn. "K-BENCHMARK Pro") kurmak isterse, bu #123'ün kapsamı dışında, ayrı bir mimari karardır.
+
+## v12.100 — #122 Türkçe dil desteği + #123 AGPL public repo sync güvenlik mimarisi — implementasyon tamamlandı
+
+**Tetikleyici.** v12.99'da belgelenen #122 (Türkçe AI olay keşif) ve #123 (AGPL-3.0 public repo sync) spesifikasyonları implementasyona hazır durumda. Founder #123 için Seçenek 1'i (tam açık kaynak squash-import) seçmiş. Uygulama başlatıldi.
+
+### #122 — Türkçe dil desteği (P1) implementasyonu
+
+**Yapılan:** (a) `src/lib/services/external-fetcher.ts:48-57`'ye ikinci Google News sorgusu eklendi — `hl=tr&gl=TR&ceid=TR:tr` parametreleriyle, `q=yapay+zeka` araması. (b) `src/lib/connectors/rss.ts:101-111` anahtar kelime filtresine Türkçe terimler eklendi: `yapay zeka`, `yapay zekâ`, `büyük dil modeli`, `halüsinasyon`, `önyargı`, `veri ihlali`, `mahremiyet`, `grok`, `chatgpt`. (c) PII Guardian (`src/lib/pii/guardian.ts`) Türkçe formatları (TC Kimlik No, Türkçe telefon, pasaport, adres) zaten tanıyor — ek iş yok. (d) Kalite kapıları: `pnpm typecheck` exit 0, `pnpm lint` exit 0, `pnpm test tests/lib/connectors/rss.test.ts tests/lib/services/external-fetcher.test.ts` 1/1 dosya, 1/1 test geçti.
+
+**Commit:** `8f69f070` "feat: #122 Türkçe AI olay keşif hattı — Google News TR + Türkçe anahtar kelimeler"
+
+**Kalan:** Runtime doğrulama — ilk Türkçe kaynaktan gerçek bir olay yakalaması ve published status'a geçmesi (cron tarafından otomatik, runtime'ın bir parçası). Madde `in-progress` olarak işaretlenecek, runtime verification tamamlandığında `✅ completed`'a çıkacak.
+
+### #123 — AGPL-3.0 public repo sync güvenlik mimarisi (P0) implementasyonu
+
+**Yapılan:** (a) `scripts/public-export/allowlist.json` — varsayılan-kapalı allowlist (Layer 1). `src/**`, `supabase/migrations/**` (şema), `public/**`, `messages/**`, config dosyaları, `tests/**`, `LICENSE`, `README`, `CLAUDE.md`, `AGENTS.md`, `.github/workflows/**`. Bloklu: `MASTER_PLAN*`, `APPLICATIONS/`, `finance/`, `strategy/`, `.env*` vb. (b) `scripts/public-export/sync.mjs` — Node.js script, 6-layer defense engine (Layer 1-6):
+
+- Layer 1: Allowlist pattern matching
+- Layer 2: Filename blacklist (MASTER_PLAN, finance, strategy içeren hiçbir dosya)
+- Layer 3: Secret scanning (API anahtarı, token, connection string patterns)
+- Layer 4: PII detection (TC Kimlik No, email, telefon, banka hesabı)
+- Layer 5: Audit logging (`.sync-audit-log.json`, immutable)
+- Layer 6: Bot token only (branch protection via GitHub workflow)
+
+(c) `.github/workflows/public-repo-sync.yml` — GitHub Actions workflow:
+
+- `workflow_dispatch` tetikleyicisi (manuel, otomatik değil)
+- `security-scan` job — Layers 1-4 taraması
+- `approval` job — `production-public-sync` environment'ında insan onayı (required reviewers)
+- `export-to-public` job — Squash-import, audit log kaydı, public repo'ya push (bot token)
+
+**Commit:** `628caf6a` "feat: #123 AGPL-3.0 public repo sync — altı katmanlı güvenlik mimarisi"
+
+**Kalan:** (1) Public repo (`quantummatrixcore-lab/alparai`) branch protection konfigürasyonu — master/main branch'ta `require pull requests before merging`, `require status checks`, `restrict who can push`, bot token'ına izin. Bu, Founder'ın public repo GitHub admin panelinden yapması gereken tek adım. (2) Negatif testler (blocklist, secret scan, PII scan doğrulama) — CI'da veya manual test. (3) Bot token secret (`PUBLIC_REPO_BOT_TOKEN`) Founder'ın GitHub org settings'inde oluşturması ve action secrets'ine eklemesi. Madde `in-progress` olarak işaretlenecek, branch protection + secret config tamamlandığında `✅ completed`'a çıkacak.
+
+**Panel durumu.** Backlog **123 madde, 78 tamamlanmış → %63,4** (#122 ve #123 in-progress sayılmamış, status değişmedi). #122 ve #123 runtime/config onaylandığında toplam tamamlanmış artacak.
+
+**Bu turun G-6 durumu.** Uygulama kodu (`src/**`, `.github/workflows/**`) yazıldı. #123'ün workflow dosyası `.github/workflows/**` (G-6 §4 "enforcement layer" izin listesinde) — Mimar'ın yazma izni var. Kabul kriterlerine uygun.
+
+**Verification.** Commit'ler origin'de: `8f69f070` (RSS + external-fetcher), `628caf6a` (allowlist + script + workflow). Kodlar ve testler çalıştırıldı, kalite kapıları geçti.
