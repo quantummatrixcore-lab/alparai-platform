@@ -2,10 +2,12 @@
 
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { requireModerator } from "@/lib/auth/session";
+import { requireModerator, requireAdmin } from "@/lib/auth/session";
 import { revalidatePath } from "next/cache";
 import { logger } from "@/lib/utils/logger";
 import type { Json } from "@/types/database";
+import { processOutreachQueue } from "@/lib/audit/outreach-agent";
+import { Resend } from "resend";
 
 interface UnsafeClient {
   from: (table: string) => {
@@ -150,5 +152,36 @@ export async function createOutreachItem(input: z.infer<typeof createItemSchema>
   } catch (error) {
     logger.error("createOutreachItem error", undefined, error instanceof Error ? error : undefined);
     return { success: false, error: "Internal server error" };
+  }
+}
+
+export async function triggerOutreachQueueAction() {
+  try {
+    const user = await requireAdmin();
+    if (!user) return { success: false, error: "Unauthorized" };
+
+    const resendApiKey = process.env.RESEND_API_KEY;
+    if (!resendApiKey) {
+      return { success: false, error: "RESEND_API_KEY environment variable is not defined" };
+    }
+
+    const supabase = createAdminClient();
+    const resend = new Resend(resendApiKey);
+
+    const result = await processOutreachQueue(supabase, resend);
+
+    revalidatePath("/[locale]/admin/outreach", "page");
+
+    return { success: true, ...result };
+  } catch (error) {
+    logger.error(
+      "triggerOutreachQueueAction error",
+      undefined,
+      error instanceof Error ? error : undefined,
+    );
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Internal server error",
+    };
   }
 }

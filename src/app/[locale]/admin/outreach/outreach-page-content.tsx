@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 import { logger } from "@/lib/utils/logger";
 import { OutreachQueueList } from "@/components/admin/outreach-queue-list";
 import type { OutreachQueueItem } from "@/components/admin/outreach-queue-list";
+import { triggerOutreachQueueAction } from "@/actions/admin/outreach";
+import { toast } from "sonner";
 
 const MEDIA_PITCH = `Subject: Embargoed Aug 2: The EU just delayed AI incident reporting to 2027 — this registry isn't waiting
 
@@ -40,6 +42,38 @@ export function OutreachPageContent({ initialQueue }: { initialQueue: OutreachQu
   const t = useTranslations("admin");
   const [activeTab, setActiveTab] = useState<"queue" | "media" | "expert" | "plan">("queue");
   const [copied, setCopied] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [oneDayAgo] = useState(() => new Date(Date.now() - 24 * 3600 * 1000));
+
+  const sentLast24h = initialQueue.filter(
+    (x) => x.status === "sent" && x.sent_at && new Date(x.sent_at) >= oneDayAgo,
+  ).length;
+  const approvedCount = initialQueue.filter((x) => x.status === "approved").length;
+
+  const handleSendNow = async () => {
+    setIsSending(true);
+    const promise = triggerOutreachQueueAction();
+    toast.promise(promise, {
+      loading: "Sending outreach emails...",
+      success: (res) => {
+        if (!res.success) {
+          throw new Error(res.error || "Failed to process queue");
+        }
+        const sent = "sent" in res ? res.sent : 0;
+        const failed = "failed" in res ? res.failed : 0;
+        return `Successfully sent ${sent} email(s), failed ${failed} email(s).`;
+      },
+      error: (err) => (err instanceof Error ? err.message : "Error dispatching queue"),
+    });
+
+    try {
+      await promise;
+    } catch (e) {
+      logger.error("dispatch queue failed", undefined, e instanceof Error ? e : undefined);
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   const handleCopy = async (text: string) => {
     try {
@@ -101,7 +135,40 @@ export function OutreachPageContent({ initialQueue }: { initialQueue: OutreachQu
       </div>
 
       <div className="mt-6">
-        {activeTab === "queue" && <OutreachQueueList initialQueue={initialQueue} />}
+        {activeTab === "queue" && (
+          <div className="space-y-6">
+            <Card className="border-white/5 bg-[#0F1E2E]">
+              <CardContent className="flex flex-col items-center justify-between gap-4 p-6 md:flex-row">
+                <div className="space-y-1">
+                  <h3 className="text-lg font-bold text-white">Outreach Dispatch Control</h3>
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-400">
+                    <span>
+                      Sent (24h): <strong className="text-emerald-400">{sentLast24h} / 50</strong>
+                    </span>
+                    <span>•</span>
+                    <span>
+                      Approved & Waiting:{" "}
+                      <strong className="text-amber-400">{approvedCount}</strong>
+                    </span>
+                  </div>
+                </div>
+                <button
+                  disabled={approvedCount === 0 || isSending}
+                  onClick={handleSendNow}
+                  className={cn(
+                    "rounded-lg px-4 py-2 text-sm font-bold shadow-md transition-all",
+                    approvedCount === 0 || isSending
+                      ? "cursor-not-allowed border border-white/5 bg-slate-800 text-slate-500"
+                      : "bg-emerald-500 text-slate-950 hover:bg-emerald-400 active:scale-95",
+                  )}
+                >
+                  {isSending ? "Sending..." : "Send Approved Now"}
+                </button>
+              </CardContent>
+            </Card>
+            <OutreachQueueList initialQueue={initialQueue} />
+          </div>
+        )}
 
         {activeTab === "media" && (
           <Card className="border-white/5 bg-[#0F1E2E]">

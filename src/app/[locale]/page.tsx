@@ -5,7 +5,6 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { HeroSection } from "@/components/marketing/hero-section";
-import { WebSiteJsonLd } from "@/components/seo/json-ld";
 import { Container, Section } from "@/components/ui/layout";
 import type { IncidentListItem, LeaderboardEntry } from "@/types";
 import { toIncidentListItems, type TranslationMap } from "@/lib/mappers";
@@ -56,6 +55,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     alternates: {
       canonical: `/${locale}`,
       languages: {
+        "x-default": "/en",
         en: "/en",
         tr: "/tr",
         de: "/de",
@@ -262,8 +262,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   return (
     <>
-      <WebSiteJsonLd />
-
       <HeroSection
         totalIncidents={incidentsCountResult.count ?? 0}
         totalProviders={providersResult.data?.length ?? 0}

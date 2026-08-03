@@ -5,10 +5,22 @@ import { updateSession } from "@/lib/supabase/middleware";
 import { routing } from "@/i18n/routing";
 import { logger } from "@/lib/utils/logger";
 import type { Database } from "@/types/database";
+import { trackBotHit } from "@/lib/geo/bot-tracker";
 
 const intlMiddleware = createIntlMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
+  const userAgent = request.headers.get("user-agent");
+  if (userAgent) {
+    void trackBotHit(userAgent, request.nextUrl.pathname).catch((err) => {
+      logger.error(
+        "[Middleware] trackBotHit failed",
+        undefined,
+        err instanceof Error ? err : undefined,
+      );
+    });
+  }
+
   if (request.headers.has("next-action")) {
     return NextResponse.next();
   }

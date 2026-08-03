@@ -83,14 +83,21 @@ jobs:
             trigger_cron "/api/cron/retro-audit"
           fi
 
-          # 6:00 UTC (cost-alarm)
+          # 6:00 UTC (cost-alarm, security-audit)
           if [ "$HOUR" = "06" ]; then
             trigger_cron "/api/cron/cost-alarm"
+            trigger_cron "/api/cron/security-audit"
           fi
 
-          # 8:00 UTC Sunday (k-weekly-refresh)
+          # 7:00 UTC (outreach)
+          if [ "$HOUR" = "07" ]; then
+            trigger_cron "/api/cron/outreach"
+          fi
+
+          # 8:00 UTC Sunday (k-weekly-refresh, verify-geo-citations)
           if [ "$HOUR" = "08" ] && [ "$DOW" = "7" ]; then
             trigger_cron "/api/cron/k-weekly-refresh"
+            trigger_cron "/api/cron/verify-geo-citations"
           fi
 
           # 8:00 UTC Aug 9 (kill-metric)

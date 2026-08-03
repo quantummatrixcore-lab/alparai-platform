@@ -1,10 +1,10 @@
 import type { MetadataRoute } from "next";
 import { createServerClient } from "@/lib/supabase/server";
-import { APP_URL } from "@/lib/constants";
+import { APP_URL, SUPPORTED_LOCALES } from "@/lib/constants";
 import { getAllPosts } from "@/content/blog-posts";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const locales = ["en", "tr"] as const;
+  const locales = SUPPORTED_LOCALES;
 
   const supabase = await createServerClient();
   const [{ data: incidents }, { data: providers }, { data: models }] = await Promise.all([
