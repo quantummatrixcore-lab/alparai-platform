@@ -1218,6 +1218,7 @@
     "mo": "Mo.",
     "model_comparison_matrix": "Model Comparison Matrix",
     "model_core": "Model Core",
+    "show_free_models": "Show Free Models",
     "models_agree": "{count} models agree",
     "models_agree_resolved": "{count} models agree · Resolved",
     "moderation": "Moderation",

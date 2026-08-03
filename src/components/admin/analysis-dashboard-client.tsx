@@ -39,6 +39,7 @@ interface Audit {
   provider: string;
   audit_date: string;
   audit_type: string;
+  is_free?: boolean;
   scores: ScoreSet;
   unique_insight: string;
   key_recommendations: string[];
@@ -106,6 +107,7 @@ export function AnalysisDashboardClient({ registryData }: Props) {
   const [carouselIndex, setCarouselIndex] = React.useState(0);
   const [isLiveAnalyzing, setIsLiveAnalyzing] = React.useState(false);
   const [liveResult, setLiveResult] = React.useState<LiveAnalysisResult | null>(null);
+  const [showFreeModels, setShowFreeModels] = React.useState(true);
 
   const [logs, _setLogs] = React.useState<string[]>([]);
 
@@ -122,7 +124,11 @@ export function AnalysisDashboardClient({ registryData }: Props) {
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
-  const totalModels = registryData.metadata.total_models;
+  const filteredAudits = showFreeModels
+    ? registryData.audits
+    : registryData.audits.filter((audit) => !audit.is_free);
+
+  const totalModels = filteredAudits.length;
   const p0Tracker = registryData.p0_tracker;
   const openP0Count = p0Tracker.filter(
     (b) => b.status === "open" || b.status === "in-progress",
@@ -137,13 +143,20 @@ export function AnalysisDashboardClient({ registryData }: Props) {
   const previousAvg = previousRound?.average_score ?? 400;
   const scoreDiff = currentAvg - previousAvg;
 
+  React.useEffect(() => {
+    if (carouselIndex >= filteredAudits.length && filteredAudits.length > 0) {
+      setCarouselIndex(0);
+    }
+  }, [filteredAudits.length, carouselIndex]);
+
   const handleNextInsight = () => {
-    setCarouselIndex((prev) => (prev + 1) % registryData.audits.length);
+    setCarouselIndex((prev) => (prev + 1) % Math.max(1, filteredAudits.length));
   };
 
   const handlePrevInsight = () => {
     setCarouselIndex(
-      (prev) => (prev - 1 + registryData.audits.length) % registryData.audits.length,
+      (prev) =>
+        (prev - 1 + Math.max(1, filteredAudits.length)) % Math.max(1, filteredAudits.length),
     );
   };
 
@@ -223,7 +236,18 @@ export function AnalysisDashboardClient({ registryData }: Props) {
   return (
     <div className="space-y-8">
       {/* Top Navigation */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-end">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <label className="flex cursor-pointer items-center gap-2">
+          <input
+            type="checkbox"
+            checked={showFreeModels}
+            onChange={(e) => setShowFreeModels(e.target.checked)}
+            className="text-brand-500 cursor-pointer rounded border-white/20 bg-neutral-900"
+          />
+          <span className="text-fg-secondary text-sm font-medium">
+            {t("show_free_models", { defaultValue: "Show Free Models" })}
+          </span>
+        </label>
         <div>
           <button
             onClick={handleRunLiveAnalysis}
@@ -445,14 +469,21 @@ export function AnalysisDashboardClient({ registryData }: Props) {
                   <thead>
                     <tr className="text-fg-muted border-b border-white/10 text-xs tracking-wider uppercase">
                       <th className="py-3 pr-4 font-semibold">{t("model_core")}</th>
-                      {registryData.audits.map((a) => (
+                      {filteredAudits.map((a) => (
                         <th key={a.model_id} className="px-2 py-3 text-center font-semibold">
-                          <span
-                            className="block max-w-[85px] truncate font-mono text-[11px]"
-                            title={a.model_name}
-                          >
-                            {a.model_name.replace(" (360°)", "")}
-                          </span>
+                          <div className="flex flex-col items-center gap-1">
+                            <span
+                              className="block max-w-[85px] truncate font-mono text-[11px]"
+                              title={a.model_name}
+                            >
+                              {a.model_name.replace(" (360°)", "")}
+                            </span>
+                            {a.is_free && (
+                              <span className="rounded border border-emerald-500/30 bg-emerald-500/20 px-1.5 py-0.5 font-sans text-[9px] font-semibold text-emerald-400">
+                                Free
+                              </span>
+                            )}
+                          </div>
                         </th>
                       ))}
                     </tr>
@@ -461,7 +492,7 @@ export function AnalysisDashboardClient({ registryData }: Props) {
                     {categories.map(({ key, label }) => (
                       <tr key={key} className="transition-colors hover:bg-white/5">
                         <td className="text-fg-primary py-3 pr-4 font-sans font-medium">{label}</td>
-                        {registryData.audits.map((a) => {
+                        {filteredAudits.map((a) => {
                           const score = (a.scores as unknown as Record<string, number>)[key];
                           const hasScore = score !== undefined && score !== 0;
                           return (
@@ -485,7 +516,7 @@ export function AnalysisDashboardClient({ registryData }: Props) {
                       <td className="text-brand-400 py-4 pr-4 font-sans">
                         {t("total_score", { defaultValue: "TOTAL SCORE" })}
                       </td>
-                      {registryData.audits.map((a) => {
+                      {filteredAudits.map((a) => {
                         const total = a.scores.total;
                         return (
                           <td key={a.model_id} className="px-1 py-4 text-center">
@@ -685,20 +716,27 @@ export function AnalysisDashboardClient({ registryData }: Props) {
 
               <div className="relative mt-4 flex flex-col justify-between">
                 <div>
-                  <div className="flex items-center justify-between">
-                    <span className="bg-brand-500/20 text-brand-300 border-brand-500/30 rounded-md border px-2 py-0.5 text-[10px] font-semibold">
-                      {registryData.audits[carouselIndex]?.provider}
-                    </span>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="bg-brand-500/20 text-brand-300 border-brand-500/30 rounded-md border px-2 py-0.5 text-[10px] font-semibold">
+                        {filteredAudits[carouselIndex]?.provider}
+                      </span>
+                      {filteredAudits[carouselIndex]?.is_free && (
+                        <span className="rounded border border-emerald-500/30 bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
+                          Free
+                        </span>
+                      )}
+                    </div>
                     <span className="text-fg-muted font-mono text-[10px]">
-                      {carouselIndex + 1} / {registryData.audits.length}
+                      {carouselIndex + 1} / {filteredAudits.length}
                     </span>
                   </div>
                   <h4 className="mt-3 text-sm font-semibold text-white">
-                    {registryData.audits[carouselIndex]?.model_name}
+                    {filteredAudits[carouselIndex]?.model_name}
                   </h4>
                   <p className="text-fg-secondary mt-3 line-clamp-3 text-xs leading-relaxed italic">
                     {t("ldquo")}
-                    {registryData.audits[carouselIndex]?.unique_insight}
+                    {filteredAudits[carouselIndex]?.unique_insight}
                     {t("rdquo")}
                   </p>
                 </div>
@@ -706,7 +744,7 @@ export function AnalysisDashboardClient({ registryData }: Props) {
             </div>
             <div className="mt-4 flex items-center justify-between border-t border-white/5 pt-3">
               <span className="text-fg-muted text-[10px]">
-                {t("reported")}: {registryData.audits[carouselIndex]?.audit_date}
+                {t("reported")}: {filteredAudits[carouselIndex]?.audit_date}
               </span>
             </div>
           </div>

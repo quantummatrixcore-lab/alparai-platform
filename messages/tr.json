@@ -1218,6 +1218,7 @@
     "mo": "Ay",
     "model_comparison_matrix": "Model Karşılaştırma Matrisi",
     "model_core": "Model Çekirdeği",
+    "show_free_models": "Ücretsiz Modelleri Göster",
     "models_agree": "{count} model kabul ediyor",
     "models_agree_resolved": "{count} model kabul ediyor · Çözüldü",
     "moderation": "Moderasyon",
