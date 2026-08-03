@@ -4263,5 +4263,11 @@
     "tooltip_unknown": "No SLA data available",
     "aria_label": "Provider uptime: {uptime}%",
     "aria_unknown": "SLA data not available"
+  },
+  "trust": {
+    "open_source": "Open Source (AGPL-3.0)",
+    "methodology": "Méthodologie évaluée par les pairs",
+    "neutrality": "Politique de neutralité",
+    "no_funding": "Aucun financement des fournisseurs d'IA"
   }
 }

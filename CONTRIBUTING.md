@@ -5,7 +5,7 @@ Thanks for your interest in ALPAR AI. We welcome PRs, bug reports, and feature i
 ## Setup
 
 1. Fork the repo.
-2. Clone locally: `git clone https://github.com/your-fork/sikayetvar`
+2. Clone locally: `git clone https://github.com/your-fork/Alparai.com`
 3. Install: `pnpm install`
 4. Copy env: `cp .env.example .env.local` and fill in.
 5. Reset database: `pnpm db:reset`

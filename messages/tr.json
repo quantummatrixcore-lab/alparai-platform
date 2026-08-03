@@ -4254,5 +4254,11 @@
     "tooltip_unknown": "SLA verisi mevcut değil",
     "aria_label": "Sağlayıcı çalışma süresi: {uptime}%",
     "aria_unknown": "SLA verisi mevcut değil"
+  },
+  "trust": {
+    "open_source": "Açık Kaynak (AGPL-3.0)",
+    "methodology": "Metodoloji",
+    "neutrality": "Tarafsızlık Politikası",
+    "no_funding": "YZ Sağlayıcısı Finansmanı Yok"
   }
 }

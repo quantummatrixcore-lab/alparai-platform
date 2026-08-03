@@ -5,6 +5,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { HeroSection } from "@/components/marketing/hero-section";
+import { TrustBar } from "@/components/marketing/trust-bar";
 import { SegmentRouting } from "@/components/marketing/segment-routing";
 import { Container, Section } from "@/components/ui/layout";
 import type { IncidentListItem, LeaderboardEntry } from "@/types";
@@ -267,6 +268,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         topProviders={topProvidersForHero}
         countsBySource={countsBySource}
       />
+
+      <TrustBar />
 
       <SegmentRouting />
 
