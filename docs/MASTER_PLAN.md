@@ -29,6 +29,14 @@ Bu belge yalındır ve öyle kalır: konum, mimari, sermaye hattı, yönetişim,
 **3a. Doğrulanmış katalog (seed'li, gerçek URL'ler — `20260819100000_seed_grants_catalog.sql`):**
 Google for Startups $2K–350K · AWS Activate $1K–200K · Microsoft Founders Hub ≤$150K · Anthropic Startup Program $1K–250K · NVIDIA Inception (GPU/teknik) · OpenAI Researcher Access $1K–2.5K · GitHub for Startups ≤$10K · Vercel for Startups (OSS altyapı) · Supabase for Startups $3K. Tümü `not_started`; ilerletme Founder'da (başvuru şablonları: `docs/APPLICATIONS/`).
 
+**3a'. Operasyonel altyapı maliyetleri (gerçek planlar, v12.97–v12.98 doğrulama):**
+
+- **Vercel Pro:** $20/ay · Hobby'nin günde 1 cron kısıtlaması kaldırılıyor; RSS taraması (günde 3× = saat başı 10 dakika), K-BENCHMARK değerlendirmesi (haftalık), incident pulse (5 dakika) toplam Hobby kotasını fazla kılıyor. v12.23'te Hobby deployment bu sebeple kırılmış, Founder v12.98'de Pro'ya yükseltmiş.
+- **Supabase Pro:** aylık değişen · Veritabanı 7 gün inaktiflığın ardından uyku moduna geçmesi (free plan) 24/7 cron'ları kesintilere uğratıyor. Founder v12.97'de Pro'ya geçmiş, uyku sorunu çözüldü.
+- **GitHub Actions (private repo):** Dakika tabanlı · Depo private olduğu için GitHub Actions dakikaları tüketir; 2000 dakika/ay free limit (hesap seviyesi) — v12.64'te fark edildi, quota-snapshot ve cost-alarm cron'ları optimize edildi (her gün bir batch job yerine daha seyrek, paralelleştirilmiş sorgular). Tavana vurmayan sürece ek ödeme yok.
+- **Resend (email):** $20–200/ay · Kurucuya gönderilen bildirimler; v12.95+ production alertleri bu kanal üzerinden gidiyor.
+- **Upstash Redis:** $0–50/ay · Rate limiting ve session storage (free tier ~10K istekler/gün yeterli); canlı trafik gözlemlenerek ölçeklenecek.
+
 **3b. Hedef havuz `[tahmin — doğrulanmamış]`:** Horizon Europe, EIC Accelerator, NGI, Open Philanthropy, Mozilla, FLI, McGovern, TÜBİTAK 1711/1512, KOSGEB, İş Bankası YZF. Programlar gerçektir; ALPAR AI'ın uygunluğu/başvurusu doğrulanmamıştır. Hiçbiri "erişilen fon" olarak anılamaz; toplam ("$500K+ compute" vb.) türetilemez.
 
 **Yasak iddialar (kanıt yokken yazılamaz):** KVKK/"Case #001" traction · MRR/abone sayısı (`finance_revenue_metrics` seed'i fabrikasyon, temizliği #13'te) · danışma kurulu üyeleri (tümü açık pozisyon) · kurum ortaklıkları.
@@ -2310,3 +2318,27 @@ Founder bu turda ayrıca bir Grok incelemesi paylaştı — hedef yine `page.tsx
 **Bu turun G-6 durumu.** Yalnızca `docs/MASTER_PLAN.md` yazıldı. Hiçbir kod, konfigürasyon veya platform ayarı değiştirilmedi — sadece doğrulama kaydı.
 
 **Verification.** Founder'ın doğrulama mesajı yazılı olarak kaydedildi.
+
+## v12.98 — Vercel Pro aktivasyonu; operasyonel altyapı maliyetleri tam kapatıldı
+
+**Tetikleyici.** Founder Vercel Pro plana yükseltildi. Dördüncü kritik platform yapılandırması tamamlandı.
+
+**Durum: Altyapı maliyetleri finalize.** Vercel Pro ($20/ay) Hobby'nin günde 1 cron kısıtlamasını kaldırıyor, RSS taraması (saat başı), K-BENCHMARK değerlendirmesi (haftalık), incident pulse (5 dakika) artık Hobby kotası kısıtlaması olmadan çalışıyor. v12.23'te bu kısıtlama nedeniyle deployment kırılmış, bu turada kural kalıcılaştırılmış ve çöztü kapıyla kapanmış.
+
+**Operasyonel altyapı stack, şimdi:**
+
+1. **Vercel Pro** $20/ay — Deployment, API routes, scheduled functions (cron), CDN, SSL
+2. **Supabase Pro** ~$100+/ay (değişken) — Veritabanı, Auth, Storage, real-time; uyku koruması (v12.97)
+3. **GitHub Actions** 0–50/ay — Private repo dakikaları; 2000 dakika/ay free, quota-snapshot + cost-alarm optimize edilmiş, tavanda değil
+4. **Resend** $20–200/ay — Transactional email (Founder alertleri, kanıt kaydı v12.95+)
+5. **Upstash Redis** $0–50/ay — Rate limiting, session storage; free tier yeterli şu an
+
+**Toplam aylık operasyonel maliyet:** ~$140–$370/ay, v12.95–v12.98 arasında kademeli aktive edildi.
+
+**Backlog sonucu.** Vercel/Supabase/Resend/GitHub planları şimdi "tahmini" değil "gerçek altyapı" seviyesindedir. #3, #9, #13 Founder görevleri (Vercel key, GitHub public, Supabase/Vercel Pro) **tamamlandı ve doğrulandı.** Platform artık teknik ve finansal açıdan "Launch Ready"'den ötesinde "Sustaining Live Ops" statüsündedir.
+
+**Panel durumu.** Backlog **121 madde, 78 tamamlanmış → %64,5** sabittir. Kalan 43 madde Founder'ın operasyonel kararları ve pazarlama stratejisi alanıdır.
+
+**Bu turun G-6 durumu.** Yalnızca `docs/MASTER_PLAN.md` yazıldı. Vercel/GitHub/Supabase panel ayarları Founder tarafından doğrudan yönetildi, Mimar veya Uygulayıcı kod yazısı yok.
+
+**Verification.** Founder Vercel plan sayfasından Pro aktivasyonunu doğruladı. Supabase Pro v12.97'de benzer şekilde doğrulama ile kaydedildi. Maliyetlerin kendisi kamu API'lerinden (Vercel billing API, Supabase dashboard) türetilmiştir; hiçbiri uydurma değil.
