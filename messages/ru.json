@@ -1,4 +1,13 @@
 {
+  "methodology": {
+    "title": "Методология",
+    "scoring_title": "Оценка инцидентов",
+    "scoring_desc": "Все инциденты оцениваются путем голосования сообщества с использованием доверительных интервалов Уилсона для уменьшения предвзятости новизны.",
+    "wilson_title": "Формула оценки Уилсона",
+    "wilson_desc": "Мы используем нижнюю границу оценки Уилсона для 95% доверительных интервалов, что обеспечивает статистическую надежность.",
+    "corrections_title": "Публичные исправления",
+    "corrections_desc": "Все исправления к опубликованным инцидентам регистрируются публично и связываются с исходной записью."
+  },
   "about_methodology_committee": {
     "title": "Methodik-Beirat",
     "description": "Das unabhängige akademische und wissenschaftliche Gremium zur Überwachung der ALPAR AI Benchmark-Methoden.",

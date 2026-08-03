@@ -1,4 +1,13 @@
 {
+  "methodology": {
+    "title": "Methodik",
+    "scoring_title": "Vorfallsbewertung",
+    "scoring_desc": "Alle Vorfälle werden durch Community-Abstimmungen mit Wilson-Score-Konfidenzintervallen bewertet, um den Recency-Bias zu reduzieren.",
+    "wilson_title": "Wilson-Score-Formel",
+    "wilson_desc": "Wir verwenden die untere Grenze des Wilson-Scores für 95%-Konfidenzintervalle, um statistische Zuverlässigkeit zu gewährleisten.",
+    "corrections_title": "Öffentliche Korrekturen",
+    "corrections_desc": "Alle Korrekturen an veröffentlichten Vorfällen werden öffentlich protokolliert und mit dem ursprünglichen Datensatz verknüpft."
+  },
   "about_methodology_committee": {
     "title": "Methodik-Beirat",
     "description": "Das unabhängige akademische und wissenschaftliche Gremium zur Überwachung der ALPAR AI Benchmark-Methoden.",
@@ -281,6 +290,8 @@
     "title_accent_desc": "Echten KI-Fehler gefunden? Dokumentieren Sie ihn. Erhalten Sie eine Verifizierung. Verdienen Sie das Ethics Advocate Badge — und Belohnungen von den Anbietern.",
     "subtitle": "ALPAR AI dokumentiert, verifiziert und speichert jeden KI-Vorfall dauerhaft — verwaltet von der Community, nicht von KI-Konzernen. Konto erforderlich — Ihre Identität bleibt geschützt, niemals veröffentlicht. Das Register ist permanent.",
     "cta_primary": "Vorfall melden",
+    "cta_explore_data": "Daten erkunden →",
+    "cta_view_platform": "Plattform ansehen →",
     "cta_journalist": "Für Journalisten",
     "cta_secondary": "Beweise ansehen",
     "cta_tertiary": "Gründungs-Reporter werden →",

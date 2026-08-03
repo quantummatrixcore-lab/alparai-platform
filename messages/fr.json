@@ -1,4 +1,13 @@
 {
+  "methodology": {
+    "title": "Méthodologie",
+    "scoring_title": "Évaluation des incidents",
+    "scoring_desc": "Tous les incidents sont évalués par vote de la communauté avec des intervalles de confiance de score Wilson pour réduire le biais de récence.",
+    "wilson_title": "Formule du score de Wilson",
+    "wilson_desc": "Nous utilisons la borne inférieure du score de Wilson pour des intervalles de confiance à 95 %, garantissant ainsi une fiabilité statistique.",
+    "corrections_title": "Corrections publiques",
+    "corrections_desc": "Toutes les corrections apportées aux incidents publiés sont consignées publiquement et liées au dossier d'origine."
+  },
   "about_methodology_committee": {
     "title": "Methodik-Beirat",
     "description": "Das unabhängige akademische und wissenschaftliche Gremium zur Überwachung der ALPAR AI Benchmark-Methoden.",

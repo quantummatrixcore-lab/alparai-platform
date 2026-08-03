@@ -1,47 +1,47 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Link } from "@/i18n/routing";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Container, Section } from "@/components/ui/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Award, Handshake, BookOpen } from "lucide-react";
+import { ArrowRight, ShieldAlert, Newspaper, Scale, Microscope } from "lucide-react";
 
 const ctas = [
   {
-    icon: ArrowRight,
-    titleKey: "join_cta_1",
-    descKey: "join_cta_1_desc",
-    btnKey: "join_cta_1_btn",
-    tagKey: "join_cta_1_tag",
+    icon: ShieldAlert,
+    titleKey: "join_segment_public_title",
+    descKey: "join_segment_public_desc",
+    btnKey: "join_segment_public_btn",
+    tagKey: "join_segment_public_tag",
     href: "/submit",
     primary: true,
   },
   {
-    icon: Award,
-    titleKey: "join_cta_2",
-    descKey: "join_cta_2_desc",
-    btnKey: "join_cta_2_btn",
-    tagKey: "join_cta_2_tag",
-    href: "/submit",
+    icon: Newspaper,
+    titleKey: "join_segment_journalist_title",
+    descKey: "join_segment_journalist_desc",
+    btnKey: "join_segment_journalist_btn",
+    tagKey: "join_segment_journalist_tag",
+    href: "/dashboard/journalist",
     primary: false,
   },
   {
-    icon: Handshake,
-    titleKey: "join_cta_3",
-    descKey: "join_cta_3_desc",
-    btnKey: "join_cta_3_btn",
-    tagKey: "join_cta_3_tag",
-    href: "/contact",
+    icon: Scale,
+    titleKey: "join_segment_legal_title",
+    descKey: "join_segment_legal_desc",
+    btnKey: "join_segment_legal_btn",
+    tagKey: "join_segment_legal_tag",
+    href: "/dashboard/legal",
     primary: false,
   },
   {
-    icon: BookOpen,
-    titleKey: "join_cta_4",
-    descKey: "join_cta_4_desc",
-    btnKey: "join_cta_4_btn",
-    tagKey: "join_cta_4_tag",
-    href: "/transparency",
+    icon: Microscope,
+    titleKey: "join_segment_safety_title",
+    descKey: "join_segment_safety_desc",
+    btnKey: "join_segment_safety_btn",
+    tagKey: "join_segment_safety_tag",
+    href: "/dashboard/safety",
     primary: false,
   },
 ] as const;
@@ -129,3 +129,4 @@ export function GetInvolved() {
     </Section>
   );
 }
+
