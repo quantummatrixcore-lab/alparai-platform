@@ -95,7 +95,7 @@ export async function fetchRSSFeed(
       let link = cleanCdata(linkMatch ? linkMatch[1] || "" : "");
       const desc = decodeHtmlEntities(cleanCdata(descMatch ? descMatch[1] || "" : ""));
 
-      // Only check if it contains AI keywords
+      // Only check if it contains AI keywords (English and Turkish)
       const lowerTitle = title.toLowerCase();
       const lowerDesc = desc.toLowerCase();
       const hasKeywords = [
@@ -108,6 +108,15 @@ export async function fetchRSSFeed(
         "copilot",
         "hallucination",
         "machine learning",
+        "yapay zeka",
+        "yapay zekâ",
+        "büyük dil modeli",
+        "halüsinasyon",
+        "önyargı",
+        "veri ihlali",
+        "mahremiyet",
+        "grok",
+        "chatgpt",
       ].some((kw) => lowerTitle.includes(kw) || lowerDesc.includes(kw));
 
       if (link && title && hasKeywords) {
