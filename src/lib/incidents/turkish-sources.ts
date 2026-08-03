@@ -16,7 +16,7 @@ export const TURKISH_INCIDENT_SOURCES: IncidentSource[] = [
   { name: "KVKK", url: "https://www.kvkk.gov.tr", category: "regulatory" },
   { name: "BTK", url: "https://www.btk.gov.tr", category: "regulatory" },
   { name: "Türkiye Bilişim Derneği", url: "https://www.tbd.org.tr", category: "stk" },
-  { name: "Yapay Zeka Politikaları Derneği (AIPA)", url: "https://aipa.org.tr", category: "stk" },
+  { name: "Türkiye Bilişim Vakfı", url: "https://www.tbv.org.tr", category: "stk" },
   { name: "TÜBİSAD", url: "https://www.tubisad.org.tr", category: "stk" },
   { name: "TÜBİTAK", url: "https://www.tubitak.gov.tr", category: "regulatory" },
 ];
