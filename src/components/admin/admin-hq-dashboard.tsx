@@ -454,10 +454,7 @@ export function AdminHQDashboard({
   const [chartData, setChartData] = useState(incidentsByDay);
 
   useEffect(() => {
-    if (incidentsByDay.length === 0) {
-      const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-      setChartData(days.map((day) => ({ day, count: Math.floor(Math.random() * 15) + 2 })));
-    }
+    setChartData(incidentsByDay);
   }, [incidentsByDay]);
 
   useEffect(() => {

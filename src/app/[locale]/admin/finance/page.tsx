@@ -168,7 +168,14 @@ export default async function FinancePage({ params }: { params: Promise<{ locale
 
   const totalMonthly = services.reduce((acc, curr) => acc + curr.currentCost, 0);
   const totalBudget = services.reduce((acc, curr) => acc + curr.budgetLimit, 0);
-  const estimatedSavings = 143.5;
+  const estimatedSavings = Math.max(
+    0,
+    services.reduce(
+      (acc, curr) =>
+        acc + (curr.budgetLimit > curr.currentCost ? curr.budgetLimit - curr.currentCost : 0),
+      0,
+    ),
+  );
 
   // Recharts Trends Grouping
   const months = Array.from(new Set(costs.map((c) => c.month)));
@@ -195,6 +202,16 @@ export default async function FinancePage({ params }: { params: Promise<{ locale
           { name: "Jul 2026", Total: 0, vercel: 0, supabase: 0, opencode: 0 },
           { name: "Aug 2026", Total: 0, vercel: 0, supabase: 0, opencode: 0 },
         ];
+
+  let costTrendPercent = 0;
+  if (trends.length >= 2) {
+    const prev = Number(trends[trends.length - 2]?.Total || 0);
+    const curr = Number(trends[trends.length - 1]?.Total || 0);
+    if (prev > 0) {
+      costTrendPercent = Math.round(((curr - prev) / prev) * 100);
+    }
+  }
+  const costTrendLabel = `${costTrendPercent > 0 ? "+" : ""}${costTrendPercent}%`;
 
   // Alarms
   const alerts: string[] = [];
@@ -274,7 +291,7 @@ export default async function FinancePage({ params }: { params: Promise<{ locale
         />
         <MetricCard
           label="Cost Trend"
-          value="-100%"
+          value={costTrendLabel}
           variant="success"
           icon={<TrendingDown className="h-6 w-6 text-cyan-400" />}
           tooltip="Zero paid API tokens spent on mechanical steps"

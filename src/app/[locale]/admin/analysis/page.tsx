@@ -44,6 +44,8 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
   const uniqueModels = Array.from(new Map(allModels.map((m) => [m.name, m])).values());
   const models = uniqueModels;
 
+  const { data: realScores } = await supabase.from("k_model_scores").select("*");
+
   const registryData = {
     metadata: {
       project: "ALPAR AI Cross Audit Engine",
@@ -53,32 +55,41 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
       scoring_weights: { consensus: 0.4, verification: 0.3, security: 0.3 },
     },
     audits: models.map((model) => {
-      // Create some default scores based on model ID so it's deterministic
-      const hash = Array.from(model.name).reduce((acc, char) => acc + char.charCodeAt(0), 0);
-      const randomScore = () => 60 + (hash % 40);
+      const real = realScores?.find((s) => s.model_id === model.id);
+      const scoreVal = real ? Math.round((real.score ?? 0) * 100) : 0;
+      const hasRealScore = real != null;
+
       return {
         model_id: model.id,
         model_name: model.name,
         provider: (model.ai_providers as { name: string } | null)?.name || "Unknown",
-        audit_date: new Date().toISOString().slice(0, 10),
-        audit_type: "Dynamic DB Audit",
+        audit_date: real?.last_audited_at
+          ? new Date(real.last_audited_at).toISOString().slice(0, 10)
+          : new Date().toISOString().slice(0, 10),
+        audit_type: hasRealScore
+          ? "Verified K-Benchmark Audit"
+          : "Registered Model (Pending Audit)",
         is_free: (model as { is_free?: boolean }).is_free || false,
         scores: {
-          vision_mission: randomScore(),
-          message_content: randomScore(),
-          ux_ui_design: randomScore(),
-          technical_architecture: randomScore(),
-          legal_compliance: randomScore(),
-          business_model: randomScore(),
-          growth_viral: randomScore(),
-          traction_social_proof: randomScore(),
-          investor_readiness: randomScore(),
-          societal_impact: randomScore(),
-          total: randomScore() * 10,
+          vision_mission: scoreVal,
+          message_content: scoreVal,
+          ux_ui_design: scoreVal,
+          technical_architecture: scoreVal,
+          legal_compliance: scoreVal,
+          business_model: scoreVal,
+          growth_viral: scoreVal,
+          traction_social_proof: scoreVal,
+          investor_readiness: scoreVal,
+          societal_impact: scoreVal,
+          total: scoreVal * 10,
           total_max: 1000,
         },
-        unique_insight: "Fetched dynamically from public.ai_models.",
-        key_recommendations: ["Review capabilities dynamically", "Integrate live telemetry"],
+        unique_insight: hasRealScore
+          ? `Verified benchmark score: ${scoreVal}/100.`
+          : "No live benchmark score recorded for this model yet.",
+        key_recommendations: hasRealScore
+          ? ["Continuous automated monitoring active"]
+          : ["Pending live benchmark audit execution"],
       };
     }),
     consensus_findings: {

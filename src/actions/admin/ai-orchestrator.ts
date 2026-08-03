@@ -69,17 +69,23 @@ export async function runCrossAuditArenaAction(_promptText: string): Promise<Are
   for (const m of candidates) {
     try {
       const modelScoreRecord = kScores?.find((k) => k.model_id === m.id);
-      const isAnomaly = !!modelScoreRecord;
-      const computedTrustScore = isAnomaly ? 60.0 : 90.0 + Math.random() * 5;
-      const computedHallucination = isAnomaly ? 0.2 : Math.random() * 0.05;
+      const computedTrustScore = modelScoreRecord
+        ? parseFloat((modelScoreRecord.score * 100).toFixed(1))
+        : null;
+      const computedHallucination = modelScoreRecord
+        ? parseFloat((1.0 - modelScoreRecord.score).toFixed(3))
+        : null;
+      const computedEthical = modelScoreRecord
+        ? parseFloat((modelScoreRecord.score * 100).toFixed(1))
+        : null;
 
       await supabase.from("ai_trust_scores" as unknown as "incidents").upsert(
         {
           model_id: m.id,
           provider: m.provider,
-          trust_score: parseFloat(computedTrustScore.toFixed(1)),
-          hallucination_rate: parseFloat(computedHallucination.toFixed(3)),
-          ethical_compliance: isAnomaly ? 70.0 : 95.0,
+          trust_score: computedTrustScore,
+          hallucination_rate: computedHallucination,
+          ethical_compliance: computedEthical,
           total_audits: 1,
           updated_at: new Date().toISOString(),
         } as never,

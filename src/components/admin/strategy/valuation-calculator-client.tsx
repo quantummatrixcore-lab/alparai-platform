@@ -149,7 +149,7 @@ export function ValuationCalculatorClient({
     const prototypeBonus = milestones > 0 ? Math.min(500000, 300000 + milestones * 35000) : 300000;
     const teamBonus = swot > 0 ? Math.min(500000, 350000 + swot * 20000) : 350000;
     const rolloutBonus =
-      risks > 0 ? Math.min(500000, 250000 + Math.max(0, 10 - risks) * 25000) : 25000;
+      risks > 0 ? Math.min(500000, 250000 + Math.max(0, 10 - risks) * 25000) : 250000;
 
     setBerkusInputs((prev) => ({
       ...prev,

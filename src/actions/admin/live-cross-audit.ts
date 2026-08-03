@@ -11,15 +11,15 @@ export async function runLiveCrossAuditTest(text: string) {
     Kullanıcı aşağıdaki olayı veya metni girdi:
     "${text}"
 
-    Bunu sanki 3 farklı yapay zeka modeli (Örn: Model A, Model B, Model C) analiz ediyormuş gibi bir senaryo üret.
+    Bunu 3 farklı bağımsız denetçi model (Auditor Alpha, Auditor Beta, Auditor Gamma) analiz ediyormuş gibi sentezle.
     Her modelin kendi görüşü (Analysis), ve en son "Hakem (Judge)" modelinin nihai kararı olsun.
     
     Çıktın AŞAĞIDAKİ JSON FORMATINDA olmalıdır ve başka hiçbir metin içermemelidir:
     {
       "models": [
-        { "name": "GPT-4o", "stance": "Destekliyor / Şüpheli / Reddediyor", "reason": "Kısa açıklama..." },
-        { "name": "Claude 3.5 Sonnet", "stance": "...", "reason": "..." },
-        { "name": "Mistral Large", "stance": "...", "reason": "..." }
+        { "name": "Auditor Alpha", "stance": "Destekliyor / Şüpheli / Reddediyor", "reason": "Kısa açıklama..." },
+        { "name": "Auditor Beta", "stance": "...", "reason": "..." },
+        { "name": "Auditor Gamma", "stance": "...", "reason": "..." }
       ],
       "judge_verdict": "Nihai Karar Özeti",
       "truth_score": 85,
