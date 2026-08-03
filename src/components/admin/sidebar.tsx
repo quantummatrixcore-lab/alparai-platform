@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, usePathname } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
@@ -71,6 +71,8 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
+  const navRef = useRef<HTMLElement>(null);
+
   const [isCollapsed, setIsCollapsed] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("admin-sidebar-collapsed") === "true";
@@ -78,15 +80,41 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     return false;
   });
 
-  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
-    overview: true,
-    operations: true,
-    intelligence: true,
-    strategy: true,
-    governance: true,
-    growth: true,
-    system: true,
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("admin-sidebar-expanded-groups");
+        if (saved) return JSON.parse(saved);
+      } catch (_e) {
+        // Fallback to default
+      }
+    }
+    return {
+      overview: true,
+      operations: true,
+      intelligence: true,
+      strategy: true,
+      governance: true,
+      growth: true,
+      system: true,
+    };
   });
+
+  // Preserve & Restore nav scroll position on pathname change
+  useEffect(() => {
+    if (typeof window !== "undefined" && navRef.current) {
+      const savedScroll = sessionStorage.getItem("admin-sidebar-scroll");
+      if (savedScroll) {
+        navRef.current.scrollTop = Number(savedScroll);
+      }
+    }
+  }, [pathname]);
+
+  const handleNavScroll = () => {
+    if (navRef.current) {
+      sessionStorage.setItem("admin-sidebar-scroll", String(navRef.current.scrollTop));
+    }
+  };
 
   const toggleCollapse = () => {
     setIsCollapsed((prev) => {
@@ -108,7 +136,13 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
   }, []);
 
   const toggleGroup = (group: string) => {
-    setExpandedGroups((prev) => ({ ...prev, [group]: !prev[group] }));
+    setExpandedGroups((prev) => {
+      const next = { ...prev, [group]: !prev[group] };
+      if (typeof window !== "undefined") {
+        localStorage.setItem("admin-sidebar-expanded-groups", JSON.stringify(next));
+      }
+      return next;
+    });
   };
 
   const overviewItems = [
@@ -673,7 +707,11 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
           </button>
         </div>
 
-        <nav className="scrollbar-hide flex-1 overflow-y-auto py-4">
+        <nav
+          ref={navRef}
+          onScroll={handleNavScroll}
+          className="scrollbar-hide flex-1 overflow-y-auto py-4"
+        >
           <div className="space-y-1">
             {renderNavGroup("overview", t("nav_group_overview"), Activity, overviewItems)}
           </div>
