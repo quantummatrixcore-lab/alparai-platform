@@ -78,6 +78,15 @@ Every number written into `docs/MASTER_PLAN.md` cites its source (file path, tab
 
 Note: `/admin/master-plan` parses this file at runtime via `parseMasterPlan()` (`src/lib/utils/markdown-parser.ts`). It ingests only table rows whose **first cell is a bare number** — never start a MASTER_PLAN table column with a plain integer unless it is intended as a tracked plan item.
 
+## Completion Rule — "pushed or it did not happen" (G-7, binding)
+
+No agent may report a task complete, or flip a `docs/MASTER_PLAN.md` backlog row to `✅ completed`, until the work is **on `origin`** and the reporting agent has re-read it from `origin` to confirm. A local commit is **not** completion.
+
+- Reports cite the **commit SHA and the branch it was pushed to**. "Committed as `abc1234`" is not a completion report; "pushed to `origin/master` as `abc1234`, re-read and confirmed" is.
+- Future tense is never completion. "I will push once the checks go green" means the item stays `pending`.
+- **Why:** agents run in different working copies — Antigravity on the Founder's local machine (`d:\Alparai`), the Architect session in a cloud container. A commit that exists in one checkout is invisible to every other agent and to deployment. Any reviewing session defines verification as "visible on `origin`"; a claim that cannot be checked there is an unverifiable state, not a finished task.
+- Precedent: v12.83 — a completion report cited commit `5a9949a`, which existed only in the local checkout and never reached `origin`. The reviewing session could not see it and correctly refused to mark the item done. The follow-up fix (`a7c3211`) was pushed first, verified on `origin`, and accepted.
+
 ## Safety
 
 - Never log raw IP, email, or PII. Always hash.
