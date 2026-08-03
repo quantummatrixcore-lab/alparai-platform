@@ -48,7 +48,14 @@ export async function signInWithGoogle(next = "/profile"): Promise<AuthResult> {
     logger.error("signInWithGoogle failed", { action: "signInWithGoogle" }, error);
     return { ok: false, error: error.message };
   }
-  return { ok: true, url: data.url };
+  let finalUrl = data.url;
+  if (finalUrl) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    if (supabaseUrl && finalUrl.startsWith(supabaseUrl)) {
+      finalUrl = finalUrl.replace(supabaseUrl, originUrl);
+    }
+  }
+  return { ok: true, url: finalUrl };
 }
 
 export async function signInWithMagicLink(email: string): Promise<AuthResult> {
