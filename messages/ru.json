@@ -281,6 +281,7 @@
     "title_accent_desc": "Echten KI-Fehler gefunden? Dokumentieren Sie ihn. Erhalten Sie eine Verifizierung. Verdienen Sie das Ethics Advocate Badge — und Belohnungen von den Anbietern.",
     "subtitle": "ALPAR AI dokumentiert, verifiziert und speichert jeden KI-Vorfall dauerhaft — verwaltet von der Community, nicht von KI-Konzernen. Konto erforderlich — Ihre Identität bleibt geschützt, niemals veröffentlicht. Das Register ist permanent.",
     "cta_primary": "Vorfall melden",
+    "cta_journalist": "Для журналистов",
     "cta_secondary": "Beweise ansehen",
     "cta_tertiary": "Gründungs-Reporter werden →",
     "cta_bounty": "Mehr über Bug-Bounties erfahren",
@@ -4189,6 +4190,30 @@
     "k12_desc": "K12 Metric Description",
     "subtitle": "How we calculate the Trust Score",
     "intro": "Our proprietary methodology ensures unbiased and transparent rankings."
+  },
+  "segments": {
+    "title": "Для кого ALPAR AI?",
+    "subtitle": "Выберите свой сегмент, чтобы получить доступ к специализированным аналитическим данным и инструментам.",
+    "journalist": {
+      "title": "Журналисты",
+      "desc": "Получите доступ к проверенным данным об инцидентах, отслеживайте сбои ИИ и находите эксклюзивные истории для своих репортажей.",
+      "cta": "Исследовать"
+    },
+    "legal": {
+      "title": "Право и соответствие",
+      "desc": "Отслеживайте нарушения нормативных требований, коллективные иски и нарушения интеллектуальной собственности, связанные с системами ИИ.",
+      "cta": "Анализировать"
+    },
+    "safety": {
+      "title": "Исследователи безопасности",
+      "desc": "Изучайте глубокие технические анализы инцидентов и оценивайте уязвимости моделей ИИ.",
+      "cta": "Изучить"
+    },
+    "compliance": {
+      "title": "Корпорации",
+      "desc": "Оценивайте риски поставщиков, интегрируйте оценки безопасности и обеспечивайте внутреннее соответствие ИИ.",
+      "cta": "Начать"
+    }
   },
   "system-status": {
     "title": "System Status",

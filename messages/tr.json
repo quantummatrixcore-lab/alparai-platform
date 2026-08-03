@@ -281,6 +281,7 @@
     "title_accent_desc": "Gerçek bir AI hatası mı buldun? Belgele. Doğrulat. Etik Savunucu rozeti kazan — ve bildirdiğin sağlayıcıdan ödül kredisi al.",
     "subtitle": "ALPAR AI, yapay zeka şirketleri yerine kendi topluluğu tarafından yönetilen, yapay zekanın her hatasını belgeleyen, doğrulayan ve kalıcı olarak kaydeden bir platformdur. Hesap gerekli — kimliğiniz korunur, asla yayınlanmaz. Kayıt kalıcıdır.",
     "cta_primary": "Olay Bildir",
+    "cta_journalist": "Gazeteciler için",
     "cta_secondary": "Kanıtları İncele",
     "cta_tertiary": "Kurucu Muhabir Ol →",
     "cta_bounty": "Bug Bounty Hakkında",
@@ -4180,6 +4181,30 @@
     "k12_desc": "K12 Metrik Açıklaması",
     "subtitle": "Güven Skorunu nasıl hesaplıyoruz",
     "intro": "Özel metodolojimiz tarafsız ve şeffaf sıralamalar sağlar."
+  },
+  "segments": {
+    "title": "ALPAR AI kimler içindir?",
+    "subtitle": "Özelleştirilmiş içgörülere ve araçlara erişmek için segmentinizi seçin.",
+    "journalist": {
+      "title": "Gazeteciler",
+      "desc": "Doğrulanmış olay verilerine erişin, yapay zeka hatalarını takip edin ve raporlarınız için özel hikayeler keşfedin.",
+      "cta": "Araştır"
+    },
+    "legal": {
+      "title": "Hukuk & Uyum",
+      "desc": "Yapay zeka sistemleriyle bağlantılı mevzuat ihlallerini, toplu davaları ve fikri mülkiyet ihlallerini izleyin.",
+      "cta": "Analiz Et"
+    },
+    "safety": {
+      "title": "Güvenlik Araştırmacıları",
+      "desc": "Derin teknik incelemeleri keşfedin ve yapay zeka modellerindeki zafiyetleri kıyaslayın.",
+      "cta": "Keşfet"
+    },
+    "compliance": {
+      "title": "Kurumsal",
+      "desc": "Tedarikçi risklerini değerlendirin, güvenlik puanlarını entegre edin ve kurum içi yapay zeka uyumluluğunu sağlayın.",
+      "cta": "Başlayın"
+    }
   },
   "system-status": {
     "title": "Sistem Durumu",

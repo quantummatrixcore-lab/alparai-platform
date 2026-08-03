@@ -281,6 +281,7 @@
     "title_accent_desc": "Found a real AI failure? Document it. Get verified. Earn the Ethics Advocate badge — and reward credits from the providers you reported.",
     "subtitle": "ALPAR AI documents, verifies, and permanently records every AI incident — governed by its community, not by AI companies. Account required — your identity is protected, never published. The record is permanent.",
     "cta_primary": "Report an Incident",
+    "cta_journalist": "For Journalists",
     "cta_secondary": "See the Evidence",
     "cta_tertiary": "Become a Founding Reporter →",
     "cta_bounty": "Learn about Bug Bounties",
@@ -4180,6 +4181,30 @@
     "k12_desc": "K12 Metric Description",
     "subtitle": "How we calculate the Trust Score",
     "intro": "Our proprietary methodology ensures unbiased and transparent rankings."
+  },
+  "segments": {
+    "title": "Who is ALPAR AI for?",
+    "subtitle": "Choose your segment to access tailored insights and tools.",
+    "journalist": {
+      "title": "Journalists",
+      "desc": "Access verified incident data, track AI failures, and discover exclusive stories for your reporting.",
+      "cta": "Investigate"
+    },
+    "legal": {
+      "title": "Legal & Compliance",
+      "desc": "Monitor regulatory breaches, class actions, and IP violations linked to AI systems.",
+      "cta": "Analyze"
+    },
+    "safety": {
+      "title": "Safety Researchers",
+      "desc": "Explore deep technical post-mortems and benchmark vulnerabilities across AI models.",
+      "cta": "Explore"
+    },
+    "compliance": {
+      "title": "Enterprise",
+      "desc": "Assess vendor risks, integrate safety scores, and ensure internal AI compliance.",
+      "cta": "Get Started"
+    }
   },
   "system-status": {
     "title": "System Status",
