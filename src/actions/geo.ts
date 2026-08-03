@@ -73,22 +73,21 @@ export async function getGeoStatsAction() {
     };
 
     const redis = getRedisInstance();
-    let redisSuccess = false;
 
     if (redis) {
       try {
         const keys = await redis.keys("geo:bot:*");
         if (keys.length > 0) {
-          const values = await redis.mget<number[]>(...keys);
+          const values = await redis.mget<(number | string)[]>(...keys);
           keys.forEach((key, idx) => {
             const parts = key.split(":");
             const bot = parts[2];
             if (bot) {
               const normalizedBot = bot === "google-extended" ? "googleExtended" : bot;
-              botHits[normalizedBot] = (botHits[normalizedBot] || 0) + (values[idx] || 0);
+              const val = Number(values[idx]) || 0;
+              botHits[normalizedBot] = (botHits[normalizedBot] || 0) + val;
             }
           });
-          redisSuccess = true;
         }
       } catch (err) {
         logger.error(
@@ -99,26 +98,40 @@ export async function getGeoStatsAction() {
       }
     }
 
-    if (!redisSuccess || Object.values(botHits).every((v) => v === 0)) {
-      const { data: dbStats } = await db.from("geo_citations").select("ai_engine, bot_hit_count");
-      if (dbStats) {
-        for (const row of dbStats) {
-          const normalizedBot =
-            row.ai_engine === "google-extended" ? "googleExtended" : row.ai_engine;
-          botHits[normalizedBot] = (botHits[normalizedBot] || 0) + (row.bot_hit_count || 1);
-        }
+    const { data: dbStats } = await db.from("geo_citations").select("ai_engine, bot_hit_count");
+    if (dbStats) {
+      for (const row of dbStats) {
+        if (!row.ai_engine) continue;
+        const engine = row.ai_engine.toLowerCase();
+        let normalizedBot = engine;
+        if (engine.includes("gpt")) normalizedBot = "gptbot";
+        else if (engine.includes("claude")) normalizedBot = "claudebot";
+        else if (engine.includes("perplexity")) normalizedBot = "perplexitybot";
+        else if (engine.includes("google")) normalizedBot = "googleExtended";
+
+        botHits[normalizedBot] = (botHits[normalizedBot] || 0) + (Number(row.bot_hit_count) || 1);
       }
     }
 
+    const citationsList = (citations as GeoCitationRow[]) || [];
+    const totalHits = Object.values(botHits).reduce(
+      (acc, v) => acc + (typeof v === "number" ? v : 0),
+      0,
+    );
+    const citationWeight = Math.min(50, citationsList.length * 5);
+    const hitWeight = Math.min(50, Math.floor(totalHits / 10));
+    const score =
+      citationsList.length > 0 || totalHits > 0 ? Math.min(100, citationWeight + hitWeight) : 0;
+
     return {
       success: true,
-      citations: (citations as GeoCitationRow[]) || [],
-      score: 88.5,
-      botHits: botHits as {
-        gptbot: number;
-        claudebot: number;
-        perplexitybot: number;
-        googleExtended: number;
+      citations: citationsList,
+      score,
+      botHits: {
+        gptbot: botHits.gptbot || 0,
+        claudebot: botHits.claudebot || 0,
+        perplexitybot: botHits.perplexitybot || 0,
+        googleExtended: botHits.googleExtended || 0,
       },
     };
   } catch (err) {
@@ -126,7 +139,7 @@ export async function getGeoStatsAction() {
       success: false,
       error: err instanceof Error ? err.message : "Failed to load GEO stats",
       citations: [],
-      score: 75.0,
+      score: 0,
       botHits: { gptbot: 0, claudebot: 0, perplexitybot: 0, googleExtended: 0 },
     };
   }
