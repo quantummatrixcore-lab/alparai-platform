@@ -291,7 +291,7 @@ export function QuestionnaireClient({
                       {run.total_answers}/{run.total_questions} {t("answers")}
                     </span>
                     <span className="text-fg-muted ml-3 text-xs">
-                      {run.model_ids.length} {t("models")}
+                      {(run.model_ids || []).length} {t("models")}
                     </span>
                   </div>
                 </div>

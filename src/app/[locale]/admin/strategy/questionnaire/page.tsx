@@ -1,4 +1,3 @@
-import { requireAdmin } from "@/lib/auth/session";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { requireAdvisor } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -35,7 +34,7 @@ interface AnswerRow {
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
-  await requireAdmin();
+  await requireAdvisor();
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "admin" });
   return {
@@ -61,14 +60,20 @@ export default async function QuestionnairePage({
     .order("started_at", { ascending: false })
     .limit(20);
 
-  const { data: allAnswers } = await supabase
-    .from("strategic_answers")
-    .select("*")
-    .order("question_index", { ascending: true });
-
   const latestRunId = runs?.[0]?.id ?? null;
+
+  let allAnswers: AnswerRow[] = [];
+  if (latestRunId) {
+    const { data: answersData } = await supabase
+      .from("strategic_answers")
+      .select("*")
+      .eq("run_id", latestRunId)
+      .order("question_index", { ascending: true });
+    allAnswers = (answersData || []) as unknown as AnswerRow[];
+  }
+
   const typedRuns = (runs || []) as unknown as RunRow[];
-  const typedAnswers = (allAnswers || []) as unknown as AnswerRow[];
+  const typedAnswers = allAnswers;
 
   const models = QUESTIONNAIRE_MODELS.map((m: GatewayModel) => ({
     id: m.id,

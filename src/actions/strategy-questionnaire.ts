@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { requireAdmin, requireAdvisor } from "@/lib/auth/session";
+import { requireAdvisor } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logger } from "@/lib/utils/logger";
 import { callModel, QUESTIONNAIRE_MODELS, type GatewayModel } from "@/lib/ai/openrouter-gateway";
@@ -70,79 +70,93 @@ export async function runQuestionnaire(modelIds?: string[]): Promise<{
     const allQuestions = [...QUESTIONS];
     let totalAnswers = 0;
 
-    for (const model of selectedModels) {
-      const modelLabel = model.id.replace(/:free$/, "").replace(/^.*\//, "");
+    const BATCH_SIZE = 5;
 
-      for (let qi = 0; qi < allQuestions.length; qi++) {
-        const q = allQuestions[qi]!;
-        const questionBlock = allQuestions.map((qq) => `${qq.id}. ${qq.text}`).join("\n\n");
+    try {
+      for (const model of selectedModels) {
+        const modelLabel = model.id.replace(/:free$/, "").replace(/^.*\//, "");
 
-        const userMessage = `Answer ALL ${allQuestions.length} questions below. Each answer: verdict first, then 1-2 sentences.\n\n${questionBlock}`;
+        for (let i = 0; i < allQuestions.length; i += BATCH_SIZE) {
+          const chunk = allQuestions.slice(i, i + BATCH_SIZE);
+          await Promise.all(
+            chunk.map(async (q, chunkIndex) => {
+              const qi = i + chunkIndex;
+              const userMessage = `Question ${q.id} [${q.section}]: ${q.text}\n\nProvide your strategic evaluation for ALPAR AI based on the project facts above. Start with your verdict in the first sentence, followed by 1-2 sentences of concrete reasoning/action (3 sentences maximum).`;
 
-        const startTime = performance.now();
+              const startTime = performance.now();
 
-        try {
-          const result = await callModel({
-            systemPrompt: SYSTEM_PROMPT,
-            userMessage,
-            model,
-            temperature: 0.3,
-          });
+              try {
+                const result = await callModel({
+                  systemPrompt: SYSTEM_PROMPT,
+                  userMessage,
+                  model,
+                  temperature: 0.3,
+                });
 
-          const latencyMs = Math.round(performance.now() - startTime);
+                const latencyMs = Math.round(performance.now() - startTime);
 
-          if (result.ok) {
-            await supabase.from("strategic_answers").insert({
-              run_id: runId,
-              model_id: model.id,
-              model_name: modelLabel,
-              question_index: qi,
-              question_id: q.id,
-              section: q.section,
-              answer_text: result.data.content,
-              latency_ms: latencyMs,
-              tokens_used: result.data.usage?.totalTokens || 0,
-            });
-          } else {
-            await supabase.from("strategic_answers").insert({
-              run_id: runId,
-              model_id: model.id,
-              model_name: modelLabel,
-              question_index: qi,
-              question_id: q.id,
-              section: q.section,
-              error_message: result.error?.message || "Unknown error",
-              latency_ms: latencyMs,
-            });
-          }
-        } catch (err) {
-          const latencyMs = Math.round(performance.now() - startTime);
-          await supabase.from("strategic_answers").insert({
-            run_id: runId,
-            model_id: model.id,
-            model_name: modelLabel,
-            question_index: qi,
-            question_id: q.id,
-            section: q.section,
-            error_message: err instanceof Error ? err.message : "Unknown error",
-            latency_ms: latencyMs,
-          });
+                if (result.ok) {
+                  await supabase.from("strategic_answers").insert({
+                    run_id: runId,
+                    model_id: model.id,
+                    model_name: modelLabel,
+                    question_index: qi,
+                    question_id: q.id,
+                    section: q.section,
+                    answer_text: result.data.content,
+                    latency_ms: latencyMs,
+                    tokens_used: result.data.usage?.totalTokens || 0,
+                  });
+                } else {
+                  await supabase.from("strategic_answers").insert({
+                    run_id: runId,
+                    model_id: model.id,
+                    model_name: modelLabel,
+                    question_index: qi,
+                    question_id: q.id,
+                    section: q.section,
+                    error_message: result.error?.message || "Unknown error",
+                    latency_ms: latencyMs,
+                  });
+                }
+              } catch (err) {
+                const latencyMs = Math.round(performance.now() - startTime);
+                await supabase.from("strategic_answers").insert({
+                  run_id: runId,
+                  model_id: model.id,
+                  model_name: modelLabel,
+                  question_index: qi,
+                  question_id: q.id,
+                  section: q.section,
+                  error_message: err instanceof Error ? err.message : "Unknown error",
+                  latency_ms: latencyMs,
+                });
+              }
+              totalAnswers++;
+            }),
+          );
         }
-
-        totalAnswers++;
-
-        await new Promise((r) => setTimeout(r, 500));
       }
-    }
 
-    await supabase
-      .from("strategic_runs")
-      .update({
-        status: "completed",
-        completed_at: new Date().toISOString(),
-        total_answers: totalAnswers,
-      })
-      .eq("id", runId);
+      await supabase
+        .from("strategic_runs")
+        .update({
+          status: "completed",
+          completed_at: new Date().toISOString(),
+          total_answers: totalAnswers,
+        })
+        .eq("id", runId);
+    } catch (runExecutionError) {
+      await supabase
+        .from("strategic_runs")
+        .update({
+          status: "failed",
+          completed_at: new Date().toISOString(),
+          total_answers: totalAnswers,
+        })
+        .eq("id", runId);
+      throw runExecutionError;
+    }
 
     revalidatePath("/admin/strategy/questionnaire");
     return { ok: true, runId };
@@ -153,7 +167,7 @@ export async function runQuestionnaire(modelIds?: string[]): Promise<{
 }
 
 export async function getQuestionnaireRuns() {
-  await requireAdmin();
+  await requireAdvisor();
   const supabase = createAdminClient();
 
   const { data: runs } = await supabase
@@ -174,7 +188,7 @@ export async function getQuestionnaireRuns() {
 }
 
 export async function getQuestionnaireRunAnswers(runId: string) {
-  await requireAdmin();
+  await requireAdvisor();
   const supabase = createAdminClient();
 
   const { data: answers } = await supabase
