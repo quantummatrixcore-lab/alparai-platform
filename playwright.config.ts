@@ -36,7 +36,7 @@ export default defineConfig({
         command: "npx next start",
         port: 3000,
         timeout: 60_000,
-        reuseExistingServer: false,
+        reuseExistingServer: true,
         env: {
           NEXT_PUBLIC_SUPABASE_URL: "https://mock-supabase.supabase.co",
           NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock-anon-key",

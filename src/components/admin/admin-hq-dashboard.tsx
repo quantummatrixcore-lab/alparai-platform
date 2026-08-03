@@ -406,15 +406,45 @@ export function AdminHQDashboard({
     },
   ];
 
-  // Map translations to colors
-  const GROUP_COLORS_DYN: Record<string, string> = {
-    [t("group_overview")]: "text-sky-400 bg-sky-400/10",
-    [t("group_operations")]: "text-orange-400 bg-orange-400/10",
-    [t("group_intelligence")]: "text-violet-400 bg-violet-400/10",
-    [t("group_strategy")]: "text-blue-400 bg-blue-400/10",
-    [t("group_governance")]: "text-emerald-400 bg-emerald-400/10",
-    [t("group_growth")]: "text-pink-400 bg-pink-400/10",
-    [t("group_system")]: "text-amber-400 bg-amber-400/10",
+  const GROUP_HOVER_CLASSES: Record<
+    string,
+    { hoverBorder: string; hoverGlow: string; iconBg: string }
+  > = {
+    [t("group_overview")]: {
+      hoverBorder: "hover:border-sky-500/30",
+      hoverGlow: "group-hover:shadow-[0_0_20px_rgba(56,189,248,0.12)]",
+      iconBg: "bg-sky-500/10 text-sky-400",
+    },
+    [t("group_operations")]: {
+      hoverBorder: "hover:border-orange-500/30",
+      hoverGlow: "group-hover:shadow-[0_0_20px_rgba(249,115,22,0.12)]",
+      iconBg: "bg-orange-500/10 text-orange-400",
+    },
+    [t("group_intelligence")]: {
+      hoverBorder: "hover:border-violet-500/30",
+      hoverGlow: "group-hover:shadow-[0_0_20px_rgba(139,92,246,0.12)]",
+      iconBg: "bg-violet-500/10 text-violet-400",
+    },
+    [t("group_strategy")]: {
+      hoverBorder: "hover:border-blue-500/30",
+      hoverGlow: "group-hover:shadow-[0_0_20px_rgba(59,130,246,0.12)]",
+      iconBg: "bg-blue-500/10 text-blue-400",
+    },
+    [t("group_governance")]: {
+      hoverBorder: "hover:border-emerald-500/30",
+      hoverGlow: "group-hover:shadow-[0_0_20px_rgba(16,185,129,0.12)]",
+      iconBg: "bg-emerald-500/10 text-emerald-400",
+    },
+    [t("group_growth")]: {
+      hoverBorder: "hover:border-pink-500/30",
+      hoverGlow: "group-hover:shadow-[0_0_20px_rgba(236,72,153,0.12)]",
+      iconBg: "bg-pink-500/10 text-pink-400",
+    },
+    [t("group_system")]: {
+      hoverBorder: "hover:border-amber-500/30",
+      hoverGlow: "group-hover:shadow-[0_0_20px_rgba(245,158,11,0.12)]",
+      iconBg: "bg-amber-500/10 text-amber-400",
+    },
   };
 
   const [systemHealth, setSystemHealth] = useState(87);
@@ -959,19 +989,25 @@ export function AdminHQDashboard({
       {/* ROW 6: Quick Nav Grid */}
       <SectionCard title={t("quick_nav")}>
         <p className="text-fg-muted mb-4 text-xs">{t("quick_nav_subtitle")}</p>
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+        <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
           {ALL_NAV_ITEMS.map((item) => {
-            const colorClass = GROUP_COLORS_DYN[item.group] ?? "text-white/60 bg-white/5";
+            const hoverStyles = GROUP_HOVER_CLASSES[item.group] || {
+              hoverBorder: "hover:border-white/20",
+              hoverGlow: "group-hover:shadow-[0_0_15px_rgba(255,255,255,0.05)]",
+              iconBg: "bg-white/5 text-white/60",
+            };
             return (
               <Link
                 key={item.href}
                 href={`/${locale}${item.href}`}
-                className="group flex flex-col items-center gap-1.5 rounded-xl border border-white/5 bg-white/[0.03] p-3 text-center transition-all hover:border-white/20 hover:bg-white/10"
+                className={`group relative flex flex-col items-center gap-3 rounded-2xl border border-white/5 bg-gradient-to-b from-white/[0.03] to-white/[0.005] p-4 text-center transition-all duration-300 hover:bg-white/[0.07] ${hoverStyles.hoverBorder} ${hoverStyles.hoverGlow} shadow-[inset_0_1px_1px_rgba(255,255,255,0.02)]`}
               >
-                <span className={`rounded-lg p-2 ${colorClass}`}>
-                  <item.icon className="h-4 w-4" />
+                <span
+                  className={`rounded-xl p-3 transition-transform duration-300 group-hover:scale-110 ${hoverStyles.iconBg}`}
+                >
+                  <item.icon className="h-7 w-7" />
                 </span>
-                <span className="text-[10px] leading-tight text-white/50 group-hover:text-white/80">
+                <span className="text-[11px] leading-tight font-semibold text-white/50 transition-colors duration-300 group-hover:text-white">
                   {item.label}
                 </span>
               </Link>
