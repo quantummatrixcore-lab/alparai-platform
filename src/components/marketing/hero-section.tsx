@@ -107,6 +107,13 @@ export function HeroSection({
                 {t("cta_primary")}
               </Link>
               <Link
+                href="/dashboard/journalist"
+                className="bg-brand-600 hover:bg-brand-500 relative inline-flex h-13 items-center justify-center gap-3 rounded-md px-8 text-base font-black text-white shadow-[0_0_20px_rgba(168,85,247,0.4)] transition-all duration-300 hover:-translate-y-1 hover:scale-105"
+              >
+                <Radio className="h-5 w-5" />
+                {t("cta_journalist")}
+              </Link>
+              <Link
                 href="/leaderboard"
                 className="bg-glass text-fg-primary hover:border-brand-500/40 inline-flex h-13 items-center justify-center gap-3 rounded-md px-8 text-base font-bold shadow-xl transition-all duration-300 hover:-translate-y-1 hover:scale-105"
               >
