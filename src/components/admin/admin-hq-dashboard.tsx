@@ -451,11 +451,27 @@ export function AdminHQDashboard({
   const [uptime, setUptime] = useState(99.97);
   const [latency, setLatency] = useState(142);
   const [resourceEff, setResourceEff] = useState(78);
-  const [chartData, setChartData] = useState(incidentsByDay);
+  // Deterministic incident trend chart data sourced from real DB aggregates (#109)
+  const defaultIncidentsByDay = useMemo(
+    () =>
+      incidentsByDay && incidentsByDay.length > 0
+        ? incidentsByDay
+        : [
+            { day: "Sun", count: 0 },
+            { day: "Mon", count: 0 },
+            { day: "Tue", count: 0 },
+            { day: "Wed", count: 0 },
+            { day: "Thu", count: 0 },
+            { day: "Fri", count: 0 },
+            { day: "Sat", count: 0 },
+          ],
+    [incidentsByDay],
+  );
+  const [chartData, setChartData] = useState(defaultIncidentsByDay);
 
   useEffect(() => {
-    setChartData(incidentsByDay);
-  }, [incidentsByDay]);
+    setChartData(defaultIncidentsByDay);
+  }, [defaultIncidentsByDay]);
 
   useEffect(() => {
     const fetchMetrics = async () => {

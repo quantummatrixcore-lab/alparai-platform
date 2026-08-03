@@ -53,14 +53,13 @@ export async function runCrossAuditArenaAction(_promptText: string): Promise<Are
 
   const auditedModelIds = candidates.map((m: FreeModelRecord) => m.id);
 
-  // 1. Fetch real anomalies from k_model_scores
+  // 1. Fetch real benchmark scores from k_model_scores
   const { data: kScores } = await supabase
     .from("k_model_scores")
     .select("model_id, score")
-    .in("model_id", auditedModelIds)
-    .lt("score", 0.5);
+    .in("model_id", auditedModelIds);
 
-  const anomaliesCount = kScores ? kScores.length : 0;
+  const anomaliesCount = kScores ? kScores.filter((k) => (k.score ?? 1) < 0.5).length : 0;
 
   // 2. Compute dynamic synthesized verdict
   const synthesizedVerdict = `[Stealth Cross-Audit Verdict] Evaluated input across ${candidates.length} free-tier models (${auditedModelIds.join(", ")}). Synthesized by ${judge?.id ?? "Judge"}: Ethical compliance verified, ${anomaliesCount} critical anomaly(s) detected via benchmark DB.`;
