@@ -52,7 +52,17 @@ export default async function StrategyOverviewPage({
   const supabase = await createServerClient();
 
   // Fetch all strategy components
-  const [swotRes, risksRes, valuationsRes, milestonesRes, snapshotsRes] = await Promise.all([
+  const [
+    swotRes,
+    risksRes,
+    valuationsRes,
+    milestonesRes,
+    snapshotsRes,
+    liveIncidentsRes,
+    liveUsersRes,
+    liveProvidersRes,
+    liveMrrRes,
+  ] = await Promise.all([
     supabase.from("strategy_swot_items").select("*").order("category"),
     supabase.from("strategy_risks").select("*").order("code"),
     supabase
@@ -66,6 +76,14 @@ export default async function StrategyOverviewPage({
       .select("*")
       .order("snapshot_date", { ascending: false })
       .limit(1),
+    supabase.from("incidents").select("id", { count: "exact", head: true }),
+    supabase.from("users").select("id", { count: "exact", head: true }),
+    supabase.from("ai_providers").select("id", { count: "exact", head: true }),
+    supabase
+      .from("finance_revenue_metrics")
+      .select("mrr_usd")
+      .order("month", { ascending: false })
+      .limit(1),
   ]);
 
   const swotItems = (swotRes.data ?? []) as SwotItem[];
@@ -74,6 +92,22 @@ export default async function StrategyOverviewPage({
   const milestones = (milestonesRes.data ?? []) as StrategyMilestone[];
   const latestSnapshot = (snapshotsRes.data?.[0] ??
     STRATEGY_METRICS_DEFAULTS) as StrategyMetricsSnapshot;
+
+  // Dynamically overwrite with real-time live data
+  const liveIncidentsCount = liveIncidentsRes.count ?? latestSnapshot.total_incidents;
+  const liveUsersCount = liveUsersRes.count ?? latestSnapshot.total_users;
+  const liveProvidersCount = liveProvidersRes.count ?? latestSnapshot.active_providers;
+  const liveMrrCents = liveMrrRes.data?.[0]
+    ? Number(liveMrrRes.data[0].mrr_usd) * 100
+    : latestSnapshot.mrr_cents;
+
+  const dynamicSnapshot = {
+    ...latestSnapshot,
+    total_incidents: liveIncidentsCount,
+    total_users: liveUsersCount,
+    active_providers: liveProvidersCount,
+    mrr_cents: liveMrrCents,
+  };
 
   // Process SWOT counts
   const strengthsCount = swotItems.filter((i) => i.category === "strength").length;
@@ -131,7 +165,7 @@ export default async function StrategyOverviewPage({
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* LEFT COLUMN: Health Score and Core Metrics Snapshots */}
           <div className="flex flex-col gap-6 lg:col-span-1">
-            <HealthGauge score={latestSnapshot.health_score} />
+            <HealthGauge score={dynamicSnapshot.health_score} />
 
             {/* Core Metrics Card */}
             <div className="border-border-subtle bg-bg-secondary/40 rounded-2xl border p-6 backdrop-blur-md">
@@ -147,7 +181,7 @@ export default async function StrategyOverviewPage({
                     <Users className="h-4 w-4 text-blue-400" />
                   </div>
                   <p className="mt-2 text-2xl font-extrabold text-white">
-                    {latestSnapshot.total_users}
+                    {dynamicSnapshot.total_users}
                   </p>
                 </div>
 
@@ -159,7 +193,7 @@ export default async function StrategyOverviewPage({
                     <AlertCircle className="h-4 w-4 text-red-400" />
                   </div>
                   <p className="mt-2 text-2xl font-extrabold text-white">
-                    {latestSnapshot.total_incidents}
+                    {dynamicSnapshot.total_incidents}
                   </p>
                 </div>
 
@@ -171,7 +205,7 @@ export default async function StrategyOverviewPage({
                     <Activity className="h-4 w-4 text-emerald-400" />
                   </div>
                   <p className="mt-2 text-2xl font-extrabold text-white">
-                    {latestSnapshot.active_providers}
+                    {dynamicSnapshot.active_providers}
                   </p>
                 </div>
 
@@ -183,8 +217,8 @@ export default async function StrategyOverviewPage({
                     <DollarSign className="h-4 w-4 text-amber-400" />
                   </div>
                   <p className="mt-2 text-xl font-extrabold text-white">
-                    {latestSnapshot.runway_months
-                      ? `${latestSnapshot.runway_months} ${t("mo")}`
+                    {dynamicSnapshot.runway_months
+                      ? `${dynamicSnapshot.runway_months} ${t("mo")}`
                       : t("unknown")}
                   </p>
                 </div>
@@ -193,7 +227,7 @@ export default async function StrategyOverviewPage({
                 <div className="text-fg-muted flex justify-between text-xs">
                   <span>{t("monthly_revenue_mrr")}</span>
                   <span className="font-mono font-bold text-white">
-                    {formatCurrency(latestSnapshot.mrr_cents)}
+                    {formatCurrency(dynamicSnapshot.mrr_cents)}
                   </span>
                 </div>
               </div>
