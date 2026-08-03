@@ -12,6 +12,31 @@ import { CheckCircle2, Loader2, Mail } from "lucide-react";
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RESEND_COOLDOWN_SEC = 60;
 
+const GOOGLE_CLIENT_ID =
+  process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
+  "341717447635-75ramo1e88p34b9dkmhfp5ocecqv0ff1.apps.googleusercontent.com";
+
+declare global {
+  interface Window {
+    google?: {
+      accounts?: {
+        id?: {
+          initialize: (config: {
+            client_id: string;
+            callback: (response: { credential?: string }) => void;
+          }) => void;
+          prompt: (
+            notification?: (notification: {
+              isNotDisplayed: () => boolean;
+              isSkippedMoment: () => boolean;
+            }) => void,
+          ) => void;
+        };
+      };
+    };
+  }
+}
+
 export function GoogleSignInButton({
   next = "/profile",
   className,
@@ -23,6 +48,68 @@ export function GoogleSignInButton({
 }) {
   const t = useTranslations("auth");
   const [pending, start] = useTransition();
+  const [gisLoaded, setGisLoaded] = useState(false);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.google?.accounts?.id) {
+      setGisLoaded(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.defer = true;
+    script.onload = () => setGisLoaded(true);
+    document.head.appendChild(script);
+  }, []);
+
+  const handleGoogleSignIn = () => {
+    start(async () => {
+      if (gisLoaded && window.google?.accounts?.id) {
+        try {
+          const { createBrowserClient } = await import("@supabase/ssr");
+          const supabase = createBrowserClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+          );
+
+          window.google.accounts.id.initialize({
+            client_id: GOOGLE_CLIENT_ID,
+            callback: async (response: { credential?: string }) => {
+              if (response.credential) {
+                const { error } = await supabase.auth.signInWithIdToken({
+                  provider: "google",
+                  token: response.credential,
+                });
+                if (error) {
+                  toast.error(error.message);
+                } else {
+                  window.location.href = next;
+                }
+              }
+            },
+          });
+
+          window.google.accounts.id.prompt((notification) => {
+            if (notification && (notification.isNotDisplayed() || notification.isSkippedMoment())) {
+              signInWithGoogle(next).then((res) => {
+                if (res.url) window.location.href = res.url;
+                else if (res.error) toast.error(res.error);
+              });
+            }
+          });
+          return;
+        } catch (_err) {
+          // Fallback on error
+        }
+      }
+
+      const res = await signInWithGoogle(next);
+      if (res.url) window.location.href = res.url;
+      else if (res.error) toast.error(res.error);
+    });
+  };
 
   return (
     <Button
@@ -37,13 +124,7 @@ export function GoogleSignInButton({
         "hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(168,85,247,0.18)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-none",
         className,
       )}
-      onClick={() => {
-        start(async () => {
-          const res = await signInWithGoogle(next);
-          if (res.url) window.location.href = res.url;
-          else if (res.error) toast.error(res.error);
-        });
-      }}
+      onClick={handleGoogleSignIn}
     >
       <svg
         className="mr-1 h-5 w-5 shrink-0"
