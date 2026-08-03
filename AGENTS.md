@@ -109,7 +109,7 @@ No agent may report a task complete, or flip a `docs/MASTER_PLAN.md` backlog row
 ## Infrastructure (post 2026-06-06 rebuild)
 
 - **Repo**: `https://github.com/quantummatrixcore-lab/Alparai.com.git` (renamed from `sikayetvar`; Vercel watches `master`).
-- **Hosting**: Vercel project `prj_REYJORnuYOT4tk28iMXnKZBCGkjL` (alparai-com) → `alparai.com` + `www.alparai.com`, region `fra1`. Duplicate `alparai-web` (`prj_mitn2MvIGMedCkJb7dw2fjDZkkqJ`) is unused — safe to delete.
+- **Hosting**: Vercel project `prj_REYJORnuYOT4tk28iMXnKZBCGkjL` (alparai-com) → `alparai.com` + `www.alparai.com`, region `fra1`, **PRO Plan** (concurrent builds = 12, maxDuration up to 300s, unlimited crons).
 - **Supabase**: project `alparai-prod` (`ref: azszpzyvxjduhemkjsdh`), region `eu-west-1`, FREE plan. Old `alparai-db` (`ojwtxkwsglbxdkqoliaq`) was lost — paused >90 days, unrecoverable.
 - **i18n**: ALL legal page body content must use `getTranslations({locale, namespace: "legal"})` / `t("key")`. Hardcoded English is a bug.
 - **i18n scope rule:** Public-facing pages (homepage `/`, `/insights`, `/community`, `/documentation`, etc.) support **all 5 languages (EN, TR, DE, FR, RU)**. Admin panels (`/admin/*` routes) strictly support **EN/TR translations only**. This prevents unnecessary translation workload on admin-only interfaces.
