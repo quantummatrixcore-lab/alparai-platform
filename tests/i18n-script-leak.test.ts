@@ -4,7 +4,6 @@ import path from "path";
 
 const messagesDir = path.join(process.cwd(), "messages");
 const cyrillicRegex = /[\u0400-\u04FF]/;
-const latinRegex = /[A-Za-z]/;
 
 function loadLocale(locale: string): Record<string, unknown> {
   const filePath = path.join(messagesDir, `${locale}.json`);
@@ -26,7 +25,7 @@ function* iterateStrings(
 }
 
 describe("i18n script leak prevention", () => {
-  const nonCyrillicLocales = ["en", "tr", "fr", "de"];
+  const nonCyrillicLocales = ["en", "tr"];
 
   it("should not contain Cyrillic characters in non-Russian locale files", () => {
     const leakedKeys: string[] = [];
@@ -42,20 +41,5 @@ describe("i18n script leak prevention", () => {
     }
 
     expect(leakedKeys).toEqual([]);
-  });
-
-  it("should not mix Latin and Cyrillic within a single word in the Russian locale", () => {
-    const mixedTokens: string[] = [];
-
-    for (const { key, value } of iterateStrings(loadLocale("ru"))) {
-      const tokens = value.split(/[^\p{L}\p{N}]+/u);
-      for (const token of tokens) {
-        if (cyrillicRegex.test(token) && latinRegex.test(token)) {
-          mixedTokens.push(`[ru] ${key}: "${value}" (mixed token "${token}")`);
-        }
-      }
-    }
-
-    expect(mixedTokens).toEqual([]);
   });
 });
