@@ -19,7 +19,11 @@
     },
     {
       "path": "/api/cron/fetch-external",
-      "schedule": "0 0 * * *"
+      "schedule": "0 */4 * * *"
+    },
+    {
+      "path": "/api/cron/import-incidents",
+      "schedule": "0 */6 * * *"
     }
   ]
 }
