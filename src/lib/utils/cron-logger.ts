@@ -69,7 +69,10 @@ export function withCronLogger<REQ extends Request, RES extends Response>(
       const status = response.status >= 400 ? "failed" : "success";
 
       const serviceId = `cron-${cronName.replace(/_/g, "-")}`;
-      await recordHeartbeat(serviceId, response.status >= 400 ? `Status ${response.status}` : undefined);
+      await recordHeartbeat(
+        serviceId,
+        response.status >= 400 ? `Status ${response.status}` : undefined,
+      );
 
       if (logId) {
         await supabase

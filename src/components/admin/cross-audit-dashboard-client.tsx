@@ -69,7 +69,8 @@ export function CrossAuditDashboardClient({ data }: CrossAuditDashboardClientPro
     toast.loading("Çapraz Sorgu Simülasyonu çalışıyor...", { id: "cross-audit" });
 
     try {
-      const res = await fetch("/api/admin/live-cross-audit", { cache: 'no-store', 
+      const res = await fetch("/api/admin/live-cross-audit", {
+        cache: "no-store",
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: testInput }),

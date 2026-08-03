@@ -9,6 +9,9 @@ import { Trophy, Award, Sparkles, Clock, DollarSign, Plus } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { formatDate } from "@/lib/utils";
 import Image from "next/image";
+import { getBountyBadgesStats } from "@/actions/bounties";
+import { BountyBadgesShowcase } from "@/components/bounties/bounty-badges-showcase";
+import { getCurrentUser } from "@/lib/auth/session";
 
 interface BountyListItem {
   id: string;
@@ -68,6 +71,20 @@ export default async function BountiesPage({ params }: { params: Promise<{ local
     .filter((b) => b.status === "paid")
     .reduce((sum, b) => sum + (b.estimated_reward_cents ?? 0), 0);
 
+  const badgesStats = await getBountyBadgesStats();
+  const user = await getCurrentUser();
+
+  let userBadgeCodes: string[] = [];
+  if (user) {
+    const { data: userBadges } = await supabase
+      .from("user_bounty_badges")
+      .select("badge_code")
+      .eq("user_id", user.id);
+    if (userBadges) {
+      userBadgeCodes = userBadges.map((ub) => ub.badge_code);
+    }
+  }
+
   return (
     <Container className="py-12">
       <header className="mb-10 max-w-3xl">
@@ -92,6 +109,22 @@ export default async function BountiesPage({ params }: { params: Promise<{ local
           color="warning"
         />
       </div>
+
+      {badgesStats && badgesStats.length > 0 && (
+        <BountyBadgesShowcase
+          badges={badgesStats}
+          userBadgeCodes={userBadgeCodes}
+          locale={locale}
+          labels={{
+            title: t("badges_title"),
+            subtitle: t("badges_subtitle"),
+            unlocked: t("badges_unlocked"),
+            locked: t("badges_locked"),
+            earnedBy: (count) => t("badges_earned_by", { count }),
+            requirementLabel: (code, threshold) => t(`badges_req_${code}`, { threshold }),
+          }}
+        />
+      )}
 
       <Card>
         <CardContent className="p-0">

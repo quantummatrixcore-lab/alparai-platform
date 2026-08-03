@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { exec } from "child_process";
-const execAsync = (cmd: string): Promise<{stdout: string, stderr: string}> => {
+const execAsync = (cmd: string): Promise<{ stdout: string; stderr: string }> => {
   return new Promise((resolve, reject) => {
     exec(cmd, (error, stdout, stderr) => {
       if (error) reject({ ...error, stdout, stderr });
@@ -14,10 +14,7 @@ export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
   try {
     const authHeader = req.headers.get("authorization");
-    if (
-      process.env.CRON_SECRET &&
-      authHeader !== `Bearer ${process.env.CRON_SECRET}`
-    ) {
+    if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -66,9 +63,6 @@ export async function GET(req: Request) {
     });
   } catch (error) {
     console.error("[Security Audit Cron] Error", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

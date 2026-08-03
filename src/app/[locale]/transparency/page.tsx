@@ -283,6 +283,40 @@ export default async function TransparencyPage({
         </CardContent>
       </Card>
 
+      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-brand-400 text-sm">
+              {tTransparency("dataMoatTitle", { defaultValue: "The Independent Data Moat" })}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-fg-secondary space-y-4 text-sm leading-relaxed">
+            <p>
+              {tTransparency("dataMoatDesc", {
+                defaultValue:
+                  "ALPAR AI holds the most comprehensive independent dataset of real-world AI failures, biases, and vulnerabilities. This continuous influx of verified incident telemetry creates an unmatched data moat—an essential asset for AI insurers, regulators, and enterprise risk models.",
+              })}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-success-500 text-sm">
+              {tTransparency("kBenchmarkTitle", { defaultValue: "K-BENCHMARK Evaluation" })}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-fg-secondary space-y-4 text-sm leading-relaxed">
+            <p>
+              {tTransparency("kBenchmarkDesc", {
+                defaultValue:
+                  "K-BENCHMARK is ALPAR AI's open methodology for scoring AI models across safety, truthfulness, fairness, privacy, robustness, and transparency. Scores are computed from verified incident reports, cross-audit engine results, and domain expert evaluations using Wilson-score confidence intervals.",
+              })}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
       <Card className="mt-8">
         <CardHeader>
           <CardTitle className="text-sm">

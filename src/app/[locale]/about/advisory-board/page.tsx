@@ -11,6 +11,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import Link from "next/link";
+import { createServerClient } from "@/lib/supabase/server";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -30,34 +31,13 @@ export default async function AdvisoryBoardPage({
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "about" });
 
-  const profiles = [
-    {
-      icon: <GraduationCap className="text-brand-400 h-6 w-6" />,
-      titleTr: "Yapay Zeka Etiği & Güvenliği Araştırmacıları",
-      titleEn: "AI Ethics & Safety Researchers",
-      descTr:
-        "Akademik ve endüstriyel güvenlik protokolleri ile hizalama (alignment) alanında uzmanlar.",
-      descEn: "Experts specializing in academic and industrial safety protocols and alignment.",
-    },
-    {
-      icon: <Scale className="text-brand-400 h-6 w-6" />,
-      titleTr: "Hukuk & Regülasyon Danışmanları",
-      titleEn: "Legal & Regulatory Advisors",
-      descTr:
-        "EU AI Act, KVKK, GDPR ve uluslararası yapay zeka mevzuatları konusunda uzman hukukçular.",
-      descEn:
-        "Legal scholars and practitioners focused on the EU AI Act, KVKK, GDPR, and global AI mandates.",
-    },
-    {
-      icon: <ShieldAlert className="text-brand-400 h-6 w-6" />,
-      titleTr: "Hesap Verebilirlik & Denetim Uzmanları",
-      titleEn: "Accountability & Audit Specialists",
-      descTr:
-        "Yapay zeka sistemlerinin tarafsızlık, şeffaflık ve güvenlik denetim yöntemlerini geliştiren liderler.",
-      descEn:
-        "Leaders developing audit methodologies for bias, transparency, and safety in AI systems.",
-    },
-  ];
+  const supabase = await createServerClient();
+  const { data: members } = await supabase
+    .from("advisory_board_members")
+    .select("*")
+    .order("display_order", { ascending: true });
+
+  const activeMembers = members && members.length > 0 ? members : [];
 
   const isTr = locale === "tr";
 
@@ -128,23 +108,42 @@ export default async function AdvisoryBoardPage({
           </div>
 
           {/* Sought Profiles Grid */}
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {profiles.map((profile, idx) => (
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+            {activeMembers.map((member) => (
               <Card
-                key={idx}
+                key={member.id}
                 className="bg-bg-secondary/10 border-border-subtle hover:border-brand-500/30 group shadow-sm transition-colors"
               >
                 <CardHeader className="pb-2">
                   <div className="border-border-subtle bg-bg-secondary/50 group-hover:border-brand-500/20 group-hover:bg-brand-500/5 mb-4 flex h-10 w-10 items-center justify-center rounded-lg border transition-colors">
-                    {profile.icon}
+                    {member.display_order === 1 && (
+                      <GraduationCap className="text-brand-400 h-6 w-6" />
+                    )}
+                    {member.display_order === 2 && (
+                      <ShieldAlert className="text-brand-400 h-6 w-6" />
+                    )}
+                    {member.display_order === 3 && <Scale className="text-brand-400 h-6 w-6" />}
+                    {(!member.display_order || member.display_order >= 4) && (
+                      <Users className="text-brand-400 h-6 w-6" />
+                    )}
                   </div>
-                  <CardTitle className="text-fg-primary text-base font-bold">
-                    {isTr ? profile.titleTr : profile.titleEn}
+                  <CardTitle className="text-fg-primary text-base leading-tight font-bold">
+                    {member.name.startsWith("[Open Position]")
+                      ? isTr
+                        ? "[Açık Pozisyon] " + member.name.replace("[Open Position] ", "")
+                        : member.name
+                      : member.name}
                   </CardTitle>
+                  <div className="text-fg-secondary mt-1 text-sm font-medium">
+                    {isTr ? member.title_tr : member.title_en}
+                  </div>
+                  <div className="text-brand-400 mt-2 text-xs font-semibold tracking-wider uppercase">
+                    {isTr ? member.institution_tr : member.institution_en}
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <p className="text-fg-secondary text-sm leading-relaxed">
-                    {isTr ? profile.descTr : profile.descEn}
+                    {isTr ? member.bio_tr : member.bio_en}
                   </p>
                 </CardContent>
               </Card>

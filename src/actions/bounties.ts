@@ -38,6 +38,17 @@ type BountyRow = {
   created_at: string;
 };
 
+export type BountyBadgeWithStats = {
+  code: string;
+  icon: string;
+  name_en: string;
+  name_tr: string;
+  description_en: string;
+  description_tr: string;
+  threshold_count: number;
+  earned_count: number;
+};
+
 export async function claimBounty(
   input: z.infer<typeof claimBountySchema>,
 ): Promise<{ ok: boolean; error?: string; bountyId?: string }> {
@@ -229,4 +240,35 @@ async function awardBadgesForBounty(
       .eq("reporter_id", info.reporterId)
       .in("status", ["validated", "paid"]);
   }
+}
+
+export async function getBountyBadgesStats(): Promise<BountyBadgeWithStats[]> {
+  const db = createAdminClient();
+  const { data: badges } = await db
+    .from("bounty_badges")
+    .select("*")
+    .order("threshold_count", { ascending: true });
+
+  if (!badges) return [];
+
+  // Get counts of how many users earned each badge
+  const { data: userBadges } = await db.from("user_bounty_badges").select("badge_code");
+
+  const earnedCounts: Record<string, number> = {};
+  if (userBadges) {
+    for (const ub of userBadges) {
+      earnedCounts[ub.badge_code] = (earnedCounts[ub.badge_code] || 0) + 1;
+    }
+  }
+
+  return badges.map((b) => ({
+    code: b.code,
+    icon: b.icon,
+    name_en: b.name_en,
+    name_tr: b.name_tr,
+    description_en: b.description_en,
+    description_tr: b.description_tr,
+    threshold_count: b.threshold_count,
+    earned_count: earnedCounts[b.code] || 0,
+  }));
 }

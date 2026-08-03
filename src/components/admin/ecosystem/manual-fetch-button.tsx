@@ -11,7 +11,8 @@ export function ManualFetchButton() {
   const handleFetch = () => {
     startTransition(async () => {
       try {
-        const response = await fetch("/api/admin/ecosystem-fetch", { cache: 'no-store', 
+        const response = await fetch("/api/admin/ecosystem-fetch", {
+          cache: "no-store",
           method: "POST",
           headers: {
             "Content-Type": "application/json",
