@@ -25,6 +25,10 @@ declare global {
             client_id: string;
             callback: (response: { credential?: string }) => void;
           }) => void;
+          renderButton: (
+            parent: HTMLElement,
+            options: { type?: string; theme?: string; size?: string },
+          ) => void;
           prompt: (
             notification?: (notification: {
               isNotDisplayed: () => boolean;
@@ -48,61 +52,74 @@ export function GoogleSignInButton({
 }) {
   const t = useTranslations("auth");
   const [pending, start] = useTransition();
-  const [gisLoaded, setGisLoaded] = useState(false);
+  const [, setGisLoaded] = useState(false);
+  const hiddenGisRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.google?.accounts?.id) {
+
+    const initGis = () => {
+      if (!window.google?.accounts?.id) return;
       setGisLoaded(true);
+
+      try {
+        window.google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: async (response: { credential?: string }) => {
+            if (response.credential) {
+              const { createBrowserClient } = await import("@supabase/ssr");
+              const supabase = createBrowserClient(
+                process.env.NEXT_PUBLIC_SUPABASE_URL!,
+                process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+              );
+              const { error } = await supabase.auth.signInWithIdToken({
+                provider: "google",
+                token: response.credential,
+              });
+              if (error) {
+                toast.error(error.message);
+              } else {
+                window.location.href = next;
+              }
+            }
+          },
+        });
+
+        if (hiddenGisRef.current) {
+          hiddenGisRef.current.innerHTML = "";
+          window.google.accounts.id.renderButton(hiddenGisRef.current, {
+            type: "standard",
+            theme: "outline",
+            size: "large",
+          });
+        }
+      } catch (_err) {
+        // Ignore initialization error
+      }
+    };
+
+    if (window.google?.accounts?.id) {
+      initGis();
       return;
     }
+
     const script = document.createElement("script");
     script.src = "https://accounts.google.com/gsi/client";
     script.async = true;
     script.defer = true;
-    script.onload = () => setGisLoaded(true);
+    script.onload = initGis;
     document.head.appendChild(script);
-  }, []);
+  }, [next]);
 
   const handleGoogleSignIn = () => {
     start(async () => {
-      if (gisLoaded && window.google?.accounts?.id) {
-        try {
-          const { createBrowserClient } = await import("@supabase/ssr");
-          const supabase = createBrowserClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-          );
+      const gisBtn = hiddenGisRef.current?.querySelector(
+        "[role=button], div[tabindex='0']",
+      ) as HTMLElement | null;
 
-          window.google.accounts.id.initialize({
-            client_id: GOOGLE_CLIENT_ID,
-            callback: async (response: { credential?: string }) => {
-              if (response.credential) {
-                const { error } = await supabase.auth.signInWithIdToken({
-                  provider: "google",
-                  token: response.credential,
-                });
-                if (error) {
-                  toast.error(error.message);
-                } else {
-                  window.location.href = next;
-                }
-              }
-            },
-          });
-
-          window.google.accounts.id.prompt((notification) => {
-            if (notification && (notification.isNotDisplayed() || notification.isSkippedMoment())) {
-              signInWithGoogle(next).then((res) => {
-                if (res.url) window.location.href = res.url;
-                else if (res.error) toast.error(res.error);
-              });
-            }
-          });
-          return;
-        } catch (_err) {
-          // Fallback on error
-        }
+      if (gisBtn) {
+        gisBtn.click();
+        return;
       }
 
       const res = await signInWithGoogle(next);
@@ -112,45 +129,48 @@ export function GoogleSignInButton({
   };
 
   return (
-    <Button
-      type="button"
-      variant="ghost"
-      size="lg"
-      isLoading={pending}
-      disabled={disabled}
-      className={cn(
-        "w-full border border-white/[0.08] bg-white/[0.03] hover:border-white/[0.16] hover:bg-white/[0.07] active:bg-white/[0.1]",
-        "rounded-xl text-sm font-semibold tracking-wide text-white shadow-lg transition-all duration-300",
-        "hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(168,85,247,0.18)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-none",
-        className,
-      )}
-      onClick={handleGoogleSignIn}
-    >
-      <svg
-        className="mr-1 h-5 w-5 shrink-0"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        aria-hidden="true"
+    <>
+      <div ref={hiddenGisRef} className="hidden" aria-hidden="true" />
+      <Button
+        type="button"
+        variant="ghost"
+        size="lg"
+        isLoading={pending}
+        disabled={disabled}
+        className={cn(
+          "w-full border border-white/[0.08] bg-white/[0.03] hover:border-white/[0.16] hover:bg-white/[0.07] active:bg-white/[0.1]",
+          "rounded-xl text-sm font-semibold tracking-wide text-white shadow-lg transition-all duration-300",
+          "hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(168,85,247,0.18)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-none",
+          className,
+        )}
+        onClick={handleGoogleSignIn}
       >
-        <path
-          d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-          fill="#4285F4"
-        />
-        <path
-          d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-          fill="#34A853"
-        />
-        <path
-          d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-          fill="#FBBC05"
-        />
-        <path
-          d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-          fill="#EA4335"
-        />
-      </svg>
-      {t("signin_with_google")}
-    </Button>
+        <svg
+          className="mr-1 h-5 w-5 shrink-0"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+            fill="#4285F4"
+          />
+          <path
+            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+            fill="#34A853"
+          />
+          <path
+            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+            fill="#FBBC05"
+          />
+          <path
+            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+            fill="#EA4335"
+          />
+        </svg>
+        {t("signin_with_google")}
+      </Button>
+    </>
   );
 }
 
