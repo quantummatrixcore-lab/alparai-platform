@@ -27,7 +27,7 @@ declare global {
           }) => void;
           renderButton: (
             parent: HTMLElement,
-            options: { type?: string; theme?: string; size?: string },
+            options: { type?: string; theme?: string; size?: string; width?: number | string },
           ) => void;
           prompt: (
             notification?: (notification: {
@@ -52,8 +52,8 @@ export function GoogleSignInButton({
 }) {
   const t = useTranslations("auth");
   const [pending, start] = useTransition();
-  const [, setGisLoaded] = useState(false);
-  const hiddenGisRef = React.useRef<HTMLDivElement>(null);
+  const [gisLoaded, setGisLoaded] = useState(false);
+  const gisContainerRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     if (typeof window === "undefined") return;
@@ -66,31 +66,35 @@ export function GoogleSignInButton({
         window.google.accounts.id.initialize({
           client_id: GOOGLE_CLIENT_ID,
           callback: async (response: { credential?: string }) => {
-            if (response.credential) {
-              const { createBrowserClient } = await import("@supabase/ssr");
-              const supabase = createBrowserClient(
-                process.env.NEXT_PUBLIC_SUPABASE_URL!,
-                process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-              );
-              const { error } = await supabase.auth.signInWithIdToken({
-                provider: "google",
-                token: response.credential,
+            const tokenStr = response.credential;
+            if (tokenStr) {
+              start(async () => {
+                const { createBrowserClient } = await import("@supabase/ssr");
+                const supabase = createBrowserClient(
+                  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+                  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+                );
+                const { error } = await supabase.auth.signInWithIdToken({
+                  provider: "google",
+                  token: tokenStr,
+                });
+                if (error) {
+                  toast.error(error.message);
+                } else {
+                  window.location.href = next;
+                }
               });
-              if (error) {
-                toast.error(error.message);
-              } else {
-                window.location.href = next;
-              }
             }
           },
         });
 
-        if (hiddenGisRef.current) {
-          hiddenGisRef.current.innerHTML = "";
-          window.google.accounts.id.renderButton(hiddenGisRef.current, {
+        if (gisContainerRef.current) {
+          gisContainerRef.current.innerHTML = "";
+          window.google.accounts.id.renderButton(gisContainerRef.current, {
             type: "standard",
             theme: "outline",
             size: "large",
+            width: 400,
           });
         }
       } catch (_err) {
@@ -111,17 +115,8 @@ export function GoogleSignInButton({
     document.head.appendChild(script);
   }, [next]);
 
-  const handleGoogleSignIn = () => {
+  const handleFallbackSignIn = () => {
     start(async () => {
-      const gisBtn = hiddenGisRef.current?.querySelector(
-        "[role=button], div[tabindex='0']",
-      ) as HTMLElement | null;
-
-      if (gisBtn) {
-        gisBtn.click();
-        return;
-      }
-
       const res = await signInWithGoogle(next);
       if (res.url) window.location.href = res.url;
       else if (res.error) toast.error(res.error);
@@ -129,8 +124,14 @@ export function GoogleSignInButton({
   };
 
   return (
-    <>
-      <div ref={hiddenGisRef} className="hidden" aria-hidden="true" />
+    <div className="relative w-full overflow-hidden rounded-xl">
+      {gisLoaded && (
+        <div
+          ref={gisContainerRef}
+          aria-hidden="true"
+          className="absolute inset-0 z-20 h-full w-full cursor-pointer opacity-[0.001] [&_iframe]:h-full! [&_iframe]:w-full! [&_iframe]:cursor-pointer!"
+        />
+      )}
       <Button
         type="button"
         variant="ghost"
@@ -143,7 +144,7 @@ export function GoogleSignInButton({
           "hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(168,85,247,0.18)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-none",
           className,
         )}
-        onClick={handleGoogleSignIn}
+        onClick={handleFallbackSignIn}
       >
         <svg
           className="mr-1 h-5 w-5 shrink-0"
@@ -170,7 +171,7 @@ export function GoogleSignInButton({
         </svg>
         {t("signin_with_google")}
       </Button>
-    </>
+    </div>
   );
 }
 
