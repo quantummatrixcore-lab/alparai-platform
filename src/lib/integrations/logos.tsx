@@ -145,6 +145,46 @@ export function LogoVault({ className }: LogoProps) {
   );
 }
 
+export function LogoOpenAI({ className }: LogoProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+      <path d="M21.2 12.2c0-1-.3-2-.8-2.8l1.3-.7c.6-.4.9-1.1.9-1.8 0-.9-.5-1.7-1.3-2.1L19.4 3.7c-.8-.5-1.8-.4-2.5.2l-1.2.9c-.8-.5-1.7-.8-2.7-.9V2.4c0-.9-.7-1.6-1.6-1.6s-1.6.7-1.6 1.6v1.5c-1 .1-1.9.4-2.7.9l-1.2-.9c-.7-.6-1.7-.7-2.5-.2L1.5 4.8c-.8.4-1.3 1.2-1.3 2.1 0 .7.3 1.4.9 1.8l1.3.7c-.5.8-.8 1.8-.8 2.8s.3 2 .8 2.8l-1.3.7c-.6.4-.9 1.1-.9 1.8 0 .9.5 1.7 1.3 2.1l1.9 1.1c.8.5 1.8.4 2.5-.2l1.2-.9c.8.5 1.7.8 2.7.9v1.5c0 .9.7 1.6 1.6 1.6s1.6-.7 1.6-1.6v-1.5c1-.1 1.9-.4 2.7-.9l1.2.9c.7.6 1.7.7 2.5.2l1.9-1.1c.8-.4 1.3-1.2 1.3-2.1 0-.7-.3-1.4-.9-1.8l-1.3-.7c.5-.8.8-1.8.8-2.8zm-9.2-5c2.8 0 5 2.2 5 5s-2.2 5-5 5-5-2.2-5-5 2.2-5 5-5z" />
+    </svg>
+  );
+}
+
+export function LogoAnthropic({ className }: LogoProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+      <path d="M12 2L2 22h4.5l2.2-5h6.6l2.2 5H22L12 2zm2.2 11H9.8L12 7.7 14.2 13z" />
+    </svg>
+  );
+}
+
+export function LogoOpenRouter({ className }: LogoProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+      <path d="M12 2L2 9.5 5 22h14l3-12.5L12 2zm0 4.2l6.2 4.8-1.9 7.8H7.7l-1.9-7.8L12 6.2z" />
+    </svg>
+  );
+}
+
+export function LogoNvidia({ className }: LogoProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 16c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm3-6c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3z" />
+    </svg>
+  );
+}
+
+export function LogoTavily({ className }: LogoProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+      <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+    </svg>
+  );
+}
+
 export const LOGO_MAP: Record<string, React.ComponentType<LogoProps>> = {
   github: LogoGitHub,
   "github-actions": LogoGitHub,
@@ -205,4 +245,10 @@ export const LOGO_MAP: Record<string, React.ComponentType<LogoProps>> = {
   doppler: LogoVault,
   "op-cli": LogoVault,
   onepassword: LogoVault,
+  openrouter: LogoOpenRouter,
+  openai: LogoOpenAI,
+  anthropic: LogoAnthropic,
+  gemini: LogoGoogle,
+  nvidia: LogoNvidia,
+  tavily: LogoTavily,
 };

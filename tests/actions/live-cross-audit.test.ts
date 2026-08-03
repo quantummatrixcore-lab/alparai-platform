@@ -14,6 +14,10 @@ vi.hoisted(() => {
   );
 });
 
+vi.mock("@/lib/auth/session", () => ({
+  requireAdmin: vi.fn().mockResolvedValue({ id: "admin-1", role: "admin" }),
+}));
+
 import { callWithFailover } from "@/lib/ai/openrouter-gateway";
 import { runLiveCrossAuditTest } from "@/actions/admin/live-cross-audit";
 
@@ -44,6 +48,21 @@ describe("Live Cross-Audit Test", () => {
       ok: true,
       data: {
         content: JSON.stringify({
+          plausibilityScore: 75,
+          categoryAccuracy: 80,
+          adversarialRisk: 10,
+          reasoning: "Moderately credible",
+          summary: "Summary of incident.",
+          critique: "Model A has some minor gaps.",
+          questions: ["Why did this happen?", "How was it verified?"],
+          answers: "We verified using official audit reports.",
+          finalPlausibilityScore: 75,
+          finalCategoryAccuracy: 80,
+          finalAdversarialRisk: 10,
+          finalReasoning: "Debate confirmed the initial assessment.",
+          truthScore: 75,
+          confidence: 0.8,
+          euActRiskCategory: "Minimal",
           models: [
             { name: "GPT-4o", stance: "Destekliyor", reason: "Credible" },
             { name: "Claude 3.5 Sonnet", stance: "Şüpheli", reason: "Unverified" },

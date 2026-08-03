@@ -103,7 +103,7 @@ export default async function FinancePage({ params }: { params: Promise<{ locale
       name: "vercel",
       currentCost:
         vercelLiveCost ??
-        Number(currentCosts.find((c) => c.service === "vercel")?.amount_usd ?? 0.0),
+        Number(currentCosts.find((c) => c.service === "vercel")?.amount_usd ?? 20.0),
       budgetLimit: Number(currentCosts.find((c) => c.service === "vercel")?.budget_usd ?? 20.0),
       trend: "stable" as const,
       lastUpdated: new Date().toISOString(),
@@ -156,8 +156,33 @@ export default async function FinancePage({ params }: { params: Promise<{ locale
     },
     {
       name: "claude_pro",
-      currentCost: Number(currentCosts.find((c) => c.service === "claude_pro")?.amount_usd ?? 0.0),
+      currentCost: Number(currentCosts.find((c) => c.service === "claude_pro")?.amount_usd ?? 20.0),
       budgetLimit: Number(currentCosts.find((c) => c.service === "claude_pro")?.budget_usd ?? 20.0),
+      trend: "stable" as const,
+      lastUpdated: new Date().toISOString(),
+    },
+    {
+      name: "google_ultra",
+      currentCost: Number(
+        currentCosts.find((c) => c.service === "google_ultra")?.amount_usd ?? 30.0,
+      ),
+      budgetLimit: Number(
+        currentCosts.find((c) => c.service === "google_ultra")?.budget_usd ?? 30.0,
+      ),
+      trend: "stable" as const,
+      lastUpdated: new Date().toISOString(),
+    },
+    {
+      name: "github",
+      currentCost: Number(currentCosts.find((c) => c.service === "github")?.amount_usd ?? 4.0),
+      budgetLimit: Number(currentCosts.find((c) => c.service === "github")?.budget_usd ?? 4.0),
+      trend: "stable" as const,
+      lastUpdated: new Date().toISOString(),
+    },
+    {
+      name: "openrouter",
+      currentCost: Number(currentCosts.find((c) => c.service === "openrouter")?.amount_usd ?? 10.0),
+      budgetLimit: Number(currentCosts.find((c) => c.service === "openrouter")?.budget_usd ?? 10.0),
       trend: "stable" as const,
       lastUpdated: new Date().toISOString(),
     },

@@ -27,20 +27,35 @@ const ENV_ALIAS_GROUPS: Record<string, string[][]> = {
   cloudflare: [["NEXT_PUBLIC_TURNSTILE_SITE_KEY", "TURNSTILE_SECRET_KEY"]],
 };
 
+import { createAdminClient } from "@/lib/supabase/admin";
+
 function getEnv(key: string): string | undefined {
   return process.env[key];
 }
 
-function checkServiceStatus(svc: IntegrationService): ServiceStatus {
+function checkServiceStatus(svc: IntegrationService, dbProviders: Set<string>): ServiceStatus {
+  // Check if it is satisfied in process.env
+  let envSatisfied = false;
   const groups = ENV_ALIAS_GROUPS[svc.id];
   if (groups) {
-    const satisfied = groups.every((group) => group.some((key) => Boolean(getEnv(key))));
-    return satisfied ? "connected" : "missing_key";
+    envSatisfied = groups.every((group) => group.some((key) => Boolean(getEnv(key))));
+  } else {
+    envSatisfied = svc.envVars.filter((k) => Boolean(getEnv(k))).length > 0;
   }
 
+  if (envSatisfied) return "connected";
+
+  // Check if it is satisfied in the api_keys database table
+  const providerLower = svc.id.toLowerCase();
+  if (dbProviders.has(providerLower)) return "connected";
+
+  // Check common aliases
+  if (svc.id === "gemini" && (dbProviders.has("google") || dbProviders.has("gemini")))
+    return "connected";
+  if (svc.id === "upstash" && (dbProviders.has("upstash") || dbProviders.has("redis")))
+    return "connected";
+
   if (svc.envVars.length === 0) return "not_configured";
-  const present = svc.envVars.filter((k) => Boolean(getEnv(k))).length;
-  if (present > 0) return "connected";
   return "missing_key";
 }
 
@@ -280,8 +295,14 @@ export async function GET() {
     const allCostsData = (await fetchAllCosts()) || [];
     const altCache = new Map<string, Awaited<ReturnType<typeof searchAlternatives>>>();
 
+    const supabase = createAdminClient();
+    const { data: dbKeys } = await supabase.from("api_keys").select("provider");
+    const dbProviders = new Set(
+      (dbKeys || []).map((k: { provider: string }) => k.provider.toLowerCase()),
+    );
+
     const statuses: IntegrationStatus[] = ACTIVE_SERVICES.map((svc) => {
-      const status = checkServiceStatus(svc);
+      const status = checkServiceStatus(svc, dbProviders);
 
       let costData: { cost: number; budget: number } | null = null;
       if (svc.costKey) {

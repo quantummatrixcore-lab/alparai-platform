@@ -11,6 +11,7 @@ import {
   Brain,
   Envelope,
   ShareNetwork,
+  GitBranch,
 } from "@phosphor-icons/react";
 
 interface CostCardProps {
@@ -48,6 +49,16 @@ export function CostOverviewCard({
         return <Lightning className="h-6 w-6 text-yellow-400" />;
       case "buffer":
         return <ShareNetwork className="h-6 w-6 text-indigo-400" />;
+      case "claude_pro":
+        return <Brain className="h-6 w-6 text-amber-500" />;
+      case "google_ultra":
+        return <Brain className="h-6 w-6 text-purple-400" />;
+      case "github":
+        return <GitBranch className="h-6 w-6 text-zinc-300" />;
+      case "openrouter":
+        return <Brain className="h-6 w-6 text-indigo-400" />;
+      case "opencode_free_tier":
+        return <Brain className="h-6 w-6 text-zinc-400" />;
       default:
         return <Cloud className="h-6 w-6 text-zinc-400" />;
     }
@@ -82,6 +93,16 @@ export function CostOverviewCard({
         return "Upstash Redis";
       case "buffer":
         return "Buffer Social";
+      case "claude_pro":
+        return "Claude Pro";
+      case "google_ultra":
+        return "Google Ultra";
+      case "github":
+        return "GitHub Premium";
+      case "openrouter":
+        return "OpenRouter";
+      case "opencode_free_tier":
+        return "OpenCode Free Tier";
       default:
         return name;
     }
