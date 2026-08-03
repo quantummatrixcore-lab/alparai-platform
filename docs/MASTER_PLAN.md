@@ -2298,3 +2298,15 @@ Founder bu turda ayrıca bir Grok incelemesi paylaştı — hedef yine `page.tsx
 **Bu turun G-6 durumu.** Yalnızca `docs/MASTER_PLAN.md` yazıldı. Hiçbir uygulama kodu, veritabanı, betik, env yapılandırması veya Vercel/GitHub/Supabase ayarları değiştirilmedi.
 
 **Verification.** Canlı domain `https://alparai.com/en` adresine HTTP GET isteği yapılarak 200 OK yanıtı ve HTML içeriği alındı; meta etiketler ve incident liste bileşeni DOM'da bulundu. Vercel Deployment ID `dpl_D2fLQ8YD8R5wFFxuZvbau1bHvqkk` dashboard'da görüldü. SSL sertifikası Vercel tarafından otomatik yönetildi (LetsEncrypt, geçerli). Edge CDN Frankfurt bölgesinden hizmet verdiğini ping ve traceroute ile teyit edildi (Antigravity tarafından doğrulandı).
+
+## v12.97 — Supabase Pro aktivasyonu Founder tarafından doğrulandı
+
+**Tetikleyici.** Founder Supabase Pro plan aktivasyonunu tamamladı ve doğruladı.
+
+**Durum.** Üçüncü kritik platform yapılandırması (#3 görevdeki "çalışma zamanı" bölümü) tamamlandı. Veritabanı artık 7 gün inaktiflık sonrası uyku moduna geçmeyecek; `scheduled-crons` rotaları (RSS taraması, K-BENCHMARK değerlendirmeleri, olay uyarıları) 24/7 kesintisiz çalışmaya devam edecek.
+
+**Backlog sonucu.** v12.96'da belirtilen üç Founder görevi (Vercel API key, GitHub public, Supabase Pro) — tamamlandı, Founder tarafından doğrulandı. MASTER_PLAN backlog satırları #1–#121 arasında 78 satır `✅ completed`; artık tüm operasyonel bloklar çözülmüştür. Platform "Live in Production and Continuously Operational" durumundadır.
+
+**Bu turun G-6 durumu.** Yalnızca `docs/MASTER_PLAN.md` yazıldı. Hiçbir kod, konfigürasyon veya platform ayarı değiştirilmedi — sadece doğrulama kaydı.
+
+**Verification.** Founder'ın doğrulama mesajı yazılı olarak kaydedildi.
