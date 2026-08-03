@@ -99,16 +99,25 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
       ],
     },
     p0_tracker: [],
-    score_evolution: [
-      {
-        date: new Date().toISOString().slice(0, 10),
-        round: 1,
-        average_score: 850,
-        highest: 920,
-        lowest: 700,
-        model_count: models.length,
-      },
-    ],
+    score_evolution: (() => {
+      const validScores = (realScores || [])
+        .map((s) => Math.round((s.score ?? 0) * 1000))
+        .filter((val) => val > 0);
+      if (validScores.length === 0) return [];
+      const avg = Math.round(validScores.reduce((a, b) => a + b, 0) / validScores.length);
+      const max = Math.max(...validScores);
+      const min = Math.min(...validScores);
+      return [
+        {
+          date: new Date().toISOString().slice(0, 10),
+          round: 1,
+          average_score: avg,
+          highest: max,
+          lowest: min,
+          model_count: validScores.length,
+        },
+      ];
+    })(),
   };
 
   return (

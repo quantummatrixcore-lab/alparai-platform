@@ -20,7 +20,7 @@ export function AnimatedCounter({
   decimals = 0,
   className,
 }: AnimatedCounterProps) {
-  const [display, setDisplay] = useState(0);
+  const [display, setDisplay] = useState(value);
 
   useEffect(() => {
     const startTime = performance.now();

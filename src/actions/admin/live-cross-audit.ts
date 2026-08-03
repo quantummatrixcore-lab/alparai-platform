@@ -151,6 +151,10 @@ export async function runLiveCrossAuditTest(text: string) {
 
     const stanceA = initA.plausibilityScore >= 70 ? "Plausible" : "Unlikely";
     const stanceB = initB.plausibilityScore >= 70 ? "Plausible" : "Unlikely";
+    const stanceSupreme = supremeResult.truthScore >= 70 ? "Plausible" : "Unlikely";
+    const refereeName = supremeResult.model
+      ? supremeResult.model.split("/").pop() || supremeResult.model
+      : "Supreme Referee";
 
     const formatted = {
       truth_score: supremeResult.truthScore,
@@ -166,6 +170,11 @@ export async function runLiveCrossAuditTest(text: string) {
           name: initB.model.split("/").pop() || initB.model,
           stance: stanceB,
           reason: `Initial plausibility: ${initB.plausibilityScore}%. Final: ${safeRebuttalB.finalReasoning}`,
+        },
+        {
+          name: refereeName,
+          stance: stanceSupreme,
+          reason: `Supreme Court Adjudicator: Truth score ${supremeResult.truthScore}/100. ${supremeResult.reasoning}`,
         },
       ],
     };
