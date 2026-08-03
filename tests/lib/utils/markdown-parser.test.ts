@@ -87,4 +87,21 @@ describe("parseMasterPlan", () => {
     const result = parseMasterPlan();
     expect(result.items[0]!.description).toBe("Fix the login flow in src/actions/x.");
   });
+
+  it("parses Depends: #XX notation into depends number array", () => {
+    const tableWithDeps = [
+      "| #   | Priority | Item          | Description                | Status        |",
+      "| --- | -------- | ------------- | -------------------------- | ------------- |",
+      "| 10  | P0       | [Antigravity] Task A | Base task | ✅ completed  |",
+      "| 11  | P1       | [Antigravity] Task B | Depends: #10 | pending       |",
+      "| 12  | P1       | [Antigravity] Task C | Depends: #10, #11 | pending       |",
+    ].join("\n");
+    files.set(PLAN_PATH, `# Plan\n\n${BACKLOG_START}\n\n${tableWithDeps}\n\n${BACKLOG_END}\n`);
+    const result = parseMasterPlan();
+
+    expect(result.error).toBeNull();
+    expect(result.items).toHaveLength(3);
+    expect(result.items[1]!.depends).toEqual([10]);
+    expect(result.items[2]!.depends).toEqual([10, 11]);
+  });
 });

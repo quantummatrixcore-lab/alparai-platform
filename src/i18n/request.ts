@@ -10,9 +10,9 @@ import type { AbstractIntlMessages } from "next-intl";
 const localeMessages: Record<Locale, () => Promise<{ default: AbstractIntlMessages }>> = {
   en: () => import("../../messages/en.json"),
   tr: () => import("../../messages/tr.json"),
-  de: () => import("../../messages/en.json"),
-  fr: () => import("../../messages/en.json"),
-  ru: () => import("../../messages/en.json"),
+  de: () => import("../../messages/de.json"),
+  fr: () => import("../../messages/fr.json"),
+  ru: () => import("../../messages/ru.json"),
 };
 
 export default getRequestConfig(async ({ requestLocale }) => {

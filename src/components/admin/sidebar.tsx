@@ -233,7 +233,7 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
     },
     {
       href: "/admin/expert-analysis",
-      label: t("nav_expert_analysis") || "Expert Analysis",
+      label: t("nav_expert_analysis") || t("nav__expert_analysis") || "Expert Analysis",
       icon: Sparkles,
       active: pathname.startsWith("/admin/expert-analysis"),
     },

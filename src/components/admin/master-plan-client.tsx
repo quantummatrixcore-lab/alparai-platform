@@ -80,14 +80,26 @@ function PlanCard({
       {!compact && item.description && (
         <p className="text-fg-muted line-clamp-2 text-xs leading-relaxed">{item.description}</p>
       )}
-      {pendingDependencies && pendingDependencies.length > 0 && (
-        <div className="mt-1 flex w-fit items-center gap-1.5 rounded border border-amber-500/20 bg-amber-500/10 px-2 py-1">
-          <AlertTriangle className="h-3 w-3 text-amber-400" />
-          <span className="text-[10px] font-bold tracking-wider text-amber-400 uppercase">
-            {pendingDependencies.map((d) => `#${d}`).join(", ")} BEKLENİYOR
-          </span>
-        </div>
-      )}
+      {(() => {
+        const depText =
+          item.depends && item.depends.length > 0
+            ? item.depends.map((d) => `#${d}`).join(", ")
+            : item.dependsOn && item.dependsOn.length > 0
+              ? item.dependsOn.map((d) => `#${d}`).join(", ")
+              : pendingDependencies && pendingDependencies.length > 0
+                ? pendingDependencies.map((d) => `#${d}`).join(", ")
+                : null;
+        if (!depText) return null;
+        return (
+          <div
+            title={`Depends: ${depText}`}
+            className="mt-1 flex w-fit items-center gap-1.5 rounded border border-amber-500/20 bg-amber-500/10 px-2 py-1 text-[10px] font-bold tracking-wider text-amber-400 uppercase"
+          >
+            <AlertTriangle className="h-3 w-3 shrink-0 text-amber-400" />
+            <span>Depends: {depText}</span>
+          </div>
+        );
+      })()}
       <div className="flex items-center justify-between">
         {item.owner ? (
           <span className="text-fg-muted text-[10px] font-semibold tracking-wider uppercase">
@@ -495,6 +507,19 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                               >
                                 {t(statusKey[item.status])}
                               </span>
+                              {((item.depends && item.depends.length > 0) ||
+                                (item.dependsOn && item.dependsOn.length > 0)) && (
+                                <span
+                                  title={`Depends: ${(item.depends && item.depends.length > 0 ? item.depends.map((d) => `#${d}`) : item.dependsOn?.map((d) => `#${d}`))?.join(", ")}`}
+                                  className="rounded border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-[10px] font-black tracking-wider text-amber-400 uppercase"
+                                >
+                                  Depends:{" "}
+                                  {(item.depends && item.depends.length > 0
+                                    ? item.depends.map((d) => `#${d}`)
+                                    : item.dependsOn?.map((d) => `#${d}`)
+                                  )?.join(", ")}
+                                </span>
+                              )}
                             </div>
                             <p
                               className={`text-sm ${item.status === "completed" ? "text-fg-secondary line-through" : "font-medium text-white"}`}

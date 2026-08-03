@@ -2704,6 +2704,7 @@
     "nav_takedown": "Kaldırma Talepleri",
     "nav_ai_orchestrator": "AI Orkestratör",
     "nav_expert_analysis": "Uzman Analizi",
+    "nav__expert_analysis": "Uzman Analizi",
     "nav_dual_channel": "Çift Kanallı Skorlama",
     "nav_cron_health": "Cron Sağlığı",
     "nav_startup_health": "Sistem Sağlığı",

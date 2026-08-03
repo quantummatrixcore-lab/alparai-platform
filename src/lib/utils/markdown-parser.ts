@@ -11,6 +11,7 @@ export interface PlanItem {
   description?: string;
   owner?: string;
   dependsOn?: string[];
+  depends?: number[];
   blocks?: string[];
   closedBy?: { sha: string; branch: string };
 }
@@ -91,11 +92,36 @@ export function parseMasterPlan(): MasterPlanParseResult {
 
       const description = cleanMarkdown(rawDescription);
 
-      const dependsOn: string[] = [];
-      const dependsRegex = /depends:#(\d+)/g;
-      let dMatch;
-      while ((dMatch = dependsRegex.exec(rawDescription)) !== null) {
-        if (dMatch[1]) dependsOn.push(dMatch[1]);
+      const dependsNumbers: number[] = [];
+      const dependsOnStrings: string[] = [];
+
+      const dependsRegexNew = /Depends:\s*#(\d+(?:\s*,\s*#\d+)*)/gi;
+      let dMatchNew;
+      while ((dMatchNew = dependsRegexNew.exec(rawDescription)) !== null) {
+        if (dMatchNew[1]) {
+          const nums = dMatchNew[1].match(/\d+/g);
+          if (nums) {
+            nums.forEach((n) => {
+              const num = parseInt(n, 10);
+              if (!isNaN(num)) {
+                if (!dependsNumbers.includes(num)) dependsNumbers.push(num);
+                if (!dependsOnStrings.includes(n)) dependsOnStrings.push(n);
+              }
+            });
+          }
+        }
+      }
+
+      const dependsRegexOld = /depends:#(\d+)/gi;
+      let dMatchOld;
+      while ((dMatchOld = dependsRegexOld.exec(rawDescription)) !== null) {
+        if (dMatchOld[1]) {
+          const num = parseInt(dMatchOld[1], 10);
+          if (!isNaN(num)) {
+            if (!dependsNumbers.includes(num)) dependsNumbers.push(num);
+            if (!dependsOnStrings.includes(dMatchOld[1])) dependsOnStrings.push(dMatchOld[1]);
+          }
+        }
       }
 
       const blocks: string[] = [];
@@ -118,7 +144,8 @@ export function parseMasterPlan(): MasterPlanParseResult {
         status,
         owner,
         description: description || undefined,
-        dependsOn: dependsOn.length > 0 ? dependsOn : undefined,
+        dependsOn: dependsOnStrings.length > 0 ? dependsOnStrings : undefined,
+        depends: dependsNumbers.length > 0 ? dependsNumbers : undefined,
         blocks: blocks.length > 0 ? blocks : undefined,
         closedBy,
       });

@@ -112,6 +112,7 @@ export function ExpertsForm() {
           { value: "research", label: "Academic Research" },
           { value: "ethics", label: "Ethics & Philosophy" },
           { value: "policy", label: "Policy & Governance" },
+          { value: "design", label: "Design & Human-Computer Interaction" },
           { value: "other", label: "Other" },
         ]}
         error={state.fieldErrors?.expertiseArea?.[0]}
