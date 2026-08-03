@@ -38,7 +38,7 @@ export function ClosingSection() {
                 href="/insights"
                 className="border-border-subtle bg-bg-secondary/80 hover:bg-bg-tertiary hover:border-brand-500/30 text-fg-primary relative inline-flex h-12 items-center justify-center gap-2 rounded-md border px-6 text-base font-bold transition-all duration-300 hover:-translate-y-0.5"
               >
-                <Compass className="h-5 w-5 text-brand-400" />
+                <Compass className="text-brand-400 h-5 w-5" />
                 {t("cta_explore_data")}
               </Link>
             </div>
@@ -79,4 +79,3 @@ export function ClosingSection() {
     </Section>
   );
 }
-
