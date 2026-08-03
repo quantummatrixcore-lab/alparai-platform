@@ -223,7 +223,13 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       href: "/admin/autopilot",
       label: t("autopilot"),
       icon: Cpu,
-      active: pathname.startsWith("/admin/autopilot"),
+      active: pathname === "/admin/autopilot",
+    },
+    {
+      href: "/admin/autopilot/analytics",
+      label: t("nav_autopilot_analytics") || t("autopilot_analytics") || "Autopilot Analytics",
+      icon: BarChart3,
+      active: pathname.startsWith("/admin/autopilot/analytics"),
     },
     {
       href: "/admin/ai-orchestrator",
