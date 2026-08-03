@@ -54,6 +54,10 @@ export async function runExternalFetchTask() {
       name: "Google News AI",
       url: "https://news.google.com/rss/search?q=artificial+intelligence+when:24h&hl=en-US&gl=US&ceid=US:en",
     },
+    {
+      name: "Google News AI (TR)",
+      url: "https://news.google.com/rss/search?q=yapay+zeka+when:24h&hl=tr&gl=TR&ceid=TR:tr",
+    },
   ];
 
   const allFetched: Array<{

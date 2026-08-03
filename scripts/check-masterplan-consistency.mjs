@@ -29,20 +29,66 @@ const proseContent = content.substring(0, tableStartIndex) + content.substring(t
 
 const lines = tableContent.split('\n');
 const idStatusMap = new Map();
+const allRows = [];
 
 for (const line of lines) {
-  // Parse rows starting with "| <number> |"
-  const match = line.match(/^\|\s*(\d+)\s*\|(?:.*?\|){3}\s*([^|]+?)\s*\|$/);
-  if (match) {
-    const id = match[1];
-    const status = match[2].trim();
-    
-    if (idStatusMap.has(id)) {
-      console.error(`Error: ID #${id} appears multiple times in the table.`);
-      process.exit(1);
-    }
-    idStatusMap.set(id, status);
+  if (!line.trim().startsWith('|') || line.includes('---') || line.includes('Item ID')) {
+    continue;
   }
+  const parts = line.split('|').map((p) => p.trim());
+  if (parts.length < 6) continue;
+
+  const id = parts[1];
+  const description = parts[4] || "";
+  const status = parts[5] || "";
+  
+  if (!id || !/^\d+$/.test(id)) continue;
+  
+  if (idStatusMap.has(id)) {
+    console.error(`Error: ID #${id} appears multiple times in the table.`);
+    process.exit(1);
+  }
+  idStatusMap.set(id, status);
+  allRows.push({ id, description, status });
+}
+
+let hasErrors = false;
+
+for (const row of allRows) {
+  // Check dependsOn
+  const dependsMatch = [...row.description.matchAll(/depends:#(\d+)/g)];
+  for (const match of dependsMatch) {
+    if (!idStatusMap.has(match[1])) {
+      console.error(`Error: Item #${row.id} has an invalid dependency (depends:#${match[1]}). Item #${match[1]} does not exist.`);
+      hasErrors = true;
+    }
+  }
+
+  // Check blocks
+  const blocksMatch = [...row.description.matchAll(/blocks:#(\d+)/g)];
+  for (const match of blocksMatch) {
+    if (!idStatusMap.has(match[1])) {
+      console.error(`Error: Item #${row.id} has an invalid dependency (blocks:#${match[1]}). Item #${match[1]} does not exist.`);
+      hasErrors = true;
+    }
+  }
+
+  // Check closed-by on completed items
+  const sLower = row.status.toLowerCase();
+  const isCompleted = row.status.includes('✅') || row.status.includes('✓') || sLower.includes('completed') || sLower.includes('tamamlandı') || sLower.includes('closed');
+
+  if (isCompleted) {
+    const closedMatch = row.description.match(/closed-by:([a-f0-9]+|legacy)@([a-zA-Z0-9_\-\/]+)/i);
+    if (!closedMatch) {
+      console.error(`Error: Completed Item #${row.id} is missing 'closed-by:<sha>@<branch>' notation in its description.`);
+      hasErrors = true;
+    }
+  }
+}
+
+if (hasErrors) {
+  console.error("Master plan consistency check failed.");
+  process.exit(1);
 }
 
 // Removed prose scanning as per Task #95:

@@ -108,6 +108,13 @@ export async function fetchRSSFeed(
         "copilot",
         "hallucination",
         "machine learning",
+        "yapay zeka",
+        "yapay zekâ",
+        "büyük dil modeli",
+        "halüsinasyon",
+        "önyargı",
+        "veri ihlali",
+        "mahremiyet",
       ].some((kw) => lowerTitle.includes(kw) || lowerDesc.includes(kw));
 
       if (link && title && hasKeywords) {
