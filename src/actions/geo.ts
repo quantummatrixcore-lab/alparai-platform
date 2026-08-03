@@ -3,6 +3,8 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/auth/session";
 import { revalidatePath } from "next/cache";
+import { getRedisInstance } from "@/lib/utils/rate-limit";
+import { logger } from "@/lib/utils/logger";
 
 export interface AddGeoCitationInput {
   ai_engine: string;
@@ -24,11 +26,8 @@ export async function addGeoCitationAction(input: AddGeoCitationInput) {
   await requireAdmin();
 
   const admin = createAdminClient();
-  const db = admin as unknown as {
-    from: (table: string) => {
-      insert: (values: unknown) => Promise<{ error: { message: string } | null }>;
-    };
-  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = admin as any;
 
   const { error } = await db.from("geo_citations").insert({
     ai_engine: input.ai_engine,
@@ -50,18 +49,8 @@ export async function getGeoStatsAction() {
   await requireAdmin();
 
   const admin = createAdminClient();
-  const db = admin as unknown as {
-    from: (table: string) => {
-      select: (cols: string) => {
-        order: (
-          col: string,
-          opts: { ascending: boolean },
-        ) => {
-          limit: (n: number) => Promise<{ data: GeoCitationRow[] | null }>;
-        };
-      };
-    };
-  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = admin as any;
 
   try {
     const { data: citations } = await db
@@ -70,15 +59,66 @@ export async function getGeoStatsAction() {
       .order("created_at", { ascending: false })
       .limit(20);
 
+    const botHits: {
+      gptbot: number;
+      claudebot: number;
+      perplexitybot: number;
+      googleExtended: number;
+      [key: string]: number;
+    } = {
+      gptbot: 0,
+      claudebot: 0,
+      perplexitybot: 0,
+      googleExtended: 0,
+    };
+
+    const redis = getRedisInstance();
+    let redisSuccess = false;
+
+    if (redis) {
+      try {
+        const keys = await redis.keys("geo:bot:*");
+        if (keys.length > 0) {
+          const values = await redis.mget<number[]>(...keys);
+          keys.forEach((key, idx) => {
+            const parts = key.split(":");
+            const bot = parts[2];
+            if (bot) {
+              const normalizedBot = bot === "google-extended" ? "googleExtended" : bot;
+              botHits[normalizedBot] = (botHits[normalizedBot] || 0) + (values[idx] || 0);
+            }
+          });
+          redisSuccess = true;
+        }
+      } catch (err) {
+        logger.error(
+          "[GEO Tracker] Redis stats fetch failed",
+          undefined,
+          err instanceof Error ? err : undefined,
+        );
+      }
+    }
+
+    if (!redisSuccess || Object.values(botHits).every((v) => v === 0)) {
+      const { data: dbStats } = await db.from("geo_citations").select("ai_engine, bot_hit_count");
+      if (dbStats) {
+        for (const row of dbStats) {
+          const normalizedBot =
+            row.ai_engine === "google-extended" ? "googleExtended" : row.ai_engine;
+          botHits[normalizedBot] = (botHits[normalizedBot] || 0) + (row.bot_hit_count || 1);
+        }
+      }
+    }
+
     return {
       success: true,
-      citations: citations || [],
+      citations: (citations as GeoCitationRow[]) || [],
       score: 88.5,
-      botHits: {
-        gptbot: 412,
-        claudebot: 289,
-        perplexitybot: 345,
-        googleExtended: 198,
+      botHits: botHits as {
+        gptbot: number;
+        claudebot: number;
+        perplexitybot: number;
+        googleExtended: number;
       },
     };
   } catch (err) {
