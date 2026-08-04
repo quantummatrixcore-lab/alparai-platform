@@ -688,6 +688,7 @@
     "meta_description": "Entdecken Sie die globale KI-Anbieter Bestenliste."
   },
   "auth": {
+    "use_email_signin_fallback": "Please use email sign-in below.",
     "signin_with_google": "Continue with Google",
     "signOut": "Sign out",
     "signIn": "Sign in",
