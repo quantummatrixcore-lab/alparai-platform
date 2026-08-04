@@ -28,6 +28,8 @@ export interface DependencyGraphData {
   nodeMap: Map<string, TaskDependencyNode>;
   startableTaskIds: string[];
   blockedTaskIds: string[];
+  cycles: string[][];
+  hasCycle: boolean;
   stats: {
     totalTasks: number;
     totalEdges: number;
@@ -144,6 +146,37 @@ export function buildDependencyGraph(items: PlanItem[]): DependencyGraphData {
     });
   });
 
+  // --- DFS Cycle Detection ---
+  const visited = new Map<string, number>(); // 0: unvisited, 1: visiting, 2: visited
+  const pathStack: string[] = [];
+  const cycles: string[][] = [];
+
+  function dfs(id: string) {
+    visited.set(id, 1);
+    pathStack.push(id);
+
+    const deps = dependsOnMap.get(id) || new Set();
+    for (const depId of deps) {
+      const state = visited.get(depId) || 0;
+      if (state === 1) {
+        const cycleStartIdx = pathStack.indexOf(depId);
+        cycles.push([...pathStack.slice(cycleStartIdx), depId]);
+      } else if (state === 0) {
+        dfs(depId);
+      }
+    }
+
+    pathStack.pop();
+    visited.set(id, 2);
+  }
+
+  items.forEach((item) => {
+    if ((visited.get(item.id) || 0) === 0) {
+      dfs(item.id);
+    }
+  });
+  // ---------------------------
+
   const stats = {
     totalTasks: items.length,
     totalEdges: edges.length,
@@ -161,6 +194,8 @@ export function buildDependencyGraph(items: PlanItem[]): DependencyGraphData {
     nodeMap,
     startableTaskIds,
     blockedTaskIds,
+    cycles,
+    hasCycle: cycles.length > 0,
     stats,
   };
 }

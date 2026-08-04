@@ -100,6 +100,10 @@
     "empty_text": "The official members of the Methodology Advisory Committee will be announced after the launch freeze period (post August 9, 2026). Currently, the committee is operating under closed review sessions."
   },
   "transparency": {
+    "dataMoatTitle": "The Independent Data Moat",
+    "dataMoatDesc": "ALPAR AI holds the most comprehensive independent dataset of real-world AI failures, accessible to researchers, regulators, and the public.",
+    "kBenchmarkTitle": "K-BENCHMARK Evaluation",
+    "kBenchmarkDesc": "K-BENCHMARK is ALPAR AI's open methodology for scoring AI models across key safety dimensions. We test models based on real-world incidents, not just academic tests.",
     "description": "ALPAR AI Transparency Report. Real-time metrics on moderation, audit logs, and provider responses.",
     "totalReports": "Total reports",
     "publishRate": "Publish rate",
@@ -475,7 +479,8 @@
     "closing_good_news_body": "When incidents enter the permanent public record, AI companies improve their systems. When providers respond officially, the public gets answers. When courts cite ALPAR AI reports, accountability has evidence. No one faces AI manipulation alone. Every documented case is part of the first permanent record that refused to let AI cause harm in silence.",
     "closing_good_news_cta": "Add to the Record â†’",
     "zero_tolerance": "Zero Tolerance. 100% Transparency.",
-    "founder_role": "Founder, ALPAR AI"
+    "founder_role": "Founder, ALPAR AI",
+    "no_providers_data": "No tracking data available yet."
   },
   "incident": {
     "takedown": "Takedown / Correction",
@@ -980,6 +985,8 @@
     "deps_status_closed": "✅ Closed",
     "deps_status_startable": "Startable",
     "deps_status_startable_short": "Startable",
+    "loading_master_plan": "Loading Master Plan...",
+    "retry_button": "Retry",
     "deps_svg_aria_label": "Dependency Graph",
     "deps_table_empty": "No dependency records matching the filter criteria were found.",
     "deps_table_filter_label": "Filter:",

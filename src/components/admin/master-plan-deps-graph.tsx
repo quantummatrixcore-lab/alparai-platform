@@ -360,7 +360,15 @@ export function MasterPlanDepsGraph({
                     setSelectedNodeId(node.id === selectedNodeId ? null : node.id);
                     if (planItem) onOpenItem(planItem);
                   }}
-                  className="cursor-pointer transition-opacity duration-200"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setSelectedNodeId(node.id === selectedNodeId ? null : node.id);
+                      if (planItem) onOpenItem(planItem);
+                    }
+                  }}
+                  className="focus-visible:ring-brand-400 cursor-pointer transition-opacity duration-200 focus:outline-none focus-visible:ring-2"
                   style={{ opacity: isHighlighted ? 1 : 0.2 }}
                 >
                   {/* Card Background Container */}

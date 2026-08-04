@@ -15,7 +15,8 @@ export type ServiceCategory =
   | "monitoring"
   | "bot-detection"
   | "vault"
-  | "ai-models";
+  | "ai-models"
+  | "ai-agents";
 
 export type ServiceStatus = "connected" | "missing_key" | "error" | "not_configured";
 

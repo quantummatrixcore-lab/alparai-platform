@@ -761,6 +761,46 @@ export const INTEGRATION_SERVICES: IntegrationService[] = [
     alternatives: ["google"],
     url: "https://tavily.com",
   },
+  // ── AI Coding Agents ────────────────────────────────────────────────────────
+  {
+    id: "jules",
+    name: "Google Jules",
+    category: "ai-agents",
+    description:
+      "Asynchronous AI coding agent by Google. Runs in a secure Cloud VM, handles bug fixes, dependency updates, feature implementation, and test writing autonomously via GitHub integration.",
+    logo: "google",
+    brandColor: "#4285F4",
+    envVars: ["JULES_API_KEY"],
+    costKey: "jules",
+    healthKey: "jules",
+    alternatives: ["github-copilot-workspace", "devin", "cursor"],
+    url: "https://jules.google.com",
+    docsUrl: "https://developers.google.com/jules/api",
+  },
+  {
+    id: "github-copilot-workspace",
+    name: "GitHub Copilot Workspace",
+    category: "ai-agents",
+    description:
+      "AI-powered development environment with task-driven code generation and multi-file editing",
+    logo: "github",
+    brandColor: "#181717",
+    envVars: [],
+    alternatives: ["jules", "devin", "cursor"],
+    url: "https://githubnext.com/projects/copilot-workspace",
+  },
+  {
+    id: "devin",
+    name: "Devin AI",
+    category: "ai-agents",
+    description:
+      "Autonomous AI software engineer capable of end-to-end task completion with planning and execution",
+    logo: "devin",
+    brandColor: "#6366F1",
+    envVars: [],
+    alternatives: ["jules", "github-copilot-workspace", "cursor"],
+    url: "https://devin.ai",
+  },
 ];
 
 export const ACTIVE_SERVICE_IDS = INTEGRATION_SERVICES.filter(
@@ -801,4 +841,5 @@ export const CATEGORIES: { id: string; label: string }[] = [
   { id: "bot-detection", label: "Bot Detection" },
   { id: "vault", label: "Secrets & Vault" },
   { id: "ai-models", label: "AI Models & Gateways" },
+  { id: "ai-agents", label: "AI Coding Agents" },
 ];

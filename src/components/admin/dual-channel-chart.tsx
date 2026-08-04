@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 
 interface DualChannelChartProps {
@@ -30,7 +29,7 @@ export function DualChannelChart({ wAudit, wIncident }: DualChannelChartProps) {
             dataKey="value"
             stroke="none"
           >
-            {data.map((entry, index) => (
+            {data.map((_, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
@@ -41,7 +40,7 @@ export function DualChannelChart({ wAudit, wIncident }: DualChannelChartProps) {
               borderRadius: "8px",
             }}
             itemStyle={{ color: "#e4e4e7" }}
-            formatter={(value: number) => [`${value}%`, "Weight"]}
+            formatter={(value: unknown) => [`${value}%`, "Weight"]}
           />
           <Legend
             verticalAlign="bottom"

@@ -238,6 +238,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       active: pathname.startsWith("/admin/ai-orchestrator"),
     },
     {
+      href: "/admin/jules",
+      label: t("nav_jules") || "Google Jules",
+      icon: Cpu,
+      active: pathname.startsWith("/admin/jules"),
+    },
+    {
       href: "/admin/expert-analysis",
       label: t("nav_expert_analysis") || t("nav__expert_analysis") || "Expert Analysis",
       icon: Sparkles,

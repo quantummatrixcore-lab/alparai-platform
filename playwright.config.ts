@@ -19,7 +19,7 @@ export default defineConfig({
     },
   },
   use: {
-    baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:3000",
+    baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     ignoreHTTPSErrors: true,
@@ -33,17 +33,17 @@ export default defineConfig({
   webServer: process.env.CI
     ? undefined
     : {
-        command: "npx next start",
+        command: "npx next dev",
         port: 3000,
-        timeout: 60_000,
+        timeout: 120_000,
         reuseExistingServer: true,
         env: {
-          NEXT_PUBLIC_SUPABASE_URL: "https://mock-supabase.supabase.co",
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock-anon-key",
-          SUPABASE_SERVICE_ROLE_KEY: "mock-service-role-key-for-playwright",
+          // NEXT_PUBLIC_SUPABASE_URL: "https://mock-supabase.supabase.co",
+          // NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock-anon-key",
+          // SUPABASE_SERVICE_ROLE_KEY: "mock-service-role-key-for-playwright",
           IS_PLAYWRIGHT_TEST: "true",
           IP_SALT: process.env.IP_SALT ?? "test-salt-must-be-at-least-16-chars",
-          NEXT_PUBLIC_APP_URL: "http://127.0.0.1:3000",
+          NEXT_PUBLIC_APP_URL: "http://localhost:3000",
         },
       },
 });

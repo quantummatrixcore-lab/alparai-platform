@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { signInWithGoogle } from "@/actions/auth";
+
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { useTransition, useState } from "react";
@@ -115,14 +115,6 @@ export function GoogleSignInButton({
     document.head.appendChild(script);
   }, [next]);
 
-  const handleFallbackSignIn = () => {
-    start(async () => {
-      const res = await signInWithGoogle(next);
-      if (res.url) window.location.href = res.url;
-      else if (res.error) toast.error(res.error);
-    });
-  };
-
   return (
     <div className="relative w-full overflow-hidden rounded-xl">
       {gisLoaded && (
@@ -144,7 +136,6 @@ export function GoogleSignInButton({
           "hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(168,85,247,0.18)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-none",
           className,
         )}
-        onClick={handleFallbackSignIn}
       >
         <svg
           className="mr-1 h-5 w-5 shrink-0"

@@ -207,14 +207,48 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
 
   useEffect(() => {
     if (!selected) return;
+    const previouslyFocusedElement = document.activeElement as HTMLElement;
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setSelected(null);
+      if (e.key === "Escape") {
+        setSelected(null);
+      } else if (e.key === "Tab") {
+        const modal = document.getElementById("master-plan-modal");
+        if (!modal) return;
+        const focusableElements = modal.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        if (focusableElements.length === 0) return;
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement || document.activeElement === modal) {
+            e.preventDefault();
+            lastElement?.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement?.focus();
+          }
+        }
+      }
     };
     window.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
+
+    const timer = setTimeout(() => {
+      const modal = document.getElementById("master-plan-modal");
+      if (modal) modal.focus();
+    }, 10);
+
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
+      clearTimeout(timer);
+      if (previouslyFocusedElement) previouslyFocusedElement.focus();
     };
   }, [selected]);
 
@@ -312,7 +346,7 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                 className={`focus:ring-brand-500/50 flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-semibold transition-all focus:ring-2 focus:outline-none ${showStartableOnly ? "bg-brand-500/10 border-brand-500/30 text-brand-400 shadow-sm" : "bg-bg-tertiary border-border-subtle text-fg-muted hover:text-white"}`}
               >
                 <PlayCircle className="h-4 w-4" />
-                Başlanabilir
+                {t("deps_status_startable")}
               </button>
               <div className="bg-bg-tertiary border-border-subtle flex flex-wrap items-center gap-1 rounded-lg border p-1">
                 <button
@@ -590,11 +624,13 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
               onClick={() => setSelected(null)}
             />
             <motion.div
+              id="master-plan-modal"
+              tabIndex={-1}
               initial={{ opacity: 0, scale: 0.95, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 16 }}
               transition={{ type: "spring", duration: 0.3 }}
-              className="bg-bg-secondary border-border-subtle relative w-full max-w-2xl overflow-hidden rounded-2xl border shadow-2xl"
+              className="bg-bg-secondary border-border-subtle relative w-full max-w-2xl overflow-hidden rounded-2xl border shadow-2xl focus:outline-none"
             >
               <div className="border-border-subtle flex items-start justify-between gap-4 border-b p-6">
                 <div>
@@ -676,7 +712,7 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                   </div>
                   <div>
                     <p className="text-fg-muted mb-1 text-xs font-bold tracking-wider uppercase">
-                      Bağımlılıklar
+                      {t("deps_th_depends_on")}
                     </p>
                     <p className="text-sm font-semibold text-white">
                       {Array.from(effectiveDependsOn.get(selected.id) || [])

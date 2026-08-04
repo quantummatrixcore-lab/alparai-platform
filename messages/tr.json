@@ -100,6 +100,10 @@
     "empty_text": "Metodoloji Danışma Kurulu'nun resmi üyeleri, lansman dondurma döneminden sonra (9 Ağustos 2026 sonrasında) resmi olarak ilan edilecektir. Şu anda kurul, kapalı değerlendirme oturumları halinde faaliyet göstermektedir."
   },
   "transparency": {
+    "dataMoatTitle": "Bağımsız Veri Hendeği",
+    "dataMoatDesc": "ALPAR AI, araştırmacılar, düzenleyiciler ve halk tarafından erişilebilen, gerçek dünyadaki yapay zeka arızalarının en kapsamlı bağımsız veri kümesini barındırır.",
+    "kBenchmarkTitle": "K-BENCHMARK Değerlendirmesi",
+    "kBenchmarkDesc": "K-BENCHMARK, yapay zeka modellerini temel güvenlik boyutlarında puanlamak için ALPAR AI'ın açık metodolojisidir. Modelleri sadece akademik testlere değil, gerçek dünya olaylarına göre test ediyoruz.",
     "description": "ALPAR AI Şeffaflık Raporu. Moderasyon, denetim günlükleri ve sağlayıcı yanıtları hakkında gerçek zamanlı metrikler.",
     "totalReports": "Toplam rapor",
     "publishRate": "Yayınlanma oranı",
@@ -475,7 +479,8 @@
     "closing_good_news_body": "Olaylar kalıcı kamuya açık kayıt haline geldiğinde yapay zeka şirketleri sistemlerini geliştirir. Sağlayıcılar resmi olarak yanıt verdiğinde halk yanıt alır. Mahkemeler ALPAR AI raporlarına atıfta bulunduğunda, hesap verebilirlik kanıta kavuşur. Kimse yapay zeka manipülasyonuyla yalnız kalmaz. Belgelenen her vaka, yapay zekanın sessizce zarar vermesine izin vermeyi refusden ilk kalıcı kaydın bir parçasıdır.",
     "closing_good_news_cta": "Kayda Ekle →",
     "zero_tolerance": "Sıfır Tolerans. %100 Şeffaflık.",
-    "founder_role": "Kurucu, ALPAR AI"
+    "founder_role": "Kurucu, ALPAR AI",
+    "no_providers_data": "Henüz veri yok."
   },
   "incident": {
     "takedown": "Kaldırma / Düzeltme",
@@ -980,6 +985,10 @@
     "deps_status_closed": "✅ Kapanmış",
     "deps_status_startable": "Başlanabilir",
     "deps_status_startable_short": "Başlanabilir",
+    "loading_master_plan": "Master Plan Yükleniyor...",
+    "plan_error_title": "Plan Yüklenemedi",
+    "plan_error_body": "Master plan verileri alınırken bir hata oluştu.",
+    "retry_button": "Tekrar Dene",
     "deps_svg_aria_label": "Bağımlılık Grafiği",
     "deps_table_empty": "Filtre kriterlerine uygun bağımlılık kaydı bulunamadı.",
     "deps_table_filter_label": "Filtre:",

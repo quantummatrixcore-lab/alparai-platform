@@ -257,7 +257,7 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
             const rev = [...scores].reverse();
             const calculated = [];
             for (let i = 0; i < rev.length; i++) {
-              currentSum += rev[i].score ?? 0;
+              currentSum += rev[i]?.score ?? 0;
               calculated.push({ value: Number((currentSum / (i + 1)).toFixed(1)) });
             }
             return calculated.slice(-10);

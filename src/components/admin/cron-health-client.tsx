@@ -61,13 +61,13 @@ export function CronHealthClient({ jobs, historyData }: CronHealthProps) {
                   cursor={{ fill: "#ffffff05" }}
                 />
                 <Bar dataKey="success" stackId="a" fill="#27ae60" radius={[0, 0, 4, 4]}>
-                  {historyData.map((entry, index) => (
+                  {historyData.map((_, index) => (
                     <Cell key={`cell-success-${index}`} fill="#27ae60" />
                   ))}
                 </Bar>
                 <Bar dataKey="failed" stackId="a" fill="#e63946" radius={[4, 4, 0, 0]}>
-                  {historyData.map((entry, index) => (
-                    <Cell key={`cell-failed-${index}`} fill="#e63946" />
+                  {historyData.map((_, index) => (
+                    <Cell key={`cell-error-${index}`} fill="#e74c3c" />
                   ))}
                 </Bar>
               </BarChart>

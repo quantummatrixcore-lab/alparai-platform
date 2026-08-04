@@ -63,13 +63,17 @@ export async function getStartupHealth(): Promise<StartupHealthResult | null> {
     ]);
 
     const history = [0, 0, 0, 0, 0, 0];
-    if (historyRes.data) {
-      historyRes.data.forEach((row) => {
+    if (historyRes.data && Array.isArray(historyRes.data)) {
+      historyRes.data.forEach((r) => {
+        const row = r as unknown as { created_at: string };
         const d = new Date(row.created_at);
         const monthDiff =
           (now.getUTCFullYear() - d.getUTCFullYear()) * 12 + now.getUTCMonth() - d.getUTCMonth();
         if (monthDiff >= 0 && monthDiff < 6) {
-          history[5 - monthDiff]++;
+          const idx = 5 - monthDiff;
+          if (history[idx] !== undefined) {
+            history[idx]!++;
+          }
         }
       });
     }

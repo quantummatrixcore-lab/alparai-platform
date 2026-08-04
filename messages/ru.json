@@ -157,7 +157,11 @@
     "streisand_category_pr_firm": "PR Firm",
     "streisand_category_legal": "Legal Representative",
     "streisand_category_individual": "Individual",
-    "streisand_category_other": "Other"
+    "streisand_category_other": "Other",
+    "dataMoatTitle": "The Independent Data Moat",
+    "dataMoatDesc": "ALPAR AI holds the most comprehensive independent dataset of real-world AI failures, accessible to researchers, regulators, and the public.",
+    "kBenchmarkTitle": "K-BENCHMARK Evaluation",
+    "kBenchmarkDesc": "K-BENCHMARK is ALPAR AI's open methodology for scoring AI models across key safety dimensions. We test models based on real-world incidents, not just academic tests."
   },
   "kvkk": {
     "title": "KVKK Clarification Text",
@@ -475,7 +479,8 @@
     "closing_good_news_body": "Wenn Vorfälle im dauerhaften öffentlichen Register stehen, verbessern KI-Unternehmen ihre Systeme.",
     "closing_good_news_cta": "Zum Register hinzufügen →",
     "zero_tolerance": "Null Toleranz. 100% Transparenz.",
-    "founder_role": "Gründer, ALPAR AI"
+    "founder_role": "Gründer, ALPAR AI",
+    "no_providers_data": "No tracking data available yet."
   },
   "incident": {
     "takedown": "Löschung / Korrektur",
