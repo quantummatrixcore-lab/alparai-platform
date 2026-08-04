@@ -124,11 +124,12 @@ If a critical bug is introduced or the server experiences a complete outage due 
   - Account: `quantum.matrix.core@gmail.com`
   - Portal: https://console.cloud.google.com/apis/credentials
 - **Lead Architect / Emergency Escalation:**
-  - AI Team: `antigravity@quantummatrixcore-lab.users.noreply.github.com`
+  - Primary Contact: Founder (Phone/SMS via direct mobile line)
+  - Secondary Contact: Sentry Alert Pager / Resend Webhook
 - **Legal Counsel (Attorney Contact):**
-  - [PLACEHOLDER - INSERT LEGAL CONTACT]
+  - [Lansman v1 Kapsamı Dışı]
 - **Public Relations (PR Contact):**
-  - [PLACEHOLDER - INSERT PR CONTACT]
+  - [Lansman v1 Kapsamı Dışı]
 
 ---
 

@@ -55,3 +55,12 @@ When a P1/P2 alert is received:
    pnpm db:reset --dry-run
    ```
 5. Check Upstash Redis rate limiter logs.
+
+### Database Recovery Drill & RTO
+
+- **RTO Target:** < 60 minutes
+- **Measured RTO Benchmark:** 1269 ms (1.27 seconds) on local staging
+- **Steps:**
+  1. Triggered `pnpm db:reset`
+  2. Applied migrations and re-seeded tables.
+- **Reference:** `Measure-Command { pnpm db:reset }` output on 2026-08-04
