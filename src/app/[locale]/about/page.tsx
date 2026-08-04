@@ -274,6 +274,52 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </Container>
       </Section>
 
+      {/* Data Moat & K-BENCHMARK — Competitive Differentiation (#126) */}
+      <Section className="border-border-subtle border-t py-20">
+        <Container className="max-w-4xl">
+          <div className="mb-12 text-center">
+            <h2 className="text-fg-primary text-3xl font-extrabold tracking-tight">
+              {t("dataMoatTitle")}
+            </h2>
+            <p className="text-fg-muted mx-auto mt-3 max-w-2xl text-base">
+              {t("dataMoatSubtitle")}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <Card className="border-border-subtle bg-bg-secondary/10">
+              <CardHeader>
+                <div className="text-brand-400 mb-3 w-fit rounded-lg bg-white/5 p-3">
+                  <Database className="h-6 w-6" />
+                </div>
+                <CardTitle className="text-fg-primary text-lg font-bold">
+                  {t("dataMoatMoatTitle")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-fg-muted text-sm leading-relaxed">{t("dataMoatMoatDesc")}</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-border-subtle bg-bg-secondary/10">
+              <CardHeader>
+                <div className="text-brand-400 mb-3 w-fit rounded-lg bg-white/5 p-3">
+                  <BarChart className="h-6 w-6" />
+                </div>
+                <CardTitle className="text-fg-primary text-lg font-bold">
+                  {t("dataMoatBenchmarkTitle")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-fg-muted text-sm leading-relaxed">
+                  {t("dataMoatBenchmarkDesc")}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </Container>
+      </Section>
+
       {/* Contact Cards */}
       <Section className="border-border-subtle border-t py-16">
         <Container className="space-y-12">
