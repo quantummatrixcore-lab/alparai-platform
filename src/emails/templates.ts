@@ -10,6 +10,15 @@ interface ConfirmationParams {
   locale: "en" | "tr";
 }
 
+export interface ModerationNotificationParams {
+  title: string;
+  status: "published" | "rejected";
+  moderationNote?: string;
+  actionUrl: string;
+  locale: string;
+  unsubscribeUrl: string;
+}
+
 export function getWhistleblowerConfirmationEmail({
   title,
   category,
@@ -1008,6 +1017,171 @@ export function getAdvisoryBoardInvitationEmail({
             <div class="btn-container">
               <a href="${inviteLink}" class="btn">${ctaText}</a>
             </div>
+          </div>
+          <div class="footer">
+            <p>${footerText} <a href="${unsubscribeUrl}">${unsubText}</a></p>
+            <p style="margin-top: 4px; font-weight: bold; color: #71717a;">ALPAR AI — Trust Infrastructure for AI Accountability</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+}
+
+export function getModerationNotificationEmail({
+  title,
+  status,
+  moderationNote,
+  actionUrl,
+  locale,
+  unsubscribeUrl,
+}: ModerationNotificationParams): string {
+  const isTr = locale === "tr";
+  const isPublished = status === "published";
+
+  const subject = isTr
+    ? `[ALPAR AI] Olay Raporunuz ${isPublished ? "Yayınlandı" : "Reddedildi"}`
+    : `[ALPAR AI] Your Incident Report has been ${isPublished ? "Published" : "Rejected"}`;
+
+  const greeting = isTr ? "Merhaba Muhabir," : "Hello Reporter,";
+
+  const bodyText = isTr
+    ? `Rapor ettiğiniz olay moderasyon ekibimiz tarafından incelendi ve ${isPublished ? "yayınlanması uygun bulundu." : "platform standartlarımızı karşılamadığı için reddedildi."}`
+    : `The incident you reported has been reviewed by our moderation team and has been ${isPublished ? "approved for publication." : "rejected as it does not meet our platform standards."}`;
+
+  const detailsTitle = isTr ? "Olay Başlığı" : "Incident Title";
+  const ctaText = isTr ? "Raporu İncele" : "View Incident";
+  const footerText = isTr
+    ? "Bu e-posta otomatik olarak gönderilmiştir. Bildirim ayarlarınızı değiştirmek için:"
+    : "This is an automated email. To manage your notification preferences:";
+  const unsubText = isTr ? "Abonelikten Çık" : "Unsubscribe";
+
+  const noteHtml = moderationNote
+    ? `<div class="card" style="margin-top: 16px; border-color: ${isPublished ? "#00ff88" : "#ef4444"};">
+         <h2 style="color: ${isPublished ? "#00ff88" : "#ef4444"}">${isTr ? "Moderasyon Notu" : "Moderation Note"}</h2>
+         <p style="color: #d4d4d8; font-size: 14px; margin: 0;">${moderationNote}</p>
+       </div>`
+    : "";
+
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <title>${subject}</title>
+        <style>
+          body {
+            background-color: #09090b;
+            color: #f4f4f5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+          }
+          .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #18181b;
+            border: 1px solid #27272a;
+            border-radius: 16px;
+            overflow: hidden;
+          }
+          .header {
+            background: linear-gradient(135deg, ${isPublished ? "#00ff88, #0A1622" : "#ef4444, #0A1622"});
+            padding: 30px 40px;
+            text-align: center;
+          }
+          .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+          }
+          .content {
+            padding: 40px;
+          }
+          .greeting {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #ffffff;
+          }
+          .body-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #d4d4d8;
+            margin-bottom: 24px;
+          }
+          .card {
+            background-color: #09090b;
+            border: 1px solid #27272a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+          }
+          .card h2 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #a1a1aa;
+            margin: 0 0 8px 0;
+          }
+          .incident-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            line-height: 1.4;
+          }
+          .btn-container {
+            text-align: center;
+            margin-top: 24px;
+          }
+          .btn {
+            display: inline-block;
+            background-color: ${isPublished ? "#00ff88" : "#3f3f46"};
+            color: ${isPublished ? "#0A1622" : "#ffffff"};
+            font-weight: 700;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: background-color 0.2s;
+          }
+          .footer {
+            background-color: #18181b;
+            border-top: 1px solid #27272a;
+            padding: 20px 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #71717a;
+          }
+          .footer a {
+            color: #00ff88;
+            text-decoration: underline;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>ALPAR AI</h1>
+          </div>
+          <div class="content">
+            <div class="greeting">${greeting}</div>
+            <p class="body-text">${bodyText}</p>
+            <div class="card">
+              <h2>${detailsTitle}</h2>
+              <div class="incident-title">${title}</div>
+            </div>
+            ${noteHtml}
+            ${
+              isPublished
+                ? `
+            <div class="btn-container">
+              <a href="${actionUrl}" class="btn">${ctaText}</a>
+            </div>
+            `
+                : ""
+            }
           </div>
           <div class="footer">
             <p>${footerText} <a href="${unsubscribeUrl}">${unsubText}</a></p>

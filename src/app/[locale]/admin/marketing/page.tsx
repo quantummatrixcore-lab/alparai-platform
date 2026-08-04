@@ -45,15 +45,6 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
           trend="up"
           trendLabel="Total Incidents Cataloged"
           accentColor="#6366f1"
-          sparkData={[
-            { value: 10 },
-            { value: 15 },
-            { value: 12 },
-            { value: 18 },
-            { value: 20 },
-            { value: incidentsCount ?? 0 },
-          ]}
-          chartType="line"
         />
         <MetricCard
           title={t("marketing_organic")}

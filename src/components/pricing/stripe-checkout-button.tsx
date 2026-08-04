@@ -7,12 +7,14 @@ import { logger } from "@/lib/utils/logger";
 interface StripeCheckoutButtonProps {
   variant?: "primary" | "outline";
   className?: string;
+  tier?: "pro" | "enterprise";
   children: React.ReactNode;
 }
 
 export function StripeCheckoutButton({
   variant = "primary",
   className,
+  tier = "pro",
   children,
 }: StripeCheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
@@ -20,7 +22,11 @@ export function StripeCheckoutButton({
   async function handleCheckout() {
     setLoading(true);
     try {
-      const res = await fetch("/api/checkout/stripe", { method: "POST" });
+      const res = await fetch("/api/checkout/stripe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tier }),
+      });
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url;

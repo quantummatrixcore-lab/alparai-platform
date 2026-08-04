@@ -51,6 +51,7 @@ export async function POST(request: Request) {
           },
           { onConflict: "user_id" },
         );
+
         logger.info("Stripe checkout completed", { userId, customerId });
       }
       break;
@@ -70,6 +71,7 @@ export async function POST(request: Request) {
           stripe_price_id: (priceId || null) as never,
         })
         .eq("stripe_subscription_id", subscription.id);
+
       break;
     }
 

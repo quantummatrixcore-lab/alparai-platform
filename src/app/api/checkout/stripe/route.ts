@@ -6,12 +6,25 @@ import { logger } from "@/lib/utils/logger";
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 const STRIPE_PRO_PRICE_ID = process.env.STRIPE_PRO_PRICE_ID;
+const STRIPE_ENTERPRISE_PRICE_ID = process.env.STRIPE_ENTERPRISE_PRICE_ID;
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://alparai.com";
 
-export async function POST(_request: Request) {
-  if (!STRIPE_SECRET_KEY || !STRIPE_PRO_PRICE_ID) {
+export async function POST(request: Request) {
+  let tier = "pro";
+  try {
+    const body = await request.json();
+    if (body.tier === "enterprise") {
+      tier = "enterprise";
+    }
+  } catch (_e) {
+    // Ignore invalid JSON
+  }
+
+  const priceId = tier === "enterprise" ? STRIPE_ENTERPRISE_PRICE_ID : STRIPE_PRO_PRICE_ID;
+
+  if (!STRIPE_SECRET_KEY || !priceId) {
     return NextResponse.json(
-      { error: "Stripe is not configured. Contact support for Pro access." },
+      { error: "Stripe is not configured. Contact support for access." },
       { status: 503 },
     );
   }
@@ -59,11 +72,11 @@ export async function POST(_request: Request) {
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: "subscription",
-      line_items: [{ price: STRIPE_PRO_PRICE_ID, quantity: 1 }],
+      line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${APP_URL}/pricing?session_id={CHECKOUT_SESSION_ID}&success=true`,
       cancel_url: `${APP_URL}/pricing?canceled=true`,
-      metadata: { user_id: user.id },
-      subscription_data: { metadata: { user_id: user.id } },
+      metadata: { user_id: user.id, tier },
+      subscription_data: { metadata: { user_id: user.id, tier } },
     });
 
     return NextResponse.json({ url: session.url });

@@ -10,7 +10,7 @@ import type { AttemptContext, AttemptOutcome } from "@/lib/autopilot";
 import { logger } from "@/lib/utils/logger";
 import { getResendClient } from "@/lib/email/resend";
 import { generateProviderToken } from "@/lib/utils/hash";
-import { getExpertVerificationEmail } from "@/emails/templates";
+import { getExpertVerificationEmail, getModerationNotificationEmail } from "@/emails/templates";
 import { generateEmailUnsubscribeToken } from "@/lib/utils/unsubscribe";
 import { checkRateLimit } from "@/lib/utils/rate-limit";
 
@@ -212,6 +212,73 @@ https://alparai.com`,
         emailErr instanceof Error ? emailErr : undefined,
       );
     }
+  }
+
+  try {
+    const { data: incident } = await admin
+      .from("incidents")
+      .select("title, title_masked, user_id")
+      .eq("id", data.incidentId)
+      .maybeSingle();
+
+    if (incident && incident.user_id) {
+      const { data: reporterUser } = await admin
+        .from("users")
+        .select("email, locale")
+        .eq("id", incident.user_id)
+        .maybeSingle();
+
+      if (reporterUser && reporterUser.email) {
+        const { data: prefs } = await admin
+          .from("email_preferences")
+          .select("reporter_notifications")
+          .eq("user_id", incident.user_id)
+          .maybeSingle();
+        const notificationsEnabled = prefs ? prefs.reporter_notifications : true;
+
+        if (notificationsEnabled) {
+          const rlCheck = await checkRateLimit(
+            `ratelimit:email_mod_notification:${incident.user_id}`,
+          );
+          if (rlCheck.ok) {
+            const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://alparai.com";
+            const unsubToken = generateEmailUnsubscribeToken(reporterUser.email);
+            const unsubscribeUrl = `${appUrl}/api/unsubscribe?email=${encodeURIComponent(reporterUser.email)}&token=${unsubToken}`;
+            const emailHtml = getModerationNotificationEmail({
+              title: incident.title_masked || incident.title || "Incident",
+              status: newStatus,
+              moderationNote: data.moderationNote ?? undefined,
+              actionUrl: `${appUrl}/${reporterUser.locale || "en"}/incidents/${data.incidentId}`,
+              locale: reporterUser.locale || "en",
+              unsubscribeUrl,
+            });
+
+            const resend = getResendClient();
+            if (resend) {
+              await resend.emails.send({
+                from: "ALPAR AI <noreply@alparai.com>",
+                to: reporterUser.email,
+                subject:
+                  reporterUser.locale === "tr"
+                    ? `[ALPAR AI] Olay Raporunuz ${newStatus === "published" ? "Yayınlandı" : "Reddedildi"}`
+                    : `[ALPAR AI] Your Incident Report has been ${newStatus === "published" ? "Published" : "Rejected"}`,
+                html: emailHtml,
+              });
+              logger.info("Sent moderation notification email to reporter", {
+                incidentId: data.incidentId,
+                status: newStatus,
+              });
+            }
+          }
+        }
+      }
+    }
+  } catch (modEmailErr) {
+    logger.error(
+      "Failed to send moderation email",
+      { incidentId: data.incidentId },
+      modEmailErr instanceof Error ? modEmailErr : undefined,
+    );
   }
 
   return { kind: "success", value: { id: data.incidentId, newStatus } };
