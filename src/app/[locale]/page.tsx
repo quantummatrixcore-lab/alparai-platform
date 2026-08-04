@@ -1,6 +1,7 @@
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 60;
 
+import { Suspense, cache } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -65,13 +66,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
-export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  setRequestLocale(locale);
-
-  // Passive background sync of AI news
-  void checkAndTriggerNewsSyncPassive();
-
+const getHomeData = cache(async (locale: string) => {
   const supabase = await createServerClient();
   const admin = createAdminClient();
   const tCommon = await getTranslations({ locale, namespace: "common" });
@@ -259,26 +254,78 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       .filter(Boolean),
   ).size;
 
+  return {
+    incidentsCountResult,
+    providersResult,
+    uniqueCountriesCount,
+    topProvidersForHero,
+    countsBySource,
+    incidents,
+    leaderboard,
+  };
+});
+
+async function HeroSectionAsync({ locale }: { locale: string }) {
+  const data = await getHomeData(locale);
+  return (
+    <HeroSection
+      totalIncidents={data.incidentsCountResult.count ?? 0}
+      totalProviders={data.providersResult.data?.length ?? 0}
+      totalCountries={data.uniqueCountriesCount}
+      topProviders={data.topProvidersForHero}
+      countsBySource={data.countsBySource}
+    />
+  );
+}
+
+async function LiveStatsAsync({ locale }: { locale: string }) {
+  const data = await getHomeData(locale);
+  return (
+    <LiveStats
+      totalIncidents={data.incidentsCountResult.count ?? 0}
+      totalProviders={data.providersResult.data?.length ?? 0}
+      totalCountries={data.uniqueCountriesCount}
+      countsBySource={data.countsBySource}
+    />
+  );
+}
+
+async function LiveFeedAndLeaderboardAsync({ locale }: { locale: string }) {
+  const data = await getHomeData(locale);
+  return (
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
+      <LiveFeed incidents={data.incidents} />
+      <LeaderboardPreview entries={data.leaderboard} />
+    </div>
+  );
+}
+
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  // Passive background sync of AI news
+  void checkAndTriggerNewsSyncPassive();
+
   return (
     <>
-      <HeroSection
-        totalIncidents={incidentsCountResult.count ?? 0}
-        totalProviders={providersResult.data?.length ?? 0}
-        totalCountries={uniqueCountriesCount}
-        topProviders={topProvidersForHero}
-        countsBySource={countsBySource}
-      />
+      <Suspense fallback={<Skeleton className="h-[600px] w-full rounded-none" />}>
+        <HeroSectionAsync locale={locale} />
+      </Suspense>
 
       <TrustBar />
 
       <SegmentRouting />
 
-      <LiveStats
-        totalIncidents={incidentsCountResult.count ?? 0}
-        totalProviders={providersResult.data?.length ?? 0}
-        totalCountries={uniqueCountriesCount}
-        countsBySource={countsBySource}
-      />
+      <Suspense
+        fallback={
+          <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <Skeleton className="h-[200px] w-full rounded-2xl" />
+          </div>
+        }
+      >
+        <LiveStatsAsync locale={locale} />
+      </Suspense>
 
       <WhyItMatters />
 
@@ -286,10 +333,16 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
       <Section>
         <Container>
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
-            <LiveFeed incidents={incidents} />
-            <LeaderboardPreview entries={leaderboard} />
-          </div>
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
+                <Skeleton className="h-[800px] w-full rounded-2xl" />
+                <Skeleton className="h-[800px] w-full rounded-2xl" />
+              </div>
+            }
+          >
+            <LiveFeedAndLeaderboardAsync locale={locale} />
+          </Suspense>
         </Container>
       </Section>
 

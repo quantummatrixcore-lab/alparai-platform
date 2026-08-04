@@ -2,6 +2,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { fetchRedditPosts } from "@/lib/connectors/reddit";
 import { fetchHNStories } from "@/lib/connectors/hackernews";
 import { fetchGitHubIncidents } from "@/lib/connectors/github";
+import { fetchHackerOneDisclosedReports } from "@/lib/connectors/hackerone";
 import { fetchRSSFeed } from "@/lib/connectors/rss";
 import { verifyExternalItem, publishVerifiedItem } from "@/lib/ai/external-verifier";
 import { logger } from "@/lib/utils/logger";
@@ -80,7 +81,7 @@ export async function runExternalFetchTask() {
     source_score: number;
   }> = [];
 
-  // 1. Fetch Reddit, HN, GitHub, and RSS concurrently via Promise.all
+  // 1. Fetch Reddit, HN, GitHub, HackerOne, and RSS concurrently via Promise.all
   const redditFetchPromises = redditSubs.flatMap((sub) => [
     ...redditKeywords.map((kw) =>
       fetchRedditPosts(sub, kw).then((posts) => ({
@@ -118,6 +119,26 @@ export async function runExternalFetchTask() {
     })),
   );
 
+  const h1FetchPromises = ["AI", "vulnerability", "model"].map((_kw) =>
+    fetchHackerOneDisclosedReports().then((reports) => ({
+      type: "fetched",
+      items: reports.map((r) => ({
+        source: "hackerone",
+        external_url: r.url,
+        title: r.title,
+        body: r.summary,
+        source_score:
+          r.severity === "critical"
+            ? 100
+            : r.severity === "high"
+              ? 80
+              : r.severity === "medium"
+                ? 50
+                : 20,
+      })),
+    })),
+  );
+
   const rssFetchPromises = rssFeeds.map((feed) =>
     fetchRSSFeed(feed.url, feed.name).then((items) => ({
       type: "both",
@@ -129,6 +150,7 @@ export async function runExternalFetchTask() {
     ...redditFetchPromises,
     ...hnFetchPromises,
     ...ghFetchPromises,
+    ...h1FetchPromises,
     ...rssFetchPromises,
   ]);
 

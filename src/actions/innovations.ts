@@ -150,10 +150,12 @@ export async function getConnectorStatuses(): Promise<
   // Count pending items by source
   const { data: counts } = await supabase.from("external_incidents_queue").select("source, status");
 
-  const sources = ["reddit", "hn", "rss"];
+  const sources = ["reddit", "hn", "github", "hackerone", "rss"];
   const sourceNames: Record<string, string> = {
     reddit: "Reddit Connector (r/ChatGPT, r/artificial...)",
     hn: "Hacker News Algolia",
+    github: "GitHub Security Issues",
+    hackerone: "HackerOne Public Security Reports",
     rss: "RSS Feeds (MIT Tech, Wired...)",
   };
 
