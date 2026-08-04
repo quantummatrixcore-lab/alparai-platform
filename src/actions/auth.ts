@@ -25,7 +25,7 @@ function getOrigin(hdrs: Headers) {
   return `${protocol}://${host}`;
 }
 
-// @deprecated Unused after removing GIS OAuth redirect fallback
+// Uses standard Supabase OAuth redirect flow.
 export async function signInWithGoogle(next = "/profile"): Promise<AuthResult> {
   const hdrs = await headers();
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
