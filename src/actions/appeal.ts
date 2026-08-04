@@ -52,7 +52,7 @@ export async function submitTakedownAppeal(
         incident_id: parsed.data.incidentId || null,
         appellant_name: parsed.data.appellantName,
         appellant_email: parsed.data.appellantEmail,
-        reason: piiResult.maskedText,
+        reason: piiResult.masked,
         evidence_url: parsed.data.evidenceUrl || null,
         status: "pending",
       })
