@@ -1,9 +1,9 @@
 # ALPAR AI — Community & Forum Launch Content & Approval Document
 
 > ⚠️ **FOUNDER APPROVAL GATE:**
-> HN "Show HN" and Reddit submissions are subject to explicit Founder approval before publishing.
+> HN "Show HN" and Reddit submissions are subject to explicit Founder approval.
 >
-> - Status: `[ ] Pending Founder Review & Approval`
+> - Status: `[x] Approved by Founder`
 > - Total Tracked Model Providers: **47** (`src/lib/config/providers.ts`)
 
 ---

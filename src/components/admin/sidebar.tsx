@@ -391,6 +391,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       active: pathname.startsWith("/admin/marketing"),
     },
     {
+      href: "/admin/seo-performance",
+      label: t("nav_seo") || "SEO & Performance",
+      icon: Activity,
+      active: pathname.startsWith("/admin/seo-performance"),
+    },
+    {
       href: "/admin/investors",
       label: t("nav_investors"),
       icon: DollarSign,
