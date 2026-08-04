@@ -1,4 +1,4 @@
-# ALPAR AI — Master Plan (v12.13, 2026-07-30)
+# ALPAR AI — Master Plan (v12.116, 2026-08-04)
 
 Bu belge yalındır ve öyle kalır: konum, mimari, sermaye hattı, yönetişim, yürütme kurulu. Geçmiş kayıtlar (v11.1–v11.88) `docs/MASTER_PLAN_ARCHIVE.md`'de. Canlı ilerleme `/admin/strategy/*` (DB-tabanlı) ve aşağıdaki Yürütme Kurulu tablosundadır — `parseMasterPlan()` yalnızca o tabloyu okur.
 
