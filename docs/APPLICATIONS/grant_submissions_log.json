@@ -70,5 +70,21 @@
     "content_used": "Default ALPAR AI Pitch Deck & Architecture Overview",
     "status": "SUCCESS",
     "agent": "Antigravity OpenChrome Simulation"
+  },
+  {
+    "program_name": "Vercel for Startups & Open Source Sponsorship (REAL SUBMISSION)",
+    "apply_url": "https://vercel.com/startups",
+    "submitted_at": "2026-08-04T02:39:00Z",
+    "content_used": "docs/APPLICATIONS/startup-programs.md",
+    "status": "SUCCESS",
+    "agent": "Antigravity OpenChrome"
+  },
+  {
+    "program_name": "Supabase Partner Integration & OSS Sponsorship (REAL SUBMISSION)",
+    "apply_url": "https://forms.supabase.com/partner",
+    "submitted_at": "2026-08-04T02:43:40Z",
+    "content_used": "docs/APPLICATIONS/startup-programs.md",
+    "status": "SUCCESS",
+    "agent": "Antigravity OpenChrome"
   }
 ]
