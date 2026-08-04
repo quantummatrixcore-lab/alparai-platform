@@ -65,7 +65,33 @@
     "k12_title": "Соответствие EU AI Act",
     "k12_desc": "Соблюдение европейских нормативных требований к ИИ.",
     "subtitle": "Открытый стандарт аудита систем искусственного интеллекта",
-    "intro": "Основа для прозрачной и ответственной оценки ИИ."
+    "intro": "Основа для прозрачной и ответственной оценки ИИ.",
+    "aiIssTitle": "Методология AI Incident Severity Score (AI-ISS)",
+    "aiIssDesc": "Детерминированный стандарт оценки тяжести инцидентов ИИ на основе CVSS (влияние, охват, эксплуатируемость и контекст ИИ).",
+    "aiIssHeading": "AI Incident Severity Score (AI-ISS)",
+    "aiIssSubheading": "Открытая воспроизводимая векторная методология для оценки тяжести реальных инцидентов ИИ.",
+    "aiIssWhatIsTitle": "Что такое AI-ISS?",
+    "aiIssWhatIsText": "AI-ISS (AI Incident Severity Score) — это открытый стандарт ALPAR AI для оценки тяжести инцидентов ИИ. Адаптированный из системы CVSS v3.1, AI-ISS заменяет качественные оценки числовым рейтингом от 0.0 до 10.0.",
+    "aiIssPillarsTitle": "Основные Векторные Компоненты",
+    "aiIssImpactTitle": "1. Влияние (Вес: 45%)",
+    "aiIssImpactDesc": "Оценивает физический вред, алгоритмическую предвзятость, утечки PII, финансовый ущерб и регуляторный риск по Статье 73 EU AI Act.",
+    "aiIssScopeTitle": "2. Охват (Вес: 30%)",
+    "aiIssScopeDesc": "Оценивает радиус воздействия на отдельных пользователей, корпоративные системы или общественную инфраструктуру.",
+    "aiIssExploitabilityTitle": "3. Эксплуатируемость и Доступ (Вес: 25%)",
+    "aiIssExploitabilityDesc": "Оценивает сложность джейлбрейков, скорость автономного выполнения и векторы доступа.",
+    "aiIssContextTitle": "Контекстные Факторы ИИ",
+    "aiIssContextDesc": "Применяет контекстные коэффициенты (0.9x - 1.3x) в зависимости от загрязнения данных, уровня автономии и сферы применения.",
+    "aiIssFormulaTitle": "Формула Расчета",
+    "aiIssFormulaText": "Базовый балл = (Влияние × 0.45 + Охват × 0.30 + Эксплуатируемость × 0.25) × Коэффициент контекста",
+    "aiIssBandsTitle": "Уровни Тяжести и Диапазоны Баллов",
+    "aiIssBandLow": "Низкий (0.0 - 3.9)",
+    "aiIssBandMedium": "Средний (4.0 - 6.9)",
+    "aiIssBandHigh": "Высокий (7.0 - 8.9)",
+    "aiIssBandCritical": "Критический (9.0 - 10.0)",
+    "aiIssExampleTitle": "Пример Расчета",
+    "aiIssExampleText": "Сценарий: Автономный агент допустил утечку данных клиентов через инъекцию промпта. Влияние: 8.5, Охват: 7.0, Эксплуатируемость: 8.0 -> Базовый = 7.925. Коэффициент: 1.1x -> Итоговый балл AI-ISS = 8.7 (Высокая тяжесть).",
+    "aiIssRelationTitle": "Связь с K-BENCHMARK",
+    "aiIssRelationText": "AI-ISS оценивает тяжесть отдельного инцидента, тогда как K-BENCHMARK оценивает общую надежность модели. Баллы AI-ISS служат входными данными для рейтингов K-BENCHMARK."
   },
   "about_methodology_committee": {
     "title": "Methodik-Beirat",
@@ -2833,7 +2859,9 @@
       "terms": "Nutzungsbedingungen",
       "cookies": "Cookie-Richtlinie",
       "dmca": "DMCA-Richtlinie",
-      "moderation": "Moderationsrichtlinie"
+      "moderation": "Moderationsrichtlinie",
+      "ai_iss": "AI-ISS Standard",
+      "provider_response": "Provider Response Protocol"
     },
     "rights": "Alle Rechte vorbehalten.",
     "platformStatus": "Intermediäre Plattform. Nutzergenerierte Inhalte."
@@ -2968,7 +2996,8 @@
     "dismiss": "Schließen",
     "cookiePreferences": "Cookie-Einstellungen",
     "select": "Auswählen",
-    "machine_translated": "Maschinell übersetzt"
+    "machine_translated": "Maschinell übersetzt",
+    "team_title": "Team — ALPAR AI"
   },
   "autopilot": {
     "dashboard": "Dashboard",
@@ -3486,7 +3515,25 @@
     "nModerationText": "Content moderation and verification are conducted by volunteer moderators and independent experts. ALPAR AI administration does not alter or suppress reports to satisfy commercial requests or external pressure.",
     "nArbitration": "5. Resolution & Takedown",
     "nArbitrationText": "Disputes regarding the accuracy of reports are resolved transparently. Takedown requests are handled strictly in accordance with our legal procedures under Article 14 of the E-Commerce Directive.",
-    "takedownDetailsPlaceholder": "Provide a clear explanation with supporting evidence."
+    "takedownDetailsPlaceholder": "Provide a clear explanation with supporting evidence.",
+    "providerResponseTitle": "Provider Response Protocol",
+    "providerResponseDesc": "Official rules governing the 30-day response window, public status badges, and transparency standards for AI model providers.",
+    "providerResponseSubtitle": "Framework for official provider notifications, response windows, and public transparency standards.",
+    "prIntroTitle": "1. Purpose & Scope",
+    "prIntroText": "The Provider Response Protocol governs formal notifications, verified response windows, and public disclosure rules for AI model providers subject to published incidents on ALPAR AI.",
+    "prWindowTitle": "2. Official 30-Day Response Window",
+    "prWindowText": "Upon publication of a verified incident report, ALPAR AI formally notifies the registered safety/legal contact of the affected AI model provider via verified outreach (hello@alparai.com). The provider is granted a mandatory 30-day response window to review evidence, provide technical context, or outline remediation actions.",
+    "prBadgesTitle": "3. Public Status Badges",
+    "prBadgePendingTitle": "Response Pending (30-Day Window Active)",
+    "prBadgePendingText": "Displayed during the 30-day response window. Indicates formal notification has been dispatched and the provider is reviewing the report.",
+    "prBadgeVerifiedTitle": "Verified Response Published",
+    "prBadgeVerifiedText": "Displayed when an official statement is submitted by an authorized provider representative. Verified responses are pinned directly alongside the incident evidence.",
+    "prBadgeNoResponseTitle": "No Response Recorded",
+    "prBadgeNoResponseText": "Factual status displayed if 30 calendar days elapse without an official response. Stated strictly as an empirical fact ('Notified on [Date], no statement received by [Date]') without attributing fault or intent.",
+    "prNeutralityTitle": "4. Absolute Platform Neutrality",
+    "prNeutralityText": "In strict accordance with the ALPAR AI Neutrality Charter, paid utility features (such as k-provider-preview early alerts or pinned response formatting) NEVER permit redaction, score modification, or deletion of valid incident reports.",
+    "prAppealsTitle": "5. Remediation & Retraction Rights",
+    "prAppealsText": "If a provider deploys a technical fix or patch addressing the incident vulnerability, they may submit proof of remediation. Upon verification, the incident record is updated to reflect remediated status."
   },
   "dilemmas": {
     "pageTitle": "KI-Dilemmata",

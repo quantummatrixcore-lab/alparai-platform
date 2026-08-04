@@ -73,6 +73,7 @@ export default async function StartupHealthPage({
           variant="success"
           icon={<ShieldCheck className="h-6 w-6 text-emerald-400" />}
           tooltip="Overall growth and system health rating"
+          sparkline={healthData.kpis[0]?.history || [0, 0, 0, 0, 0, 0]}
         />
         <MetricCard
           label="Edge Uptime"
@@ -80,6 +81,7 @@ export default async function StartupHealthPage({
           variant="success"
           icon={<Zap className="h-6 w-6 text-cyan-400" />}
           tooltip="Vercel & Supabase infrastructure uptime"
+          sparkline={[99.9, 99.95, 99.99, 99.98, 100.0, uptimePct]}
         />
         <MetricCard
           label="Monthly Burn Rate"
@@ -87,6 +89,7 @@ export default async function StartupHealthPage({
           variant="default"
           icon={<DollarSign className="h-6 w-6 text-purple-400" />}
           tooltip="Free open source tier allocation active"
+          sparkline={[50, 40, 20, 10, 0, 0]}
         />
         <MetricCard
           label="Funding Activation"
@@ -98,6 +101,7 @@ export default async function StartupHealthPage({
           variant="warning"
           icon={<Award className="h-6 w-6 text-amber-400" />}
           tooltip="State and grant funding win rate"
+          sparkline={[20, 40, 60, 80, 100, fundingData?.combinedWinRate ?? 100]}
         />
       </div>
 

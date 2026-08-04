@@ -235,7 +235,10 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
           trend="up"
           trendLabel={t("kb_trend_ratings")}
           accentColor="#f59e0b"
-          sparkData={scores.slice(0, 8).map((s, i) => ({ value: s.score ?? 70 + i * 3 }))}
+          sparkData={[...scores]
+            .reverse()
+            .slice(-10)
+            .map((_, i) => ({ value: scores.length - Math.min(10, scores.length) + i + 1 }))}
           chartType="bar"
         />
         <MetricCard
@@ -249,7 +252,16 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
           trend="up"
           trendLabel={t("kb_trend_audit")}
           accentColor="#6366f1"
-          sparkData={scores.slice(0, 8).map((s, i) => ({ value: s.score ?? 65 + i * 4 }))}
+          sparkData={(() => {
+            let currentSum = 0;
+            const rev = [...scores].reverse();
+            const calculated = [];
+            for (let i = 0; i < rev.length; i++) {
+              currentSum += rev[i].score ?? 0;
+              calculated.push({ value: Number((currentSum / (i + 1)).toFixed(1)) });
+            }
+            return calculated.slice(-10);
+          })()}
           chartType="line"
         />
       </div>

@@ -1,7 +1,15 @@
 import { requireAdmin } from "@/lib/auth/session";
 import { getScoringConfigAction } from "@/actions/admin/dual-channel-scoring";
-import { ShieldCheck, Scale, Lock, Sliders, Database } from "lucide-react";
+import {
+  ShieldCheck,
+  Scale,
+  Lock,
+  Sliders,
+  Database,
+  PieChart as PieChartIcon,
+} from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { DualChannelChart } from "@/components/admin/dual-channel-chart";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -29,6 +37,15 @@ export default async function DualChannelScoringAdminPage({
           {t("dual_channel_model_trust_scoring_archite")}
         </h1>
         <p className="mt-2 text-slate-400">{t("isolated_dual_channel_data_pipeline_with")}</p>
+      </div>
+
+      {/* Visual Data Binding for Score Weights */}
+      <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-6">
+        <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-white">
+          <PieChartIcon className="h-5 w-5 text-emerald-400" />
+          {t("scoring_weight_distribution") || "Scoring Weight Distribution"}
+        </h2>
+        <DualChannelChart wAudit={config.wAudit} wIncident={config.wIncident} />
       </div>
 
       {/* Architecture Status Cards */}

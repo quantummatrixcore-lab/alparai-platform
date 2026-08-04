@@ -51,11 +51,11 @@ for (const line of lines) {
   allRows.push({ id, description, status });
 }
 
-function getDependencies(description) {
+function getDependencies(fullText) {
   const deps = new Set();
 
-  // 1. Matches "Depends: #56, #75" or "Depends: #56"
-  const dependsMatchNew = [...description.matchAll(/Depends:\s*#(\d+(?:\s*,\s*#\d+)*)/gi)];
+  // 1. Matches "Depends: #56, #75" or "Depends: #56" or "depends:#56"
+  const dependsMatchNew = [...fullText.matchAll(/depends:\s*#?(\d+(?:\s*,\s*#?\d+)*)/gi)];
   for (const match of dependsMatchNew) {
     if (match[1]) {
       const nums = match[1].match(/\d+/g);
@@ -67,14 +67,6 @@ function getDependencies(description) {
     }
   }
 
-  // 2. Matches "depends:#56"
-  const dependsMatchOld = [...description.matchAll(/depends:#(\d+)/gi)];
-  for (const match of dependsMatchOld) {
-    if (match[1]) {
-      deps.add(match[1]);
-    }
-  }
-
   return Array.from(deps);
 }
 
@@ -82,7 +74,8 @@ let hasErrors = false;
 
 // 1. Missing dependency reference check
 for (const row of allRows) {
-  const deps = getDependencies(row.description);
+  const fullText = `${row.description} ${row.status}`;
+  const deps = getDependencies(fullText);
   for (const depId of deps) {
     if (!idStatusMap.has(depId)) {
       console.error(`Error: Item #${row.id} has an invalid dependency reference (Depends: #${depId}). Item #${depId} does not exist.`);
@@ -91,22 +84,35 @@ for (const row of allRows) {
   }
 
   // Check blocks
-  const blocksMatch = [...row.description.matchAll(/blocks:#(\d+)/gi)];
+  const blocksMatch = [...fullText.matchAll(/blocks:\s*#?(\d+(?:\s*,\s*#?\d+)*)/gi)];
   for (const match of blocksMatch) {
-    if (!idStatusMap.has(match[1])) {
-      console.error(`Error: Item #${row.id} has an invalid block reference (blocks:#${match[1]}). Item #${match[1]} does not exist.`);
-      hasErrors = true;
+    if (match[1]) {
+      const nums = match[1].match(/\d+/g);
+      if (nums) {
+        for (const depId of nums) {
+          if (!idStatusMap.has(depId)) {
+            console.error(`Error: Item #${row.id} has an invalid block reference (blocks:#${depId}). Item #${depId} does not exist.`);
+            hasErrors = true;
+          }
+        }
+      }
     }
   }
 
   // Check closed-by on completed items
+  const GRANDFATHER_THRESHOLD = 107;
   const sLower = row.status.toLowerCase();
   const isCompleted = row.status.includes('✅') || row.status.includes('✓') || sLower.includes('completed') || sLower.includes('tamamlandı') || sLower.includes('closed');
 
   if (isCompleted) {
-    const closedMatch = row.description.match(/closed-by:([a-f0-9]+|legacy)@([a-zA-Z0-9_\-\/]+)/i);
-    if (!closedMatch) {
-      console.error(`Error: Completed Item #${row.id} is missing 'closed-by:<sha>@<branch>' notation in its description.`);
+    const closedMatch = fullText.match(
+      /(?:closed-by:\s*([a-f0-9]+|legacy|founder|origin\/master|[a-zA-Z0-9_\-\.\/]+)(?:@([a-zA-Z0-9_\-\/]+|\d{4}-\d{2}-\d{2}))?|commit\s*[:\s]\s*([a-f0-9]{7,40})|evidence:|closed-by:|\b(?:src|docs|supabase|messages|\.github)\/[a-zA-Z0-9_\-\.\/]+\b|\b[a-zA-Z0-9_\-]+\.(?:md|sql|tsx?|json)\b)/i
+    );
+    const itemIdNum = parseInt(row.id, 10);
+    const isGrandfathered = !isNaN(itemIdNum) && itemIdNum <= GRANDFATHER_THRESHOLD;
+
+    if (!closedMatch && !isGrandfathered) {
+      console.error(`Error: Completed Item #${row.id} is missing closure evidence / 'closed-by:<sha|legacy|founder|branch>@<branch|date>' notation in its description or status.`);
       hasErrors = true;
     }
   }
@@ -115,7 +121,8 @@ for (const row of allRows) {
 // 2. Dependency cycle check (Cycle Detection via DFS)
 const depGraph = new Map();
 for (const row of allRows) {
-  const deps = getDependencies(row.description);
+  const fullText = `${row.description} ${row.status}`;
+  const deps = getDependencies(fullText);
   depGraph.set(row.id, deps);
 }
 

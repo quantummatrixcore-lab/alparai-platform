@@ -122,14 +122,7 @@ const nextConfig = {
       },
     ];
   },
-  async rewrites() {
-    return [
-      {
-        source: "/auth/v1/:path*",
-        destination: "https://azszpzyvxjduhemkjsdh.supabase.co/auth/v1/:path*",
-      },
-    ];
-  },
+
   async redirects() {
     return [
       {

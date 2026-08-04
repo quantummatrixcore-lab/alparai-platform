@@ -66,7 +66,7 @@ export function MasterPlanDepsTable({
       <div className="bg-bg-secondary border-border-subtle flex flex-wrap items-center justify-between gap-3 rounded-xl border p-3">
         <div className="text-fg-muted flex items-center gap-2 text-xs font-bold tracking-wider uppercase">
           <Filter className="text-brand-400 h-4 w-4" />
-          <span>Filtre:</span>
+          <span>{t("deps_table_filter_label")}</span>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -78,7 +78,7 @@ export function MasterPlanDepsTable({
                 : "bg-bg-tertiary text-fg-muted border-border-subtle border hover:text-white"
             }`}
           >
-            Tüm Görevler ({graph.stats.totalTasks})
+            {t("deps_filter_all", { count: graph.stats.totalTasks })}
           </button>
           <button
             onClick={() => setFilterMode("connected")}
@@ -88,8 +88,10 @@ export function MasterPlanDepsTable({
                 : "bg-bg-tertiary text-fg-muted border-border-subtle border hover:text-white"
             }`}
           >
-            Sadece İlişkili (
-            {graph.nodes.filter((n) => n.dependsOn.length > 0 || n.blocks.length > 0).length})
+            {t("deps_filter_connected", {
+              count: graph.nodes.filter((n) => n.dependsOn.length > 0 || n.blocks.length > 0)
+                .length,
+            })}
           </button>
           <button
             onClick={() => setFilterMode("startable")}
@@ -100,7 +102,7 @@ export function MasterPlanDepsTable({
             }`}
           >
             <PlayCircle className="h-3.5 w-3.5 text-emerald-400" />
-            Başlanabilir ({graph.stats.startableCount})
+            {t("deps_filter_startable", { count: graph.stats.startableCount })}
           </button>
           <button
             onClick={() => setFilterMode("blocked")}
@@ -111,7 +113,7 @@ export function MasterPlanDepsTable({
             }`}
           >
             <Lock className="h-3.5 w-3.5 text-amber-400" />
-            Engellenmiş ({graph.stats.blockedCount})
+            {t("deps_filter_blocked", { count: graph.stats.blockedCount })}
           </button>
         </div>
       </div>
@@ -123,22 +125,22 @@ export function MasterPlanDepsTable({
             <thead className="bg-bg-tertiary/60 border-border-subtle text-fg-muted border-b font-bold tracking-wider uppercase">
               <tr>
                 <th scope="col" className="w-20 px-4 py-3.5">
-                  Görev No
+                  {t("deps_th_id")}
                 </th>
                 <th scope="col" className="min-w-[240px] px-4 py-3.5">
-                  Görev Başlığı
+                  {t("deps_th_title")}
                 </th>
                 <th scope="col" className="w-28 px-4 py-3.5">
-                  Durum
+                  {t("deps_th_status")}
                 </th>
                 <th scope="col" className="min-w-[200px] px-4 py-3.5">
-                  Bağlı Olduğu Görevler (Prerequisites)
+                  {t("deps_th_depends_on")}
                 </th>
                 <th scope="col" className="min-w-[200px] px-4 py-3.5">
-                  Blokladığı Görevler (Blocks)
+                  {t("deps_th_blocks")}
                 </th>
                 <th scope="col" className="w-36 px-4 py-3.5 text-right">
-                  Eylem Durumu
+                  {t("deps_th_readiness")}
                 </th>
               </tr>
             </thead>
@@ -147,7 +149,7 @@ export function MasterPlanDepsTable({
                 {filteredNodes.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="text-fg-muted py-12 text-center">
-                      Filtre kriterlerine uygun bağımlılık kaydı bulunamadı.
+                      {t("deps_table_empty")}
                     </td>
                   </tr>
                 ) : (
@@ -177,7 +179,9 @@ export function MasterPlanDepsTable({
                           </div>
                           <div className="text-fg-muted mt-0.5 flex items-center gap-2 text-[10px]">
                             <span className="font-bold text-amber-400">{node.priority}</span>
-                            {node.owner && <span>• Sorumlu: [{node.owner}]</span>}
+                            {node.owner && (
+                              <span>• {t("deps_owner_label", { owner: node.owner })}</span>
+                            )}
                           </div>
                         </td>
 
@@ -185,17 +189,17 @@ export function MasterPlanDepsTable({
                         <td className="px-4 py-3 whitespace-nowrap">
                           {node.status === "completed" && (
                             <span className="inline-flex items-center gap-1 rounded border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-semibold text-emerald-400">
-                              <CheckCircle2 className="h-3 w-3" /> Tamamlandı
+                              <CheckCircle2 className="h-3 w-3" /> {t("plan_status_completed")}
                             </span>
                           )}
                           {node.status === "pending" && (
                             <span className="inline-flex items-center gap-1 rounded border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 font-semibold text-amber-400">
-                              <Clock className="h-3 w-3" /> Bekliyor
+                              <Clock className="h-3 w-3" /> {t("plan_status_pending")}
                             </span>
                           )}
                           {node.status === "paused" && (
                             <span className="inline-flex items-center gap-1 rounded border border-purple-500/30 bg-purple-500/10 px-2 py-0.5 font-semibold text-purple-400">
-                              <Clock className="h-3 w-3" /> Duraklatıldı
+                              <Clock className="h-3 w-3" /> {t("plan_status_paused")}
                             </span>
                           )}
                         </td>
@@ -203,7 +207,7 @@ export function MasterPlanDepsTable({
                         {/* Depends On (Prerequisites) */}
                         <td className="px-4 py-3">
                           {node.dependsOn.length === 0 ? (
-                            <span className="text-fg-muted/60 italic">— Bağımlılık Yok</span>
+                            <span className="text-fg-muted/60 italic">{t("deps_none")}</span>
                           ) : (
                             <div className="flex flex-wrap gap-1.5">
                               {node.dependsOn.map((depId) => {
@@ -236,7 +240,7 @@ export function MasterPlanDepsTable({
                         {/* Blocks */}
                         <td className="px-4 py-3">
                           {node.blocks.length === 0 ? (
-                            <span className="text-fg-muted/60 italic">— Blokladığı Görev Yok</span>
+                            <span className="text-fg-muted/60 italic">{t("deps_blocks_none")}</span>
                           ) : (
                             <div className="flex flex-wrap gap-1.5">
                               {node.blocks.map((blockedId) => {
@@ -269,19 +273,22 @@ export function MasterPlanDepsTable({
                         <td className="px-4 py-3 text-right whitespace-nowrap">
                           {node.status === "completed" ? (
                             <span className="text-[11px] font-semibold text-emerald-400">
-                              ✅ Kapanmış
+                              {t("deps_status_closed")}
                             </span>
                           ) : node.canStart ? (
                             <span className="inline-flex items-center gap-1 rounded border border-emerald-500/40 bg-emerald-500/15 px-2 py-1 font-bold text-emerald-400">
-                              <PlayCircle className="h-3.5 w-3.5" /> Başlanabilir
+                              <PlayCircle className="h-3.5 w-3.5" />{" "}
+                              {t("deps_status_startable_short")}
                             </span>
                           ) : node.isBlocked ? (
                             <span
                               className="inline-flex items-center gap-1 rounded border border-amber-500/40 bg-amber-500/15 px-2 py-1 font-bold text-amber-400"
-                              title={`Bekleyen: ${node.pendingDependencies.map((d) => `#${d}`).join(", ")}`}
+                              title={`${t("deps_pending_label")}: ${node.pendingDependencies.map((d) => `#${d}`).join(", ")}`}
                             >
-                              <Lock className="h-3.5 w-3.5" /> Bloklu (
-                              {node.pendingDependencies.length})
+                              <Lock className="h-3.5 w-3.5" />{" "}
+                              {t("deps_status_blocked_short", {
+                                count: node.pendingDependencies.length,
+                              })}
                             </span>
                           ) : (
                             <span className="text-fg-muted text-[11px]">
