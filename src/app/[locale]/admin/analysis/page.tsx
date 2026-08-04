@@ -56,8 +56,14 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
     },
     audits: models.map((model) => {
       const real = realScores?.find((s) => s.model_id === model.id);
-      const scoreVal = real ? Math.round((real.score ?? 0) * 100) : 0;
-      const hasRealScore = real != null;
+      const rawScore = real?.score ?? 0;
+      // Normalize score: if rawScore is 0-100 (percentage), scale to 0-100 (scoreVal) and 0-1000 (total)
+      const scoreVal = Math.min(
+        100,
+        Math.round(rawScore <= 1 ? rawScore * 100 : rawScore <= 100 ? rawScore : rawScore / 10),
+      );
+      const totalScore = Math.min(1000, scoreVal * 10);
+      const hasRealScore = real != null && rawScore > 0;
 
       return {
         model_id: model.id,
@@ -81,7 +87,7 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
           traction_social_proof: scoreVal,
           investor_readiness: scoreVal,
           societal_impact: scoreVal,
-          total: scoreVal * 10,
+          total: totalScore,
           total_max: 1000,
         },
         unique_insight: hasRealScore
@@ -101,12 +107,22 @@ export default async function AnalysisPage({ params }: { params: Promise<{ local
     p0_tracker: [],
     score_evolution: (() => {
       const validScores = (realScores || [])
-        .map((s) => Math.round((s.score ?? 0) * 1000))
+        .map((s) => {
+          const raw = s.score ?? 0;
+          const score100 = Math.min(
+            100,
+            Math.round(raw <= 1 ? raw * 100 : raw <= 100 ? raw : raw / 10),
+          );
+          return score100 * 10;
+        })
         .filter((val) => val > 0);
       if (validScores.length === 0) return [];
-      const avg = Math.round(validScores.reduce((a, b) => a + b, 0) / validScores.length);
-      const max = Math.max(...validScores);
-      const min = Math.min(...validScores);
+      const avg = Math.min(
+        1000,
+        Math.round(validScores.reduce((a, b) => a + b, 0) / validScores.length),
+      );
+      const max = Math.min(1000, Math.max(...validScores));
+      const min = Math.min(1000, Math.min(...validScores));
       return [
         {
           date: new Date().toISOString().slice(0, 10),
