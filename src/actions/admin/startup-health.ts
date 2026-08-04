@@ -9,6 +9,7 @@ export interface KpiMetric {
   lastMonth: number;
   totalCount: number;
   momGrowthPct: number | null;
+  history: number[];
   status: "ok" | "insufficient_data";
 }
 
@@ -40,10 +41,14 @@ export async function getStartupHealth(): Promise<StartupHealthResult | null> {
     Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 1),
   ).toISOString();
 
+  const sixMonthsAgo = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 5, 1),
+  ).toISOString();
+
   const getCounts = async (
     table: "users" | "incidents" | "newsletter_subscribers" | "incident_votes",
   ) => {
-    const [thisRes, lastRes, totalRes] = await Promise.all([
+    const [thisRes, lastRes, totalRes, historyRes] = await Promise.all([
       db
         .from(table)
         .select("id", { count: "exact", head: true })
@@ -54,12 +59,26 @@ export async function getStartupHealth(): Promise<StartupHealthResult | null> {
         .gte("created_at", startOfLastMonth)
         .lt("created_at", startOfThisMonth),
       db.from(table).select("id", { count: "exact", head: true }),
+      db.from(table).select("created_at").gte("created_at", sixMonthsAgo),
     ]);
+
+    const history = [0, 0, 0, 0, 0, 0];
+    if (historyRes.data) {
+      historyRes.data.forEach((row) => {
+        const d = new Date(row.created_at);
+        const monthDiff =
+          (now.getUTCFullYear() - d.getUTCFullYear()) * 12 + now.getUTCMonth() - d.getUTCMonth();
+        if (monthDiff >= 0 && monthDiff < 6) {
+          history[5 - monthDiff]++;
+        }
+      });
+    }
 
     return {
       thisMonth: thisRes.count ?? 0,
       lastMonth: lastRes.count ?? 0,
       totalCount: totalRes.count ?? 0,
+      history,
     };
   };
 
@@ -77,6 +96,7 @@ export async function getStartupHealth(): Promise<StartupHealthResult | null> {
       lastMonth: users.lastMonth,
       totalCount: users.totalCount,
       momGrowthPct: momGrowth(users.thisMonth, users.lastMonth),
+      history: users.history,
       status: "ok",
     },
     {
@@ -85,6 +105,7 @@ export async function getStartupHealth(): Promise<StartupHealthResult | null> {
       lastMonth: incidents.lastMonth,
       totalCount: incidents.totalCount,
       momGrowthPct: momGrowth(incidents.thisMonth, incidents.lastMonth),
+      history: incidents.history,
       status: "ok",
     },
     {
@@ -93,6 +114,7 @@ export async function getStartupHealth(): Promise<StartupHealthResult | null> {
       lastMonth: votes.lastMonth,
       totalCount: votes.totalCount,
       momGrowthPct: momGrowth(votes.thisMonth, votes.lastMonth),
+      history: votes.history,
       status: "ok",
     },
     {
@@ -101,6 +123,7 @@ export async function getStartupHealth(): Promise<StartupHealthResult | null> {
       lastMonth: newsletter.lastMonth,
       totalCount: newsletter.totalCount,
       momGrowthPct: momGrowth(newsletter.thisMonth, newsletter.lastMonth),
+      history: newsletter.history,
       status: "ok",
     },
   ];

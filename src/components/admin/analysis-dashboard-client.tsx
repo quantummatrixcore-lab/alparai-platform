@@ -361,13 +361,44 @@ export function AnalysisDashboardClient({ registryData }: Props) {
                 +{scoreDiff} {t("increase_from_r1", { diff: scoreDiff })}
               </span>
             </div>
-            {/* Abstract Trendline SVG */}
+            {/* Dynamic Trendline SVG */}
             <div className="mt-3 flex h-8 items-end gap-1 opacity-70">
-              <div className="bg-brand-500/10 h-[30%] w-full rounded-t-sm"></div>
-              <div className="bg-brand-500/20 h-[45%] w-full rounded-t-sm"></div>
-              <div className="bg-brand-500/30 h-[60%] w-full rounded-t-sm"></div>
-              <div className="bg-brand-500/50 h-[80%] w-full rounded-t-sm shadow-[0_0_10px_rgba(168,85,247,0.3)]"></div>
-              <div className="bg-brand-500 h-[95%] w-full animate-pulse rounded-t-sm shadow-[0_0_15px_rgba(168,85,247,0.5)]"></div>
+              {evolution.length > 0 ? (
+                // Use actual evolution data, pad to at least 5 bars if needed
+                Array.from({ length: Math.max(5, evolution.length) }).map((_, i) => {
+                  const evIndex = i - (Math.max(5, evolution.length) - evolution.length);
+                  const point = evIndex >= 0 ? evolution[evIndex] : null;
+                  const heightPercent = point
+                    ? Math.max(10, (point.average_score / 1000) * 100)
+                    : 10 + i * 15; // Fallback heights for padding
+                  const isLatest = i === Math.max(5, evolution.length) - 1;
+                  return (
+                    <div
+                      key={i}
+                      className={cn(
+                        "w-full rounded-t-sm",
+                        isLatest
+                          ? "bg-brand-500 animate-pulse shadow-[0_0_15px_rgba(168,85,247,0.5)]"
+                          : "bg-brand-500/30 transition-opacity hover:opacity-100",
+                      )}
+                      style={{ height: `${heightPercent}%` }}
+                      title={
+                        point
+                          ? `Round ${point.round}: ${point.average_score}`
+                          : "Historical Context"
+                      }
+                    />
+                  );
+                })
+              ) : (
+                <>
+                  <div className="bg-brand-500/10 h-[30%] w-full rounded-t-sm"></div>
+                  <div className="bg-brand-500/20 h-[45%] w-full rounded-t-sm"></div>
+                  <div className="bg-brand-500/30 h-[60%] w-full rounded-t-sm"></div>
+                  <div className="bg-brand-500/50 h-[80%] w-full rounded-t-sm shadow-[0_0_10px_rgba(168,85,247,0.3)]"></div>
+                  <div className="bg-brand-500 h-[95%] w-full animate-pulse rounded-t-sm shadow-[0_0_15px_rgba(168,85,247,0.5)]"></div>
+                </>
+              )}
             </div>
           </div>
 

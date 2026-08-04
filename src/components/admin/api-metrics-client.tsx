@@ -14,6 +14,7 @@ import { AnimatedCounter } from "@/components/admin/premium/animated-counter";
 import { StatusPill } from "@/components/admin/premium/status-pill";
 import { AdminSectionCard } from "@/components/admin/admin-design-kit";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 
 interface ApiMetricsProps {
   metrics?: {
@@ -40,6 +41,11 @@ export function ApiMetricsClient({
   endpoints = [],
 }: ApiMetricsProps) {
   const t = useTranslations("admin");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -133,53 +139,59 @@ export function ApiMetricsClient({
 
       {/* Traffic Chart */}
       <AdminSectionCard title={t("api_traffic_overview") || "Traffic Overview (24h)"}>
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={trafficData}>
-              <defs>
-                <linearGradient id="requestsGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#a855f7" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#a855f7" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="errorsGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
-              <XAxis
-                dataKey="hour"
-                tick={{ fill: "#71717a", fontSize: 10 }}
-                axisLine={{ stroke: "#ffffff10" }}
-                tickLine={false}
-              />
-              <YAxis tick={{ fill: "#71717a", fontSize: 10 }} axisLine={false} tickLine={false} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#18181b",
-                  border: "1px solid #27272a",
-                  borderRadius: "8px",
-                }}
-                labelStyle={{ color: "#fafafa" }}
-              />
-              <Area
-                type="monotone"
-                dataKey="requests"
-                stroke="#a855f7"
-                strokeWidth={2}
-                fillOpacity={1}
-                fill="url(#requestsGradient)"
-              />
-              <Area
-                type="monotone"
-                dataKey="errors"
-                stroke="#ef4444"
-                strokeWidth={2}
-                fillOpacity={1}
-                fill="url(#errorsGradient)"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+        <div className="h-64 w-full">
+          {mounted ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={trafficData}>
+                <defs>
+                  <linearGradient id="requestsGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#a855f7" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#a855f7" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="errorsGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
+                <XAxis
+                  dataKey="hour"
+                  tick={{ fill: "#71717a", fontSize: 10 }}
+                  axisLine={{ stroke: "#ffffff10" }}
+                  tickLine={false}
+                />
+                <YAxis tick={{ fill: "#71717a", fontSize: 10 }} axisLine={false} tickLine={false} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#18181b",
+                    border: "1px solid #27272a",
+                    borderRadius: "8px",
+                  }}
+                  labelStyle={{ color: "#fafafa" }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="requests"
+                  stroke="#a855f7"
+                  strokeWidth={2}
+                  fillOpacity={1}
+                  fill="url(#requestsGradient)"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="errors"
+                  stroke="#ef4444"
+                  strokeWidth={2}
+                  fillOpacity={1}
+                  fill="url(#errorsGradient)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="flex h-full w-full animate-pulse items-center justify-center rounded-xl bg-white/5 text-sm text-white/40">
+              Loading Chart...
+            </div>
+          )}
         </div>
         <div className="mt-4 flex gap-6 text-sm">
           <span className="flex items-center gap-2 text-purple-400">

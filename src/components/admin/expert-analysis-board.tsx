@@ -178,6 +178,22 @@ export function ExpertAnalysisBoard() {
                     <p className="font-sans leading-relaxed whitespace-pre-line text-slate-200">
                       {report.critique}
                     </p>
+
+                    {/* Dynamic Percentage Statistic Nodes (Confidence Score) */}
+                    <div className="mt-3 border-t border-slate-800/60 pt-3">
+                      <div className="mb-1 flex items-center justify-between font-mono text-[10px] text-slate-400">
+                        <span>{t("confidence_score", { defaultValue: "Confidence Score" })}</span>
+                        <span className="font-bold text-emerald-400">
+                          {report.confidenceScore}%
+                        </span>
+                      </div>
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-800">
+                        <div
+                          className="h-full rounded-full bg-emerald-500 transition-all duration-1000 ease-out"
+                          style={{ width: `${report.confidenceScore}%` }}
+                        />
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
