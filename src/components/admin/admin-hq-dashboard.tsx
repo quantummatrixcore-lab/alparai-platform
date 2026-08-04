@@ -41,7 +41,6 @@ import {
   Grid2X2,
   Map,
   AlertTriangle,
-  ClipboardList,
   Building2,
   Calculator,
   Zap,
@@ -255,12 +254,6 @@ export function AdminHQDashboard({
       href: "/admin/strategy/risks",
       label: t("nav_risks"),
       icon: AlertTriangle,
-      group: t("group_strategy"),
-    },
-    {
-      href: "/admin/strategy/questionnaire",
-      label: t("nav_questionnaire"),
-      icon: ClipboardList,
       group: t("group_strategy"),
     },
     {

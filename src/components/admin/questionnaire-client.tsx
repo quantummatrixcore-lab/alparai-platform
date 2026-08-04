@@ -88,6 +88,7 @@ export function QuestionnaireClient({
   const t = useTranslations("admin");
   const [running, setRunning] = useState(false);
   const [exporting, setExporting] = useState<string | null>(null);
+  const [modelFilter, setModelFilter] = useState<"all" | "free" | "premium">("all");
   const [selectedModels, setSelectedModels] = useState<string[]>(models.map((m) => m.id));
   const [expandedAnswer, setExpandedAnswer] = useState<{
     questionId: string;
@@ -209,14 +210,51 @@ export function QuestionnaireClient({
       )}
 
       <div className="bg-bg-secondary border-border-subtle rounded-xl border p-5">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h3 className="text-sm font-bold text-white">{i18n.modelsLabel}</h3>
-            <p className="text-fg-muted mt-0.5 text-xs">{i18n.selectAll}</p>
+            <div className="mt-2 flex items-center gap-2">
+              <button
+                onClick={() => setModelFilter("all")}
+                className={`rounded-full px-3 py-1 text-xs font-bold transition-all ${
+                  modelFilter === "all"
+                    ? "bg-brand-500/20 text-brand-300 ring-brand-500/40 ring-1"
+                    : "bg-bg-tertiary text-fg-muted ring-border-subtle ring-1 hover:text-white"
+                }`}
+              >
+                All
+              </button>
+              <button
+                onClick={() => setModelFilter("free")}
+                className={`rounded-full px-3 py-1 text-xs font-bold transition-all ${
+                  modelFilter === "free"
+                    ? "bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-500/40"
+                    : "bg-bg-tertiary text-fg-muted ring-border-subtle ring-1 hover:text-white"
+                }`}
+              >
+                Free
+              </button>
+              <button
+                onClick={() => setModelFilter("premium")}
+                className={`rounded-full px-3 py-1 text-xs font-bold transition-all ${
+                  modelFilter === "premium"
+                    ? "bg-amber-500/20 text-amber-300 ring-1 ring-amber-500/40"
+                    : "bg-bg-tertiary text-fg-muted ring-border-subtle ring-1 hover:text-white"
+                }`}
+              >
+                Premium
+              </button>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setSelectedModels(models.map((m) => m.id))}
+              onClick={() =>
+                setSelectedModels(
+                  models
+                    .filter((m) => modelFilter === "all" || m.tier === modelFilter)
+                    .map((m) => m.id),
+                )
+              }
               className="text-fg-muted text-xs underline underline-offset-2 hover:text-white"
             >
               {isTurkish ? "Tümünü Seç" : "Select All"}
@@ -230,20 +268,31 @@ export function QuestionnaireClient({
           </div>
         </div>
         <div className="mb-4 flex flex-wrap gap-2">
-          {models.map((m) => (
-            <button
-              key={m.id}
-              onClick={() => toggleModel(m.id)}
-              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-all ${
-                selectedModels.includes(m.id)
-                  ? "bg-brand-500/20 text-brand-300 ring-brand-500/40 ring-1"
-                  : "bg-bg-tertiary text-fg-muted ring-border-subtle ring-1 hover:text-white"
-              }`}
-            >
-              <Cpu className="h-3 w-3" />
-              {m.label}
-            </button>
-          ))}
+          {models
+            .filter((m) => modelFilter === "all" || m.tier === modelFilter)
+            .map((m) => (
+              <button
+                key={m.id}
+                onClick={() => toggleModel(m.id)}
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-all ${
+                  selectedModels.includes(m.id)
+                    ? "bg-brand-500/20 text-brand-300 ring-brand-500/40 ring-1"
+                    : "bg-bg-tertiary text-fg-muted ring-border-subtle ring-1 hover:text-white"
+                }`}
+              >
+                <Cpu className="h-3 w-3" />
+                {m.label}
+                {m.tier === "free" ? (
+                  <span className="ml-1 rounded-sm bg-emerald-500/20 px-1 py-0.5 text-[9px] tracking-wider text-emerald-400 uppercase">
+                    Free
+                  </span>
+                ) : (
+                  <span className="ml-1 rounded-sm bg-amber-500/20 px-1 py-0.5 text-[9px] tracking-wider text-amber-400 uppercase">
+                    Premium
+                  </span>
+                )}
+              </button>
+            ))}
         </div>
         <button
           onClick={handleRun}

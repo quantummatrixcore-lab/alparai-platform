@@ -101,8 +101,20 @@ export const TRIAGE_SLOT_3_CHAIN: readonly GatewayModel[] = [
   { id: "command-r", provider: "cohere", tier: "free", maxTokens: 2048 },
 ] as const;
 
-// Strategic Questionnaire models — 4 free OpenRouter models + MiMo V2.5 (paid)
+// Strategic Questionnaire models — free OpenRouter models + MiMo V2.5 (paid)
 export const QUESTIONNAIRE_MODELS: readonly GatewayModel[] = [
+  {
+    id: "google/gemini-2.0-flash-lite-preview-02-05:free",
+    provider: "openrouter",
+    tier: "free",
+    maxTokens: 4096,
+  },
+  {
+    id: "meta-llama/llama-3.3-70b-instruct:free",
+    provider: "openrouter",
+    tier: "free",
+    maxTokens: 4096,
+  },
   { id: "deepseek/deepseek-v4-flash:free", provider: "openrouter", tier: "free", maxTokens: 4096 },
   { id: "tencent/hy3:free", provider: "openrouter", tier: "free", maxTokens: 4096 },
   {
@@ -126,6 +138,19 @@ export const SUPREME_COURT_CHAIN: readonly GatewayModel[] = [
 
 // 1. Math, Logic, Data Analysis (DeepSeek Optimized)
 export const MATH_LOGIC_CHAIN: readonly GatewayModel[] = [
+  {
+    id: "google/gemini-2.0-flash-lite-preview-02-05:free",
+    provider: "openrouter",
+    tier: "free",
+    maxTokens: 4096,
+  },
+  {
+    id: "meta-llama/llama-3.3-70b-instruct:free",
+    provider: "openrouter",
+    tier: "free",
+    maxTokens: 4096,
+  },
+  { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 4096 },
   { id: "deepseek-ai/deepseek-v3", provider: "nvidia", tier: "free", maxTokens: 4096 },
   { id: "deepseek/deepseek-chat", provider: "openrouter", tier: "free", maxTokens: 4096 },
   { id: "deepseek/deepseek-chat", provider: "openrouter", tier: "premium", maxTokens: 4096 },
@@ -151,6 +176,18 @@ export const CREATIVE_COPY_CHAIN: readonly GatewayModel[] = [
 // 3. High-Risk Audit, Legal, Complex Reasoning (GPT-4o / Claude 3.5 Sonnet)
 // Directly uses SUPREME_COURT_CHAIN logic but named for capability domain
 export const RISK_AUDIT_CHAIN: readonly GatewayModel[] = [
+  {
+    id: "google/gemini-2.0-flash-lite-preview-02-05:free",
+    provider: "openrouter",
+    tier: "free",
+    maxTokens: 4096,
+  },
+  {
+    id: "meta-llama/llama-3.3-70b-instruct:free",
+    provider: "openrouter",
+    tier: "free",
+    maxTokens: 4096,
+  },
   { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 4096 },
   {
     id: "nvidia/llama-3.1-nemotron-70b-instruct",

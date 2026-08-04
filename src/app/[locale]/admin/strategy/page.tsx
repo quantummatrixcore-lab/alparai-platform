@@ -6,6 +6,8 @@ import { requireAdvisor } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import { HealthGauge } from "@/components/admin/strategy/health-gauge";
 import { LiveStrategyClient } from "@/components/admin/strategy/live-strategy-client";
+import { QuestionnaireClient } from "@/components/admin/questionnaire-client";
+import { QUESTIONNAIRE_MODELS } from "@/lib/ai/openrouter-gateway";
 import { Link } from "@/i18n/routing";
 import { STRATEGY_METRICS_DEFAULTS, DEFAULT_VALUATION_PRE_MONEY } from "@/lib/constants";
 import { QUESTIONS } from "@/lib/strategy/questions";
@@ -62,6 +64,7 @@ export default async function StrategyOverviewPage({
     liveUsersRes,
     liveProvidersRes,
     liveMrrRes,
+    runsRes,
   ] = await Promise.all([
     supabase.from("strategy_swot_items").select("*").order("category"),
     supabase.from("strategy_risks").select("*").order("code"),
@@ -84,12 +87,14 @@ export default async function StrategyOverviewPage({
       .select("mrr_usd")
       .order("month", { ascending: false })
       .limit(1),
+    supabase.from("strategic_runs").select("*").order("started_at", { ascending: false }).limit(20),
   ]);
 
   const swotItems = (swotRes.data ?? []) as SwotItem[];
   const risks = (risksRes.data ?? []) as StrategyRisk[];
   const valuations = (valuationsRes.data ?? []) as StrategyValuation[];
   const milestones = (milestonesRes.data ?? []) as StrategyMilestone[];
+  const runs = runsRes.data || [];
   const latestSnapshot = (snapshotsRes.data?.[0] ??
     STRATEGY_METRICS_DEFAULTS) as StrategyMetricsSnapshot;
 
@@ -128,6 +133,24 @@ export default async function StrategyOverviewPage({
     totalMilestones > 0
       ? Math.round(milestones.reduce((acc, m) => acc + m.progress, 0) / totalMilestones)
       : 0;
+
+  const latestRunId = runs?.[0]?.id ?? null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let allAnswers: any[] = [];
+  if (latestRunId) {
+    const { data: answersData } = await supabase
+      .from("strategic_answers")
+      .select("*")
+      .eq("run_id", latestRunId)
+      .order("question_index", { ascending: true });
+    allAnswers = answersData || [];
+  }
+
+  const models = QUESTIONNAIRE_MODELS.map((m) => ({
+    id: m.id,
+    label: m.id.replace(/:free$/, "").replace(/^.*\//, ""),
+    tier: m.tier,
+  }));
 
   // Formatting helper for currency
   const formatCurrency = (cents: number) => {
@@ -419,13 +442,13 @@ export default async function StrategyOverviewPage({
                   </span>
                 </div>
               </div>
-              <Link
-                href="/admin/strategy/questionnaire"
+              <a
+                href="#questionnaire"
                 className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
               >
                 {t("run_questionnaire") || "Run Evaluation"}
                 <ChevronRight className="h-3 w-3" />
-              </Link>
+              </a>
             </div>
           </div>
         </div>
@@ -441,6 +464,43 @@ export default async function StrategyOverviewPage({
               activeRisks: activeRisksCount,
               doneMilestones,
               totalMilestones,
+            }}
+          />
+        </div>
+
+        {/* Strategy Questionnaire Module */}
+        <div id="questionnaire" className="mt-12">
+          <QuestionnaireClient
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            runs={runs as any[]}
+            answers={allAnswers}
+            latestRunId={latestRunId}
+            models={models}
+            locale={locale}
+            i18n={{
+              runButton: t("questionnaire_run_button") || "Run Evaluation",
+              runAgainButton: t("questionnaire_run_again_button") || "Run Again",
+              running: t("questionnaire_running") || "Running...",
+              history: t("questionnaire_history") || "Run History",
+              tableQuestion: t("questionnaire_question") || "Question",
+              tableModel: t("questionnaire_model") || "Model",
+              tableAnswer: t("questionnaire_answer") || "Answer",
+              exportMd: t("questionnaire_export") || "Export MD",
+              noRuns: t("questionnaire_no_runs") || "No evaluations yet.",
+              noAnswers: t("questionnaire_no_answers") || "No answers.",
+              statusCompleted: t("questionnaire_status_completed") || "Completed",
+              statusFailed: t("questionnaire_failed") || "Failed",
+              statusRunning: t("questionnaire_running_lower") || "Running",
+              tokens: t("questionnaire_tokens") || "Tokens",
+              latency: t("questionnaire_latency") || "Latency",
+              selectAll: t("questionnaire_select_all") || "Select All",
+              questionsCount:
+                t("questionnaire_questions_count", { total: QUESTIONS.length }) ||
+                `${QUESTIONS.length} Questions`,
+              modelsLabel: t("questionnaire_models") || "Models",
+              close: t("questionnaire_close") || "Close",
+              error: t("questionnaire_error") || "Error",
+              totalRuns: t("questionnaire_total_runs") || "Total Runs",
             }}
           />
         </div>

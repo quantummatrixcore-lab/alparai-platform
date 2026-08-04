@@ -42,7 +42,6 @@ import {
   Grid2X2,
   Map,
   AlertTriangle,
-  ClipboardList,
   Building2,
   Calculator,
   Zap,
@@ -299,12 +298,6 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       label: t("strategy_risks"),
       icon: AlertTriangle,
       active: pathname.startsWith("/admin/strategy/risks"),
-    },
-    {
-      href: "/admin/strategy/questionnaire",
-      label: t("questionnaire_title"),
-      icon: ClipboardList,
-      active: pathname.startsWith("/admin/strategy/questionnaire"),
     },
     {
       href: "/admin/strategy/state-support",
