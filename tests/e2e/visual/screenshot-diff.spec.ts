@@ -8,7 +8,7 @@ const KEY_PAGES = [
   { path: "/en/methodology/k-benchmark", name: "methodology" },
   { path: "/en/bounties", name: "bounties" },
   { path: "/en/status", name: "status" },
-  { path: "/en/legal", name: "legal" },
+  { path: "/en/legal/terms", name: "legal" },
 ];
 
 test.describe("Visual Regression", () => {
