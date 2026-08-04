@@ -157,13 +157,15 @@ export default async function BountiesPage({ params }: { params: Promise<{ local
                 </div>
               </div>
 
-              <Link
-                href="/submit"
+              <a
+                href="https://hackerone.com/alparai"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="group bg-warning-500 hover:bg-warning-400 relative inline-flex h-11 items-center justify-center gap-2 rounded-full px-8 text-sm font-black text-black shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(245,158,11,0.5)]"
               >
                 <Plus className="h-4 w-4" />
                 {t("program_cta")}
-              </Link>
+              </a>
             </div>
           ) : (
             <div className="divide-border-subtle divide-y">

@@ -14,8 +14,29 @@ Response time: 48 hours acknowledgement, 7 days triage
 
 We follow responsible disclosure. Security researchers who report valid vulnerabilities will be credited in our changelog (with permission).
 
+## Bug Bounty Program (HackerOne)
+ALPAR AI operates a public bug bounty program via HackerOne: [hackerone.com/alparai](https://hackerone.com/alparai).
+Please submit all vulnerability reports through the HackerOne platform to be eligible for rewards.
+
+### Safe Harbor
+When conducting vulnerability research according to this policy, we consider this research to be:
+- Authorized in accordance with the Computer Fraud and Abuse Act (CFAA) (and/or similar state laws), and we will not initiate or support legal action against you for accidental, good faith violations of this policy;
+- Exempt from the Digital Millennium Copyright Act (DMCA), and we will not bring a claim against you for circumvention of technology controls;
+- Exempt from restrictions in our Terms of Service that would interfere with conducting security research, and we waive those restrictions on a limited basis for work done under this policy; and
+- Lawful, helpful to the overall security of the Internet, and conducted in good faith.
+
+You are expected, as always, to comply with all applicable laws. If at any time you have concerns or are uncertain whether your security research is consistent with this policy, please submit a report through our HackerOne channel before going any further.
+
 ## Scope
 - alparai.com web application
 - API endpoints under api.alparai.com
 - Authentication and authorization systems
-- Data handling and PII processing
+- Data handling and PII processing (PII Guardian)
+- API Key Encryption Vault
+- Row Level Security (RLS) implementation
+
+### Out of Scope
+- Third-party services or infrastructure (Vercel, Supabase, Cloudflare)
+- Denial of Service (DoS/DDoS) attacks
+- Social engineering (e.g. Phishing)
+- Physical security
