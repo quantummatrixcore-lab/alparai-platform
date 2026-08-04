@@ -1,13 +1,26 @@
 import { requireAdmin } from "@/lib/auth/session";
 import { getScoringConfigAction } from "@/actions/admin/dual-channel-scoring";
 import { ShieldCheck, Scale, Lock, Sliders, Database } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
-export default async function DualChannelScoringAdminPage() {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "admin" });
+  return {
+    title: t("dual_channel_scoring_title", { defaultValue: "Çift Kanal Skorlama · ALPAR AI" }),
+  };
+}
+
+export default async function DualChannelScoringAdminPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  await requireAdmin();
   const t = await getTranslations("admin");
   const config = await getScoringConfigAction();
-
-  await requireAdmin();
   return (
     <div className="space-y-8 p-6 text-white">
       <div>

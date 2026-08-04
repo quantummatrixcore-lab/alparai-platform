@@ -12,7 +12,7 @@ import {
   Globe,
   Code,
 } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 const ICON_MAP: Record<string, React.ReactNode> = {
   Eye: <Eye className="h-6 w-6 text-purple-400" />,
@@ -25,7 +25,22 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   Code: <Code className="h-6 w-6 text-teal-400" />,
 };
 
-export default async function ModularArchitectureAdminPage() {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "admin" });
+  return {
+    title: t("modular_architecture_title", { defaultValue: "Modüler Mimari Durumu · ALPAR AI" }),
+  };
+}
+
+export default async function ModularArchitectureAdminPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  await requireAdmin();
   const t = await getTranslations("admin");
   const data = await getModularArchitectureAction();
 
