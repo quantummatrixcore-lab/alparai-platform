@@ -1,3 +1,14 @@
+# Walkthrough - Anasayfa Suspense Optimizasyonu (#141 / Madde 8)
+
+## Tamamlanan Değişiklikler
+- `src/app/[locale]/page.tsx` içerisindeki tüm veritabanı sorguları (incidents, leaderboard, countries, vb.) Next.js'in `cache` mekanizması ile sarmalanarak `getHomeData` isimli tek bir async fonksiyona alındı.
+- Canlı metrikleri gösteren bileşenler (`HeroSection`, `LiveStats`, `LiveFeed`, `LeaderboardPreview`) kendi `Async` wrapper bileşenlerine ayrıldı (`HeroSectionAsync`, `LiveStatsAsync`, `LiveFeedAndLeaderboardAsync`).
+- Bu asenkron bileşenler `<Suspense fallback={<Skeleton />}>` ile sarmalandı. Böylece anasayfanın statik kısımları (`TrustBar`, `WhyItMatters`, `HowItWorks` vb.) sunucudan anında gönderilirken, veritabanı sorgusu gerektiren bölümler arka planda yüklenmeye devam edecek.
+- Bileşenlerin Skeleton fallback'leri için `@/components/ui/skeleton` kullanılarak kullanıcı dostu yükleme durumları oluşturuldu.
+- `pnpm typecheck` başarıyla çalıştırılarak tip güvenliği doğrulandı.
+
+---
+
 # Walkthrough - K-Benchmark Mock Model Güncellemesi (2026 Nesli)
 
 ## Tamamlanan Değişiklikler
