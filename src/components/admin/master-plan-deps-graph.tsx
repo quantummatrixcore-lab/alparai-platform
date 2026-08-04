@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { PlayCircle, Lock, Filter, Sparkles, Info } from "lucide-react";
 import type { PlanItem } from "@/lib/utils/markdown-parser";
 import { buildDependencyGraph, type TaskDependencyNode } from "@/lib/utils/masterplan-deps";
@@ -22,6 +23,7 @@ export function MasterPlanDepsGraph({
   onOpenItem,
   searchQuery = "",
 }: MasterPlanDepsGraphProps) {
+  const t = useTranslations("admin");
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
   const [filterMode, setFilterMode] = useState<"all" | "connected" | "blocked" | "startable">(
@@ -173,7 +175,7 @@ export function MasterPlanDepsGraph({
       <div className="bg-bg-secondary border-border-subtle flex flex-wrap items-center justify-between gap-3 rounded-xl border p-3">
         <div className="text-fg-muted flex items-center gap-2 text-xs font-bold tracking-wider uppercase">
           <Sparkles className="text-brand-400 h-4 w-4" />
-          <span>Görsel Graf Filtresi:</span>
+          <span>{t("deps_graph_filter_label")}</span>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -185,8 +187,10 @@ export function MasterPlanDepsGraph({
                 : "bg-bg-tertiary text-fg-muted border-border-subtle border hover:text-white"
             }`}
           >
-            Sadece İlişkili (
-            {graph.nodes.filter((n) => n.dependsOn.length > 0 || n.blocks.length > 0).length})
+            {t("deps_filter_connected", {
+              count: graph.nodes.filter((n) => n.dependsOn.length > 0 || n.blocks.length > 0)
+                .length,
+            })}
           </button>
           <button
             onClick={() => setFilterMode("all")}
@@ -196,7 +200,7 @@ export function MasterPlanDepsGraph({
                 : "bg-bg-tertiary text-fg-muted border-border-subtle border hover:text-white"
             }`}
           >
-            Tüm Görevler ({graph.stats.totalTasks})
+            {t("deps_filter_all", { count: graph.stats.totalTasks })}
           </button>
           <button
             onClick={() => setFilterMode("startable")}
@@ -207,7 +211,7 @@ export function MasterPlanDepsGraph({
             }`}
           >
             <PlayCircle className="h-3.5 w-3.5 text-emerald-400" />
-            Başlanabilir ({graph.stats.startableCount})
+            {t("deps_filter_startable", { count: graph.stats.startableCount })}
           </button>
           <button
             onClick={() => setFilterMode("blocked")}
@@ -218,7 +222,7 @@ export function MasterPlanDepsGraph({
             }`}
           >
             <Lock className="h-3.5 w-3.5 text-amber-400" />
-            Engellenmiş ({graph.stats.blockedCount})
+            {t("deps_filter_blocked", { count: graph.stats.blockedCount })}
           </button>
         </div>
       </div>
@@ -228,24 +232,20 @@ export function MasterPlanDepsGraph({
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
-            <span className="text-fg-secondary font-medium">
-              Yeşil Çizgi / Rozet: Tamamlanmış / Başlanabilir
-            </span>
+            <span className="text-fg-secondary font-medium">{t("deps_legend_green")}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-amber-400"></span>
-            <span className="text-fg-secondary font-medium">
-              Turuncu Çizgi / Rozet: Bloklayan Bağımlılık
-            </span>
+            <span className="text-fg-secondary font-medium">{t("deps_legend_orange")}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-blue-400"></span>
-            <span className="text-fg-secondary font-medium">Mavi Rozet: Bloklanan Görev</span>
+            <span className="text-fg-secondary font-medium">{t("deps_legend_blue")}</span>
           </div>
         </div>
         <div className="text-fg-muted flex items-center gap-1 italic">
           <Info className="text-brand-400 h-3.5 w-3.5" />
-          <span>Kartların üzerine gelerek ilişkili akışı vurgulayabilirsiniz.</span>
+          <span>{t("deps_legend_instruction")}</span>
         </div>
       </div>
 
@@ -254,14 +254,14 @@ export function MasterPlanDepsGraph({
         {layoutNodes.length === 0 ? (
           <div className="text-fg-muted flex flex-col items-center justify-center py-16 text-center">
             <Filter className="mb-2 h-8 w-8 opacity-40" />
-            <p className="text-sm font-semibold">
-              Seçilen filtre için çizilecek bağımlılık grafiği bulunamadı.
-            </p>
+            <p className="text-sm font-semibold">{t("deps_empty")}</p>
           </div>
         ) : (
           <svg
             width={svgWidth}
             height={svgHeight}
+            role="img"
+            aria-label={t("deps_svg_aria_label")}
             className="block h-auto w-full select-none"
             viewBox={`0 0 ${svgWidth} ${svgHeight}`}
           >
@@ -403,22 +403,22 @@ export function MasterPlanDepsGraph({
                   <g transform="translate(12, 50)">
                     {node.status === "completed" && (
                       <text x="0" y="10" fill="#34d399" fontSize="9" fontWeight="bold">
-                        ✓ Tamamlandı
+                        ✓ {t("plan_status_completed")}
                       </text>
                     )}
                     {node.status !== "completed" && node.canStart && (
                       <text x="0" y="10" fill="#34d399" fontSize="9" fontWeight="bold">
-                        ▶ Başlanabilir
+                        {t("deps_status_startable")}
                       </text>
                     )}
                     {node.status !== "completed" && node.isBlocked && (
                       <text x="0" y="10" fill="#fbbf24" fontSize="9" fontWeight="bold">
-                        🔒 Engelli ({node.pendingDependencies.length})
+                        🔒 {t("deps_status_blocked", { count: node.pendingDependencies.length })}
                       </text>
                     )}
                     {node.blocks.length > 0 && (
                       <text x="120" y="10" fill="#60a5fa" fontSize="9" fontWeight="bold">
-                        → {node.blocks.length} Blokluyor
+                        → {t("deps_blocks_count", { count: node.blocks.length })}
                       </text>
                     )}
                   </g>
