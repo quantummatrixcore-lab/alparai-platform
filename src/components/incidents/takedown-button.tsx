@@ -39,7 +39,7 @@ export function TakedownButton({ incidentId }: { incidentId: string }) {
         title={t("takedown")}
         description={t("takedownDesc", {
           defaultValue:
-            "Submit a takedown or correction request. We review all submissions within 7 days.",
+            "Submit a takedown or correction request. We review all submissions within 24 hours.",
         })}
       >
         <form

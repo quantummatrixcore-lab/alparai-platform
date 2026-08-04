@@ -14,8 +14,12 @@ import {
   Search,
   X,
   PlayCircle,
+  Network,
+  Table as TableIcon,
 } from "lucide-react";
 import type { MasterPlanParseError, PlanItem } from "@/lib/utils/markdown-parser";
+import { MasterPlanDepsTable } from "@/components/admin/master-plan-deps-table";
+import { MasterPlanDepsGraph } from "@/components/admin/master-plan-deps-graph";
 
 interface MasterPlanClientProps {
   items: PlanItem[];
@@ -127,7 +131,7 @@ function EmptyColumn({ icon, label }: { icon: React.ReactNode; label: string }) 
 
 export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
   const t = useTranslations("admin");
-  const [viewMode, setViewMode] = useState<"list" | "kanban">("kanban");
+  const [viewMode, setViewMode] = useState<"kanban" | "list" | "graph" | "table">("kanban");
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<PlanItem | null>(null);
   const [showStartableOnly, setShowStartableOnly] = useState(false);
@@ -310,7 +314,16 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                 <PlayCircle className="h-4 w-4" />
                 Başlanabilir
               </button>
-              <div className="bg-bg-tertiary border-border-subtle flex items-center gap-1 rounded-lg border p-1">
+              <div className="bg-bg-tertiary border-border-subtle flex flex-wrap items-center gap-1 rounded-lg border p-1">
+                <button
+                  onClick={() => setViewMode("kanban")}
+                  aria-pressed={viewMode === "kanban"}
+                  aria-label={t("view_kanban")}
+                  className={`focus:ring-brand-500/50 flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold transition-all focus:ring-2 focus:outline-none ${viewMode === "kanban" ? "bg-bg-secondary text-white shadow-sm" : "text-fg-muted hover:text-white"}`}
+                >
+                  <LayoutGrid className="h-4 w-4" />
+                  {t("view_kanban")}
+                </button>
                 <button
                   onClick={() => setViewMode("list")}
                   aria-pressed={viewMode === "list"}
@@ -321,13 +334,22 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                   {t("view_list")}
                 </button>
                 <button
-                  onClick={() => setViewMode("kanban")}
-                  aria-pressed={viewMode === "kanban"}
-                  aria-label={t("view_kanban")}
-                  className={`focus:ring-brand-500/50 flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold transition-all focus:ring-2 focus:outline-none ${viewMode === "kanban" ? "bg-bg-secondary text-white shadow-sm" : "text-fg-muted hover:text-white"}`}
+                  onClick={() => setViewMode("graph")}
+                  aria-pressed={viewMode === "graph"}
+                  aria-label={t("view_graph")}
+                  className={`focus:ring-brand-500/50 flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold transition-all focus:ring-2 focus:outline-none ${viewMode === "graph" ? "bg-bg-secondary text-white shadow-sm" : "text-fg-muted hover:text-white"}`}
                 >
-                  <LayoutGrid className="h-4 w-4" />
-                  {t("view_kanban")}
+                  <Network className="text-brand-400 h-4 w-4" />
+                  {t("view_graph")}
+                </button>
+                <button
+                  onClick={() => setViewMode("table")}
+                  aria-pressed={viewMode === "table"}
+                  aria-label={t("view_deps_table")}
+                  className={`focus:ring-brand-500/50 flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold transition-all focus:ring-2 focus:outline-none ${viewMode === "table" ? "bg-bg-secondary text-white shadow-sm" : "text-fg-muted hover:text-white"}`}
+                >
+                  <TableIcon className="h-4 w-4 text-amber-400" />
+                  {t("view_deps_table")}
                 </button>
               </div>
             </div>
@@ -535,6 +557,16 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                     })}
                   </AnimatePresence>
                 </div>
+              )}
+
+              {/* SVG Graph View */}
+              {viewMode === "graph" && (
+                <MasterPlanDepsGraph items={items} onOpenItem={setSelected} searchQuery={query} />
+              )}
+
+              {/* Dependency Table View */}
+              {viewMode === "table" && (
+                <MasterPlanDepsTable items={items} onOpenItem={setSelected} searchQuery={query} />
               )}
             </>
           )}

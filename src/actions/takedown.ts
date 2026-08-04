@@ -12,6 +12,7 @@ import { hashIp } from "@/lib/utils/hash";
 import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 import type { Database } from "@/types/database";
 import { logger } from "@/lib/utils/logger";
+import { calculateSlaDueDate } from "@/lib/moderation/sla";
 
 export interface TakedownResult {
   ok: boolean;
@@ -47,6 +48,7 @@ const runTakedownRequestWork = async (
     requester_email: data.parsed.requester_email,
     requester_organization: data.parsed.organization ?? null,
     evidence_url: data.parsed.identity_proof_url,
+    sla_due_at: calculateSlaDueDate().toISOString(),
   };
   const { data: row, error } = await admin
     .from("takedown_requests")
@@ -153,6 +155,7 @@ const runInlineTakedownWork = async (
     requester_name: data.requesterName,
     requester_organization: data.userId ? null : "Anonymous user",
     incident_id: data.parsed.incidentId,
+    sla_due_at: calculateSlaDueDate().toISOString(),
   };
   const { data: row, error } = await admin
     .from("takedown_requests")

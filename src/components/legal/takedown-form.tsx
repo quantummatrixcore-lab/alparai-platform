@@ -32,7 +32,7 @@ export function TakedownForm() {
         <p className="text-fg-muted mt-2 text-sm">
           {t("takedownReceivedDesc", {
             defaultValue:
-              "We review takedown requests within 7 days. You will receive a response at the email you provided.",
+              "We review takedown requests within 24 hours. You will receive a response at the email you provided.",
           })}
         </p>
       </div>

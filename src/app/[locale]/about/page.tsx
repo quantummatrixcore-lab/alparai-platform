@@ -2,7 +2,17 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container, Section } from "@/components/ui/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Wordmark } from "@/components/layout/wordmark";
-import { Sparkles, Users, Shield, Globe, Linkedin, Award, Mail } from "lucide-react";
+import {
+  Sparkles,
+  Users,
+  Shield,
+  Globe,
+  Linkedin,
+  Award,
+  Mail,
+  Database,
+  BarChart,
+} from "lucide-react";
 import { FounderStory } from "@/components/marketing/founder-story";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -147,6 +157,44 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
               </CardHeader>
               <CardContent className="text-fg-secondary text-sm leading-relaxed">
                 {t("openSourceText")}
+              </CardContent>
+            </Card>
+          </div>
+        </Container>
+      </Section>
+
+      {/* Data Moat & Benchmark Section */}
+      <Section className="bg-bg-secondary/10 border-border-subtle border-y py-16">
+        <Container>
+          <div className="mb-12 text-center">
+            <h2 className="text-fg-primary text-3xl font-extrabold tracking-tight">
+              {t("dataMoatTitle")}
+            </h2>
+            <p className="text-fg-muted mx-auto mt-2 max-w-2xl text-sm">{t("dataMoatSubtitle")}</p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <Card className="border-border-subtle bg-bg-primary">
+              <CardHeader>
+                <CardTitle className="inline-flex items-center gap-2 text-white">
+                  <Database className="text-brand-400 h-5 w-5" />
+                  {t("dataMoatMoatTitle")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-fg-secondary text-sm leading-relaxed">
+                {t("dataMoatMoatDesc")}
+              </CardContent>
+            </Card>
+
+            <Card className="border-border-subtle bg-bg-primary">
+              <CardHeader>
+                <CardTitle className="inline-flex items-center gap-2 text-white">
+                  <BarChart className="text-brand-400 h-5 w-5" />
+                  {t("dataMoatBenchmarkTitle")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-fg-secondary text-sm leading-relaxed">
+                {t("dataMoatBenchmarkDesc")}
               </CardContent>
             </Card>
           </div>

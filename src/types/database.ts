@@ -3770,6 +3770,66 @@ export type Database = {
           },
         ]
       }
+      takedown_appeals: {
+        Row: {
+          id: string
+          takedown_id: string | null
+          incident_id: string | null
+          appellant_name: string
+          appellant_email: string
+          reason: string
+          evidence_url: string | null
+          status: string
+          assigned_moderator_id: string | null
+          resolution_notes: string | null
+          resolved_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          takedown_id?: string | null
+          incident_id?: string | null
+          appellant_name: string
+          appellant_email: string
+          reason: string
+          evidence_url?: string | null
+          status?: string
+          assigned_moderator_id?: string | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          takedown_id?: string | null
+          incident_id?: string | null
+          appellant_name?: string
+          appellant_email?: string
+          reason?: string
+          evidence_url?: string | null
+          status?: string
+          assigned_moderator_id?: string | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "takedown_appeals_takedown_id_fkey"
+            columns: ["takedown_id"]
+            isOneToOne: false
+            referencedRelation: "takedown_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "takedown_appeals_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       takedown_requests: {
         Row: {
           assigned_moderator_id: string | null

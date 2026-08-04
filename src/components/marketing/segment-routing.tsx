@@ -1,6 +1,9 @@
+"use client";
+
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Newspaper, Scale, Shield, Building2, ArrowRight } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 export function SegmentRouting() {
   const t = useTranslations("segments");
@@ -72,6 +75,7 @@ export function SegmentRouting() {
             <Link
               key={segment.id}
               href={segment.href}
+              onClick={() => trackEvent("segment_cta_click", { segment: segment.id })}
               className={`group relative flex flex-col rounded-2xl border p-6 ${segment.borderColor} ${segment.hoverBorder} bg-background/50 overflow-hidden backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg`}
             >
               <div

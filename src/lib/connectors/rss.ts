@@ -110,6 +110,7 @@ export async function fetchRSSFeed(
         "machine learning",
         "yapay zeka",
         "yapay zekâ",
+        "yapı zekâ",
         "büyük dil modeli",
         "halüsinasyon",
         "önyargı",

@@ -146,6 +146,7 @@ export async function GET(request: Request) {
   const euDeadline = url.searchParams.get("eu_deadline");
   const provider = url.searchParams.get("provider");
   const model = url.searchParams.get("model");
+  const q = url.searchParams.get("q");
 
   const supabase = await createServerClient();
 
@@ -200,6 +201,7 @@ export async function GET(request: Request) {
   if (euDeadline) query = query.eq("eu_act_reporting_deadline_days", parseInt(euDeadline, 10));
   if (provider) query = query.eq("ai_providers.slug", provider);
   if (model) query = query.ilike("ai_models.name", `%${model}%`);
+  if (q) query = query.textSearch("search_vector", q, { type: "websearch", config: "simple" });
 
   const { data, error } = await query;
   if (error) {
