@@ -36,7 +36,10 @@ export function LeaderboardPreview({ entries }: { entries: LeaderboardEntry[] })
           {t("subtitle")}
         </Link>
       </div>
-      <Card variant="glass">
+      <Card
+        variant="glass"
+        className="hover:shadow-brand-500/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+      >
         <CardContent className="p-0">
           <motion.ol
             variants={containerVariants}

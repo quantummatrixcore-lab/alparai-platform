@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion, useScroll, useTransform, animate, useInView } from "framer-motion";
+import { motion, animate, useInView } from "framer-motion";
 import { Link } from "@/i18n/routing";
 import { ArrowRight, ShieldAlert, Target, Trophy, Quote, Radio } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -30,9 +30,6 @@ export function HeroSection({
 }) {
   const t = useTranslations("hero");
   const tIncident = useTranslations("incident");
-  const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 500], [0, 150]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   const incidentTooltip = countsBySource
     ? `${tIncident("source_user_submitted")}: ${countsBySource.user_submitted}\n` +
@@ -45,13 +42,17 @@ export function HeroSection({
   return (
     <section className="bg-bg-primary relative overflow-hidden pt-24 pb-16">
       {/* Background Effects */}
-      <div aria-hidden="true" className="absolute inset-0 z-0 overflow-hidden">
+      <div
+        aria-hidden="true"
+        className="from-gradient-hero-start to-gradient-hero-end animate-gradient-shift absolute inset-0 z-0 overflow-hidden bg-gradient-to-br bg-[length:200%_200%]"
+      >
         <div className="bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%221%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')] absolute inset-0 opacity-20 mix-blend-overlay" />
-        <motion.div
-          style={{ y: y1, opacity }}
-          className="bg-brand-600/8 absolute -top-[30%] left-1/4 h-[800px] w-[800px] -translate-x-1/2 rounded-full mix-blend-screen blur-[140px]"
-        />
-        <div className="bg-danger-500/10 absolute top-[20%] right-[5%] h-[500px] w-[500px] rounded-full mix-blend-screen blur-[160px]" />
+
+        {/* Floating particles */}
+        <div className="bg-brand-600/20 animate-float absolute -top-[10%] left-[20%] h-[400px] w-[400px] rounded-full mix-blend-screen blur-[120px]" />
+        <div className="bg-accent-500/20 animate-float-delayed absolute top-[20%] right-[10%] h-[300px] w-[300px] rounded-full mix-blend-screen blur-[100px]" />
+        <div className="bg-danger-500/15 animate-float absolute -bottom-[10%] left-[40%] h-[350px] w-[350px] rounded-full mix-blend-screen blur-[120px]" />
+
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_0%,#000_20%,transparent_100%)] bg-[size:64px_64px]" />
       </div>
 
@@ -78,7 +79,7 @@ export function HeroSection({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-fg-primary pb-4 text-5xl leading-[0.95] font-black tracking-tighter drop-shadow-lg sm:text-6xl lg:text-[72px]"
+              className="text-fg-primary animate-fade-up pb-4 text-5xl leading-[0.95] font-black tracking-tighter opacity-0 drop-shadow-lg sm:text-6xl lg:text-[72px]"
             >
               {t("title_primary")}
             </motion.h1>
@@ -103,7 +104,7 @@ export function HeroSection({
               <Link
                 href="/submit"
                 onClick={() => trackEvent("hero_cta_click", { action: "primary" })}
-                className="group bg-danger-500 hover:bg-danger-400 relative inline-flex h-13 items-center justify-center gap-3 rounded-md px-8 text-base font-black text-white shadow-[0_0_25px_rgba(230,57,70,0.4)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-[0_0_40px_rgba(230,57,70,0.7)]"
+                className="group bg-danger-500 hover:bg-danger-400 animate-gradient-shift relative inline-flex h-13 items-center justify-center gap-3 rounded-md px-8 text-base font-black text-white shadow-[0_0_25px_rgba(230,57,70,0.4)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:bg-[length:200%_auto] hover:shadow-[0_0_40px_rgba(230,57,70,0.7)]"
               >
                 <ShieldAlert className="h-5 w-5" />
                 {t("cta_primary")}
@@ -345,7 +346,17 @@ function AnimatedValue({ value }: { value: number | string }) {
   }, [numVal, isInView]);
 
   if (typeof value === "string") return <>{value}</>;
-  return <span ref={ref}>{count.toLocaleString()}</span>;
+  return (
+    <span
+      ref={ref}
+      className={cn(
+        numVal === 0 &&
+          "from-fg-muted/50 to-fg-muted/50 animate-shimmer inline-block min-w-[2ch] bg-gradient-to-r via-white/80 bg-[length:200%_100%] bg-clip-text text-transparent",
+      )}
+    >
+      {count.toLocaleString()}
+    </span>
+  );
 }
 
 function LiveStatCard({

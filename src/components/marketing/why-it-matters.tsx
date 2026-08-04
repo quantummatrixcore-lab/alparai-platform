@@ -63,7 +63,7 @@ export function WhyItMatters() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <Section className="relative overflow-hidden">
+    <Section className="reveal-on-scroll relative scroll-mt-16 overflow-hidden">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_50%,rgba(230,57,70,0.03),transparent)]"

@@ -688,6 +688,7 @@
     "meta_description": "Discover the global AI Provider Leaderboard. We rank the top AI companies by our proprietary Trust Score, safety metrics, and incident reports to ensure public accountability."
   },
   "auth": {
+    "use_email_signin_fallback": "Please use email sign-in below.",
     "signin_with_google": "Continue with Google",
     "signOut": "Sign out",
     "signIn": "Sign in",

@@ -30,7 +30,17 @@ function AnimatedNumber({ value }: CounterProps) {
     return () => controls.stop();
   }, [value, isInView]);
 
-  return <span ref={ref}>{count.toLocaleString()}</span>;
+  return (
+    <span
+      ref={ref}
+      className={cn(
+        value === 0 &&
+          "from-fg-muted/50 to-fg-muted/50 animate-shimmer inline-block min-w-[2ch] bg-gradient-to-r via-white/80 bg-[length:200%_100%] bg-clip-text text-transparent",
+      )}
+    >
+      {count.toLocaleString()}
+    </span>
+  );
 }
 
 interface LiveStatsProps {
@@ -88,7 +98,7 @@ export function LiveStats({
   ];
 
   return (
-    <div className="bg-bg-secondary/20 border-border-subtle relative overflow-hidden border-y py-8">
+    <div className="bg-bg-secondary/20 border-border-subtle reveal-on-scroll relative scroll-mt-16 overflow-hidden border-y py-8">
       <Container>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {statItems.map((item, idx) => {

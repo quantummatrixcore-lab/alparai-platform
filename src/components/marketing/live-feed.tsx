@@ -13,7 +13,10 @@ export function LiveFeed({ incidents }: { incidents: IncidentListItem[] }) {
   const hasIncidents = incidents.length > 0;
 
   return (
-    <Card variant="gradient">
+    <Card
+      variant="gradient"
+      className="hover:shadow-brand-500/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+    >
       <CardHeader>
         <CardTitle className="inline-flex items-center gap-2">
           <span className="relative flex h-2.5 w-2.5">

@@ -17,7 +17,7 @@ export function HowItWorks() {
   const t = useTranslations("hero");
 
   return (
-    <Section className="bg-bg-secondary/30">
+    <Section className="bg-bg-secondary/30 reveal-on-scroll scroll-mt-16">
       <Container>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -40,7 +40,10 @@ export function HowItWorks() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
               >
-                <Card variant="default">
+                <Card
+                  variant="default"
+                  className="hover:shadow-brand-500/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                >
                   <CardHeader>
                     <div className="bg-danger-500/10 text-danger-400 mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg">
                       <Icon className="h-5 w-5" />

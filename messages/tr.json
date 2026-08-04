@@ -688,6 +688,7 @@
     "meta_description": "Küresel Yapay Zeka Sağlayıcı Liderlik Tablosu. Halka açık hesap verebilirliği sağlamak için en iyi yapay zeka şirketlerini Güven Skoru, güvenlik metrikleri ve ihlal raporlarıyla sıralıyoruz."
   },
   "auth": {
+    "use_email_signin_fallback": "Lütfen aşağıdaki e-posta ile giriş seçeneğini kullanın.",
     "signin_with_google": "Google ile devam et",
     "signOut": "Çıkış yap",
     "signIn": "Giriş yap",

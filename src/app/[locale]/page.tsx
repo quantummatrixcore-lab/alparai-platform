@@ -331,7 +331,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
       <HowItWorks />
 
-      <Section>
+      <Section className="reveal-on-scroll scroll-mt-16">
         <Container>
           <Suspense
             fallback={
