@@ -58,6 +58,10 @@ export function GoogleSignInButton({
   React.useEffect(() => {
     if (typeof window === "undefined") return;
 
+    if (!process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
+      console.warn("NEXT_PUBLIC_GOOGLE_CLIENT_ID is missing. GIS might not work correctly.");
+    }
+
     const initGis = () => {
       if (!window.google?.accounts?.id) return;
       setGisLoaded(true);
@@ -136,6 +140,9 @@ export function GoogleSignInButton({
           "hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(168,85,247,0.18)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-none",
           className,
         )}
+        onClick={() => {
+          toast.info(t("use_email_signin_fallback") || "Please use email sign-in below");
+        }}
       >
         <svg
           className="mr-1 h-5 w-5 shrink-0"

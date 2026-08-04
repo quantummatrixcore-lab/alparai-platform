@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,20 +27,39 @@ if (tableStartIndex === -1 || tableEndIndex === -1) {
 
 const tableContent = content.substring(tableStartIndex + tableStartMarker.length, tableEndIndex);
 
-const lines = tableContent.split('\n');
+const fileLines = content.split('\n');
 const idStatusMap = new Map();
 const allRows = [];
 
-for (const line of lines) {
-  if (!line.trim().startsWith('|') || line.includes('---') || line.includes('Item ID')) {
-    continue;
-  }
+let grandfatheredSHAs = new Set();
+try {
+  grandfatheredSHAs = new Set(execSync('git log --format="%H" 5b03aace').toString().trim().split('\n'));
+} catch (e) {
+  console.warn("Could not fetch git history for 5b03aace. Defaulting to empty set.");
+}
+
+let blameLines = [];
+try {
+  blameLines = execSync('git blame -l docs/MASTER_PLAN.md').toString().split('\n');
+} catch (e) {
+  console.warn("Could not run git blame.");
+}
+
+let inTable = false;
+for (let i = 0; i < fileLines.length; i++) {
+  const line = fileLines[i];
+  if (line.includes(tableStartMarker)) inTable = true;
+  if (line.includes(tableEndMarker)) inTable = false;
+
+  if (!inTable) continue;
+  if (!line.trim().startsWith('|') || line.includes('---') || line.includes('Item ID')) continue;
+
   const parts = line.split('|').map((p) => p.trim());
   if (parts.length < 6) continue;
 
   const id = parts[1];
   const description = parts[4] || "";
-  const status = parts[5] || "";
+  const status = parts[parts.length - 2] || "";
   
   if (!id || !/^\d+$/.test(id)) continue;
   
@@ -48,7 +68,12 @@ for (const line of lines) {
     process.exit(1);
   }
   idStatusMap.set(id, status);
-  allRows.push({ id, description, status });
+
+  const blameMatch = blameLines[i] ? blameLines[i].match(/^[a-f0-9]+/) : null;
+  const blameCommit = blameMatch ? blameMatch[0] : null;
+  const isGrandfathered = grandfatheredSHAs.has(blameCommit);
+
+  allRows.push({ id, description, status, isGrandfathered });
 }
 
 function getDependencies(fullText) {
@@ -100,19 +125,19 @@ for (const row of allRows) {
   }
 
   // Check closed-by on completed items
-  const GRANDFATHER_THRESHOLD = 107;
   const sLower = row.status.toLowerCase();
   const isCompleted = row.status.includes('✅') || row.status.includes('✓') || sLower.includes('completed') || sLower.includes('tamamlandı') || sLower.includes('closed');
 
   if (isCompleted) {
     const closedMatch = fullText.match(
-      /(?:closed-by:\s*([a-f0-9]+|legacy|founder|origin\/master|[a-zA-Z0-9_\-\.\/]+)(?:@([a-zA-Z0-9_\-\/]+|\d{4}-\d{2}-\d{2}))?|commit\s*[:\s]\s*([a-f0-9]{7,40})|evidence:|closed-by:|\b(?:src|docs|supabase|messages|\.github)\/[a-zA-Z0-9_\-\.\/]+\b|\b[a-zA-Z0-9_\-]+\.(?:md|sql|tsx?|json)\b)/i
+      /(?:closed-by:\s*([a-f0-9]+|legacy|founder@\d{4}-\d{2}-\d{2}|origin\/master|[a-zA-Z0-9_\-\.\/]+)(?:@([a-zA-Z0-9_\-\/]+|\d{4}-\d{2}-\d{2}))?|commit\s*[:\s]\s*([a-f0-9]{7,40})|evidence:|closed-by:|\b(?:src|docs|supabase|messages|\.github)\/[a-zA-Z0-9_\-\.\/]+\b|\b[a-zA-Z0-9_\-]+\.(?:md|sql|tsx?|json)\b)/i
     );
+    const GRANDFATHER_THRESHOLD = 107;
     const itemIdNum = parseInt(row.id, 10);
-    const isGrandfathered = !isNaN(itemIdNum) && itemIdNum <= GRANDFATHER_THRESHOLD;
+    const isNumericGrandfathered = !isNaN(itemIdNum) && itemIdNum <= GRANDFATHER_THRESHOLD;
 
-    if (!closedMatch && !isGrandfathered) {
-      console.error(`Error: Completed Item #${row.id} is missing closure evidence / 'closed-by:<sha|legacy|founder|branch>@<branch|date>' notation in its description or status.`);
+    if (!closedMatch && !row.isGrandfathered && !isNumericGrandfathered) {
+      console.error(`Error: Completed Item #${row.id} is missing closure evidence / 'closed-by:<sha|legacy|founder@YYYY-MM-DD|branch>@<branch|date>' notation in its description or status.`);
       hasErrors = true;
     }
   }

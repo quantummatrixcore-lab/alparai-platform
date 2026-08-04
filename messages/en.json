@@ -2864,7 +2864,12 @@
     "nav_api_keys": "API Keys",
     "nav_settings": "Settings",
     "nav_codebase_hygiene": "Codebase Hygiene",
-    "nav_modular_arch": "Modular Architecture"
+    "nav_modular_arch": "Modular Architecture",
+    "plan_status_blocked": "Blocked",
+    "deps_graph_empty": "No dependency graph found for selected filter.",
+    "deps_graph_cycle_warning": "Circular dependency detected: {nodes}",
+    "deps_graph_legend_blocker": "Orange line/badge: Blocking dependency",
+    "deps_graph_legend_peer": "Blue line: Peer dependency"
   },
   "footer": {
     "tagline": "Where the world holds AI accountable.",

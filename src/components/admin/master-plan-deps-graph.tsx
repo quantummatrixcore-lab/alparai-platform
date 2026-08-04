@@ -6,6 +6,9 @@ import { PlayCircle, Lock, Filter, Sparkles, Info } from "lucide-react";
 import type { PlanItem } from "@/lib/utils/markdown-parser";
 import { buildDependencyGraph, type TaskDependencyNode } from "@/lib/utils/masterplan-deps";
 
+const NODE_WIDTH = 200;
+const NODE_HEIGHT = 70;
+
 interface MasterPlanDepsGraphProps {
   items: PlanItem[];
   onOpenItem: (item: PlanItem) => void;
@@ -98,8 +101,6 @@ export function MasterPlanDepsGraph({
     });
 
     // 3. Assign SVG X and Y coordinates
-    const NODE_WIDTH = 200;
-    const NODE_HEIGHT = 70;
     const COL_GAP = 90;
     const ROW_GAP = 24;
     const PADDING = 30;
@@ -236,11 +237,11 @@ export function MasterPlanDepsGraph({
           </div>
           <div className="flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-amber-400"></span>
-            <span className="text-fg-secondary font-medium">{t("deps_legend_orange")}</span>
+            <span className="text-fg-secondary font-medium">{t("deps_graph_legend_blocker")}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-blue-400"></span>
-            <span className="text-fg-secondary font-medium">{t("deps_legend_blue")}</span>
+            <span className="text-fg-secondary font-medium">{t("deps_graph_legend_peer")}</span>
           </div>
         </div>
         <div className="text-fg-muted flex items-center gap-1 italic">
@@ -249,12 +250,24 @@ export function MasterPlanDepsGraph({
         </div>
       </div>
 
+      {/* Cycle Warning */}
+      {graph.hasCycle && (
+        <div className="mb-4 flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm font-semibold text-red-400">
+          <span>⚠️</span>
+          <span>
+            {t("deps_graph_cycle_warning", {
+              nodes: graph.cycles.map((c) => c.join(" -> ")).join(", "),
+            })}
+          </span>
+        </div>
+      )}
+
       {/* SVG Canvas Board */}
       <div className="bg-bg-secondary border-border-subtle relative min-h-[420px] overflow-x-auto rounded-xl border p-4 shadow-sm">
         {layoutNodes.length === 0 ? (
           <div className="text-fg-muted flex flex-col items-center justify-center py-16 text-center">
             <Filter className="mb-2 h-8 w-8 opacity-40" />
-            <p className="text-sm font-semibold">{t("deps_empty")}</p>
+            <p className="text-sm font-semibold">{t("deps_graph_empty")}</p>
           </div>
         ) : (
           <svg
@@ -262,6 +275,7 @@ export function MasterPlanDepsGraph({
             height={svgHeight}
             role="img"
             aria-label={t("deps_svg_aria_label")}
+            aria-describedby="deps-graph-legend"
             className="block h-auto w-full select-none"
             viewBox={`0 0 ${svgWidth} ${svgHeight}`}
           >
@@ -297,10 +311,10 @@ export function MasterPlanDepsGraph({
               const toNode = layoutNodeMap.get(edge.toId);
               if (!fromNode || !toNode) return null;
 
-              const x1 = fromNode.x + 200; // right edge of source card
-              const y1 = fromNode.y + 35; // vertical center
+              const x1 = fromNode.x + NODE_WIDTH; // right edge of source card
+              const y1 = fromNode.y + NODE_HEIGHT / 2; // vertical center
               const x2 = toNode.x; // left edge of target card
-              const y2 = toNode.y + 35;
+              const y2 = toNode.y + NODE_HEIGHT / 2;
 
               // Cubic bezier curve path
               const dx = Math.abs(x2 - x1) / 2;
@@ -368,13 +382,13 @@ export function MasterPlanDepsGraph({
                       if (planItem) onOpenItem(planItem);
                     }
                   }}
-                  className="focus-visible:ring-brand-400 cursor-pointer transition-opacity duration-200 focus:outline-none focus-visible:ring-2"
+                  className="focus-visible:ring-brand-400 cursor-pointer transition-opacity duration-200 focus:ring-2 focus:ring-blue-500 focus:outline-none focus-visible:ring-2"
                   style={{ opacity: isHighlighted ? 1 : 0.2 }}
                 >
                   {/* Card Background Container */}
                   <rect
-                    width="200"
-                    height="70"
+                    width={NODE_WIDTH}
+                    height={NODE_HEIGHT}
                     rx="10"
                     fill={cardBg}
                     className={`${cardBorder} transition-all`}
