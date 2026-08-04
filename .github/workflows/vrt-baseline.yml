@@ -37,6 +37,11 @@ jobs:
 
       - run: pnpm build
 
+      - name: Start app
+        run: |
+          pnpm exec next start --port 3000 &
+          npx --yes wait-on http://127.0.0.1:3000 --timeout 120000
+
       - name: Regenerate baselines (chromium)
         run: pnpm exec playwright test tests/e2e/visual/ --project=chromium --update-snapshots
 
