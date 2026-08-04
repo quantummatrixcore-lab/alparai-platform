@@ -2890,3 +2890,75 @@ Birleştirme sonrası: **136 madde, 110 tamamlanmış → %80,9**. (Önceki "128
 **G-6 uyum.** Yalnızca `docs/MASTER_PLAN.md` yazıldı.
 
 **Verification.** Birleştirme program aracılığıyla doğrulandı: master'ın 119 maddesinin tamamı korundu, 111 kapanışın yalnızca #81'i bilinçli olarak açıldı, 14+3 madde eklendi, madde numaraları benzersiz. Depo görünürlüğü GitHub API ile teyit edildi (`private:false` — açık olay). Lansman envanteri dosya yollarıyla kayıtlı.
+
+---
+
+## v12.113 — Lansman ön koşul zinciri ve güvenlik kısıtlandırması (#81 private + sıf taraması)
+
+### Context
+
+Founder açık karar verdi: **`alparai-platform` private olacak**, sırlar taranıp kapatılacak, lansman #123'ün temiz-repo hattıyla gerçekleşecek. Bu, bütün platformu lansman için güvenli hâle getiren yapısal kararın adımlarının fiilî uygulanması. Sıra bağlayıcı ve geri döndürülemez:
+
+1. **#81 ACİL:** Repo private (GitHub Settings → Danger Zone → visibility change) + GitHub secret scanning aç
+2. **Sıf taraması:** `gitleaks detect --verbose` + `trufflehog git --json` — tüm geçmişte; bulunansa döndür
+3. **#145:** Topluluk dosyaları (`CODE_OF_CONDUCT.md`, kök `SECURITY.md`, `.github/ISSUE_TEMPLATE/`)
+4. **#123 (spec yazılı):** Temiz repo squash-import → `alparai` public
+5. **`launch_posts.md` Founder onayı:** HN/Reddit/r/netsec taslakları
+6. **Paylaşım:** Lansman basın duyurusu
+
+Hiçbir adım öncekini atlayamaz; sıra #146'da zorlayıcı ref'ler ile tutulur.
+
+### Yapılan işler (Mimar tarafı, v12.112 bölümünde yazılan)
+
+**#145 spec yazılı:** `CODE_OF_CONDUCT.md` (Contributor Covenant), kök `SECURITY.md` (GitHub güvenlik sekmesi kökü okuyor; `docs/SECURITY.md`'ye referans + 48 saat acknowledgment / 7 gün kritik patch SLA yazılı), `.github/ISSUE_TEMPLATE/bug.md` / `feature.md` / `incident-report.md` (üç şablon).
+
+**#146 lansman sırası bağlayıcısı yazılı:** Madde metni: _"Lansman ön koşul zinciri: #81 (private) → sır taraması → #145 (topluluk dosyaları) → #123 (temiz repo yayını) → `launch_posts.md` Founder onayı → HN/Reddit/GitHub Discussions paylaşımı. Hiçbir adım öncekini atlayamaz; zip dosyası formatında tüm ön koşullar ve sonrasındakiler `depends:`/`blocks:` notasyonuyla maddeler arası karşılıklı referanslı."_
+
+**#147 spec yazılı:** HackerOne programının fiilen açılması (`docs/OUTREACH/hackerone_strategy.md` zaten kapsam/safe harbor/ödül katmanlarıyla hazır) — kapsam, safe harbor + RFC 4646 listeleme, ödül katmanları (başlangıçta Hall of Fame), `public/.well-known/security.txt` → program URL. Ön koşul: #145 + #81.
+
+### #81 güvenlik kararı — kapalı yapısal nedenler
+
+`alparai-platform` permanent private olur. **Sebep:** git geçmişinde stratejik dokümantasyon (MASTER_PLAN satır sayıları, versiyon numaraları, commit mesajları), finansal detaylar (İnsan kaynakları, sözleşme terimler, bütçe planlama), teknik mimarı (iç API versionlama, backup stratejisi), ve potansiyel olarak veritabanı anahtarları (hatta `src/lib/supabase/.admin.ts`'de admin client imporları geçmişte görünüyorsa). Public olması ciddi risk oluşturur. Uygulayıcı (Antigravity) ya da Founder bu tur içinde repo'yu private durumuna alır.
+
+**Sıf taraması ön şartı:** `gitleaks detect --verbose -s` + `trufflehog git --json` tüm geçmişte. Bulunanlar: belgelenir, potansiyel risk değerlendirilir (Founder ile konsülte), ve karar verilir — varsa döndürülür (Supabase/Vercel/Google Cloud anahtarları rotated), yoksa süreç temiz devam eder. GitHub secret scanning (`repo/security/secret scanning`) otomatik açılır; Vercel/Supabase/Google Cloud API key alerts etkinleştirilir.
+
+**Doktrin kuralı (G-6a):** Uygulaması tamamen Implementer rolüne aittir (Antigravity/tarayıcı ajanı); Mimar bu bölümde yalnızca karar ve sıra dokumentasyonu yapar, kodla dokunmaz.
+
+### Şekil — lansman zinciri enforcements
+
+| Ön Koşul         | Adım                                                                 | Sonrası                                 |
+| ---------------- | -------------------------------------------------------------------- | --------------------------------------- |
+| —                | **#81:** Repo private                                                | GitHub secret scanning                  |
+| —                | **Sıf taraması:** gitleaks + trufflehog                              | Bulunanlar raporlanır                   |
+| #81 + sıf sonucu | **#145:** CODE_OF_CONDUCT, kök SECURITY, ISSUE_TEMPLATE              | GitHub repo → Community sekmesi         |
+| #145             | **#123:** Squash-import (temiz `alparai`'ye)                         | `alparai` public, MASTER_PLAN/tarih hiç |
+| #123             | **`launch_posts.md` Founder onayı**                                  | Taslaklar onaylandı, hazır              |
+| İki önceki       | **#147:** HackerOne açılış**                                         | Safe harbor ve ödülü aktif              |
+| #145+#147+#123   | **Paylaşım:** HN + r/MachineLearning + r/netsec + GitHub Discussions | Lansman basın duyurusu yayınlandı       |
+
+### Antigravity blok görev sırası (güncelleme)
+
+**ACİL:** #81 private + sıf taraması ve döndürme → doğrulama raporu.
+
+**Ardından (otomatik sıra):** #145, #123 (zaten spec).
+
+**Paralel (bloğu olmayan):** #144(c) `IRREVERSIBLE` bariyeri (Mimar + enforcer yapısı), #141 ISR + Suspense.
+
+**Sonrası:** #138 OAuth, #137 hesap kurtarma, #140 SEO paneli, #131 i18n/a11y, #132 yaptırım, #142 huni, #143 görsel, #147 HackerOne.
+
+### Panel durumu
+
+136 madde, 110 tamamlanmış → **%80,9** (değişim yok; sıra enforcements v12.112'de yazıldı).
+
+**G-6 uyum.** Yalnızca `docs/MASTER_PLAN.md` yazıldı.
+
+**Verification.**
+
+1. #146'daki `depends:`/`blocks:` notasyonu kontrol edilir (sıra enforcements mevcut mu).
+2. **#81 private durumu:** GitHub API `GET /repos/quantummatrixcore-lab/alparai-platform` → `"private": true` doğrulanır (ACİL yapıldıktan sonra).
+3. **Sıf taraması:** Antigravity doğrulama logunu post eder (hangi tarama aracı, hangi eşik, bulgu yok/bulgu+döndürme).
+4. Push + origin'den okuma (G-7).
+
+---
+
+**Mimar sonraki adımı:** v12.114 — Implementer'ın #81/sıf taraması/lansman zinciri ilerlemesini kaydetmek. Şu andan itibaren tüm Mimar çalışması `master` üzerinde gerçekleşir.
