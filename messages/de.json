@@ -2869,7 +2869,8 @@
     "deps_graph_legend_peer": "Blue line: Peer dependency",
     "seo_performance_title": "SEO & Leistung · ALPAR AI",
     "provider_response_title": "Anbieter-Antwort-Protokoll · ALPAR AI",
-    "modular_architecture_title": "Status der Modularen Architektur · ALPAR AI"
+    "modular_architecture_title": "Status der Modularen Architektur · ALPAR AI",
+    "expert_analysis_title": "Expertenrat-Analyse · ALPAR AI"
   },
   "footer": {
     "tagline": "Wo die Welt KI zur Verantwortung zieht.",
