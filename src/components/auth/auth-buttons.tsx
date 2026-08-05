@@ -39,6 +39,15 @@ declare global {
             }) => void,
           ) => void;
         };
+        oauth2?: {
+          initTokenClient: (config: {
+            client_id: string;
+            scope: string;
+            callback: (response: { access_token?: string; error?: string }) => void;
+          }) => {
+            requestAccessToken: () => void;
+          };
+        };
       };
     };
   }
@@ -73,7 +82,11 @@ export function GoogleSignInButton({
       };
 
       try {
-        if (typeof window !== "undefined" && !window.google?.accounts?.id) {
+        if (
+          typeof window !== "undefined" &&
+          !window.google?.accounts?.id &&
+          !window.google?.accounts?.oauth2
+        ) {
           await new Promise<void>((resolve, reject) => {
             const script = document.createElement("script");
             script.src = "https://accounts.google.com/gsi/client";
@@ -85,7 +98,26 @@ export function GoogleSignInButton({
           });
         }
 
-        if (window.google?.accounts?.id) {
+        if (window.google?.accounts?.oauth2) {
+          const client = window.google.accounts.oauth2.initTokenClient({
+            client_id: clientId,
+            scope: "email profile openid",
+            callback: async (response) => {
+              if (response.access_token) {
+                const { signInWithGoogleIdToken } = await import("@/actions/auth");
+                const res = await signInWithGoogleIdToken(response.access_token);
+                if (res.ok) {
+                  window.location.href = next;
+                } else {
+                  await fallbackOAuthRedirect();
+                }
+              } else {
+                await fallbackOAuthRedirect();
+              }
+            },
+          });
+          client.requestAccessToken();
+        } else if (window.google?.accounts?.id) {
           window.google.accounts.id.initialize({
             client_id: clientId,
             callback: async (response) => {
@@ -95,7 +127,7 @@ export function GoogleSignInButton({
                 if (res.ok) {
                   window.location.href = next;
                 } else {
-                  toast.error(res.error || t("server_error"));
+                  await fallbackOAuthRedirect();
                 }
               }
             },
