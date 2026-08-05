@@ -248,6 +248,74 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </Container>
       </Section>
 
+      {/* Advisory Board Section */}
+      <Section className="bg-bg-secondary/20 border-border-subtle border-t py-16">
+        <Container>
+          <div className="mb-12 text-center">
+            <h2 className="text-fg-primary text-3xl font-extrabold tracking-tight">
+              {t("advisoryBoardTitle")}
+            </h2>
+            <p className="text-fg-muted mx-auto mt-2 max-w-2xl text-sm">
+              {t("advisoryBoardSubtitle")}
+            </p>
+          </div>
+
+          <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2">
+            {[1, 2].map((idx) => (
+              <Card
+                key={idx}
+                className="border-border-subtle bg-bg-surface/50 hover:border-brand-500/40 border-dashed p-6 transition-all"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="border-border-subtle bg-bg-elevated text-fg-muted flex h-12 w-12 items-center justify-center rounded-full border">
+                    <Users className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-fg-primary text-sm font-bold">
+                      {t("advisoryBoardPlaceholderTitle")} #{idx}
+                    </h3>
+                    <p className="text-fg-muted mt-1 text-xs leading-relaxed">
+                      {t("advisoryBoardPlaceholderDesc")}
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          <div className="mt-8 text-center">
+            <a
+              href="mailto:hello@alparai.com?subject=Advisory%20Board%20Inquiry"
+              className="text-brand-400 inline-flex items-center gap-2 text-xs font-semibold hover:underline"
+            >
+              <Mail className="h-4 w-4" />
+              <span>{t("advisoryBoardJoinCTA")} (hello@alparai.com)</span>
+            </a>
+          </div>
+        </Container>
+      </Section>
+
+      {/* Careers & Opportunities Section */}
+      <Section className="bg-bg-primary border-border-subtle border-t py-16">
+        <Container className="text-center">
+          <h2 className="text-fg-primary text-3xl font-extrabold tracking-tight">
+            {t("careersTitle")}
+          </h2>
+          <p className="text-fg-muted mx-auto mt-2 max-w-xl text-sm leading-relaxed">
+            {t("careersSubtitle")}
+          </p>
+          <div className="mt-6">
+            <a
+              href="mailto:hello@alparai.com?subject=Careers%20Inquiry"
+              className="bg-brand-500 hover:bg-brand-600 inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-xs font-semibold text-white transition-colors"
+            >
+              <Mail className="h-4 w-4" />
+              <span>{t("careersCTA")}</span>
+            </a>
+          </div>
+        </Container>
+      </Section>
+
       {/* Values Cards */}
       <Section className="bg-bg-secondary/10 border-border-subtle border-t py-16">
         <Container className="space-y-12">
