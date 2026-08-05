@@ -276,6 +276,18 @@
     "ambassador_subtitle": "Join the ALPAR AI Student Ambassador Program and lead the discussion on AI Safety at your university.",
     "ambassador_form_title": "Apply Now"
   },
+  "press": {
+    "title": "Press & Media Kit",
+    "description": "Official media assets, brand guidelines, and press releases for ALPAR AI.",
+    "download_logo_svg": "Download SVG Logo",
+    "download_logo_png": "Download PNG Logo",
+    "brand_guidelines": "Brand Guidelines",
+    "color_palette": "Color Palette",
+    "typography": "Typography",
+    "press_releases": "Press Releases",
+    "contact_press": "Media Contact",
+    "press_email": "press@alparai.com"
+  },
   "pricing": {
     "title": "Pricing — ALPAR AI",
     "description": "Choose the right tier to support and scale AI accountability.",
