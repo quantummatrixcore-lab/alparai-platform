@@ -344,7 +344,7 @@ export const VENDORS: Vendor[] = [
     name: "Google Ultra",
     category: "AI Chat Interface",
     plan: "Advanced Tier",
-    cost: "$19.99 / mo",
+    cost: "$30.00 / mo",
     criticality: "low",
     prosCons: {
       en: "Pro: High integration with Google Workspace, multimodal reasoning. Con: Subscriptions managed outside company billing.",
