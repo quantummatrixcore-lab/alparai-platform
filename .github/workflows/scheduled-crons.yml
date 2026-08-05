@@ -2,10 +2,8 @@ name: Scheduled Cron Jobs
 
 on:
   schedule:
-    # Run every 10 minutes for fast backfill tasks
-    - cron: "*/10 * * * *"
-    # Run every hour on the hour for scheduled/daily tasks
-    - cron: "0 * * * *"
+    # Run once daily at 04:00 UTC as a fallback (Vercel Crons on Pro plan handle active schedule)
+    - cron: "0 4 * * *"
   workflow_dispatch:
 
 jobs:

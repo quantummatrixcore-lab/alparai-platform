@@ -6,7 +6,6 @@ import { logger } from "@/lib/utils/logger";
 export const dynamic = "force-dynamic";
 
 const BYTES_PER_GB = 1024 ** 3;
-const SUPABASE_FREE_DB_LIMIT_GB = 0.5;
 
 interface GitHubActionsBilling {
   total_minutes_used?: number;
@@ -148,10 +147,10 @@ async function fetchVercelBandwidthGb(): Promise<VendorSnapshot | null> {
     return {
       vendor: "vercel",
       metric: "bandwidth_gb",
-      limit_value: null,
+      limit_value: 1000,
       used_value: totalBytes / BYTES_PER_GB,
       unit: "GB",
-      plan_name: null,
+      plan_name: "Pro",
     };
   } catch (e) {
     logger.error(
@@ -180,10 +179,10 @@ async function fetchSupabaseDbSizeGb(
     return {
       vendor: "supabase",
       metric: "db_size_gb",
-      limit_value: SUPABASE_FREE_DB_LIMIT_GB,
+      limit_value: 8.0,
       used_value: bytes / BYTES_PER_GB,
       unit: "GB",
-      plan_name: "Free",
+      plan_name: "Pro",
     };
   } catch (e) {
     logger.error(

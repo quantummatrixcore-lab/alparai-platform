@@ -82,8 +82,7 @@ async function getHandler(request: NextRequest) {
     const { data: vendorQuotas, error: quotasError } = await admin
       .from("vendor_quotas" as never)
       .select("vendor, metric, limit_value, used_value, unit")
-      .not("limit_value", "is", null)
-      .eq("source", "api");
+      .not("limit_value", "is", null);
 
     if (quotasError) {
       throw new Error(`Failed to fetch vendor_quotas: ${quotasError.message}`);
