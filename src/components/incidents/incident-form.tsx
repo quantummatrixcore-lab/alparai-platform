@@ -12,6 +12,7 @@ import { ProviderCombobox, type ComboboxOption } from "@/components/ui/provider-
 import { ModelAutocomplete, type ModelOption } from "@/components/ui/model-autocomplete";
 import { EvidenceUploader, SubmitButton } from "./evidence-uploader";
 import { VoiceIncidentReporter } from "./VoiceIncidentReporter";
+import { VideoEvidenceUploader } from "./VideoEvidenceUploader";
 import { PIIBanner } from "./pii-banner";
 import { Shield, CheckCircle2, Link as LinkIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -865,9 +866,18 @@ export function IncidentForm({
         )}
       </div>
 
-      <div>
-        <label className="text-fg-primary mb-1.5 block text-sm font-medium">{t("evidence")}</label>
+      <div className="space-y-3">
+        <label className="text-fg-primary block text-sm font-medium">{t("evidence")}</label>
         <EvidenceUploader name="evidence" />
+        <VideoEvidenceUploader
+          onAnalysis={(summaryText) =>
+            setDescription((prev) =>
+              prev
+                ? `${prev}\n\n[Video Delil Özeti]: ${summaryText}`
+                : `[Video Delil Özeti]: ${summaryText}`,
+            )
+          }
+        />
       </div>
 
       <fieldset className="border-border-subtle bg-bg-secondary/40 space-y-3 rounded-md border p-4">
