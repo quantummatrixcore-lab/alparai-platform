@@ -52,7 +52,7 @@ export default async function LeaderboardPage({
   const { data: leaderboardData } = await supabase
     .from("provider_leaderboard")
     .select(
-      "id, slug, name, logo_url, is_verified, website_url, trust_score, incident_count, response_count, is_verified_respondent",
+      "id, slug, name, logo_url, is_verified, website_url, trust_score, incident_count, response_count, is_verified_respondent, response_rate",
     )
     .order("name");
 
@@ -68,11 +68,12 @@ export default async function LeaderboardPage({
       incident_count: number | null;
       response_count: number | null;
       is_verified_respondent: boolean | null;
+      response_rate: number | null;
     }>
   ).map((p) => {
     const total = p.incident_count ?? 0;
     const responded = p.response_count ?? 0;
-    const responseRate = total > 0 ? Math.round((responded / total) * 100) : 0;
+    const responseRate = p.response_rate ?? (total > 0 ? Math.round((responded / total) * 100) : 0);
 
     return {
       id: p.id ?? "",

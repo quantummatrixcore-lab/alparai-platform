@@ -1,0 +1,7 @@
+title = "gitleaks config"
+
+[allowlist]
+description = "Global allowlist"
+paths = [
+    '''\.env\.example''',
+]
