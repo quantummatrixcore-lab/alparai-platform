@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { ProviderCombobox, type ComboboxOption } from "@/components/ui/provider-combobox";
 import { ModelAutocomplete, type ModelOption } from "@/components/ui/model-autocomplete";
 import { EvidenceUploader, SubmitButton } from "./evidence-uploader";
+import { VoiceIncidentReporter } from "./VoiceIncidentReporter";
 import { PIIBanner } from "./pii-banner";
 import { Shield, CheckCircle2, Link as LinkIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -707,6 +708,10 @@ export function IncidentForm({
         onChange={(e) => setDescription(e.target.value)}
         hint={`${description.length}/5000`}
         error={clientErrors.description?.[0] || state.fieldErrors?.description?.[0]}
+      />
+
+      <VoiceIncidentReporter
+        onTranscript={(text) => setDescription((prev) => (prev ? `${prev}\n\n${text}` : text))}
       />
 
       <div className="border-border-subtle bg-bg-secondary/30 space-y-4 rounded-md border p-4">
