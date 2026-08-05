@@ -37,6 +37,7 @@ import {
   Inbox,
   UserCheck,
   Flame,
+  BarChart3,
   LineChart,
 } from "lucide-react";
 
