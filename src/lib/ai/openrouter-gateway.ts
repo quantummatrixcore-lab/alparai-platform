@@ -434,6 +434,56 @@ export async function callWithFailover(
   };
 }
 
+/**
+ * Hedged Requests: Execute requests across multiple models concurrently.
+ * Returns the first successful response (arbitrage for free tier TTFT).
+ */
+export async function callWithHedge(
+  request: Omit<GatewayRequest, "model">,
+  models: readonly GatewayModel[],
+): Promise<GatewayResult & { attemptedModels: string[] }> {
+  // Limit to 2 free models maximum to optimize concurrent connections
+  const activeModels = models.slice(0, 2);
+  const attemptedModels = activeModels.map((m) => `${m.provider}:${m.id}`);
+
+  if (activeModels.length === 0) {
+    return {
+      ok: false,
+      error: { code: "api_error", message: "No models provided for hedging.", model: "hedge" },
+      attemptedModels,
+    };
+  }
+
+  try {
+    const firstSuccess = await Promise.any(
+      activeModels.map(async (model) => {
+        const result = await callModel({ ...request, model });
+        if (!result.ok) {
+          throw result.error;
+        }
+        logger.info("[Gateway] Hedge success", { model: `${model.provider}:${model.id}` });
+        return result;
+      }),
+    );
+
+    return { ...firstSuccess, attemptedModels };
+  } catch (err: unknown) {
+    let errorMessage = String(err);
+    if (err instanceof AggregateError) {
+      errorMessage = err.errors.map((e) => e?.message || String(e)).join(" | ");
+    }
+    return {
+      ok: false,
+      error: {
+        code: "api_error",
+        message: `All hedged models failed: ${errorMessage}`,
+        model: "hedge",
+      },
+      attemptedModels,
+    };
+  }
+}
+
 export async function isGatewayConfigured(): Promise<boolean> {
   const checks = await Promise.all(
     Object.values(adapters).map((adapter) => adapter.isConfigured()),
