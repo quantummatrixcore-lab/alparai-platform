@@ -18,26 +18,31 @@ export function SpatialBentoCard({
   return (
     <div
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-3xl",
-        "border border-white/10 bg-white/5 backdrop-blur-xl",
-        "transition-all duration-500 ease-out hover:-translate-y-1 hover:border-white/20 hover:bg-white/10 hover:shadow-2xl",
+        "group relative flex flex-col overflow-hidden rounded-[32px]",
+        "border border-white/[0.08] bg-white/[0.02] backdrop-blur-[24px]",
+        "transition-all duration-500 ease-out hover:-translate-y-1 hover:border-white/[0.15] hover:bg-white/[0.04] hover:shadow-[0_8px_32px_rgba(0,0,0,0.4)]",
         className,
       )}
       {...props}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.06] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
-      <div className="relative z-10 flex flex-1 flex-col p-6">
+      <div className="relative z-10 flex flex-1 flex-col p-8">
         {(title || description || actionIcon) && (
-          <div className="mb-4 flex items-start justify-between">
-            <div>
+          <div className="mb-6 flex items-start justify-between">
+            <div className="space-y-1.5">
               {title && (
-                <h3 className="text-lg font-semibold tracking-tight text-white">{title}</h3>
+                <h3 className="text-[17px] font-medium tracking-[-0.01em] text-neutral-100">
+                  {title}
+                </h3>
               )}
-              {description && <p className="mt-1 text-sm text-neutral-400">{description}</p>}
+              {description && (
+                <p className="text-[14px] leading-relaxed text-neutral-400">{description}</p>
+              )}
             </div>
             {actionIcon && (
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white transition-transform group-hover:scale-110 group-hover:bg-white/20">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.05] text-neutral-300 transition-all duration-300 group-hover:scale-105 group-hover:bg-white/[0.1]">
                 {actionIcon}
               </div>
             )}
