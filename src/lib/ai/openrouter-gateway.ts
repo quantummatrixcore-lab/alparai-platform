@@ -124,6 +124,14 @@ export const QUESTIONNAIRE_MODELS: readonly GatewayModel[] = [
     maxTokens: 4096,
   },
   { id: "cohere/north-mini-code:free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+  // Qwen3.5 Omni — natively multimodal (text + audio + image + video), 256k context, 113-language ASR
+  { id: "qwen/qwen3.5-omni-7b:free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+  {
+    id: "qwen/qwen2.5-vl-72b-instruct:free",
+    provider: "openrouter",
+    tier: "free",
+    maxTokens: 4096,
+  },
 ] as const;
 
 export const SUPREME_COURT_CHAIN: readonly GatewayModel[] = [
