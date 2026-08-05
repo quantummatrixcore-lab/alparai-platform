@@ -31,19 +31,21 @@ export default async function StartupHealthPage({
 
   if (!healthData) {
     return (
-      <AdminContainer>
-        <AdminPageHeader
-          icon={<Activity className="h-6 w-6 text-rose-400" />}
-          title={t("startup_health_score") || "Startup Health Matrix"}
-          subtitle="Access Restricted or Data Unavailable"
-        />
-        <AdminSectionCard>
-          <div className="text-fg-muted p-8 text-center">
-            {t("no_data_available_or_insufficient_permis") ||
-              "No data available or insufficient permissions."}
-          </div>
-        </AdminSectionCard>
-      </AdminContainer>
+      <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+        <AdminContainer>
+          <AdminPageHeader
+            icon={<Activity className="h-6 w-6 text-rose-400" />}
+            title={t("startup_health_score") || "Startup Health Matrix"}
+            subtitle="Access Restricted or Data Unavailable"
+          />
+          <AdminSectionCard>
+            <div className="text-fg-muted p-8 text-center">
+              {t("no_data_available_or_insufficient_permis") ||
+                "No data available or insufficient permissions."}
+            </div>
+          </AdminSectionCard>
+        </AdminContainer>
+      </div>
     );
   }
 

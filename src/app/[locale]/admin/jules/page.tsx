@@ -10,11 +10,13 @@ export default async function JulesPage() {
   const [sessionsResult] = await Promise.all([listJulesSessions()]);
 
   return (
-    <JulesDashboard
-      sessions={sessionsResult.sessions ?? []}
-      connected={sessionsResult.success}
-      defaultRepo="quantummatrixcore-lab/Alparai.com"
-    />
+    <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+      <JulesDashboard
+        sessions={sessionsResult.sessions ?? []}
+        connected={sessionsResult.success}
+        defaultRepo="quantummatrixcore-lab/Alparai.com"
+      />
+    </div>
   );
 }
 

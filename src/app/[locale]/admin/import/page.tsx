@@ -44,12 +44,14 @@ export default async function AdminImportPage({ params }: PageProps) {
   }
 
   return (
-    <Container className="space-y-10 py-8">
-      <CsvUploadForm locale={locale} />
-      <ImportQueueClient
-        initialIncidents={(pendingIncidents as unknown as ImportedIncident[]) || []}
-        locale={locale}
-      />
-    </Container>
+    <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+      <Container className="space-y-10 py-8">
+        <CsvUploadForm locale={locale} />
+        <ImportQueueClient
+          initialIncidents={(pendingIncidents as unknown as ImportedIncident[]) || []}
+          locale={locale}
+        />
+      </Container>
+    </div>
   );
 }

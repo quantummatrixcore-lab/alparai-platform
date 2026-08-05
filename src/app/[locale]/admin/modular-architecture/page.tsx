@@ -46,7 +46,7 @@ export default async function ModularArchitectureAdminPage({
 
   await requireAdmin();
   return (
-    <div className="space-y-8 p-6 text-white">
+    <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 text-white shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
       <div>
         <h1 className="flex items-center gap-3 text-3xl font-bold tracking-tight text-white">
           <Layers className="h-8 w-8 text-cyan-400" />

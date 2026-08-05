@@ -53,18 +53,20 @@ export default async function AdminTakedownPage({
   const pending = items.filter((i) => i.status === "pending");
 
   return (
-    <Container className="py-10">
-      <header className="mb-6">
-        <h1 className="text-fg-primary text-2xl font-bold">{t("stats_takedown_requests")}</h1>
-        <p className="text-fg-muted mt-1 text-sm">
-          {pending.length} {t("pending_review")} · {items.length} {t("stats_total")}
-        </p>
-      </header>
-      <Card>
-        <CardContent className="pt-6">
-          <TakedownQueue items={items} />
-        </CardContent>
-      </Card>
-    </Container>
+    <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+      <Container className="py-10">
+        <header className="mb-6">
+          <h1 className="text-fg-primary text-2xl font-bold">{t("stats_takedown_requests")}</h1>
+          <p className="text-fg-muted mt-1 text-sm">
+            {pending.length} {t("pending_review")} · {items.length} {t("stats_total")}
+          </p>
+        </header>
+        <Card>
+          <CardContent className="pt-6">
+            <TakedownQueue items={items} />
+          </CardContent>
+        </Card>
+      </Container>
+    </div>
   );
 }

@@ -24,21 +24,23 @@ export default async function FeatureFlagsPage({
   const flags = await getFeatureFlagsAction();
 
   return (
-    <AdminContainer>
-      <AdminPageHeader
-        icon={<Flag className="text-brand-400 h-6 w-6" />}
-        title={t("nav_featureFlags") || "Live Feature Flags Management"}
-        subtitle={
-          t("sistem_zelliklerini_pii_guardian_sybil_s") ||
-          "Manage system features, PII guardian rules, and edge caches in real-time."
-        }
-        breadcrumb={[
-          { label: "Admin", href: "/admin" },
-          { label: "Feature Flags", href: "/admin/feature-flags" },
-        ]}
-      />
+    <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+      <AdminContainer>
+        <AdminPageHeader
+          icon={<Flag className="text-brand-400 h-6 w-6" />}
+          title={t("nav_featureFlags") || "Live Feature Flags Management"}
+          subtitle={
+            t("sistem_zelliklerini_pii_guardian_sybil_s") ||
+            "Manage system features, PII guardian rules, and edge caches in real-time."
+          }
+          breadcrumb={[
+            { label: "Admin", href: "/admin" },
+            { label: "Feature Flags", href: "/admin/feature-flags" },
+          ]}
+        />
 
-      <FeatureFlagsClient initialFlags={flags} />
-    </AdminContainer>
+        <FeatureFlagsClient initialFlags={flags} />
+      </AdminContainer>
+    </div>
   );
 }

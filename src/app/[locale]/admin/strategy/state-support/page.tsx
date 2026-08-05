@@ -264,7 +264,7 @@ export default async function StateSupportPage({
             return (
               <div
                 key={kpi.label}
-                className="border-border-subtle bg-bg-secondary/40 rounded-2xl border p-5 backdrop-blur-sm"
+                className="border-border-subtle rounded-2xl border bg-zinc-900/40 p-5 ring-1 ring-white/10 backdrop-blur-sm backdrop-blur-xl"
                 style={{ boxShadow: `inset 0 0 30px ${kpi.glow}` }}
               >
                 <div className="flex items-start justify-between">

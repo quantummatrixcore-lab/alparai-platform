@@ -271,7 +271,7 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
         <p className="text-[11px] leading-relaxed">{t("kbench_box_desc")}</p>
       </div>
 
-      <div className="bg-bg-secondary/40 overflow-hidden rounded-xl border border-white/5 backdrop-blur-xl">
+      <div className="overflow-hidden rounded-xl border border-white/5 bg-zinc-900/40 ring-1 ring-white/10 backdrop-blur-xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-white">
             <thead className="text-fg-muted bg-white/5 text-xs font-bold uppercase">
@@ -355,7 +355,7 @@ export default async function KBenchmarkPage({ params }: { params: Promise<{ loc
           <BenchTrRunButton />
         </div>
 
-        <div className="bg-bg-secondary/40 overflow-hidden rounded-xl border border-white/5 backdrop-blur-xl">
+        <div className="overflow-hidden rounded-xl border border-white/5 bg-zinc-900/40 ring-1 ring-white/10 backdrop-blur-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-white">
               <thead className="text-fg-muted bg-white/5 text-xs font-bold uppercase">

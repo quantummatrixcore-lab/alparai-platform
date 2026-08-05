@@ -51,13 +51,15 @@ export default async function AdminEcosystemPage({
   };
 
   return (
-    <EcosystemDashboard
-      data={{
-        queue: queueRes.data ?? [],
-        feed: feedRes.data ?? [],
-        positive: positiveRes.data ?? [],
-        stats,
-      }}
-    />
+    <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+      <EcosystemDashboard
+        data={{
+          queue: queueRes.data ?? [],
+          feed: feedRes.data ?? [],
+          positive: positiveRes.data ?? [],
+          stats,
+        }}
+      />
+    </div>
   );
 }

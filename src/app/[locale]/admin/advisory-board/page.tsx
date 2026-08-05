@@ -106,7 +106,7 @@ export default async function AdvisoryBoardPage({
         />
       </div>
 
-      <div className="bg-bg-secondary/40 overflow-hidden rounded-xl border border-white/5 backdrop-blur-xl">
+      <div className="overflow-hidden rounded-xl border border-white/5 bg-zinc-900/40 ring-1 ring-white/10 backdrop-blur-xl">
         <div className="border-b border-white/5 bg-white/5 p-4">
           <p className="text-fg-muted flex items-center gap-2 text-sm">
             <WarningCircle weight="fill" className="text-amber-400" />

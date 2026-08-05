@@ -13,21 +13,23 @@ export default async function SignalsPage({ params }: { params: Promise<{ locale
   const signals = await getSystemSignalsAction();
 
   return (
-    <AdminContainer>
-      <AdminPageHeader
-        icon={<Activity className="h-6 w-6 text-cyan-400" />}
-        title={t("signals_title") || "Telemetry & Signal Control"}
-        subtitle={
-          t("signals_subtitle") ||
-          "Live real-time system metrics, performance telemetry, and health gauges."
-        }
-        breadcrumb={[
-          { label: "Admin", href: "/admin" },
-          { label: "Signals", href: "/admin/signals" },
-        ]}
-      />
+    <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+      <AdminContainer>
+        <AdminPageHeader
+          icon={<Activity className="h-6 w-6 text-cyan-400" />}
+          title={t("signals_title") || "Telemetry & Signal Control"}
+          subtitle={
+            t("signals_subtitle") ||
+            "Live real-time system metrics, performance telemetry, and health gauges."
+          }
+          breadcrumb={[
+            { label: "Admin", href: "/admin" },
+            { label: "Signals", href: "/admin/signals" },
+          ]}
+        />
 
-      <SignalsClient initialSignals={signals} />
-    </AdminContainer>
+        <SignalsClient initialSignals={signals} />
+      </AdminContainer>
+    </div>
   );
 }

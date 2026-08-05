@@ -31,7 +31,7 @@ export default async function PlatformsAdminPage({
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8 pb-12">
+    <div className="mx-auto max-w-6xl space-y-8 rounded-3xl bg-zinc-900/40 p-6 pb-12 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
       <div>
         <h1 className="flex items-center gap-3 text-3xl font-black tracking-tight text-white">
           <Globe className="h-8 w-8 text-pink-400" />

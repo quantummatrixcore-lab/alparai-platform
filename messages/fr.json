@@ -2866,7 +2866,10 @@
     "deps_graph_empty": "No dependency graph found for selected filter.",
     "deps_graph_cycle_warning": "Circular dependency detected: {nodes}",
     "deps_graph_legend_blocker": "Orange line/badge: Blocking dependency",
-    "deps_graph_legend_peer": "Blue line: Peer dependency"
+    "deps_graph_legend_peer": "Blue line: Peer dependency",
+    "seo_performance_title": "SEO & Performance · ALPAR AI",
+    "provider_response_title": "Protocole de Réponse du Fournisseur · ALPAR AI",
+    "modular_architecture_title": "Statut de l'Architecture Modulaire · ALPAR AI"
   },
   "footer": {
     "tagline": "Wo die Welt KI zur Verantwortung zieht.",
@@ -3577,7 +3580,16 @@
     "prNeutralityTitle": "4. Neutralité Absolue de la Plateforme",
     "prNeutralityText": "Conformément à la Charte de Neutralité d'ALPAR AI, les fonctionnalités payantes (k-provider-preview) ne permettent JAMAIS la suppression ou la modification des rapports d'incidents valides.",
     "prAppealsTitle": "5. Droits de Correctif et de Rectification",
-    "prAppealsText": "Si un fournisseur déploie un correctif technique traitant la vulnérabilité, il peut soumettre une preuve. Après vérification, le statut est mis à jour en 'Corrigé'."
+    "prAppealsText": "Si un fournisseur déploie un correctif technique traitant la vulnérabilité, il peut soumettre une preuve. Après vérification, le statut est mis à jour en 'Corrigé'.",
+    "appealPageTitle": "Recours contre la Décision de Retrait",
+    "backToTakedownPolicy": "Retour à la Politique de Retrait",
+    "appealIntro": "Si une demande de retrait a été appliquée à votre contenu ve vous pensez qu'elle est erronée, vous pouvez soumettre un recours. Notre SLA de 24h s'applique.",
+    "appealRightsTitle": "Votre Droit de Recours et Contre-Notification",
+    "appealRightsDesc": "Conformément à l'article 14 de la directive UE sur le commerce électronique, les parties affectées ont le droit de présenter des preuves contraires.",
+    "appealNextStepsTitle": "Que se passe-t-il ensuite ?",
+    "appealNextStep1": "Le reçu de soumission et le jeton de suivi sont générés instantanément.",
+    "appealNextStep2": "Notre conseil juridique examine les preuves contraires dans les 24 heures.",
+    "appealNextStep3": "Si le recours est accepté, l'enregistrement affecté est restauré."
   },
   "dilemmas": {
     "pageTitle": "KI-Dilemmata",

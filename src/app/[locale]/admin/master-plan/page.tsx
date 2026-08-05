@@ -24,7 +24,7 @@ export default async function MasterPlanPage({ params }: { params: Promise<{ loc
   const { items, error } = parseMasterPlan();
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen rounded-3xl bg-zinc-900/40 p-6 py-8 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
       <Container>
         <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>

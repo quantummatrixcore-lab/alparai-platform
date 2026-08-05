@@ -2892,7 +2892,10 @@
     "deps_graph_empty": "Seçilen filtre için çizilecek bağımlılık grafiği bulunamadı.",
     "deps_graph_cycle_warning": "Döngüsel bağımlılık tespit edildi: {nodes}",
     "deps_graph_legend_blocker": "Turuncu Çizgi / Rozet: Bloklayan Bağımlılık",
-    "deps_graph_legend_peer": "Mavi Çizgi: Eş Bağımlılık"
+    "deps_graph_legend_peer": "Mavi Çizgi: Eş Bağımlılık",
+    "seo_performance_title": "SEO ve Performans · ALPAR AI",
+    "provider_response_title": "Sağlayıcı Yanıt Protokolü · ALPAR AI",
+    "modular_architecture_title": "Modüler Mimari Durumu · ALPAR AI"
   },
   "footer": {
     "tagline": "Dünyanın AI'ı hesap verilebilir kıldığı yer.",
@@ -3603,7 +3606,16 @@
     "prNeutralityTitle": "4. Mutlak Platform Tarafsızlığı",
     "prNeutralityText": "ALPAR AI Tarafsızlık Şartı uyarınca, ücretli altyapı özellikleri (k-provider-preview ön izleme uyarıları veya sabitlenmiş yanıt formatı), geçerli olay raporlarının silinmesine, gizlenmesine veya skorlarının değiştirilmesine ASLA izin vermez.",
     "prAppealsTitle": "5. Düzeltme ve İyileştirme Hakları",
-    "prAppealsText": "Sağlayıcı ilgili olaya neden olan zafiyeti gideren bir teknik yama veya güncelleme yayınladığında, iyileştirme kanıtı sunabilir. Doğrulamanın ardından olay kaydı 'İyileştirildi' statüsüyle güncellenir."
+    "prAppealsText": "Sağlayıcı ilgili olaya neden olan zafiyeti gideren bir teknik yama veya güncelleme yayınladığında, iyileştirme kanıtı sunabilir. Doğrulamanın ardından olay kaydı 'İyileştirildi' statüsüyle güncellenir.",
+    "appealPageTitle": "İçerik Kaldırma Kararına İtiraz",
+    "backToTakedownPolicy": "İçerik Kaldırma Politikasına Dön",
+    "appealIntro": "İçeriğinize veya raporunuza bir kaldırma isteği veya kaldırma kararı uygulandıysa ve işlemin sehven veya yetersiz gerekçeyle yapıldığına inanıyorsanız, aşağıdan resmi bir itiraz sunabilirsiniz. İtiraz incelemelerinde 24 saatlik SLA geçerlidir.",
+    "appealRightsTitle": "İtiraz ve Karşı Bildirim Hakkınız",
+    "appealRightsDesc": "AB E-Ticaret Direktifi Madde 14 ve KVKK düzenlemeleri uyarınca, bir kaldırma kararı verildiğinde etkilenen taraflar karşı delil sunma hakkına sahiptir.",
+    "appealNextStepsTitle": "Sonra Ne Olacak?",
+    "appealNextStep1": "Gönderim üzerine alındı belgesi ve takip belirteci anında oluşturulur.",
+    "appealNextStep2": "Uyum ve Hukuk Kurulumuz karşı delilleri 24 saat içinde inceler.",
+    "appealNextStep3": "İtiraz kabul edilirse, etkilenen kayıt geri yüklenir ve denetim izi güncellenir."
   },
   "dilemmas": {
     "pageTitle": "Yapay Zeka Dilemmaları",

@@ -36,16 +36,18 @@ export default async function AdminAutopilotAnalyticsPage({
   const result = await getAdminAutopilotSnapshot(100);
   if (!result.ok || !result.snapshot) {
     return (
-      <Container className="py-10">
-        <Card className="border-white/5 bg-white/[0.02]">
-          <CardHeader>
-            <CardTitle>{t("autopilot_analytics") || "Autopilot Analytics"}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-fg-muted">{result.error ?? tCommon("unknown_error")}</p>
-          </CardContent>
-        </Card>
-      </Container>
+      <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+        <Container className="py-10">
+          <Card className="border-white/5 bg-white/[0.02]">
+            <CardHeader>
+              <CardTitle>{t("autopilot_analytics") || "Autopilot Analytics"}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-fg-muted">{result.error ?? tCommon("unknown_error")}</p>
+            </CardContent>
+          </Card>
+        </Container>
+      </div>
     );
   }
 

@@ -41,7 +41,7 @@ export default async function AdminInnovationsPage({
   const initialInnovations = (innovationsData || []) as StrategyInnovation[];
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen rounded-3xl bg-zinc-900/40 p-6 py-8 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
       <Container>
         <InnovationsClient
           initialInnovations={initialInnovations}

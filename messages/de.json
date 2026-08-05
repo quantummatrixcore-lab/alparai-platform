@@ -2866,7 +2866,10 @@
     "deps_graph_empty": "No dependency graph found for selected filter.",
     "deps_graph_cycle_warning": "Circular dependency detected: {nodes}",
     "deps_graph_legend_blocker": "Orange line/badge: Blocking dependency",
-    "deps_graph_legend_peer": "Blue line: Peer dependency"
+    "deps_graph_legend_peer": "Blue line: Peer dependency",
+    "seo_performance_title": "SEO & Leistung · ALPAR AI",
+    "provider_response_title": "Anbieter-Antwort-Protokoll · ALPAR AI",
+    "modular_architecture_title": "Status der Modularen Architektur · ALPAR AI"
   },
   "footer": {
     "tagline": "Wo die Welt KI zur Verantwortung zieht.",
@@ -3577,7 +3580,16 @@
     "prNeutralityTitle": "4. Absolute Plattform-Neutralität",
     "prNeutralityText": "Gemäß der ALPAR AI Neutralitätscharta erlauben kostenpflichtige Funktionen (k-provider-preview) NIEMALS das Löschen, Ausblenden oder Verändern gültiger Vorfallsberichte.",
     "prAppealsTitle": "5. Behebungs- und Korrekturrechte",
-    "prAppealsText": "Behebt ein Anbieter die Schwachstelle durch ein technisches Update, kann er einen Nachweis einreichen. Nach Prüfung wird der Status auf 'Behoben' aktualisiert."
+    "prAppealsText": "Behebt ein Anbieter die Schwachstelle durch ein technisches Update, kann er einen Nachweis einreichen. Nach Prüfung wird der Status auf 'Behoben' aktualisiert.",
+    "appealPageTitle": "Einspruch gegen Entfernungsentscheidung",
+    "backToTakedownPolicy": "Zurück zur Entfernungsrichtlinie",
+    "appealIntro": "Wenn ein Entfernungsantrag auf Ihre Inhalte angewendet wurde und Sie der Meinung sind, dass dies irrtümlich geschah, können Sie unten Einspruch einlegen. Es gilt unser 24-Stunden-SLA.",
+    "appealRightsTitle": "Ihr Recht auf Einspruch & Gegendarstellung",
+    "appealRightsDesc": "Gemäß Artikel 14 der EU-Richtlinie über den elektronischen Geschäftsverkehr haben betroffene Parteien das Recht, Gegenbeweise vorzulegen.",
+    "appealNextStepsTitle": "Was passiert als Nächstes?",
+    "appealNextStep1": "Eingangsbestätigung und Tracking-Token werden sofort generiert.",
+    "appealNextStep2": "Unser Compliance & Legal Board prüft Gegenbeweise innerhalb von 24 Stunden.",
+    "appealNextStep3": "Wird dem Einspruch stattgegeben, wird der Datensatz wiederhergestellt."
   },
   "dilemmas": {
     "pageTitle": "KI-Dilemmata",

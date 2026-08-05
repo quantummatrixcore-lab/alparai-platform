@@ -2892,7 +2892,10 @@
     "deps_graph_empty": "No dependency graph found for selected filter.",
     "deps_graph_cycle_warning": "Circular dependency detected: {nodes}",
     "deps_graph_legend_blocker": "Orange line/badge: Blocking dependency",
-    "deps_graph_legend_peer": "Blue line: Peer dependency"
+    "deps_graph_legend_peer": "Blue line: Peer dependency",
+    "seo_performance_title": "SEO & Performance · ALPAR AI",
+    "provider_response_title": "Provider Response Protocol · ALPAR AI",
+    "modular_architecture_title": "Modular Architecture Status · ALPAR AI"
   },
   "footer": {
     "tagline": "Where the world holds AI accountable.",
@@ -3603,7 +3606,16 @@
     "prNeutralityTitle": "4. Absolute Platform Neutrality",
     "prNeutralityText": "In strict accordance with the ALPAR AI Neutrality Charter, paid utility features (such as k-provider-preview early alerts or pinned response formatting) NEVER permit redaction, score modification, or deletion of valid incident reports.",
     "prAppealsTitle": "5. Remediation & Retraction Rights",
-    "prAppealsText": "If a provider deploys a technical fix or patch addressing the incident vulnerability, they may submit proof of remediation. Upon verification, the incident record is updated to reflect remediated status."
+    "prAppealsText": "If a provider deploys a technical fix or patch addressing the incident vulnerability, they may submit proof of remediation. Upon verification, the incident record is updated to reflect remediated status.",
+    "appealPageTitle": "Takedown Decision Appeal",
+    "backToTakedownPolicy": "Back to Takedown Policy",
+    "appealIntro": "If a takedown request or removal decision was applied to your content or report, and you believe the action was taken in error or without sufficient grounds, you may submit a formal appeal below. Our 24-hour SLA applies to appeal reviews.",
+    "appealRightsTitle": "Your Right to Appeal & Counter-Notice",
+    "appealRightsDesc": "Under Article 14 of the EU E-Commerce Directive and KVKK regulations, affected parties have the right to present counter-evidence when a removal decision is rendered. All submitted appeals undergo expedited review by our Moderation Board.",
+    "appealNextStepsTitle": "What Happens Next?",
+    "appealNextStep1": "Submission receipt and tracking token are instantly generated upon dispatch.",
+    "appealNextStep2": "Our Compliance & Legal Board reviews counter-evidence within 24 hours.",
+    "appealNextStep3": "If the appeal is upheld, the affected record is restored and audit trail updated."
   },
   "dilemmas": {
     "pageTitle": "AI Dilemmas",

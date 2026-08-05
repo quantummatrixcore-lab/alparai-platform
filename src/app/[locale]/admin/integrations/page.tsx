@@ -168,7 +168,7 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
           title={t("integrations_title")}
           subtitle={t("integrations_sync_failed")}
         />
-        <div className="bg-bg-secondary/40 border-border-subtle rounded-xl border p-8 text-center">
+        <div className="border-border-subtle rounded-xl border bg-zinc-900/40 p-8 text-center ring-1 ring-white/10 backdrop-blur-xl">
           <p className="mb-4 text-sm text-rose-400">{error}</p>
           <Button
             onClick={fetchData}

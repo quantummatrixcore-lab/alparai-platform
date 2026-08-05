@@ -193,7 +193,7 @@ export default async function StrategyOverviewPage({
             <HealthGauge score={dynamicSnapshot.health_score} />
 
             {/* Core Metrics Card */}
-            <div className="border-border-subtle bg-bg-secondary/40 rounded-2xl border p-6 backdrop-blur-md">
+            <div className="border-border-subtle rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-md backdrop-blur-xl">
               <h3 className="mb-4 text-xs font-bold tracking-wider text-white uppercase">
                 {t("core_metrics_snapshot")}
               </h3>
@@ -262,7 +262,7 @@ export default async function StrategyOverviewPage({
           {/* RIGHT COLUMN: Strategy Modules Summary Links */}
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:col-span-2">
             {/* SWOT ANALİZİ CARD */}
-            <div className="border-border-subtle bg-bg-secondary/40 hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border p-6 transition-all duration-300">
+            <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
               <div>
                 <div className="mb-4 flex items-center justify-between">
                   <div className="rounded-lg border border-purple-500/25 bg-purple-500/10 p-2 text-purple-400">
@@ -301,7 +301,7 @@ export default async function StrategyOverviewPage({
             </div>
 
             {/* RİSK YÖNETİMİ CARD */}
-            <div className="border-border-subtle bg-bg-secondary/40 hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border p-6 transition-all duration-300">
+            <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
               <div>
                 <div className="mb-4 flex items-center justify-between">
                   <div className="rounded-lg border border-red-500/25 bg-red-500/10 p-2 text-red-400">
@@ -340,7 +340,7 @@ export default async function StrategyOverviewPage({
             </div>
 
             {/* DEĞERLEME MODELİ CARD */}
-            <div className="border-border-subtle bg-bg-secondary/40 hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border p-6 transition-all duration-300">
+            <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
               <div>
                 <div className="mb-4 flex items-center justify-between">
                   <div className="rounded-lg border border-amber-500/25 bg-amber-500/10 p-2 text-amber-400">
@@ -375,7 +375,7 @@ export default async function StrategyOverviewPage({
             </div>
 
             {/* OKR MILESTONES CARD */}
-            <div className="border-border-subtle bg-bg-secondary/40 hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border p-6 transition-all duration-300">
+            <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
               <div>
                 <div className="mb-4 flex items-center justify-between">
                   <div className="rounded-lg border border-blue-500/25 bg-blue-500/10 p-2 text-blue-400">
@@ -418,7 +418,7 @@ export default async function StrategyOverviewPage({
             </div>
 
             {/* STRATEJİK DEĞERLENDİRME CARD */}
-            <div className="border-border-subtle bg-bg-secondary/40 hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border p-6 transition-all duration-300">
+            <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
               <div>
                 <div className="mb-4 flex items-center justify-between">
                   <div className="rounded-lg border border-emerald-500/25 bg-emerald-500/10 p-2 text-emerald-400">
@@ -454,7 +454,7 @@ export default async function StrategyOverviewPage({
             </div>
 
             {/* 360° EKOSİSTEM ANALİZİ CARD */}
-            <div className="border-border-subtle bg-bg-secondary/40 hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border p-6 transition-all duration-300">
+            <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
               <div>
                 <div className="mb-4 flex items-center justify-between">
                   <div className="border-brand-500/25 bg-brand-500/10 text-brand-400 rounded-lg border p-2">
