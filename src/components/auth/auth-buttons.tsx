@@ -81,12 +81,22 @@ export function GoogleSignInButton({
         }
       };
 
+      // GIS accounts.id.callback returns credential = JWT ID Token
+      // This is exactly what supabase.auth.signInWithIdToken expects.
+      // DO NOT use oauth2.initTokenClient — it returns access_token (not ID token)
+      // and causes a second Supabase OAuth redirect (the supabase.co double-popup bug).
+      const handleCredential = async (credential: string) => {
+        const { signInWithGoogleIdToken } = await import("@/actions/auth");
+        const res = await signInWithGoogleIdToken(credential);
+        if (res.ok) {
+          window.location.href = next;
+        } else {
+          await fallbackOAuthRedirect();
+        }
+      };
+
       try {
-        if (
-          typeof window !== "undefined" &&
-          !window.google?.accounts?.id &&
-          !window.google?.accounts?.oauth2
-        ) {
+        if (typeof window !== "undefined" && !window.google?.accounts?.id) {
           await new Promise<void>((resolve, reject) => {
             const script = document.createElement("script");
             script.src = "https://accounts.google.com/gsi/client";
@@ -96,39 +106,17 @@ export function GoogleSignInButton({
             script.onerror = () => reject(new Error("Failed to load Google GIS"));
             document.head.appendChild(script);
           });
+          await new Promise<void>((resolve) => setTimeout(resolve, 300));
         }
 
-        if (window.google?.accounts?.oauth2) {
-          const client = window.google.accounts.oauth2.initTokenClient({
-            client_id: clientId,
-            scope: "email profile openid",
-            callback: async (response) => {
-              if (response.access_token) {
-                const { signInWithGoogleIdToken } = await import("@/actions/auth");
-                const res = await signInWithGoogleIdToken(response.access_token);
-                if (res.ok) {
-                  window.location.href = next;
-                } else {
-                  await fallbackOAuthRedirect();
-                }
-              } else {
-                await fallbackOAuthRedirect();
-              }
-            },
-          });
-          client.requestAccessToken();
-        } else if (window.google?.accounts?.id) {
+        if (window.google?.accounts?.id) {
           window.google.accounts.id.initialize({
             client_id: clientId,
             callback: async (response) => {
               if (response.credential) {
-                const { signInWithGoogleIdToken } = await import("@/actions/auth");
-                const res = await signInWithGoogleIdToken(response.credential);
-                if (res.ok) {
-                  window.location.href = next;
-                } else {
-                  await fallbackOAuthRedirect();
-                }
+                await handleCredential(response.credential);
+              } else {
+                await fallbackOAuthRedirect();
               }
             },
           });
