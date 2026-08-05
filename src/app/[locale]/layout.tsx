@@ -19,6 +19,7 @@ import { PwaRegister } from "@/components/pwa-register";
 
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { PostHogProvider } from "@/components/posthog-provider";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import "../globals.css";
 import { Inter, Outfit, JetBrains_Mono } from "next/font/google";
@@ -81,27 +82,29 @@ export default async function LocaleLayout({
         >
           {tCommon("skipToContent", { defaultValue: "Skip to main content" })}
         </a>
-        <NextIntlClientProvider messages={messages}>
-          {isEmbed ? (
-            <main className="m-0 min-h-screen bg-transparent p-0">{children}</main>
-          ) : (
-            <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden pb-16 lg:pb-0">
-              <Header user={headerUser} />
-              <MainContent>{children}</MainContent>
-              <Footer />
-            </div>
-          )}
-          {!isEmbed && <MobileBottomNav />}
-          <ClientProviders />
-          {!isEmbed && <ScrollToTop />}
-          <PwaRegister />
-          <OrganizationJsonLd />
-          <SoftwareApplicationJsonLd />
-          <WebSiteJsonLd />
-          <PlausibleWithConsent />
-          <Analytics />
-          <SpeedInsights />
-        </NextIntlClientProvider>
+        <PostHogProvider>
+          <NextIntlClientProvider messages={messages}>
+            {isEmbed ? (
+              <main className="m-0 min-h-screen bg-transparent p-0">{children}</main>
+            ) : (
+              <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden pb-16 lg:pb-0">
+                <Header user={headerUser} />
+                <MainContent>{children}</MainContent>
+                <Footer />
+              </div>
+            )}
+            {!isEmbed && <MobileBottomNav />}
+            <ClientProviders />
+            {!isEmbed && <ScrollToTop />}
+            <PwaRegister />
+            <OrganizationJsonLd />
+            <SoftwareApplicationJsonLd />
+            <WebSiteJsonLd />
+            <PlausibleWithConsent />
+            <Analytics />
+            <SpeedInsights />
+          </NextIntlClientProvider>
+        </PostHogProvider>
       </body>
     </html>
   );

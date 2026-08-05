@@ -66,6 +66,10 @@
       "**/ANTIGRAVITY*",
       "**/ALPAR_AI_Master_Dossier*",
       "**/CLAUDE_STRATEGY_BRIEF*",
+      "**/docs/**",
+      "**/ops/**",
+      "**/scripts/**",
+      "**/*.log",
       ".env*",
       "*.key",
       "*.pem"
