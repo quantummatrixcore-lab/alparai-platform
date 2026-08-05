@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Star, MessageSquare, Lightbulb, ChevronRight } from "lucide-react";
 import { createServerClient } from "@/lib/supabase/server";
 import { Badge } from "@/components/ui/badge";
+import { MODELS_CATALOG } from "@/lib/constants/models-catalog";
 
 export const revalidate = 30;
 
@@ -45,10 +46,30 @@ export default async function ModelsPage({ params, searchParams }: ModelPageProp
     db.from("model_feature_requests").select("model_id, id"),
   ]);
 
-  const models = (modelsRes.data || []).filter((model) => {
+  const dbModels = (modelsRes.data || []).filter((model) => {
     const provider = model.ai_providers as { slug: string } | null;
     return provider?.slug !== "alpar-autopilot";
   });
+  const dbModelIds = new Set(dbModels.map((m) => m.id));
+
+  const catalogModels = MODELS_CATALOG.filter((cat) => !dbModelIds.has(cat.id)).map((cat) => ({
+    id: cat.id,
+    name: cat.name,
+    version: cat.category,
+    status: "active",
+    released_at: null as string | null,
+    provider_id: cat.provider.toLowerCase().replace(/[^a-z0-9]/g, "-"),
+    ai_providers: {
+      id: cat.provider.toLowerCase().replace(/[^a-z0-9]/g, "-"),
+      name: cat.provider,
+      slug: cat.provider.toLowerCase().replace(/[^a-z0-9]/g, "-"),
+      logo_url: null as string | null,
+    },
+    description: cat.description,
+    context_window: cat.contextWindow,
+  }));
+
+  const models = [...dbModels, ...catalogModels];
   const reviews = reviewsRes.data || [];
   const features = featuresRes.data || [];
 
