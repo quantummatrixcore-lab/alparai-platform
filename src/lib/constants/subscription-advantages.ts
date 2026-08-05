@@ -200,6 +200,17 @@ export const SUBSCRIPTION_ADVANTAGES: SubscriptionAdvantage[] = [
 
 export const FREE_AI_API_PROVIDERS: FreeAiApiProvider[] = [
   {
+    name: "Blackbox AI",
+    freeTierDetails: {
+      en: "Specialized developer code-generation API endpoint with free tier allocations for DeepSeek R1 & GPT-4o.",
+      tr: "DeepSeek R1 ve GPT-4o yönlendirmeli geliştirici odaklı kod üretimi ve analiz API uç noktası.",
+    },
+    rateLimits: "20 RPM / 200k TPM",
+    topModels: ["Blackbox Code", "DeepSeek R1", "GPT-4o"],
+    url: "https://www.blackbox.ai",
+    isIntegrated: true,
+  },
+  {
     name: "Groq Cloud API",
     freeTierDetails: {
       en: "Permanent free tier with ultra-fast LPU inference (500+ tokens/sec) for open-weight models.",
