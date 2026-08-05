@@ -3093,31 +3093,31 @@
     }
   },
   "contact": {
-    "title": "Kontakt aufnehmen",
-    "subtitle": "Presse, Partnerschaft, Sicherheitshinweis oder Fragen.",
-    "sendMessage": "Nachricht senden",
-    "general": "Allgemein",
+    "title": "Contactez-nous",
+    "subtitle": "Presse, partenariats, avis de sécurité ou questions.",
+    "sendMessage": "Envoyer le message",
+    "general": "Général",
     "press": "Presse",
-    "office": "Registrierter Sitz",
-    "officeText": "Wird nach Registrierung im Impressum bekannt gegeben.",
+    "office": "Siège social",
+    "officeText": "Sera annoncé dans les mentions légales après enregistrement.",
     "form": {
-      "name": "Name",
-      "email": "E-Mail",
-      "category": "Kategorie",
-      "category_general": "Allgemein",
+      "name": "Nom",
+      "email": "E-mail",
+      "category": "Catégorie",
+      "category_general": "Général",
       "category_press": "Presse",
-      "category_partnership": "Partnerschaft",
-      "category_investor": "Investor",
-      "category_security": "Sicherheit",
-      "category_legal": "Rechtliches",
-      "subject": "Betreff",
-      "message": "Nachricht",
-      "submit": "Nachricht senden",
-      "sent_title": "Nachricht gesendet!",
-      "sent_desc": "Vielen Dank. Wir melden uns in Kürze.",
-      "sent_toast": "Nachricht erfolgreich gesendet"
+      "category_partnership": "Partenariat",
+      "category_investor": "Investisseur",
+      "category_security": "Sécurité",
+      "category_legal": "Mentions légales",
+      "subject": "Sujet",
+      "message": "Message",
+      "submit": "Envoyer le message",
+      "sent_title": "Message envoyé !",
+      "sent_desc": "Merci. Nous vous répondrons dans les plus brefs délais.",
+      "sent_toast": "Message envoyé avec succès"
     },
-    "description": "Kontaktieren Sie das ALPAR AI Team."
+    "description": "Contactez l'équipe ALPAR AI."
   },
   "badge": {
     "severity": {
@@ -3568,45 +3568,45 @@
   },
   "marketing": {
     "incident_of_week": {
-      "title": "Vorfall der Woche",
-      "provider": "Anbieter",
-      "views": "Aufrufe"
+      "title": "Incident de la semaine",
+      "provider": "Fournisseur",
+      "views": "vues"
     },
     "advocate_of_week": {
-      "title": "Befürworter der Woche",
-      "rep": "Reputation",
-      "pioneer": "Pionier"
+      "title": "Défenseur de la semaine",
+      "rep": "Réputation",
+      "pioneer": "Pionnier"
     },
     "founder_story": {
-      "title": "Warum ich dies gebaut habe",
-      "highlight": "Grok verlangte nach meinem Pass.",
-      "p1": "Anfang 2026 erfand eine KI eine Firmengründung in meinem Namen...",
-      "p2": "Es gab keine Hotline. Keine unabhängige Anlaufstelle.",
-      "quote": "Es gab kein Register. Also habe ich eines gebaut.",
-      "p3": "ALPAR AI ist die Infrastruktur für Rechenschaftspflicht.",
-      "transition_p": "Ihre Meldung dauert 60 Sekunden.",
-      "transition_cta": "Ihre Geschichte erzählen →"
+      "title": "Pourquoi j'ai créé cela",
+      "highlight": "Grok m'a demandé mon passeport.",
+      "p1": "Début 2026, une IA a inventé une création d'entreprise à mon nom et m'a réclamé mon passeport...",
+      "p2": "Il n'y avait pas d'assistance téléphonique. Aucun registre indépendant.",
+      "quote": "Il n'y avait pas de recours. Alors j'en ai créé un.",
+      "p3": "ALPAR AI est l'infrastructure de responsabilité que j'aurais souhaité voir exister.",
+      "transition_p": "Votre signalement prend 60 secondes et ne nécessite aucun compte.",
+      "transition_cta": "Racontez votre histoire →"
     },
     "dilemma": {
-      "title": "Stimme des Volkes: KI-Dilemmata",
-      "subtitle": "Stimmen Sie ab.",
-      "critical_question": "Kritische Frage"
+      "title": "La voix du peuple : Dilemmes de l'IA",
+      "subtitle": "Votez et découvrez l'avis de la communauté.",
+      "critical_question": "Question critique"
     },
     "social_proof": {
-      "badge": "Vertrauen & Glaubwürdigkeit",
-      "title": "Infrastruktur für KI-Vertrauen",
-      "subtitle": "Unabhängiges Register zur Verfolgung von KI-Fehlern.",
-      "pillar1_title": "Verifizierbare Aufzeichnungen",
-      "pillar1_desc": "Jeder Vorfall wird kryptografisch gespeichert.",
-      "pillar2_title": "Antwortschleife der Anbieter",
-      "pillar2_desc": "Offizielle Antworten von Anbietern.",
-      "pillar3_title": "Moderation",
-      "pillar3_desc": "Geprüft durch KI und menschliche Moderatoren.",
-      "trust_signals_title": "Vertrauenssignale",
-      "signal_open_source": "AGPL-3.0 Open Source",
-      "signal_eu_hosting": "EU-Datenhosting",
-      "signal_aligned": "KVKK + DSGVO Konform",
-      "signal_community_verified": "Community Verifiziert"
+      "badge": "Confiance & Crédibilité",
+      "title": "Infrastructure de confiance de l'écosystème",
+      "subtitle": "Registre indépendant suivant les défaillances et biais de l'IA.",
+      "pillar1_title": "Enregistrements publics vérifiables",
+      "pillar1_desc": "Chaque incident est conservé de manière cryptographique et vérifiée.",
+      "pillar2_title": "Boucle de réponse des fournisseurs",
+      "pillar2_desc": "Les représentants d'OpenAI, Google, Anthropic et d'autres répondent officiellement.",
+      "pillar3_title": "Modération humaine & IA",
+      "pillar3_desc": "Les soumissions sont filtrées par nos modèles et validées par nos experts.",
+      "trust_signals_title": "Signaux de confiance de la plateforme",
+      "signal_open_source": "Open Source AGPL-3.0",
+      "signal_eu_hosting": "Hébergement des données en UE",
+      "signal_aligned": "Conforme KVKK + RGPD",
+      "signal_community_verified": "Vérifié par la communauté"
     }
   },
   "myIncidents": {
