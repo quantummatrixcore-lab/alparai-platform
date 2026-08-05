@@ -64,6 +64,7 @@ export function MasterPlanDepsGraph({
     return map;
   }, [items]);
 
+  // Export handlers for SVG and PNG graph downloads
   const handleExportSVG = () => {
     if (!svgRef.current) return;
     const serializer = new XMLSerializer();
