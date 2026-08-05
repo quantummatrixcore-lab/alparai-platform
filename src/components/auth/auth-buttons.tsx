@@ -74,7 +74,7 @@ export function GoogleSignInButton({
 
     const clientId =
       process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
-      "341717447635-75ramo1e88p34b9dkmhfp5ocecqv0ff1.apps.googleusercontent.com";
+      "341717447635-hsdu69hk692lkveikkpc8398v8rhu40b.apps.googleusercontent.com";
 
     const loadAndRenderGIS = async () => {
       if (typeof window === "undefined") return;
