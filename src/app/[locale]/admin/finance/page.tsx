@@ -126,20 +126,7 @@ export default async function FinancePage({ params }: { params: Promise<{ locale
       trend: "down" as const,
       lastUpdated: new Date().toISOString(),
     },
-    {
-      name: "gemini",
-      currentCost: Number(currentCosts.find((c) => c.service === "gemini")?.amount_usd ?? 0.0),
-      budgetLimit: Number(currentCosts.find((c) => c.service === "gemini")?.budget_usd ?? 20.0),
-      trend: "stable" as const,
-      lastUpdated: new Date().toISOString(),
-    },
-    {
-      name: "anthropic",
-      currentCost: Number(currentCosts.find((c) => c.service === "anthropic")?.amount_usd ?? 0.0),
-      budgetLimit: Number(currentCosts.find((c) => c.service === "anthropic")?.budget_usd ?? 20.0),
-      trend: "stable" as const,
-      lastUpdated: new Date().toISOString(),
-    },
+
     {
       name: "resend",
       currentCost: Number(currentCosts.find((c) => c.service === "resend")?.amount_usd ?? 0.0),
