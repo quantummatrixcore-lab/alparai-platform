@@ -22,6 +22,10 @@ import {
 import { toast } from "sonner";
 import { Gauge } from "@/components/admin/premium/gauge";
 import { VENDORS } from "@/lib/constants/resources-catalog";
+import {
+  SUBSCRIPTION_ADVANTAGES,
+  FREE_AI_API_PROVIDERS,
+} from "@/lib/constants/subscription-advantages";
 import { getOpenCodeEfficiencyAction } from "@/actions/admin/opencode-efficiency";
 import type { OpenCodeEfficiencyReport } from "@/lib/opencode/efficiency";
 
@@ -821,6 +825,181 @@ export function ResourcesClient({ locale }: { locale: string }) {
               ))}
             </tbody>
           </table>
+        </div>
+      </div>
+
+      {/* 360° Subscription Advantage & Maximum Efficiency Matrix */}
+      <div className="bg-bg-secondary border-border-subtle space-y-6 rounded-xl border p-6">
+        <div className="border-border-subtle flex flex-wrap items-center justify-between gap-4 border-b pb-4">
+          <div>
+            <h2 className="flex items-center gap-2 text-xl font-black tracking-tight text-white">
+              <Activity className="h-5 w-5 text-emerald-400" />
+              {isTR
+                ? "360° Abonelik Maksimum Verimlilik Paneli"
+                : "360° Subscription Maximum Efficiency Matrix"}
+            </h2>
+            <p className="text-fg-muted mt-1 text-xs">
+              {isTR
+                ? "Ödediğimiz tüm platformların sunduğu ekstra avantajlar, kota tasarrufları ve maksimum verimlilik yüzdeleri."
+                : "Comprehensive breakdown of paid platform perks, quota savings, and maximum efficiency percentages."}
+            </p>
+          </div>
+          <div className="flex items-center gap-2 rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 font-mono text-xs font-bold text-emerald-400">
+            <span>{isTR ? "Ortalama Sistem Verimliliği:" : "Avg Efficiency Score:"}</span>
+            <span className="text-sm font-black">
+              {Math.round(
+                SUBSCRIPTION_ADVANTAGES.reduce((acc, c) => acc + c.efficiencyScorePct, 0) /
+                  SUBSCRIPTION_ADVANTAGES.length,
+              )}
+              %
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {SUBSCRIPTION_ADVANTAGES.map((sub) => (
+            <div
+              key={sub.id}
+              className="bg-bg-tertiary/20 flex flex-col justify-between rounded-xl border border-white/5 p-5 transition-all hover:border-white/10"
+            >
+              <div>
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <h3 className="text-base font-bold text-white">{sub.name}</h3>
+                    <span className="text-fg-muted mt-0.5 block font-mono text-[10px] tracking-wider uppercase">
+                      {sub.planName} • ${sub.monthlyCostUsd.toFixed(2)}/mo
+                    </span>
+                  </div>
+                  <Badge
+                    variant="outline"
+                    className={
+                      sub.efficiencyScorePct >= 95
+                        ? "border-emerald-500/30 bg-emerald-500/10 font-mono font-bold text-emerald-400"
+                        : "border-amber-500/30 bg-amber-500/10 font-mono font-bold text-amber-400"
+                    }
+                  >
+                    %{sub.efficiencyScorePct} {isTR ? "Verim" : "Efficiency"}
+                  </Badge>
+                </div>
+
+                <div className="mt-4 space-y-2">
+                  <span className="text-fg-muted block text-[10px] font-bold tracking-wider uppercase">
+                    {isTR ? "Maksimum Verimlilik Avantajları:" : "Key High-Efficiency Perks:"}
+                  </span>
+                  <ul className="space-y-1.5 text-xs text-white/90">
+                    {(isTR ? sub.keyPerks.tr : sub.keyPerks.en).map((perk, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-400" />
+                        <span className="leading-snug">{perk}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {sub.actionRequired && (
+                <div className="mt-4 border-t border-white/5 pt-3">
+                  <a
+                    href={sub.actionRequired.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-400 transition-colors hover:text-amber-300"
+                  >
+                    <span>⚡ {isTR ? sub.actionRequired.tr : sub.actionRequired.en}</span>
+                    <ExternalLink className="h-3 w-3 shrink-0" />
+                  </a>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Free AI API Credit Providers Inventory */}
+      <div className="bg-bg-secondary border-border-subtle space-y-6 rounded-xl border p-6">
+        <div className="border-border-subtle border-b pb-4">
+          <h2 className="flex items-center gap-2 text-xl font-black tracking-tight text-white">
+            <Server className="h-5 w-5 text-cyan-400" />
+            {isTR
+              ? "Sıfır Maliyetli Ücretsiz AI API Kredi Envanteri"
+              : "Zero-Cost Free AI API Credit Providers"}
+          </h2>
+          <p className="text-fg-muted mt-1 text-xs">
+            {isTR
+              ? "Kalıcı ücretsiz planlar, LPU çıkarım hızları ve sıfır bütçe ile kullanılabilecek ücretsiz AI uç noktaları."
+              : "Permanent free tiers, hyper-fast LPU inference, and zero-budget AI endpoints for maximum cost optimization."}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {FREE_AI_API_PROVIDERS.map((provider) => (
+            <div
+              key={provider.name}
+              className="bg-bg-tertiary/20 flex flex-col justify-between rounded-xl border border-white/5 p-5"
+            >
+              <div>
+                <div className="flex items-start justify-between gap-2">
+                  <h3 className="text-base font-bold text-white">{provider.name}</h3>
+                  <Badge
+                    variant="outline"
+                    className={
+                      provider.isIntegrated
+                        ? "border-emerald-500/30 bg-emerald-500/10 text-[10px] font-bold text-emerald-400"
+                        : "border-cyan-500/30 bg-cyan-500/10 text-[10px] font-bold text-cyan-400"
+                    }
+                  >
+                    {provider.isIntegrated
+                      ? isTR
+                        ? "Aktif Entegre"
+                        : "Active Integrated"
+                      : isTR
+                        ? "Ücretsiz Katman"
+                        : "Free Tier"}
+                  </Badge>
+                </div>
+
+                <p className="text-fg-muted mt-2 text-xs leading-relaxed">
+                  {isTR ? provider.freeTierDetails.tr : provider.freeTierDetails.en}
+                </p>
+
+                <div className="mt-3 space-y-1 font-mono text-[11px]">
+                  <div className="flex justify-between text-white/80">
+                    <span className="text-fg-muted">
+                      {isTR ? "Hız Limitleri:" : "Rate Limits:"}
+                    </span>
+                    <span className="font-bold text-cyan-400">{provider.rateLimits}</span>
+                  </div>
+                  <div className="mt-2 flex flex-col gap-1">
+                    <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
+                      {isTR ? "Desteklenen Modeller:" : "Top Models:"}
+                    </span>
+                    <div className="flex flex-wrap gap-1">
+                      {provider.topModels.map((model) => (
+                        <span
+                          key={model}
+                          className="rounded border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] text-white"
+                        >
+                          {model}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4 flex justify-end border-t border-white/5 pt-3">
+                <a
+                  href={provider.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs font-bold text-cyan-400 transition-colors hover:text-cyan-300"
+                >
+                  <span>{isTR ? "Konsola Git" : "Go to Console"}</span>
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
