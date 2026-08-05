@@ -342,19 +342,19 @@ export const VENDORS: Vendor[] = [
   {
     id: "google_ultra",
     name: "Google Ultra",
-    category: "AI Chat Interface",
-    plan: "Advanced Tier",
+    category: "AI Suite & Creative FX",
+    plan: "Advanced / Ultra Tier",
     cost: "$30.00 / mo",
-    criticality: "low",
+    criticality: "medium",
     prosCons: {
-      en: "Pro: High integration with Google Workspace, multimodal reasoning. Con: Subscriptions managed outside company billing.",
-      tr: "Artı: Google Workspace ile yüksek entegrasyon, çok modlu akıl yürütme. Eksi: Şirket dışı abonelik yönetimi.",
+      en: "Pro: Google Labs FX credits (Flow, ImageFX, VideoFX, Veo, MusicFX), $10-$100/mo GDP Cloud credits, 2M Gemini token context, Workspace RAG. Con: Individual Google account billing.",
+      tr: "Artı: Google Labs FX medya kredileri (Flow, ImageFX, VideoFX, Veo, MusicFX), $10-$100/ay GDP Cloud kredisi, 2M Gemini token bağlamı, Workspace RAG entegrasyonu.",
     },
     alternatives: {
-      en: "Claude Pro (Low switch cost, coding preference), ChatGPT Plus (Low switch cost, general reasoning preference).",
-      tr: "Claude Pro (Düşük geçiş maliyeti), ChatGPT Plus (Düşük geçiş maliyeti, genel kullanım tercihi).",
+      en: "Midjourney / Runway Gen-3 (High paid cost, single-purpose), Claude Pro (Low switch cost).",
+      tr: "Midjourney / Runway Gen-3 (Yüksek ek maliyet), Claude Pro (Düşük geçiş maliyeti).",
     },
-    url: "https://one.google.com/explore-plan/gemini-advanced",
+    url: "https://labs.google/fx",
   },
 
   // 4. Domains & Misc
