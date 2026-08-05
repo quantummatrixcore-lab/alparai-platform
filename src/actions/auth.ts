@@ -25,6 +25,25 @@ function getOrigin(hdrs: Headers) {
   return `${protocol}://${host}`;
 }
 
+export async function signInWithGoogleIdToken(token: string): Promise<AuthResult> {
+  const hdrs = await headers();
+  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.auth_signin}:${ip}`);
+  if (!rl.ok) {
+    return { ok: false, error: `Too many attempts. Try again in ${rl.retryAfter}s.` };
+  }
+  const supabase = await createServerClient();
+  const { error } = await supabase.auth.signInWithIdToken({
+    provider: "google",
+    token,
+  });
+  if (error) {
+    logger.error("signInWithGoogleIdToken failed", { action: "signInWithGoogleIdToken" }, error);
+    return { ok: false, error: error.message };
+  }
+  return { ok: true };
+}
+
 // Uses standard Supabase OAuth redirect flow.
 export async function signInWithGoogle(next = "/profile"): Promise<AuthResult> {
   const hdrs = await headers();

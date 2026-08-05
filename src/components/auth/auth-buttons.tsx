@@ -51,12 +51,58 @@ export function GoogleSignInButton({
 
   const handleGoogleSignIn = () => {
     start(async () => {
-      const { signInWithGoogle } = await import("@/actions/auth");
-      const res = await signInWithGoogle(next);
-      if (res.ok && res.url) {
-        window.location.href = res.url;
-      } else {
-        toast.error(res.error || t("server_error"));
+      const clientId =
+        process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
+        "341717447635-75ramo1e88p34b9dkmhfp5ocecqv0ff1.apps.googleusercontent.com";
+
+      const fallbackOAuthRedirect = async () => {
+        const { signInWithGoogle } = await import("@/actions/auth");
+        const res = await signInWithGoogle(next);
+        if (res.ok && res.url) {
+          window.location.href = res.url;
+        } else {
+          toast.error(res.error || t("server_error"));
+        }
+      };
+
+      try {
+        if (typeof window !== "undefined" && !window.google?.accounts?.id) {
+          await new Promise<void>((resolve, reject) => {
+            const script = document.createElement("script");
+            script.src = "https://accounts.google.com/gsi/client";
+            script.async = true;
+            script.defer = true;
+            script.onload = () => resolve();
+            script.onerror = () => reject(new Error("Failed to load Google GIS"));
+            document.head.appendChild(script);
+          });
+        }
+
+        if (window.google?.accounts?.id) {
+          window.google.accounts.id.initialize({
+            client_id: clientId,
+            callback: async (response) => {
+              if (response.credential) {
+                const { signInWithGoogleIdToken } = await import("@/actions/auth");
+                const res = await signInWithGoogleIdToken(response.credential);
+                if (res.ok) {
+                  window.location.href = next;
+                } else {
+                  toast.error(res.error || t("server_error"));
+                }
+              }
+            },
+          });
+          window.google.accounts.id.prompt((notification) => {
+            if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+              fallbackOAuthRedirect();
+            }
+          });
+        } else {
+          await fallbackOAuthRedirect();
+        }
+      } catch {
+        await fallbackOAuthRedirect();
       }
     });
   };
