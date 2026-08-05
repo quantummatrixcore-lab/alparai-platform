@@ -4,6 +4,7 @@ import { Cpu, ShieldCheck, Zap, Layers } from "lucide-react";
 
 import { createServerClient } from "@/lib/supabase/server";
 import { OrchestratorTriggerButton } from "./trigger-button";
+import { BlackboxCodeAnalysisSection } from "./code-analysis-section";
 import { getTranslations } from "next-intl/server";
 
 export default async function AiOrchestratorAdminPage() {
@@ -202,6 +203,8 @@ export default async function AiOrchestratorAdminPage() {
           </div>
         </div>
       )}
+      {/* Blackbox AI Code Quality Analysis Section */}
+      <BlackboxCodeAnalysisSection />
     </div>
   );
 }
