@@ -7,6 +7,7 @@ import { createServerClient } from "@/lib/supabase/server";
 import { HealthGauge } from "@/components/admin/strategy/health-gauge";
 import { LiveStrategyClient } from "@/components/admin/strategy/live-strategy-client";
 import { QuestionnaireClient } from "@/components/admin/questionnaire-client";
+import { EcosystemBenchmarkWidget } from "@/components/admin/ecosystem-benchmark-widget";
 import { QUESTIONNAIRE_MODELS } from "@/lib/ai/openrouter-gateway";
 import { Link } from "@/i18n/routing";
 import { STRATEGY_METRICS_DEFAULTS, DEFAULT_VALUATION_PRE_MONEY } from "@/lib/constants";
@@ -22,6 +23,7 @@ import {
   DollarSign,
   ChevronRight,
   Cpu,
+  Target,
 } from "lucide-react";
 import type {
   SwotItem,
@@ -450,6 +452,40 @@ export default async function StrategyOverviewPage({
                 <ChevronRight className="h-3 w-3" />
               </a>
             </div>
+
+            {/* 360° EKOSİSTEM ANALİZİ CARD */}
+            <div className="border-border-subtle bg-bg-secondary/40 hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border p-6 transition-all duration-300">
+              <div>
+                <div className="mb-4 flex items-center justify-between">
+                  <div className="border-brand-500/25 bg-brand-500/10 text-brand-400 rounded-lg border p-2">
+                    <Target className="h-5 w-5" />
+                  </div>
+                  <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
+                    {t("module_06") || "Module 06"}
+                  </span>
+                </div>
+                <h2 className="text-lg font-bold text-white">
+                  {t("ecosystem_benchmark") || "360° Ecosystem Benchmarking"}
+                </h2>
+                <p className="text-fg-muted mt-2 text-xs">
+                  {t("ecosystem_benchmark_desc") ||
+                    "Market post-mortem: OpenRouter, Blackbox AI, LMSYS, Scale AI & LangChain analysis."}
+                </p>
+                <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-2 text-center text-xs">
+                  <span className="text-fg-muted block text-[9px] font-bold tracking-wider uppercase">
+                    Defensive Moat Index
+                  </span>
+                  <span className="text-lg font-extrabold text-emerald-400">89.8 / 100</span>
+                </div>
+              </div>
+              <a
+                href="#ecosystem-benchmark"
+                className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
+              >
+                View Benchmark
+                <ChevronRight className="h-3 w-3" />
+              </a>
+            </div>
           </div>
         </div>
         {/* Live AI Strategy Analysis */}
@@ -503,6 +539,11 @@ export default async function StrategyOverviewPage({
               totalRuns: t("questionnaire_total_runs") || "Total Runs",
             }}
           />
+        </div>
+
+        {/* 360° Ecosystem Post-Mortem & Benchmarking Module */}
+        <div id="ecosystem-benchmark" className="mt-12">
+          <EcosystemBenchmarkWidget />
         </div>
       </Container>
     </div>

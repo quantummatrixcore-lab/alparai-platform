@@ -9,6 +9,8 @@ import { CostTrendChart } from "@/components/admin/finance/cost-trend-chart";
 import { ApiUsageTable } from "@/components/admin/finance/api-usage-table";
 import { AlertBanner } from "@/components/admin/finance/alert-banner";
 import { QuotaWidget } from "@/components/admin/quota-widget";
+import { AIVelocityWidget } from "@/components/admin/ai-velocity-widget";
+import type { VelocityMetric } from "@/lib/analytics/velocity-calculator";
 import {
   AdminContainer,
   AdminPageHeader,
@@ -59,8 +61,14 @@ export default async function FinancePage({ params }: { params: Promise<{ locale
     .select("*")
     .order("recorded_at", { ascending: false });
 
+  const { data: dbVelocity } = await supabase
+    .from("ai_velocity_metrics" as never)
+    .select("*")
+    .order("release_date", { ascending: false });
+
   const costs = (dbCosts || []) as unknown as DBMonthlyCost[];
   const usage = (dbUsage || []) as unknown as DBApiUsage[];
+  const velocityMetrics = (dbVelocity || []) as unknown as VelocityMetric[];
 
   // Dynamic current month calculation (e.g. "2026-08-01")
   const now = new Date();
@@ -337,6 +345,9 @@ export default async function FinancePage({ params }: { params: Promise<{ locale
       <AdminSectionCard title="Infrastructure & Provider Cost Trends">
         <CostTrendChart data={trends} />
       </AdminSectionCard>
+
+      {/* AI Velocity Engine & Projections */}
+      <AIVelocityWidget initialMetrics={velocityMetrics.length > 0 ? velocityMetrics : undefined} />
 
       {/* Infrastructure Quota Tracking */}
       <AdminSectionCard title="Platform Quota & Resource Usage">
