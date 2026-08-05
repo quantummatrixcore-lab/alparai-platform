@@ -96,7 +96,7 @@ export const TRIAGE_SLOT_2_CHAIN: readonly GatewayModel[] = [
 
 export const TRIAGE_SLOT_3_CHAIN: readonly GatewayModel[] = [
   { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 2048 },
-  { id: "qwen/qwen-2.5-72b:free", provider: "openrouter", tier: "free", maxTokens: 2048 },
+  { id: "qwen/qwen3.5-omni-7b:free", provider: "openrouter", tier: "free", maxTokens: 2048 },
   { id: "blackboxai", provider: "blackbox", tier: "free", maxTokens: 2048 },
   { id: "command-r", provider: "cohere", tier: "free", maxTokens: 2048 },
 ] as const;

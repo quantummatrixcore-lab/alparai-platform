@@ -17,6 +17,7 @@ export interface GatewayRequest {
   model: GatewayModel;
   temperature?: number;
   responseFormat?: "json" | "text";
+  imageUrl?: string;
 }
 
 export interface GatewayResponse {
