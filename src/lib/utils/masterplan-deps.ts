@@ -217,3 +217,51 @@ export function getBlockedTasks(items: PlanItem[]): PlanItem[] {
   const blockedSet = new Set(graph.blockedTaskIds);
   return items.filter((i) => blockedSet.has(i.id));
 }
+
+/**
+ * Finds the critical path (longest path of dependent tasks in the DAG) using DFS.
+ * Returns array of node IDs on the critical path.
+ */
+export function findCriticalPath(
+  nodes: TaskDependencyNode[],
+  edges: TaskDependencyEdge[],
+): string[] {
+  const adj = new Map<string, string[]>();
+  nodes.forEach((n) => adj.set(n.id, []));
+
+  edges.forEach((e) => {
+    if (adj.has(e.fromId)) {
+      adj.get(e.fromId)!.push(e.toId);
+    }
+  });
+
+  const memo = new Map<string, string[]>();
+
+  function dfs(nodeId: string): string[] {
+    if (memo.has(nodeId)) return memo.get(nodeId)!;
+
+    const neighbors = adj.get(nodeId) || [];
+    let longestNextPath: string[] = [];
+
+    for (const neighborId of neighbors) {
+      const neighborPath = dfs(neighborId);
+      if (neighborPath.length > longestNextPath.length) {
+        longestNextPath = neighborPath;
+      }
+    }
+
+    const path = [nodeId, ...longestNextPath];
+    memo.set(nodeId, path);
+    return path;
+  }
+
+  let longestPath: string[] = [];
+  nodes.forEach((n) => {
+    const path = dfs(n.id);
+    if (path.length > longestPath.length) {
+      longestPath = path;
+    }
+  });
+
+  return longestPath;
+}
