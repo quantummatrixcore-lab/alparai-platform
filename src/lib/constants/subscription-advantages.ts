@@ -196,18 +196,42 @@ export const SUBSCRIPTION_ADVANTAGES: SubscriptionAdvantage[] = [
       tr: ["Groq Cloud API (Ücretsiz LPU)", "Cerebras API (Ücretsiz LPU)"],
     },
   },
+  {
+    id: "blackbox_ai",
+    name: "Blackbox AI ($18.46 Active Balance)",
+    monthlyCostUsd: 0.0,
+    planName: "Prepaid API & Subscription Credits",
+    category: "ai_suite",
+    efficiencyScorePct: 97,
+    keyPerks: {
+      en: [
+        "$9.86 API Credits active for high-speed OpenAI-compatible Pro model inference (`api.blackbox.ai/v1`)",
+        "$8.60 Subscription Credits active for Pro Chat, App Builder & VSCode/JetBrains IDE agents",
+        "DeepSeek R1, GPT-4o, and Claude 3.5 Sonnet low-cost developer code generation",
+      ],
+      tr: [
+        "$9.86 API Kredisi OpenAI-uyumlu Pro model çıkarımı için aktif (`api.blackbox.ai/v1`)",
+        "$8.60 Abonelik Kredisi Pro Sohbet, App Builder ve VSCode/JetBrains IDE ajanları için aktif",
+        "DeepSeek R1, GPT-4o ve Claude 3.5 Sonnet ile düşük maliyetli geliştirici kod üretimi",
+      ],
+    },
+    zeroCostAlternatives: {
+      en: ["Google AI Studio Free Tier", "Groq Cloud API"],
+      tr: ["Google AI Studio Ücretsiz Katman", "Groq Cloud API"],
+    },
+  },
 ];
 
 export const FREE_AI_API_PROVIDERS: FreeAiApiProvider[] = [
   {
-    name: "Blackbox AI",
+    name: "Blackbox AI ($18.46 Active Credits)",
     freeTierDetails: {
-      en: "Specialized developer code-generation API endpoint with free tier allocations for DeepSeek R1 & GPT-4o.",
-      tr: "DeepSeek R1 ve GPT-4o yönlendirmeli geliştirici odaklı kod üretimi ve analiz API uç noktası.",
+      en: "$9.86 API Credits (Pro Models, Remote/CLI Agent) + $8.60 Subscription Credits (Pro Chat, VSCode/JetBrains Agent). High-throughput code generation & DeepSeek R1 routing.",
+      tr: "$9.86 API Kredisi (Pro Modeller, Remote/CLI Ajanı) + $8.60 Abonelik Kredisi (Pro Sohbet, VSCode/JetBrains Ajanı). Yüksek hızlı kod üretimi ve DeepSeek R1 yönlendirmesi.",
     },
     rateLimits: "20 RPM / 200k TPM",
-    topModels: ["Blackbox Code", "DeepSeek R1", "GPT-4o"],
-    url: "https://www.blackbox.ai",
+    topModels: ["Blackbox Code", "DeepSeek R1", "GPT-4o", "Claude 3.5 Sonnet"],
+    url: "https://app.blackbox.ai",
     isIntegrated: true,
   },
   {
