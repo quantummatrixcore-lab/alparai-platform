@@ -83,6 +83,41 @@ export type Database = {
           }
           Relationships: []
         },
+        funnel_events: {
+          Row: {
+            id: string
+            event_name: string
+            user_id: string | null
+            session_id: string | null
+            metadata: Json
+            created_at: string
+          }
+          Insert: {
+            id?: string
+            event_name: string
+            user_id?: string | null
+            session_id?: string | null
+            metadata?: Json
+            created_at?: string
+          }
+          Update: {
+            id?: string
+            event_name?: string
+            user_id?: string | null
+            session_id?: string | null
+            metadata?: Json
+            created_at?: string
+          }
+          Relationships: [
+            {
+              foreignKeyName: "funnel_events_user_id_fkey"
+              columns: ["user_id"]
+              isOneToOne: false
+              referencedRelation: "users"
+              referencedColumns: ["id"]
+            }
+          ]
+        },
         sla_alarms: {
           Row: {
             id: string

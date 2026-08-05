@@ -52,6 +52,10 @@ export async function POST(request: Request) {
           { onConflict: "user_id" },
         );
 
+        // Katman yükseltme (Tier Upgrade) - Task #2
+        await admin.from("api_keys").update({ tier: "enterprise" }).eq("provider", userId);
+        await admin.from("users").update({ subscription_tier: "enterprise" }).eq("id", userId);
+
         logger.info("Stripe checkout completed", { userId, customerId });
       }
       break;
@@ -72,15 +76,39 @@ export async function POST(request: Request) {
         })
         .eq("stripe_subscription_id", subscription.id);
 
+      if (status === "inactive") {
+        const { data: subData } = await admin
+          .from("subscriptions")
+          .select("user_id")
+          .eq("stripe_subscription_id", subscription.id)
+          .single();
+
+        if (subData?.user_id) {
+          await admin.from("api_keys").update({ tier: "free" }).eq("provider", subData.user_id);
+          await admin.from("users").update({ subscription_tier: "free" }).eq("id", subData.user_id);
+        }
+      }
       break;
     }
 
     case "customer.subscription.deleted": {
       const subscription = event.data.object;
+      const { data: subData } = await admin
+        .from("subscriptions")
+        .select("user_id")
+        .eq("stripe_subscription_id", subscription.id)
+        .single();
+
       await admin
         .from("subscriptions")
         .update({ status: "canceled" })
         .eq("stripe_subscription_id", subscription.id);
+
+      if (subData?.user_id) {
+        await admin.from("api_keys").update({ tier: "free" }).eq("provider", subData.user_id);
+        await admin.from("users").update({ subscription_tier: "free" }).eq("id", subData.user_id);
+      }
+
       logger.info("Stripe subscription canceled", { subscriptionId: subscription.id });
       break;
     }

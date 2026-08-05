@@ -28,5 +28,41 @@
         }
       ]
     }
+  },
+  {
+    "timestamp": "2026-08-05T09:35:37.587Z",
+    "action": "export-blocked",
+    "metadata": {
+      "reason": "security-violations",
+      "blocked_count": 4,
+      "violations": [
+        {
+          "file": "CODE_OF_CONDUCT.md",
+          "reason": "pii-detected: email"
+        },
+        {
+          "file": "package.json",
+          "reason": "pii-detected: email"
+        },
+        {
+          "file": "playwright.config.ts",
+          "reason": "secret-detected: SUPABASE_SERVICE_ROLE_KEY"
+        },
+        {
+          "file": "README.md",
+          "reason": "pii-detected: email"
+        }
+      ]
+    }
+  },
+  {
+    "timestamp": "2026-08-05T09:35:45.801Z",
+    "action": "export-started",
+    "metadata": {
+      "file_count": 12,
+      "file_list_hash": "210e8c5d958c086e28c2bb91b58430d19d034ef63dc2e91cf459a7c48599f94d",
+      "public_repo": "https://github.com/quantummatrixcore-lab/alparai.git",
+      "branch": "main"
+    }
   }
 ]

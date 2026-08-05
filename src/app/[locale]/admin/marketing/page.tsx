@@ -18,9 +18,15 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
 
   const supabase = createAdminClient();
 
-  const { count: incidentsCount } = await supabase
-    .from("incidents")
-    .select("*", { count: "exact", head: true });
+  const { count: startCount } = await supabase
+    .from("funnel_events")
+    .select("*", { count: "exact", head: true })
+    .eq("event_name", "submit_start");
+
+  const { count: completeCount } = await supabase
+    .from("funnel_events")
+    .select("*", { count: "exact", head: true })
+    .eq("event_name", "submit_complete");
 
   const { count: outreachCount } = await supabase
     .from("outreach_queue")
@@ -30,6 +36,10 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
     .from("users")
     .select("*", { count: "exact", head: true });
 
+  const funnelStart = startCount ?? 0;
+  const funnelComplete = completeCount ?? 0;
+  const conversionRate = funnelStart > 0 ? Math.round((funnelComplete / funnelStart) * 100) : 0;
+
   return (
     <div className="space-y-8">
       <div>
@@ -37,14 +47,24 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
         <p className="text-fg-muted mt-1 text-sm">{t("marketing_subtitle")}</p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
+        <MetricCard
+          title="Funnel: Ziyaret -> Başlama"
+          value={funnelStart.toLocaleString()}
+          icon={<Users className="h-4 w-4" />}
+          trend="neutral"
+          trendLabel="Forma girenler"
+          accentColor="#3b82f6"
+        />
         <MetricCard
           title={t("marketing_funnel")}
-          value={(incidentsCount ?? 0).toLocaleString()}
+          value={funnelComplete.toLocaleString()}
           icon={<TrendingUp className="h-4 w-4" />}
-          trend="up"
-          trendLabel="Total Incidents Cataloged"
+          trend={conversionRate >= 50 ? "up" : "down"}
+          trendLabel={`%${conversionRate} Dönüşüm`}
           accentColor="#6366f1"
+          badge={conversionRate > 0 ? `%${conversionRate}` : undefined}
+          badgeColor={conversionRate >= 50 ? "text-emerald-400" : "text-amber-400"}
         />
         <MetricCard
           title={t("marketing_organic")}

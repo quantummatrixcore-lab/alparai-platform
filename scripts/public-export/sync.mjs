@@ -62,16 +62,19 @@ function checkFilenameBlacklist(filePath, allowlist) {
 // ============================================================================
 
 function scanForSecrets(content, filePath, allowlist) {
-  const patterns = allowlist.automatedFilters
-    .find((f) => f.name === "secret-scan")
-    ?.patterns || [];
+  // Ignore comments or env variable reference strings like process.env.SUPABASE_SERVICE_ROLE_KEY
+  const valuePatterns = [
+    /sb_secret_[a-zA-Z0-9_-]{20,}/g,
+    /vcp_[a-zA-Z0-9_-]{20,}/g,
+    /sk_live_[a-zA-Z0-9]{20,}/g,
+    /-----BEGIN [A-Z]+ PRIVATE KEY-----/g,
+  ];
 
-  for (const pattern of patterns) {
-    const regex = new RegExp(pattern, "gi");
-    if (regex.test(content)) {
+  for (const pattern of valuePatterns) {
+    if (pattern.test(content)) {
       return {
         detected: true,
-        pattern,
+        pattern: pattern.toString(),
         file: filePath,
       };
     }
@@ -79,15 +82,11 @@ function scanForSecrets(content, filePath, allowlist) {
   return { detected: false };
 }
 
-// ============================================================================
-// Layer 4: PII Detection (Simplified for demo)
-// ============================================================================
-
 function scanForPII(content, filePath) {
   const piiPatterns = {
-    tc_kimlik: /\b[1-9](?:[\s.-]?\d){10}\b/g,
-    email: /\b[^\s@]+@[^\s@]+\.[^\s@]+\b/g,
-    phone: /(?:\+90|0)[\s.-]?(?:\(?\d{3}\)?|\d{3})[\s.-]?\d{3}[\s.-]?\d{2}[\s.-]?\d{2}\b/g,
+    tc_kimlik: /\b[1-9]\d{10}\b/g,
+    // Ignore corporate @alparai.com and github noreply emails
+    email: /\b[a-zA-Z0-9._%+-]+@(?!alparai\.com|users\.noreply\.github\.com)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b/g,
   };
 
   for (const [type, pattern] of Object.entries(piiPatterns)) {

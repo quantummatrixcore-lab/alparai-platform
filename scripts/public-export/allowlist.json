@@ -38,8 +38,8 @@
       "patterns": ["tests/**/*.ts", "tests/**/*.tsx"]
     },
     {
-      "comment": "License and core documentation",
-      "patterns": ["LICENSE", "README.md", "CLAUDE.md", "AGENTS.md"]
+      "comment": "License and public community documentation",
+      "patterns": ["LICENSE", "README.md", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md"]
     },
     {
       "comment": "GitHub workflows and CI/CD (enforcement layer allowed per G-6)",
@@ -51,7 +51,7 @@
     }
   ],
   "blocked": {
-    "comment": "Always blocked — business documents, strategy, financial data",
+    "comment": "Always blocked — business documents, strategy, financial data, outreach logs, internal playbooks",
     "patterns": [
       "**/MASTER_PLAN*",
       "**/APPLICATIONS/**",
@@ -60,6 +60,12 @@
       "**/strateg*",
       "**/secret*",
       "**/private*",
+      "**/OUTREACH/**",
+      "**/CRISIS_PLAYBOOK/**",
+      "**/ARCHIVE/**",
+      "**/ANTIGRAVITY*",
+      "**/ALPAR_AI_Master_Dossier*",
+      "**/CLAUDE_STRATEGY_BRIEF*",
       ".env*",
       "*.key",
       "*.pem"
@@ -69,7 +75,20 @@
     {
       "name": "filename-blacklist",
       "description": "Second-layer defense: files containing blocked keywords in path",
-      "keywords": ["MASTER_PLAN", "APPLICATIONS", "finance", "strategy", "secret", ".env"]
+      "keywords": [
+        "MASTER_PLAN",
+        "APPLICATIONS",
+        "finance",
+        "strategy",
+        "secret",
+        ".env",
+        "OUTREACH",
+        "CRISIS_PLAYBOOK",
+        "ARCHIVE",
+        "ANTIGRAVITY",
+        "Dossier",
+        "CLAUDE"
+      ]
     },
     {
       "name": "secret-scan",

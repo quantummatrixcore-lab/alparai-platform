@@ -21,6 +21,7 @@ import { GoogleSignInButton } from "@/components/auth/auth-buttons";
 import { Link, useRouter } from "@/i18n/routing";
 import type { AIProvider, AIModel, IncidentCategory, IncidentSeverity } from "@/types";
 import { trackEvent } from "@/lib/analytics";
+import { trackFunnelEvent } from "@/actions/funnel";
 import { logger } from "@/lib/utils/logger";
 import { getFingerprint } from "@/lib/utils/fingerprint";
 import { incidentSubmissionSchema } from "@/lib/validation/schemas";
@@ -217,6 +218,7 @@ export function IncidentForm({
       if (val) utm[key] = val;
     });
     trackEvent("submit_start", utm);
+    trackFunnelEvent("submit_start", utm);
 
     // Load fingerprint
     getFingerprint().then(setVisitorId).catch(console.error);
@@ -232,6 +234,7 @@ export function IncidentForm({
         if (val) utm[key] = val;
       });
       trackEvent("submit_complete", utm);
+      trackFunnelEvent("submit_complete", utm);
       toast.success(t("submitted"));
 
       if (state.incidentId) {
