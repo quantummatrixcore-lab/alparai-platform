@@ -25,7 +25,7 @@ function getOrigin(hdrs: Headers) {
   return `${protocol}://${host}`;
 }
 
-export async function signInWithGoogleIdToken(token: string): Promise<AuthResult> {
+export async function signInWithGoogleIdToken(token: string, nonce: string): Promise<AuthResult> {
   const hdrs = await headers();
   const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.auth_signin}:${ip}`);
@@ -36,6 +36,7 @@ export async function signInWithGoogleIdToken(token: string): Promise<AuthResult
   const { error } = await supabase.auth.signInWithIdToken({
     provider: "google",
     token,
+    nonce,
   });
   if (error) {
     logger.error("signInWithGoogleIdToken failed", { action: "signInWithGoogleIdToken" }, error);
