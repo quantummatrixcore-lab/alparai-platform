@@ -110,8 +110,8 @@ export default async function FinancePage({ params }: { params: Promise<{ locale
     },
     {
       name: "supabase",
-      currentCost: Number(currentCosts.find((c) => c.service === "supabase")?.amount_usd ?? 0.0),
-      budgetLimit: Number(currentCosts.find((c) => c.service === "supabase")?.budget_usd ?? 0.0),
+      currentCost: Number(currentCosts.find((c) => c.service === "supabase")?.amount_usd ?? 35.0),
+      budgetLimit: Number(currentCosts.find((c) => c.service === "supabase")?.budget_usd ?? 35.0),
       trend: "stable" as const,
       lastUpdated: new Date().toISOString(),
     },

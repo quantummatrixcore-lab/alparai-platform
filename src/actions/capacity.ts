@@ -96,8 +96,8 @@ export async function getLiveCapacityMetrics(): Promise<CapacityMetrics> {
   const dailyUsedCost = !dailyCostErr && dailyCost ? Number(dailyCost) : 0;
   const monthlyUsedCost = !monthlyCostErr && monthlyCost ? Number(monthlyCost) : 0;
 
-  const dbLimit = 524288000; // 500 MB
-  const storageLimit = 1073741824; // 1 GB
+  const dbLimit = 8589934592; // 8 GB (Supabase Pro Plan)
+  const storageLimit = 107374182400; // 100 GB (Supabase Pro Plan)
 
   return {
     supabaseDb: {
@@ -117,15 +117,15 @@ export async function getLiveCapacityMetrics(): Promise<CapacityMetrics> {
     },
     vercelDeploys: {
       used: 12,
-      limit: 100,
-      percentage: 12,
-      lastVerified: "2026-07-16",
+      limit: 1000,
+      percentage: 1.2,
+      lastVerified: "2026-08-05",
     },
     vercelCrons: {
-      used: 2,
-      limit: 2,
-      percentage: 100,
-      lastVerified: "2026-07-16",
+      used: 3,
+      limit: 100,
+      percentage: 3.0,
+      lastVerified: "2026-08-05",
     },
     upstashRedis: {
       used: 350,
