@@ -97,7 +97,7 @@ function getLimiters(): Record<string, Ratelimit> {
     }),
     [RATE_LIMIT_KEYS.auth_signin]: new Ratelimit({
       redis: _redis,
-      limiter: Ratelimit.slidingWindow(10, "15 m"),
+      limiter: Ratelimit.slidingWindow(30, "15 m"),
       analytics: true,
       prefix: "alpar",
     }),
