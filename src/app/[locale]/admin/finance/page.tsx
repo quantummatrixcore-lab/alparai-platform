@@ -8,6 +8,7 @@ import { BudgetGauge } from "@/components/admin/finance/budget-gauge";
 import { CostTrendChart } from "@/components/admin/finance/cost-trend-chart";
 import { ApiUsageTable } from "@/components/admin/finance/api-usage-table";
 import { AlertBanner } from "@/components/admin/finance/alert-banner";
+import { QuotaWidget } from "@/components/admin/quota-widget";
 import {
   AdminContainer,
   AdminPageHeader,
@@ -335,6 +336,44 @@ export default async function FinancePage({ params }: { params: Promise<{ locale
       {/* Trend Chart */}
       <AdminSectionCard title="Infrastructure & Provider Cost Trends">
         <CostTrendChart data={trends} />
+      </AdminSectionCard>
+
+      {/* Infrastructure Quota Tracking */}
+      <AdminSectionCard title="Platform Quota & Resource Usage">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <QuotaWidget
+            name="GitHub Actions"
+            used={120}
+            total={2000}
+            unit="min"
+            warningAt={0.8}
+            criticalAt={0.95}
+          />
+          <QuotaWidget
+            name="Vercel Build Minutes"
+            used={45}
+            total={6000}
+            unit="min"
+            warningAt={0.8}
+            criticalAt={0.95}
+          />
+          <QuotaWidget
+            name="Supabase Storage"
+            used={128}
+            total={8192}
+            unit="MB"
+            warningAt={0.8}
+            criticalAt={0.95}
+          />
+          <QuotaWidget
+            name="OpenRouter Credits"
+            used={5}
+            total={50}
+            unit="USD"
+            warningAt={0.8}
+            criticalAt={0.95}
+          />
+        </div>
       </AdminSectionCard>
 
       {/* API Usage Metrics Table */}
