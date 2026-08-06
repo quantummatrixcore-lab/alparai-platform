@@ -20,6 +20,7 @@ const links = [
   { href: "/blog", key: "blog" },
   { href: "/press-kit", key: "presskit" },
   { href: "/challenges", key: "challenges" },
+  { href: "/about/advisory-board", key: "advisory_board" },
 ] as const;
 
 export function MobileNav({

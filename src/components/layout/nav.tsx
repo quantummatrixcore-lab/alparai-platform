@@ -16,6 +16,7 @@ import {
   Shield,
   ChevronDown,
   Zap,
+  Users,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import type { ComponentType } from "react";
@@ -36,6 +37,7 @@ const mainNavItems: NavItem[] = [
 ];
 
 const resourcesItems: NavItem[] = [
+  { href: "/about/advisory-board", labelKey: "advisory_board", icon: Users },
   { href: "/transparency", labelKey: "transparency", icon: Eye },
   { href: "/challenges", labelKey: "challenges", icon: Award },
   { href: "/blog", labelKey: "blog", icon: BookOpen },

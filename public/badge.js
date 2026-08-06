@@ -7,15 +7,20 @@
 
     var provider = "alpar";
     var theme = "auto";
-    var targetId = "alparai-badge";
+    var targetId = "alparai-trust-badge";
 
     if (currentScript) {
       provider = currentScript.getAttribute("data-provider") || provider;
       theme = currentScript.getAttribute("data-theme") || theme;
-      targetId = currentScript.getAttribute("data-target") || targetId;
+      if (currentScript.getAttribute("data-target")) {
+        targetId = currentScript.getAttribute("data-target");
+      }
     }
 
-    var targetEl = document.getElementById(targetId);
+    var targetEl =
+      document.getElementById(targetId) ||
+      document.getElementById("alparai-trust-badge") ||
+      document.getElementById("alparai-badge");
     if (!targetEl) {
       targetEl = document.createElement("div");
       targetEl.id = targetId;

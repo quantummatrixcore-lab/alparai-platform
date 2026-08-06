@@ -399,7 +399,8 @@
     "presskit": "Press Kit",
     "ratings": "Model Ratings",
     "challenges": "Challenges",
-    "velocity": "Velocity Index"
+    "velocity": "Velocity Index",
+    "advisory_board": "Advisory Board"
   },
   "velocity": {
     "page_title": "Velocity Engine Public Dashboard",

@@ -10,8 +10,8 @@ import {
   Mail,
   Sparkles,
 } from "lucide-react";
-import Link from "next/link";
 import { createServerClient } from "@/lib/supabase/server";
+import { CalendlyEmbed } from "@/components/marketing/calendly-embed";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -82,14 +82,14 @@ export default async function AdvisoryBoardPage({
                 </div>
 
                 <div className="flex-shrink-0">
-                  <Link
-                    href="mailto:quantum.matrix.core@gmail.com?subject=ALPAR%20AI%20Advisory%20Board%20Application"
+                  <a
+                    href="mailto:hello@alparai.com?subject=ALPAR%20AI%20Advisory%20Board%20Application"
                     className="bg-brand-500 hover:bg-brand-600 shadow-brand-500/20 inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-sm font-bold text-white shadow-lg transition-all active:scale-95"
                   >
                     <Mail className="h-4 w-4" />
                     {t("advisoryBoardJoinCTA")}
                     <ArrowUpRight className="h-4 w-4" />
-                  </Link>
+                  </a>
                 </div>
               </div>
             </div>
@@ -153,6 +153,11 @@ export default async function AdvisoryBoardPage({
               </div>
             </>
           )}
+
+          {/* Calendly Integration Section */}
+          <div className="mt-16">
+            <CalendlyEmbed isTr={isTr} />
+          </div>
         </Container>
       </Section>
     </div>

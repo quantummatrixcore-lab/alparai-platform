@@ -373,7 +373,8 @@
     "presskit": "Pressemappe",
     "ratings": "Modell-Bewertungen",
     "challenges": "Herausforderungen",
-    "velocity": "Geschwindigkeitsindex"
+    "velocity": "Geschwindigkeitsindex",
+    "advisory_board": "Beirat"
   },
   "hero": {
     "eyebrow": "COMMUNITY-GEFÜHRTE KI-VERANTWORTUNG",
@@ -4597,5 +4598,39 @@
       "link_ai_act": "Sehen Sie sich den Live-Tracker für schwere Vorfälle an",
       "link_methodology": "Lesen Sie die K-BENCHMARK-Methodik"
     }
+  },
+  "compliance": {
+    "title": "EU AI Act Artikel 73 Compliance-Checkliste | ALPAR AI",
+    "description": "Eine 12-Punkte-Checkliste für die Meldung schwerwiegender Vorfälle für Hochrisiko-KI-Systeme gemäß Artikel 73 des EU AI Act.",
+    "header_badge": "LEAD MAGNET",
+    "header_title": "EU AI Act Artikel 73 — 12-Punkte-Compliance-Checkliste",
+    "header_subtitle": "Ein obligatorischer Leitfaden für Banken- und Telekommunikations-Compliance-Abteilungen zu Meldungen schwerwiegender Vorfälle.",
+    "item1_title": "1. 72-Stunden-Benachrichtigungsfenster",
+    "item1_desc": "Sofortige Meldung an die zuständigen nationalen Behörden (NCA) bei Kenntnisnahme eines schwerwiegenden Vorfalls.",
+    "item2_title": "2. Klassifizierung von Hochrisiko-KI",
+    "item2_desc": "Überprüfen Sie, ob das System gemäß Anhang III als Hochrisiko eingestuft ist.",
+    "item3_title": "3. PII & Personenbezogene Datenbewertung",
+    "item3_desc": "Identifizieren Sie potenzielle Verstöße gegen personenbezogene Daten.",
+    "item4_title": "4. Vorfallsprotokollierung & Audit Trail",
+    "item4_desc": "Stellen Sie sicher, dass unveränderliche Protokolle für forensische Analysen geführt werden.",
+    "item5_title": "5. Warnung der zuständigen nationalen Behörde (NCA)",
+    "item5_desc": "Richten Sie einen direkten Kommunikationskanal mit der zuständigen NCA ein.",
+    "item6_title": "6. Interner Audit-Mechanismus",
+    "item6_desc": "Leiten Sie unmittelbar nach einem Vorfall interne Überprüfungsausschüsse ein.",
+    "item7_title": "7. Ursachenanalyse (RCA)",
+    "item7_desc": "Leiten Sie eine Ursachenanalyse innerhalb des vorgegebenen Zeitrahmens ein.",
+    "item8_title": "8. Umsetzung von Abhilfemaßnahmen",
+    "item8_desc": "Setzen Sie vorübergehende oder dauerhafte Korrekturen ein, um andauernden Schaden zu stoppen.",
+    "item9_title": "9. Grenzüberschreitende Koordinierung",
+    "item9_desc": "Bei Betroffenheit mehrerer Mitgliedstaaten Koordinierung mit dem KI-Amt.",
+    "item10_title": "10. Benutzerbenachrichtigungsprotokolle",
+    "item10_desc": "Informieren Sie betroffene Personen transparent und unverzüglich.",
+    "item11_title": "11. Feedback zur Überwachung nach dem Inverkehrbringen",
+    "item11_desc": "Vorfallsdaten fließen in kontinuierliche Risikomanagementsysteme zurück.",
+    "item12_title": "12. Dokumentation & Aufbewahrung von Aufzeichnungen",
+    "item12_desc": "Führen Sie detaillierte Dossiers über den Vorfall und die Reaktion für 10 Jahre.",
+    "cta_title": "Bleiben Sie konform mit ALPAR AI",
+    "cta_desc": "Automatisieren Sie Ihre Vorfallsprotokollierung und behördliche Berichterstattung.",
+    "cta_button": "Kostenlos starten"
   }
 }

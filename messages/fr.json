@@ -372,8 +372,9 @@
     "dilemmas": "Dilemmata",
     "presskit": "Pressemappe",
     "ratings": "Modell-Bewertungen",
-    "challenges": "Herausforderungen",
-    "velocity": "Indice de vélocité"
+    "challenges": "Défis",
+    "velocity": "Indice de vélocité",
+    "advisory_board": "Conseil Consultatif"
   },
   "hero": {
     "eyebrow": "COMMUNITY-GEFÜHRTE KI-VERANTWORTUNG",
@@ -4597,5 +4598,39 @@
       "link_ai_act": "Afficher le suivi des incidents graves en direct",
       "link_methodology": "Lire la méthodologie K-BENCHMARK"
     }
+  },
+  "compliance": {
+    "title": "Liste de contrôle de conformité à l'article 73 de la loi sur l'IA de l'UE | ALPAR AI",
+    "description": "Une liste de contrôle de notification des incidents graves en 12 points pour les systèmes d'IA à haut risque en vertu de l'article 73 de la loi sur l'IA de l'UE.",
+    "header_badge": "AIMANT À PROSPECTS",
+    "header_title": "Article 73 de la loi sur l'IA de l'UE — Liste de contrôle de conformité en 12 points",
+    "header_subtitle": "Un guide obligatoire pour les services de conformité bancaire et télécom concernant les notifications d'incidents graves.",
+    "item1_title": "1. Fenêtre de notification de 72 heures",
+    "item1_desc": "Signalement immédiat aux autorités nationales compétentes (ANC) dès la prise de connaissance d'un incident grave.",
+    "item2_title": "2. Classification de l'IA à haut risque",
+    "item2_desc": "Vérifiez si le système est classé comme à haut risque au titre de l'annexe III.",
+    "item3_title": "3. Évaluation des PII et des données personnelles",
+    "item3_desc": "Identifiez les violations potentielles impliquant des informations personnelles identifiables.",
+    "item4_title": "4. Journalisation des incidents et piste d'audit",
+    "item4_desc": "Assurez-vous que des journaux inaltérables sont conservés pour l'analyse médico-légale.",
+    "item5_title": "5. Alerte de l'autorité nationale compétente (ANC)",
+    "item5_desc": "Établissez un canal de communication direct avec l'ANC compétente.",
+    "item6_title": "6. Mécanisme d'audit interne",
+    "item6_desc": "Déclenchez des comités d'examen interne immédiatement après un incident.",
+    "item7_title": "7. Analyse de la cause racine (RCA)",
+    "item7_desc": "Initiez une RCA dans le délai imparti.",
+    "item8_title": "8. Mise en œuvre d'actions d'atténuation",
+    "item8_desc": "Déployez des correctifs temporaires ou permanents pour stopper les dommages en cours.",
+    "item9_title": "9. Coordination transfrontalière",
+    "item9_desc": "Si plusieurs États membres sont touchés, coordonnez avec le Bureau de l'IA.",
+    "item10_title": "10. Protocoles de notification des utilisateurs",
+    "item10_desc": "Informez les personnes touchées en toute transparence et rapidement.",
+    "item11_title": "11. Rétroaction sur la surveillance après commercialisation",
+    "item11_desc": "Réintégrez les données d'incidents dans les systèmes de gestion continue des risques.",
+    "item12_title": "12. Documentation et tenue de registres",
+    "item12_desc": "Conservez des dossiers détaillés sur l'incident et la réponse pendant 10 ans.",
+    "cta_title": "Restez conforme avec ALPAR AI",
+    "cta_desc": "Automatisez votre journalisation des incidents et vos rapports réglementaires.",
+    "cta_button": "Commencer gratuitement"
   }
 }
