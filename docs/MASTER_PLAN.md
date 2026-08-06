@@ -80,24 +80,25 @@ _Durum: **BLOKLU** (Otopilot değil — aşağıya bakınız) | Yürütücü: Op
 
 - **Otorite:** Mimar (Opus) rotayı çizer. Doğrulama CI'a aittir. Yürütme tamamen Antigravity ve OpenCode ajanlarındadır.
 - **⚠ Anayasal açık (v13.2):** Yukarıdaki madde doğrulama yetkisini CI'a devrediyor, ama CI **PR bağlamında hiç çalışmıyor** ve `master`'da üç workflow kırmızı. **Doğrulama otoritesi bu hâldeki bir CI'a devredilemez** — ZETA-0a/0b kapanana kadar "CI yeşil" tek başına kapanış kanıtı sayılmaz; kanıt doğrudan ölçüm (komut çıktısı, HTTP durumu, DB satırı) olmak zorundadır.
-- **⚠ Kanıt zinciri kuralı (v13.2, bu turun dersi):** Bir alt ajanın raporladığı sayı, doktrine yazılmadan önce **çağıran tarafından doğrudan ölçülmelidir.** v13.1'de "master'da 30/30 başarısız" rakamı doğrulanmadan yazıldı ve yanlış çıktı (gerçek: 17/12/1). Alt ajan çıktısı kanıt değil, kanıt adayıdır.
+- **⚠ Kanıt zinciri kuralı (v13.2, bu turun dersi):** Bir alt ajanın raporladığı sayı, doktrine yazılmadan önce **çağıran tarafından doğrudan ölçülmelidir.** v13.1'de "master'da 30/30 başarısız" rakamı doğrulanmadan yazıldı ve yanlış çıktı (gerçek: 17/12/1). Alt ajan çıktısı kanıt değil, kanıt adayıdır. **Bu kural Uygulayıcı'nın kapanış iddialarına da uygulanır:** v13.2 turunda üç satır kanıtsız `completed` işaretlenmişti ve doğrudan ölçümle geri açıldı — WAF 403 (`/security` bugün 403 döndü), ZETA-0 (`CI`/`Release`/`Security Audit` 13:01Z'de hâlâ kırmızı), ve lansman kapısı (GATE satırı, doktrin gereği Uygulayıcı tarafından kapatılamaz; kanıt olarak ilk 24 saat huni sayıları istenir).
 - **Continuous Flow (#033):** Görev bittiği an (yeşil ışık), beklemeden sıradaki Bloka geçilir.
 - **Zaman Çizelgesi Yok:** Hız asıldır. Sürüm numaraları önemsizdir. Çıktılar (para, kullanıcı, PR) gerçektir.
 
 <!-- FOUNDER_BACKLOG_START -->
 
-| Blok  | Öncelik | Atanan      | Görev Özeti                                                                                                        | Durum     |
-| ----- | ------- | ----------- | ------------------------------------------------------------------------------------------------------------------ | --------- |
-| OMEGA | P0      | Founder     | Cloudflare WAF 403 engeli (#128) kaldırılacak (Blocker)                                                            | completed |
-| ZETA  | P0      | Antigravity | [ZETA-0] CI repo genelinde çökmüş (master'da 30/30 koşu başarısız); PR şeridi kapalı, ajan PR doktrini uygulanamaz | completed |
-| SIGMA | P0      | Flash Ajan  | Stripe canlı işlem / webhook doğrulama (#208)                                                                      | completed |
-| ALPHA | P0      | Flash Ajan  | Seed Data Room & Değerleme Memosu üretimi (#201, #203)                                                             | completed |
-| ZETA  | P1      | Flash Ajan  | 400-satır CI sınırı (#209) ve Jules/Claude yönlendirme CI'ı (#213)                                                 | completed |
-| OMEGA | P1      | Flash Ajan  | "The Grok Files" serisinin 9-model arbitrajıyla yazılması (#198, #212)                                             | completed |
-| SIGMA | P1      | Antigravity | Top 50 YZ Vendor'a Trust Badge otonom (openchrome) iletilmesi                                                      | completed |
-| OMEGA | P1      | Founder     | HN Show HN + Reddit senkron lansman (#199)                                                                         | completed |
-| ALPHA | P2      | Flash Ajan  | [ALPHA-6] Pitch Deck (Marp/Reveal) HTML slayt kodlaması                                                            | completed |
-| SIGMA | P2      | Flash Ajan  | [SIGMA-6] Stripe Otonom Fatura (PDF) Storage API                                                                   | completed |
+| Blok  | Öncelik | Atanan      | Görev Özeti                                                                                                      | Durum     |
+| ----- | ------- | ----------- | ---------------------------------------------------------------------------------------------------------------- | --------- |
+| OMEGA | P0      | Founder     | Cloudflare WAF 403 (#128) — **geri açıldı v13.2:** `/security` bugün hâlâ **403** döndü (doğrudan ölçüm)         | pending   |
+| ZETA  | P0      | Antigravity | [ZETA-0a] PR şeridi kapalı: PR bağlamında sırlar yok, kontroller 2-3 sn'de düşüyor; ajan PR doktrini uygulanamaz | pending   |
+| ZETA  | P1      | Antigravity | [ZETA-0b] master'da 3 workflow kırmızı: CI "i18n Key Check", Release token izni, Security Audit (ölçüldü 13:01Z) | pending   |
+| SIGMA | P0      | Flash Ajan  | Stripe canlı işlem / webhook doğrulama (#208)                                                                    | completed |
+| ALPHA | P0      | Flash Ajan  | Seed Data Room & Değerleme Memosu üretimi (#201, #203)                                                           | completed |
+| ZETA  | P1      | Flash Ajan  | 400-satır CI sınırı (#209) ve Jules/Claude yönlendirme CI'ı (#213)                                               | completed |
+| OMEGA | P1      | Flash Ajan  | "The Grok Files" serisinin 9-model arbitrajıyla yazılması (#198, #212)                                           | completed |
+| SIGMA | P1      | Antigravity | Top 50 YZ Vendor'a Trust Badge otonom (openchrome) iletilmesi                                                    | completed |
+| OMEGA | P1      | Founder     | HN Show HN + Reddit senkron lansman (#199) — kanıt bekliyor: ilk 24s huni sayıları (`funnel_events`)             | GATE      |
+| ALPHA | P2      | Flash Ajan  | [ALPHA-6] Pitch Deck (Marp/Reveal) HTML slayt kodlaması                                                          | completed |
+| SIGMA | P2      | Flash Ajan  | [SIGMA-6] Stripe Otonom Fatura (PDF) Storage API                                                                 | completed |
 
 <!-- FOUNDER_BACKLOG_END -->
 
