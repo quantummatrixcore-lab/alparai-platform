@@ -340,3 +340,4 @@ describe("PII Guardian", () => {
       expect(maskPII("Steuer-ID: 12345678901").masked).toContain("[REDACTED-TAX-ID]");
     });
   });
+});

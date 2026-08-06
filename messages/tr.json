@@ -3106,6 +3106,7 @@
     "error_unexpected": "Beklenmeyen bir hata oluştu."
   },
   "common": {
+    "not_found": "Sayfa bulunamadı",
     "share": "Paylaş",
     "showMore": "Daha fazla göster",
     "github": "GitHub",

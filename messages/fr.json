@@ -2891,7 +2891,10 @@
     "vendor_portal_title": "Portail SLA & Confiance des fournisseurs d'IA",
     "vendor_portal_subtitle": "Suivez la conformité SLA des fournisseurs, les temps de réponse, l'historique des incidents et les classements de confiance.",
     "vendor_sla_uptime": "Disponibilité SLA",
-    "vendor_avg_latency": "Latence moyenne"
+    "vendor_avg_latency": "Latence moyenne",
+    "api_metrics_live_status": "Télémétrie en direct active",
+    "api_loading_chart": "Chargement du graphique...",
+    "api_metrics_system_healthy": "Système opérationnel"
   },
   "footer": {
     "tagline": "Wo die Welt KI zur Verantwortung zieht.",
@@ -3006,6 +3009,7 @@
     "health_chart_api_hits": "Accès à l'API"
   },
   "common": {
+    "not_found": "Page non trouvée",
     "share": "Teilen",
     "showMore": "Mehr anzeigen",
     "github": "GitHub",

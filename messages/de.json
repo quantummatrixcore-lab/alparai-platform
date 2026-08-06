@@ -2891,7 +2891,10 @@
     "vendor_portal_title": "KI-Anbieter-SLA- & Vertrauensportal",
     "vendor_portal_subtitle": "Verfolgen Sie die SLA-Einhaltung der Anbieter, Antwortzeiten, Vorfallsverläufe und Vertrauensrankings.",
     "vendor_sla_uptime": "SLA-Betriebszeit",
-    "vendor_avg_latency": "Durchschn. Latenz"
+    "vendor_avg_latency": "Durchschn. Latenz",
+    "api_metrics_live_status": "Live-Telemetrie aktiv",
+    "api_loading_chart": "Diagramm wird geladen...",
+    "api_metrics_system_healthy": "System betriebsbereit"
   },
   "footer": {
     "tagline": "Wo die Welt KI zur Verantwortung zieht.",
@@ -3006,6 +3009,7 @@
     "health_chart_api_hits": "API-Treffer"
   },
   "common": {
+    "not_found": "Seite nicht gefunden",
     "share": "Teilen",
     "showMore": "Mehr anzeigen",
     "github": "GitHub",

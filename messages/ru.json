@@ -2891,7 +2891,10 @@
     "vendor_portal_title": "Портал SLA и доверия ИИ-провайдеров",
     "vendor_portal_subtitle": "Отслеживайте соблюдение SLA провайдерами, время отклика, историю инцидентов и рейтинги доверия.",
     "vendor_sla_uptime": "Время работы по SLA",
-    "vendor_avg_latency": "Средняя задержка"
+    "vendor_avg_latency": "Средняя задержка",
+    "api_metrics_live_status": "Живая телеметрия активна",
+    "api_loading_chart": "Загрузка графика...",
+    "api_metrics_system_healthy": "Система работает нормально"
   },
   "footer": {
     "tagline": "Wo die Welt KI zur Verantwortung zieht.",
@@ -3006,6 +3009,7 @@
     "health_chart_api_hits": "Хиты API"
   },
   "common": {
+    "not_found": "Страница не найдена",
     "share": "Teilen",
     "showMore": "Mehr anzeigen",
     "github": "GitHub",

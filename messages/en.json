@@ -3100,6 +3100,7 @@
     "health_chart_api_hits": "API Hits"
   },
   "common": {
+    "not_found": "Page not found",
     "share": "Share",
     "showMore": "Show more",
     "github": "GitHub",
