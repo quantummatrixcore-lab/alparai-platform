@@ -4516,5 +4516,86 @@
     "th_elo": "Бенчмарк ELO",
     "th_release": "Дата выпуска",
     "th_jump": "Скачок возможностей"
+  },
+  "article73_checklist": {
+    "title": "EU AI Act Article 73 Compliance Checklist",
+    "subtitle": "Interactive audit framework & lead magnet for high-risk AI system providers to meet mandatory serious incident reporting requirements.",
+    "badge": "EU AI Act Regulatory Compliance",
+    "meta_title": "EU AI Act Article 73 Compliance Checklist | ALPAR AI",
+    "meta_description": "Interactive checklist and lead magnet template for complying with EU AI Act Article 73 serious incident reporting obligations.",
+    "stats": {
+      "deadline_general": "15 Days",
+      "deadline_general_sub": "General Incident Reporting",
+      "deadline_urgent": "48 Hours",
+      "deadline_urgent_sub": "Fatal / Severe Harm",
+      "penalty": "€35M / 7%",
+      "penalty_sub": "Maximum Non-compliance Fine"
+    },
+    "filter": {
+      "all": "All Items ({count})",
+      "identification": "Triage & Classification",
+      "timelines": "Reporting Timelines",
+      "logging": "Logging & Telemetry",
+      "rca": "RCA & Filings"
+    },
+    "progress": {
+      "title": "Audit Compliance Score",
+      "completed": "{completed} of {total} items completed ({percent}%)",
+      "status_low": "Action Required: System vulnerable to regulatory non-compliance.",
+      "status_mid": "In Progress: Key reporting mechanisms partially implemented.",
+      "status_high": "Fully Aligned: System ready for Article 73 serious incident disclosures."
+    },
+    "download_box": {
+      "badge": "Free Regulatory Resource",
+      "title": "Download Complete PDF Compliance Pack & Incident Response Template",
+      "subtitle": "Get the offline PDF audit matrix, root cause analysis dossier template, and regulator notification form.",
+      "email_placeholder": "Enter your corporate email address",
+      "role_placeholder": "Select your organizational role",
+      "role_provider": "AI System Provider",
+      "role_deployer": "AI System Deployer / Enterprise",
+      "role_compliance": "Legal & Compliance Counsel",
+      "role_auditor": "AI Auditor / Security Researcher",
+      "button": "Get Free Compliance Kit",
+      "success_message": "Success! The Article 73 PDF Compliance Kit has been dispatched to your email.",
+      "disclaimer": "No spam ever. ALPAR AI stores email data in accordance with KVKK / GDPR principles."
+    },
+    "items": {
+      "item1_title": "Serious Incident Triage Protocol",
+      "item1_desc": "Establish formal criteria to categorize events causing death, severe health harm, critical infrastructure disruption, or fundamental rights violations.",
+      "item1_ref": "Article 73(1) & Article 3(49)",
+      "item2_title": "48-Hour Fatal Harm Fast-Track Dispatch",
+      "item2_desc": "Implement an automated escalation pipeline to notify market surveillance authorities within 48 hours in the event of death or severe health impairment.",
+      "item2_ref": "Article 73(2)(a)",
+      "item3_title": "7-Day Fundamental Rights & Widespread Infringement Trigger",
+      "item3_desc": "Define notification workflows for serious incidents causing systemic fundamental rights breaches or widespread market disruptions within 7 calendar days.",
+      "item3_ref": "Article 73(2)(b)",
+      "item4_title": "Standard 15-Day Serious Incident Regulatory Filing",
+      "item4_desc": "Formulate a standardized reporting mechanism to transmit initial incident reports to Member State authorities within 15 days of awareness.",
+      "item4_ref": "Article 73(1)",
+      "item5_title": "Article 12 Automated Event Logging & Traceability",
+      "item5_desc": "Ensure high-risk AI systems maintain continuous, tamper-evident logs capturing inputs, outputs, operational state, and decision trace telemetry.",
+      "item5_ref": "Article 12 & Article 73(4)",
+      "item6_title": "Article 72 Post-Market Monitoring System Integration",
+      "item6_desc": "Connect post-market telemetry feeds directly into continuous risk management reviews to detect recurring performance anomalies.",
+      "item6_ref": "Article 72",
+      "item7_title": "30-Day Investigation & Root Cause Analysis (RCA) Dossier",
+      "item7_desc": "Develop a standard 30-day post-notification procedure to complete full root-cause investigation, technical forensic analysis, and remedial plan submission.",
+      "item7_ref": "Article 73(4)",
+      "item8_title": "Deployer & Market Surveillance Authority Communication",
+      "item8_desc": "Establish secure channels to alert system deployers, downstream integrators, and relevant EU Member State market surveillance bodies upon incident confirmation.",
+      "item8_ref": "Article 73(5)",
+      "item9_title": "Third-Party & Vendor AI Component Audit Protocol",
+      "item9_desc": "Verify third-party foundation model and API supply chain compliance, ensuring sub-tier vendors maintain SLA logging for serious incident reporting.",
+      "item9_ref": "Article 25 & Article 73",
+      "item10_title": "Independent AI Incident Registry Verification (ALPAR AI)",
+      "item10_desc": "Cross-reference internal incident telemetry with open public incident databases (ALPAR AI K-BENCHMARK) to identify undisclosed systemic vulnerabilities.",
+      "item10_ref": "ALPAR AI Open Trust Standard"
+    },
+    "trust_footer": {
+      "title": "Built for AI Trust & Regulatory Readiness",
+      "desc": "ALPAR AI provides open-source trust infrastructure, cross-audit verification, and serious incident registries to bridge the regulatory gap.",
+      "link_ai_act": "View Live Serious Incident Tracker",
+      "link_methodology": "Read K-BENCHMARK Methodology"
+    }
   }
 }

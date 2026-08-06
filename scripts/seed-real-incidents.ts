@@ -138,7 +138,7 @@ export async function seedRealIncidents(execute = false) {
       description_masked: descMaskedResult.masked,
       contains_pii: titleMaskedResult.piiFound || descMaskedResult.piiFound,
       pii_categories: Array.from(
-        new Set([...titleMaskedResult.detections, ...descMaskedResult.detections])
+        new Set([...titleMaskedResult.detections, ...descMaskedResult.detections]),
       ),
     };
   });
@@ -154,7 +154,9 @@ export async function seedRealIncidents(execute = false) {
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
-    console.error("❌ Error: Missing SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY environment variables.");
+    console.error(
+      "❌ Error: Missing SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY environment variables.",
+    );
     process.exit(1);
   }
 

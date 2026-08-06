@@ -32,7 +32,7 @@ export default function Loading() {
         <Skeleton className="h-10 flex-1 rounded-xl bg-slate-800" />
         <div className="flex gap-3">
           <Skeleton className="h-10 w-36 rounded-xl bg-slate-800" />
-          <Skeleton className="h-10 w-24 rounded-xl bg-brand-500/20" />
+          <Skeleton className="bg-brand-500/20 h-10 w-24 rounded-xl" />
         </div>
       </div>
 
@@ -70,4 +70,3 @@ export default function Loading() {
     </div>
   );
 }
-

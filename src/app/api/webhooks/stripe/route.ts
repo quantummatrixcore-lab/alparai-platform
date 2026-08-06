@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logger } from "@/lib/utils/logger";
+import { processAutonomousPdfInvoice } from "@/lib/billing/invoices";
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
@@ -60,8 +61,10 @@ export async function POST(request: Request) {
       const session = event.data.object;
       let userId = session.metadata?.user_id || session.client_reference_id;
       const rawTier = session.metadata?.tier || "pro";
-      const customerId = typeof session.customer === "string" ? session.customer : session.customer?.id;
-      const subscriptionId = typeof session.subscription === "string" ? session.subscription : session.subscription?.id;
+      const customerId =
+        typeof session.customer === "string" ? session.customer : session.customer?.id;
+      const subscriptionId =
+        typeof session.subscription === "string" ? session.subscription : session.subscription?.id;
       const { apiKeyTier, userTier } = normalizeTier(rawTier);
 
       if (!userId && customerId) {
@@ -88,7 +91,10 @@ export async function POST(request: Request) {
         );
 
         if (subErr) {
-          logger.error("Failed to upsert subscription on checkout completion", { userId, error: subErr.message });
+          logger.error("Failed to upsert subscription on checkout completion", {
+            userId,
+            error: subErr.message,
+          });
         }
 
         const { error: keyErr } = await admin
@@ -97,7 +103,10 @@ export async function POST(request: Request) {
           .eq("provider", userId);
 
         if (keyErr) {
-          logger.error("Failed to update api_keys tier on checkout completion", { userId, error: keyErr.message });
+          logger.error("Failed to update api_keys tier on checkout completion", {
+            userId,
+            error: keyErr.message,
+          });
         }
 
         const { error: userErr } = await admin
@@ -109,7 +118,10 @@ export async function POST(request: Request) {
           .eq("id", userId);
 
         if (userErr) {
-          logger.error("Failed to update user subscription_tier on checkout completion", { userId, error: userErr.message });
+          logger.error("Failed to update user subscription_tier on checkout completion", {
+            userId,
+            error: userErr.message,
+          });
         }
 
         logger.info("Stripe checkout session completed & tier upgrade applied via admin client", {
@@ -119,6 +131,20 @@ export async function POST(request: Request) {
           rawTier,
           userTier,
           apiKeyTier,
+        });
+
+        // SIGMA-6: Autonomous PDF Invoice generation & Supabase Storage upload
+        const invoiceId = `inv_${session.id.slice(-12)}_${Date.now()}`;
+        const amountTotal = session.amount_total || 2900;
+        const currency = session.currency || "usd";
+        const customerEmail = session.customer_details?.email || undefined;
+        await processAutonomousPdfInvoice({
+          invoiceId,
+          userId,
+          customerEmail,
+          amount: amountTotal,
+          currency,
+          plan: userTier,
         });
       } else {
         logger.warn("Stripe checkout.session.completed received without resolved userId", {
@@ -131,7 +157,10 @@ export async function POST(request: Request) {
 
     case "customer.subscription.created": {
       const subscription = event.data.object;
-      const customerId = typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id;
+      const customerId =
+        typeof subscription.customer === "string"
+          ? subscription.customer
+          : subscription.customer?.id;
       const subscriptionId = subscription.id;
       const rawTier = subscription.metadata?.tier || "vendor";
       const { apiKeyTier, userTier } = normalizeTier(rawTier);
@@ -191,7 +220,10 @@ export async function POST(request: Request) {
       const periodEnd = subscription.items?.data?.[0]?.current_period_end;
       const rawTier = subscription.metadata?.tier || "pro";
       const { apiKeyTier, userTier } = normalizeTier(rawTier);
-      const customerId = typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id;
+      const customerId =
+        typeof subscription.customer === "string"
+          ? subscription.customer
+          : subscription.customer?.id;
 
       await admin
         .from("subscriptions")
@@ -246,7 +278,10 @@ export async function POST(request: Request) {
 
     case "customer.subscription.deleted": {
       const subscription = event.data.object;
-      const customerId = typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id;
+      const customerId =
+        typeof subscription.customer === "string"
+          ? subscription.customer
+          : subscription.customer?.id;
       let userId = subscription.metadata?.user_id;
 
       if (!userId) {
@@ -285,4 +320,3 @@ export async function POST(request: Request) {
 
   return NextResponse.json({ received: true });
 }
-
