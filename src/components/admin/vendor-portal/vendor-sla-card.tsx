@@ -22,11 +22,11 @@ export function VendorSlaCard({ vendor }: VendorSlaCardProps) {
   };
 
   return (
-    <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-zinc-900/40 p-6 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:border-white/20 hover:bg-zinc-900/60">
+    <div className="group border-border-subtle bg-bg-secondary hover:border-border-subtle/80 hover:bg-bg-tertiary relative overflow-hidden rounded-3xl border p-6 shadow-2xl backdrop-blur-xl transition-all duration-300">
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <h3 className="group-hover:text-brand-300 text-xl font-bold text-white transition-colors">
+            <h3 className="group-hover:text-brand-300 text-fg-primary text-xl font-bold transition-colors">
               {vendor.providerName}
             </h3>
             <span
@@ -37,23 +37,23 @@ export function VendorSlaCard({ vendor }: VendorSlaCardProps) {
               {vendor.rankingTier}
             </span>
           </div>
-          <p className="mt-1 font-mono text-xs text-zinc-400">slug: {vendor.providerSlug}</p>
+          <p className="text-fg-muted mt-1 font-mono text-xs">slug: {vendor.providerSlug}</p>
         </div>
         <div className="text-right">
-          <div className="flex items-center gap-1 text-2xl font-black text-white">
+          <div className="text-fg-primary flex items-center gap-1 text-2xl font-black">
             <ShieldCheck className="text-brand-400 inline-block h-5 w-5" />
             <span>{vendor.compositeScore.toFixed(1)}</span>
-            <span className="text-xs font-normal text-zinc-500">/100</span>
+            <span className="text-fg-muted text-xs font-normal">/100</span>
           </div>
-          <span className="text-[10px] font-semibold tracking-wider text-zinc-400 uppercase">
+          <span className="text-fg-muted text-[10px] font-semibold tracking-wider uppercase">
             Trust Score
           </span>
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-2 gap-4 border-t border-white/5 pt-4 sm:grid-cols-4">
+      <div className="border-border-subtle mt-6 grid grid-cols-2 gap-4 border-t pt-4 sm:grid-cols-4">
         <div>
-          <div className="flex items-center gap-1.5 text-xs text-zinc-400">
+          <div className="text-fg-muted flex items-center gap-1.5 text-xs">
             <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
             <span>SLA Uptime</span>
           </div>
@@ -63,17 +63,17 @@ export function VendorSlaCard({ vendor }: VendorSlaCardProps) {
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-xs text-zinc-400">
+          <div className="text-fg-muted flex items-center gap-1.5 text-xs">
             <Zap className="h-3.5 w-3.5 text-amber-400" />
             <span>Avg Latency</span>
           </div>
-          <p className="mt-1 font-mono text-lg font-bold text-white">
+          <p className="text-fg-primary mt-1 font-mono text-lg font-bold">
             {vendor.avgResponseLatencyMs}ms
           </p>
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-xs text-zinc-400">
+          <div className="text-fg-muted flex items-center gap-1.5 text-xs">
             <AlertTriangle className="h-3.5 w-3.5 text-rose-400" />
             <span>Penalty</span>
           </div>
@@ -83,7 +83,7 @@ export function VendorSlaCard({ vendor }: VendorSlaCardProps) {
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-xs text-zinc-400">
+          <div className="text-fg-muted flex items-center gap-1.5 text-xs">
             <Activity className="h-3.5 w-3.5 text-cyan-400" />
             <span>Resp. Bonus</span>
           </div>

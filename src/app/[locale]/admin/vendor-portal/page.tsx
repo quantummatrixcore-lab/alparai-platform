@@ -20,9 +20,5 @@ export default async function VendorPortalPage({
 
   const data = await getVendorPortalDataAction();
 
-  return (
-    <div className="min-h-screen bg-black p-6 md:p-8">
-      <VendorPortalDashboard data={data} />
-    </div>
-  );
+  return <VendorPortalDashboard data={data} />;
 }

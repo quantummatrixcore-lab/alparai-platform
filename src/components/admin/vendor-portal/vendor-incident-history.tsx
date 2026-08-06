@@ -45,18 +45,18 @@ export function VendorIncidentHistory({ incidents }: VendorIncidentHistoryProps)
   };
 
   return (
-    <div className="space-y-4 rounded-3xl border border-white/10 bg-zinc-900/40 p-6 shadow-2xl backdrop-blur-xl">
+    <div className="border-border-subtle bg-bg-secondary space-y-4 rounded-3xl border p-6 shadow-2xl backdrop-blur-xl">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <ShieldAlert className="h-5 w-5 text-amber-400" />
-          <h2 className="text-lg font-bold text-white">Vendor Incident Log</h2>
+          <h2 className="text-fg-primary text-lg font-bold">Vendor Incident Log</h2>
         </div>
-        <span className="font-mono text-xs text-zinc-400">Real-time Telemetry</span>
+        <span className="text-fg-muted font-mono text-xs">Real-time Telemetry</span>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm text-zinc-300">
-          <thead className="border-b border-white/10 bg-white/5 text-xs tracking-wider text-zinc-400 uppercase">
+        <table className="text-fg-primary w-full text-left text-sm">
+          <thead className="border-border-subtle bg-bg-tertiary text-fg-muted border-b text-xs tracking-wider uppercase">
             <tr>
               <th className="p-3.5">Provider</th>
               <th className="p-3.5">Incident</th>
@@ -65,11 +65,11 @@ export function VendorIncidentHistory({ incidents }: VendorIncidentHistoryProps)
               <th className="p-3.5">Timestamp</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-border-subtle divide-y">
             {incidents.map((inc) => (
-              <tr key={inc.id} className="transition-colors hover:bg-white/5">
-                <td className="p-3.5 font-bold text-white">{inc.providerName}</td>
-                <td className="p-3.5 font-medium text-zinc-200">{inc.title}</td>
+              <tr key={inc.id} className="hover:bg-bg-tertiary/60 transition-colors">
+                <td className="text-fg-primary p-3.5 font-bold">{inc.providerName}</td>
+                <td className="text-fg-primary p-3.5 font-medium">{inc.title}</td>
                 <td className="p-3.5">
                   <span
                     className={`rounded-lg border px-2 py-0.5 text-xs font-bold tracking-wider uppercase ${getSeverityBadge(
@@ -80,7 +80,7 @@ export function VendorIncidentHistory({ incidents }: VendorIncidentHistoryProps)
                   </span>
                 </td>
                 <td className="p-3.5">{getStatusBadge(inc.status)}</td>
-                <td className="p-3.5 font-mono text-xs text-zinc-400">
+                <td className="text-fg-muted p-3.5 font-mono text-xs">
                   {new Date(inc.createdAt).toLocaleString()}
                 </td>
               </tr>
@@ -88,7 +88,7 @@ export function VendorIncidentHistory({ incidents }: VendorIncidentHistoryProps)
           </tbody>
         </table>
         {incidents.length === 0 && (
-          <div className="py-8 text-center text-zinc-500">
+          <div className="text-fg-muted py-8 text-center">
             No active or past incidents recorded.
           </div>
         )}

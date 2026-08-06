@@ -20,6 +20,7 @@ import {
 import type { MasterPlanParseError, PlanItem } from "@/lib/utils/markdown-parser";
 import { MasterPlanDepsTable } from "@/components/admin/master-plan-deps-table";
 import { MasterPlanDepsGraph } from "@/components/admin/master-plan-deps-graph";
+import { AdminSubNav, type SubNavItem } from "@/components/admin/admin-design-kit";
 
 interface MasterPlanClientProps {
   items: PlanItem[];
@@ -80,7 +81,7 @@ function PlanCard({
           {item.priority}
         </span>
       </div>
-      <p className={`${compact ? "text-sm" : "font-medium"} text-white`}>{item.title}</p>
+      <p className={`${compact ? "text-sm" : "font-medium"} text-fg-primary`}>{item.title}</p>
       {!compact && item.description && (
         <p className="text-fg-muted line-clamp-2 text-xs leading-relaxed">{item.description}</p>
       )}
@@ -135,6 +136,32 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<PlanItem | null>(null);
   const [showStartableOnly, setShowStartableOnly] = useState(false);
+
+  const navItems: SubNavItem[] = useMemo(
+    () => [
+      {
+        id: "kanban",
+        label: t("view_kanban"),
+        icon: LayoutGrid,
+      },
+      {
+        id: "list",
+        label: t("view_list"),
+        icon: List,
+      },
+      {
+        id: "graph",
+        label: t("view_graph"),
+        icon: Network,
+      },
+      {
+        id: "table",
+        label: t("view_deps_table"),
+        icon: TableIcon,
+      },
+    ],
+    [t],
+  );
 
   const completedIds = useMemo(
     () => new Set(items.filter((i) => i.status === "completed").map((i) => i.id)),
@@ -273,7 +300,7 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
         >
           <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
           <div>
-            <p className="text-sm font-bold text-white">{t("plan_error_title")}</p>
+            <p className="text-fg-primary text-sm font-bold">{t("plan_error_title")}</p>
             <p className="mt-1 text-sm text-red-200/80">
               {error === "markers" ? t("plan_error_markers_body") : t("plan_error_body")}
             </p>
@@ -285,7 +312,7 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
       {isEmpty && (
         <div className="bg-bg-secondary/40 border-border-subtle/50 flex flex-col items-center justify-center rounded-xl border border-dashed py-16 text-center">
           <Inbox className="text-fg-muted mb-3 h-10 w-10 opacity-40" />
-          <p className="text-sm font-bold text-white">{t("plan_empty_title")}</p>
+          <p className="text-fg-primary text-sm font-bold">{t("plan_empty_title")}</p>
           <p className="text-fg-muted mt-1 max-w-md text-sm">{t("plan_empty_body")}</p>
         </div>
       )}
@@ -300,7 +327,7 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                 {t("progress_title")}
               </div>
               <div className="flex items-end gap-2">
-                <span className="text-4xl font-black text-white">{Math.round(progress)}%</span>
+                <span className="text-fg-primary text-4xl font-black">{Math.round(progress)}%</span>
                 <span className="text-fg-muted mb-1 text-sm font-medium">
                   {t("progress_active", { completed: completedCount, total: activeTotal })}
                 </span>
@@ -318,7 +345,7 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
 
           {/* View Toggle + Filter */}
           <div className="border-border-subtle flex flex-col gap-4 border-b pb-4 md:flex-row md:items-center md:justify-between">
-            <h2 className="text-xl font-bold text-white">{t("execution_board")}</h2>
+            <h2 className="text-fg-primary text-xl font-bold">{t("execution_board")}</h2>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <div className="bg-bg-tertiary border-border-subtle flex items-center gap-2 rounded-lg border px-3">
                 <Search className="text-fg-muted h-4 w-4 shrink-0" />
@@ -334,7 +361,7 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                   <button
                     onClick={() => setQuery("")}
                     aria-label={t("plan_filter_clear")}
-                    className="text-fg-muted rounded p-0.5 transition-colors hover:text-white focus:ring-2 focus:outline-none"
+                    className="text-fg-muted hover:text-fg-primary rounded p-0.5 transition-colors focus:ring-2 focus:outline-none"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -343,49 +370,16 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
               <button
                 onClick={() => setShowStartableOnly(!showStartableOnly)}
                 aria-pressed={showStartableOnly}
-                className={`focus:ring-brand-500/50 flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-semibold transition-all focus:ring-2 focus:outline-none ${showStartableOnly ? "bg-brand-500/10 border-brand-500/30 text-brand-400 shadow-sm" : "bg-bg-tertiary border-border-subtle text-fg-muted hover:text-white"}`}
+                className={`focus:ring-brand-500/50 flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-semibold transition-all focus:ring-2 focus:outline-none ${showStartableOnly ? "bg-brand-500/10 border-brand-500/30 text-brand-400 shadow-sm" : "bg-bg-tertiary border-border-subtle text-fg-muted hover:text-fg-primary"}`}
               >
                 <PlayCircle className="h-4 w-4" />
                 {t("deps_status_startable")}
               </button>
-              <div className="bg-bg-tertiary border-border-subtle flex flex-wrap items-center gap-1 rounded-lg border p-1">
-                <button
-                  onClick={() => setViewMode("kanban")}
-                  aria-pressed={viewMode === "kanban"}
-                  aria-label={t("view_kanban")}
-                  className={`focus:ring-brand-500/50 flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold transition-all focus:ring-2 focus:outline-none ${viewMode === "kanban" ? "bg-bg-secondary text-white shadow-sm" : "text-fg-muted hover:text-white"}`}
-                >
-                  <LayoutGrid className="h-4 w-4" />
-                  {t("view_kanban")}
-                </button>
-                <button
-                  onClick={() => setViewMode("list")}
-                  aria-pressed={viewMode === "list"}
-                  aria-label={t("view_list")}
-                  className={`focus:ring-brand-500/50 flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold transition-all focus:ring-2 focus:outline-none ${viewMode === "list" ? "bg-bg-secondary text-white shadow-sm" : "text-fg-muted hover:text-white"}`}
-                >
-                  <List className="h-4 w-4" />
-                  {t("view_list")}
-                </button>
-                <button
-                  onClick={() => setViewMode("graph")}
-                  aria-pressed={viewMode === "graph"}
-                  aria-label={t("view_graph")}
-                  className={`focus:ring-brand-500/50 flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold transition-all focus:ring-2 focus:outline-none ${viewMode === "graph" ? "bg-bg-secondary text-white shadow-sm" : "text-fg-muted hover:text-white"}`}
-                >
-                  <Network className="text-brand-400 h-4 w-4" />
-                  {t("view_graph")}
-                </button>
-                <button
-                  onClick={() => setViewMode("table")}
-                  aria-pressed={viewMode === "table"}
-                  aria-label={t("view_deps_table")}
-                  className={`focus:ring-brand-500/50 flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold transition-all focus:ring-2 focus:outline-none ${viewMode === "table" ? "bg-bg-secondary text-white shadow-sm" : "text-fg-muted hover:text-white"}`}
-                >
-                  <TableIcon className="h-4 w-4 text-amber-400" />
-                  {t("view_deps_table")}
-                </button>
-              </div>
+              <AdminSubNav
+                items={navItems}
+                activeId={viewMode}
+                onChange={(id) => setViewMode(id as "kanban" | "list" | "graph" | "table")}
+              />
             </div>
           </div>
 
@@ -393,7 +387,7 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
           {noFilterResults ? (
             <div className="bg-bg-secondary/40 border-border-subtle/50 flex flex-col items-center justify-center rounded-xl border border-dashed py-14 text-center">
               <Search className="text-fg-muted mb-3 h-8 w-8 opacity-40" />
-              <p className="text-sm font-bold text-white">{t("plan_filter_no_results")}</p>
+              <p className="text-fg-primary text-sm font-bold">{t("plan_filter_no_results")}</p>
               <button
                 onClick={() => setQuery("")}
                 className="text-brand-400 mt-2 text-sm font-semibold hover:underline"
@@ -409,7 +403,7 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                   {/* Pending Column */}
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="flex items-center gap-2 font-bold text-white">
+                      <h3 className="text-fg-primary flex items-center gap-2 font-bold">
                         <Clock className="h-5 w-5 text-amber-400" />
                         {t("pending_column")}
                       </h3>
@@ -443,7 +437,7 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                   {/* Paused / Founder-Gated Column */}
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="flex items-center gap-2 font-bold text-white">
+                      <h3 className="text-fg-primary flex items-center gap-2 font-bold">
                         <Clock className="h-5 w-5 text-purple-400" />
                         {t("paused_column")}
                       </h3>
@@ -477,7 +471,7 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                   {/* Completed Column */}
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="flex items-center gap-2 font-bold text-white">
+                      <h3 className="text-fg-primary flex items-center gap-2 font-bold">
                         <CheckCircle2 className="h-5 w-5 text-emerald-400" />
                         {t("completed_column")}
                       </h3>
@@ -578,7 +572,7 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                               )}
                             </div>
                             <p
-                              className={`text-sm ${item.status === "completed" ? "text-fg-secondary line-through" : "font-medium text-white"}`}
+                              className={`text-sm ${item.status === "completed" ? "text-fg-secondary line-through" : "text-fg-primary font-medium"}`}
                             >
                               {item.title}
                             </p>
@@ -649,12 +643,12 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                       {t(statusKey[selected.status])}
                     </span>
                   </div>
-                  <h3 className="text-lg font-bold text-white">{selected.title}</h3>
+                  <h3 className="text-fg-primary text-lg font-bold">{selected.title}</h3>
                 </div>
                 <button
                   onClick={() => setSelected(null)}
                   aria-label={t("plan_modal_close")}
-                  className="text-fg-muted hover:bg-bg-tertiary rounded-lg p-2 transition-colors hover:text-white focus:ring-2 focus:outline-none"
+                  className="text-fg-muted hover:bg-bg-tertiary hover:text-fg-primary rounded-lg p-2 transition-colors focus:ring-2 focus:outline-none"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -681,13 +675,13 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                     <p className="text-fg-muted mb-1 text-xs font-bold tracking-wider uppercase">
                       {t("plan_detail_priority")}
                     </p>
-                    <p className="text-sm font-semibold text-white">{selected.priority}</p>
+                    <p className="text-fg-primary text-sm font-semibold">{selected.priority}</p>
                   </div>
                   <div>
                     <p className="text-fg-muted mb-1 text-xs font-bold tracking-wider uppercase">
                       {t("plan_detail_status")}
                     </p>
-                    <p className="text-sm font-semibold text-white">
+                    <p className="text-fg-primary text-sm font-semibold">
                       {t(statusKey[selected.status])}
                     </p>
                   </div>
@@ -695,7 +689,7 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                     <p className="text-fg-muted mb-1 text-xs font-bold tracking-wider uppercase">
                       {t("plan_detail_owner")}
                     </p>
-                    <p className="text-sm font-semibold text-white">
+                    <p className="text-fg-primary text-sm font-semibold">
                       {selected.owner ?? t("plan_detail_no_owner")}
                     </p>
                   </div>
@@ -703,7 +697,7 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                     <p className="text-fg-muted mb-1 text-xs font-bold tracking-wider uppercase">
                       {t("plan_detail_commit")}
                     </p>
-                    <p className="font-mono text-sm text-white">
+                    <p className="text-fg-primary font-mono text-sm">
                       {selected.commitHash ??
                         (selected.closedBy
                           ? `${selected.closedBy.sha}@${selected.closedBy.branch}`
@@ -714,7 +708,7 @@ export function MasterPlanClient({ items, error }: MasterPlanClientProps) {
                     <p className="text-fg-muted mb-1 text-xs font-bold tracking-wider uppercase">
                       {t("deps_th_depends_on")}
                     </p>
-                    <p className="text-sm font-semibold text-white">
+                    <p className="text-fg-primary text-sm font-semibold">
                       {Array.from(effectiveDependsOn.get(selected.id) || [])
                         .map((d) => `#${d}`)
                         .join(", ") || "—"}

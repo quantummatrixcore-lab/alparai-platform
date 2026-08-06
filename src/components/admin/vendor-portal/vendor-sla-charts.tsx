@@ -19,13 +19,13 @@ interface VendorSlaChartsProps {
 
 export function VendorSlaCharts({ data }: VendorSlaChartsProps) {
   return (
-    <div className="space-y-4 rounded-3xl border border-white/10 bg-zinc-900/40 p-6 shadow-2xl backdrop-blur-xl">
+    <div className="border-border-subtle bg-bg-secondary space-y-4 rounded-3xl border p-6 shadow-2xl backdrop-blur-xl">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Activity className="text-brand-400 h-5 w-5" />
-          <h2 className="text-lg font-bold text-white">SLA Uptime Trends (%)</h2>
+          <h2 className="text-fg-primary text-lg font-bold">SLA Uptime Trends (%)</h2>
         </div>
-        <span className="font-mono text-xs text-zinc-400">Last 7 Days Telemetry</span>
+        <span className="text-fg-muted font-mono text-xs">Last 7 Days Telemetry</span>
       </div>
 
       <div className="h-72 w-full pt-2">
