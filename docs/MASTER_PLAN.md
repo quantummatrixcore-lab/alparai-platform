@@ -163,7 +163,7 @@ Google for Startups $2K–350K · AWS Activate $1K–200K · Microsoft Founders 
 | 186 | P0 | [Blok A] Vendor Portal Beta — ilk 3 AI sağlayıcı, SLA tracking canlı | — | ✅ completed — closed-by:ef89f064@master |
 | 187 | P0 | [Blok A] Compliance API ticari lansman — ilk enterprise sözleşme (banka/telekom) | #186 | pending |
 | 188 | P1 | [Blok A] Lloyd's Lab gerçek başvuru (Case #001 + Velocity verisiyle) | #189 | pending |
-| 189 | P0 | [Blok B] Velocity Engine **public** dashboard — ΔV_AI endeksi + dinamik ARR | #178 | ✅ completed — closed-by:a07964c6@master |
+| 189 | P0 | [Blok B] Velocity Engine **public** dashboard — ΔV_AI endeksi + dinamik ARR | #178 | ✅ completed — closed-by:30fed41c@master |
 | 190 | P0 | [Blok B] Qwen3.5-Omni production rollout (hibrit %50/50, cost-guard sıkı) | #178 | pending |
 | 191 | P1 | [Blok B] Multimodal kanıt pipeline — ses/video incident + diarization | #190 | pending |
 | 192 | P0 | [Blok C] EU AI Act Madde 50 toolkit — uyum API'si + ceza riski skoru | #189 | pending |
