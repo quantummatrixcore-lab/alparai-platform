@@ -198,7 +198,7 @@ describe("Cost-Alarm Cron Job", () => {
       error: null,
     });
 
-    mockEq.mockResolvedValueOnce({
+    mockNot.mockResolvedValueOnce({
       data: [
         {
           vendor: "github_actions",
@@ -237,7 +237,7 @@ describe("Cost-Alarm Cron Job", () => {
     const body = await res.json();
 
     expect(mockNot).toHaveBeenCalledWith("limit_value", "is", null);
-    expect(mockEq).toHaveBeenCalledWith("source", "api");
+    expect(mockEq).toHaveBeenCalledWith("month", expect.any(String));
 
     expect(body.quotaAlerts).toEqual({
       warningVendors: ["supabase"],

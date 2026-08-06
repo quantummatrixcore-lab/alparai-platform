@@ -469,3 +469,8 @@ export const litigationExportResponseSchema = z.object({
     }),
   }),
 });
+
+// 22. GET /api/v1/compliance/article50
+export const article50ResponseSchema = z.object({
+  ok: z.boolean().optional(),
+});

@@ -10,6 +10,19 @@ async function getHandler(request: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
+    // Task #199: HN/Reddit launch is pending.
+    // Set to true only when the actual launch is executed.
+    const isLaunched = process.env.NEXT_PUBLIC_APP_LAUNCHED === "true" || false;
+
+    if (!isLaunched) {
+      logger.info("[Day-7 Kill-Metric] N/A — not launched");
+      return NextResponse.json({
+        ok: true,
+        users: "N/A — not launched",
+        incidents: "N/A — not launched",
+      });
+    }
+
     const supabase = await createServerClient();
 
     // Kill-metric: check user acquisition and incident count since launch (Aug 2)

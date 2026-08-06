@@ -51,6 +51,8 @@ const routeSchemaMap: Record<string, z.ZodTypeAny> = {
   "bench-tr": schemas.benchTrResponseSchema,
   whistleblower: schemas.whistleblowerResponseSchema,
   "litigation/export": schemas.litigationExportResponseSchema,
+  "compliance/article50": schemas.article50ResponseSchema,
+  "k-benchmark": schemas.auditorBenchmarkResponseSchema,
 };
 
 describe("API v1 Contract Coverage", () => {

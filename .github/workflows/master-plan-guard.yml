@@ -20,12 +20,12 @@ jobs:
           ALLOWED=("noreply@anthropic.com" "claude@anthropic.com")
           MATCH=false
           for EMAIL in "${ALLOWED[@]}"; do
-            if [[ "" == *""* ]]; then
+            if [[ "$AUTHOR" == *"$EMAIL"* ]]; then
               MATCH=true
               break
             fi
           done
-          if [ "" = false ]; then
+          if [ "$MATCH" = false ]; then
             echo "::error::MASTER_PLAN.md may only be modified by Architect sessions (noreply@anthropic.com). Commit author: $AUTHOR"
             exit 1
           fi
@@ -39,3 +39,16 @@ jobs:
           node-version: 20
       - name: Run consistency check
         run: node scripts/check-masterplan-consistency.mjs
+
+  check-size:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check MASTER_PLAN.md size
+        run: |
+          LINES=$(wc -l < docs/MASTER_PLAN.md)
+          echo "MASTER_PLAN.md has $LINES lines"
+          if [ "$LINES" -gt 400 ]; then
+            echo "::error::MASTER_PLAN.md is $LINES lines, which exceeds the 400 line limit (Task #209). Move backlog items to DB or MASTER_PLAN_ARCHIVE.md."
+            exit 1
+          fi
