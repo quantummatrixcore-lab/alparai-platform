@@ -160,6 +160,26 @@ Google for Startups $2K–350K · AWS Activate $1K–200K · Microsoft Founders 
 | 183 | P1 | [Antigravity/Flash] Bilge RAG Memory Layer (pgvector SQL Migration) |`bilge_memory`tablosu,`vector(1536)`HNSW index ve RLS ile eklendi. | ✅ completed — closed-by:891efda3@master |
 | 184 | P1 | [Antigravity/Flash] K-BENCHMARK Public Freemium API Route |`/api/v1/k-benchmark`uç noktası (EU AI Act uyumluluk skorları) eklendi. | ✅ completed — closed-by:92e1dab6@master |
 | 185 | P1 | [Antigravity/Flash] Yatırımcı Paketi v2 & 3 Yıllık Finansal Model | Pitch deck ve birim ekonomi projeksiyonları`docs/INVESTOR/` altına eklendi. | ✅ completed — closed-by:92e1dab6@master |
+| 186 | P0 | [Blok A] Vendor Portal Beta — ilk 3 AI sağlayıcı, SLA tracking canlı | — | pending |
+| 187 | P0 | [Blok A] Compliance API ticari lansman — ilk enterprise sözleşme (banka/telekom) | #186 | pending |
+| 188 | P1 | [Blok A] Lloyd's Lab gerçek başvuru (Case #001 + Velocity verisiyle) | #189 | pending |
+| 189 | P0 | [Blok B] Velocity Engine **public** dashboard — ΔV_AI endeksi + dinamik ARR | #178 | pending |
+| 190 | P0 | [Blok B] Qwen3.5-Omni production rollout (hibrit %50/50, cost-guard sıkı) | #178 | pending |
+| 191 | P1 | [Blok B] Multimodal kanıt pipeline — ses/video incident + diarization | #190 | pending |
+| 192 | P0 | [Blok C] EU AI Act Madde 50 toolkit — uyum API'si + ceza riski skoru | #189 | pending |
+| 193 | P1 | [Blok C] KVKK Case #001 takip panosu + otomatik bülten tetikleyici | — | pending |
+| 194 | P2 | [Blok C] 5-ülke şikayet durum otomasyonu (ICO/CNIL/FTC/EU) | #193 | pending |
+| 195 | P1 | [Blok D] İlk üniversite MOU (Boğaziçi/TU Berlin) + Academy beta | #193 | pending |
+| 196 | P1 | [Blok D] AI Incident Database resmi partnerliği | — | pending |
+| 197 | P2 | [Blok D] ISO/IEC 42001 hizalama whitepaper'ı | #195 | pending |
+| 198 | P0 | [Blok E] "The Grok Files" 10 günlük seri | #193 | pending |
+| 199 | P1 | [Blok E] HN Show HN + Reddit senkron lansman (Salı 16:00 TR) | #198 | pending |
+| 200 | P1 | [Blok E] Marcus/Gebru warm-intro advisory outreach | #199 | pending |
+| 201 | P0 | [Blok F] Seed data room — velocity-endeksli 18 aylık model | #189 | pending |
+| 202 | P0 | [Blok F] 20 VC listesi + 5 warm intro | #201 | pending |
+| 203 | P1 | [Blok F] Değerleme memosu ($3.5-4.5M post-Omni) | #202 | pending |
+| 204 | P1 | [Blok G] 113-dil incident alımı (Omni) | #191 | pending |
+| 205 | P2 | [Blok G] RTL desteği (Arapça/Farsça) | #204 | pending |
 <!-- FOUNDER_BACKLOG_END -->
 
 ---
@@ -3410,13 +3430,13 @@ JSON-LD (Organization + SoftwareApplication), Twitter/X Card meta, hreflang, sit
 
 **Founder'da (kod değil):** #146 lansman paylaşım onayı · #163 pitch deck son onayı · #164 danışma kurulu ilk temas onayı.
 
-Verification. Bu güncelleme yalnızca `docs/MASTER_PLAN.md`'ye yazılmıştır (G-6 uyum). Backlog sayımı: 79 + 7 yeni = **86 madde**; 74 tamamlanmış → **%86,0**. Oran düştü çünkü 7 yeni stratejik madde eklendi; bu dürüst bir düşüştür ve büyüme göstergesidir.
+Verification. Bu güncelleme yalnızca `docs/MASTER_PLAN.md`'ye yazılmıştır (G-6 uyum). Backlog sayımı: 86 + 20 yeni (Faz 4 Sovereign Scale blokları) = **106 madde**; 74 tamamlanmış → **%69,8**. Oran düştü çünkü 20 yeni Sovereign Scale blok görevi eklendi.
 
 ### Faz 4: Pazar Hâkimiyeti & Ekosistem Entegrasyonu (Opus Sınırsız Zekâ Vizyonu)
 
 ALPAR AI'ın 2027 hedefleri doğrultusunda salt bir platform olmaktan çıkıp, otonom agent ekosisteminin "Regülasyon ve Güvenlik Katmanı" (Regulation & Security Layer) olması planlanmaktadır. Otopilot inisiyatifi ile devreye alınacak yapısal genişlemeler:
 
-**1. Otonom Hukuki Uyum Temsilcisi (Autonomous Legal Compliance Agent):** 
+**1. Otonom Hukuki Uyum Temsilcisi (Autonomous Legal Compliance Agent):**
 Şirketlerin yapay zeka sistemleri için EU AI Act ve GDPR uyumluluğunu otonom olarak denetleyen, eksiklikleri kod bazında raporlayan ve hatta düzelten bir alt-ajan altyapısı. Bu özellik, ALPAR AI'ın Enterprise paketinin merkezinde yer alacak.
 
 **2. Gelişmiş "K-BENCHMARK" API (Gerçek Zamanlı Model Kesicisi):**
@@ -3431,4 +3451,4 @@ Otonom ajanların gelecekteki kuantum çözme (quantum-decryption) yeteneklerine
 **5. Sınırsız Otopilot Yönetişimi:**
 Sistemdeki ajanların (Haiku, Flash, Pro) sadece kod yazmakla kalmayıp, ürün stratejisi, pazarlama kampanyası metrikleri ve bütçe optimizasyonu konularında karar verici "Kurul Üyeleri" gibi hareket ettiği (Agentic Board) tam otonom işletme modeline (DAO / Agent-DAO) geçiş.
 
-*Not: Opus zekâsı ile çizilen bu vizyon, ALPAR AI'ın teknik bir araçtan küresel bir pazar yapıcısına (market maker) dönüşümünü simgeler.*
+_Not: Opus zekâsı ile çizilen bu vizyon, ALPAR AI'ın teknik bir araçtan küresel bir pazar yapıcısına (market maker) dönüşümünü simgeler._
