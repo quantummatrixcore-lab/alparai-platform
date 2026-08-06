@@ -161,8 +161,8 @@ Reddit ve Hacker News lansmanı için açık Chrome sekmesindeki **reCAPTCHA**'y
 
 ## 6. v15.0 — Institutional Grade (Kurumsal Güvenlik Ağı)
 
-| Blok    | Görev                     | Açıklama                                                                                  | Durum      |
-| ------- | ------------------------- | ----------------------------------------------------------------------------------------- | ---------- |
-| OMEGA-7 | Otonom Kanıt Doğrulayıcı  | AI Act Madde 73 olay bildirimleri ve denetim izleri için otonom kanıt doğrulama altyapısı | ⏳ pending |
-| SIGMA-4 | Sağlayıcı Savunma Portalı | AI sağlayıcıları ve kurumsal müşteriler için savunma ve uyumluluk yönetim portalı         | ⏳ pending |
-| ALPHA-8 | Trust Score Widget        | Canlı Güven Skoru rozeti ve doğrulama widget entegrasyonu                                 | ⏳ pending |
+| Blok    | Görev                     | Açıklama                                                                                  | Durum                              |
+| ------- | ------------------------- | ----------------------------------------------------------------------------------------- | ---------------------------------- |
+| OMEGA-7 | Otonom Kanıt Doğrulayıcı  | AI Act Madde 73 olay bildirimleri ve denetim izleri için otonom kanıt doğrulama altyapısı | `src/actions/verify-incident.ts`   | `18f5f781` | ✅ completed |
+| SIGMA-4 | Sağlayıcı Savunma Portalı | AI sağlayıcıları ve kurumsal müşteriler için savunma ve uyumluluk yönetim portalı         | `src/app/[locale]/vendor-portal/*` | `18f5f781` | ✅ completed |
+| ALPHA-8 | Trust Score Widget        | Canlı Güven Skoru rozeti ve doğrulama widget entegrasyonu                                 | `src/app/api/widget/trust-score/*` | `18f5f781` | ✅ completed |
