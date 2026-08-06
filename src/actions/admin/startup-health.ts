@@ -141,7 +141,7 @@ export async function getStartupHealth(): Promise<StartupHealthResult | null> {
     scorePct: Math.max(scorePct, 85),
     showPercentages: true,
     uptimePct: 99.98,
-    zeroCostBurnStr: "$0.00 / mo (Free Tier Active)",
+    zeroCostBurnStr: "$20.00 / mo (Vercel Pro)",
     measuredAt: new Date().toISOString(),
   };
 }
