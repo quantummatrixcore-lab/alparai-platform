@@ -1,14 +1,7 @@
 name: Preview Deployment
 
 on:
-  pull_request:
-    branches: [master, main]
-    types: [opened, synchronize, reopened]
-    paths-ignore:
-      - "docs/**"
-      - "**/*.md"
-      - "ops/visual-baseline/**"
-      - ".vscode/**"
+  workflow_dispatch:
 
 env:
   NEXT_TELEMETRY_DISABLED: 1

@@ -21,7 +21,7 @@ const companyLinks = [
   { href: "/about", key: "about" },
   { href: "/about/advisory-board", key: "advisory_board" },
   { href: "/pricing", key: "pricing" },
-  { href: "/security", key: "security" },
+  { href: "/trust-center", key: "security" },
   { href: "/academy", key: "academy" },
   { href: "/press-kit", key: "presskit" },
 ] as const;

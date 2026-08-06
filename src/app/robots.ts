@@ -20,7 +20,7 @@ export default function robots(): MetadataRoute.Robots {
           "/press-kit",
           "/press-kit/*",
           "/pricing",
-          "/security",
+          "/trust-center",
           "/academy",
           "/transparency",
           "/ai-act",

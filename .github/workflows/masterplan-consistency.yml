@@ -4,9 +4,6 @@ on:
   push:
     paths:
       - "docs/MASTER_PLAN.md"
-  pull_request:
-    paths:
-      - "docs/MASTER_PLAN.md"
 
 jobs:
   check-consistency:
