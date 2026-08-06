@@ -156,3 +156,13 @@ ALPAR AI bağışla ayakta duran bir açık kaynak projesi değil; Stripe üzeri
 ### 5a. Founder için kalan tek eylem (delege edilemez)
 
 Reddit ve Hacker News lansmanı için açık Chrome sekmesindeki **reCAPTCHA**'yı çözün, ardından Antigravity'ye **"devam et"** mesajı gönderin. Ajan lansmanı otomatik tamamlar.
+
+---
+
+## 6. v15.0 — Institutional Grade (Kurumsal Güvenlik Ağı)
+
+| Blok    | Görev                     | Açıklama                                                                                  | Durum      |
+| ------- | ------------------------- | ----------------------------------------------------------------------------------------- | ---------- |
+| OMEGA-7 | Otonom Kanıt Doğrulayıcı  | AI Act Madde 73 olay bildirimleri ve denetim izleri için otonom kanıt doğrulama altyapısı | ⏳ pending |
+| SIGMA-4 | Sağlayıcı Savunma Portalı | AI sağlayıcıları ve kurumsal müşteriler için savunma ve uyumluluk yönetim portalı         | ⏳ pending |
+| ALPHA-8 | Trust Score Widget        | Canlı Güven Skoru rozeti ve doğrulama widget entegrasyonu                                 | ⏳ pending |
