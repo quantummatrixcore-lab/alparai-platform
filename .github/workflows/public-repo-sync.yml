@@ -74,7 +74,6 @@ jobs:
     needs: security-scan
     environment:
       name: production-public-sync
-      reviewers: []
     steps:
       - name: Waiting for approval
         run: |
