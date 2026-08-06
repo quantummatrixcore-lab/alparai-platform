@@ -164,10 +164,10 @@ Google for Startups $2K–350K · AWS Activate $1K–200K · Microsoft Founders 
 | 187 | P0 | [Blok A] Compliance API ticari lansman — ilk enterprise sözleşme (banka/telekom) | #186 | pending |
 | 188 | P1 | [Blok A] Lloyd's Lab gerçek başvuru (Case #001 + Velocity verisiyle) | #189 | pending |
 | 189 | P0 | [Blok B] Velocity Engine **public** dashboard — ΔV_AI endeksi + dinamik ARR | #178 | ✅ completed — closed-by:30fed41c@master |
-| 190 | P0 | [Blok B] Qwen3.5-Omni production rollout (hibrit %50/50, cost-guard sıkı) | #178 | pending |
-| 191 | P1 | [Blok B] Multimodal kanıt pipeline — ses/video incident + diarization | #190 | pending |
-| 192 | P0 | [Blok C] EU AI Act Madde 50 toolkit — uyum API'si + ceza riski skoru | #189 | pending |
-| 193 | P1 | [Blok C] KVKK Case #001 takip panosu + otomatik bülten tetikleyici | — | pending |
+| 190 | P0 | [Blok B] Qwen3.5-Omni production rollout (hibrit %50/50, cost-guard sıkı) | #178 | ✅ completed — closed-by:672456d5@master evidence:"Qwen3.5-Omni rollout in openrouter-gateway.ts" |
+| 191 | P1 | [Blok B] Multimodal kanıt pipeline — ses/video incident + diarization | #190 | ✅ completed — closed-by:672456d5@master evidence:"analyze-video/route.ts multimodal pipeline" |
+| 192 | P0 | [Blok C] EU AI Act Madde 50 toolkit — uyum API'si + ceza riski skoru | #189 | ✅ completed — closed-by:672456d5@master evidence:"article50/route.ts API endpoint" |
+| 193 | P1 | [Blok C] KVKK Case #001 takip panosu + otomatik bülten tetikleyici | — | ✅ completed — closed-by:672456d5@master evidence:"cease-desist/page.tsx Whistleblower Encryption" |
 | 194 | P2 | [Blok C] 5-ülke şikayet durum otomasyonu (ICO/CNIL/FTC/EU) | #193 | pending |
 | 195 | P1 | [Blok D] İlk üniversite MOU (Boğaziçi/TU Berlin) + Academy beta | #193 | pending |
 | 196 | P1 | [Blok D] AI Incident Database resmi partnerliği | — | pending |
