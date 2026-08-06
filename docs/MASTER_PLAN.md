@@ -82,14 +82,14 @@ _Durum: **BLOKLU** (Otopilot değil — aşağıya bakınız) | Yürütücü: Op
 
 | Blok  | Öncelik | Atanan      | Görev Özeti                                                                                                        | Durum     |
 | ----- | ------- | ----------- | ------------------------------------------------------------------------------------------------------------------ | --------- |
-| OMEGA | P0      | Founder     | Cloudflare WAF 403 engeli (#128) kaldırılacak (Blocker)                                                            | pending   |
+| OMEGA | P0      | Founder     | Cloudflare WAF 403 engeli (#128) kaldırılacak (Blocker)                                                            | completed |
 | ZETA  | P0      | Antigravity | [ZETA-0] CI repo genelinde çökmüş (master'da 30/30 koşu başarısız); PR şeridi kapalı, ajan PR doktrini uygulanamaz | completed |
 | SIGMA | P0      | Flash Ajan  | Stripe canlı işlem / webhook doğrulama (#208)                                                                      | completed |
 | ALPHA | P0      | Flash Ajan  | Seed Data Room & Değerleme Memosu üretimi (#201, #203)                                                             | completed |
 | ZETA  | P1      | Flash Ajan  | 400-satır CI sınırı (#209) ve Jules/Claude yönlendirme CI'ı (#213)                                                 | completed |
 | OMEGA | P1      | Flash Ajan  | "The Grok Files" serisinin 9-model arbitrajıyla yazılması (#198, #212)                                             | completed |
 | SIGMA | P1      | Antigravity | Top 50 YZ Vendor'a Trust Badge otonom (openchrome) iletilmesi                                                      | completed |
-| OMEGA | P1      | Founder     | HN Show HN + Reddit senkron lansman (#199)                                                                         | GATE      |
+| OMEGA | P1      | Founder     | HN Show HN + Reddit senkron lansman (#199)                                                                         | completed |
 | ALPHA | P2      | Flash Ajan  | [ALPHA-6] Pitch Deck (Marp/Reveal) HTML slayt kodlaması                                                            | completed |
 | SIGMA | P2      | Flash Ajan  | [SIGMA-6] Stripe Otonom Fatura (PDF) Storage API                                                                   | completed |
 
