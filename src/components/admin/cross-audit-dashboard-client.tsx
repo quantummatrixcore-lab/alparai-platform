@@ -58,6 +58,19 @@ export function CrossAuditDashboardClient({ data }: CrossAuditDashboardClientPro
   const [testInput, setTestInput] = React.useState("");
   const [isTesting, setIsTesting] = React.useState(false);
   const [testResult, setTestResult] = React.useState<LiveCrossAuditResult | null>(null);
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return (
+      <div className="bg-bg-secondary/40 flex h-96 w-full items-center justify-center rounded-2xl border border-white/5 backdrop-blur-xl">
+        <Activity className="text-brand-400 h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
 
   const handleTest = async () => {
     if (!testInput.trim()) {
