@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
 import { requireAdvisor } from "@/lib/auth/session";
-import { createServerClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { HealthGauge } from "@/components/admin/strategy/health-gauge";
 import { LiveStrategyClient } from "@/components/admin/strategy/live-strategy-client";
 import { QuestionnaireClient } from "@/components/admin/questionnaire-client";
@@ -53,7 +53,7 @@ export default async function StrategyOverviewPage({
   const user = await requireAdvisor();
   const isReadOnly = (user.role as string) === "advisor";
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
 
   // Fetch all strategy components
   const [
@@ -156,7 +156,7 @@ export default async function StrategyOverviewPage({
 
   // Formatting helper for currency
   const formatCurrency = (cents: number) => {
-    return new Intl.NumberFormat(t("en_us"), {
+    return new Intl.NumberFormat(locale === "tr" ? "tr-TR" : "en-US", {
       style: "currency",
       currency: "USD",
       maximumFractionDigits: 0,
@@ -164,390 +164,394 @@ export default async function StrategyOverviewPage({
   };
 
   return (
-    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
-      <div className="min-h-screen py-8">
-      <Container>
-        {/* Page Header */}
-        <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div>
-            <div className="flex items-center gap-2">
-              <Compass className="text-brand-400 animate-spin-slow h-6 w-6" />
-              <h1 className="text-2xl font-extrabold tracking-tight text-white md:text-3xl">
-                {t("strategic_advisory_board")}
-              </h1>
+    <div className="min-h-screen bg-black p-6">
+      <div className="rounded-3xl bg-zinc-900/40 p-8 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl">
+        <div className="min-h-screen py-8">
+          <Container>
+            {/* Page Header */}
+            <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+              <div>
+                <div className="flex items-center gap-2">
+                  <Compass className="text-brand-400 animate-spin-slow h-6 w-6" />
+                  <h1 className="text-2xl font-extrabold tracking-tight text-white md:text-3xl">
+                    {t("strategic_advisory_board")}
+                  </h1>
+                </div>
+                <p className="text-fg-muted mt-1 text-sm">
+                  {t("real_time_company_health_metrics_swot_ri")}
+                </p>
+              </div>
+              {isReadOnly && (
+                <span className="bg-brand-500/10 text-brand-300 border-brand-500/20 rounded-full border px-3 py-1 text-xs font-semibold tracking-wider uppercase">
+                  {t("read_only_advisor")}
+                </span>
+              )}
             </div>
-            <p className="text-fg-muted mt-1 text-sm">
-              {t("real_time_company_health_metrics_swot_ri")}
-            </p>
-          </div>
-          {isReadOnly && (
-            <span className="bg-brand-500/10 text-brand-300 border-brand-500/20 rounded-full border px-3 py-1 text-xs font-semibold tracking-wider uppercase">
-              {t("read_only_advisor")}
-            </span>
-          )}
+
+            {/* Dashboard Grid Layout */}
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+              {/* LEFT COLUMN: Health Score and Core Metrics Snapshots */}
+              <div className="flex flex-col gap-6 lg:col-span-1">
+                <HealthGauge score={dynamicSnapshot.health_score} />
+
+                {/* Core Metrics Card */}
+                <div className="border-border-subtle rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-md backdrop-blur-xl">
+                  <h3 className="mb-4 text-xs font-bold tracking-wider text-white uppercase">
+                    {t("core_metrics_snapshot")}
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-bg-tertiary/20 rounded-xl border border-white/5 p-4">
+                      <div className="text-fg-muted flex items-center justify-between">
+                        <span className="text-[10px] font-bold tracking-wider uppercase">
+                          {t("total_users")}
+                        </span>
+                        <Users className="h-4 w-4 text-blue-400" />
+                      </div>
+                      <p className="mt-2 text-2xl font-extrabold text-white">
+                        {dynamicSnapshot.total_users}
+                      </p>
+                    </div>
+
+                    <div className="bg-bg-tertiary/20 rounded-xl border border-white/5 p-4">
+                      <div className="text-fg-muted flex items-center justify-between">
+                        <span className="text-[10px] font-bold tracking-wider uppercase">
+                          {t("incidents")}
+                        </span>
+                        <AlertCircle className="h-4 w-4 text-red-400" />
+                      </div>
+                      <p className="mt-2 text-2xl font-extrabold text-white">
+                        {dynamicSnapshot.total_incidents}
+                      </p>
+                    </div>
+
+                    <div className="bg-bg-tertiary/20 rounded-xl border border-white/5 p-4">
+                      <div className="text-fg-muted flex items-center justify-between">
+                        <span className="text-[10px] font-bold tracking-wider uppercase">
+                          {t("providers_1")}
+                        </span>
+                        <Activity className="h-4 w-4 text-emerald-400" />
+                      </div>
+                      <p className="mt-2 text-2xl font-extrabold text-white">
+                        {dynamicSnapshot.active_providers}
+                      </p>
+                    </div>
+
+                    <div className="bg-bg-tertiary/20 rounded-xl border border-white/5 p-4">
+                      <div className="text-fg-muted flex items-center justify-between">
+                        <span className="text-[10px] font-bold tracking-wider uppercase">
+                          {t("runway")}
+                        </span>
+                        <DollarSign className="h-4 w-4 text-amber-400" />
+                      </div>
+                      <p className="mt-2 text-xl font-extrabold text-white">
+                        {dynamicSnapshot.runway_months
+                          ? `${dynamicSnapshot.runway_months} ${t("mo")}`
+                          : t("unknown")}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-4 border-t border-white/5 pt-4 text-center">
+                    <div className="text-fg-muted flex justify-between text-xs">
+                      <span>{t("monthly_revenue_mrr")}</span>
+                      <span className="font-mono font-bold text-white">
+                        {formatCurrency(dynamicSnapshot.mrr_cents)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* RIGHT COLUMN: Strategy Modules Summary Links */}
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:col-span-2">
+                {/* SWOT ANALİZİ CARD */}
+                <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
+                  <div>
+                    <div className="mb-4 flex items-center justify-between">
+                      <div className="rounded-lg border border-purple-500/25 bg-purple-500/10 p-2 text-purple-400">
+                        <GridIcon className="h-5 w-5" />
+                      </div>
+                      <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
+                        {t("module_01")}
+                      </span>
+                    </div>
+                    <h2 className="text-lg font-bold text-white">{t("swot_matrix")}</h2>
+                    <p className="text-fg-muted mt-2 text-xs">
+                      {t("track_internal_strengths_weaknesses_and_")}
+                    </p>
+                    <div className="mt-4 grid grid-cols-2 gap-2 text-center text-xs">
+                      <div className="rounded-lg border border-emerald-500/10 bg-emerald-500/5 p-1.5 font-bold text-emerald-400">
+                        S: {strengthsCount}
+                      </div>
+                      <div className="rounded-lg border border-red-500/10 bg-red-500/5 p-1.5 font-bold text-red-400">
+                        W: {weaknessesCount}
+                      </div>
+                      <div className="rounded-lg border border-blue-500/10 bg-blue-500/5 p-1.5 font-bold text-blue-400">
+                        O: {opportunitiesCount}
+                      </div>
+                      <div className="rounded-lg border border-amber-500/10 bg-amber-500/5 p-1.5 font-bold text-amber-400">
+                        T: {threatsCount}
+                      </div>
+                    </div>
+                  </div>
+                  <Link
+                    href="/admin/strategy/swot"
+                    className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
+                  >
+                    {t("manage_swot")}
+                    <ChevronRight className="h-3 w-3" />
+                  </Link>
+                </div>
+
+                {/* RİSK YÖNETİMİ CARD */}
+                <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
+                  <div>
+                    <div className="mb-4 flex items-center justify-between">
+                      <div className="rounded-lg border border-red-500/25 bg-red-500/10 p-2 text-red-400">
+                        <ShieldAlert className="h-5 w-5" />
+                      </div>
+                      <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
+                        {t("module_02")}
+                      </span>
+                    </div>
+                    <h2 className="text-lg font-bold text-white">{t("risk_analysis_matrix")}</h2>
+                    <p className="text-fg-muted mt-2 text-xs">
+                      {t("prioritize_monitor_and_mitigate_legal_pr")}
+                    </p>
+                    <div className="mt-4 flex items-center gap-4 text-xs">
+                      <div className="flex-1 rounded-lg border border-white/10 bg-white/5 p-2 text-center">
+                        <span className="text-fg-muted block text-[9px] font-bold tracking-wider uppercase">
+                          {t("aktif_risk")}
+                        </span>
+                        <span className="text-lg font-extrabold text-white">
+                          {activeRisksCount}
+                        </span>
+                      </div>
+                      <div className="flex-1 rounded-lg border border-red-500/20 bg-red-500/10 p-2 text-center text-red-400">
+                        <span className="block text-[9px] font-bold tracking-wider uppercase">
+                          {t("y_ksek_risk")}
+                        </span>
+                        <span className="text-lg font-extrabold">{highRisksCount}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <Link
+                    href="/admin/strategy/risks"
+                    className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
+                  >
+                    {t("manage_risks")}
+                    <ChevronRight className="h-3 w-3" />
+                  </Link>
+                </div>
+
+                {/* DEĞERLEME MODELİ CARD */}
+                <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
+                  <div>
+                    <div className="mb-4 flex items-center justify-between">
+                      <div className="rounded-lg border border-amber-500/25 bg-amber-500/10 p-2 text-amber-400">
+                        <TrendingUp className="h-5 w-5" />
+                      </div>
+                      <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
+                        {t("module_03")}
+                      </span>
+                    </div>
+                    <h2 className="text-lg font-bold text-white">{t("company_valuation")}</h2>
+                    <p className="text-fg-muted mt-2 text-xs">
+                      {t("simulate_valuation_cap_metrics_across_be")}
+                    </p>
+                    <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-2 text-center">
+                      <span className="text-fg-muted block text-[9px] font-bold tracking-wider uppercase">
+                        {t("last_calculated_valuation")}
+                      </span>
+                      <span className="text-lg font-extrabold text-emerald-400">
+                        {valuations.length > 0
+                          ? formatCurrency(valuations[0]!.result_pre_money * 100)
+                          : formatCurrency(DEFAULT_VALUATION_PRE_MONEY * 100)}
+                      </span>
+                    </div>
+                  </div>
+                  <Link
+                    href="/admin/strategy/valuation"
+                    className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
+                  >
+                    {t("calculate_valuation")}
+                    <ChevronRight className="h-3 w-3" />
+                  </Link>
+                </div>
+
+                {/* OKR MILESTONES CARD */}
+                <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
+                  <div>
+                    <div className="mb-4 flex items-center justify-between">
+                      <div className="rounded-lg border border-blue-500/25 bg-blue-500/10 p-2 text-blue-400">
+                        <Compass className="h-5 w-5" />
+                      </div>
+                      <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
+                        {t("module_04")}
+                      </span>
+                    </div>
+                    <h2 className="text-lg font-bold text-white">{t("strategic_roadmap")}</h2>
+                    <p className="text-fg-muted mt-2 text-xs">
+                      {t("map_quarterly_okrs_and_milestone_complet")}
+                    </p>
+                    <div className="mt-4">
+                      <div className="text-fg-muted mb-1 flex justify-between text-[10px] font-bold tracking-wider uppercase">
+                        <span>{t("roadmap_progress")}</span>
+                        <span>{avgOkrProgress}%</span>
+                      </div>
+                      <div className="h-2 w-full overflow-hidden rounded-full bg-white/5">
+                        <div
+                          className="bg-brand-500 h-full rounded-full transition-all duration-1000"
+                          style={{ width: `${avgOkrProgress}%` }}
+                        />
+                      </div>
+                      <span className="text-fg-muted mt-1.5 block text-[10px]">
+                        {t("donemilestones_of_totalmilestones_milest", {
+                          doneMilestones,
+                          totalMilestones,
+                        })}
+                      </span>
+                    </div>
+                  </div>
+                  <Link
+                    href="/admin/strategy/roadmap"
+                    className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
+                  >
+                    {t("manage_milestones")}
+                    <ChevronRight className="h-3 w-3" />
+                  </Link>
+                </div>
+
+                {/* STRATEJİK DEĞERLENDİRME CARD */}
+                <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
+                  <div>
+                    <div className="mb-4 flex items-center justify-between">
+                      <div className="rounded-lg border border-emerald-500/25 bg-emerald-500/10 p-2 text-emerald-400">
+                        <Cpu className="h-5 w-5" />
+                      </div>
+                      <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
+                        {t("module_05")}
+                      </span>
+                    </div>
+                    <h2 className="text-lg font-bold text-white">
+                      {t("strategy_questionnaire") || "Strategic Questionnaire"}
+                    </h2>
+                    <p className="text-fg-muted mt-2 text-xs">
+                      {t("strategy_questionnaire_desc") ||
+                        "Compare model evaluations, latencies, and costs on platform strategy."}
+                    </p>
+                    <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-2 text-center text-xs">
+                      <span className="text-fg-muted block text-[9px] font-bold tracking-wider uppercase">
+                        {t("question_pool") || "Soru Havuzu"}
+                      </span>
+                      <span className="text-lg font-extrabold text-white">
+                        {QUESTIONS.length} {t("active_questions") || "Aktif Soru"}
+                      </span>
+                    </div>
+                  </div>
+                  <a
+                    href="#questionnaire"
+                    className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
+                  >
+                    {t("run_questionnaire") || "Run Evaluation"}
+                    <ChevronRight className="h-3 w-3" />
+                  </a>
+                </div>
+
+                {/* 360° EKOSİSTEM ANALİZİ CARD */}
+                <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
+                  <div>
+                    <div className="mb-4 flex items-center justify-between">
+                      <div className="border-brand-500/25 bg-brand-500/10 text-brand-400 rounded-lg border p-2">
+                        <Target className="h-5 w-5" />
+                      </div>
+                      <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
+                        {t("module_06") || "Module 06"}
+                      </span>
+                    </div>
+                    <h2 className="text-lg font-bold text-white">
+                      {t("ecosystem_benchmark") || "360° Ecosystem Benchmarking"}
+                    </h2>
+                    <p className="text-fg-muted mt-2 text-xs">
+                      {t("ecosystem_benchmark_desc") ||
+                        "Market post-mortem: OpenRouter, Blackbox AI, LMSYS, Scale AI & LangChain analysis."}
+                    </p>
+                    <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-2 text-center text-xs">
+                      <span className="text-fg-muted block text-[9px] font-bold tracking-wider uppercase">
+                        Defensive Moat Index
+                      </span>
+                      <span className="text-lg font-extrabold text-emerald-400">89.8 / 100</span>
+                    </div>
+                  </div>
+                  <a
+                    href="#ecosystem-benchmark"
+                    className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
+                  >
+                    View Benchmark
+                    <ChevronRight className="h-3 w-3" />
+                  </a>
+                </div>
+              </div>
+            </div>
+            {/* Live AI Strategy Analysis */}
+            <div className="mt-8">
+              <LiveStrategyClient
+                context={{
+                  strengths: strengthsCount,
+                  weaknesses: weaknessesCount,
+                  opportunities: opportunitiesCount,
+                  threats: threatsCount,
+                  highRisks: highRisksCount,
+                  activeRisks: activeRisksCount,
+                  doneMilestones,
+                  totalMilestones,
+                }}
+              />
+            </div>
+
+            {/* Strategy Questionnaire Module */}
+            <div id="questionnaire" className="mt-12">
+              <QuestionnaireClient
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                runs={runs as any[]}
+                answers={allAnswers}
+                latestRunId={latestRunId}
+                models={models}
+                locale={locale}
+                i18n={{
+                  runButton: t("questionnaire_run_button") || "Run Evaluation",
+                  runAgainButton: t("questionnaire_run_again_button") || "Run Again",
+                  running: t("questionnaire_running") || "Running...",
+                  history: t("questionnaire_history") || "Run History",
+                  tableQuestion: t("questionnaire_question") || "Question",
+                  tableModel: t("questionnaire_model") || "Model",
+                  tableAnswer: t("questionnaire_answer") || "Answer",
+                  exportMd: t("questionnaire_export") || "Export MD",
+                  noRuns: t("questionnaire_no_runs") || "No evaluations yet.",
+                  noAnswers: t("questionnaire_no_answers") || "No answers.",
+                  statusCompleted: t("questionnaire_status_completed") || "Completed",
+                  statusFailed: t("questionnaire_failed") || "Failed",
+                  statusRunning: t("questionnaire_running_lower") || "Running",
+                  tokens: t("questionnaire_tokens") || "Tokens",
+                  latency: t("questionnaire_latency") || "Latency",
+                  selectAll: t("questionnaire_select_all") || "Select All",
+                  questionsCount:
+                    t("questionnaire_questions_count", { total: QUESTIONS.length }) ||
+                    `${QUESTIONS.length} Questions`,
+                  modelsLabel: t("questionnaire_models") || "Models",
+                  close: t("questionnaire_close") || "Close",
+                  error: t("questionnaire_error") || "Error",
+                  totalRuns: t("questionnaire_total_runs") || "Total Runs",
+                }}
+              />
+            </div>
+
+            {/* 360° Ecosystem Post-Mortem & Benchmarking Module */}
+            <div id="ecosystem-benchmark" className="mt-12">
+              <EcosystemBenchmarkWidget />
+            </div>
+          </Container>
         </div>
-
-        {/* Dashboard Grid Layout */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* LEFT COLUMN: Health Score and Core Metrics Snapshots */}
-          <div className="flex flex-col gap-6 lg:col-span-1">
-            <HealthGauge score={dynamicSnapshot.health_score} />
-
-            {/* Core Metrics Card */}
-            <div className="border-border-subtle rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-md backdrop-blur-xl">
-              <h3 className="mb-4 text-xs font-bold tracking-wider text-white uppercase">
-                {t("core_metrics_snapshot")}
-              </h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-bg-tertiary/20 rounded-xl border border-white/5 p-4">
-                  <div className="text-fg-muted flex items-center justify-between">
-                    <span className="text-[10px] font-bold tracking-wider uppercase">
-                      {t("total_users")}
-                    </span>
-                    <Users className="h-4 w-4 text-blue-400" />
-                  </div>
-                  <p className="mt-2 text-2xl font-extrabold text-white">
-                    {dynamicSnapshot.total_users}
-                  </p>
-                </div>
-
-                <div className="bg-bg-tertiary/20 rounded-xl border border-white/5 p-4">
-                  <div className="text-fg-muted flex items-center justify-between">
-                    <span className="text-[10px] font-bold tracking-wider uppercase">
-                      {t("incidents")}
-                    </span>
-                    <AlertCircle className="h-4 w-4 text-red-400" />
-                  </div>
-                  <p className="mt-2 text-2xl font-extrabold text-white">
-                    {dynamicSnapshot.total_incidents}
-                  </p>
-                </div>
-
-                <div className="bg-bg-tertiary/20 rounded-xl border border-white/5 p-4">
-                  <div className="text-fg-muted flex items-center justify-between">
-                    <span className="text-[10px] font-bold tracking-wider uppercase">
-                      {t("providers_1")}
-                    </span>
-                    <Activity className="h-4 w-4 text-emerald-400" />
-                  </div>
-                  <p className="mt-2 text-2xl font-extrabold text-white">
-                    {dynamicSnapshot.active_providers}
-                  </p>
-                </div>
-
-                <div className="bg-bg-tertiary/20 rounded-xl border border-white/5 p-4">
-                  <div className="text-fg-muted flex items-center justify-between">
-                    <span className="text-[10px] font-bold tracking-wider uppercase">
-                      {t("runway")}
-                    </span>
-                    <DollarSign className="h-4 w-4 text-amber-400" />
-                  </div>
-                  <p className="mt-2 text-xl font-extrabold text-white">
-                    {dynamicSnapshot.runway_months
-                      ? `${dynamicSnapshot.runway_months} ${t("mo")}`
-                      : t("unknown")}
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 border-t border-white/5 pt-4 text-center">
-                <div className="text-fg-muted flex justify-between text-xs">
-                  <span>{t("monthly_revenue_mrr")}</span>
-                  <span className="font-mono font-bold text-white">
-                    {formatCurrency(dynamicSnapshot.mrr_cents)}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* RIGHT COLUMN: Strategy Modules Summary Links */}
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:col-span-2">
-            {/* SWOT ANALİZİ CARD */}
-            <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
-              <div>
-                <div className="mb-4 flex items-center justify-between">
-                  <div className="rounded-lg border border-purple-500/25 bg-purple-500/10 p-2 text-purple-400">
-                    <GridIcon className="h-5 w-5" />
-                  </div>
-                  <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
-                    {t("module_01")}
-                  </span>
-                </div>
-                <h2 className="text-lg font-bold text-white">{t("swot_matrix")}</h2>
-                <p className="text-fg-muted mt-2 text-xs">
-                  {t("track_internal_strengths_weaknesses_and_")}
-                </p>
-                <div className="mt-4 grid grid-cols-2 gap-2 text-center text-xs">
-                  <div className="rounded-lg border border-emerald-500/10 bg-emerald-500/5 p-1.5 font-bold text-emerald-400">
-                    S: {strengthsCount}
-                  </div>
-                  <div className="rounded-lg border border-red-500/10 bg-red-500/5 p-1.5 font-bold text-red-400">
-                    W: {weaknessesCount}
-                  </div>
-                  <div className="rounded-lg border border-blue-500/10 bg-blue-500/5 p-1.5 font-bold text-blue-400">
-                    O: {opportunitiesCount}
-                  </div>
-                  <div className="rounded-lg border border-amber-500/10 bg-amber-500/5 p-1.5 font-bold text-amber-400">
-                    T: {threatsCount}
-                  </div>
-                </div>
-              </div>
-              <Link
-                href="/admin/strategy/swot"
-                className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
-              >
-                {t("manage_swot")}
-                <ChevronRight className="h-3 w-3" />
-              </Link>
-            </div>
-
-            {/* RİSK YÖNETİMİ CARD */}
-            <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
-              <div>
-                <div className="mb-4 flex items-center justify-between">
-                  <div className="rounded-lg border border-red-500/25 bg-red-500/10 p-2 text-red-400">
-                    <ShieldAlert className="h-5 w-5" />
-                  </div>
-                  <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
-                    {t("module_02")}
-                  </span>
-                </div>
-                <h2 className="text-lg font-bold text-white">{t("risk_analysis_matrix")}</h2>
-                <p className="text-fg-muted mt-2 text-xs">
-                  {t("prioritize_monitor_and_mitigate_legal_pr")}
-                </p>
-                <div className="mt-4 flex items-center gap-4 text-xs">
-                  <div className="flex-1 rounded-lg border border-white/10 bg-white/5 p-2 text-center">
-                    <span className="text-fg-muted block text-[9px] font-bold tracking-wider uppercase">
-                      {t("aktif_risk")}
-                    </span>
-                    <span className="text-lg font-extrabold text-white">{activeRisksCount}</span>
-                  </div>
-                  <div className="flex-1 rounded-lg border border-red-500/20 bg-red-500/10 p-2 text-center text-red-400">
-                    <span className="block text-[9px] font-bold tracking-wider uppercase">
-                      {t("y_ksek_risk")}
-                    </span>
-                    <span className="text-lg font-extrabold">{highRisksCount}</span>
-                  </div>
-                </div>
-              </div>
-              <Link
-                href="/admin/strategy/risks"
-                className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
-              >
-                {t("manage_risks")}
-                <ChevronRight className="h-3 w-3" />
-              </Link>
-            </div>
-
-            {/* DEĞERLEME MODELİ CARD */}
-            <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
-              <div>
-                <div className="mb-4 flex items-center justify-between">
-                  <div className="rounded-lg border border-amber-500/25 bg-amber-500/10 p-2 text-amber-400">
-                    <TrendingUp className="h-5 w-5" />
-                  </div>
-                  <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
-                    {t("module_03")}
-                  </span>
-                </div>
-                <h2 className="text-lg font-bold text-white">{t("company_valuation")}</h2>
-                <p className="text-fg-muted mt-2 text-xs">
-                  {t("simulate_valuation_cap_metrics_across_be")}
-                </p>
-                <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-2 text-center">
-                  <span className="text-fg-muted block text-[9px] font-bold tracking-wider uppercase">
-                    {t("last_calculated_valuation")}
-                  </span>
-                  <span className="text-lg font-extrabold text-emerald-400">
-                    {valuations.length > 0
-                      ? formatCurrency(valuations[0]!.result_pre_money * 100)
-                      : formatCurrency(DEFAULT_VALUATION_PRE_MONEY * 100)}
-                  </span>
-                </div>
-              </div>
-              <Link
-                href="/admin/strategy/valuation"
-                className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
-              >
-                {t("calculate_valuation")}
-                <ChevronRight className="h-3 w-3" />
-              </Link>
-            </div>
-
-            {/* OKR MILESTONES CARD */}
-            <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
-              <div>
-                <div className="mb-4 flex items-center justify-between">
-                  <div className="rounded-lg border border-blue-500/25 bg-blue-500/10 p-2 text-blue-400">
-                    <Compass className="h-5 w-5" />
-                  </div>
-                  <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
-                    {t("module_04")}
-                  </span>
-                </div>
-                <h2 className="text-lg font-bold text-white">{t("strategic_roadmap")}</h2>
-                <p className="text-fg-muted mt-2 text-xs">
-                  {t("map_quarterly_okrs_and_milestone_complet")}
-                </p>
-                <div className="mt-4">
-                  <div className="text-fg-muted mb-1 flex justify-between text-[10px] font-bold tracking-wider uppercase">
-                    <span>{t("roadmap_progress")}</span>
-                    <span>{avgOkrProgress}%</span>
-                  </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-white/5">
-                    <div
-                      className="bg-brand-500 h-full rounded-full transition-all duration-1000"
-                      style={{ width: `${avgOkrProgress}%` }}
-                    />
-                  </div>
-                  <span className="text-fg-muted mt-1.5 block text-[10px]">
-                    {t("donemilestones_of_totalmilestones_milest", {
-                      doneMilestones,
-                      totalMilestones,
-                    })}
-                  </span>
-                </div>
-              </div>
-              <Link
-                href="/admin/strategy/roadmap"
-                className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
-              >
-                {t("manage_milestones")}
-                <ChevronRight className="h-3 w-3" />
-              </Link>
-            </div>
-
-            {/* STRATEJİK DEĞERLENDİRME CARD */}
-            <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
-              <div>
-                <div className="mb-4 flex items-center justify-between">
-                  <div className="rounded-lg border border-emerald-500/25 bg-emerald-500/10 p-2 text-emerald-400">
-                    <Cpu className="h-5 w-5" />
-                  </div>
-                  <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
-                    {t("module_05")}
-                  </span>
-                </div>
-                <h2 className="text-lg font-bold text-white">
-                  {t("strategy_questionnaire") || "Strategic Questionnaire"}
-                </h2>
-                <p className="text-fg-muted mt-2 text-xs">
-                  {t("strategy_questionnaire_desc") ||
-                    "Compare model evaluations, latencies, and costs on platform strategy."}
-                </p>
-                <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-2 text-center text-xs">
-                  <span className="text-fg-muted block text-[9px] font-bold tracking-wider uppercase">
-                    {t("question_pool") || "Soru Havuzu"}
-                  </span>
-                  <span className="text-lg font-extrabold text-white">
-                    {QUESTIONS.length} {t("active_questions") || "Aktif Soru"}
-                  </span>
-                </div>
-              </div>
-              <a
-                href="#questionnaire"
-                className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
-              >
-                {t("run_questionnaire") || "Run Evaluation"}
-                <ChevronRight className="h-3 w-3" />
-              </a>
-            </div>
-
-            {/* 360° EKOSİSTEM ANALİZİ CARD */}
-            <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
-              <div>
-                <div className="mb-4 flex items-center justify-between">
-                  <div className="border-brand-500/25 bg-brand-500/10 text-brand-400 rounded-lg border p-2">
-                    <Target className="h-5 w-5" />
-                  </div>
-                  <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
-                    {t("module_06") || "Module 06"}
-                  </span>
-                </div>
-                <h2 className="text-lg font-bold text-white">
-                  {t("ecosystem_benchmark") || "360° Ecosystem Benchmarking"}
-                </h2>
-                <p className="text-fg-muted mt-2 text-xs">
-                  {t("ecosystem_benchmark_desc") ||
-                    "Market post-mortem: OpenRouter, Blackbox AI, LMSYS, Scale AI & LangChain analysis."}
-                </p>
-                <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-2 text-center text-xs">
-                  <span className="text-fg-muted block text-[9px] font-bold tracking-wider uppercase">
-                    Defensive Moat Index
-                  </span>
-                  <span className="text-lg font-extrabold text-emerald-400">89.8 / 100</span>
-                </div>
-              </div>
-              <a
-                href="#ecosystem-benchmark"
-                className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
-              >
-                View Benchmark
-                <ChevronRight className="h-3 w-3" />
-              </a>
-            </div>
-          </div>
-        </div>
-        {/* Live AI Strategy Analysis */}
-        <div className="mt-8">
-          <LiveStrategyClient
-            context={{
-              strengths: strengthsCount,
-              weaknesses: weaknessesCount,
-              opportunities: opportunitiesCount,
-              threats: threatsCount,
-              highRisks: highRisksCount,
-              activeRisks: activeRisksCount,
-              doneMilestones,
-              totalMilestones,
-            }}
-          />
-        </div>
-
-        {/* Strategy Questionnaire Module */}
-        <div id="questionnaire" className="mt-12">
-          <QuestionnaireClient
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            runs={runs as any[]}
-            answers={allAnswers}
-            latestRunId={latestRunId}
-            models={models}
-            locale={locale}
-            i18n={{
-              runButton: t("questionnaire_run_button") || "Run Evaluation",
-              runAgainButton: t("questionnaire_run_again_button") || "Run Again",
-              running: t("questionnaire_running") || "Running...",
-              history: t("questionnaire_history") || "Run History",
-              tableQuestion: t("questionnaire_question") || "Question",
-              tableModel: t("questionnaire_model") || "Model",
-              tableAnswer: t("questionnaire_answer") || "Answer",
-              exportMd: t("questionnaire_export") || "Export MD",
-              noRuns: t("questionnaire_no_runs") || "No evaluations yet.",
-              noAnswers: t("questionnaire_no_answers") || "No answers.",
-              statusCompleted: t("questionnaire_status_completed") || "Completed",
-              statusFailed: t("questionnaire_failed") || "Failed",
-              statusRunning: t("questionnaire_running_lower") || "Running",
-              tokens: t("questionnaire_tokens") || "Tokens",
-              latency: t("questionnaire_latency") || "Latency",
-              selectAll: t("questionnaire_select_all") || "Select All",
-              questionsCount:
-                t("questionnaire_questions_count", { total: QUESTIONS.length }) ||
-                `${QUESTIONS.length} Questions`,
-              modelsLabel: t("questionnaire_models") || "Models",
-              close: t("questionnaire_close") || "Close",
-              error: t("questionnaire_error") || "Error",
-              totalRuns: t("questionnaire_total_runs") || "Total Runs",
-            }}
-          />
-        </div>
-
-        {/* 360° Ecosystem Post-Mortem & Benchmarking Module */}
-        <div id="ecosystem-benchmark" className="mt-12">
-          <EcosystemBenchmarkWidget />
-        </div>
-      </Container>
+      </div>
     </div>
-      </div></div>
   );
 }
