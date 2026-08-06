@@ -231,7 +231,15 @@ async function processLanguage(lang) {
           translatedCount++;
         }
       }
-      fs.writeFileSync(targetPath, JSON.stringify(targetObj, null, 2), "utf8");
+      for (let w = 0; w < 3; w++) {
+        try {
+          fs.writeFileSync(targetPath, JSON.stringify(targetObj, null, 2), "utf8");
+          break;
+        } catch (e) {
+          if (w === 2) throw e;
+          await new Promise((r) => setTimeout(r, 1000));
+        }
+      }
     } else {
       console.warn(`[${lang.toUpperCase()}] Batch failed after retries, skipping...`);
     }

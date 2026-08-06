@@ -187,49 +187,53 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
     : "—";
 
   return (
-    <AdminContainer>
-      <AdminPageHeader
-        icon={<Cpu className="text-brand-400 h-6 w-6" />}
-        title={`${t("integrations_title")} (${totalConnected}/${totalServices})`}
-        subtitle={t("integrations_subtitle")}
-        lastUpdated={lastUpdatedTime}
-        action={
-          <Button
-            onClick={fetchData}
-            disabled={loading}
-            variant="outline"
-            size="sm"
-            leftIcon={<RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />}
-          >
-            {loading ? t("integrations_refreshing") : t("integrations_refresh")}
-          </Button>
-        }
-      />
+    <div className="min-h-screen bg-black p-6">
+      <div className="rounded-3xl bg-zinc-900/40 p-8 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl">
+        <AdminContainer>
+          <AdminPageHeader
+            icon={<Cpu className="text-brand-400 h-6 w-6" />}
+            title={`${t("integrations_title")} (${totalConnected}/${totalServices})`}
+            subtitle={t("integrations_subtitle")}
+            lastUpdated={lastUpdatedTime}
+            action={
+              <Button
+                onClick={fetchData}
+                disabled={loading}
+                variant="outline"
+                size="sm"
+                leftIcon={<RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />}
+              >
+                {loading ? t("integrations_refreshing") : t("integrations_refresh")}
+              </Button>
+            }
+          />
 
-      {/* Zero Cost Banner Shield */}
-      <ZeroCostBanner services={aiProviders} totalSaved={totalSavedStr} locale={locale} />
+          {/* Zero Cost Banner Shield */}
+          <ZeroCostBanner services={aiProviders} totalSaved={totalSavedStr} locale={locale} />
 
-      <div className="mt-8 space-y-8">
-        {CATEGORIES.map((cat) => {
-          const services = INTEGRATION_SERVICES.filter(
-            (s) => s.category === cat.id && activeServiceIds.has(s.id),
-          );
-          if (services.length === 0) return null;
+          <div className="mt-8 space-y-8">
+            {CATEGORIES.map((cat) => {
+              const services = INTEGRATION_SERVICES.filter(
+                (s) => s.category === cat.id && activeServiceIds.has(s.id),
+              );
+              if (services.length === 0) return null;
 
-          return (
-            <CategoryGroup
-              key={cat.id}
-              categoryId={cat.id}
-              label={cat.label}
-              services={services}
-              statuses={statusMap}
-              alternatives={data?.alternatives || {}}
-              expandedServices={expandedServices}
-              onToggleService={toggleService}
-            />
-          );
-        })}
+              return (
+                <CategoryGroup
+                  key={cat.id}
+                  categoryId={cat.id}
+                  label={cat.label}
+                  services={services}
+                  statuses={statusMap}
+                  alternatives={data?.alternatives || {}}
+                  expandedServices={expandedServices}
+                  onToggleService={toggleService}
+                />
+              );
+            })}
+          </div>
+        </AdminContainer>
       </div>
-    </AdminContainer>
+    </div>
   );
 }
