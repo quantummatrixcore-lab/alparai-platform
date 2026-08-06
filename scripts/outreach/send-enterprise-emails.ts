@@ -1,0 +1,340 @@
+import { Resend } from "resend";
+import * as dotenv from "dotenv";
+
+dotenv.config({ path: ".env.local" });
+dotenv.config();
+
+const SENDER = "ALPAR AI Enterprise Team <hello@alparai.com>";
+const EXECUTE_SEND = process.env.EXECUTE_SEND === "true" || process.env.EXECUTE_SEND === "1";
+
+export interface EnterpriseTarget {
+  id: string;
+  companyName: string;
+  industry: string;
+  targetRole: string;
+  recipientEmail: string;
+  subject: string;
+  customHook: string;
+}
+
+export const ENTERPRISE_TARGETS: EnterpriseTarget[] = [
+  {
+    id: "ENT-001",
+    companyName: "Siemens AG",
+    industry: "Industrial Automation & Mobility",
+    targetRole: "Chief AI Officer / VP of Industrial AI",
+    recipientEmail: "ai-governance@siemens.com",
+    subject: "EU AI Act Compliance & Real-Time Incident Surveillance for Siemens Industrial AI",
+    customHook: "As Siemens expands autonomous automation and edge AI across industrial systems, Article 9 & 72 mandates of the EU AI Act require continuous post-market surveillance and risk mitigation.",
+  },
+  {
+    id: "ENT-002",
+    companyName: "SAP SE",
+    industry: "Enterprise Software & Cloud SaaS",
+    targetRole: "Head of AI Trust & Compliance",
+    recipientEmail: "ai-ethics@sap.com",
+    subject: "Audit-Ready AI Accountability & Foundation Model Shielding for SAP Business AI",
+    customHook: "With SAP Business AI embedded across global enterprise workflows, fulfilling Article 50 transparency requirements and preventing systemic model drift demands independent audit infrastructure.",
+  },
+  {
+    id: "ENT-003",
+    companyName: "BMW Group",
+    industry: "Automotive & Autonomous Driving",
+    targetRole: "Director of Autonomous Systems Safety",
+    recipientEmail: "ai-safety@bmwgroup.com",
+    subject: "High-Risk AI System Auditing & Incident Benchmarking for BMW Mobility AI",
+    customHook: "Automotive AI classified under Annex III of the EU AI Act requires rigorous, continuous safety audits and real-time failure taxonomy logging prior to and after deployment.",
+  },
+  {
+    id: "ENT-004",
+    companyName: "Allianz SE",
+    industry: "Financial Services & Insurance",
+    targetRole: "Chief Risk Officer & Head of Algorithmic Underwriting",
+    recipientEmail: "ai-risk-governance@allianz.com",
+    subject: "EU AI Act Article 14 Human Oversight & Bias Auditing for Allianz Underwriting AI",
+    customHook: "High-risk financial AI models deployed for credit and insurance risk scoring must guarantee human oversight, explainability, and bias-free continuous monitoring under new EU regulations.",
+  },
+  {
+    id: "ENT-005",
+    companyName: "Bayer AG",
+    industry: "Pharmaceuticals & Life Sciences",
+    targetRole: "Head of Digital Health & AI Quality Assurance",
+    recipientEmail: "digital-health-compliance@bayer.com",
+    subject: "ISO/IEC 42001 & EU AI Act Governance Infrastructure for Bayer Life Sciences AI",
+    customHook: "Deploying AI in clinical decision support and drug discovery requires strict verification trails, zero-trust PII sanitization, and automated compliance reporting.",
+  },
+  {
+    id: "ENT-006",
+    companyName: "Deutsche Bank AG",
+    industry: "Banking & Capital Markets",
+    targetRole: "Global Head of Model Risk Management",
+    recipientEmail: "model-risk@db.com",
+    subject: "Real-Time AI Vulnerability Shielding & Regulatory Reporting for Deutsche Bank",
+    customHook: "As algorithmic decisioning comes under increased regulatory scrutiny from ESMA and the EU AI Office, automated incident detection and model risk auditing are critical enterprise safeguards.",
+  },
+  {
+    id: "ENT-007",
+    companyName: "Philips Healthcare",
+    industry: "Medical Technology & Diagnostics",
+    targetRole: "VP of Regulatory Affairs & AI Software",
+    recipientEmail: "medical-ai-regulatory@philips.com",
+    subject: "EU AI Act Annex III Compliance & Post-Market Surveillance for Philips Clinical AI",
+    customHook: "Medical AI applications facing dual MDR/EU AI Act oversight require continuous telemetry, prompt injection defense, and standardized incident escalation pathways.",
+  },
+  {
+    id: "ENT-008",
+    companyName: "ASML",
+    industry: "Semiconductor & High-Tech Manufacturing",
+    targetRole: "Chief Information Security Officer / AI Governance Lead",
+    recipientEmail: "ai-security@asml.com",
+    subject: "Enterprise AI Security & Supply Chain Vulnerability Shielding for ASML",
+    customHook: "Protecting proprietary semiconductor IP while leveraging internal LLMs and predictive maintenance AI demands enterprise-grade trust infrastructure and leak prevention.",
+  },
+  {
+    id: "ENT-009",
+    companyName: "Spotify",
+    industry: "Digital Media & Personalization",
+    targetRole: "VP of Engineering & Algorithmic Responsibility",
+    recipientEmail: "ai-responsibility@spotify.com",
+    subject: "Algorithmic Impact Assessment & Transparency Framework for Spotify AI Systems",
+    customHook: "Ensuring recommendation models comply with emerging EU transparency guidelines without compromising latency or user experience requires lightweight, independent verification infrastructure.",
+  },
+  {
+    id: "ENT-10",
+    companyName: "Delivery Hero",
+    industry: "Logistics & Automated Decision Systems",
+    targetRole: "Head of Enterprise Data & AI Ethics",
+    recipientEmail: "ai-governance@deliveryhero.com",
+    subject: "Automated Dispatch & Labor AI Governance under EU AI Act Regulations",
+    customHook: "Worker-management and logistics optimization AI models require transparent auditing and non-discriminatory decision tracking to satisfy European labor and AI compliance standards.",
+  },
+];
+
+export function buildEnterpriseEmailHtml(target: EnterpriseTarget): string {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EU AI Act Compliance & Governance Infrastructure</title>
+</head>
+<body style="margin:0; padding:0; background-color:#0f172a; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#e2e8f0;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#0f172a; padding:40px 20px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:620px; background-color:#1e293b; border-radius:12px; border:1px solid #334155; overflow:hidden;">
+          
+          <!-- Header -->
+          <tr>
+            <td style="padding:32px 40px 24px 40px; background-color:#0284c7; background-image:linear-gradient(135deg, #0284c7 0%, #0f172a 100%);">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td>
+                    <span style="font-size:22px; font-weight:800; tracking:1px; color:#ffffff; text-transform:uppercase; letter-spacing:1px;">ALPAR AI</span>
+                    <span style="font-size:12px; color:#93c5fd; display:block; margin-top:2px;">TRUST INFRASTRUCTURE FOR AI ACCOUNTABILITY</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Content Body -->
+          <tr>
+            <td style="padding:32px 40px; font-size:15px; line-height:1.6; color:#cbd5e1;">
+              <p style="margin-top:0; font-size:16px; color:#f8fafc; font-weight:600;">
+                Dear ${target.companyName} AI Leadership Team,
+              </p>
+
+              <p>
+                ${target.customHook}
+              </p>
+
+              <p>
+                <strong>ALPAR AI</strong> provides an enterprise-grade trust and compliance engine designed specifically for organizations deploying high-risk and general-purpose AI systems within the European Union and global markets.
+              </p>
+
+              <!-- Capability Box -->
+              <div style="background-color:#0f172a; border-radius:8px; border-left:4px solid #0284c7; padding:20px; margin:24px 0;">
+                <p style="margin:0 0 12px 0; font-weight:700; color:#38bdf8; font-size:14px; text-transform:uppercase; letter-spacing:0.5px;">
+                  Key Enterprise Platform Capabilities
+                </p>
+                <ul style="margin:0; padding-left:20px; color:#94a3b8;">
+                  <li style="margin-bottom:8px;"><strong style="color:#f1f5f9;">Continuous Post-Market Surveillance (Art. 72):</strong> Automated AI incident tracking, error escalation, and vulnerability telemetry.</li>
+                  <li style="margin-bottom:8px;"><strong style="color:#f1f5f9;">Automated Risk & Bias Benchmarking (Art. 9):</strong> Continuous validation against EU AI Act, NIST AI RMF, and ISO/IEC 42001 standards.</li>
+                  <li style="margin-bottom:8px;"><strong style="color:#f1f5f9;">Zero-Trust PII Guardian:</strong> Real-time anonymization and data leakage protection before model execution.</li>
+                  <li style="margin-bottom:0;"><strong style="color:#f1f5f9;">Audit-Ready Technical Dossiers:</strong> Instant generation of compliance documentation for EU regulatory bodies.</li>
+                </ul>
+              </div>
+
+              <p>
+                We are currently onboarding select European enterprise partners into our private Executive Pilot Program to benchmark their AI governance readiness ahead of regulatory enforcement deadlines.
+              </p>
+
+              <!-- CTA Button -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:28px 0;">
+                <tr>
+                  <td style="border-radius:6px; background-color:#0284c7;">
+                    <a href="https://alparai.com/enterprise?ref=outreach-${target.id}" target="_blank" style="font-size:15px; font-weight:700; color:#ffffff; text-decoration:none; display:inline-block; padding:12px 28px; border-radius:6px; border:1px solid #0284c7;">
+                      Schedule Confidential AI Audit Briefing &rarr;
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin-bottom:0; color:#94a3b8; font-size:14px;">
+                Sincerely,<br>
+                <strong style="color:#f8fafc;">Ercüment Erden</strong><br>
+                Founder & Lead Architect, ALPAR AI<br>
+                <a href="mailto:hello@alparai.com" style="color:#38bdf8; text-decoration:none;">hello@alparai.com</a> | <a href="https://alparai.com" style="color:#38bdf8; text-decoration:none;">alparai.com</a>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:20px 40px; background-color:#0f172a; border-top:1px solid #334155; text-align:center; font-size:12px; color:#64748b;">
+              <p style="margin:0 0 4px 0;">ALPAR AI Platform &mdash; Governance & Trust Infrastructure</p>
+              <p style="margin:0;">Sent via Secure API from hello@alparai.com | Confidential Enterprise Outreach</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
+export function buildEnterpriseEmailText(target: EnterpriseTarget): string {
+  return `Dear ${target.companyName} AI Leadership Team,
+
+${target.customHook}
+
+ALPAR AI provides an enterprise-grade trust and compliance engine designed specifically for organizations deploying high-risk and general-purpose AI systems within the European Union and global markets.
+
+KEY ENTERPRISE PLATFORM CAPABILITIES:
+- Continuous Post-Market Surveillance (Art. 72): Automated AI incident tracking, error escalation, and vulnerability telemetry.
+- Automated Risk & Bias Benchmarking (Art. 9): Continuous validation against EU AI Act, NIST AI RMF, and ISO/IEC 42001 standards.
+- Zero-Trust PII Guardian: Real-time anonymization and data leakage protection before model execution.
+- Audit-Ready Technical Dossiers: Instant generation of compliance documentation for EU regulatory bodies.
+
+We are currently onboarding select European enterprise partners into our private Executive Pilot Program to benchmark their AI governance readiness ahead of regulatory enforcement deadlines.
+
+Schedule a confidential AI Audit Briefing with our engineering team:
+https://alparai.com/enterprise?ref=outreach-${target.id}
+
+Sincerely,
+Ercüment Erden
+Founder & Lead Architect, ALPAR AI
+hello@alparai.com | https://alparai.com
+`;
+}
+
+export async function processOutreach() {
+  console.log("=================================================");
+  console.log("🚀 ALPAR AI Enterprise Outreach Engine v1.0");
+  console.log(`From Address: ${SENDER}`);
+  console.log(`Execution Mode: ${EXECUTE_SEND ? "LIVE (REAL SEND)" : "🔒 DRY-RUN (SAFETY SHIELD ENABLED)"}`);
+  console.log("=================================================\n");
+
+  if (!process.env.RESEND_API_KEY && EXECUTE_SEND) {
+    console.error("❌ ERROR: RESEND_API_KEY environment variable is missing!");
+    process.exit(1);
+  }
+
+  const resend = new Resend(process.env.RESEND_API_KEY || "re_dummy_key_for_dry_run");
+
+  const results: {
+    id: string;
+    company: string;
+    recipient: string;
+    status: "DRY_RUN" | "SENT" | "FAILED";
+    resendId?: string;
+    error?: string;
+  }[] = [];
+
+  for (let i = 0; i < ENTERPRISE_TARGETS.length; i++) {
+    const target = ENTERPRISE_TARGETS[i];
+    if (!target) continue;
+
+    const htmlContent = buildEnterpriseEmailHtml(target);
+    const textContent = buildEnterpriseEmailText(target);
+
+    console.log(`[${i + 1}/${ENTERPRISE_TARGETS.length}] Processing ${target.id} - ${target.companyName} (${target.targetRole})`);
+    console.log(`   To: ${target.recipientEmail}`);
+    console.log(`   Subject: ${target.subject}`);
+
+    if (!EXECUTE_SEND) {
+      console.log(`   🔒 DRY-RUN MODE: Email preview generated (${htmlContent.length} bytes HTML). Not dispatched.`);
+      results.push({
+        id: target.id,
+        company: target.companyName,
+        recipient: target.recipientEmail,
+        status: "DRY_RUN",
+      });
+    } else {
+      try {
+        console.log("   📡 Dispatching via Resend API...");
+        const data = await resend.emails.send({
+          from: SENDER,
+          to: target.recipientEmail,
+          subject: target.subject,
+          html: htmlContent,
+          text: textContent,
+        });
+
+        if (data.error) {
+          console.error(`   ❌ Resend Error: ${JSON.stringify(data.error)}`);
+          results.push({
+            id: target.id,
+            company: target.companyName,
+            recipient: target.recipientEmail,
+            status: "FAILED",
+            error: JSON.stringify(data.error),
+          });
+        } else {
+          console.log(`   ✅ Sent! Resend ID: ${data.data?.id}`);
+          results.push({
+            id: target.id,
+            company: target.companyName,
+            recipient: target.recipientEmail,
+            status: "SENT",
+            resendId: data.data?.id,
+          });
+        }
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : String(err);
+        console.error(`   ❌ Exception: ${errorMsg}`);
+        results.push({
+          id: target.id,
+          company: target.companyName,
+          recipient: target.recipientEmail,
+          status: "FAILED",
+          error: errorMsg,
+        });
+      }
+
+      // Rate limit safety: 500ms delay between API requests
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+  }
+
+  console.log("\n=================================================");
+  console.log("📊 OUTREACH EXECUTION SUMMARY");
+  console.log("=================================================");
+  console.table(results);
+  
+  if (!EXECUTE_SEND) {
+    console.log("\n💡 Note: No emails were sent to actual targets because EXECUTE_SEND is not set to 'true'.");
+    console.log("To execute live sending, run: EXECUTE_SEND=true npx tsx scripts/outreach/send-enterprise-emails.ts");
+  }
+}
+
+// Automatically execute if invoked directly
+if (require.main === module || (typeof process !== "undefined" && process.argv[1]?.includes("send-enterprise-emails"))) {
+  processOutreach().catch((err) => {
+    console.error("Fatal error during outreach execution:", err);
+    process.exit(1);
+  });
+}
