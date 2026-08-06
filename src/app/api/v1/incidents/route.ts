@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     }
 
     const supabase = createAdminClient();
-    
+
     // Getting approved incidents
     const { data: incidents, error } = await supabase
       .from("incidents")
@@ -20,10 +20,7 @@ export async function GET(request: Request) {
       .order("created_at", { ascending: false });
 
     if (error) {
-      return NextResponse.json(
-        { error: "Failed to fetch incidents" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Failed to fetch incidents" }, { status: 500 });
     }
 
     return NextResponse.json({
@@ -31,14 +28,11 @@ export async function GET(request: Request) {
       count: incidents?.length || 0,
     });
   } catch (_err) {
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
 
-export async function OPTIONS() {
+export async function OPTIONS(_request: Request) {
   return new NextResponse(null, {
     status: 204,
     headers: {
@@ -48,4 +42,3 @@ export async function OPTIONS() {
     },
   });
 }
-
