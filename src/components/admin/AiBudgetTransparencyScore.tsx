@@ -102,14 +102,14 @@ export function AiBudgetTransparencyScore({
         <div className="flex flex-col items-center justify-center rounded-2xl border border-white/5 bg-white/[0.02] p-6 backdrop-blur-xl lg:col-span-5">
           <div className="relative flex items-center justify-center">
             {/* SVG Circular Radial Gauge */}
-            <svg className="h-44 w-44 -rotate-90 transform" viewBox="0 0 160 160">
+            <svg className="h-48 w-48 -rotate-90 transform" viewBox="0 0 160 160">
               {/* Background circle track */}
               <circle
                 cx="80"
                 cy="80"
                 r="70"
                 stroke="currentColor"
-                strokeWidth="12"
+                strokeWidth="10"
                 className="text-zinc-800/80"
                 fill="transparent"
               />
@@ -119,7 +119,7 @@ export function AiBudgetTransparencyScore({
                 cy="80"
                 r="70"
                 stroke="url(#gradient-score)"
-                strokeWidth="12"
+                strokeWidth="10"
                 strokeDasharray="440"
                 strokeDashoffset={strokeDashoffset}
                 strokeLinecap="round"
@@ -135,13 +135,13 @@ export function AiBudgetTransparencyScore({
               </defs>
             </svg>
 
-            {/* Inner Gauge Text */}
-            <div className="absolute flex flex-col items-center justify-center text-center">
-              <span className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+            {/* Inner Gauge Text - Perfectly Symmetrical & Centered */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center">
+              <span className="text-3xl font-black tracking-tight text-white drop-shadow-sm">
                 %{score}
               </span>
-              <span className="text-[11px] font-semibold tracking-wider text-emerald-400 uppercase">
-                Anti-Hallucination Score
+              <span className="mt-1 max-w-[100px] text-[9px] font-bold tracking-widest text-emerald-400 uppercase leading-tight">
+                Anti-Hallucination <br /> Score
               </span>
             </div>
           </div>
