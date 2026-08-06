@@ -14,145 +14,6 @@ interface HeatmapData {
   resend: number;
 }
 
-const MOCK_24H_USAGE: HeatmapData[] = [
-  { hour: 0, openai: 280, anthropic: 420, google: 850, supabase: 1200, upstash: 8500, resend: 0 },
-  { hour: 1, openai: 120, anthropic: 180, google: 450, supabase: 800, upstash: 4200, resend: 0 },
-  { hour: 2, openai: 90, anthropic: 110, google: 320, supabase: 600, upstash: 2100, resend: 0 },
-  { hour: 3, openai: 75, anthropic: 95, google: 280, supabase: 500, upstash: 1800, resend: 1 },
-  { hour: 4, openai: 65, anthropic: 85, google: 250, supabase: 450, upstash: 1500, resend: 0 },
-  { hour: 5, openai: 110, anthropic: 160, google: 380, supabase: 700, upstash: 3200, resend: 2 },
-  { hour: 6, openai: 450, anthropic: 620, google: 1100, supabase: 2100, upstash: 12000, resend: 5 },
-  {
-    hour: 7,
-    openai: 890,
-    anthropic: 1200,
-    google: 1850,
-    supabase: 3500,
-    upstash: 18000,
-    resend: 2,
-  },
-  {
-    hour: 8,
-    openai: 1200,
-    anthropic: 1650,
-    google: 2200,
-    supabase: 4200,
-    upstash: 24000,
-    resend: 3,
-  },
-  {
-    hour: 9,
-    openai: 1400,
-    anthropic: 1850,
-    google: 2400,
-    supabase: 4600,
-    upstash: 28000,
-    resend: 1,
-  },
-  {
-    hour: 10,
-    openai: 1300,
-    anthropic: 1750,
-    google: 2300,
-    supabase: 4400,
-    upstash: 26000,
-    resend: 0,
-  },
-  {
-    hour: 11,
-    openai: 1100,
-    anthropic: 1550,
-    google: 2100,
-    supabase: 4000,
-    upstash: 22000,
-    resend: 2,
-  },
-  {
-    hour: 12,
-    openai: 950,
-    anthropic: 1350,
-    google: 1900,
-    supabase: 3600,
-    upstash: 20000,
-    resend: 4,
-  },
-  {
-    hour: 13,
-    openai: 1050,
-    anthropic: 1450,
-    google: 2000,
-    supabase: 3800,
-    upstash: 21000,
-    resend: 3,
-  },
-  {
-    hour: 14,
-    openai: 1200,
-    anthropic: 1600,
-    google: 2150,
-    supabase: 4100,
-    upstash: 23000,
-    resend: 2,
-  },
-  {
-    hour: 15,
-    openai: 1350,
-    anthropic: 1800,
-    google: 2300,
-    supabase: 4400,
-    upstash: 25000,
-    resend: 1,
-  },
-  {
-    hour: 16,
-    openai: 1280,
-    anthropic: 1750,
-    google: 2250,
-    supabase: 4300,
-    upstash: 24000,
-    resend: 2,
-  },
-  {
-    hour: 17,
-    openai: 1100,
-    anthropic: 1550,
-    google: 2000,
-    supabase: 4000,
-    upstash: 22000,
-    resend: 5,
-  },
-  {
-    hour: 18,
-    openai: 850,
-    anthropic: 1200,
-    google: 1700,
-    supabase: 3200,
-    upstash: 18000,
-    resend: 3,
-  },
-  {
-    hour: 19,
-    openai: 650,
-    anthropic: 950,
-    google: 1400,
-    supabase: 2600,
-    upstash: 14000,
-    resend: 2,
-  },
-  {
-    hour: 20,
-    openai: 520,
-    anthropic: 780,
-    google: 1100,
-    supabase: 2100,
-    upstash: 11000,
-    resend: 1,
-  },
-  { hour: 21, openai: 420, anthropic: 630, google: 900, supabase: 1800, upstash: 9000, resend: 0 },
-  { hour: 22, openai: 350, anthropic: 520, google: 750, supabase: 1500, upstash: 7500, resend: 0 },
-  { hour: 23, openai: 310, anthropic: 480, google: 680, supabase: 1400, upstash: 6800, resend: 0 },
-];
-
 const PROVIDER_COLORS: Record<string, { bg: string; text: string }> = {
   openai: { bg: "bg-amber-500", text: "text-amber-900" },
   anthropic: { bg: "bg-indigo-500", text: "text-indigo-900" },
@@ -173,9 +34,29 @@ function getHeatmapColor(value: number, maxValue: number) {
   return "bg-zinc-300";
 }
 
-export function UsageHeatmap({ providers }: { providers: Provider[] }) {
+export function UsageHeatmap({
+  providers,
+  usageData = [],
+}: {
+  providers: Provider[];
+  usageData?: HeatmapData[];
+}) {
   const t = useTranslations("admin");
-  const allValues = MOCK_24H_USAGE.flatMap((row) => [
+
+  const dataToUse =
+    usageData.length > 0
+      ? usageData
+      : Array.from({ length: 24 }).map((_, i) => ({
+          hour: i,
+          openai: 0,
+          anthropic: 0,
+          google: 0,
+          supabase: 0,
+          upstash: 0,
+          resend: 0,
+        }));
+
+  const allValues = dataToUse.flatMap((row) => [
     row.openai,
     row.anthropic,
     row.google,
@@ -227,7 +108,7 @@ export function UsageHeatmap({ providers }: { providers: Provider[] }) {
                 <div className="flex items-center truncate text-xs font-semibold text-zinc-400">
                   {providers.find((p) => p.id === providerId)?.name || providerId}
                 </div>
-                {MOCK_24H_USAGE.map((row, hourIndex) => {
+                {dataToUse.map((row, hourIndex) => {
                   const value = row[providerId as keyof HeatmapData] as number;
                   const colorClass = getHeatmapColor(value, maxValue);
 
@@ -273,7 +154,7 @@ export function UsageHeatmap({ providers }: { providers: Provider[] }) {
         <div className="mt-6 border-t border-white/10 pt-4">
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
             {providers.map((provider) => {
-              const totalRequests = MOCK_24H_USAGE.reduce(
+              const totalRequests = dataToUse.reduce(
                 (sum, row) => sum + (row[provider.id as keyof HeatmapData] as number),
                 0,
               );

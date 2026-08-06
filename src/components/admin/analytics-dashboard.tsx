@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
   Zap,
@@ -25,6 +26,7 @@ interface AnalyticsDashboardProps {
 
 export function AnalyticsDashboard({ snapshot, locale }: AnalyticsDashboardProps) {
   const t = useTranslations("admin");
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const currentSnapshot = snapshot;
 
@@ -36,8 +38,7 @@ export function AnalyticsDashboard({ snapshot, locale }: AnalyticsDashboardProps
         const res = await triggerAutopilotWorkerTick();
         if (res.ok) {
           toast.success(t("worker_triggered") || "Autopilot worker tick triggered successfully.");
-          // In a real app we might refetch, but here we can update local state or simulate
-          // since it's mock/autopilot
+          router.refresh();
         } else {
           toast.error(res.error || "Failed to trigger worker");
         }

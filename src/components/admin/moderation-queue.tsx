@@ -209,17 +209,26 @@ function ModerationCard({ incident }: { incident: IncidentListItem }) {
             </Link>
           </div>
 
-          {/* AI Metrics quick summary mock (Ethics & Consensus) */}
-          <div className="grid grid-cols-2 gap-2 rounded-xl border border-white/5 bg-neutral-950/40 p-3">
-            <div className="flex items-center justify-between text-[11px]">
-              <span className="text-fg-muted">{t("ethics_score")}</span>
-              <span className="font-mono font-bold text-emerald-400">92%</span>
-            </div>
-            <div className="flex items-center justify-between text-[11px]">
-              <span className="text-fg-muted">{t("consensus_strength")}</span>
-              <span className="font-mono font-bold text-cyan-400">{t("high")}</span>
-            </div>
-          </div>
+          {incident.cross_audit_truth_score !== null &&
+            incident.cross_audit_truth_score !== undefined && (
+              <div className="grid grid-cols-2 gap-2 rounded-xl border border-white/5 bg-neutral-950/40 p-3">
+                <div className="flex items-center justify-between text-[11px]">
+                  <span className="text-fg-muted">Truth Score</span>
+                  <span className="font-mono font-bold text-emerald-400">
+                    {incident.cross_audit_truth_score}%
+                  </span>
+                </div>
+                {incident.cross_audit_confidence !== null &&
+                  incident.cross_audit_confidence !== undefined && (
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-fg-muted">Confidence</span>
+                      <span className="font-mono font-bold text-cyan-400">
+                        {incident.cross_audit_confidence}%
+                      </span>
+                    </div>
+                  )}
+              </div>
+            )}
 
           {/* Action Note Area */}
           {showNote && (

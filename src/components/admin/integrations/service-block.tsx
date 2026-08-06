@@ -21,17 +21,16 @@ interface ServiceBlockProps {
 }
 
 // Zero-cost limits and stats for premium presentation
-const SERVICE_LIMIT_SPECS: Record<string, { label: string; limit: string; usageMock: number }> = {
-  supabase: { label: "Storage & Database Size", limit: "382MB / 500MB Free", usageMock: 76 },
+const SERVICE_LIMIT_SPECS: Record<string, { label: string; limit: string }> = {
+  supabase: { label: "Storage & Database Size", limit: "500MB Free (Sync Pending)" },
   vercel: {
     label: "Bandwidth & Serverless Execution",
-    limit: "23.4GB / 100GB Free",
-    usageMock: 23,
+    limit: "100GB Free (Sync Pending)",
   },
-  upstash: { label: "Redis Requests / Month", limit: "4,120 / 10,000 Free", usageMock: 41 },
-  resend: { label: "Transaction Emails / Month", limit: "210 / 3,000 Free", usageMock: 7 },
-  sentry: { label: "Error Logs & Transactions", limit: "1,850 / 5,000 Free", usageMock: 37 },
-  cloudflare: { label: "Turnstile Challenges / Month", limit: "12,450 / Unlimited", usageMock: 12 },
+  upstash: { label: "Redis Requests / Month", limit: "10,000 Free (Sync Pending)" },
+  resend: { label: "Transaction Emails / Month", limit: "3,000 Free (Sync Pending)" },
+  sentry: { label: "Error Logs & Transactions", limit: "5,000 Free (Sync Pending)" },
+  cloudflare: { label: "Turnstile Challenges / Month", limit: "Unlimited (Sync Pending)" },
 };
 
 export function ServiceBlock({
@@ -130,15 +129,9 @@ export function ServiceBlock({
                 <span className="text-fg-secondary font-mono text-xs font-semibold">
                   {spec.limit}
                 </span>
-                <span className="text-success-400 font-mono text-xs font-bold">
-                  ({spec.usageMock}%)
-                </span>
               </div>
               <div className="mt-1.5 h-1 w-24 overflow-hidden rounded-full bg-white/5 sm:ml-auto">
-                <div
-                  className="bg-success-500 h-full rounded-full"
-                  style={{ width: `${spec.usageMock}%` }}
-                />
+                <div className="h-full rounded-full bg-zinc-600" style={{ width: `0%` }} />
               </div>
             </div>
           )}

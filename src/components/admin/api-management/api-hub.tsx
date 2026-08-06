@@ -13,112 +13,9 @@ import { useTranslations } from "next-intl";
 
 export type Provider = RealProvider;
 
-const MOCK_PROVIDERS_FALLBACK: Provider[] = [
-  {
-    id: "openai",
-    name: "OpenAI",
-    status: "connected",
-    models: ["GPT-4o", "GPT-4o-mini"],
-    health: 99,
-    latencyMs: 245,
-    dailyRequests: 12400,
-    quotaUsed: 4250000,
-    quotaLimit: 100000000,
-    dailyCostUsd: 0.38,
-    monthlyLimitUsd: 500,
-    respondentActive: true,
-    isRealEnvKey: true,
-  },
-  {
-    id: "anthropic",
-    name: "Anthropic Claude",
-    status: "connected",
-    models: ["Claude 3.5 Sonnet", "Claude 3 Opus"],
-    health: 98,
-    latencyMs: 189,
-    dailyRequests: 18920,
-    quotaUsed: 8920000,
-    quotaLimit: 50000000,
-    dailyCostUsd: 0.42,
-    monthlyLimitUsd: 800,
-    respondentActive: true,
-    isRealEnvKey: true,
-  },
-  {
-    id: "google",
-    name: "Google Gemini",
-    status: "connected",
-    models: ["Gemini 1.5 Pro", "Gemini 1.5 Flash"],
-    health: 100,
-    latencyMs: 156,
-    dailyRequests: 24600,
-    quotaUsed: 2400,
-    quotaLimit: 15000,
-    dailyCostUsd: 0.0,
-    monthlyLimitUsd: 0,
-    respondentActive: false,
-    isRealEnvKey: true,
-  },
-  {
-    id: "supabase",
-    name: "Supabase",
-    status: "connected",
-    models: ["PostgreSQL", "RLS", "Storage"],
-    health: 100,
-    latencyMs: 42,
-    dailyRequests: 58000,
-    quotaUsed: 450000,
-    quotaLimit: 500000000,
-    dailyCostUsd: 0.0,
-    monthlyLimitUsd: 0,
-    respondentActive: false,
-    isRealEnvKey: true,
-  },
-  {
-    id: "upstash",
-    name: "Upstash Redis",
-    status: "connected",
-    models: ["Redis Cache", "Rate Limiter"],
-    health: 99,
-    latencyMs: 12,
-    dailyRequests: 1240000,
-    quotaUsed: 1240,
-    quotaLimit: 10000,
-    dailyCostUsd: 0.0,
-    monthlyLimitUsd: 0,
-    respondentActive: false,
-    isRealEnvKey: true,
-  },
-  {
-    id: "resend",
-    name: "Resend Email",
-    status: "connected",
-    models: ["Transactional Email"],
-    health: 99,
-    latencyMs: 234,
-    dailyRequests: 14,
-    quotaUsed: 14,
-    quotaLimit: 3000,
-    dailyCostUsd: 0.0,
-    monthlyLimitUsd: 0,
-    respondentActive: false,
-    isRealEnvKey: true,
-  },
-];
-
-const MOCK_LATENCY_TRENDS = [
-  { date: "Mon", openai: 250, anthropic: 195, google: 160, supabase: 45 },
-  { date: "Tue", openai: 245, anthropic: 188, google: 158, supabase: 48 },
-  { date: "Wed", openai: 260, anthropic: 192, google: 162, supabase: 50 },
-  { date: "Thu", openai: 240, anthropic: 185, google: 155, supabase: 44 },
-  { date: "Fri", openai: 235, anthropic: 189, google: 159, supabase: 46 },
-  { date: "Sat", openai: 248, anthropic: 191, google: 161, supabase: 49 },
-  { date: "Sun", openai: 245, anthropic: 189, google: 156, supabase: 42 },
-];
-
 export function ApiManagementHub() {
   const t = useTranslations("admin");
-  const [providers, setProviders] = useState<Provider[]>(MOCK_PROVIDERS_FALLBACK);
+  const [providers, setProviders] = useState<Provider[]>([]);
   const [dailySpend, setDailySpend] = useState<number>(0.8);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<"telemetry" | "ai-providers" | "system-keys">(
@@ -257,7 +154,7 @@ export function ApiManagementHub() {
                   {t("baseline_benchmark")}
                 </span>
               </div>
-              <ModelHealthChart data={MOCK_LATENCY_TRENDS} />
+              <ModelHealthChart data={[]} />
             </section>
 
             {/* Quota Gauges */}

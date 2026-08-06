@@ -140,7 +140,7 @@ export function AiBudgetTransparencyScore({
               <span className="text-3xl font-black tracking-tight text-white drop-shadow-sm">
                 %{score}
               </span>
-              <span className="mt-1 max-w-[100px] text-[9px] font-bold tracking-widest text-emerald-400 uppercase leading-tight">
+              <span className="mt-1 max-w-[100px] text-[9px] leading-tight font-bold tracking-widest text-emerald-400 uppercase">
                 Anti-Hallucination <br /> Score
               </span>
             </div>
