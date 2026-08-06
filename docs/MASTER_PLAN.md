@@ -72,14 +72,16 @@ _Durum: Otopilot Aktif | Yürütücü: OpenCode Flash / Jules_
 
 <!-- FOUNDER_BACKLOG_START -->
 
-| Blok  | Öncelik | Atanan      | Görev Özeti                                                            | Durum   |
-| ----- | ------- | ----------- | ---------------------------------------------------------------------- | ------- |
-| OMEGA | P0      | Founder     | Cloudflare WAF 403 engeli (#128) kaldırılacak (Blocker)                | pending |
-| SIGMA | P0      | Flash Ajan  | Stripe canlı işlem / webhook doğrulama (#208)                          | pending |
-| ALPHA | P0      | Flash Ajan  | Seed Data Room & Değerleme Memosu üretimi (#201, #203)                 | pending |
-| ZETA  | P1      | Flash Ajan  | 400-satır CI sınırı (#209) ve Jules/Claude yönlendirme CI'ı (#213)     | pending |
-| OMEGA | P1      | Flash Ajan  | "The Grok Files" serisinin 9-model arbitrajıyla yazılması (#198, #212) | pending |
-| SIGMA | P1      | Antigravity | Top 50 YZ Vendor'a Trust Badge otonom (openchrome) iletilmesi          | pending |
-| OMEGA | P1      | Founder     | HN Show HN + Reddit senkron lansman (#199)                             | GATE    |
+| Blok  | Öncelik | Atanan      | Görev Özeti                                                            | Durum     |
+| ----- | ------- | ----------- | ---------------------------------------------------------------------- | --------- |
+| OMEGA | P0      | Founder     | Cloudflare WAF 403 engeli (#128) kaldırılacak (Blocker)                | pending   |
+| SIGMA | P0      | Flash Ajan  | Stripe canlı işlem / webhook doğrulama (#208)                          | completed |
+| ALPHA | P0      | Flash Ajan  | Seed Data Room & Değerleme Memosu üretimi (#201, #203)                 | completed |
+| ZETA  | P1      | Flash Ajan  | 400-satır CI sınırı (#209) ve Jules/Claude yönlendirme CI'ı (#213)     | completed |
+| OMEGA | P1      | Flash Ajan  | "The Grok Files" serisinin 9-model arbitrajıyla yazılması (#198, #212) | completed |
+| SIGMA | P1      | Antigravity | Top 50 YZ Vendor'a Trust Badge otonom (openchrome) iletilmesi          | pending   |
+| OMEGA | P1      | Founder     | HN Show HN + Reddit senkron lansman (#199)                             | GATE      |
+| ALPHA | P2      | Flash Ajan  | [ALPHA-6] Pitch Deck (Marp/Reveal) HTML slayt kodlaması                | pending   |
+| SIGMA | P2      | Flash Ajan  | [SIGMA-6] Stripe Otonom Fatura (PDF) Storage API                       | pending   |
 
 <!-- FOUNDER_BACKLOG_END -->
