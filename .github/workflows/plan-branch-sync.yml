@@ -19,31 +19,38 @@ jobs:
 
       - name: Inspect diff against master
         id: meta
+        shell: bash
         run: |
+          set +e
           git fetch origin master --quiet
+
           CHANGED=$(git diff --name-only origin/master...HEAD)
-          echo "Changed files:"
-          echo "$CHANGED"
-          GOV_ONLY=true
-          while IFS= read -r f; do
-            [ -z "$f" ] && continue
-            case "$f" in
-              docs/MASTER_PLAN.md|CLAUDE.md|AGENTS.md) ;;
-              *) GOV_ONLY=false ;;
-            esac
-          done <<< "$CHANGED"
-          echo "gov_only=$GOV_ONLY" >> "$GITHUB_OUTPUT"
+          echo "Changed files: $CHANGED"
+
+          NON_GOV=$(printf '%s\n' "$CHANGED" | grep -v -E '^(docs/MASTER_PLAN\.md|CLAUDE\.md|AGENTS\.md)$' | grep -v '^$')
+          if [ -z "$NON_GOV" ]; then
+            echo "gov_only=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "gov_only=false" >> "$GITHUB_OUTPUT"
+          fi
+
           MSG=$(git log -1 --format=%B HEAD)
           AUTHOR=$(git log -1 --format=%ae HEAD)
           echo "author=$AUTHOR" >> "$GITHUB_OUTPUT"
-          if echo "$MSG" | grep -q '\[architect\]'; then
+
+          MARKER=$(printf '%s' "$MSG" | grep -cF '[architect]')
+          if [ "$MARKER" -gt 0 ]; then
             echo "has_marker=true" >> "$GITHUB_OUTPUT"
           else
             echo "has_marker=false" >> "$GITHUB_OUTPUT"
           fi
 
+          echo "Result: author=$AUTHOR"
+          exit 0
+
       - name: Auto-merge into master (governance-only, architect-marked, allowlisted author)
         if: steps.meta.outputs.gov_only == 'true' && steps.meta.outputs.has_marker == 'true' && steps.meta.outputs.author == 'noreply@anthropic.com'
+        shell: bash
         run: |
           git config user.name "plan-branch-sync[bot]"
           git config user.email "noreply@anthropic.com"
@@ -53,5 +60,6 @@ jobs:
 
       - name: Skip notice
         if: steps.meta.outputs.gov_only != 'true' || steps.meta.outputs.has_marker != 'true' || steps.meta.outputs.author != 'noreply@anthropic.com'
+        shell: bash
         run: |
           echo "::warning::Skipping auto-merge to master — either non-governance files changed, missing [architect] marker, or author not on allowlist. Manual review required (git merge claude/strategy-brief-review-i93xcv)."
