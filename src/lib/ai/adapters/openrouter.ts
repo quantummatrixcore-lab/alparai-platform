@@ -41,11 +41,18 @@ export class OpenRouterAdapter implements ProviderAdapter {
     const startTime = performance.now();
 
     try {
+      const userContent = request.imageUrl
+        ? [
+            { type: "text" as const, text: request.userMessage },
+            { type: "image_url" as const, image_url: { url: request.imageUrl } },
+          ]
+        : request.userMessage;
+
       const completion = await client.chat.completions.create({
         model: request.model.id,
         messages: [
           { role: "system", content: request.systemPrompt },
-          { role: "user", content: request.userMessage },
+          { role: "user", content: userContent },
         ],
         max_tokens: request.model.maxTokens,
         temperature: request.temperature ?? 0.3,

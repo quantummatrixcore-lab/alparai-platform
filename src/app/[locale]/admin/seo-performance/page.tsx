@@ -64,7 +64,8 @@ export default async function SeoPerformancePage({
   const complianceRate = 92;
 
   return (
-    <div className="animate-in fade-in space-y-8 duration-500">
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="animate-in fade-in space-y-8 duration-500">
       <div>
         <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">
           SEO & Performans Panosu
@@ -98,7 +99,7 @@ export default async function SeoPerformancePage({
         </div>
 
         {/* Sağ Sütun: Uyum Oranı Widget (Premium) */}
-        <div className="border-border-subtle bg-bg-secondary/40 relative flex flex-col items-center justify-center overflow-hidden rounded-2xl border p-8 text-center backdrop-blur-xl">
+        <div className="border-border-subtle relative flex flex-col items-center justify-center overflow-hidden rounded-2xl border bg-zinc-900/40 p-8 text-center ring-1 ring-white/10 backdrop-blur-xl">
           <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent"></div>
           <h2 className="relative z-10 mb-2 text-sm font-bold tracking-wider text-slate-300 uppercase">
             Genel Uyum Oranı
@@ -168,5 +169,6 @@ export default async function SeoPerformancePage({
         </ul>
       </div>
     </div>
+      </div></div>
   );
 }

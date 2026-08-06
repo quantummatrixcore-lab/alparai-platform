@@ -20,8 +20,10 @@ export function OrganizationJsonLd() {
       "@type": "ContactPoint",
       email: "hello@alparai.com",
       contactType: "customer support",
-      availableLanguage: ["English", "Turkish"],
+      availableLanguage: ["English", "Turkish", "German", "French", "Russian"],
     },
+    foundingDate: "2024",
+    knowsAbout: ["AI Accountability", "AI Incident Reporting", "AI Safety", "Machine Learning"],
   };
   return (
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
@@ -43,6 +45,32 @@ export function WebSiteJsonLd() {
       },
       "query-input": "required name=search_term_string",
     },
+  };
+  return (
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
+  );
+}
+
+export function SoftwareApplicationJsonLd() {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: APP_NAME,
+    url: APP_URL,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    description: APP_DESCRIPTION,
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: APP_NAME,
+      url: APP_URL,
+    },
+    inLanguage: ["en", "tr", "de", "fr", "ru"],
   };
   return (
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />

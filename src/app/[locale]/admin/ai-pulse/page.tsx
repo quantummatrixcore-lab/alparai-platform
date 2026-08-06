@@ -106,7 +106,8 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
   const geminiSpark = getSparkData("gemini");
 
   return (
-    <div className="animate-in fade-in space-y-8 duration-500">
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="animate-in fade-in space-y-8 duration-500">
       <div>
         <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">
           {t("ai_pulse_title")}
@@ -149,7 +150,7 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Model Health Tracker */}
-        <Card className="bg-bg-secondary/40 overflow-hidden border-white/5 backdrop-blur-xl lg:col-span-2">
+        <Card className="overflow-hidden border-white/5 bg-zinc-900/40 ring-1 ring-white/10 backdrop-blur-xl lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between border-b border-white/5">
             <CardTitle className="text-fg-muted flex items-center gap-2 text-sm font-bold tracking-wider uppercase">
               <Pulse weight="duotone" className="h-4 w-4" /> {t("integrated_models_health")}
@@ -193,7 +194,7 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
         </Card>
 
         {/* Global AI News Feed */}
-        <Card className="bg-bg-secondary/40 overflow-hidden border-white/5 backdrop-blur-xl">
+        <Card className="overflow-hidden border-white/5 bg-zinc-900/40 ring-1 ring-white/10 backdrop-blur-xl">
           <CardHeader className="border-b border-white/5">
             <CardTitle className="text-fg-muted flex items-center gap-2 text-sm font-bold tracking-wider uppercase">
               <Radio weight="duotone" className="h-4 w-4" /> {t("global_intelligence")}
@@ -219,5 +220,6 @@ export default async function AiPulsePage({ params }: { params: Promise<{ locale
       </div>
       <LiveModelsDirectory initialModels={allModels} />
     </div>
+      </div></div>
   );
 }

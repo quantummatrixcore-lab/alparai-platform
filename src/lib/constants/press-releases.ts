@@ -21,6 +21,46 @@ export type PressRelease = {
 
 export const PRESS_RELEASES: PressRelease[] = [
   {
+    slug: "alpar-ai-launch-2026",
+    date: "2026-08-01",
+    title: {
+      tr: "ALPAR AI Kamusal Yapay Zeka Hesap Verebilirlik Altyapısını Duyurdu",
+      en: "ALPAR AI Announces Public AI Accountability Infrastructure",
+    },
+    spot: {
+      tr: "Topluluk denetimli yapay zeka güven altyapısı ALPAR AI, küresel ihlal veritabanı ve şeffaflık panellerini genel erişime açtı.",
+      en: "Community-governed AI trust platform ALPAR AI launches its global incident database and public transparency dashboards.",
+    },
+    content: {
+      tr: "ALPAR AI, yapay zeka sistemlerinin güvenilirliğini ve hesap verebilirliğini bağımsız olarak ölçen küresel platformunu duyurdu. Kamusal güven altyapısı olarak tasarlanan sistem, doğrulanan ihlalleri kayıt altına alarak yapay zeka geliştiricilerini şeffaflığa davet ediyor.",
+      en: "ALPAR AI announces its global platform for independently measuring AI system reliability and accountability. Designed as public trust infrastructure, the platform logs verified incidents to foster transparency.",
+    },
+    tags: {
+      tr: ["alpar ai", "lansman", "yapay zeka", "şeffaflık", "güven"],
+      en: ["alpar ai", "launch", "ai trust", "transparency", "accountability"],
+    },
+  },
+  {
+    slug: "k-benchmark-announcement-2026",
+    date: "2026-08-05",
+    title: {
+      tr: "ALPAR AI, Yapay Zeka Güvenilirlik Standardı K-BENCHMARK'ı Yayınladı",
+      en: "ALPAR AI Releases K-BENCHMARK for AI Reliability Standards",
+    },
+    spot: {
+      tr: "Yapay zeka modellerinin halüsinasyon, güvenlik ihlali ve tarafsızlık skorlarını ölçen K-BENCHMARK duyuruldu.",
+      en: "ALPAR AI introduces K-BENCHMARK to systematically evaluate hallucination, safety breach, and neutrality metrics.",
+    },
+    content: {
+      tr: "K-BENCHMARK, 150'den fazla aktif yapay zeka modelinin gerçek dünya ihlal oranlarını istatistiksel yöntemlerle puanlayan ilk açık standart olarak yayına girdi.",
+      en: "K-BENCHMARK launches as the first open standard evaluating real-world incident rates across 150+ active AI models with statistical rigor.",
+    },
+    tags: {
+      tr: ["k-benchmark", "yapay zeka", "skorlama", "güvenilirlik", "standart"],
+      en: ["k-benchmark", "ai benchmark", "scoring", "reliability", "standards"],
+    },
+  },
+  {
     slug: "grok-passport-scandal-new-era",
     date: "2026-07-06",
     title: {

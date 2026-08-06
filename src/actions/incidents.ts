@@ -104,21 +104,28 @@ const runSubmitWork = async (
   const { user, raw } = data;
   const maskedTitle = maskPII(raw.title);
   const maskedDescription = maskPII(raw.description);
+  const maskedExpertFix = raw.expert_fix ? maskPII(raw.expert_fix) : null;
   const containsPii =
-    maskedTitle.masked !== raw.title || maskedDescription.masked !== raw.description;
+    maskedTitle.masked !== raw.title ||
+    maskedDescription.masked !== raw.description ||
+    (maskedExpertFix ? maskedExpertFix.masked !== raw.expert_fix : false);
 
   const incidentDateISO = raw.incident_date
     ? new Date(raw.incident_date).toISOString()
     : new Date().toISOString();
 
   const providerIsCustom = isCustomValue(raw.provider_id);
-  const providerCustom = providerIsCustom
+  const rawProviderCustom = providerIsCustom
     ? (raw.provider_custom || extractCustomName(raw.provider_id) || "").trim()
     : "";
+  const providerCustom = rawProviderCustom ? maskPII(rawProviderCustom).masked : "";
   const providerCustomSlug = providerCustom ? slugify(providerCustom) : "";
 
   const modelIsCustom = isCustomValue(raw.model_id);
-  const modelCustom = modelIsCustom ? (raw.model_custom || raw.model_id.slice(7) || "").trim() : "";
+  const rawModelCustom = modelIsCustom
+    ? (raw.model_custom || raw.model_id.slice(7) || "").trim()
+    : "";
+  const modelCustom = rawModelCustom ? maskPII(rawModelCustom).masked : "";
 
   const locale = await resolveLocale();
 
@@ -157,7 +164,7 @@ const runSubmitWork = async (
     language: locale,
     is_anonymous: raw.is_anonymous,
     is_expert: raw.is_expert,
-    expert_fix: raw.expert_fix || null,
+    expert_fix: maskedExpertFix ? maskedExpertFix.masked : null,
     source_url: raw.source_url,
     is_possible_duplicate: isPossibleDuplicate,
     ip_hash: hashIp(data.ip),
@@ -166,6 +173,7 @@ const runSubmitWork = async (
     pii_categories: [
       ...maskedTitle.detections.map((d) => d.type),
       ...maskedDescription.detections.map((d) => d.type),
+      ...(maskedExpertFix ? maskedExpertFix.detections.map((d) => d.type) : []),
     ].filter((v, i, a) => a.indexOf(v) === i),
     anonymous_email_hash: raw.anonymous_email
       ? createHash("sha256").update(raw.anonymous_email.toLowerCase()).digest("hex")

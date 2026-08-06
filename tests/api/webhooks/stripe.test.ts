@@ -7,13 +7,20 @@ vi.hoisted(() => {
 });
 
 const mockSubUpsert = vi.fn();
-const mockSubEq = vi.fn().mockResolvedValue({ error: null });
+const mockSubEq = vi.fn();
 
 const mockSubTable = {
   upsert: mockSubUpsert,
   update: vi.fn().mockReturnThis(),
+  select: vi.fn().mockReturnThis(),
   eq: mockSubEq,
+  single: vi.fn().mockResolvedValue({ data: { user_id: "test-user-id" }, error: null }),
+  then: function (resolve: (value: { error: null }) => void) {
+    resolve({ error: null });
+  },
 };
+mockSubEq.mockReturnValue(mockSubTable);
+mockSubEq.mockImplementation(() => mockSubTable);
 
 const mockFrom = vi.fn().mockReturnValue(mockSubTable);
 
@@ -47,7 +54,7 @@ function createMockEvent(type: string, overrides: Record<string, unknown> = {}) 
 describe("Stripe Webhook", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockSubEq.mockResolvedValue({ error: null });
+    mockSubEq.mockReturnValue(mockSubTable);
   });
 
   it("returns 400 when signature is missing", async () => {
@@ -153,7 +160,7 @@ describe("Stripe Webhook", () => {
     expect(res.status).toBe(200);
 
     expect(mockSubTable.update).toHaveBeenCalledWith(
-      expect.objectContaining({ status: "active", stripe_price_id: "price_pro" }),
+      expect.objectContaining({ status: "active", plan: "pro" }),
     );
     expect(mockSubEq).toHaveBeenCalledWith("stripe_subscription_id", "sub_123");
   });
@@ -171,7 +178,9 @@ describe("Stripe Webhook", () => {
     const res = await POST(req);
     expect(res.status).toBe(200);
 
-    expect(mockSubTable.update).toHaveBeenCalledWith({ status: "canceled" });
+    expect(mockSubTable.update).toHaveBeenCalledWith(
+      expect.objectContaining({ status: "canceled", plan: "free" }),
+    );
     expect(mockSubEq).toHaveBeenCalledWith("stripe_subscription_id", "sub_456");
   });
 

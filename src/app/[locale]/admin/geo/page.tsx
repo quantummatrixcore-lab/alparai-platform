@@ -18,7 +18,8 @@ export default async function GEOPage({ params }: { params: Promise<{ locale: st
   const stats = await getGeoStatsAction();
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="space-y-6 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-white">{t("nav_geo")}</h1>
         <p className="text-fg-muted text-sm">{t("geo_ai_traffic_gauge")}</p>
@@ -30,5 +31,6 @@ export default async function GEOPage({ params }: { params: Promise<{ locale: st
         botHits={stats.botHits}
       />
     </div>
+      </div></div>
   );
 }

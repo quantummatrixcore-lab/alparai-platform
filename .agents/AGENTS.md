@@ -70,3 +70,8 @@ pnpm test:e2e                 # End-to-end resilience (for mutated flows).
 - Auxiliary AI processing must default to free-tier providers first (Rule #32).
 - `docs/MASTER_PLAN.md` is strictly Architect-only (enforced by pre-commit hook). Proposals must go to `docs/PROPOSALS/NNN-name.md`.
 - External communications (email/social) require an explicitly approved queue item (Rule #6).
+
+## Ajan Yönetim Kuralları (Hafıza Kaydı)
+
+1. **Alt Ajan Temizliği:** Alt ajanlar (subagents) görevlerini bitirdiklerinde otomatik kapanmaz ve arka planda ciddi RAM tüketirler. İşi biten ajanlar derhal `manage_subagents (action: kill)` ile temizlenmelidir.
+2. **Model Belirleme:** OpenCode kullanılarak oluşturulan her ajan için mutlaka amaca uygun AI modeli (Pro veya Flash) açıkça belirtilmelidir.

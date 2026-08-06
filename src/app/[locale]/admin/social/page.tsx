@@ -38,7 +38,8 @@ export default async function SocialPage({ params }: { params: Promise<{ locale:
   ]);
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="min-h-screen rounded-3xl bg-zinc-900/40 p-6 py-8 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
       <Container>
         <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
@@ -64,5 +65,6 @@ export default async function SocialPage({ params }: { params: Promise<{ locale:
         />
       </Container>
     </div>
+      </div></div>
   );
 }

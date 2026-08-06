@@ -46,35 +46,39 @@ export default async function RedactionQueuePage({
   };
 
   return (
-    <Container className="py-10">
-      <header className="mb-6">
-        <h1 className="text-fg-primary text-2xl font-bold">{t("redaction_queue_title")}</h1>
-        <p className="text-fg-muted mt-1 text-sm">
-          {items.length} {t("redaction_queue_count")}
-        </p>
-      </header>
-      <Card>
-        <CardContent className="p-0">
-          {items.length === 0 ? (
-            <div className="flex h-32 items-center justify-center">
-              <p className="text-fg-muted text-sm">{t("redaction_queue_empty")}</p>
-            </div>
-          ) : (
-            <div className="divide-fg-muted/10 divide-y">
-              {items.map((r) => (
-                <div key={r.id} className="flex items-center justify-between px-6 py-4">
-                  <div className="space-y-1">
-                    <p className="text-fg-primary text-sm font-medium">{r.incident_id}</p>
-                    <p className="text-fg-muted text-xs">{r.reason ?? "—"}</p>
-                    <p className="text-fg-muted/50 text-xs">{formatDate(r.created_at, locale)}</p>
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+      <Container className="py-10">
+        <header className="mb-6">
+          <h1 className="text-fg-primary text-2xl font-bold">{t("redaction_queue_title")}</h1>
+          <p className="text-fg-muted mt-1 text-sm">
+            {items.length} {t("redaction_queue_count")}
+          </p>
+        </header>
+        <Card>
+          <CardContent className="p-0">
+            {items.length === 0 ? (
+              <div className="flex h-32 items-center justify-center">
+                <p className="text-fg-muted text-sm">{t("redaction_queue_empty")}</p>
+              </div>
+            ) : (
+              <div className="divide-fg-muted/10 divide-y">
+                {items.map((r) => (
+                  <div key={r.id} className="flex items-center justify-between px-6 py-4">
+                    <div className="space-y-1">
+                      <p className="text-fg-primary text-sm font-medium">{r.incident_id}</p>
+                      <p className="text-fg-muted text-xs">{r.reason ?? "—"}</p>
+                      <p className="text-fg-muted/50 text-xs">{formatDate(r.created_at, locale)}</p>
+                    </div>
+                    <div>{statusBadge(r.status)}</div>
                   </div>
-                  <div>{statusBadge(r.status)}</div>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </Container>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </Container>
+    </div>
+      </div></div>
   );
 }

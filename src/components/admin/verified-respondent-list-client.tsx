@@ -22,19 +22,19 @@ interface Props {
 export function VerifiedRespondentListClient({ providers = [] }: Props) {
   const t = useTranslations("admin");
   return (
-    <Card className="border-white/10 bg-[#0F1E2E]">
+    <Card className="border-border-subtle bg-bg-secondary shadow-sm">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-base text-white">
+        <CardTitle className="text-fg-primary flex items-center gap-2 text-base font-bold">
           <ShieldCheck className="h-5 w-5 text-emerald-400" />
           {t("verified_respondent_badge_management")}
         </CardTitle>
-        <p className="text-xs text-slate-400">{t("grant_official_verified_respondent_badge")}</p>
+        <p className="text-fg-muted text-xs">{t("grant_official_verified_respondent_badge")}</p>
       </CardHeader>
 
       <CardContent>
-        <div className="divide-y divide-white/5 rounded-lg border border-white/5 bg-[#08121C]">
+        <div className="divide-border-subtle border-border-subtle bg-bg-tertiary divide-y rounded-xl border">
           {providers.length === 0 ? (
-            <div className="p-6 text-center text-xs text-slate-500">
+            <div className="text-fg-muted p-6 text-center text-xs">
               {t("no_ai_providers_tracked_yet")}
             </div>
           ) : (
@@ -43,16 +43,16 @@ export function VerifiedRespondentListClient({ providers = [] }: Props) {
               return (
                 <div
                   key={p.id}
-                  className="flex items-center justify-between p-4 transition-colors hover:bg-white/[0.02]"
+                  className="hover:bg-bg-tertiary/60 flex items-center justify-between p-4 transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-300">
+                    <div className="border-border-subtle bg-bg-secondary text-fg-muted flex h-9 w-9 items-center justify-center rounded-lg border">
                       <Building2 className="h-4 w-4" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-white">{p.name}</span>
-                        <span className="font-mono text-xs text-slate-500">({p.slug})</span>
+                        <span className="text-fg-primary text-sm font-semibold">{p.name}</span>
+                        <span className="text-fg-muted font-mono text-xs">({p.slug})</span>
                         {isVerified && (
                           <Badge className="border-emerald-500/30 bg-emerald-500/10 text-[10px] text-emerald-400">
                             {t("verified_respondent")}
@@ -60,9 +60,9 @@ export function VerifiedRespondentListClient({ providers = [] }: Props) {
                         )}
                       </div>
                       {p.respondent_contact_email && (
-                        <div className="mt-0.5 text-xs text-slate-400">
+                        <div className="text-fg-muted mt-0.5 text-xs">
                           {t("contact")}{" "}
-                          <span className="font-mono text-slate-300">
+                          <span className="text-fg-primary font-mono">
                             {p.respondent_contact_email}
                           </span>
                         </div>

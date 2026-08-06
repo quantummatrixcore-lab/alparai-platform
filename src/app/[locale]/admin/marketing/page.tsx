@@ -41,7 +41,8 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
   const conversionRate = funnelStart > 0 ? Math.round((funnelComplete / funnelStart) * 100) : 0;
 
   return (
-    <div className="space-y-8">
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-white">{t("nav_marketing")}</h1>
         <p className="text-fg-muted mt-1 text-sm">{t("marketing_subtitle")}</p>
@@ -94,5 +95,6 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
         </p>
       </div>
     </div>
+      </div></div>
   );
 }

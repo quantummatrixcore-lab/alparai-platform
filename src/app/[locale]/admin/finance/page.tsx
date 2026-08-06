@@ -8,6 +8,9 @@ import { BudgetGauge } from "@/components/admin/finance/budget-gauge";
 import { CostTrendChart } from "@/components/admin/finance/cost-trend-chart";
 import { ApiUsageTable } from "@/components/admin/finance/api-usage-table";
 import { AlertBanner } from "@/components/admin/finance/alert-banner";
+import { QuotaWidget } from "@/components/admin/quota-widget";
+import { AIVelocityWidget } from "@/components/admin/ai-velocity-widget";
+import type { VelocityMetric } from "@/lib/analytics/velocity-calculator";
 import {
   AdminContainer,
   AdminPageHeader,
@@ -58,8 +61,14 @@ export default async function FinancePage({ params }: { params: Promise<{ locale
     .select("*")
     .order("recorded_at", { ascending: false });
 
+  const { data: dbVelocity } = await supabase
+    .from("ai_velocity_metrics" as never)
+    .select("*")
+    .order("release_date", { ascending: false });
+
   const costs = (dbCosts || []) as unknown as DBMonthlyCost[];
   const usage = (dbUsage || []) as unknown as DBApiUsage[];
+  const velocityMetrics = (dbVelocity || []) as unknown as VelocityMetric[];
 
   // Dynamic current month calculation (e.g. "2026-08-01")
   const now = new Date();
@@ -246,101 +255,148 @@ export default async function FinancePage({ params }: { params: Promise<{ locale
   });
 
   return (
-    <AdminContainer>
-      {/* Header */}
-      <AdminPageHeader
-        icon={<DollarSign className="h-6 w-6 text-emerald-400" />}
-        title={t("title") || "Financial Intelligence & Cost Optimization"}
-        subtitle={
-          t("description") ||
-          "Real-time monthly infrastructure cost tracking, budget caps, and zero-cost AI router savings."
-        }
-        lastUpdated={new Date().toLocaleDateString(locale)}
-        badge={
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-400">
-            <Zap className="h-3.5 w-3.5" /> Zero Token Cost Active
-          </span>
-        }
-        breadcrumb={[
-          { label: "Admin", href: "/admin" },
-          { label: "Finance", href: "/admin/finance" },
-        ]}
-      />
-
-      {/* Zero Cost Tier Banner */}
-      <ZeroCostBanner
-        services={services}
-        totalSaved={`$${estimatedSavings.toFixed(2)}`}
-        locale={locale}
-      />
-
-      {/* Alert Banner if any threshold exceeded */}
-      {alerts.length > 0 && <AlertBanner alerts={alerts} />}
-
-      {/* KPI Overview Grid */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard
-          label="Total Monthly Cost"
-          value={`$${totalMonthly.toFixed(2)}`}
-          variant="success"
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+      <AdminContainer>
+        {/* Header */}
+        <AdminPageHeader
           icon={<DollarSign className="h-6 w-6 text-emerald-400" />}
-          tooltip="Active monthly infrastructure spending"
+          title={t("title") || "Financial Intelligence & Cost Optimization"}
+          subtitle={
+            t("description") ||
+            "Real-time monthly infrastructure cost tracking, budget caps, and zero-cost AI router savings."
+          }
+          lastUpdated={new Date().toLocaleDateString(locale)}
+          badge={
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-400">
+              <Zap className="h-3.5 w-3.5" /> Zero Token Cost Active
+            </span>
+          }
+          breadcrumb={[
+            { label: "Admin", href: "/admin" },
+            { label: "Finance", href: "/admin/finance" },
+          ]}
         />
-        <MetricCard
-          label="Monthly Budget Ceiling"
-          value={`$${totalBudget.toFixed(2)}`}
-          variant="default"
-          icon={<ShieldCheck className="h-6 w-6 text-purple-400" />}
-          tooltip="Combined budget caps across services"
-        />
-        <MetricCard
-          label="Estimated Monthly Savings"
-          value={`$${estimatedSavings.toFixed(2)}`}
-          variant="success"
-          delta={{ value: 100, isPositive: true }}
-          icon={<Sparkles className="h-6 w-6 text-amber-400" />}
-          tooltip="Saved via OpenCode Free-First model allocation"
-        />
-        <MetricCard
-          label="Cost Trend"
-          value={costTrendLabel}
-          variant="success"
-          icon={<TrendingDown className="h-6 w-6 text-cyan-400" />}
-          tooltip="Zero paid API tokens spent on mechanical steps"
-        />
-      </div>
 
-      {/* Service Cost Breakdown & Budget Gauge */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:col-span-2">
-          {services.map((service) => (
-            <CostOverviewCard
-              key={service.name}
-              name={service.name}
-              currentCost={service.currentCost}
-              budgetLimit={service.budgetLimit}
-              percentUsed={service.percentUsed}
-              trend={service.trend}
-              lastUpdated={service.lastUpdated}
+        {/* Zero Cost Tier Banner */}
+        <ZeroCostBanner
+          services={services}
+          totalSaved={`$${estimatedSavings.toFixed(2)}`}
+          locale={locale}
+        />
+
+        {/* Alert Banner if any threshold exceeded */}
+        {alerts.length > 0 && <AlertBanner alerts={alerts} />}
+
+        {/* KPI Overview Grid */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <MetricCard
+            label="Total Monthly Cost"
+            value={`$${totalMonthly.toFixed(2)}`}
+            variant="success"
+            icon={<DollarSign className="h-6 w-6 text-emerald-400" />}
+            tooltip="Active monthly infrastructure spending"
+          />
+          <MetricCard
+            label="Monthly Budget Ceiling"
+            value={`$${totalBudget.toFixed(2)}`}
+            variant="default"
+            icon={<ShieldCheck className="h-6 w-6 text-purple-400" />}
+            tooltip="Combined budget caps across services"
+          />
+          <MetricCard
+            label="Estimated Monthly Savings"
+            value={`$${estimatedSavings.toFixed(2)}`}
+            variant="success"
+            delta={{ value: 100, isPositive: true }}
+            icon={<Sparkles className="h-6 w-6 text-amber-400" />}
+            tooltip="Saved via OpenCode Free-First model allocation"
+          />
+          <MetricCard
+            label="Cost Trend"
+            value={costTrendLabel}
+            variant="success"
+            icon={<TrendingDown className="h-6 w-6 text-cyan-400" />}
+            tooltip="Zero paid API tokens spent on mechanical steps"
+          />
+        </div>
+
+        {/* Service Cost Breakdown & Budget Gauge */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:col-span-2">
+            {services.map((service) => (
+              <CostOverviewCard
+                key={service.name}
+                name={service.name}
+                currentCost={service.currentCost}
+                budgetLimit={service.budgetLimit}
+                percentUsed={service.percentUsed}
+                trend={service.trend}
+                lastUpdated={service.lastUpdated}
+              />
+            ))}
+          </div>
+          <div className="lg:col-span-1">
+            <AdminSectionCard title="Budget Allocation Gauge">
+              <BudgetGauge totalMonthly={totalMonthly} totalBudget={totalBudget} />
+            </AdminSectionCard>
+          </div>
+        </div>
+
+        {/* Trend Chart */}
+        <AdminSectionCard title="Infrastructure & Provider Cost Trends">
+          <CostTrendChart data={trends} />
+        </AdminSectionCard>
+
+        {/* AI Velocity Engine & Projections */}
+        <AIVelocityWidget
+          initialMetrics={velocityMetrics.length > 0 ? velocityMetrics : undefined}
+        />
+
+        {/* Infrastructure Quota Tracking */}
+        <AdminSectionCard title="Platform Quota & Resource Usage">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <QuotaWidget
+              name="GitHub Actions"
+              used={120}
+              total={2000}
+              unit="min"
+              warningAt={0.8}
+              criticalAt={0.95}
             />
-          ))}
-        </div>
-        <div className="lg:col-span-1">
-          <AdminSectionCard title="Budget Allocation Gauge">
-            <BudgetGauge totalMonthly={totalMonthly} totalBudget={totalBudget} />
-          </AdminSectionCard>
-        </div>
-      </div>
+            <QuotaWidget
+              name="Vercel Build Minutes"
+              used={45}
+              total={6000}
+              unit="min"
+              warningAt={0.8}
+              criticalAt={0.95}
+            />
+            <QuotaWidget
+              name="Supabase Storage"
+              used={128}
+              total={8192}
+              unit="MB"
+              warningAt={0.8}
+              criticalAt={0.95}
+            />
+            <QuotaWidget
+              name="OpenRouter Credits"
+              used={5}
+              total={50}
+              unit="USD"
+              warningAt={0.8}
+              criticalAt={0.95}
+            />
+          </div>
+        </AdminSectionCard>
 
-      {/* Trend Chart */}
-      <AdminSectionCard title="Infrastructure & Provider Cost Trends">
-        <CostTrendChart data={trends} />
-      </AdminSectionCard>
-
-      {/* API Usage Metrics Table */}
-      <AdminSectionCard title="Real-Time API & Gateway Telemetry Usage">
-        <ApiUsageTable data={usage} />
-      </AdminSectionCard>
-    </AdminContainer>
+        {/* API Usage Metrics Table */}
+        <AdminSectionCard title="Real-Time API & Gateway Telemetry Usage">
+          <ApiUsageTable data={usage} />
+        </AdminSectionCard>
+      </AdminContainer>
+    </div>
+      </div></div>
   );
 }

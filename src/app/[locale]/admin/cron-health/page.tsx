@@ -52,14 +52,18 @@ export default async function CronHealthPage({ params }: { params: Promise<{ loc
   }
 
   return (
-    <AdminContainer>
-      <AdminPageHeader
-        icon={<Clock className="h-7 w-7 text-sky-400" />}
-        title={t("cron_health") || "Cron Job Health"}
-        subtitle={"Monitor background tasks and periodic system jobs"}
-      />
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+      <AdminContainer>
+        <AdminPageHeader
+          icon={<Clock className="h-7 w-7 text-sky-400" />}
+          title={t("cron_health") || "Cron Job Health"}
+          subtitle={"Monitor background tasks and periodic system jobs"}
+        />
 
-      <CronHealthClient jobs={cronJobs} historyData={historyData} />
-    </AdminContainer>
+        <CronHealthClient jobs={cronJobs} historyData={historyData} />
+      </AdminContainer>
+    </div>
+      </div></div>
   );
 }

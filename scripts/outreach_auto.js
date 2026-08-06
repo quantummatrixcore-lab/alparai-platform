@@ -1,22 +1,20 @@
 const { createClient } = require("@supabase/supabase-js");
 const { Resend } = require("resend");
 
-const SUPABASE_URL =
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "https://azszpzyvxjduhemkjsdh.supabase.co";
-const SUPABASE_KEY =
-  process.env.SUPABASE_SERVICE_ROLE_KEY || "sb_secret_1sBUb718t3FjL5O6xG4e_dummy"; // Need real key from env
-const RESEND_API_KEY = process.env.RESEND_API_KEY || "re_azPYeA4u_C6FZQUwasCKD8wi8f6VSKXX4";
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://auth.alparai.com";
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
-// I need to read the real keys from .env.local
+// Load .env.local if present
 const fs = require("fs");
 const dotenv = require("dotenv");
-const envConfig = dotenv.parse(fs.readFileSync(".env.local"));
+const envConfig = fs.existsSync(".env.local") ? dotenv.parse(fs.readFileSync(".env.local")) : {};
 
 const supabase = createClient(
-  envConfig.NEXT_PUBLIC_SUPABASE_URL,
-  envConfig.SUPABASE_SERVICE_ROLE_KEY,
+  process.env.NEXT_PUBLIC_SUPABASE_URL || envConfig.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY || envConfig.SUPABASE_SERVICE_ROLE_KEY,
 );
-const resend = new Resend(envConfig.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY || envConfig.RESEND_API_KEY);
 
 const contacts = [
   { email: "kyle.wiggers@techcrunch.com", name: "Kyle Wiggers", type: "media" },

@@ -19,6 +19,8 @@ declare global {
         id?: {
           initialize: (config: {
             client_id: string;
+            nonce?: string;
+            use_fedcm_for_prompt?: boolean;
             callback: (response: { credential?: string }) => void;
           }) => void;
           renderButton: (
@@ -85,9 +87,19 @@ export function GoogleSignInButton({
       // This is exactly what supabase.auth.signInWithIdToken expects.
       // DO NOT use oauth2.initTokenClient — it returns access_token (not ID token)
       // and causes a second Supabase OAuth redirect (the supabase.co double-popup bug).
-      const handleCredential = async (credential: string) => {
+      const generateNonce = async () => {
+        const nonce = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32))));
+        const encoder = new TextEncoder();
+        const encodedNonce = encoder.encode(nonce);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", encodedNonce);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashedNonce = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+        return { nonce, hashedNonce };
+      };
+
+      const handleCredential = async (credential: string, nonce: string) => {
         const { signInWithGoogleIdToken } = await import("@/actions/auth");
-        const res = await signInWithGoogleIdToken(credential);
+        const res = await signInWithGoogleIdToken(credential, nonce);
         if (res.ok) {
           window.location.href = next;
         } else {
@@ -110,11 +122,15 @@ export function GoogleSignInButton({
         }
 
         if (window.google?.accounts?.id) {
+          const { nonce, hashedNonce } = await generateNonce();
+
           window.google.accounts.id.initialize({
             client_id: clientId,
+            nonce: hashedNonce,
+            use_fedcm_for_prompt: true,
             callback: async (response) => {
               if (response.credential) {
-                await handleCredential(response.credential);
+                await handleCredential(response.credential, nonce);
               } else {
                 await fallbackOAuthRedirect();
               }

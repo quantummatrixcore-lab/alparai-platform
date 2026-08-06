@@ -177,6 +177,12 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
 
   const intelligenceItems = [
     {
+      href: "/admin/vendor-portal",
+      label: t("nav_vendor_portal") || "Vendor Portal",
+      icon: Server,
+      active: pathname.startsWith("/admin/vendor-portal"),
+    },
+    {
       href: "/admin/k-benchmark",
       label: t("nav_kBenchmark"),
       icon: BarChart3,

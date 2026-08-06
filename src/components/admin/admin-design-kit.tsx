@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowUpRight, Sparkles, ShieldCheck, Zap, Inbox } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Logo } from "@/components/layout/logo";
+export { AdminSubNav, type AdminSubNavProps, type SubNavItem } from "./admin-sub-nav";
 
 export function AdminContainer({
   children,

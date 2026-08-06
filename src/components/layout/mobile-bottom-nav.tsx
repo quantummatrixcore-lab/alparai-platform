@@ -49,7 +49,7 @@ export function MobileBottomNav() {
             key={item.href}
             href={item.href}
             className={cn(
-              "flex flex-col items-center justify-center gap-0.5 rounded-xl px-3 py-1 transition-all duration-300",
+              "flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 rounded-xl px-3 py-1 transition-all duration-300",
               isActive
                 ? "text-brand-400 bg-brand-500/5 font-bold"
                 : "text-fg-secondary hover:text-fg-primary",

@@ -1,10 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { PlayCircle, Lock, Filter, Sparkles, Info } from "lucide-react";
+import { PlayCircle, Lock, Filter, Sparkles, Info, Download, FileImage } from "lucide-react";
 import type { PlanItem } from "@/lib/utils/markdown-parser";
-import { buildDependencyGraph, type TaskDependencyNode } from "@/lib/utils/masterplan-deps";
+import {
+  buildDependencyGraph,
+  findCriticalPath,
+  type TaskDependencyNode,
+} from "@/lib/utils/masterplan-deps";
 
 const NODE_WIDTH = 200;
 const NODE_HEIGHT = 70;
@@ -33,13 +37,82 @@ export function MasterPlanDepsGraph({
     "connected",
   );
 
+  const svgRef = useRef<SVGSVGElement | null>(null);
+
   const graph = useMemo(() => buildDependencyGraph(items), [items]);
+
+  const criticalPathIds = useMemo(() => findCriticalPath(graph.nodes, graph.edges), [graph]);
+  const criticalPathSet = useMemo(() => new Set(criticalPathIds), [criticalPathIds]);
+
+  const criticalEdgeSet = useMemo(() => {
+    const set = new Set<string>();
+    for (let i = 0; i < criticalPathIds.length - 1; i++) {
+      const from = criticalPathIds[i];
+      const to = criticalPathIds[i + 1];
+      graph.edges.forEach((e) => {
+        if (e.fromId === from && e.toId === to) {
+          set.add(e.id);
+        }
+      });
+    }
+    return set;
+  }, [criticalPathIds, graph.edges]);
 
   const itemMap = useMemo(() => {
     const map = new Map<string, PlanItem>();
     items.forEach((i) => map.set(i.id, i));
     return map;
   }, [items]);
+
+  // Export handlers for SVG and PNG graph downloads
+  const handleExportSVG = () => {
+    if (!svgRef.current) return;
+    const serializer = new XMLSerializer();
+    const source = serializer.serializeToString(svgRef.current);
+    const blob = new Blob([source], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "master-plan-graph.svg";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleExportPNG = () => {
+    if (!svgRef.current) return;
+    const serializer = new XMLSerializer();
+    const source = serializer.serializeToString(svgRef.current);
+    const svgBlob = new Blob([source], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(svgBlob);
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = svgWidth || 800;
+      canvas.height = svgHeight || 600;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.fillStyle = "#0f172a";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const pngUrl = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = pngUrl;
+            a.download = "master-plan-graph.png";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(pngUrl);
+          }
+        }, "image/png");
+      }
+      URL.revokeObjectURL(url);
+    };
+    img.src = url;
+  };
 
   // Compute node layers and coordinates for SVG layout
   const { layoutNodes, layoutEdges, svgWidth, svgHeight } = useMemo(() => {
@@ -225,6 +298,20 @@ export function MasterPlanDepsGraph({
             <Lock className="h-3.5 w-3.5 text-amber-400" />
             {t("deps_filter_blocked", { count: graph.stats.blockedCount })}
           </button>
+          <button
+            onClick={handleExportSVG}
+            className="border-border-subtle bg-bg-tertiary text-fg-muted flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all hover:text-white"
+          >
+            <Download className="text-brand-400 h-3.5 w-3.5" />
+            <span>Export SVG</span>
+          </button>
+          <button
+            onClick={handleExportPNG}
+            className="border-border-subtle bg-bg-tertiary text-fg-muted flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all hover:text-white"
+          >
+            <FileImage className="text-brand-400 h-3.5 w-3.5" />
+            <span>Export PNG</span>
+          </button>
         </div>
       </div>
 
@@ -242,6 +329,12 @@ export function MasterPlanDepsGraph({
           <div className="flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-blue-400"></span>
             <span className="text-fg-secondary font-medium">{t("deps_graph_legend_peer")}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full bg-red-500"></span>
+            <span className="text-fg-secondary font-medium font-semibold text-red-400">
+              Kritik Yol (Critical Path)
+            </span>
           </div>
         </div>
         <div className="text-fg-muted flex items-center gap-1 italic">
@@ -271,6 +364,7 @@ export function MasterPlanDepsGraph({
           </div>
         ) : (
           <svg
+            ref={svgRef}
             width={svgWidth}
             height={svgHeight}
             role="img"
@@ -303,6 +397,17 @@ export function MasterPlanDepsGraph({
               >
                 <path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b" />
               </marker>
+              <marker
+                id="arrow-critical"
+                viewBox="0 0 10 10"
+                refX="8"
+                refY="5"
+                markerWidth="6"
+                markerHeight="6"
+                orient="auto-start-reverse"
+              >
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#ef4444" />
+              </marker>
             </defs>
 
             {/* 1. Render Edges (Connecting Lines) */}
@@ -322,6 +427,15 @@ export function MasterPlanDepsGraph({
 
               const isHighlighted = highlightedEdgeIds ? highlightedEdgeIds.has(edge.id) : true;
               const isSatisfied = edge.status === "satisfied";
+              const isCriticalEdge = criticalEdgeSet.has(edge.id);
+
+              let edgeStroke = isSatisfied ? "#10b981" : "#f59e0b";
+              let marker = isSatisfied ? "url(#arrow-satisfied)" : "url(#arrow-blocking)";
+
+              if (isCriticalEdge) {
+                edgeStroke = "#ef4444";
+                marker = "url(#arrow-critical)";
+              }
 
               return (
                 <g
@@ -332,10 +446,10 @@ export function MasterPlanDepsGraph({
                   <path
                     d={pathD}
                     fill="none"
-                    stroke={isSatisfied ? "#10b981" : "#f59e0b"}
-                    strokeWidth={isHighlighted && activeFocusId ? 3 : 2}
-                    strokeDasharray={isSatisfied ? "none" : "5 3"}
-                    markerEnd={isSatisfied ? "url(#arrow-satisfied)" : "url(#arrow-blocking)"}
+                    stroke={edgeStroke}
+                    strokeWidth={isCriticalEdge ? 3 : isHighlighted && activeFocusId ? 3 : 2}
+                    strokeDasharray={isCriticalEdge ? "none" : isSatisfied ? "none" : "5 3"}
+                    markerEnd={marker}
                   />
                 </g>
               );
@@ -347,11 +461,14 @@ export function MasterPlanDepsGraph({
               const isSelected = selectedNodeId === node.id;
               const isHovered = hoveredNodeId === node.id;
               const isHighlighted = highlightedNodeIds ? highlightedNodeIds.has(node.id) : true;
+              const isCriticalNode = criticalPathSet.has(node.id);
 
               let cardBorder = "stroke-border-subtle";
               let cardBg = "#111827"; // dark bg
 
-              if (node.status === "completed") {
+              if (isCriticalNode) {
+                cardBorder = "stroke-red-500";
+              } else if (node.status === "completed") {
                 cardBorder = "stroke-emerald-500/40";
               } else if (node.canStart) {
                 cardBorder = "stroke-emerald-400";

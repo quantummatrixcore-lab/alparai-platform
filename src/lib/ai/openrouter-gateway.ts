@@ -96,7 +96,7 @@ export const TRIAGE_SLOT_2_CHAIN: readonly GatewayModel[] = [
 
 export const TRIAGE_SLOT_3_CHAIN: readonly GatewayModel[] = [
   { id: "gemini-1.5-flash", provider: "google", tier: "free", maxTokens: 2048 },
-  { id: "qwen/qwen-2.5-72b:free", provider: "openrouter", tier: "free", maxTokens: 2048 },
+  { id: "qwen/qwen3.5-omni-7b:free", provider: "openrouter", tier: "free", maxTokens: 2048 },
   { id: "blackboxai", provider: "blackbox", tier: "free", maxTokens: 2048 },
   { id: "command-r", provider: "cohere", tier: "free", maxTokens: 2048 },
 ] as const;
@@ -124,6 +124,14 @@ export const QUESTIONNAIRE_MODELS: readonly GatewayModel[] = [
     maxTokens: 4096,
   },
   { id: "cohere/north-mini-code:free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+  // Qwen3.5 Omni — natively multimodal (text + audio + image + video), 256k context, 113-language ASR
+  { id: "qwen/qwen3.5-omni-7b:free", provider: "openrouter", tier: "free", maxTokens: 4096 },
+  {
+    id: "qwen/qwen2.5-vl-72b-instruct:free",
+    provider: "openrouter",
+    tier: "free",
+    maxTokens: 4096,
+  },
 ] as const;
 
 export const SUPREME_COURT_CHAIN: readonly GatewayModel[] = [
@@ -426,9 +434,83 @@ export async function callWithFailover(
   };
 }
 
+/**
+ * Hedged Requests: Execute requests across multiple models concurrently.
+ * Returns the first successful response (arbitrage for free tier TTFT).
+ */
+export async function callWithHedge(
+  request: Omit<GatewayRequest, "model">,
+  models: readonly GatewayModel[],
+): Promise<GatewayResult & { attemptedModels: string[] }> {
+  // Limit to 2 free models maximum to optimize concurrent connections
+  const activeModels = models.slice(0, 2);
+  const attemptedModels = activeModels.map((m) => `${m.provider}:${m.id}`);
+
+  if (activeModels.length === 0) {
+    return {
+      ok: false,
+      error: { code: "api_error", message: "No models provided for hedging.", model: "hedge" },
+      attemptedModels,
+    };
+  }
+
+  try {
+    const firstSuccess = await Promise.any(
+      activeModels.map(async (model) => {
+        const result = await callModel({ ...request, model });
+        if (!result.ok) {
+          throw result.error;
+        }
+        logger.info("[Gateway] Hedge success", { model: `${model.provider}:${model.id}` });
+        return result;
+      }),
+    );
+
+    return { ...firstSuccess, attemptedModels };
+  } catch (err: unknown) {
+    let errorMessage = String(err);
+    if (err instanceof AggregateError) {
+      errorMessage = err.errors.map((e) => e?.message || String(e)).join(" | ");
+    }
+    return {
+      ok: false,
+      error: {
+        code: "api_error",
+        message: `All hedged models failed: ${errorMessage}`,
+        model: "hedge",
+      },
+      attemptedModels,
+    };
+  }
+}
+
 export async function isGatewayConfigured(): Promise<boolean> {
   const checks = await Promise.all(
     Object.values(adapters).map((adapter) => adapter.isConfigured()),
   );
   return checks.some(Boolean);
+}
+
+export interface HybridMultimodalModelSelection {
+  primary: string;
+  fallback: string;
+  selected: string;
+}
+
+/**
+ * Task #190: 50/50 Hybrid Multimodal Model Router (Qwen3.5-Omni / Gemini Flash).
+ * Randomly selects between "qwen/qwen3.5-omni-7b:free" (50%) and "google/gemini-flash-1.5" (50%).
+ * Provides primary and secondary fallback model IDs for cost guard and rate-limit resilience.
+ */
+export function getHybridMultimodalModel(isFallback = false): HybridMultimodalModelSelection {
+  const isQwenPrimary = Math.random() < 0.5;
+  const primary = isQwenPrimary ? "qwen/qwen3.5-omni-7b:free" : "google/gemini-flash-1.5";
+  const fallback = isQwenPrimary ? "google/gemini-flash-1.5" : "qwen/qwen3.5-omni-7b:free";
+  const selected = isFallback ? fallback : primary;
+
+  return {
+    primary,
+    fallback,
+    selected,
+  };
 }

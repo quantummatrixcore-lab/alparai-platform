@@ -7,6 +7,7 @@ import { createServerClient } from "@/lib/supabase/server";
 import { HealthGauge } from "@/components/admin/strategy/health-gauge";
 import { LiveStrategyClient } from "@/components/admin/strategy/live-strategy-client";
 import { QuestionnaireClient } from "@/components/admin/questionnaire-client";
+import { EcosystemBenchmarkWidget } from "@/components/admin/ecosystem-benchmark-widget";
 import { QUESTIONNAIRE_MODELS } from "@/lib/ai/openrouter-gateway";
 import { Link } from "@/i18n/routing";
 import { STRATEGY_METRICS_DEFAULTS, DEFAULT_VALUATION_PRE_MONEY } from "@/lib/constants";
@@ -22,6 +23,7 @@ import {
   DollarSign,
   ChevronRight,
   Cpu,
+  Target,
 } from "lucide-react";
 import type {
   SwotItem,
@@ -162,7 +164,8 @@ export default async function StrategyOverviewPage({
   };
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="min-h-screen py-8">
       <Container>
         {/* Page Header */}
         <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
@@ -191,7 +194,7 @@ export default async function StrategyOverviewPage({
             <HealthGauge score={dynamicSnapshot.health_score} />
 
             {/* Core Metrics Card */}
-            <div className="border-border-subtle bg-bg-secondary/40 rounded-2xl border p-6 backdrop-blur-md">
+            <div className="border-border-subtle rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-md backdrop-blur-xl">
               <h3 className="mb-4 text-xs font-bold tracking-wider text-white uppercase">
                 {t("core_metrics_snapshot")}
               </h3>
@@ -260,7 +263,7 @@ export default async function StrategyOverviewPage({
           {/* RIGHT COLUMN: Strategy Modules Summary Links */}
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:col-span-2">
             {/* SWOT ANALİZİ CARD */}
-            <div className="border-border-subtle bg-bg-secondary/40 hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border p-6 transition-all duration-300">
+            <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
               <div>
                 <div className="mb-4 flex items-center justify-between">
                   <div className="rounded-lg border border-purple-500/25 bg-purple-500/10 p-2 text-purple-400">
@@ -299,7 +302,7 @@ export default async function StrategyOverviewPage({
             </div>
 
             {/* RİSK YÖNETİMİ CARD */}
-            <div className="border-border-subtle bg-bg-secondary/40 hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border p-6 transition-all duration-300">
+            <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
               <div>
                 <div className="mb-4 flex items-center justify-between">
                   <div className="rounded-lg border border-red-500/25 bg-red-500/10 p-2 text-red-400">
@@ -338,7 +341,7 @@ export default async function StrategyOverviewPage({
             </div>
 
             {/* DEĞERLEME MODELİ CARD */}
-            <div className="border-border-subtle bg-bg-secondary/40 hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border p-6 transition-all duration-300">
+            <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
               <div>
                 <div className="mb-4 flex items-center justify-between">
                   <div className="rounded-lg border border-amber-500/25 bg-amber-500/10 p-2 text-amber-400">
@@ -373,7 +376,7 @@ export default async function StrategyOverviewPage({
             </div>
 
             {/* OKR MILESTONES CARD */}
-            <div className="border-border-subtle bg-bg-secondary/40 hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border p-6 transition-all duration-300">
+            <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
               <div>
                 <div className="mb-4 flex items-center justify-between">
                   <div className="rounded-lg border border-blue-500/25 bg-blue-500/10 p-2 text-blue-400">
@@ -416,7 +419,7 @@ export default async function StrategyOverviewPage({
             </div>
 
             {/* STRATEJİK DEĞERLENDİRME CARD */}
-            <div className="border-border-subtle bg-bg-secondary/40 hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border p-6 transition-all duration-300">
+            <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
               <div>
                 <div className="mb-4 flex items-center justify-between">
                   <div className="rounded-lg border border-emerald-500/25 bg-emerald-500/10 p-2 text-emerald-400">
@@ -447,6 +450,40 @@ export default async function StrategyOverviewPage({
                 className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
               >
                 {t("run_questionnaire") || "Run Evaluation"}
+                <ChevronRight className="h-3 w-3" />
+              </a>
+            </div>
+
+            {/* 360° EKOSİSTEM ANALİZİ CARD */}
+            <div className="border-border-subtle hover:border-brand-500/30 flex flex-col justify-between rounded-2xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300">
+              <div>
+                <div className="mb-4 flex items-center justify-between">
+                  <div className="border-brand-500/25 bg-brand-500/10 text-brand-400 rounded-lg border p-2">
+                    <Target className="h-5 w-5" />
+                  </div>
+                  <span className="text-fg-muted font-mono text-[9px] font-bold tracking-wider uppercase">
+                    {t("module_06") || "Module 06"}
+                  </span>
+                </div>
+                <h2 className="text-lg font-bold text-white">
+                  {t("ecosystem_benchmark") || "360° Ecosystem Benchmarking"}
+                </h2>
+                <p className="text-fg-muted mt-2 text-xs">
+                  {t("ecosystem_benchmark_desc") ||
+                    "Market post-mortem: OpenRouter, Blackbox AI, LMSYS, Scale AI & LangChain analysis."}
+                </p>
+                <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-2 text-center text-xs">
+                  <span className="text-fg-muted block text-[9px] font-bold tracking-wider uppercase">
+                    Defensive Moat Index
+                  </span>
+                  <span className="text-lg font-extrabold text-emerald-400">89.8 / 100</span>
+                </div>
+              </div>
+              <a
+                href="#ecosystem-benchmark"
+                className="text-brand-400 hover:text-brand-300 mt-6 flex items-center gap-1 text-xs font-bold transition"
+              >
+                View Benchmark
                 <ChevronRight className="h-3 w-3" />
               </a>
             </div>
@@ -504,7 +541,13 @@ export default async function StrategyOverviewPage({
             }}
           />
         </div>
+
+        {/* 360° Ecosystem Post-Mortem & Benchmarking Module */}
+        <div id="ecosystem-benchmark" className="mt-12">
+          <EcosystemBenchmarkWidget />
+        </div>
       </Container>
     </div>
+      </div></div>
   );
 }

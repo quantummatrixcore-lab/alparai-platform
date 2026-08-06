@@ -15,6 +15,7 @@ import {
   Eye,
   Shield,
   ChevronDown,
+  Zap,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import type { ComponentType } from "react";
@@ -28,6 +29,7 @@ interface NavItem {
 const mainNavItems: NavItem[] = [
   { href: "/leaderboard", labelKey: "leaderboard", icon: BarChart3 },
   { href: "/incidents", labelKey: "incidents", icon: FileText },
+  { href: "/velocity", labelKey: "velocity", icon: Zap },
   { href: "/ai-act", labelKey: "ai_act", icon: Shield },
   { href: "/academy", labelKey: "academy", icon: GraduationCap },
   { href: "/dilemmas", labelKey: "dilemmas", icon: Scale },

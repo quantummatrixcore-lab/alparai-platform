@@ -51,7 +51,8 @@ export default async function LaunchSignalPage({
     .select("*", { count: "exact", head: true });
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-white">
@@ -79,7 +80,7 @@ export default async function LaunchSignalPage({
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <div className="bg-bg-secondary border-border-subtle rounded-xl border p-6">
+        <div className="border-border-subtle rounded-xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl">
           <div className="flex items-center gap-4">
             <div className="bg-brand-500/10 text-brand-400 flex h-12 w-12 items-center justify-center rounded-lg">
               <Database className="h-6 w-6" />
@@ -93,7 +94,7 @@ export default async function LaunchSignalPage({
           </div>
         </div>
 
-        <div className="bg-bg-secondary border-border-subtle rounded-xl border p-6">
+        <div className="border-border-subtle rounded-xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl">
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
               <Search className="h-6 w-6" />
@@ -107,7 +108,7 @@ export default async function LaunchSignalPage({
           </div>
         </div>
 
-        <div className="bg-bg-secondary border-border-subtle rounded-xl border p-6">
+        <div className="border-border-subtle rounded-xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl">
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-amber-500/10 text-amber-400">
               <Activity className="h-6 w-6" />
@@ -121,7 +122,7 @@ export default async function LaunchSignalPage({
           </div>
         </div>
 
-        <div className="bg-bg-secondary border-border-subtle rounded-xl border p-6">
+        <div className="border-border-subtle rounded-xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl">
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400">
               <Eye className="h-6 w-6" />
@@ -137,7 +138,7 @@ export default async function LaunchSignalPage({
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <div className="bg-bg-secondary border-border-subtle rounded-xl border p-6">
+        <div className="border-border-subtle rounded-xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl">
           <h3 className="mb-4 flex items-center gap-2 text-lg font-bold text-white">
             <Globe className="text-fg-muted h-5 w-5" />
             {t("launch_signal_platforms")}
@@ -184,7 +185,7 @@ export default async function LaunchSignalPage({
           </div>
         </div>
 
-        <div className="bg-bg-secondary border-border-subtle rounded-xl border p-6">
+        <div className="border-border-subtle rounded-xl border bg-zinc-900/40 p-6 ring-1 ring-white/10 backdrop-blur-xl">
           <h3 className="mb-4 flex items-center gap-2 text-lg font-bold text-white">
             <AlertTriangle className="text-fg-muted h-5 w-5" />
             {t("launch_signal_system_status")}
@@ -217,5 +218,6 @@ export default async function LaunchSignalPage({
         </div>
       </div>
     </div>
+      </div></div>
   );
 }

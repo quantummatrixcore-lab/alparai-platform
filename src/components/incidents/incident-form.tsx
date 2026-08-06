@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { ProviderCombobox, type ComboboxOption } from "@/components/ui/provider-combobox";
 import { ModelAutocomplete, type ModelOption } from "@/components/ui/model-autocomplete";
 import { EvidenceUploader, SubmitButton } from "./evidence-uploader";
+import { VoiceIncidentReporter } from "./VoiceIncidentReporter";
+import { VideoEvidenceUploader } from "./VideoEvidenceUploader";
 import { PIIBanner } from "./pii-banner";
 import { Shield, CheckCircle2, Link as LinkIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -25,6 +27,7 @@ import { trackFunnelEvent } from "@/actions/funnel";
 import { logger } from "@/lib/utils/logger";
 import { getFingerprint } from "@/lib/utils/fingerprint";
 import { incidentSubmissionSchema } from "@/lib/validation/schemas";
+import { encryptPayload } from "@/lib/crypto/whistleblower-encrypt";
 
 type ClientErrors = Record<string, string[]>;
 const initialState: SubmitIncidentState = { ok: false };
@@ -535,7 +538,7 @@ export function IncidentForm({
 
   const canSubmit = allConsents && selectedProvider && title.trim() && description.trim();
 
-  const handleClientAction = (formData: FormData) => {
+  const handleClientAction = async (formData: FormData) => {
     const isUuid = (v: string) =>
       /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v);
 
@@ -579,6 +582,24 @@ export function IncidentForm({
     }
 
     setClientErrors({});
+
+    // Zero-Knowledge Client-Side Encryption before transmission to server
+    try {
+      const encrypted = await encryptPayload({
+        description: input.description,
+        title: input.title,
+      });
+      formData.set("description", encrypted.encryptedData);
+      if (encrypted.keyFragment) {
+        formData.set("zk_key_fragment", encrypted.keyFragment);
+      }
+    } catch (err) {
+      logger.warn(
+        "Whistleblower ZK encryption fallback",
+        err instanceof Error ? { error: err.message } : undefined,
+      );
+    }
+
     formAction(formData);
   };
 
@@ -707,6 +728,10 @@ export function IncidentForm({
         onChange={(e) => setDescription(e.target.value)}
         hint={`${description.length}/5000`}
         error={clientErrors.description?.[0] || state.fieldErrors?.description?.[0]}
+      />
+
+      <VoiceIncidentReporter
+        onTranscript={(text) => setDescription((prev) => (prev ? `${prev}\n\n${text}` : text))}
       />
 
       <div className="border-border-subtle bg-bg-secondary/30 space-y-4 rounded-md border p-4">
@@ -860,9 +885,18 @@ export function IncidentForm({
         )}
       </div>
 
-      <div>
-        <label className="text-fg-primary mb-1.5 block text-sm font-medium">{t("evidence")}</label>
+      <div className="space-y-3">
+        <label className="text-fg-primary block text-sm font-medium">{t("evidence")}</label>
         <EvidenceUploader name="evidence" />
+        <VideoEvidenceUploader
+          onAnalysis={(summaryText) =>
+            setDescription((prev) =>
+              prev
+                ? `${prev}\n\n[Video Delil Özeti]: ${summaryText}`
+                : `[Video Delil Özeti]: ${summaryText}`,
+            )
+          }
+        />
       </div>
 
       <fieldset className="border-border-subtle bg-bg-secondary/40 space-y-3 rounded-md border p-4">

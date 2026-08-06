@@ -51,22 +51,26 @@ export default async function AdminUsersPage({ params }: { params: Promise<{ loc
   }
 
   return (
-    <Container className="py-10">
-      <header className="mb-6 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-fg-primary inline-flex items-center gap-2 text-2xl font-bold">
-            <Users className="text-brand-400 h-6 w-6" /> {t("users")}
-          </h1>
-          <p className="text-fg-muted mt-1 text-sm">{t("all_registered_users")}</p>
-        </div>
-        <PromoteUserForm currentUserRole={user.role} />
-      </header>
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+      <Container className="py-10">
+        <header className="mb-6 flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h1 className="text-fg-primary inline-flex items-center gap-2 text-2xl font-bold">
+              <Users className="text-brand-400 h-6 w-6" /> {t("users")}
+            </h1>
+            <p className="text-fg-muted mt-1 text-sm">{t("all_registered_users")}</p>
+          </div>
+          <PromoteUserForm currentUserRole={user.role} />
+        </header>
 
-      <UsersClient
-        users={users}
-        userRole={user.role as "user" | "moderator" | "admin" | "ceo"}
-        locale={locale}
-      />
-    </Container>
+        <UsersClient
+          users={users}
+          userRole={user.role as "user" | "moderator" | "admin" | "ceo"}
+          locale={locale}
+        />
+      </Container>
+    </div>
+      </div></div>
   );
 }

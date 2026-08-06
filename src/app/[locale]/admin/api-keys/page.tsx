@@ -15,7 +15,7 @@ export default async function ApiKeysPage({ params }: { params: Promise<{ locale
   const t = await getTranslations({ locale, namespace: "admin" });
 
   return (
-    <div className="animate-in fade-in space-y-8 duration-500">
+    <div className="animate-in fade-in space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl duration-500 md:p-8">
       <div>
         <h1 className="flex items-center gap-2 text-3xl font-black tracking-tight text-white drop-shadow-md">
           <Key className="text-brand-400 h-8 w-8" />

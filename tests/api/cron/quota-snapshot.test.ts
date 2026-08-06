@@ -122,7 +122,7 @@ describe("Quota Snapshot Cron Route (/api/cron/quota-snapshot)", () => {
       vendor: "vercel",
       metric: "bandwidth_gb",
       used_value: 1,
-      limit_value: null,
+      limit_value: 1000,
       unit: "GB",
       source: "api",
     });
@@ -132,9 +132,9 @@ describe("Quota Snapshot Cron Route (/api/cron/quota-snapshot)", () => {
       vendor: "supabase",
       metric: "db_size_gb",
       used_value: 52428800 / 1024 ** 3,
-      limit_value: 0.5,
+      limit_value: 8,
       unit: "GB",
-      plan_name: "Free",
+      plan_name: "Pro",
       source: "api",
     });
 

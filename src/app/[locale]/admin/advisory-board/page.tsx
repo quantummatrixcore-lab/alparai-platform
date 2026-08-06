@@ -75,7 +75,8 @@ export default async function AdvisoryBoardPage({
   const activeMembers = members && members.length > 0 ? members : DEFAULT_MEMBERS;
 
   return (
-    <div className="animate-in fade-in space-y-8 duration-500">
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="animate-in fade-in space-y-8 duration-500">
       <div>
         <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">
           {t("advisory_title")}
@@ -106,7 +107,7 @@ export default async function AdvisoryBoardPage({
         />
       </div>
 
-      <div className="bg-bg-secondary/40 overflow-hidden rounded-xl border border-white/5 backdrop-blur-xl">
+      <div className="overflow-hidden rounded-xl border border-white/5 bg-zinc-900/40 ring-1 ring-white/10 backdrop-blur-xl">
         <div className="border-b border-white/5 bg-white/5 p-4">
           <p className="text-fg-muted flex items-center gap-2 text-sm">
             <WarningCircle weight="fill" className="text-amber-400" />
@@ -167,5 +168,6 @@ export default async function AdvisoryBoardPage({
         </div>
       </div>
     </div>
+      </div></div>
   );
 }

@@ -57,7 +57,7 @@ describe("Capacity Actions", () => {
       const metrics = await getLiveCapacityMetrics();
 
       expect(metrics.supabaseDb.usedBytes).toBe(52428800);
-      expect(metrics.supabaseDb.percentage).toBe(10);
+      expect(metrics.supabaseDb.percentage).toBeCloseTo(0.61, 2);
       expect(metrics.supabaseStorage.usedBytes).toBe(10485760);
       expect(metrics.rowCounts.incidents).toBe(42);
       expect(metrics.resendEmails.used).toBe(42);

@@ -9,12 +9,17 @@ import { Footer } from "@/components/layout/footer";
 import { MainContent } from "@/components/layout/main-content";
 import { ClientProviders } from "@/components/client-providers";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
-import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/json-ld";
+import {
+  OrganizationJsonLd,
+  SoftwareApplicationJsonLd,
+  WebSiteJsonLd,
+} from "@/components/seo/json-ld";
 import { PlausibleWithConsent } from "@/components/plausible-consent";
 import { PwaRegister } from "@/components/pwa-register";
 
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { PostHogProvider } from "@/components/posthog-provider";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import "../globals.css";
 import { Inter, Outfit, JetBrains_Mono } from "next/font/google";
@@ -58,10 +63,12 @@ export default async function LocaleLayout({
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") || "";
   const isEmbed = pathname.endsWith("/embed");
+  const dir = locale === "ar" || locale === "fa" ? "rtl" : "ltr";
 
   return (
     <html
       lang={locale}
+      dir={dir}
       className={`${sans.variable} ${display.variable} ${mono.variable}`}
       suppressHydrationWarning
     >
@@ -77,26 +84,29 @@ export default async function LocaleLayout({
         >
           {tCommon("skipToContent", { defaultValue: "Skip to main content" })}
         </a>
-        <NextIntlClientProvider messages={messages}>
-          {isEmbed ? (
-            <main className="m-0 min-h-screen bg-transparent p-0">{children}</main>
-          ) : (
-            <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden pb-16 lg:pb-0">
-              <Header user={headerUser} />
-              <MainContent>{children}</MainContent>
-              <Footer />
-            </div>
-          )}
-          {!isEmbed && <MobileBottomNav />}
-          <ClientProviders />
-          {!isEmbed && <ScrollToTop />}
-          <PwaRegister />
-          <OrganizationJsonLd />
-          <WebSiteJsonLd />
-          <PlausibleWithConsent />
-          <Analytics />
-          <SpeedInsights />
-        </NextIntlClientProvider>
+        <PostHogProvider>
+          <NextIntlClientProvider messages={messages}>
+            {isEmbed ? (
+              <main className="m-0 min-h-screen bg-transparent p-0">{children}</main>
+            ) : (
+              <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden pb-16 lg:pb-0">
+                <Header user={headerUser} />
+                <MainContent>{children}</MainContent>
+                <Footer />
+              </div>
+            )}
+            {!isEmbed && <MobileBottomNav />}
+            <ClientProviders />
+            {!isEmbed && <ScrollToTop />}
+            <PwaRegister />
+            <OrganizationJsonLd />
+            <SoftwareApplicationJsonLd />
+            <WebSiteJsonLd />
+            <PlausibleWithConsent />
+            <Analytics />
+            <SpeedInsights />
+          </NextIntlClientProvider>
+        </PostHogProvider>
       </body>
     </html>
   );

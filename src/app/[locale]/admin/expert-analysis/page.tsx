@@ -16,5 +16,9 @@ export default async function ExpertAnalysisAdminPage({
   await requireAdmin();
   const { locale } = await params;
   setRequestLocale(locale);
-  return <ExpertAnalysisBoard />;
+  return (
+    <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+      <ExpertAnalysisBoard />
+    </div>
+  );
 }
