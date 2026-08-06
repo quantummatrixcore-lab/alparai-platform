@@ -5,6 +5,24 @@ import { logger } from "@/lib/utils/logger";
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 
+/**
+ * Normalizes user subscription tier for `api_keys.tier` ('free' | 'developer' | 'enterprise')
+ * and `users.subscription_tier` / `subscriptions.plan`.
+ */
+function normalizeTier(tierRaw?: string | null): {
+  apiKeyTier: "free" | "developer" | "enterprise";
+  userTier: string;
+} {
+  const normalized = (tierRaw || "").toLowerCase();
+  if (normalized === "enterprise") {
+    return { apiKeyTier: "enterprise", userTier: "enterprise" };
+  }
+  if (normalized === "pro" || normalized === "developer" || normalized === "pilot") {
+    return { apiKeyTier: "developer", userTier: normalized };
+  }
+  return { apiKeyTier: "free", userTier: "free" };
+}
+
 export async function POST(request: Request) {
   if (!STRIPE_SECRET_KEY || !STRIPE_WEBHOOK_SECRET) {
     return NextResponse.json({ error: "Stripe not configured" }, { status: 503 });
@@ -38,8 +56,10 @@ export async function POST(request: Request) {
     case "checkout.session.completed": {
       const session = event.data.object;
       const userId = session.metadata?.user_id;
+      const rawTier = session.metadata?.tier || "pro";
       const customerId = session.customer as string;
       const subscriptionId = session.subscription as string;
+      const { apiKeyTier, userTier } = normalizeTier(rawTier);
 
       if (userId && customerId) {
         await admin.from("subscriptions").upsert(
@@ -47,45 +67,74 @@ export async function POST(request: Request) {
             user_id: userId,
             stripe_customer_id: customerId,
             stripe_subscription_id: subscriptionId,
+            plan: userTier,
             status: "active",
           },
           { onConflict: "user_id" },
         );
 
-        // Katman yükseltme (Tier Upgrade) - Task #2
-        await admin.from("api_keys").update({ tier: "enterprise" }).eq("provider", userId);
-        await admin.from("users").update({ subscription_tier: "enterprise" }).eq("id", userId);
+        await admin.from("api_keys").update({ tier: apiKeyTier }).eq("provider", userId);
+        await admin
+          .from("users")
+          .update({
+            subscription_tier: userTier,
+            stripe_customer_id: customerId,
+          })
+          .eq("id", userId);
 
-        logger.info("Stripe checkout completed", { userId, customerId });
+        logger.info("Stripe checkout completed and tier updated", {
+          userId,
+          customerId,
+          tier: userTier,
+          apiKeyTier,
+        });
       }
       break;
     }
 
     case "customer.subscription.updated": {
       const subscription = event.data.object;
-      const status = subscription.status === "active" ? "active" : "inactive";
+      const isActive = subscription.status === "active" || subscription.status === "trialing";
       const periodEnd = subscription.items.data[0]?.current_period_end;
-      const priceId = subscription.items.data[0]?.price?.id;
+      const rawTier = subscription.metadata?.tier || "pro";
+      const { apiKeyTier, userTier } = normalizeTier(rawTier);
 
       await admin
         .from("subscriptions")
         .update({
-          status,
+          status: subscription.status,
+          plan: isActive ? userTier : "free",
           current_period_end: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
-          stripe_price_id: (priceId || null) as never,
         })
         .eq("stripe_subscription_id", subscription.id);
 
-      if (status === "inactive") {
+      let userId = subscription.metadata?.user_id;
+      if (!userId) {
         const { data: subData } = await admin
           .from("subscriptions")
           .select("user_id")
           .eq("stripe_subscription_id", subscription.id)
           .single();
+        userId = subData?.user_id;
+      }
 
-        if (subData?.user_id) {
-          await admin.from("api_keys").update({ tier: "free" }).eq("provider", subData.user_id);
-          await admin.from("users").update({ subscription_tier: "free" }).eq("id", subData.user_id);
+      if (userId) {
+        if (isActive) {
+          await admin.from("api_keys").update({ tier: apiKeyTier }).eq("provider", userId);
+          await admin.from("users").update({ subscription_tier: userTier }).eq("id", userId);
+          logger.info("Stripe subscription updated (active)", {
+            userId,
+            subscriptionId: subscription.id,
+            userTier,
+            apiKeyTier,
+          });
+        } else {
+          await admin.from("api_keys").update({ tier: "free" }).eq("provider", userId);
+          await admin.from("users").update({ subscription_tier: "free" }).eq("id", userId);
+          logger.info("Stripe subscription updated (inactive)", {
+            userId,
+            subscriptionId: subscription.id,
+          });
         }
       }
       break;
@@ -93,23 +142,28 @@ export async function POST(request: Request) {
 
     case "customer.subscription.deleted": {
       const subscription = event.data.object;
-      const { data: subData } = await admin
-        .from("subscriptions")
-        .select("user_id")
-        .eq("stripe_subscription_id", subscription.id)
-        .single();
+      let userId = subscription.metadata?.user_id;
+
+      if (!userId) {
+        const { data: subData } = await admin
+          .from("subscriptions")
+          .select("user_id")
+          .eq("stripe_subscription_id", subscription.id)
+          .single();
+        userId = subData?.user_id;
+      }
 
       await admin
         .from("subscriptions")
-        .update({ status: "canceled" })
+        .update({ status: "canceled", plan: "free" })
         .eq("stripe_subscription_id", subscription.id);
 
-      if (subData?.user_id) {
-        await admin.from("api_keys").update({ tier: "free" }).eq("provider", subData.user_id);
-        await admin.from("users").update({ subscription_tier: "free" }).eq("id", subData.user_id);
+      if (userId) {
+        await admin.from("api_keys").update({ tier: "free" }).eq("provider", userId);
+        await admin.from("users").update({ subscription_tier: "free" }).eq("id", userId);
       }
 
-      logger.info("Stripe subscription canceled", { subscriptionId: subscription.id });
+      logger.info("Stripe subscription canceled", { subscriptionId: subscription.id, userId });
       break;
     }
   }
