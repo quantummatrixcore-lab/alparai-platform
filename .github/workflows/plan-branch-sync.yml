@@ -6,7 +6,8 @@ on:
       - claude/strategy-brief-review-i93xcv
 
 permissions:
-  contents: write
+  contents: read
+  pull-requests: write
 
 jobs:
   sync:
@@ -48,18 +49,29 @@ jobs:
           echo "Result: author=$AUTHOR"
           exit 0
 
-      - name: Auto-merge into master (governance-only, architect-marked, allowlisted author)
+      # master requires PRs + 7 status checks (repo ruleset) — the default
+      # GITHUB_TOKEN cannot bypass that (only admin-bypass identities can
+      # push directly), so this opens/updates a PR and requests auto-merge
+      # instead of pushing straight to master.
+      - name: Open or update PR into master (governance-only, architect-marked, allowlisted author)
         if: steps.meta.outputs.gov_only == 'true' && steps.meta.outputs.has_marker == 'true' && steps.meta.outputs.author == 'noreply@anthropic.com'
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git config user.name "plan-branch-sync[bot]"
-          git config user.email "noreply@anthropic.com"
-          git checkout master
-          git merge --ff-only claude/strategy-brief-review-i93xcv
-          git push origin master
+          set +e
+          EXISTING=$(gh pr list --base master --head claude/strategy-brief-review-i93xcv --state open --json number --jq '.[0].number')
+          if [ -z "$EXISTING" ]; then
+            gh pr create --base master --head claude/strategy-brief-review-i93xcv \
+              --title "Plan branch sync: governance updates" \
+              --body "Automated PR from plan-branch-sync.yml. Governance-only diff (docs/MASTER_PLAN.md / CLAUDE.md / AGENTS.md), [architect]-marked, author on allowlist."
+            EXISTING=$(gh pr list --base master --head claude/strategy-brief-review-i93xcv --state open --json number --jq '.[0].number')
+          fi
+          echo "PR number: $EXISTING"
+          gh pr merge "$EXISTING" --auto --squash
 
       - name: Skip notice
         if: steps.meta.outputs.gov_only != 'true' || steps.meta.outputs.has_marker != 'true' || steps.meta.outputs.author != 'noreply@anthropic.com'
         shell: bash
         run: |
-          echo "::warning::Skipping auto-merge to master — either non-governance files changed, missing [architect] marker, or author not on allowlist. Manual review required (git merge claude/strategy-brief-review-i93xcv)."
+          echo "::warning::Skipping PR/auto-merge — either non-governance files changed, missing [architect] marker, or author not on allowlist. Manual review required."
