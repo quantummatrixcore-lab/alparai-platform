@@ -40,11 +40,7 @@ export async function middleware(request: NextRequest) {
 
   const isAdminPath = pathname.startsWith("/admin") || /^\/[a-z]{2}\/admin(\/|$)/.test(pathname);
 
-  if (process.env.IS_PLAYWRIGHT_TEST === "true" && isAdminPath && !pathname.startsWith("/api/")) {
-    return NextResponse.next();
-  }
-
-  if (isAdminPath && !pathname.startsWith("/api/")) {
+  if (isAdminPath && !pathname.startsWith("/api/") && process.env.IS_PLAYWRIGHT_TEST !== "true") {
     const supabase = createServerClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
