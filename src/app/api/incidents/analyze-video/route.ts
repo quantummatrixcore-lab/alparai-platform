@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getHybridMultimodalModel } from "@/lib/ai/openrouter-gateway";
 
 const MAX_VIDEO_SIZE_BYTES = 50 * 1024 * 1024; // 50MB
 
@@ -15,19 +16,22 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Video file exceeds 50MB size limit" }, { status: 413 });
     }
 
-    // Video analysis pipeline (Qwen Omni visual framing analysis + audio transcript)
+    // Video analysis pipeline (Qwen Omni / Gemini Flash 50/50 hybrid analysis)
     const openRouterApiKey = process.env.OPENROUTER_API_KEY;
 
     if (openRouterApiKey) {
       try {
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        const hybridModel = getHybridMultimodalModel();
+        let targetModel = hybridModel.primary;
+
+        let response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${openRouterApiKey}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            model: "qwen/qwen-2.5-72b-instruct",
+            model: targetModel,
             messages: [
               {
                 role: "user",
@@ -36,6 +40,27 @@ export async function POST(request: Request) {
             ],
           }),
         });
+
+        // Fallback to secondary model if primary encounters rate limit or error
+        if (!response.ok && hybridModel.fallback) {
+          targetModel = hybridModel.fallback;
+          response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${openRouterApiKey}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              model: targetModel,
+              messages: [
+                {
+                  role: "user",
+                  content: `Video analysis request for file: ${videoFile.name} (${Math.round(videoFile.size / 1024)} KB). Generate visual event log analysis for AI incident verification.`,
+                },
+              ],
+            }),
+          });
+        }
 
         if (response.ok) {
           const data = await response.json();

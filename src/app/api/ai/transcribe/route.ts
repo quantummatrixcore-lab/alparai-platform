@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getHybridMultimodalModel } from "@/lib/ai/openrouter-gateway";
 
 export async function POST(request: Request) {
   try {
@@ -17,14 +18,12 @@ export async function POST(request: Request) {
         const base64Audio = Buffer.from(arrayBuffer).toString("base64");
         const mimeType = audioFile.type || "audio/webm";
 
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${openRouterApiKey}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: "qwen/qwen-2.5-72b-instruct",
+        const hybridModel = getHybridMultimodalModel();
+        let targetModel = hybridModel.primary;
+
+        const buildPayload = (model: string) =>
+          JSON.stringify({
+            model,
             messages: [
               {
                 role: "user",
@@ -42,8 +41,29 @@ export async function POST(request: Request) {
                 ],
               },
             ],
-          }),
+          });
+
+        let response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${openRouterApiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: buildPayload(targetModel),
         });
+
+        // Fallback to secondary model if primary fails or hits rate limit
+        if (!response.ok && hybridModel.fallback) {
+          targetModel = hybridModel.fallback;
+          response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${openRouterApiKey}`,
+              "Content-Type": "application/json",
+            },
+            body: buildPayload(targetModel),
+          });
+        }
 
         if (response.ok) {
           const data = await response.json();

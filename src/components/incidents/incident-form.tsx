@@ -27,6 +27,7 @@ import { trackFunnelEvent } from "@/actions/funnel";
 import { logger } from "@/lib/utils/logger";
 import { getFingerprint } from "@/lib/utils/fingerprint";
 import { incidentSubmissionSchema } from "@/lib/validation/schemas";
+import { encryptPayload } from "@/lib/crypto/whistleblower-encrypt";
 
 type ClientErrors = Record<string, string[]>;
 const initialState: SubmitIncidentState = { ok: false };
@@ -537,7 +538,7 @@ export function IncidentForm({
 
   const canSubmit = allConsents && selectedProvider && title.trim() && description.trim();
 
-  const handleClientAction = (formData: FormData) => {
+  const handleClientAction = async (formData: FormData) => {
     const isUuid = (v: string) =>
       /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v);
 
@@ -581,6 +582,24 @@ export function IncidentForm({
     }
 
     setClientErrors({});
+
+    // Zero-Knowledge Client-Side Encryption before transmission to server
+    try {
+      const encrypted = await encryptPayload({
+        description: input.description,
+        title: input.title,
+      });
+      formData.set("description", encrypted.encryptedData);
+      if (encrypted.keyFragment) {
+        formData.set("zk_key_fragment", encrypted.keyFragment);
+      }
+    } catch (err) {
+      logger.warn(
+        "Whistleblower ZK encryption fallback",
+        err instanceof Error ? { error: err.message } : undefined,
+      );
+    }
+
     formAction(formData);
   };
 

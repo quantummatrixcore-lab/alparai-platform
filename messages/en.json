@@ -161,7 +161,21 @@
     "streisand_category_pr_firm": "PR Firm",
     "streisand_category_legal": "Legal Representative",
     "streisand_category_individual": "Individual",
-    "streisand_category_other": "Other"
+    "streisand_category_other": "Other",
+    "cease_desist_badge": "Streisand Shield",
+    "cease_desist_title": "Cease & Desist Transparency Archive",
+    "cease_desist_subtitle": "Complete public log of Cease & Desist notices and legal suppression demands received from AI providers. Suppression attempts are permanently archived here under the Streisand Shield protocol.",
+    "cease_desist_empty": "No registered Cease & Desist notices found. All incoming legal demands are archived transparently upon receipt.",
+    "cease_desist_provider": "Target Provider",
+    "cease_desist_threat_level": "Threat Level",
+    "cease_desist_legal_text": "Incoming Demand / Legal Text",
+    "cease_desist_our_response": "ALPAR AI Shield Response",
+    "cease_desist_published_at": "Published At",
+    "threat_low": "Low",
+    "threat_medium": "Medium",
+    "threat_high": "High",
+    "threat_critical": "Critical",
+    "threat_existential": "Existential"
   },
   "kvkk": {
     "title": "KVKK Clarification Text",

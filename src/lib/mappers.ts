@@ -60,11 +60,15 @@ export function toIncidentListItem(
     machineTranslated = row.machine_translated ?? false;
   }
 
+  const titleMasked = row.title_masked ?? row.title ?? "";
+  const rawTitleTr = row.title_tr && row.title_tr.trim().length > 0 ? row.title_tr : null;
+  const titleTr = locale === "tr" ? (rawTitleTr ?? titleMasked) : rawTitleTr;
+
   return {
     id: row.id,
-    title_masked: row.title_masked ?? row.title ?? "",
+    title_masked: titleMasked,
     description_masked: row.description_masked ?? row.description ?? "",
-    title_tr: row.title_tr ?? null,
+    title_tr: titleTr,
     description_tr: row.description_tr ?? null,
     translated_title: translatedTitle,
     translated_description: translatedDesc,

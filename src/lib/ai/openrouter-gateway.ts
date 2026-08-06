@@ -490,3 +490,27 @@ export async function isGatewayConfigured(): Promise<boolean> {
   );
   return checks.some(Boolean);
 }
+
+export interface HybridMultimodalModelSelection {
+  primary: string;
+  fallback: string;
+  selected: string;
+}
+
+/**
+ * Task #190: 50/50 Hybrid Multimodal Model Router (Qwen3.5-Omni / Gemini Flash).
+ * Randomly selects between "qwen/qwen3.5-omni-7b:free" (50%) and "google/gemini-flash-1.5" (50%).
+ * Provides primary and secondary fallback model IDs for cost guard and rate-limit resilience.
+ */
+export function getHybridMultimodalModel(isFallback = false): HybridMultimodalModelSelection {
+  const isQwenPrimary = Math.random() < 0.5;
+  const primary = isQwenPrimary ? "qwen/qwen3.5-omni-7b:free" : "google/gemini-flash-1.5";
+  const fallback = isQwenPrimary ? "google/gemini-flash-1.5" : "qwen/qwen3.5-omni-7b:free";
+  const selected = isFallback ? fallback : primary;
+
+  return {
+    primary,
+    fallback,
+    selected,
+  };
+}

@@ -631,6 +631,44 @@ export type Database = {
         }
         Relationships: []
       }
+      art50_transparency_status: {
+        Row: {
+          ai_disclosure_compliant: boolean
+          c2pa_provenance_enabled: boolean
+          created_at: string
+          id: string
+          provider_id: string | null
+          updated_at: string
+          watermarking_technology: string
+        }
+        Insert: {
+          ai_disclosure_compliant?: boolean
+          c2pa_provenance_enabled?: boolean
+          created_at?: string
+          id?: string
+          provider_id?: string | null
+          updated_at?: string
+          watermarking_technology?: string
+        }
+        Update: {
+          ai_disclosure_compliant?: boolean
+          c2pa_provenance_enabled?: boolean
+          created_at?: string
+          id?: string
+          provider_id?: string | null
+          updated_at?: string
+          watermarking_technology?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "art50_transparency_status_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "ai_providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       art73_obligation_status: {
         Row: {
           created_at: string

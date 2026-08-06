@@ -71,7 +71,7 @@ pnpm test:e2e                 # End-to-end resilience (for mutated flows).
 - `docs/MASTER_PLAN.md` is strictly Architect-only (enforced by pre-commit hook). Proposals must go to `docs/PROPOSALS/NNN-name.md`.
 - External communications (email/social) require an explicitly approved queue item (Rule #6).
 
-## Ajan Y�netim Kurallar� (Haf�za Kayd�)
+## Ajan Yönetim Kuralları (Hafıza Kaydı)
 
-1. **Alt Ajan Temizli�i:** Alt ajanlar (subagents) g�revlerini bitirdiklerinde otomatik kapanmaz ve arka planda ciddi RAM t�ketirler. ��i biten ajanlar derhal `manage_subagents (action: kill)` ile temizlenmelidir.
-2. **Model Belirleme:** OpenCode kullan�larak olu�turulan her ajan i�in mutlaka amaca uygun AI modeli (Pro veya Flash) a��k�a belirtilmelidir.
+1. **Alt Ajan Temizliği:** Alt ajanlar (subagents) görevlerini bitirdiklerinde otomatik kapanmaz ve arka planda ciddi RAM tüketirler. İşi biten ajanlar derhal `manage_subagents (action: kill)` ile temizlenmelidir.
+2. **Model Belirleme:** OpenCode kullanılarak oluşturulan her ajan için mutlaka amaca uygun AI modeli (Pro veya Flash) açıkça belirtilmelidir.

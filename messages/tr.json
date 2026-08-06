@@ -161,7 +161,21 @@
     "streisand_category_pr_firm": "Halkla İlişkiler Şirketi",
     "streisand_category_legal": "Hukuki Temsilci",
     "streisand_category_individual": "Birey",
-    "streisand_category_other": "Diğer"
+    "streisand_category_other": "Diğer",
+    "cease_desist_badge": "Streisand Etkisi Kalkanı",
+    "cease_desist_title": "Cease & Desist Şeffaflık Arşivi",
+    "cease_desist_subtitle": "Yapay zeka sağlayıcılarından veya hukuki temsilcilerinden alınan ihtarname (Cease & Desist) ve içerik kaldırma tehditlerinin tam şeffaflık kaydı. Gizleme girişimleri burada kalıcı olarak arşivlenir.",
+    "cease_desist_empty": "Henüz kayıtlı Cease & Desist uyarısı bulunmamaktadır. Tüm hukuk talepleri anında şeffaf olarak arşivlenir.",
+    "cease_desist_provider": "Hedef Sağlayıcı",
+    "cease_desist_threat_level": "Tehdit Seviyesi",
+    "cease_desist_legal_text": "Gelen İhtarname / Tehdit Metni",
+    "cease_desist_our_response": "ALPAR AI Kalkan Yanıtı",
+    "cease_desist_published_at": "Yayın Tarihi",
+    "threat_low": "Düşük (Low)",
+    "threat_medium": "Orta (Medium)",
+    "threat_high": "Yüksek (High)",
+    "threat_critical": "Kritik (Critical)",
+    "threat_existential": "Varoluşsal (Existential)"
   },
   "kvkk": {
     "title": "KVKK Aydınlatma Metni",
