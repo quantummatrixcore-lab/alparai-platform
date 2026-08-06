@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { analyzeCompliance, type ComplianceResult } from "@/actions/analyze-compliance";
+import { analyzeCompliance } from "@/actions/analyze-compliance";
+import type { ComplianceResult } from "@/actions/analyze-compliance";
 
 export default function AnalyzerPage() {
   const t = useTranslations("analyzer");
