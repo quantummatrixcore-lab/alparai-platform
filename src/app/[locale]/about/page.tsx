@@ -12,7 +12,12 @@ import {
   Mail,
   Database,
   BarChart,
+  Scale,
+  ShieldAlert,
+  GraduationCap,
+  ArrowRight,
 } from "lucide-react";
+import Link from "next/link";
 import { FounderStory } from "@/components/marketing/founder-story";
 import { createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -163,44 +168,6 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </Container>
       </Section>
 
-      {/* Data Moat & Benchmark Section */}
-      <Section className="bg-bg-secondary/10 border-border-subtle border-y py-16">
-        <Container>
-          <div className="mb-12 text-center">
-            <h2 className="text-fg-primary text-3xl font-extrabold tracking-tight">
-              {t("dataMoatTitle")}
-            </h2>
-            <p className="text-fg-muted mx-auto mt-2 max-w-2xl text-sm">{t("dataMoatSubtitle")}</p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <Card className="border-border-subtle bg-bg-primary">
-              <CardHeader>
-                <CardTitle className="inline-flex items-center gap-2 text-white">
-                  <Database className="text-brand-400 h-5 w-5" />
-                  {t("dataMoatMoatTitle")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-fg-secondary text-sm leading-relaxed">
-                {t("dataMoatMoatDesc")}
-              </CardContent>
-            </Card>
-
-            <Card className="border-border-subtle bg-bg-primary">
-              <CardHeader>
-                <CardTitle className="inline-flex items-center gap-2 text-white">
-                  <BarChart className="text-brand-400 h-5 w-5" />
-                  {t("dataMoatBenchmarkTitle")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-fg-secondary text-sm leading-relaxed">
-                {t("dataMoatBenchmarkDesc")}
-              </CardContent>
-            </Card>
-          </div>
-        </Container>
-      </Section>
-
       {/* Founder Story Section */}
       <FounderStory />
 
@@ -248,49 +215,132 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </Container>
       </Section>
 
-      {/* Advisory Board Section */}
-      <Section className="bg-bg-secondary/20 border-border-subtle border-t py-16">
-        <Container>
-          <div className="mb-12 text-center">
-            <h2 className="text-fg-primary text-3xl font-extrabold tracking-tight">
+      {/* Spatial Glassmorphism Advisory Board Section (Call for Advisors) */}
+      <Section className="border-border-subtle bg-bg-primary relative overflow-hidden border-t py-24">
+        {/* Spatial background atmospheric glow orbs */}
+        <div className="bg-brand-500/10 pointer-events-none absolute -top-40 left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full blur-[140px]" />
+        <div className="bg-accent-500/10 pointer-events-none absolute right-10 -bottom-40 h-[400px] w-[400px] rounded-full blur-[120px]" />
+
+        <Container className="relative">
+          <div className="mx-auto max-w-3xl space-y-4 text-center">
+            <div className="border-brand-500/30 bg-brand-500/10 text-brand-300 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold shadow-[0_0_15px_rgba(168,85,247,0.15)] backdrop-blur-md">
+              <Sparkles className="text-brand-400 h-3.5 w-3.5 animate-pulse" />
+              <span>{t("advisoryBoardBadge")}</span>
+            </div>
+
+            <h2 className="text-fg-primary text-3xl font-extrabold tracking-tight sm:text-4xl">
               {t("advisoryBoardTitle")}
             </h2>
-            <p className="text-fg-muted mx-auto mt-2 max-w-2xl text-sm">
+
+            <p className="text-fg-secondary mx-auto max-w-2xl text-base leading-relaxed">
               {t("advisoryBoardSubtitle")}
             </p>
           </div>
 
-          <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2">
-            {[1, 2].map((idx) => (
-              <Card
-                key={idx}
-                className="border-border-subtle bg-bg-surface/50 hover:border-brand-500/40 border-dashed p-6 transition-all"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="border-border-subtle bg-bg-elevated text-fg-muted flex h-12 w-12 items-center justify-center rounded-full border">
-                    <Users className="h-5 w-5" />
+          {/* Spatial Glassmorphism Tracks Grid */}
+          <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                icon: Sparkles,
+                titleKey: "advisoryBoardTrack1Title",
+                descKey: "advisoryBoardTrack1Desc",
+                tag: "Ethics & Safety",
+                color: "text-brand-400",
+                borderColor: "hover:border-brand-500/40",
+              },
+              {
+                icon: ShieldAlert,
+                titleKey: "advisoryBoardTrack2Title",
+                descKey: "advisoryBoardTrack2Desc",
+                tag: "Audit & Red-Teaming",
+                color: "text-accent-400",
+                borderColor: "hover:border-accent-400/40",
+              },
+              {
+                icon: Scale,
+                titleKey: "advisoryBoardTrack3Title",
+                descKey: "advisoryBoardTrack3Desc",
+                tag: "Governance & Law",
+                color: "text-warning-400",
+                borderColor: "hover:border-warning-400/40",
+              },
+              {
+                icon: GraduationCap,
+                titleKey: "advisoryBoardTrack4Title",
+                descKey: "advisoryBoardTrack4Desc",
+                tag: "Enterprise Strategy",
+                color: "text-success-400",
+                borderColor: "hover:border-success-400/40",
+              },
+            ].map((track, idx) => {
+              const Icon = track.icon;
+              return (
+                <div
+                  key={idx}
+                  className={`border-border-subtle bg-bg-secondary/40 group relative flex flex-col justify-between rounded-2xl border p-6 backdrop-blur-xl transition-all duration-300 ${track.borderColor} hover:shadow-brand-500/10 hover:-translate-y-1 hover:shadow-2xl`}
+                >
+                  <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-b from-white/[0.04] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+                  <div className="relative z-10 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 shadow-inner backdrop-blur-md transition-transform duration-300 group-hover:scale-110">
+                        <Icon className={`h-5 w-5 ${track.color}`} />
+                      </div>
+                      <span className="border-border-subtle bg-bg-elevated/60 text-fg-muted rounded-full border px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase backdrop-blur-sm">
+                        {track.tag}
+                      </span>
+                    </div>
+
+                    <div>
+                      <h3 className="text-fg-primary text-base font-bold transition-colors group-hover:text-white">
+                        {t(track.titleKey)}
+                      </h3>
+                      <p className="text-fg-muted mt-2 text-xs leading-relaxed">
+                        {t(track.descKey)}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-fg-primary text-sm font-bold">
-                      {t("advisoryBoardPlaceholderTitle")} #{idx}
-                    </h3>
-                    <p className="text-fg-muted mt-1 text-xs leading-relaxed">
-                      {t("advisoryBoardPlaceholderDesc")}
-                    </p>
+
+                  <div className="border-border-subtle/50 text-brand-400 relative z-10 mt-6 flex items-center gap-1.5 border-t pt-4 text-xs font-semibold transition-transform group-hover:translate-x-1">
+                    <span>{t("advisoryBoardOpenPosition")}</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
                   </div>
                 </div>
-              </Card>
-            ))}
+              );
+            })}
           </div>
 
-          <div className="mt-8 text-center">
-            <a
-              href="mailto:hello@alparai.com?subject=Advisory%20Board%20Inquiry"
-              className="text-brand-400 inline-flex items-center gap-2 text-xs font-semibold hover:underline"
-            >
-              <Mail className="h-4 w-4" />
-              <span>{t("advisoryBoardJoinCTA")} (hello@alparai.com)</span>
-            </a>
+          {/* Call for Advisors Action Card (Spatial Glassmorphic Banner) */}
+          <div className="border-brand-500/20 from-brand-950/40 via-bg-secondary/60 to-bg-tertiary/40 relative mt-12 overflow-hidden rounded-2xl border bg-gradient-to-r p-8 shadow-2xl backdrop-blur-2xl md:p-10">
+            <div className="bg-brand-500/10 pointer-events-none absolute -right-20 -bottom-20 h-64 w-64 rounded-full blur-3xl" />
+
+            <div className="relative z-10 flex flex-col items-center justify-between gap-6 text-center md:flex-row md:text-left">
+              <div className="max-w-xl space-y-2">
+                <h3 className="text-fg-primary text-xl font-bold tracking-tight sm:text-2xl">
+                  {t("advisoryBoardBannerTitle")}
+                </h3>
+                <p className="text-fg-secondary text-xs leading-relaxed sm:text-sm">
+                  {t("advisoryBoardBannerDesc")}
+                </p>
+              </div>
+
+              <div className="flex shrink-0 flex-col items-center gap-3 sm:flex-row">
+                <a
+                  href="mailto:hello@alparai.com?subject=Global%20AI%20Ethics%20%26%20Trust%20Advisory%20Board%20Application"
+                  className="bg-brand-500 hover:bg-brand-600 shadow-brand-500/25 inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-xs font-bold text-white shadow-lg transition-all hover:scale-105 active:scale-95"
+                >
+                  <Mail className="h-4 w-4" />
+                  <span>{t("advisoryBoardApplyCTA")}</span>
+                </a>
+                <Link
+                  href="/about/advisory-board"
+                  className="border-border-subtle text-fg-secondary inline-flex items-center justify-center gap-2 rounded-xl border bg-white/5 px-5 py-3 text-xs font-semibold backdrop-blur-md transition-all hover:bg-white/10 hover:text-white"
+                >
+                  <span>{t("advisoryBoardLearnMoreCTA")}</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
           </div>
         </Container>
       </Section>
