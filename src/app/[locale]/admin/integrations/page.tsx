@@ -138,6 +138,7 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
 
   if (loading && !data) {
     return (
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
       <AdminContainer>
         <AdminPageHeader
           icon={<Cpu className="text-brand-400 h-6 w-6 animate-pulse" />}
@@ -231,5 +232,6 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
         })}
       </div>
     </AdminContainer>
+      </div></div>
   );
 }

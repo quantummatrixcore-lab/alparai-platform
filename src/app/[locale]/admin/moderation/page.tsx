@@ -44,7 +44,8 @@ export default async function ModerationPage({ params }: { params: Promise<{ loc
   const providers = providersRes.ok && providersRes.data ? providersRes.data : [];
 
   return (
-    <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
       <Container className="py-10">
         <header className="mb-8">
           <h1 className="flex items-center gap-3 text-2xl font-bold text-white">
@@ -80,5 +81,6 @@ export default async function ModerationPage({ params }: { params: Promise<{ loc
         </div>
       </Container>
     </div>
+      </div></div>
   );
 }

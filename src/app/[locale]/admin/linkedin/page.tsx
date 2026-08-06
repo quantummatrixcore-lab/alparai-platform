@@ -32,7 +32,8 @@ export default async function LinkedinAdminPage({
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8 rounded-3xl bg-zinc-900/40 p-6 pb-12 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="mx-auto max-w-6xl space-y-8 rounded-3xl bg-zinc-900/40 p-6 pb-12 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
       <div>
         <h1 className="flex items-center gap-3 text-3xl font-black tracking-tight text-white">
           <Users className="h-8 w-8 text-sky-400" />
@@ -45,5 +46,6 @@ export default async function LinkedinAdminPage({
         <LinkedinContactsList initialContacts={contacts || []} />
       </AdminSectionCard>
     </div>
+      </div></div>
   );
 }

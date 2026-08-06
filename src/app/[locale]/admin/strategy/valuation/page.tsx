@@ -53,7 +53,8 @@ export default async function ValuationPage({ params }: { params: Promise<{ loca
   const t = await getTranslations({ locale, namespace: "admin" });
 
   return (
-    <div className="min-h-screen rounded-3xl bg-zinc-900/40 p-6 py-8 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="min-h-screen rounded-3xl bg-zinc-900/40 p-6 py-8 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
       <Container>
         {/* Page Header */}
         <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
@@ -83,5 +84,6 @@ export default async function ValuationPage({ params }: { params: Promise<{ loca
         />
       </Container>
     </div>
+      </div></div>
   );
 }

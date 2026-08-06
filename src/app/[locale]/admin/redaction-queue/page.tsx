@@ -46,7 +46,8 @@ export default async function RedactionQueuePage({
   };
 
   return (
-    <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
       <Container className="py-10">
         <header className="mb-6">
           <h1 className="text-fg-primary text-2xl font-bold">{t("redaction_queue_title")}</h1>
@@ -78,5 +79,6 @@ export default async function RedactionQueuePage({
         </Card>
       </Container>
     </div>
+      </div></div>
   );
 }

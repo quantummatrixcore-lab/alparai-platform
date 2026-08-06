@@ -54,7 +54,8 @@ export default async function AdminInvestorsPage({
   const pendingApps = applications.filter((a) => a.status === "pending");
 
   return (
-    <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
       <Container className="py-10">
         <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <MetricCard
@@ -94,5 +95,6 @@ export default async function AdminInvestorsPage({
         <InvestorApplicationsList applications={applications} />
       </Container>
     </div>
+      </div></div>
   );
 }

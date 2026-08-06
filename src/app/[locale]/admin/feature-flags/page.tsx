@@ -24,7 +24,8 @@ export default async function FeatureFlagsPage({
   const flags = await getFeatureFlagsAction();
 
   return (
-    <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
       <AdminContainer>
         <AdminPageHeader
           icon={<Flag className="text-brand-400 h-6 w-6" />}
@@ -42,5 +43,6 @@ export default async function FeatureFlagsPage({
         <FeatureFlagsClient initialFlags={flags} />
       </AdminContainer>
     </div>
+      </div></div>
   );
 }

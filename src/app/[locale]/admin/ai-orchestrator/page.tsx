@@ -51,7 +51,8 @@ export default async function AiOrchestratorAdminPage() {
 
   await requireAdmin();
   return (
-    <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 text-white shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 text-white shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="flex items-center gap-3 text-3xl font-bold tracking-tight text-white">
@@ -206,5 +207,6 @@ export default async function AiOrchestratorAdminPage() {
       {/* Blackbox AI Code Quality Analysis Section */}
       <BlackboxCodeAnalysisSection />
     </div>
+      </div></div>
   );
 }

@@ -76,7 +76,8 @@ export default async function AdminAuditPage({ params }: { params: Promise<{ loc
   }));
 
   return (
-    <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
       <Container className="max-w-7xl py-10">
         <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -93,5 +94,6 @@ export default async function AdminAuditPage({ params }: { params: Promise<{ loc
         <AuditLogClient initialLogs={initialLogs} locale={locale} />
       </Container>
     </div>
+      </div></div>
   );
 }

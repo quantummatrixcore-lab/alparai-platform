@@ -58,7 +58,8 @@ export default async function AdminDashboardPage({
   setRequestLocale(locale);
 
   return (
-    <div className="min-h-screen bg-[#070709] p-4 text-zinc-100 selection:bg-cyan-500/30 selection:text-cyan-200 md:p-8 lg:p-12">
+    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="min-h-screen bg-[#070709] p-4 text-zinc-100 selection:bg-cyan-500/30 selection:text-cyan-200 md:p-8 lg:p-12">
       <div className="mx-auto max-w-7xl space-y-8">
         {/* Top Bar: Title + Status + Action Buttons */}
         <header className="flex flex-col gap-6 rounded-3xl border border-white/10 bg-zinc-900/30 p-6 backdrop-blur-2xl md:flex-row md:items-center md:justify-between">
@@ -611,5 +612,6 @@ export default async function AdminDashboardPage({
         </div>
       </div>
     </div>
+      </div></div>
   );
 }
