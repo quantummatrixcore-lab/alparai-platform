@@ -74,7 +74,7 @@ _Durum: **BLOKLU** (Otopilot değil — aşağıya bakınız) | Yürütücü: Op
 ## 3. Yönetişim & Yürütme Anayasası
 
 - **Otorite:** Mimar (Opus) rotayı çizer. Doğrulama CI'a aittir. Yürütme tamamen Antigravity ve OpenCode ajanlarındadır.
-- **⚠ Anayasal açık (v13.1):** Yukarıdaki madde doğrulama yetkisini CI'a devrediyor, ama CI şu an açık PR'larda kırmızıdır. **Doğrulama otoritesi kırmızı bir CI'a devredilemez** — ZETA-P0 kapanana kadar "CI yeşil" bir kapanış kanıtı olarak kabul edilmez; kapanış kanıtı doğrudan ölçüm (komut çıktısı, HTTP durumu, DB satırı) olmak zorundadır.
+- **⚠ Anayasal açık (v13.1):** Yukarıdaki madde doğrulama yetkisini CI'a devrediyor, ama CI şu an repo genelinde kırmızıdır (master dahil). **Doğrulama otoritesi kırmızı bir CI'a devredilemez** — ZETA-0 kapanana kadar "CI yeşil" bir kapanış kanıtı olarak kabul edilmez; kapanış kanıtı doğrudan ölçüm (komut çıktısı, HTTP durumu, DB satırı) olmak zorundadır.
 - **Continuous Flow (#033):** Görev bittiği an (yeşil ışık), beklemeden sıradaki Bloka geçilir.
 - **Zaman Çizelgesi Yok:** Hız asıldır. Sürüm numaraları önemsizdir. Çıktılar (para, kullanıcı, PR) gerçektir.
 
