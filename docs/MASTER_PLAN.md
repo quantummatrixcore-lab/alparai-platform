@@ -4,7 +4,7 @@
 
 Mühendislik temelleri (RLS, 9-model failover) inşa edilmiştir. Build-trap (aşırı mühendislik) dönemi bitmiştir. **Artık tüm otonom zeka; gelir (revenue), yatırım (VC) ve pazar penetrasyonu (GTM) için kullanılacaktır.**
 
-> **Kural 10 düzeltmesi (v13.1, ölçüldü 2026-08-06):** Bu satır "%100 yeşil CI" iddia ediyordu. **Yanlıştır — ve düzeltmenin ilk hâli de yanlıştı.** İlk ölçüm yalnızca PR'lara baktı (PR #69 → 13 kontrolün 12'si `failure`, hepsi 2–3 sn). İkinci ölçüm asıl durumu gösterdi: **`master` dalındaki son 30 koşunun 30'u da başarısız** (26 `push`, 4 `deployment_status`; sıfır başarı). Yani CI PR'a özgü değil, **repo genelinde çökmüş durumda.** Ayrıntı: `docs/plan/v12.13x.md`.
+> **Kural 10 düzeltmesi (v13.2, doğrudan ölçüldü 2026-08-06):** Bu satır "%100 yeşil CI" iddia ediyordu; yanlıştır. **v13.1'de yazdığım "master'da 30/30 başarısız" rakamı da yanlıştı** — bir alt ajan raporunu doğrulamadan doktrine geçirdim. Doğrudan ölçüm (`master`, son 30 koşu): **17 başarılı, 12 başarısız, 1 atlanmış**; süreler 5–63 sn; adımlar gerçekten çalışıyor. **İki ayrı sorun var, v13.1 bunları birbirine karıştırdı:** (1) `master`'da üç workflow gerçek hatalarla düşüyor (`CI` → "i18n Key Check" adımı; `Security Audit`; `Release` → "Resource not accessible by integration" token izni); (2) **PR bağlamında** neredeyse her kontrol 2–3 sn'de, adım çalıştırmadan düşüyor (PR #69: 13'ün 12'si — bu doğrudan doğrulandı). Ayrıntı: `docs/plan/v12.13x.md`.
 
 ---
 
@@ -67,18 +67,20 @@ _Durum: Otopilot Bekliyor | Yürütücü: 9-Model Arbitraj Sistemi_
 
 _Durum: **BLOKLU** (Otopilot değil — aşağıya bakınız) | Yürütücü: OpenCode Flash / Jules_
 
-> **Kural 10 düzeltmesi (v13.1, ölçüldü):** Bu blok "Otopilot Aktif" işaretliydi. **Değildir — yapısal olarak çalışamaz.** `master` ruleset'i PR + 7 status check zorunlu kılıyor; CI **her dalda ve her olay türünde** düşüyor (master'da son 30 koşunun 30'u başarısız) ⇒ hiçbir PR merge edilemez. `Trigger Jules Agent` kontrolü de başarısız. Yani ZETA-1'in kabul kriteri bugünkü altyapıda **matematiksel olarak karşılanamaz.** Ölçülen durum: 4 açık PR (#68, #69, #70 dependabot; #72 insan-yazımı), hiçbiri merge edilebilir değil.
+> **Kural 10 düzeltmesi (v13.2, ölçüldü):** Bu blok "Otopilot Aktif" işaretliydi. **Değildir — PR şeridi kapalı olduğu için çalışamaz.** `master` ruleset'i PR + 7 status check zorunlu kılıyor; PR bağlamında kontroller 2–3 sn'de, adım çalıştırmadan düşüyor ⇒ hiçbir PR merge edilemez. `Trigger Jules Agent` kontrolü de başarısız. Yani ZETA-1'in kabul kriteri bugünkü altyapıda karşılanamaz. Ölçülen: 4 açık PR (#68, #69, #70 dependabot; #72 insan-yazımı), hiçbiri merge edilebilir değil. **Not:** `master` dalı bundan ayrıdır ve büyük ölçüde çalışır (17/30 başarılı) — v13.1'in "her dalda çökmüş" ifadesi yanlıştı.
 
-1. **[ZETA-0] (P0, yeni — ön koşul, tüm ajan işinin üstünde)** CI ayağa kaldırılacak. **Teşhis henüz tamamlanmadı:** job log'ları API üzerinden alınamıyor (HTTP 404), bu yüzden kesin hata satırı bilinmiyor. Bilinen iki kanıt: (a) sır referansına **fallback veren tek workflow** (`preview.yml`, `|| 'default'` deseni) çalışan tek workflow; (b) buna rağmen `master` push koşuları da tamamen başarısız — yani sır eksikliği tek başına açıklamıyor, org/repo düzeyinde bir Actions kısıtlaması ya da kota sorunu da olabilir. **İlk adım teşhis olmalıdır:** bir workflow'u `workflow_dispatch` ile elle tetikleyip log'a UI üzerinden erişilmeye çalışılır; log alınabilirse ilk hata satırı raporlanır. Ancak ondan sonra düzeltme seçilir. **Kabul:** `master`'da en az bir workflow yeşile döner **ve** açık PR'lardan en az biri merge edilir.
-2. **[ZETA-1]** _(ZETA-0'a bağlı)_ Jules veya GitHub-Claude, `master` dalına dokunmaksızın arka planda otonom PR açacak (Örn: kullanılmayan kod temizliği).
-3. **[ZETA-2]** MASTER_PLAN.md dosyasının 400-satır barajı (Task #209) CI workflow'una sıkıca bağlanacak. Bu dosya (v13.0) 250 satırı geçmeyecek.
+1. **[ZETA-0a] (P0, ön koşul, tüm ajan işinin üstünde)** **PR şeridi açılacak.** En güçlü açıklama: `pull_request` bağlamında sırlar yok. Kanıt: sır referanslarına fallback veren tek workflow (`preview.yml`, `secrets.X || 'default'`) PR'da çalışan tek workflow; fallback'siz olanlar (`ci.yml`, `security.yml`, `secret-scan.yml` → `secrets.GITHUB_TOKEN`) anında düşüyor. Dependabot PR'ları tanımı gereği repo secret'ı almaz. **Çözüm seçenekleri:** Dependabot secrets tanımlanır **veya** sır gerektiren job'lara `if: github.event_name != 'pull_request'` konur (taramalar `push`/`schedule`'da tam kalır) **veya** required-check listesi PR'da fiilen koşabilen kontrollerle sınırlanır. **Kabul:** açık PR'lardan en az biri yeşile döner ve merge edilir.
+2. **[ZETA-0b] (P1)** **`master`'daki üç gerçek hata düzeltilecek** — bunlar altyapı değil, kod/config hatası: `CI` workflow'u **"i18n Key Check"** adımında düşüyor (eksik/uyumsuz çeviri anahtarı); `Release` workflow'u **"Resource not accessible by integration"** ile düşüyor (release-please token izni yetersiz — `permissions: contents: write` gerekli); `Security Audit` düşüyor. **Kabul:** üçü de `master`'da yeşile döner.
+3. **[ZETA-1]** _(ZETA-0'a bağlı)_ Jules veya GitHub-Claude, `master` dalına dokunmaksızın arka planda otonom PR açacak (Örn: kullanılmayan kod temizliği).
+4. **[ZETA-2]** MASTER_PLAN.md dosyasının 400-satır barajı (Task #209) CI workflow'una sıkıca bağlanacak. Bu dosya (v13.0) 250 satırı geçmeyecek.
 
 ---
 
 ## 3. Yönetişim & Yürütme Anayasası
 
 - **Otorite:** Mimar (Opus) rotayı çizer. Doğrulama CI'a aittir. Yürütme tamamen Antigravity ve OpenCode ajanlarındadır.
-- **⚠ Anayasal açık (v13.1):** Yukarıdaki madde doğrulama yetkisini CI'a devrediyor, ama CI şu an repo genelinde kırmızıdır (master dahil). **Doğrulama otoritesi kırmızı bir CI'a devredilemez** — ZETA-0 kapanana kadar "CI yeşil" bir kapanış kanıtı olarak kabul edilmez; kapanış kanıtı doğrudan ölçüm (komut çıktısı, HTTP durumu, DB satırı) olmak zorundadır.
+- **⚠ Anayasal açık (v13.2):** Yukarıdaki madde doğrulama yetkisini CI'a devrediyor, ama CI **PR bağlamında hiç çalışmıyor** ve `master`'da üç workflow kırmızı. **Doğrulama otoritesi bu hâldeki bir CI'a devredilemez** — ZETA-0a/0b kapanana kadar "CI yeşil" tek başına kapanış kanıtı sayılmaz; kanıt doğrudan ölçüm (komut çıktısı, HTTP durumu, DB satırı) olmak zorundadır.
+- **⚠ Kanıt zinciri kuralı (v13.2, bu turun dersi):** Bir alt ajanın raporladığı sayı, doktrine yazılmadan önce **çağıran tarafından doğrudan ölçülmelidir.** v13.1'de "master'da 30/30 başarısız" rakamı doğrulanmadan yazıldı ve yanlış çıktı (gerçek: 17/12/1). Alt ajan çıktısı kanıt değil, kanıt adayıdır.
 - **Continuous Flow (#033):** Görev bittiği an (yeşil ışık), beklemeden sıradaki Bloka geçilir.
 - **Zaman Çizelgesi Yok:** Hız asıldır. Sürüm numaraları önemsizdir. Çıktılar (para, kullanıcı, PR) gerçektir.
 
