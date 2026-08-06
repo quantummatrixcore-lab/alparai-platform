@@ -12,6 +12,7 @@ import { INTEGRATION_SERVICES, CATEGORIES } from "@/lib/integrations/registry";
 import type { IntegrationStatus, IntegrationAlternative } from "@/lib/integrations/types";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { EcosystemMap } from "@/components/admin/integrations/ecosystem-map";
 
 export default function AdminIntegrationsPage({ params }: { params: Promise<{ locale: string }> }) {
   const t = useTranslations("admin");
@@ -207,6 +208,8 @@ export default function AdminIntegrationsPage({ params }: { params: Promise<{ lo
               </Button>
             }
           />
+
+          <EcosystemMap />
 
           {/* Zero Cost Banner Shield */}
           <ZeroCostBanner services={aiProviders} totalSaved={totalSavedStr} locale={locale} />
