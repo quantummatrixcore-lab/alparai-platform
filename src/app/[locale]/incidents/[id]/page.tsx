@@ -194,8 +194,7 @@ export default async function IncidentDetailPage({
     };
   }
 
-  const supabaseUrl =
-    process.env.NEXT_PUBLIC_SUPABASE_URL || "https://azszpzyvxjduhemkjsdh.supabase.co";
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://auth.alparai.com";
   const evidence: EvidenceItem[] = ((evidenceRes.data as Array<Record<string, unknown>>) ?? []).map(
     (e) => {
       const pathStr = e["file_path"] as string;
