@@ -2,11 +2,24 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "compliance" });
+  const { locale: _locale } = await params;
+  const title = "EU AI Act §73 Compliance — ALPAR AI";
+  const description =
+    "Free compliance checklist for AI providers under the EU AI Act Article 73 — powered by ALPAR AI's community-governed trust infrastructure.";
+
   return {
-    title: t("title"),
-    description: t("description"),
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 

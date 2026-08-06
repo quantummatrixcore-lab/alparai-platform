@@ -14,11 +14,24 @@ import { createServerClient } from "@/lib/supabase/server";
 import { CalendlyEmbed } from "@/components/marketing/calendly-embed";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "about" });
+  const { locale: _locale } = await params;
+  const title = "Join the Advisory Board — ALPAR AI";
+  const description =
+    "Help shape the future of AI accountability. Apply to join ALPAR AI's Advisory Board.";
+
   return {
-    title: t("advisoryBoardTitle"),
-    description: t("advisoryBoardSubtitle"),
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 

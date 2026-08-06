@@ -39,6 +39,32 @@ const PATTERNS: ReadonlyArray<{
     re: /(?:(?:vergi|VKN|tax)\s*(?:kimlik|id|number|no|numaras\u0131)?\s*(?:no|numaras\u0131)?\s*[:.]?\s*)\d{10}\b/gi,
     mask: "[REDACTED-TAX-ID]",
   },
+  // European Union national IDs & tax numbers (GDPR / EU AI Act compliance)
+  {
+    name: "ssn_eu_es_dni",
+    re: /\b(?:[0-9]{8}[A-Z]|[XYZ][0-9]{7}[A-Z])\b/g,
+    mask: "[REDACTED-EU-ID]",
+  },
+  {
+    name: "codice_fiscale",
+    re: /\b[A-Z]{6}\d{2}[A-EHLMPR-T]\d{2}[A-Z]\d{3}[A-Z]\b/gi,
+    mask: "[REDACTED-EU-ID]",
+  },
+  {
+    name: "insee_fr",
+    re: /\b[12]\d{2}(?:0[1-9]|1[0-2]|[2-9]\d)\d{8}(?:\d{2})?\b/g,
+    mask: "[REDACTED-EU-ID]",
+  },
+  {
+    name: "vat_eu",
+    re: /\b(?:ATU\d{8}|BE0\d{9}|DE\d{9}|FR[A-Z0-9]{2}\d{9}|IT\d{11}|ES[A-Z0-9]\d{7}[A-Z0-9]|NL\d{9}B\d{2}|PL\d{10}|SE\d{12})\b/g,
+    mask: "[REDACTED-VAT-ID]",
+  },
+  {
+    name: "steuer_id_de",
+    re: /(?:Steuer-?ID|IdNr|Steueridentifikationsnummer)\s*[:.]?\s*\d{11}\b/gi,
+    mask: "[REDACTED-TAX-ID]",
+  },
   // Turkish phone (mobile + landline)
   {
     name: "phone_tr",

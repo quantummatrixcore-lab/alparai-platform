@@ -16,6 +16,7 @@ import {
 } from "@/components/seo/json-ld";
 import { PlausibleWithConsent } from "@/components/plausible-consent";
 import { PwaRegister } from "@/components/pwa-register";
+import { UtmTracker } from "@/components/analytics/utm-tracker";
 
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -103,6 +104,7 @@ export default async function LocaleLayout({
             <SoftwareApplicationJsonLd />
             <WebSiteJsonLd />
             <PlausibleWithConsent />
+            <UtmTracker />
             <Analytics />
             <SpeedInsights />
           </NextIntlClientProvider>

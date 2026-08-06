@@ -314,4 +314,29 @@ describe("PII Guardian", () => {
       expect(isSensitiveCategory("other")).toBe(false);
     });
   });
-});
+
+  describe("EU PII Patterns (GDPR & EU AI Act)", () => {
+    it("detects and masks Spanish DNI / NIE", () => {
+      expect(hasPII("DNI: 12345678Z")).toBe(true);
+      expect(detectPIITypes("DNI: 12345678Z")).toContain("ssn_eu_es_dni");
+      expect(maskPII("My DNI is 12345678Z.").masked).toContain("[REDACTED-EU-ID]");
+    });
+
+    it("detects and masks Italian Codice Fiscale", () => {
+      expect(hasPII("Codice Fiscale: RSSMRA80A01H501U")).toBe(true);
+      expect(detectPIITypes("Codice Fiscale: RSSMRA80A01H501U")).toContain("codice_fiscale");
+      expect(maskPII("CF: RSSMRA80A01H501U").masked).toContain("[REDACTED-EU-ID]");
+    });
+
+    it("detects and masks EU VAT ID", () => {
+      expect(hasPII("Company VAT DE123456789")).toBe(true);
+      expect(detectPIITypes("VAT: DE123456789")).toContain("vat_eu");
+      expect(maskPII("VAT DE123456789").masked).toContain("[REDACTED-VAT-ID]");
+    });
+
+    it("detects and masks German Steuer-ID", () => {
+      expect(hasPII("Steuer-ID: 12345678901")).toBe(true);
+      expect(detectPIITypes("Steuer-ID: 12345678901")).toContain("steuer_id_de");
+      expect(maskPII("Steuer-ID: 12345678901").masked).toContain("[REDACTED-TAX-ID]");
+    });
+  });
