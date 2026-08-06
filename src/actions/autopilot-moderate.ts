@@ -11,24 +11,14 @@ import {
 } from "@/lib/autopilot";
 import { revalidatePath } from "next/cache";
 import { getResendClient } from "@/lib/email/resend";
-import { resolveApiKey } from "@/lib/ai/api-keys";
+import { callWithFailover, FAST_TRIAGE_CHAIN } from "@/lib/ai/openrouter-gateway";
 
 async function evaluateIncidentWithGemini(
   title: string,
   description: string,
 ): Promise<{ score: number; reason: string; costTokens?: number } | null> {
-  const apiKey = await resolveApiKey("google", "GOOGLE_API_KEY");
-  if (!apiKey) {
-    logger.error("No Google API Key found for incident moderation Gemini call");
-    return null;
-  }
-
-  const prompt = `You are ALPAR Autopilot, the AI incident moderation agent for ALPAR AI.
-Your task is to evaluate a user-submitted AI incident reports.
-
-Evaluate this incident:
-Title: "${title}"
-Description: "${description}"
+  const systemPrompt = `You are ALPAR Autopilot, the AI incident moderation agent for ALPAR AI.
+Your task is to evaluate a user-submitted AI incident report.
 
 Evaluate the submission based on:
 1. Relevance: Is this actually about an artificial intelligence system? (e.g. LLM, computer vision, recommendation system, self-driving cars, deepfake, etc.)
@@ -47,37 +37,32 @@ Return ONLY a valid JSON object matching this schema (do not output markdown tic
   "reason": "Clear explanation of the evaluation reason."
 }`;
 
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 8000);
+  const userMessage = `Title: "${title}"\nDescription: "${description}"`;
 
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+    const result = await callWithFailover(
       {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            responseMimeType: "application/json",
-          },
-        }),
-        signal: controller.signal,
+        systemPrompt,
+        userMessage,
+        temperature: 0.1,
+        responseFormat: "json",
       },
+      FAST_TRIAGE_CHAIN,
     );
 
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      logger.error("Gemini API call failed for moderation", { status: response.status });
+    if (!result.ok) {
+      logger.error("AI gateway failover failed for moderation", { error: result.error });
       return null;
     }
 
-    const data = await response.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    const costTokens = data.usageMetadata?.totalTokenCount || 0;
+    const text = result.data.content
+      .trim()
+      .replace(/^```(?:json)?\s*/i, "")
+      .replace(/\s*```$/i, "")
+      .trim();
+
     if (!text) {
-      logger.error("Gemini API returned empty response for moderation");
+      logger.error("AI gateway returned empty response for moderation");
       return null;
     }
 
@@ -85,12 +70,11 @@ Return ONLY a valid JSON object matching this schema (do not output markdown tic
     return {
       score: typeof parsed.score === "number" ? parsed.score : 50,
       reason: parsed.reason || "Evaluated by AI.",
-      costTokens,
+      costTokens: result.data.usage?.totalTokens || 0,
     };
   } catch (error) {
-    clearTimeout(timeoutId);
     logger.error(
-      "Error calling Gemini API for incident moderation",
+      "Error calling AI gateway for incident moderation",
       undefined,
       error instanceof Error ? error : undefined,
     );

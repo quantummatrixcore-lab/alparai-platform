@@ -1,7 +1,19 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import Image from "next/image";
-import { Star, MessageSquare, Lightbulb, ChevronRight } from "lucide-react";
+import {
+  Star,
+  MessageSquare,
+  Lightbulb,
+  ChevronRight,
+  Cpu,
+  Layers,
+  Sparkles,
+  Search,
+  SlidersHorizontal,
+  Award,
+  ShieldCheck,
+} from "lucide-react";
 import { createServerClient } from "@/lib/supabase/server";
 import { Badge } from "@/components/ui/badge";
 import { MODELS_CATALOG } from "@/lib/constants/models-catalog";
@@ -94,6 +106,14 @@ export default async function ModelsPage({ params, searchParams }: ModelPageProp
     return acc;
   }, {});
 
+  // Dashboard Stats Calculations
+  const totalModelsCount = models.length;
+  const ratedModelsCount = models.filter((m) => (reviewStats[m.id]?.count || 0) > 0).length;
+  const uniqueProvidersCount = new Set(
+    models.map((m) => (m.ai_providers as { name: string } | null)?.name || m.provider_id),
+  ).size;
+  const totalAuditsCount = reviews.length + features.length;
+
   // Apply search filtering
   let filteredModels = [...models];
   if (search) {
@@ -136,48 +156,113 @@ export default async function ModelsPage({ params, searchParams }: ModelPageProp
   };
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 px-4 py-12 sm:px-6 lg:px-8">
-      <div className="space-y-4 text-center">
-        <h1 className="text-fg-primary from-brand-400 bg-gradient-to-r to-rose-400 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl">
+    <div className="mx-auto max-w-7xl space-y-10 px-4 py-12 sm:px-6 lg:px-8">
+      {/* Enterprise Header Banner */}
+      <div className="relative space-y-4 text-center">
+        <div className="inline-flex items-center gap-2 rounded-full border border-brand-500/30 bg-brand-500/10 px-4 py-1.5 text-xs font-semibold text-brand-300 backdrop-blur-md">
+          <Sparkles className="h-3.5 w-3.5 text-brand-400 animate-pulse" />
+          <span>K-BENCHMARK 3.0 • ENTERPRISE MODEL EVALUATION</span>
+        </div>
+        <h1 className="text-fg-primary bg-gradient-to-r from-white via-slate-100 to-brand-300 bg-clip-text text-4xl font-black tracking-tight text-transparent sm:text-5xl lg:text-6xl">
           {t("page_title")}
         </h1>
-        <p className="text-fg-muted mx-auto max-w-2xl text-lg">{t("page_subtitle")}</p>
+        <p className="text-fg-muted mx-auto max-w-2xl text-base sm:text-lg font-normal leading-relaxed">
+          {t("page_subtitle")}
+        </p>
       </div>
 
-      {/* Filter and Sort Form */}
+      {/* Enterprise Stat Cards Grid */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/40 p-5 backdrop-blur-xl shadow-xl transition-all duration-300 hover:border-brand-500/40 hover:bg-slate-900/60">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Models</span>
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-brand-500/20 bg-brand-500/10 text-brand-400">
+              <Cpu className="h-5 w-5" />
+            </div>
+          </div>
+          <div className="mt-3 text-3xl font-extrabold text-white">{totalModelsCount}</div>
+          <div className="mt-1 flex items-center gap-1 text-xs text-slate-400">
+            <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+            <span>Catalog & Verified</span>
+          </div>
+        </div>
+
+        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/40 p-5 backdrop-blur-xl shadow-xl transition-all duration-300 hover:border-amber-500/40 hover:bg-slate-900/60">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Rated Models</span>
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-amber-500/20 bg-amber-500/10 text-amber-400">
+              <Star className="h-5 w-5 fill-amber-400/20" />
+            </div>
+          </div>
+          <div className="mt-3 text-3xl font-extrabold text-white">{ratedModelsCount}</div>
+          <div className="mt-1 text-xs text-slate-400">Community Benchmarked</div>
+        </div>
+
+        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/40 p-5 backdrop-blur-xl shadow-xl transition-all duration-300 hover:border-indigo-500/40 hover:bg-slate-900/60">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">AI Labs & Providers</span>
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-indigo-500/20 bg-indigo-500/10 text-indigo-400">
+              <Layers className="h-5 w-5" />
+            </div>
+          </div>
+          <div className="mt-3 text-3xl font-extrabold text-white">{uniqueProvidersCount}</div>
+          <div className="mt-1 text-xs text-slate-400">Active Ecosystem</div>
+        </div>
+
+        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/40 p-5 backdrop-blur-xl shadow-xl transition-all duration-300 hover:border-purple-500/40 hover:bg-slate-900/60">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Community Audits</span>
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-purple-500/20 bg-purple-500/10 text-purple-400">
+              <Award className="h-5 w-5" />
+            </div>
+          </div>
+          <div className="mt-3 text-3xl font-extrabold text-white">{totalAuditsCount}</div>
+          <div className="mt-1 text-xs text-slate-400">Reviews & Feature Requests</div>
+        </div>
+      </div>
+
+      {/* Glassmorphism Filter and Sort Form */}
       <form
         method="GET"
-        className="border-border-subtle bg-bg-secondary/20 mx-auto flex max-w-4xl flex-col gap-4 rounded-2xl border p-4 backdrop-blur-md sm:flex-row"
+        className="relative border border-white/10 bg-slate-900/40 mx-auto flex max-w-5xl flex-col gap-4 rounded-2xl p-4 backdrop-blur-xl shadow-2xl sm:flex-row sm:items-center"
       >
-        <input
-          type="text"
-          name="search"
-          defaultValue={search || ""}
-          placeholder={t("search_placeholder")}
-          className="border-border-subtle bg-bg-secondary/40 text-fg-primary focus:border-brand-500 placeholder-fg-muted flex-1 rounded-xl border px-4 py-2 text-sm transition focus:outline-none"
-        />
-        <select
-          name="sort"
-          defaultValue={sort || "name"}
-          className="border-border-subtle bg-bg-secondary/40 text-fg-primary focus:border-brand-500 cursor-pointer rounded-xl border px-4 py-2 text-sm transition focus:outline-none"
-        >
-          <option value="name">{t("sort_name")}</option>
-          <option value="rating">{t("sort_rating")}</option>
-          <option value="reviews">{t("sort_reviews")}</option>
-          <option value="features">{t("sort_features")}</option>
-        </select>
-        <button
-          type="submit"
-          className="bg-brand-500 hover:bg-brand-600 rounded-xl px-6 py-2 text-sm font-semibold text-white transition"
-        >
-          {t("filter")}
-        </button>
+        <div className="relative flex-1">
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <input
+            type="text"
+            name="search"
+            defaultValue={search || ""}
+            placeholder={t("search_placeholder")}
+            className="w-full border border-white/10 bg-slate-950/60 pl-11 pr-4 py-2.5 text-sm text-white placeholder-slate-400 rounded-xl transition-all focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+          />
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="relative flex items-center">
+            <SlidersHorizontal className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <select
+              name="sort"
+              defaultValue={sort || "name"}
+              className="border border-white/10 bg-slate-950/60 pl-9 pr-8 py-2.5 text-sm text-white cursor-pointer rounded-xl transition-all focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+            >
+              <option value="name">{t("sort_name")}</option>
+              <option value="rating">{t("sort_rating")}</option>
+              <option value="reviews">{t("sort_reviews")}</option>
+              <option value="features">{t("sort_features")}</option>
+            </select>
+          </div>
+          <button
+            type="submit"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-500 to-indigo-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-500/20 transition-all hover:from-brand-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-brand-500/50"
+          >
+            {t("filter")}
+          </button>
+        </div>
       </form>
 
-      {/* Table/List View */}
-      <div className="border-border-subtle bg-bg-secondary/20 overflow-hidden rounded-2xl border backdrop-blur-md">
+      {/* Enterprise Glassmorphic Table/List View */}
+      <div className="border border-white/10 bg-slate-900/40 overflow-hidden rounded-2xl shadow-2xl backdrop-blur-xl">
         {/* Table Header (Hidden on Mobile) */}
-        <div className="border-border-subtle bg-bg-secondary/40 text-fg-muted hidden border-b px-6 py-4 text-xs font-black tracking-wider uppercase md:grid md:grid-cols-[2fr_1.2fr_1.2fr_1.2fr_0.8fr_0.8fr_40px] md:items-center md:gap-4">
+        <div className="border-b border-white/10 bg-slate-950/60 text-slate-400 hidden px-6 py-4 text-xs font-black tracking-widest uppercase md:grid md:grid-cols-[2fr_1.2fr_1.2fr_1.2fr_0.8fr_0.8fr_40px] md:items-center md:gap-4">
           <div>{t("table_model_name", { defaultValue: "Model" })}</div>
           <div>{t("table_provider", { defaultValue: "Provider" })}</div>
           <div>{t("table_status", { defaultValue: "Status" })}</div>
@@ -189,16 +274,16 @@ export default async function ModelsPage({ params, searchParams }: ModelPageProp
           <div></div>
         </div>
 
-        <div className="divide-border-subtle divide-y">
+        <div className="divide-y divide-white/5">
           {filteredModels.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 text-center">
-              <div className="bg-brand-500/10 mb-4 flex h-16 w-16 items-center justify-center rounded-2xl">
+              <div className="bg-brand-500/10 mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-brand-500/20">
                 <Lightbulb className="text-brand-400 h-8 w-8" />
               </div>
-              <h3 className="text-fg-primary mb-2 text-xl font-bold">
+              <h3 className="text-white mb-2 text-xl font-bold">
                 {search ? t("no_results_title") : t("empty_title")}
               </h3>
-              <p className="text-fg-muted max-w-sm text-sm">
+              <p className="text-slate-400 max-w-sm text-sm">
                 {search ? t("no_results_subtitle") : t("empty_subtitle")}
               </p>
             </div>
@@ -218,36 +303,36 @@ export default async function ModelsPage({ params, searchParams }: ModelPageProp
                 <Link
                   key={model.id}
                   href={`/models/${model.provider_id}/${model.id}`}
-                  className="group hover:bg-bg-secondary/40 flex flex-col gap-4 p-6 transition duration-200 md:grid md:grid-cols-[2fr_1.2fr_1.2fr_1.2fr_0.8fr_0.8fr_40px] md:items-center md:gap-4 md:px-6 md:py-4"
+                  className="group flex flex-col gap-4 p-6 transition-all duration-300 hover:bg-slate-800/40 md:grid md:grid-cols-[2fr_1.2fr_1.2fr_1.2fr_0.8fr_0.8fr_40px] md:items-center md:gap-4 md:px-6 md:py-4"
                 >
                   {/* Model Name & Version */}
                   <div className="space-y-1">
-                    <h3 className="text-fg-primary group-hover:text-brand-400 text-lg font-bold transition-colors">
+                    <h3 className="text-white group-hover:text-brand-400 text-base font-bold transition-colors">
                       {model.name}
                     </h3>
-                    <p className="text-fg-muted text-xs">
+                    <p className="text-slate-400 text-xs font-mono">
                       {model.version && t("version", { version: model.version })}
                       {model.released_at && ` • ${t("released", { date: model.released_at })}`}
                     </p>
                   </div>
 
                   {/* Provider */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2.5">
                     {provider?.logo_url ? (
                       <Image
                         src={provider.logo_url}
                         alt={provider.name}
-                        width={24}
-                        height={24}
+                        width={26}
+                        height={26}
                         unoptimized
-                        className="bg-bg-tertiary rounded-md object-contain p-0.5"
+                        className="bg-slate-800 rounded-lg border border-white/10 object-contain p-1"
                       />
                     ) : (
-                      <div className="bg-bg-tertiary text-fg-muted flex h-6 w-6 items-center justify-center rounded-md text-[10px] font-bold">
+                      <div className="bg-slate-800 border border-white/10 text-brand-300 flex h-7 w-7 items-center justify-center rounded-lg text-[11px] font-bold">
                         {provider?.name?.[0] || "AI"}
                       </div>
                     )}
-                    <span className="text-fg-secondary text-sm font-semibold">
+                    <span className="text-slate-200 text-sm font-semibold">
                       {provider?.name || t("unknown_provider")}
                     </span>
                   </div>
@@ -257,52 +342,55 @@ export default async function ModelsPage({ params, searchParams }: ModelPageProp
                     <Badge
                       variant={statusVariants[model.status] || "default"}
                       size="sm"
-                      className="w-fit"
+                      dot
+                      className="w-fit border-white/10"
                     >
                       {t(model.status)}
                     </Badge>
                   </div>
 
                   {/* Rating / Stars */}
-                  <div className="flex items-center gap-1.5 md:justify-center">
+                  <div className="flex items-center gap-2 md:justify-center">
                     <div className="flex items-center gap-0.5">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star
                           key={star}
                           className={`h-3.5 w-3.5 ${
                             star <= Math.round(avgScore)
-                              ? "fill-brand-400 text-brand-400"
-                              : "text-border-strong"
+                              ? "fill-amber-400 text-amber-400"
+                              : "text-slate-700"
                           }`}
                         />
                       ))}
                     </div>
-                    <span className="text-fg-primary ml-1 text-sm font-bold">
+                    <span className="inline-flex items-center rounded-md border border-amber-500/20 bg-amber-500/10 px-1.5 py-0.5 text-xs font-extrabold text-amber-300">
                       {avgScore > 0 ? avgScore.toFixed(1) : "-"}
                     </span>
                   </div>
 
                   {/* Reviews */}
-                  <div className="text-fg-secondary flex items-center gap-2 md:justify-center md:gap-0">
-                    <MessageSquare className="text-fg-muted h-4 w-4 shrink-0 md:hidden" />
-                    <span className="text-sm font-semibold">{stats.count}</span>
-                    <span className="text-fg-muted ml-1 text-xs md:hidden">
+                  <div className="text-slate-300 flex items-center gap-2 md:justify-center md:gap-0">
+                    <MessageSquare className="text-slate-400 h-4 w-4 shrink-0 md:hidden" />
+                    <span className="text-sm font-bold">{stats.count}</span>
+                    <span className="text-slate-400 ml-1 text-xs md:hidden">
                       ({t("reviews", { count: stats.count })})
                     </span>
                   </div>
 
                   {/* Suggestions */}
-                  <div className="text-fg-secondary flex items-center gap-2 md:justify-center md:gap-0">
-                    <Lightbulb className="text-fg-muted h-4 w-4 shrink-0 md:hidden" />
-                    <span className="text-sm font-semibold">{featuresCount}</span>
-                    <span className="text-fg-muted ml-1 text-xs md:hidden">
+                  <div className="text-slate-300 flex items-center gap-2 md:justify-center md:gap-0">
+                    <Lightbulb className="text-slate-400 h-4 w-4 shrink-0 md:hidden" />
+                    <span className="text-sm font-bold">{featuresCount}</span>
+                    <span className="text-slate-400 ml-1 text-xs md:hidden">
                       ({t("suggestions_label", { defaultValue: "suggestions" })})
                     </span>
                   </div>
 
                   {/* Action */}
                   <div className="flex justify-end">
-                    <ChevronRight className="text-fg-muted group-hover:text-brand-400 h-5 w-5 transition duration-200 group-hover:translate-x-1" />
+                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/5 group-hover:bg-brand-500/20 transition-all duration-200">
+                      <ChevronRight className="text-slate-400 group-hover:text-brand-300 h-4 w-4 transition duration-200 group-hover:translate-x-0.5" />
+                    </div>
                   </div>
                 </Link>
               );
@@ -313,3 +401,4 @@ export default async function ModelsPage({ params, searchParams }: ModelPageProp
     </div>
   );
 }
+

@@ -63,10 +63,12 @@ export default async function LocaleLayout({
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") || "";
   const isEmbed = pathname.endsWith("/embed");
+  const dir = locale === "ar" || locale === "fa" ? "rtl" : "ltr";
 
   return (
     <html
       lang={locale}
+      dir={dir}
       className={`${sans.variable} ${display.variable} ${mono.variable}`}
       suppressHydrationWarning
     >

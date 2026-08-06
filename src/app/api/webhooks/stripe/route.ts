@@ -6,16 +6,19 @@ const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 
 /**
- * Normalizes user subscription tier for `api_keys.tier` ('free' | 'developer' | 'enterprise')
+ * Normalizes user subscription tier for `api_keys.tier` ('free' | 'developer' | 'vendor' | 'enterprise')
  * and `users.subscription_tier` / `subscriptions.plan`.
  */
 function normalizeTier(tierRaw?: string | null): {
-  apiKeyTier: "free" | "developer" | "enterprise";
+  apiKeyTier: "free" | "developer" | "vendor" | "enterprise";
   userTier: string;
 } {
-  const normalized = (tierRaw || "").toLowerCase();
+  const normalized = (tierRaw || "").trim().toLowerCase();
   if (normalized === "enterprise") {
     return { apiKeyTier: "enterprise", userTier: "enterprise" };
+  }
+  if (normalized === "vendor") {
+    return { apiKeyTier: "vendor", userTier: "vendor" };
   }
   if (normalized === "pro" || normalized === "developer" || normalized === "pilot") {
     return { apiKeyTier: "developer", userTier: normalized };
@@ -55,20 +58,104 @@ export async function POST(request: Request) {
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object;
-      const userId = session.metadata?.user_id;
+      let userId = session.metadata?.user_id || session.client_reference_id;
       const rawTier = session.metadata?.tier || "pro";
-      const customerId = session.customer as string;
-      const subscriptionId = session.subscription as string;
+      const customerId = typeof session.customer === "string" ? session.customer : session.customer?.id;
+      const subscriptionId = typeof session.subscription === "string" ? session.subscription : session.subscription?.id;
       const { apiKeyTier, userTier } = normalizeTier(rawTier);
 
-      if (userId && customerId) {
+      if (!userId && customerId) {
+        const { data: userByCust } = await admin
+          .from("users")
+          .select("id")
+          .eq("stripe_customer_id", customerId)
+          .single();
+        if (userByCust?.id) {
+          userId = userByCust.id;
+        }
+      }
+
+      if (userId) {
+        const { error: subErr } = await admin.from("subscriptions").upsert(
+          {
+            user_id: userId,
+            stripe_customer_id: customerId || null,
+            stripe_subscription_id: subscriptionId || null,
+            plan: userTier,
+            status: "active",
+          },
+          { onConflict: "user_id" },
+        );
+
+        if (subErr) {
+          logger.error("Failed to upsert subscription on checkout completion", { userId, error: subErr.message });
+        }
+
+        const { error: keyErr } = await admin
+          .from("api_keys")
+          .update({ tier: apiKeyTier })
+          .eq("provider", userId);
+
+        if (keyErr) {
+          logger.error("Failed to update api_keys tier on checkout completion", { userId, error: keyErr.message });
+        }
+
+        const { error: userErr } = await admin
+          .from("users")
+          .update({
+            subscription_tier: userTier,
+            ...(customerId ? { stripe_customer_id: customerId } : {}),
+          })
+          .eq("id", userId);
+
+        if (userErr) {
+          logger.error("Failed to update user subscription_tier on checkout completion", { userId, error: userErr.message });
+        }
+
+        logger.info("Stripe checkout session completed & tier upgrade applied via admin client", {
+          userId,
+          customerId,
+          subscriptionId,
+          rawTier,
+          userTier,
+          apiKeyTier,
+        });
+      } else {
+        logger.warn("Stripe checkout.session.completed received without resolved userId", {
+          sessionId: session.id,
+          customerId,
+        });
+      }
+      break;
+    }
+
+    case "customer.subscription.created": {
+      const subscription = event.data.object;
+      const customerId = typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id;
+      const subscriptionId = subscription.id;
+      const rawTier = subscription.metadata?.tier || "vendor";
+      const { apiKeyTier, userTier } = normalizeTier(rawTier);
+
+      let userId = subscription.metadata?.user_id;
+      if (!userId && customerId) {
+        const { data: userByCust } = await admin
+          .from("users")
+          .select("id")
+          .eq("stripe_customer_id", customerId)
+          .single();
+        if (userByCust?.id) {
+          userId = userByCust.id;
+        }
+      }
+
+      if (userId) {
         await admin.from("subscriptions").upsert(
           {
             user_id: userId,
-            stripe_customer_id: customerId,
+            stripe_customer_id: customerId || null,
             stripe_subscription_id: subscriptionId,
             plan: userTier,
-            status: "active",
+            status: subscription.status || "active",
           },
           { onConflict: "user_id" },
         );
@@ -78,15 +165,21 @@ export async function POST(request: Request) {
           .from("users")
           .update({
             subscription_tier: userTier,
-            stripe_customer_id: customerId,
+            ...(customerId ? { stripe_customer_id: customerId } : {}),
           })
           .eq("id", userId);
 
-        logger.info("Stripe checkout completed and tier updated", {
+        logger.info("Stripe customer.subscription.created tier upgrade applied via admin client", {
           userId,
           customerId,
-          tier: userTier,
+          subscriptionId,
+          userTier,
           apiKeyTier,
+        });
+      } else {
+        logger.warn("Stripe customer.subscription.created received without resolved userId", {
+          subscriptionId,
+          customerId,
         });
       }
       break;
@@ -95,9 +188,10 @@ export async function POST(request: Request) {
     case "customer.subscription.updated": {
       const subscription = event.data.object;
       const isActive = subscription.status === "active" || subscription.status === "trialing";
-      const periodEnd = subscription.items.data[0]?.current_period_end;
+      const periodEnd = subscription.items?.data?.[0]?.current_period_end;
       const rawTier = subscription.metadata?.tier || "pro";
       const { apiKeyTier, userTier } = normalizeTier(rawTier);
+      const customerId = typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id;
 
       await admin
         .from("subscriptions")
@@ -116,6 +210,16 @@ export async function POST(request: Request) {
           .eq("stripe_subscription_id", subscription.id)
           .single();
         userId = subData?.user_id;
+      }
+      if (!userId && customerId) {
+        const { data: userByCust } = await admin
+          .from("users")
+          .select("id")
+          .eq("stripe_customer_id", customerId)
+          .single();
+        if (userByCust?.id) {
+          userId = userByCust.id;
+        }
       }
 
       if (userId) {
@@ -142,6 +246,7 @@ export async function POST(request: Request) {
 
     case "customer.subscription.deleted": {
       const subscription = event.data.object;
+      const customerId = typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id;
       let userId = subscription.metadata?.user_id;
 
       if (!userId) {
@@ -151,6 +256,16 @@ export async function POST(request: Request) {
           .eq("stripe_subscription_id", subscription.id)
           .single();
         userId = subData?.user_id;
+      }
+      if (!userId && customerId) {
+        const { data: userByCust } = await admin
+          .from("users")
+          .select("id")
+          .eq("stripe_customer_id", customerId)
+          .single();
+        if (userByCust?.id) {
+          userId = userByCust.id;
+        }
       }
 
       await admin
@@ -170,3 +285,4 @@ export async function POST(request: Request) {
 
   return NextResponse.json({ received: true });
 }
+

@@ -4522,5 +4522,86 @@
     "methodology": "Metodoloji",
     "neutrality": "Tarafsızlık Politikası",
     "no_funding": "YZ Sağlayıcısı Finansmanı Yok"
+  },
+  "article73_checklist": {
+    "title": "AB AI Act Madde 73 Uyumluluk Kontrol Listesi",
+    "subtitle": "Yüksek riskli yapay zekâ sistemi sağlayıcıları için zorunlu ciddi olay bildirim yükümlülüklerine yönelik etkileşimli denetim çerçevesi.",
+    "badge": "AB AI Act Yasal Uyumluluk",
+    "meta_title": "AB AI Act Madde 73 Uyumluluk Kontrol Listesi | ALPAR AI",
+    "meta_description": "AB AI Act Madde 73 ciddi olay bildirim yükümlülüklerine uyum sağlamak için etkileşimli kontrol listesi ve potansiyel müşteri kılavuzu.",
+    "stats": {
+      "deadline_general": "15 Gün",
+      "deadline_general_sub": "Genel Olay Bildirim Süresi",
+      "deadline_urgent": "48 Saat",
+      "deadline_urgent_sub": "Ölümcül / Ağır Zarar Süresi",
+      "penalty": "35M € / %7",
+      "penalty_sub": "Maksimum Uyumsuzluk Cezası"
+    },
+    "filter": {
+      "all": "Tüm Maddeler ({count})",
+      "identification": "Sınıflandırma & Ön Değerlendirme",
+      "timelines": "Bildirim Süreleri",
+      "logging": "Loglama & Telemetri",
+      "rca": "Kök Neden & Dosyalama"
+    },
+    "progress": {
+      "title": "Denetim Uyumluluk Skoru",
+      "completed": "{total} maddeden {completed} tanesi tamamlandı (%{percent})",
+      "status_low": "Eylem Gerekli: Sistem mevzuat ihlaline karşı savunmasız.",
+      "status_mid": "Devam Ediyor: Temel bildirim mekanizmaları kısmen uygulandı.",
+      "status_high": "Tam Uyumlu: Sistem Madde 73 ciddi olay bildirimlerine hazır."
+    },
+    "download_box": {
+      "badge": "Ücretsiz Mevzuat Kaynağı",
+      "title": "Tam PDF Uyumluluk Paketi & Olay Müdahale Şablonunu İndirin",
+      "subtitle": "Çevrimdışı PDF denetim matrisini, kök neden analizi dosya şablonunu ve düzenleyici kurum bildirim formunu edinin.",
+      "email_placeholder": "Kurumsal e-posta adresinizi girin",
+      "role_placeholder": "Kurumsal rolünüzü seçin",
+      "role_provider": "Yapay Zekâ Sağlayıcısı (Provider)",
+      "role_deployer": "Yapay Zekâ Dağıtıcısı / İşletme (Deployer)",
+      "role_compliance": "Hukuk & Uyum Danışmanı",
+      "role_auditor": "Yapay Zekâ Denetçisi / Güvenlik Araştırmacısı",
+      "button": "Ücretsiz Uyum Kitini Alın",
+      "success_message": "Başarılı! Madde 73 PDF Uyumluluk Kiti e-posta adresinize gönderildi.",
+      "disclaimer": "Spam yok. ALPAR AI e-posta verilerini KVKK / GDPR ilkelerine uygun olarak saklar."
+    },
+    "items": {
+      "item1_title": "Ciddi Olay Ön Değerlendirme Protokolü",
+      "item1_desc": "Ölüm, ağır sağlık zararı, kritik altyapı aksaması veya temel hak ihlaline yol açan olayları kategorize etmek için resmi kriterler belirleyin.",
+      "item1_ref": "Madde 73(1) & Madde 3(49)",
+      "item2_title": "48 Saatlik Ölümcül Zarar Hızlı Bildirim Hattı",
+      "item2_desc": "Ölüm veya ağır sağlık hasarı durumunda 48 saat içinde piyasa gözetim makamlarına bildirimde bulunmak üzere otomatik bir üst makama iletim hattı kurun.",
+      "item2_ref": "Madde 73(2)(a)",
+      "item3_title": "7 Günlük Temel Haklar & Yaygın İhlal Tetikleyicisi",
+      "item3_desc": "Sistemik temel hak ihlallerine veya yaygın piyasa aksamalarına neden olan ciddi olaylar için 7 takvim günü içinde bildirim iş akışlarını tanımlayın.",
+      "item3_ref": "Madde 73(2)(b)",
+      "item4_title": "Standart 15 Günlük Ciddi Olay Resmi Bildirimi",
+      "item4_desc": "Farkındalık oluştuktan sonra 15 gün içinde AB üye devlet makamlarına ilk olay raporlarını iletmek için standart bir raporlama mekanizması oluşturun.",
+      "item4_ref": "Madde 73(1)",
+      "item5_title": "Madde 12 Otomatik Olay Loglaması & İzlenebilirlik",
+      "item5_desc": "Yüksek riskli yapay zekâ sistemlerinin girdileri, çıktıları, çalışma durumunu ve karar telemetrisini kaydeden müdahaleye karşı korumalı loglar tutmasını sağlayın.",
+      "item5_ref": "Madde 12 & Madde 73(4)",
+      "item6_title": "Madde 72 Piyasa Sonrası İzleme Sistemi Entegrasyonu",
+      "item6_desc": "Tekrarlayan performans anormalliklerini tespit etmek için piyasa sonrası telemetri akışlarını doğrudan sürekli risk yönetimi incelemelerine bağlayın.",
+      "item6_ref": "Madde 72",
+      "item7_title": "30 Günlük İnceleme & Kök Neden Analizi (RCA) Dosyası",
+      "item7_desc": "İlk bildirimden sonra 30 gün içinde tam kök neden incelemesini, teknik adli analizi ve düzeltici eylem planı sunumunu tamamlamak için prosedür geliştirin.",
+      "item7_ref": "Madde 73(4)",
+      "item8_title": "Dağıtıcı (Deployer) & Piyasa Gözetim Makamı İletişimi",
+      "item8_desc": "Olay doğrulandığında sistem dağıtıcılarını, alt entegratörleri ve ilgili AB Üye Devlet piyasa gözetim organlarını uyarmak için güvenli kanallar kurun.",
+      "item8_ref": "Madde 73(5)",
+      "item9_title": "Üçüncü Taraf & Tedarikçi Yapay Zekâ Bileşeni Denetim Protokolü",
+      "item9_desc": "Üçüncü taraf temel model ve API tedarik zinciri uyumluluğunu doğrulayın, alt tedarikçilerin ciddi olay raporlaması için SLA logları tutmasını sağlayın.",
+      "item9_ref": "Madde 25 & Madde 73",
+      "item10_title": "Bağımsız Yapay Zekâ Olay Kaydı Doğrulaması (ALPAR AI)",
+      "item10_desc": "Açıklanmayan sistemik zafiyetleri tespit etmek için iç olay telemetrisini açık kamu olay veritabanları (ALPAR AI K-BENCHMARK) ile çapraz karşılaştırın.",
+      "item10_ref": "ALPAR AI Açık Güven Standardı"
+    },
+    "trust_footer": {
+      "title": "Yapay Zekâ Güveni & Mevzuat Hazırlığı İçin Tasarlandı",
+      "desc": "ALPAR AI, düzenleme açığını kapatmak için açık kaynaklı güven altyapısı, çapraz denetim doğrulaması ve ciddi olay kayıtları sağlar.",
+      "link_ai_act": "Canlı Ciddi Olay Takibini İnceleyin",
+      "link_methodology": "K-BENCHMARK Metodolojisini Okuyun"
+    }
   }
 }

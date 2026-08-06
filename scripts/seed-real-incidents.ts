@@ -1,0 +1,212 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createClient } from "@supabase/supabase-js";
+import { maskPII } from "../src/lib/pii/guardian";
+
+export interface RealIncidentSeedItem {
+  id: string;
+  title: string;
+  description: string;
+  title_tr: string;
+  description_tr: string;
+  provider_slug: string;
+  category: "copyright" | "privacy" | "bias" | "misinformation" | "hallucination";
+  severity: "low" | "medium" | "high" | "critical";
+  incident_date: string;
+  location_country: string;
+  language: string;
+  eu_ai_act_article?: string;
+}
+
+export const REAL_INCIDENTS_SEED_DATA: RealIncidentSeedItem[] = [
+  {
+    id: "real-seed-00000000-0000-4000-8000-000000000101",
+    title: "New York Times Sues OpenAI & Microsoft over Copyrighted Data Ingestion",
+    description:
+      "In December 2023, The New York Times filed a milestone copyright infringement lawsuit in US Federal Court against OpenAI and Microsoft. The complaint demonstrated that millions of paywalled NYT articles were scraped without permission to train GPT-4, resulting in verbatim regurgitation of news content. This landmark case highlights systemic risk, training data transparency, and intellectual property compliance under EU AI Act Article 53.",
+    title_tr: "New York Times, Telifsiz Veri Kullanımı Nedeniyle OpenAI ve Microsoft'a Dava Açtı",
+    description_tr:
+      "Aralık 2023'te The New York Times, OpenAI ve Microsoft'a karşı ABD Federal Mahkemesinde tarihi bir telif hakkı ihlali davası açtı. Şikayette, milyonlarca telifli makalenin izin alınmaksızın GPT-4 modelini eğitmek üzere tarandığı ve birebir alıntılar üretildiği belgelendi. Bu dava, EU AI Act Madde 53 altındaki Genel Amaçlı YZ (GPAI) eğitim verisi şeffaflığı ve telif hakları uyumunun temel örneğidir.",
+    provider_slug: "openai",
+    category: "copyright",
+    severity: "critical",
+    incident_date: "2023-12-27",
+    location_country: "US",
+    language: "en",
+    eu_ai_act_article: "Article 53 (GPAI Model Copyright & Training Transparency)",
+  },
+  {
+    id: "real-seed-00000000-0000-4000-8000-000000000102",
+    title: "OpenAI Sky Synthetic Voice Replication & Scarlett Johansson Controversy",
+    description:
+      "In May 2024, actress Scarlett Johansson publicly revealed that OpenAI created a synthetic AI voice named Sky that mimicked her voice from the film Her, despite her explicit refusal to license her voice. OpenAI paused the Sky voice following international backlash. The event demonstrates biometric identity risk, unconsented synthetic voice replication, and deepfake transparency obligations under EU AI Act Article 50.",
+    title_tr: "OpenAI Sky Sentetik Ses Klonlama ve Scarlett Johansson Tartışması",
+    description_tr:
+      "Mayıs 2024'te oyuncu Scarlett Johansson, OpenAI'ın sesini lisanslama teklifini açıkça reddetmesine rağmen Her filmindeki sesini taklit eden Sky adlı sentetik bir ses sunduğunu açıkladı. Küresel tepkilerin ardından OpenAI ses seçeneğini durdurdu. Olay, kişisel biyometrik hakların ihlali ve EU AI Act Madde 50 altındaki sentetik içerik şeffaflığı yükümlülüklerini ortaya koymaktadır.",
+    provider_slug: "openai",
+    category: "privacy",
+    severity: "high",
+    incident_date: "2024-05-20",
+    location_country: "US",
+    language: "en",
+    eu_ai_act_article: "Article 50 (Transparency Obligations for Synthetic Media)",
+  },
+  {
+    id: "real-seed-00000000-0000-4000-8000-000000000103",
+    title: "Google Gemini Historical Image Bias and Depiction Overcorrection",
+    description:
+      "In February 2024, Google paused Gemini image generation feature after the model generated historically inaccurate and anachronistic depictions of historical figures (such as racially diverse 1940s German soldiers and non-historical founding figures). Google acknowledged that internal diversity guardrails failed to account for historical context, illustrating algorithmic bias and model alignment failure under EU AI Act transparency rules.",
+    title_tr: "Google Gemini Tarihi Görsel Üretiminde Algoritmik Yanlılık ve Hatalar",
+    description_tr:
+      "Şubat 2024'te Google, Gemini modelinin tarihsel figürleri anokronik ve tarihsel olarak yanlış şekilde üretmesi üzerine görsel üretme özelliğini askıya aldı. Google, çeşitlilik filtrelerinin tarihsel bağlamı göz önüne alamadığını kabul etti. Olay, EU AI Act çerçevesinde algoritmik yanlılık ve model hizalama başarısızlıklarına örnek teşkil eder.",
+    provider_slug: "google",
+    category: "bias",
+    severity: "high",
+    incident_date: "2024-02-22",
+    location_country: "US",
+    language: "en",
+    eu_ai_act_article: "Article 10 (Data Governance & Algorithmic Bias Mitigation)",
+  },
+  {
+    id: "real-seed-00000000-0000-4000-8000-000000000104",
+    title: "Midjourney Photorealistic Deepfakes & Artists Copyright Class Action",
+    description:
+      "In 2023, Midjourney v5 generated hyper-realistic viral deepfakes—such as Pope Francis wearing a white puffer jacket and fake arrest photos of political figures—causing widespread global misinformation. Simultaneously, visual artists filed class-action lawsuits accusing Midjourney of scraping billions of copyrighted artworks without consent, violating EU AI Act Article 50 deepfake disclosure rules and copyright standards.",
+    title_tr: "Midjourney Foto-Gerçekçi Deepfake Dezenformasyonu ve Sanatçı Telif Davası",
+    description_tr:
+      "2023'te Midjourney v5, Papa Francis'in kaz tüyü montlu ve siyasetçilerin sahte gözaltı fotoğrafları gibi viral hiper-gerçekçi deepfake görseller üreterek küresel dezenformasyon dalgasına yol açtı. Eşzamanlı olarak, görsel sanatçılar izin alınmaksızın milyarlarca eserin taranması nedeniyle toplu dava açtı. Olay, EU AI Act Madde 50 deepfake etiketleme ve telif uyum kriterlerini doğrudan ilgilendirmektedir.",
+    provider_slug: "midjourney",
+    category: "misinformation",
+    severity: "high",
+    incident_date: "2023-03-27",
+    location_country: "US",
+    language: "en",
+    eu_ai_act_article: "Article 50 (Watermarking & Disclosure of AI Generated Content)",
+  },
+  {
+    id: "real-seed-00000000-0000-4000-8000-000000000105",
+    title: "Air Canada AI Chatbot Refund Misinformation Leading to Binding Court Order",
+    description:
+      "In February 2024, a Canadian tribunal rendered a landmark decision holding Air Canada legally liable for false information provided by its customer support AI chatbot. The chatbot hallucinated an official retroactive bereavement refund policy. The tribunal rejected Air Canada legal defense that its AI chatbot was a separate legal entity responsible for its own words, setting an global enterprise accountability precedent under AI safety principles.",
+    title_tr: "Air Canada YZ Chatbot'unun Uydurduğu İade Politikasına Mahkumiyet Kararı",
+    description_tr:
+      "Şubat 2024'te Kanada Mahkemesi, müşteri hizmetleri YZ sohbet robotunun uydurduğu sahte taziye indirimi politikası nedeniyle Air Canada'yı yasal olarak sorumlu tuttu. Mahkeme, havayolu şirketinin 'robot kendi hareketlerinden sorumlu bağımsız bir varlıktır' savunmasını reddederek kurumların YZ sistemlerinin yanlış bilgilendirmelerinden doğrudan sorumlu olduğunu tescilledi.",
+    provider_slug: "other",
+    category: "hallucination",
+    severity: "critical",
+    incident_date: "2024-02-14",
+    location_country: "CA",
+    language: "en",
+    eu_ai_act_article: "Article 73 (Serious Incident Reporting & Consumer Protection)",
+  },
+];
+
+function loadEnvLocal() {
+  const envPath = path.resolve(process.cwd(), ".env.local");
+  if (fs.existsSync(envPath)) {
+    const lines = fs.readFileSync(envPath, "utf-8").split("\n");
+    for (const line of lines) {
+      if (line.startsWith("#") || !line.trim()) continue;
+      const match = line.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/);
+      if (match) {
+        const key = match[1];
+        let value = match[2] || "";
+        if (value.startsWith('"') && value.endsWith('"')) {
+          value = value.substring(1, value.length - 1);
+        } else if (value.startsWith("'") && value.endsWith("'")) {
+          value = value.substring(1, value.length - 1);
+        }
+        if (key && !process.env[key]) {
+          process.env[key] = value;
+        }
+      }
+    }
+  }
+}
+
+export async function seedRealIncidents(execute = false) {
+  loadEnvLocal();
+  console.log("🔒 Running PII Guardian sanitization checks on 5 historical AI seed incidents...");
+
+  const processedData = REAL_INCIDENTS_SEED_DATA.map((item) => {
+    const titleMaskedResult = maskPII(item.title);
+    const descMaskedResult = maskPII(item.description);
+
+    return {
+      ...item,
+      title_masked: titleMaskedResult.masked,
+      description_masked: descMaskedResult.masked,
+      contains_pii: titleMaskedResult.piiFound || descMaskedResult.piiFound,
+      pii_categories: Array.from(
+        new Set([...titleMaskedResult.detections, ...descMaskedResult.detections])
+      ),
+    };
+  });
+
+  console.log(`✓ Sanitized ${processedData.length} incidents through PII Guardian.`);
+
+  if (!execute) {
+    console.log("ℹ️ Dry-run mode completed. Pass --execute to write to Supabase.");
+    return processedData;
+  }
+
+  const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    console.error("❌ Error: Missing SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY environment variables.");
+    process.exit(1);
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  for (const incident of processedData) {
+    const { data: provider } = await supabase
+      .from("ai_providers")
+      .select("id")
+      .eq("slug", incident.provider_slug)
+      .maybeSingle();
+
+    const providerId = provider?.id ?? null;
+
+    const payload = {
+      id: incident.id,
+      user_id: null,
+      is_anonymous: false,
+      title: incident.title,
+      description: incident.description,
+      title_masked: incident.title_masked,
+      description_masked: incident.description_masked,
+      title_tr: incident.title_tr,
+      description_tr: incident.description_tr,
+      ai_provider_id: providerId,
+      category: incident.category,
+      severity: incident.severity,
+      incident_date: incident.incident_date,
+      location_country: incident.location_country,
+      language: incident.language,
+      status: "published",
+      published_at: new Date().toISOString(),
+      contains_pii: incident.contains_pii,
+      pii_categories: incident.pii_categories,
+    };
+
+    const { error } = await supabase.from("incidents").upsert(payload, { onConflict: "id" });
+    if (error) {
+      console.error(`❌ Failed to upsert incident ${incident.id}:`, error.message);
+    } else {
+      console.log(`✅ Upserted incident: ${incident.title}`);
+    }
+  }
+
+  console.log("🚀 Real incidents seeding script finished successfully.");
+  return processedData;
+}
+
+if (require.main === module) {
+  const isExecute = process.argv.includes("--execute");
+  seedRealIncidents(isExecute).catch((err) => {
+    console.error("Fatal seed error:", err);
+    process.exit(1);
+  });
+}
