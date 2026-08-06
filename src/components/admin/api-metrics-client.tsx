@@ -189,7 +189,7 @@ export function ApiMetricsClient({
             </ResponsiveContainer>
           ) : (
             <div className="flex h-full w-full animate-pulse items-center justify-center rounded-xl bg-white/5 text-sm text-white/40">
-              Loading Chart...
+              {t("api_loading_chart")}
             </div>
           )}
         </div>

@@ -47,7 +47,7 @@ export function EcosystemDashboard({ data }: { data: DashboardData }) {
               </div>
               <p className="mt-1 text-xs text-zinc-400">
                 {t("ecosystem_hub_subtitle") ||
-                  "Küresel yapay zeka ekosistem haberlerini izleyin, dış kaynaklardan çekilen otomatik olay taslaklarını onaylayın."}
+                  "Monitor AI ecosystem news, review external incident submissions, and track positive developments."}
               </p>
             </div>
           </div>
@@ -66,11 +66,11 @@ export function EcosystemDashboard({ data }: { data: DashboardData }) {
           </div>
           <div className="min-w-0 flex-1">
             <h4 className="flex items-center gap-2 text-xs font-bold tracking-wider text-amber-300 uppercase">
-              <span>{t("review_queue_guidance") || "İnceleme Kuyruğu Rehberi"}</span>
+              <span>{t("review_queue_guidance") || "Review Queue Guidance"}</span>
             </h4>
             <p className="mt-1 text-xs leading-relaxed text-zinc-300">
               {t("review_queue_guidance_desc") ||
-                "Kuyruktaki kayıtlar; OECD AI Observatory, AI Incident Database (AIID) ve küresel RSS haber akışlarından ALPAR AI otonom tarayıcıları tarafından otomatik çekilen potansiyel olay taslaklarıdır."}
+                "Entries in the queue are potential incident drafts automatically fetched by ALPAR AI autonomous crawlers from OECD AI Observatory, AI Incident Database (AIID), and global RSS feeds."}
             </p>
             <div className="mt-3 flex flex-wrap gap-4 text-[11px] text-zinc-400">
               <span className="flex items-center gap-1.5 font-medium">

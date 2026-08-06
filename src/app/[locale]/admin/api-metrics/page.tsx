@@ -146,17 +146,29 @@ export default async function ApiMetricsPage({ params }: { params: Promise<{ loc
   ];
 
   return (
-    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
-      <div className="animate-in fade-in space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl duration-500 md:p-8">
-      <div>
-        <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">
-          {t("api_metrics_title")}
-        </h1>
-        <p className="text-fg-secondary mt-2">{t("api_metrics_subtitle")}</p>
-      </div>
+    <div className="min-h-screen bg-black p-6">
+      <div className="rounded-3xl bg-zinc-900/40 p-8 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl">
+        <div className="animate-in fade-in space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl duration-500 md:p-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">
+                {t("api_metrics_title")}
+              </h1>
+              <p className="text-fg-secondary mt-2">{t("api_metrics_subtitle")}</p>
+            </div>
+            <div className="flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-400">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+              {t("api_metrics_live_status")}
+            </div>
+          </div>
 
-      <ApiMetricsClient metrics={dbMetrics} trafficData={trafficData} endpoints={endpointsData} />
+          <ApiMetricsClient
+            metrics={dbMetrics}
+            trafficData={trafficData}
+            endpoints={endpointsData}
+          />
+        </div>
+      </div>
     </div>
-      </div></div>
   );
 }

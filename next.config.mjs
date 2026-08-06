@@ -160,6 +160,21 @@ const nextConfig = {
         destination: "/legal/imprint",
         permanent: true,
       },
+      {
+        source: "/:locale/documentation",
+        destination: "/:locale/api-docs",
+        permanent: true,
+      },
+      {
+        source: "/documentation",
+        destination: "/api-docs",
+        permanent: true,
+      },
+      {
+        source: "/:locale/insights",
+        destination: "/:locale/insights/open-vs-closed",
+        permanent: false,
+      },
     ];
   },
 };
