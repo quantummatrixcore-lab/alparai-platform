@@ -132,18 +132,19 @@ ALPAR AI bağışla ayakta duran bir açık kaynak projesi değil; Stripe üzeri
 
 > **Evidence Rule:** Aşağıdaki tüm commit SHA'ları `origin/master`'da doğrulanmıştır. Tabloda yer almayan hiçbir iş "tamamlandı" sayılmaz.
 
-| Blok     | Görev                                                              | Dosya(lar)                              | Commit SHA        | Durum     |
-| -------- | ------------------------------------------------------------------ | --------------------------------------- | ----------------- | --------- |
-| ALPHA-1  | Seed Data Room (LTV/CAC 17x, TAM €2.1B, 18-ay Runway)              | `docs/fundraising/seed-data-room.md`    | `4e250ed5`        | ✅ pushed |
-| ALPHA-2  | Değerleme Memosu (€4.5M savunması, Earlybird/Point Nine/Balderton) | `docs/fundraising/valuation-memo.md`    | `4e250ed5`        | ✅ pushed |
-| ALPHA-3  | Top 20 EU VC Listesi + Cold Outreach taslakları                    | `docs/fundraising/vc-outreach.md`       | `1c00c75d`        | ✅ pushed |
-| ALPHA-6  | 12-slayt Marp Pitch Deck (Pre-Seed €750K)                          | `docs/fundraising/pitch-deck.md`        | `d9956c80`        | ✅ pushed |
-| OMEGA-1  | The Grok Files #1-3 (TR + EN blog serisi)                          | `docs/content/grok-files/01-03-*.md`    | `049579cf`        | ✅ pushed |
-| OMEGA-1b | The Grok Files #4-6 (PII, 9-Model, Trust Badge Economy)            | `docs/content/grok-files/04-06-*.md`    | `275f110d`        | ✅ pushed |
-| OMEGA-3  | Qwen ASR Fizibilite Raporu (113 dil, $0.60/ay maliyet)             | `docs/plan/omega3-asr-feasibility.md`   | `d9956c80`        | ✅ pushed |
-| SIGMA-1  | Top 50 AI Vendor Trust Badge Outreach Paketi                       | `docs/outreach/trust-badge-outreach.md` | `e9d2dfa`         | ✅ pushed |
-| SIGMA-3  | EU AI Act §73 Compliance Sayfası (Next.js route)                   | `src/app/[locale]/compliance/page.tsx`  | `d0a55167`        | ✅ pushed |
-| OMEGA-P1 | HN Show HN + Reddit Senkron Lansman                                | —                                       | CAPTCHA (Founder) | ⚠️        |
+| Blok      | Görev                                                              | Dosya(lar)                              | Commit SHA        | Durum     |
+| --------- | ------------------------------------------------------------------ | --------------------------------------- | ----------------- | --------- |
+| ALPHA-1   | Seed Data Room (LTV/CAC 17x, TAM €2.1B, 18-ay Runway)              | `docs/fundraising/seed-data-room.md`    | `4e250ed5`        | ✅ pushed |
+| ALPHA-2   | Değerleme Memosu (€4.5M savunması, Earlybird/Point Nine/Balderton) | `docs/fundraising/valuation-memo.md`    | `4e250ed5`        | ✅ pushed |
+| ALPHA-3   | Top 20 EU VC Listesi + Cold Outreach taslakları                    | `docs/fundraising/vc-outreach.md`       | `1c00c75d`        | ✅ pushed |
+| ALPHA-6   | 12-slayt Marp Pitch Deck (Pre-Seed €750K)                          | `docs/fundraising/pitch-deck.md`        | `d9956c80`        | ✅ pushed |
+| OMEGA-1   | The Grok Files #1-3 (TR + EN blog serisi)                          | `docs/content/grok-files/01-03-*.md`    | `049579cf`        | ✅ pushed |
+| OMEGA-1b  | The Grok Files #4-6 (PII, 9-Model, Trust Badge Economy)            | `docs/content/grok-files/04-06-*.md`    | `275f110d`        | ✅ pushed |
+| OMEGA-3   | Qwen ASR Fizibilite Raporu (113 dil, $0.60/ay maliyet)             | `docs/plan/omega3-asr-feasibility.md`   | `d9956c80`        | ✅ pushed |
+| SIGMA-1   | Top 50 AI Vendor Trust Badge Outreach Paketi                       | `docs/outreach/trust-badge-outreach.md` | `e9d2dfa`         | ✅ pushed |
+| SIGMA-3   | EU AI Act §73 Compliance Sayfası (Next.js route)                   | `src/app/[locale]/compliance/page.tsx`  | `d0a55167`        | ✅ pushed |
+| AUDIT-360 | 52 Admin Modülü Tarayıcı & Kod Düzeltmesi (i18n & Redirect)        | `src/app/[locale]/admin/*`              | `e6db30ab`        | ✅ pushed |
+| OMEGA-P1  | HN Show HN + Reddit Senkron Lansman                                | —                                       | CAPTCHA (Founder) | ⚠️        |
 
 ### 5a. Founder için kalan tek eylem (delege edilemez)
 
