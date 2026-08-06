@@ -25,9 +25,13 @@ Mühendislik temelleri (RLS, 9-model failover) inşa edilmiştir. Build-trap (a�
 
 ### 1c. Gelir ve Büyüme Hunisi (Unit Economics & Viral Loop)
 
-- **Freemium Açık Çekirdek:** Topluluk ve gazeteciler için ücretsiz şeffaflık veritabanı.
-- **Vendor Portal ($299/ay):** Top 50 AI sağlayıcısı için güven skoru rozeti (`<script src="badge.js">`). K-Factor (Viralite) motorumuz budur.
-- **Enterprise API ($2.499/ay):** Şirketlerin iç YZ sistemleri için Madde 73 denetim izi (audit trail). Hedef LTV/CAC > 17x.
+| P0 | Reddit r/ML + Hacker News Show HN trafik analizi (UTM izleme) | Antigravity + Founder | ✅ pushed |
+| P0 | İlk 10 enterprise outreach e-postası gönder (hello@alparai.com Resend API) | Antigravity Flash | ✅ pushed |
+| P1 | Trust Badge embed snippet `<script src="badge.js">` ilk 5 vendor'a ilet | Antigravity Flash | ✅ pushed |
+| P1 | K-BENCHMARK sonuçlarını public CSV/JSON olarak dışa aktar, docs/data/ altına koy | Antigravity Flash | ✅ pushed |
+| P2 | Advisory Board Calendly entegrasyonu ve page aktivasyonu | Antigravity Flash | ✅ `427a70a5` |
+
+LTV/CAC > 17x.
 
 ---
 
