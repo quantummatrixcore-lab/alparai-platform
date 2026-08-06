@@ -183,7 +183,11 @@ Google for Startups $2K–350K · AWS Activate $1K–200K · Microsoft Founders 
 | 206 | P1 | [Antigravity/OpenCode]`kill-metric`yorumlanamaz sinyal üretiyor — hiç olmamış bir lansmanı ölçüyor |`src/app/api/cron/kill-metric/route.ts:16` `launchDate = 2026-08-02`sabitiyle o tarihten beri kullanıcı ve olay sayıyor; ama lansman (#199) hiç yapılmadı. Rota "Day-7 Kill-Metric" adıyla 9 Ağustos'ta **"Users: 0, Incidents: 0"** üretecek ve bu sıfır, ürün başarısızlığıyla karıştırılabilir — oysa ürün kimseye gösterilmedi. Rotada eşik/karar mantığı da yok, yalnızca`logger.info` (`:30`). **Spec:** rotaya lansman durumu kontrolü eklenir; lansman gerçekleşmemişse metrik `0`değil`"N/A — not launched"`döner, ve eşik/karar mantığı yazılır. **Kabul:** 9 Ağustos raporunun yorumlanabilir çıktığı gösterilir.`depends:#199`| pending |
 | 207 | P1 | [Antigravity/OpenCode] Sıfır dış doğrulama — platformu Founder dışında kimse kullanmadı | **İlk sonuç-biçimli madde (v12.127 doktrini).** 125 backlog maddesi, 101 kapanış, ama bugüne kadar tek bir harici kullanıcının olay bildirdiği raporlanmadı. Altyapı hazır: outreach kuyruğu (#115), davet/bildirim hattı, moderasyon. Eksik olan kullanım. **Kabul (inşa değil, gözlem):** Founder dışı hesaplardan **10 adet`published`olay**; sayı DB sorgusuyla raporlanır.`depends:#199`| pending |
 | 208 | P1 | [Antigravity/OpenCode + Founder] Gelir hiç doğrulanmadı — Stripe canlı ama tek bir gerçek işlem yok | Stripe checkout + webhook +`subscriptions`tablosu canlı (#151 ✅), kota takibi var (#173 ✅) — ama bunlar **altyapıyı** ölçüyor, **işlemi** değil. Bugüne kadar uçtan uca tamamlanmış tek bir gerçek ödeme raporlanmadı. **Kabul:** gerçek modda (test modu değil) bir abonelik tamamlanır — Founder'ın kendi kartıyla asgari tutar yeterli — ve webhook'un`api_keys.tier`'ı yazdığı **DB'den** gösterilir. | pending |
-| 209 | P1 | [Antigravity/OpenCode] `MASTER_PLAN.md`boyut zorlayıcısı yok — v11.89'da bir kez küçültüldü, yeniden şişti | v12.127'de dosya 3.454 satır / 531 KB ölçüldü; panelin okuduğu backlog tablosu yalnızca 131 satır (%4).`CLAUDE.md`Kural 3 "10 KB üstü dosyayı doğrudan okuma" diyor — dosya kendi sınırının 53 katıydı. Bu tur arşive ayrılarak 1.421 satıra indirildi, ama **v11.89'da da aynısı yapılmıştı ve tekrar birikti** — çünkü zorlayıcı yok (Doktrin #047: her bağlayıcı kural yürütülebilir bir zorlayıcıyla gelir). **Spec:** (a) CI'da`docs/MASTER_PLAN.md` 400 satırı aşarsa iş akışı kırmızıya düşer; (b) uzun vadede backlog satırları DB'ye taşınır (`/admin/strategy/*`zaten DB tabanlı,`parseMasterPlan()`markdown'ı panele çeviriyor — tablo, Postgres'te yaşamak isteyen bir durumun serileştirmesi),`MASTER_PLAN.md` doktrin-only olur ve her tur değişmeyi bırakır. **Kabul:** 400 satırı aşan bir commit'in CI'da bloklandığı gösterilir. | pending |
+| 209 | P1 | [Antigravity/OpenCode] `MASTER_PLAN.md`boyut zorlayıcısı yok — v11.89'da bir kez küçültüldü, yeniden şişti | v12.127'de dosya 3.454 satır / 531 KB ölçüldü; panelin okuduğu backlog tablosu yalnızca 131 satır (%4).`CLAUDE.md`Kural 3 "10 KB üstü dosyayı doğrudan okuma" diyor — dosya kendi sınırının 53 katıydı. Bu tur arşive ayrılarak 1.421 satıra indirildi, ama **v11.89'da da aynısı yapılmıştı ve tekrar birikti** — çünkü zorlayıcı yok (Doktrin #047: her bağlayıcı kural yürütülebilir bir zorlayıcıyla gelir). **Spec:** (a) CI'da`docs/MASTER_PLAN.md` 400 satırı aşarsa iş akışı kırmızıya düşer; (b) uzun vadede backlog satırları DB'ye taşınır (`/admin/strategy/*`zaten DB tabanlı,`parseMasterPlan()`markdown'ı panele çeviriyor — tablo, Postgres'te yaşamak isteyen bir durumun serileştirmesi),`MASTER_PLAN.md`doktrin-only olur ve her tur değişmeyi bırakır. **Kabul:** 400 satırı aşan bir commit'in CI'da bloklandığı gösterilir. | pending |
+| 210 | P1 | [Antigravity/OpenCode] Jules kurulu ve canlı, ama bir tek iş bitirdiğine dair kanıt yok | **Sonuç-biçimli madde (v12.127 doktrini).** #148 (CLI + REST API +`/admin/jules`, `src/actions/admin/jules.ts`), #149 (anahtar Vercel'de) ve #150 (sızıntı rotate edildi) üçü de ✅. Stratejik gerekçe #148'in kendi metninde: tekrarlayan teknik görevler (bağımlılık, tip hatası, test, i18n) pahalı Antigravity/Mimar token'ı tüketiyor, Jules bunları asenkron GitHub VM'inde yürütmeli. **Ama Jules'ün bir görevi fiilen tamamladığı hiç raporlanmadı; `.github/workflows/`taramasında sıfır Jules referansı var.** Entegrasyon`✅`, kullanım ölçülmemiş. **Kabul:** Jules tarafından açılmış, CI yeşil ve merge edilmiş **3 PR** raporlanır (görev sınıfı: ajan yönlendirme tablosundaki mekanik hijyen). Sıfır PR çıkarsa entegrasyon "kurulu ama ölü" işaretlenir ve kaldırılması değerlendirilir — kullanılmayan entegrasyon bakım borcudur. | pending |
+| 211 | P1 | [Antigravity/OpenCode] GitHub üzerinden Claude uygulayıcısı devreye alınır — dördüncü yürütücü, PR disipliniyle | Founder talebi (2026-08-06): görevler GitHub üzerinden doğrudan bir Claude ajanına verilebilsin. `.github/workflows/`altına Claude Code GitHub Action eklenir; tetikleyici issue etiketi ya da PR yorumu. **Kapsam sınırı zorunlu:** yalnızca PR açar,`master`'a **push etmez**, `docs/MASTER_PLAN.md`'ye dokunmaz (G-6a — Uygulayıcı MASTER_PLAN'a yazmaz). Gerekçe: v12.111'de kaydedilen koordinasyon açığı ("Mimar kararları Uygulayıcı'ya ulaşmıyor") bilinen bir sistemde beşinci yürütücüyü aynı dala yazdırmak açığı çarpar; PR tek yapısal panzehirdir. **Kabul:** bir issue'dan üretilmiş, CI yeşil, merge edilmiş bir PR gösterilir. `depends:#213` | pending |
+| 212 | P1 | [Antigravity/OpenCode] Platformun kendi 9 modeli boşta — token arbitrajı yapılmıyor | Envanter gerçek: 9 adaptör (`src/lib/ai/adapters/`— Google, Vertex Gemini/Imagen/Veo, OpenRouter, Blackbox, HuggingFace, Cohere, NVIDIA NGC),`callWithFailover()` zincirleri (`src/lib/ai/openrouter-gateway.ts`: `FREE_TRIAGE_MODELS`9 ücretsiz model,`CREATIVE_COPY_CHAIN`, `MATH_LOGIC_CHAIN`), maliyet kill-switch (`isCostKillSwitchActive()`), `resolveApiKey()` (env → fallback → DB). Hepsi kapılı ve iş-akışına gömülü — genel amaçlı "şunu üret" uç noktası yok ve **bu bilinçli/doğru tasarım, korunacak**. Boşluk: proje, ücretsiz modellerin yapabileceği işleri pahalı ajan token'ıyla yaptırıyor. **İlk uygulama:** eksik çeviriler (`messages/{de,fr,ru}.json`; v12.92'de arayüz çevirisi ~%45 ölçülmüştü) `CREATIVE_COPY_CHAIN`'e verilir, çıktı insan onayından geçer. **Kabul:** en az bir dil dosyasının tamamlanma oranı öncesi/sonrası ölçülerek raporlanır. | pending |
+| 213 | P2 | [Antigravity/OpenCode] Ajan yönlendirme tablosunun yaptırımı yok | Doktrin #047: her bağlayıcı kural yürütülebilir bir zorlayıcıyla gelir. v12.128'de yazılan ajan yönlendirme tablosu şu an yalnızca metin. **Spec:** `master`'a doğrudan push yalnızca Mimar ve Antigravity kimlikleriyle kabul edilir; Jules ya da GitHub-Claude kimliğinden gelen doğrudan push CI'da kırmızıya düşer (bu ikisi yalnızca PR açar). **Kabul:** Jules kimliğiyle atılmış doğrudan bir push'un bloklandığı gösterilir. `blocks:#211` | pending |
 <!-- FOUNDER_BACKLOG_END -->
 
 ---
@@ -1470,6 +1474,56 @@ Son hücre esas alınarak `python3` ile kesin ölçüm: **129 madde** (#206–#2
 ### Verification
 
 Backlog sayımı `awk`+`grep -c` ile marker arası ölçüldü (125 → 129). 403 gözlemi üç rotada bağımsız `WebFetch` ile alındı. `kill-metric/route.ts:16` ve `auth-buttons.tsx` doğrudan okundu. Public repo temizliği GitHub üzerinden doğrudan doğrulandı. Dosya boyutu `wc -lc` ile öncesi/sonrası ölçüldü. `node scripts/check-masterplan-consistency.mjs` → `passed`.
+
+---
+
+## v12.128 — Ajan çoğalması yönetilmiyor: Jules kurulu ama ölçülmüyor + dördüncü uygulayıcı + platformun kendi 9 modeli boşta
+
+**Tetikleyici.** Founder iki şey istedi: Jules stratejisinin güncellenmesi ve görevlerin GitHub üzerinden doğrudan bir Claude ajanına verilebilmesi; ayrıca admin paneldeki AI sağlayıcı modelleriyle üretim yaptırılıp yaptırılamayacağı. İki soru da aynı yere çıkıyor: **projede kaç uygulayıcı var, hangisi neyi yapar, hangisinin çalıştığı ölçülüyor?**
+
+**G-5 uyumu:** iki paralel Haiku ajanı tüm keşfi yaptı (Jules durumu; AI adaptör envanteri ve çağrı yolları). Pahalı model yalnızca hedefli doğrulama (`git log -S` ile sızıntı izi, üç backlog satırı) ve sentez yaptı. **"Opus sınırlarını aşarak / sınırsız zeka" ifadesi mecazi yoğunluk talebi olarak ele alındı** — var olmayan bir mod iddia edilmiyor (Kural 10); ölçülebilir olan şudur: keşif tamamen devredildi, her bulgu dosya:satır ya da commit SHA'ya bağlandı.
+
+### Öz-düzeltme (Kural 10, kendi iddiama)
+
+Bu turda `docs/MASTER_PLAN.md`'de düz metin GCP anahtarı gördüğümü bildirdim ve güvenlik bulgusu olarak sundum. **Yanlıştı.** Anahtar `785d2219`'da girmiş, ama `57cb4195` (v12.116) bunu **zaten yakalamış** ve #150 olarak açmıştı; madde kapalı — anahtar rotate edilmiş, `secret-scan.yml`'den `docs/**` istisnası kaldırılmış, tarama 0 hatayla doğrulanmış. Mevcut çalışma ağacında anahtar yok (`grep -ral` → 0 eşleşme), yalnızca iki tarihsel commit'te duruyor ve o anahtar ölü. **Sistem kendi sızıntısını kendi yakaladı** — yaptırım katmanının çalıştığının kanıtı. İkinci düzeltme: araştırma ajanı #149'u `pending` raporladı; güncel tabloda **✅** (`4af863cf`) — Jules anahtarı Vercel'de.
+
+### Bulgu 1 — Jules kurulu, canlı, ve kullanıldığına dair hiçbir kanıt yok
+
+#148 ✅, #149 ✅, #150 ✅ — üçü de kapalı. Stratejik gerekçe #148'in kendi metninde yazılı: tekrarlayan teknik görevler pahalı Antigravity/Mimar token'ı tüketiyor, Jules bunları asenkron GitHub VM'inde yürütmeli. **Ama Jules'ün bir görevi fiilen bitirdiği hiç raporlanmadı**; Jules'e özel workflow da yok. Bu, v12.127'de tanımladığım inşa-biçimi/sonuç-biçimi ayrımının tam örneği: "Jules'ü entegre et" kapandı, "Jules N iş bitirdi" hiç sorulmadı. → #210.
+
+### Bulgu 2 (asıl mesele) — dört yürütücü var, aralarında yönlendirme kuralı yok
+
+Mevcut ve önerilen yürütücüler: **Mimar** (yalnızca MASTER_PLAN) · **Antigravity** (ana uygulayıcı, yerel makine, tarayıcı ajanı) · **OpenCode** · **Jules** (kurulu, boşta) · **önerilen: GitHub üzerinden Claude**. `CLAUDE.md` Kural 9'da bir **model** yönlendirme tablosu var; **ajan** yönlendirme tablosu yok. Ve v12.111 kök nedeni zaten kaydetmişti: _"Mimar kararları Uygulayıcı'ya ulaşmıyor."_ Koordinasyon açığı bilinen bir sistemde beşinci yürütücüyü eklemek işi bölmez, **açığı çarpar**. Bu yüzden bu turun çıktısı "Claude'u da ekleyelim" değil, **önce yönlendirme ve birleştirme disiplini**.
+
+#### Yeni bağlayıcı doktrin — Ajan Yönlendirme Tablosu (Kural 9'un ajan karşılığı)
+
+| İş sınıfı                                                                      | Ajan                                         | Birleştirme                     |
+| ------------------------------------------------------------------------------ | -------------------------------------------- | ------------------------------- |
+| MASTER_PLAN yazarlığı, doktrin, karar                                          | **Mimar**                                    | doğrudan `master`               |
+| Özellik geliştirme, tarayıcı işleri, sır/para gerektiren her şey               | **Antigravity**                              | doğrudan `master`               |
+| Mekanik depo hijyeni: bağımlılık, tip hatası, test yazımı, i18n doldurma, lint | **Jules**                                    | **yalnızca PR**, CI yeşil şartı |
+| PR incelemesi, CI hatası triyajı, sınırlı kapsamlı issue→düzeltme              | **GitHub üzerinden Claude**                  | **yalnızca PR**, CI yeşil şartı |
+| Platformun kendi içerik/analiz işleri (çeviri, pazarlama kopyası, özet)        | **Platformun 9 modeli** (`callWithFailover`) | uygulama içi, maliyet-korumalı  |
+
+**Bağlayıcı kural:** Jules ve GitHub-Claude **hiçbir koşulda doğrudan `master`'a push edemez** — yalnızca PR açar, CI yeşil olmadan merge edilmez. Yaptırımı → #213.
+
+### Bulgu 3 — platformun kendi 9 modeli var, dış işler için kullanılmıyor
+
+Envanter gerçek ve güçlü: 9 adaptör, `callWithFailover()` zincirleri (`FREE_TRIAGE_MODELS` 9 ücretsiz model dahil), maliyet kill-switch, `resolveApiKey()` üç kademeli çözümleme, ve dört turlu çok-ajanlı münazara motoru (`cross-audit/debate-runner.ts`) gerçekten çalışıyor. **Hepsi kapılı ve iş-akışına gömülü:** genel amaçlı bir "şunu üret" uç noktası yok — ve bu **bilinçli, doğru** bir tasarım (keyfi üretim endpoint'i maliyet ve kötüye kullanım yüzeyi açar); korunacak.
+
+Founder'ın sorusuna dürüst cevap: **evet yapılabilir, ama doğru kullanım bir oyun alanı değil, token arbitrajıdır.** Proje, ücretsiz modellerin yapabileceği işleri pahalı ajan token'ıyla yaptırıyor. En net örnek çeviri: v12.92'de arayüz çevirisinin ~%45 gerçek olduğu ölçülmüştü, `messages/{de,fr,ru}.json` hâlâ eksik, ve `CREATIVE_COPY_CHAIN` zaten mevcut. → #212.
+
+### Antigravity blok görev sırası (v12.127'nin AF–AK'sinden sonra)
+
+**BLOK AL (P1):** #211 GitHub-Claude workflow'u — mevcut CI'ya eklenir, en hızlı kazanç · **BLOK AM (P1):** #212 çeviri arbitrajı · **BLOK AN (P1):** #210 Jules'e ilk üç gerçek görev · **BLOK AO (P2):** #213 yönlendirme yaptırımı.
+
+### Panel durumu
+
+129 → **133 madde** (#210–#213), tamamlanmış **104** sabit → **%78,2**. Payda büyüdü, oran düştü; dürüst düşüş.
+
+### Verification (v12.128)
+
+Jules durumu üç backlog satırından (#148/#149/#150) doğrudan okundu. Sızıntı izi `git log --all -S "AIzaSyDNoThYU"` ile iki commit'te bulundu, mevcut ağaçta `grep -ral` ile 0 eşleşme doğrulandı. AI adaptör envanteri ve çağrı yolları Haiku ajanı tarafından dosya:satır referanslı çıkarıldı. Backlog sayımı marker arası `python3` ile ölçüldü.
 
 ---
 
