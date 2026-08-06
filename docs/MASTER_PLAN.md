@@ -160,7 +160,7 @@ Google for Startups $2K–350K · AWS Activate $1K–200K · Microsoft Founders 
 | 183 | P1 | [Antigravity/Flash] Bilge RAG Memory Layer (pgvector SQL Migration) |`bilge_memory`tablosu,`vector(1536)`HNSW index ve RLS ile eklendi. | ✅ completed — closed-by:891efda3@master |
 | 184 | P1 | [Antigravity/Flash] K-BENCHMARK Public Freemium API Route |`/api/v1/k-benchmark`uç noktası (EU AI Act uyumluluk skorları) eklendi. | ✅ completed — closed-by:92e1dab6@master |
 | 185 | P1 | [Antigravity/Flash] Yatırımcı Paketi v2 & 3 Yıllık Finansal Model | Pitch deck ve birim ekonomi projeksiyonları`docs/INVESTOR/` altına eklendi. | ✅ completed — closed-by:92e1dab6@master |
-| 186 | P0 | [Blok A] Vendor Portal Beta — ilk 3 AI sağlayıcı, SLA tracking canlı | — | pending |
+| 186 | P0 | [Blok A] Vendor Portal Beta — ilk 3 AI sağlayıcı, SLA tracking canlı | — | ✅ completed — closed-by:ef89f064@master |
 | 187 | P0 | [Blok A] Compliance API ticari lansman — ilk enterprise sözleşme (banka/telekom) | #186 | pending |
 | 188 | P1 | [Blok A] Lloyd's Lab gerçek başvuru (Case #001 + Velocity verisiyle) | #189 | pending |
 | 189 | P0 | [Blok B] Velocity Engine **public** dashboard — ΔV_AI endeksi + dinamik ARR | #178 | pending |
