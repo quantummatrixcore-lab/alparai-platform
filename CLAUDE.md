@@ -58,6 +58,8 @@ pnpm db:migrate       # supabase migration up
 
    **G-7 (binding, v12.83) — "pushed or it did not happen".** No agent may report a task complete, or flip a `docs/MASTER_PLAN.md` backlog row to `✅ completed`, until the work is **on `origin`** and the reporting agent has re-read it from `origin` to confirm. A local commit is not completion. Reports must cite the commit SHA **and** the branch it was pushed to. Rationale: agents run in different working copies (Antigravity on the Founder's local machine at `d:\Alparai`, this session in a cloud container); a commit that exists in one checkout is invisible to every other agent and to the Founder's deployment. Verification by any reviewing session is defined as "visible on `origin`" — an agent claiming otherwise is reporting an unverifiable state.
 
+   **G-8 (binding, v12.129) — Plan branch senkronizasyonu otomatik.** Mimar `claude/strategy-brief-review-i93xcv` branch'inde yazar; `.github/workflows/plan-branch-sync.yml` her push'ta bu branch'i, değişen dosyalar yalnızca `docs/MASTER_PLAN.md`/`CLAUDE.md`/`AGENTS.md` ise ve commit `[architect]` etiketi + allowlist'teki yazar kimliğini (`noreply@anthropic.com`) taşıyorsa otomatik olarak `master`'a fast-forward merge eder. Kod dosyası değişikliği varsa otomatik merge yapılmaz, manuel inceleme gerekir. Gerekçe (v12.94–v12.111 kanıtı): otomasyonsuz 2-branch modeli branch'in haftalarca senkronsuz kalmasına ve 14 maddenin (#131–#144) Uygulayıcı tarafından hiç görülmemesine yol açmıştı; v12.112 bunu tek-branch (master) modeline geçerek geçici çözmüştü. Bu kural aynı ayrımı (git log'da Mimar/Uygulayıcı kaynağı net) korurken senkron kaybını yapısal olarak imkânsız kılar. Branch iki oturumdan fazla senkronsuz kalırsa (`git rev-list --left-right --count origin/master...origin/claude/strategy-brief-review-i93xcv` ile ölçülür) bu bir CI/süreç ihlali sayılır.
+
 10. **No unsourced numbers in `docs/MASTER_PLAN.md`** — every figure cites a file path, table name, or measurement. If unmeasured, write "ölçülmedi". Projections must be tagged `[tahmin — doğrulanmamış]`.
 
 11. **Prompt normalization (binding, all sessions)** — The Founder writes in Turkish. Before acting on any Founder message, silently rewrite it into a precise professional English prompt (role, task, constraints, evidence rule), then execute that. Never print the rewritten prompt — it is internal working state, not output. **No exceptions clause (2026-08-02):** the Founder flagged that this rule exists but doesn't fire on every message. It applies to every Founder message without exception, including short ones, follow-ups, and messages sent while already mid-task — there is no message type that skips it. If a reply didn't visibly benefit from normalization, that is a sign the step was skipped, not a sign the message didn't need it.
@@ -83,6 +85,3 @@ pnpm db:migrate       # supabase migration up
 - **i18n routing**: `src/middleware.ts` rewrites `/{locale}/...`.
 - **Incidents**: `submitIncident` server action → PII Guardian → Supabase insert.
 - **Ratings**: K-BENCHMARK model scoring via `k_model_scores` MAT view.
-
-
-
