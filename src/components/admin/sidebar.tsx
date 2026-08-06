@@ -555,8 +555,8 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
                 {item.active && (
                   <motion.div
                     layoutId={`sidebar-active-pill-${id}`}
-                    className="bg-brand-500/15 border-brand-500 pointer-events-none absolute inset-0 rounded-xl border-l-2 shadow-[inset_0_0_12px_rgba(168,85,247,0.15)]"
-                    transition={{ type: "spring" as const, stiffness: 350, damping: 30 }}
+                    className="bg-brand-500/20 border-brand-500 pointer-events-none absolute inset-0 rounded-xl border-l-2 shadow-[inset_0_0_15px_rgba(168,85,247,0.3)]"
+                    transition={{ type: "spring" as const, stiffness: 400, damping: 30, mass: 0.8 }}
                   />
                 )}
                 <Icon
@@ -613,8 +613,13 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
                   {item.active && (
                     <motion.div
                       layoutId="admin-sidebar-active-pill"
-                      className="bg-brand-500/15 border-brand-500 pointer-events-none absolute inset-0 rounded-xl border-l-2 shadow-[inset_0_0_12px_rgba(168,85,247,0.15)]"
-                      transition={{ type: "spring" as const, stiffness: 350, damping: 30 }}
+                      className="bg-brand-500/20 border-brand-500 pointer-events-none absolute inset-0 rounded-xl border-l-2 shadow-[inset_0_0_15px_rgba(168,85,247,0.3)]"
+                      transition={{
+                        type: "spring" as const,
+                        stiffness: 400,
+                        damping: 30,
+                        mass: 0.8,
+                      }}
                     />
                   )}
                   <Icon
@@ -682,9 +687,9 @@ export function AdminSidebar({ user }: { user: SidebarUserShape }) {
       {/* Sidebar Drawer */}
       <aside
         className={cn(
-          "bg-bg-secondary/95 fixed inset-y-0 left-0 z-50 flex flex-col border-r border-white/5 shadow-[4px_0_24px_rgba(0,0,0,0.5)] backdrop-blur-2xl transition-all duration-300 ease-in-out",
+          "bg-bg-secondary/40 fixed inset-y-0 left-0 z-50 flex flex-col border-r border-white/10 shadow-[4px_0_24px_rgba(0,0,0,0.5),_inset_0_1px_1px_0_rgba(255,255,255,0.1)] ring-1 ring-white/5 backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-150 transition-all duration-300 ease-in-out dark:bg-slate-950/30",
           isOpen ? "w-72 translate-x-0" : "w-72 -translate-x-full",
-          "lg:bg-bg-secondary/40 lg:static lg:flex lg:h-screen lg:translate-x-0 lg:shadow-none",
+          "lg:static lg:flex lg:h-screen lg:translate-x-0 lg:shadow-none",
           isCollapsed ? "lg:w-16" : "lg:w-64",
         )}
       >

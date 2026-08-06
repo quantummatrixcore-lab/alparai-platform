@@ -1,8 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
-import { Plus, Edit2, Trash2, Calendar, Shield, X, HelpCircle, Loader2 } from "lucide-react";
+import {
+  Plus,
+  Edit2,
+  Trash2,
+  Calendar,
+  Shield,
+  X,
+  HelpCircle,
+  Loader2,
+  Flame,
+  AlertCircle,
+  CheckCircle2,
+  LayoutGrid,
+  ScatterChart as ScatterChartIcon,
+  Search,
+  RotateCcw,
+  ShieldAlert,
+  Sparkles,
+  TrendingUp,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ScatterChart,
+  Scatter,
+  XAxis,
+  YAxis,
+  ZAxis,
+  CartesianGrid,
+  Tooltip as RechartsTooltip,
+  ResponsiveContainer,
+  ReferenceArea,
+  Cell,
+} from "recharts";
 import { cn } from "@/lib/utils";
 import { upsertRiskAction, deleteRiskAction } from "@/actions/strategy";
 import { toast } from "sonner";
@@ -13,6 +45,10 @@ interface RiskMatrixClientProps {
   isReadOnly: boolean;
   locale: string;
 }
+
+type ViewMode = "heatmap" | "scatter";
+type RiskFilter =
+  "all" | "high" | "medium" | "low" | "active" | "mitigated" | "triggered" | "closed";
 
 export function RiskMatrixClient({
   initialRisks,
@@ -26,8 +62,39 @@ export function RiskMatrixClient({
   const [isSaving, setIsSaving] = useState(false);
   const [activeRisk, setActiveRisk] = useState<Partial<StrategyRisk> | null>(null);
 
-  // Selected cell filter in 5x5 grid
+  // View mode: Heatmap or Scatter chart
+  const [viewMode, setViewMode] = useState<ViewMode>("heatmap");
+
+  // Selected cell filter in 5x5 grid (Probability vs Impact)
   const [selectedCell, setSelectedCell] = useState<{ p: number; i: number } | null>(null);
+
+  // Search & Filter state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeFilter, setActiveFilter] = useState<RiskFilter>("all");
+
+  // Calculated KPI stats
+  const stats = useMemo(() => {
+    const total = risks.length;
+    let high = 0;
+    let medium = 0;
+    let low = 0;
+    let active = 0;
+    let scoreSum = 0;
+
+    risks.forEach((r) => {
+      const score = r.probability * r.impact;
+      scoreSum += score;
+      if (score >= 15) high++;
+      else if (score >= 8) medium++;
+      else low++;
+
+      if (r.status === "active") active++;
+    });
+
+    const avgExposure = total > 0 ? (scoreSum / total).toFixed(1) : "0.0";
+
+    return { total, high, medium, low, active, avgExposure };
+  }, [risks]);
 
   // Group risks by Probability (1-5) and Impact (1-5)
   const getCellRisks = (p: number, i: number) => {
@@ -39,20 +106,23 @@ export function RiskMatrixClient({
     const score = p * i;
     const isSelected = selectedCell && selectedCell.p === p && selectedCell.i === i;
 
-    let baseColor =
-      "bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/20";
+    let colorStyles =
+      "border-emerald-500/20 bg-gradient-to-br from-emerald-500/15 via-emerald-500/5 to-teal-950/20 text-emerald-300 shadow-emerald-950/20 hover:border-emerald-400/40 hover:bg-emerald-500/25";
+
     if (score >= 15) {
-      baseColor = "bg-red-500/20 hover:bg-red-500/35 text-red-400 border-red-500/30";
+      colorStyles =
+        "border-red-500/30 bg-gradient-to-br from-red-500/25 via-red-500/15 to-rose-950/40 text-red-300 shadow-red-950/30 hover:border-red-400/50 hover:bg-red-500/35";
     } else if (score >= 8) {
-      baseColor = "bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 border-amber-500/25";
+      colorStyles =
+        "border-amber-500/25 bg-gradient-to-br from-amber-500/20 via-amber-500/10 to-orange-950/30 text-amber-300 shadow-amber-950/20 hover:border-amber-400/40 hover:bg-amber-500/30";
     }
 
     return cn(
-      "relative flex h-16 w-full cursor-pointer flex-col items-center justify-center rounded-xl border text-lg font-bold transition-all duration-300 select-none",
-      baseColor,
+      "group relative flex h-16 w-full cursor-pointer flex-col items-center justify-center rounded-2xl border p-2.5 shadow-lg backdrop-blur-md transition-all duration-300 select-none",
+      colorStyles,
       isSelected &&
-        "ring-brand-500 ring-offset-bg-primary z-10 scale-[1.03] shadow-lg ring-2 ring-offset-2",
-      count === 0 && "opacity-25 hover:opacity-40",
+        "ring-brand-400 z-20 scale-[1.04] border-white/50 shadow-2xl ring-2 ring-offset-2 ring-offset-slate-950",
+      count === 0 && "opacity-35 hover:opacity-75",
     );
   };
 
@@ -144,427 +214,922 @@ export function RiskMatrixClient({
     }
   };
 
-  // Filtered risks list based on selected matrix cell
-  const filteredRisks = selectedCell
-    ? risks.filter((r) => r.probability === selectedCell.p && r.impact === selectedCell.i)
-    : risks;
+  // Filtered risks list based on matrix selection, search query, and filter pill
+  const filteredRisks = useMemo(() => {
+    return risks.filter((r) => {
+      // 1. Matrix cell filter
+      if (selectedCell) {
+        if (r.probability !== selectedCell.p || r.impact !== selectedCell.i) {
+          return false;
+        }
+      }
 
-  // Grid headers/axis
-  const probabilities = [5, 4, 3, 2, 1]; // Y-axis (Probability, high at top)
-  const impacts = [1, 2, 3, 4, 5]; // X-axis (Impact, high at right)
+      // 2. Search query filter
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        const matchTitle = r.title.toLowerCase().includes(q);
+        const matchCode = r.code.toLowerCase().includes(q);
+        const matchDesc = r.description?.toLowerCase().includes(q) ?? false;
+        const matchMitigation = r.mitigation_plan?.toLowerCase().includes(q) ?? false;
+        if (!matchTitle && !matchCode && !matchDesc && !matchMitigation) {
+          return false;
+        }
+      }
+
+      // 3. Category / Status pill filter
+      const score = r.probability * r.impact;
+      if (activeFilter === "high") return score >= 15;
+      if (activeFilter === "medium") return score >= 8 && score < 15;
+      if (activeFilter === "low") return score < 8;
+      if (activeFilter === "active") return r.status === "active";
+      if (activeFilter === "mitigated") return r.status === "mitigated";
+      if (activeFilter === "triggered") return r.status === "triggered";
+      if (activeFilter === "closed") return r.status === "closed";
+
+      return true;
+    });
+  }, [risks, selectedCell, searchQuery, activeFilter]);
+
+  // Scatter chart data mapping
+  const scatterData = useMemo(() => {
+    return risks.map((r) => ({
+      ...r,
+      x: r.impact,
+      y: r.probability,
+      score: r.probability * r.impact,
+      z: r.probability * r.impact * 20 + 100, // Dot size
+    }));
+  }, [risks]);
+
+  // Matrix axis definitions
+  const probabilities = [5, 4, 3, 2, 1]; // Y-axis (Probability 5 down to 1)
+  const impacts = [1, 2, 3, 4, 5]; // X-axis (Impact 1 to 5)
 
   return (
-    <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-      {/* 5x5 HEATMAP MATRIX (YÜKSEK ÇÖZÜNÜRLÜKLÜ RİSK ANALİZİ) */}
-      <div className="lg:col-span-5">
-        <div className="border-border-subtle bg-bg-secondary/40 rounded-2xl border p-5 backdrop-blur-md">
-          <h3 className="mb-4 flex items-center justify-between text-xs font-bold tracking-wider text-white uppercase">
-            <span>{t("5x5_risk_heatmap_matrix")}</span>
-            {selectedCell && (
-              <button
-                onClick={() => setSelectedCell(null)}
-                className="text-brand-400 hover:text-brand-300 text-[10px] font-bold tracking-wider uppercase transition"
-              >
-                {t("reset_filter")}
-              </button>
-            )}
-          </h3>
-
-          <div className="flex flex-col items-stretch">
-            {/* Heatmap Grid */}
-            <div className="flex gap-2">
-              {/* Y-axis Label */}
-              <div className="text-fg-muted flex w-8 shrink-0 flex-col justify-between py-8 text-right font-mono text-[9px] font-bold tracking-wider uppercase select-none">
-                <span>P5</span>
-                <span>P4</span>
-                <span>P3</span>
-                <span>P2</span>
-                <span>P1</span>
-              </div>
-
-              <div className="flex-1 space-y-2">
-                {probabilities.map((p) => (
-                  <div key={p} className="grid grid-cols-5 gap-2">
-                    {impacts.map((i) => {
-                      const cellRisks = getCellRisks(p, i);
-                      const count = cellRisks.length;
-                      return (
-                        <div
-                          key={i}
-                          onClick={() =>
-                            setSelectedCell(
-                              selectedCell && selectedCell.p === p && selectedCell.i === i
-                                ? null
-                                : { p, i },
-                            )
-                          }
-                          className={getCellColor(p, i, count)}
-                        >
-                          <span>{count}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* X-axis Label */}
-            <div className="mt-2 flex gap-2">
-              <div className="w-8 shrink-0" />
-              <div className="text-fg-muted grid flex-1 grid-cols-5 gap-2 text-center font-mono text-[9px] font-bold tracking-wider uppercase select-none">
-                <span>I1</span>
-                <span>I2</span>
-                <span>I3</span>
-                <span>I4</span>
-                <span>I5</span>
-              </div>
+    <div className="space-y-8">
+      {/* KPI METRIC SUMMARY CARDS */}
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.05 }}
+          className="relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/50 p-4 shadow-xl backdrop-blur-xl"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+              Total Risks
+            </span>
+            <div className="border-brand-500/20 bg-brand-500/10 text-brand-400 rounded-xl border p-2">
+              <ShieldAlert className="h-4 w-4" />
             </div>
           </div>
+          <div className="mt-3 flex items-baseline justify-between">
+            <span className="text-2xl font-black tracking-tight text-white">{stats.total}</span>
+            <span className="text-[10px] font-semibold text-slate-400">{stats.active} Active</span>
+          </div>
+          <div className="bg-brand-500/5 pointer-events-none absolute -right-6 -bottom-6 h-20 w-20 rounded-full blur-2xl" />
+        </motion.div>
 
-          <div className="text-fg-muted mt-5 flex justify-between gap-4 border-t border-white/5 pt-4 text-[10px] font-bold tracking-wider uppercase">
-            <div className="flex items-center gap-1.5">
-              <span className="h-2.5 w-2.5 rounded border border-emerald-500/40 bg-emerald-500/25" />
-              <span>{t("low_1_6")}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="h-2.5 w-2.5 rounded border border-amber-500/40 bg-amber-500/25" />
-              <span>{t("medium_8_12")}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="h-2.5 w-2.5 rounded border border-red-500/40 bg-red-500/25" />
-              <span>{t("high_15_25")}</span>
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+          className="relative overflow-hidden rounded-2xl border border-red-500/20 bg-gradient-to-br from-red-950/30 via-slate-900/60 to-slate-900/50 p-4 shadow-xl backdrop-blur-xl"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold tracking-wider text-red-300 uppercase">
+              Critical / High
+            </span>
+            <div className="animate-pulse rounded-xl border border-red-500/30 bg-red-500/20 p-2 text-red-400">
+              <Flame className="h-4 w-4" />
             </div>
           </div>
-        </div>
+          <div className="mt-3 flex items-baseline justify-between">
+            <span className="text-2xl font-black tracking-tight text-red-400">{stats.high}</span>
+            <span className="text-[10px] font-bold tracking-wider text-red-400/80 uppercase">
+              Score ≥ 15
+            </span>
+          </div>
+          <div className="pointer-events-none absolute -right-6 -bottom-6 h-20 w-20 rounded-full bg-red-500/10 blur-2xl" />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.15 }}
+          className="relative overflow-hidden rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-950/30 via-slate-900/60 to-slate-900/50 p-4 shadow-xl backdrop-blur-xl"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold tracking-wider text-amber-300 uppercase">
+              Medium Risk
+            </span>
+            <div className="rounded-xl border border-amber-500/30 bg-amber-500/20 p-2 text-amber-400">
+              <AlertCircle className="h-4 w-4" />
+            </div>
+          </div>
+          <div className="mt-3 flex items-baseline justify-between">
+            <span className="text-2xl font-black tracking-tight text-amber-400">
+              {stats.medium}
+            </span>
+            <span className="text-[10px] font-bold tracking-wider text-amber-400/80 uppercase">
+              Score 8-14
+            </span>
+          </div>
+          <div className="pointer-events-none absolute -right-6 -bottom-6 h-20 w-20 rounded-full bg-amber-500/10 blur-2xl" />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+          className="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-950/30 via-slate-900/60 to-slate-900/50 p-4 shadow-xl backdrop-blur-xl"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold tracking-wider text-emerald-300 uppercase">
+              Low Risk
+            </span>
+            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/20 p-2 text-emerald-400">
+              <CheckCircle2 className="h-4 w-4" />
+            </div>
+          </div>
+          <div className="mt-3 flex items-baseline justify-between">
+            <span className="text-2xl font-black tracking-tight text-emerald-400">{stats.low}</span>
+            <span className="text-[10px] font-bold tracking-wider text-emerald-400/80 uppercase">
+              Score 1-7
+            </span>
+          </div>
+          <div className="pointer-events-none absolute -right-6 -bottom-6 h-20 w-20 rounded-full bg-emerald-500/10 blur-2xl" />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.25 }}
+          className="relative col-span-2 overflow-hidden rounded-2xl border border-white/10 bg-slate-900/50 p-4 shadow-xl backdrop-blur-xl sm:col-span-2 lg:col-span-1"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+              Avg Exposure
+            </span>
+            <div className="rounded-xl border border-cyan-500/20 bg-cyan-500/10 p-2 text-cyan-400">
+              <TrendingUp className="h-4 w-4" />
+            </div>
+          </div>
+          <div className="mt-3 flex items-baseline justify-between">
+            <span className="text-2xl font-black tracking-tight text-cyan-300">
+              {stats.avgExposure}
+              <span className="text-xs font-normal text-slate-400"> / 25</span>
+            </span>
+            <Sparkles className="h-4 w-4 text-cyan-400/60" />
+          </div>
+          <div className="pointer-events-none absolute -right-6 -bottom-6 h-20 w-20 rounded-full bg-cyan-500/5 blur-2xl" />
+        </motion.div>
       </div>
 
-      {/* RİSK LİSTESİ TABLOSU */}
-      <div className="flex flex-col lg:col-span-7">
-        <div className="border-border-subtle bg-bg-secondary/40 flex flex-1 flex-col justify-between rounded-2xl border p-5 backdrop-blur-md">
-          <div>
-            <div className="mb-4 flex items-center justify-between gap-2">
-              <h3 className="text-xs font-bold tracking-wider text-white uppercase">
-                {t("risk_matrix_logs")}
-                {selectedCell && (
-                  <span className="text-brand-400 ml-2 font-mono lowercase">
-                    {t("risk_filtered")} P{selectedCell.p} {t("i")}
-                    {selectedCell.i})
-                  </span>
-                )}
-              </h3>
-              {!isReadOnly && (
-                <button
-                  onClick={handleOpenAdd}
-                  className="bg-brand-600 hover:bg-brand-500 hover:shadow-brand-500/10 flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-white shadow-lg transition"
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                  {t("register_risk")}
-                </button>
-              )}
-            </div>
-
-            <div className="max-h-[460px] scrollbar-thin space-y-4 overflow-y-auto pr-1">
-              {filteredRisks.length === 0 ? (
-                <p className="text-fg-muted py-8 text-center text-xs italic">
-                  {t("no_risks_found_in_this_category")}
-                </p>
-              ) : (
-                filteredRisks.map((risk) => {
-                  const score = risk.probability * risk.impact;
-                  const isHigh = score >= 15;
-                  const isMedium = score >= 8 && score < 15;
-
-                  return (
-                    <div
-                      key={risk.id}
-                      className="bg-bg-tertiary/20 group relative rounded-xl border border-white/5 p-4 transition hover:border-white/10"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-brand-400 font-mono text-xs font-black tracking-wider">
-                              {risk.code}
-                            </span>
-                            <h4 className="truncate text-sm leading-snug font-bold text-white">
-                              {risk.title}
-                            </h4>
-                          </div>
-                          {risk.description && (
-                            <p className="text-fg-muted mt-1.5 text-xs leading-relaxed">
-                              {risk.description}
-                            </p>
-                          )}
-                        </div>
-
-                        {/* Risk level score ring */}
-                        <div className="flex shrink-0 items-center gap-2">
-                          <div
-                            className={cn(
-                              "flex h-10 w-10 flex-col items-center justify-center rounded-xl border text-sm font-black",
-                              isHigh
-                                ? "border-red-500/20 bg-red-500/10 text-red-400"
-                                : isMedium
-                                  ? "border-amber-500/20 bg-amber-500/10 text-amber-400"
-                                  : "border-emerald-500/20 bg-emerald-500/10 text-emerald-400",
-                            )}
-                          >
-                            <span>{score}</span>
-                            <span className="mt-0.5 text-[7px] font-bold tracking-wider uppercase">
-                              {t("risk_score_label")}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {risk.mitigation_plan && (
-                        <div className="mt-3 border-t border-white/5 pt-2.5">
-                          <span className="text-fg-muted block flex items-center gap-1.5 text-[10px] font-bold tracking-wider uppercase">
-                            <Shield className="h-3 w-3 text-emerald-400" />
-                            {t("mitigation_plan")}
-                          </span>
-                          <p className="text-fg-muted/80 mt-1 text-xs leading-relaxed italic">
-                            {risk.mitigation_plan}
-                          </p>
-                        </div>
-                      )}
-
-                      <div className="text-fg-muted mt-3 flex flex-wrap items-center gap-4 border-t border-white/5 pt-2 text-[10px] font-bold tracking-wider uppercase">
-                        {risk.target_date && (
-                          <span className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" />
-                            <span>{risk.target_date}</span>
-                          </span>
-                        )}
-                        <span className="flex items-center gap-1">
-                          <HelpCircle className="h-3 w-3" />
-                          <span>
-                            P:{risk.probability} {t("i")}
-                            {risk.impact}
-                          </span>
-                        </span>
-                        <span
-                          className={cn(
-                            "rounded border px-1.5 py-0.5 text-[8px]",
-                            risk.status === "active"
-                              ? "border-amber-500/15 bg-amber-500/5 text-amber-400"
-                              : risk.status === "mitigated"
-                                ? "border-emerald-500/15 bg-emerald-500/5 text-emerald-400"
-                                : risk.status === "triggered"
-                                  ? "border-red-500/15 bg-red-500/5 text-red-400"
-                                  : "text-fg-muted border-white/10 bg-white/5",
-                          )}
-                        >
-                          {risk.status === "active"
-                            ? t("risk_active")
-                            : risk.status === "mitigated"
-                              ? t("risk_mitigated")
-                              : risk.status === "triggered"
-                                ? t("risk_triggered")
-                                : t("risk_closed")}
-                        </span>
-                      </div>
-
-                      {/* Edit/Delete overlay */}
-                      {!isReadOnly && (
-                        <div className="bg-bg-secondary/90 absolute top-3 right-16 flex items-center gap-1 rounded-lg border border-white/5 px-1 py-0.5 opacity-0 shadow-md transition-opacity group-hover:opacity-100">
-                          <button
-                            onClick={() => handleOpenEdit(risk)}
-                            className="text-fg-muted rounded p-1 transition hover:bg-white/5 hover:text-white"
-                          >
-                            <Edit2 className="h-3.5 w-3.5" />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(risk.id)}
-                            className="rounded p-1 text-red-400 transition hover:bg-red-500/10 hover:text-red-300"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* CRUD dialog Modal */}
-      {isModalOpen && activeRisk && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-          <div className="bg-bg-secondary border-border-strong w-full max-w-lg rounded-2xl border p-6 shadow-2xl">
-            <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-bold text-white uppercase">
-                {activeRisk.id ? t("edit_risk_log") : t("register_strategic_risk")}
-              </h3>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="text-fg-muted rounded-lg p-1 hover:text-white"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                    {t("risk_code_label")}
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={activeRisk.code || ""}
-                    onChange={(e) => setActiveRisk({ ...activeRisk, code: e.target.value })}
-                    placeholder={t("risk_code_placeholder")}
-                    className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-4 py-2.5 text-sm text-white focus:ring-1 focus:outline-none"
-                  />
-                </div>
-                <div className="col-span-2">
-                  <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                    {t("risk_title")}
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={activeRisk.title || ""}
-                    onChange={(e) => setActiveRisk({ ...activeRisk, title: e.target.value })}
-                    placeholder={t("risk_title_placeholder")}
-                    className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-4 py-2.5 text-sm text-white focus:ring-1 focus:outline-none"
-                  />
-                </div>
+      {/* MAIN CONTENT GRID (VISUALIZATION + LOGS) */}
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+        {/* LEFT COLUMN: HEATMAP / SCATTER CHART (5 COLS) */}
+        <div className="space-y-4 lg:col-span-5">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-[0_20px_50px_rgba(0,0,0,0.3),_inset_0_1px_1px_0_rgba(255,255,255,0.25)] ring-1 ring-white/5 backdrop-blur-3xl backdrop-contrast-125 backdrop-saturate-150 dark:bg-slate-950/30">
+            {/* Header & Mode Switcher */}
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <ShieldAlert className="text-brand-400 h-4 w-4" />
+                <h3 className="text-xs font-extrabold tracking-wider text-white uppercase">
+                  {t("5x5_risk_heatmap_matrix")}
+                </h3>
               </div>
 
-              <div>
-                <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                  {t("description_1")}
-                </label>
-                <textarea
-                  value={activeRisk.description || ""}
-                  onChange={(e) => setActiveRisk({ ...activeRisk, description: e.target.value })}
-                  rows={2}
-                  className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-4 py-2 text-sm text-white focus:ring-1 focus:outline-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                    {t("probability_1_5")}
-                  </label>
-                  <select
-                    value={activeRisk.probability}
-                    onChange={(e) =>
-                      setActiveRisk({ ...activeRisk, probability: Number(e.target.value) })
-                    }
-                    className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-4 py-2.5 text-sm text-white focus:ring-1 focus:outline-none"
-                  >
-                    <option value="1">1 - {t("risk_prob_very_low")}</option>
-                    <option value="2">2 - {t("risk_prob_low")}</option>
-                    <option value="3">3 - {t("risk_prob_medium")}</option>
-                    <option value="4">4 - {t("risk_prob_high")}</option>
-                    <option value="5">5 - {t("risk_prob_very_high")}</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                    {t("impact_1_5")}
-                  </label>
-                  <select
-                    value={activeRisk.impact}
-                    onChange={(e) =>
-                      setActiveRisk({ ...activeRisk, impact: Number(e.target.value) })
-                    }
-                    className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-4 py-2.5 text-sm text-white focus:ring-1 focus:outline-none"
-                  >
-                    <option value="1">1 - {t("risk_impact_negligible")}</option>
-                    <option value="2">2 - {t("risk_impact_minor")}</option>
-                    <option value="3">3 - {t("risk_impact_moderate")}</option>
-                    <option value="4">4 - {t("risk_impact_major")}</option>
-                    <option value="5">5 - {t("risk_impact_catastrophic")}</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                  {t("mitigation_plan_1")}
-                </label>
-                <textarea
-                  value={activeRisk.mitigation_plan || ""}
-                  onChange={(e) =>
-                    setActiveRisk({ ...activeRisk, mitigation_plan: e.target.value })
-                  }
-                  rows={2}
-                  className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-4 py-2 text-sm text-white focus:ring-1 focus:outline-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                    {t("status_1")}
-                  </label>
-                  <select
-                    value={activeRisk.status}
-                    onChange={(e) =>
-                      setActiveRisk({
-                        ...activeRisk,
-                        status: e.target.value as "active" | "mitigated" | "triggered" | "closed",
-                      })
-                    }
-                    className="bg-bg-tertiary border-border-subtle focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border px-4 py-2.5 text-sm text-white focus:ring-1 focus:outline-none"
-                  >
-                    <option value="active">{t("risk_active")}</option>
-                    <option value="mitigated">{t("risk_mitigated")}</option>
-                    <option value="triggered">{t("risk_triggered")}</option>
-                    <option value="closed">{t("risk_closed")}</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="text-fg-secondary mb-1 block text-xs font-bold tracking-wider uppercase">
-                    {t("target_date")}
-                  </label>
-                  <input
-                    type="date"
-                    value={activeRisk.target_date || ""}
-                    onChange={(e) => setActiveRisk({ ...activeRisk, target_date: e.target.value })}
-                    className="bg-bg-tertiary border-border-subtle w-full rounded-xl border px-4 py-2 text-sm text-white focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              <div className="mt-6 flex justify-end gap-2 border-t border-white/5 pt-4">
+              {/* View Switcher Controls */}
+              <div className="flex items-center gap-1 rounded-xl border border-white/10 bg-slate-950/60 p-1">
                 <button
                   type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="border-border-subtle rounded-xl border px-5 py-2.5 text-sm font-semibold text-white/80 transition hover:bg-white/5 hover:text-white"
+                  onClick={() => setViewMode("heatmap")}
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[10px] font-bold uppercase transition-all duration-200",
+                    viewMode === "heatmap"
+                      ? "bg-brand-500 shadow-brand-500/20 text-white shadow-md"
+                      : "text-slate-400 hover:text-white",
+                  )}
                 >
-                  {t("cancel")}
+                  <LayoutGrid className="h-3 w-3" />
+                  <span>5x5 Heatmap</span>
                 </button>
                 <button
-                  type="submit"
-                  disabled={isSaving}
-                  className="bg-brand-600 hover:bg-brand-500 hover:shadow-brand-500/10 flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition"
-                >
-                  {isSaving ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      {t("saving")}
-                    </>
-                  ) : (
-                    t("swot_save")
+                  type="button"
+                  onClick={() => setViewMode("scatter")}
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[10px] font-bold uppercase transition-all duration-200",
+                    viewMode === "scatter"
+                      ? "bg-brand-500 shadow-brand-500/20 text-white shadow-md"
+                      : "text-slate-400 hover:text-white",
                   )}
+                >
+                  <ScatterChartIcon className="h-3 w-3" />
+                  <span>2D Scatter</span>
                 </button>
               </div>
-            </form>
+            </div>
+
+            {/* Matrix Filter reset indicator */}
+            {selectedCell && (
+              <div className="border-brand-500/30 bg-brand-500/10 text-brand-300 mb-4 flex items-center justify-between rounded-xl border px-3 py-2 text-xs font-semibold">
+                <span>
+                  {t("risk_filtered")} P{selectedCell.p} : I{selectedCell.i}
+                </span>
+                <button
+                  onClick={() => setSelectedCell(null)}
+                  className="text-brand-400 flex items-center gap-1 text-[10px] font-bold uppercase transition hover:text-white"
+                >
+                  <RotateCcw className="h-3 w-3" />
+                  {t("reset_filter")}
+                </button>
+              </div>
+            )}
+
+            {/* VIEW MODE 1: 5x5 HEATMAP MATRIX */}
+            {viewMode === "heatmap" ? (
+              <div className="flex flex-col items-stretch">
+                <div className="flex gap-2.5">
+                  {/* Y-AXIS LABEL (PROBABILITY P5 -> P1) */}
+                  <div className="flex w-10 shrink-0 flex-col justify-between py-2 text-right font-mono text-[10px] font-bold text-slate-400 select-none">
+                    <span title="Probability 5 (Very High)">P5</span>
+                    <span title="Probability 4 (High)">P4</span>
+                    <span title="Probability 3 (Medium)">P3</span>
+                    <span title="Probability 2 (Low)">P2</span>
+                    <span title="Probability 1 (Very Low)">P1</span>
+                  </div>
+
+                  {/* HEATMAP GRID */}
+                  <div className="flex-1 space-y-2">
+                    {probabilities.map((p) => (
+                      <div key={p} className="grid grid-cols-5 gap-2">
+                        {impacts.map((i) => {
+                          const cellRisks = getCellRisks(p, i);
+                          const count = cellRisks.length;
+                          const score = p * i;
+
+                          return (
+                            <motion.div
+                              key={i}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={() =>
+                                setSelectedCell(
+                                  selectedCell && selectedCell.p === p && selectedCell.i === i
+                                    ? null
+                                    : { p, i },
+                                )
+                              }
+                              className={getCellColor(p, i, count)}
+                            >
+                              <div className="flex items-center gap-1">
+                                <span className="text-sm font-extrabold">{count}</span>
+                                {count > 0 && score >= 15 && (
+                                  <span className="h-1.5 w-1.5 animate-ping rounded-full bg-red-400" />
+                                )}
+                              </div>
+                              <span className="text-[9px] font-medium opacity-60">{score} pts</span>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* X-AXIS LABEL (IMPACT I1 -> I5) */}
+                <div className="mt-3 flex gap-2.5">
+                  <div className="w-10 shrink-0" />
+                  <div className="grid flex-1 grid-cols-5 gap-2 text-center font-mono text-[10px] font-bold text-slate-400 select-none">
+                    <span title="Impact 1 (Negligible)">I1</span>
+                    <span title="Impact 2 (Minor)">I2</span>
+                    <span title="Impact 3 (Moderate)">I3</span>
+                    <span title="Impact 4 (Major)">I4</span>
+                    <span title="Impact 5 (Catastrophic)">I5</span>
+                  </div>
+                </div>
+
+                {/* MATRIX COLOR LEGEND */}
+                <div className="mt-6 flex items-center justify-between gap-2 border-t border-white/10 pt-4 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                  <div className="flex items-center gap-1.5">
+                    <span className="h-3 w-3 rounded-md border border-emerald-500/40 bg-emerald-500/25" />
+                    <span>{t("low_1_6")}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="h-3 w-3 rounded-md border border-amber-500/40 bg-amber-500/25" />
+                    <span>{t("medium_8_12")}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="h-3 w-3 rounded-md border border-red-500/40 bg-red-500/25" />
+                    <span>{t("high_15_25")}</span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* VIEW MODE 2: RECHARTS 2D SCATTER PLOT */
+              <div className="w-full space-y-2">
+                <div className="h-[360px] w-full pt-2">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
+
+                      {/* Quadrant risk areas */}
+                      <ReferenceArea
+                        x1={0.5}
+                        x2={5.5}
+                        y1={3.5}
+                        y2={5.5}
+                        fill="#ef4444"
+                        fillOpacity={0.06}
+                      />
+                      <ReferenceArea
+                        x1={3.5}
+                        x2={5.5}
+                        y1={0.5}
+                        y2={3.5}
+                        fill="#f59e0b"
+                        fillOpacity={0.05}
+                      />
+                      <ReferenceArea
+                        x1={0.5}
+                        x2={3.5}
+                        y1={0.5}
+                        y2={3.5}
+                        fill="#10b981"
+                        fillOpacity={0.04}
+                      />
+
+                      <XAxis
+                        type="number"
+                        dataKey="x"
+                        name="Impact"
+                        domain={[0.5, 5.5]}
+                        ticks={[1, 2, 3, 4, 5]}
+                        stroke="#94a3b8"
+                        tick={{ fill: "#94a3b8", fontSize: 11 }}
+                        label={{
+                          value: "Impact (1-5)",
+                          position: "insideBottom",
+                          offset: -10,
+                          fill: "#94a3b8",
+                          fontSize: 11,
+                        }}
+                      />
+                      <YAxis
+                        type="number"
+                        dataKey="y"
+                        name="Probability"
+                        domain={[0.5, 5.5]}
+                        ticks={[1, 2, 3, 4, 5]}
+                        stroke="#94a3b8"
+                        tick={{ fill: "#94a3b8", fontSize: 11 }}
+                        label={{
+                          value: "Probability (1-5)",
+                          angle: -90,
+                          position: "insideLeft",
+                          fill: "#94a3b8",
+                          fontSize: 11,
+                        }}
+                      />
+                      <ZAxis type="number" dataKey="z" range={[100, 400]} />
+
+                      <RechartsTooltip
+                        cursor={{ strokeDasharray: "3 3", stroke: "#ffffff30" }}
+                        content={({ active, payload }) => {
+                          if (active && payload && payload.length) {
+                            const data = payload[0]?.payload as StrategyRisk & { score: number };
+                            const isHigh = data.score >= 15;
+                            const isMedium = data.score >= 8 && data.score < 15;
+
+                            return (
+                              <div className="max-w-xs rounded-2xl border border-white/20 bg-slate-950/90 p-3.5 text-xs text-white shadow-2xl backdrop-blur-2xl">
+                                <div className="mb-2 flex items-center justify-between gap-2 border-b border-white/10 pb-2">
+                                  <span className="text-brand-400 font-mono font-black">
+                                    {data.code}
+                                  </span>
+                                  <span
+                                    className={cn(
+                                      "rounded-md border px-2 py-0.5 text-[9px] font-black uppercase",
+                                      isHigh
+                                        ? "border-red-500/40 bg-red-500/20 text-red-300"
+                                        : isMedium
+                                          ? "border-amber-500/40 bg-amber-500/20 text-amber-300"
+                                          : "border-emerald-500/40 bg-emerald-500/20 text-emerald-300",
+                                    )}
+                                  >
+                                    Score: {data.score}
+                                  </span>
+                                </div>
+                                <p className="mb-1 text-sm leading-snug font-bold text-white">
+                                  {data.title}
+                                </p>
+                                {data.description && (
+                                  <p className="mb-2 line-clamp-2 text-[11px] text-slate-400">
+                                    {data.description}
+                                  </p>
+                                )}
+                                <div className="grid grid-cols-2 gap-2 border-t border-white/10 pt-2 text-[10px] text-slate-300">
+                                  <div>
+                                    <span className="block text-slate-500">Probability:</span>
+                                    <span className="font-semibold text-white">
+                                      {data.probability} / 5
+                                    </span>
+                                  </div>
+                                  <div>
+                                    <span className="block text-slate-500">Impact:</span>
+                                    <span className="font-semibold text-white">
+                                      {data.impact} / 5
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          }
+                          return null;
+                        }}
+                      />
+
+                      <Scatter name="Risks" data={scatterData}>
+                        {scatterData.map((entry, index) => {
+                          const score = entry.score;
+                          const fillColor =
+                            score >= 15 ? "#ef4444" : score >= 8 ? "#f59e0b" : "#10b981";
+                          return (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={fillColor}
+                              stroke="#ffffff80"
+                              strokeWidth={1.5}
+                            />
+                          );
+                        })}
+                      </Scatter>
+                    </ScatterChart>
+                  </ResponsiveContainer>
+                </div>
+                <p className="text-center text-[10px] text-slate-400 italic">
+                  Hover over risk nodes to view details
+                </p>
+              </div>
+            )}
           </div>
         </div>
-      )}
+
+        {/* RIGHT COLUMN: RISK CARDS LIST & CONTROLS (7 COLS) */}
+        <div className="flex flex-col space-y-4 lg:col-span-7">
+          <div className="flex flex-1 flex-col justify-between rounded-3xl border border-white/10 bg-white/5 p-5 shadow-[0_20px_50px_rgba(0,0,0,0.3),_inset_0_1px_1px_0_rgba(255,255,255,0.25)] ring-1 ring-white/5 backdrop-blur-3xl backdrop-contrast-125 backdrop-saturate-150 dark:bg-slate-950/30">
+            <div>
+              {/* Header + Register Risk Button */}
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h3 className="flex items-center gap-2 text-xs font-extrabold tracking-wider text-white uppercase">
+                    <span>{t("risk_matrix_logs")}</span>
+                    <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 font-mono text-[10px] text-slate-400">
+                      {filteredRisks.length} / {risks.length}
+                    </span>
+                  </h3>
+                </div>
+
+                {!isReadOnly && (
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={handleOpenAdd}
+                    className="bg-brand-600 hover:bg-brand-500 shadow-brand-500/20 flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold text-white shadow-lg transition"
+                  >
+                    <Plus className="h-4 w-4" />
+                    {t("register_risk")}
+                  </motion.button>
+                )}
+              </div>
+
+              {/* SEARCH & QUICK FILTER PILLS BAR */}
+              <div className="mb-4 space-y-3">
+                {/* Search input */}
+                <div className="relative">
+                  <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search risks by code, title or mitigation..."
+                    className="focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border border-white/10 bg-slate-950/60 py-2 pr-4 pl-9 text-xs text-white placeholder-slate-500 focus:ring-1 focus:outline-none"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery("")}
+                      className="absolute top-1/2 right-3 -translate-y-1/2 text-xs text-slate-400 hover:text-white"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Filter Pills */}
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {(
+                    [
+                      { id: "all", label: "All" },
+                      { id: "high", label: "Critical (≥15)" },
+                      { id: "medium", label: "Medium (8-14)" },
+                      { id: "low", label: "Low (1-7)" },
+                      { id: "active", label: t("risk_active") },
+                      { id: "mitigated", label: t("risk_mitigated") },
+                      { id: "triggered", label: t("risk_triggered") },
+                    ] as const
+                  ).map((filter) => (
+                    <button
+                      key={filter.id}
+                      onClick={() => setActiveFilter(filter.id)}
+                      className={cn(
+                        "rounded-lg border px-2.5 py-1 text-[10px] font-bold uppercase transition-all duration-200 select-none",
+                        activeFilter === filter.id
+                          ? "border-brand-500/50 bg-brand-500/20 text-brand-300 shadow-sm"
+                          : "border-white/5 bg-white/5 text-slate-400 hover:border-white/15 hover:text-white",
+                      )}
+                    >
+                      {filter.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* RISK CARDS CONTAINER WITH ANIMATE PRESENCE */}
+              <div className="max-h-[460px] scrollbar-thin space-y-3.5 overflow-y-auto pr-1">
+                <AnimatePresence mode="popLayout">
+                  {filteredRisks.length === 0 ? (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="py-12 text-center"
+                    >
+                      <HelpCircle className="mx-auto mb-2 h-8 w-8 text-slate-600" />
+                      <p className="text-xs text-slate-400 italic">
+                        {t("no_risks_found_in_this_category")}
+                      </p>
+                    </motion.div>
+                  ) : (
+                    filteredRisks.map((risk) => {
+                      const score = risk.probability * risk.impact;
+                      const isHigh = score >= 15;
+                      const isMedium = score >= 8 && score < 15;
+
+                      return (
+                        <motion.div
+                          key={risk.id}
+                          layout
+                          initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
+                          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                          exit={{ opacity: 0, scale: 0.95, filter: "blur(4px)" }}
+                          transition={{
+                            type: "spring" as const,
+                            stiffness: 400,
+                            damping: 30,
+                            mass: 0.8,
+                          }}
+                          className={cn(
+                            "group relative overflow-hidden rounded-2xl border p-4 backdrop-blur-md transition-all duration-300",
+                            isHigh
+                              ? "border-red-500/20 bg-gradient-to-r from-red-950/20 via-slate-900/50 to-slate-900/40 hover:border-red-500/40"
+                              : isMedium
+                                ? "border-amber-500/20 bg-gradient-to-r from-amber-950/20 via-slate-900/50 to-slate-900/40 hover:border-amber-500/40"
+                                : "border-emerald-500/20 bg-gradient-to-r from-emerald-950/20 via-slate-900/50 to-slate-900/40 hover:border-emerald-500/40",
+                          )}
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2">
+                                <span className="text-brand-400 font-mono text-xs font-black tracking-wider">
+                                  {risk.code}
+                                </span>
+                                <h4 className="truncate text-sm leading-snug font-bold text-white">
+                                  {risk.title}
+                                </h4>
+                              </div>
+                              {risk.description && (
+                                <p className="mt-1.5 text-xs leading-relaxed text-slate-300">
+                                  {risk.description}
+                                </p>
+                              )}
+                            </div>
+
+                            {/* Risk score badge */}
+                            <div className="flex shrink-0 items-center gap-2">
+                              <div
+                                className={cn(
+                                  "flex h-11 w-11 flex-col items-center justify-center rounded-xl border text-sm font-black shadow-md",
+                                  isHigh
+                                    ? "border-red-500/30 bg-red-500/20 text-red-300"
+                                    : isMedium
+                                      ? "border-amber-500/30 bg-amber-500/20 text-amber-300"
+                                      : "border-emerald-500/30 bg-emerald-500/20 text-emerald-300",
+                                )}
+                              >
+                                <span>{score}</span>
+                                <span className="text-[7px] font-bold tracking-wider uppercase opacity-80">
+                                  Score
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Mitigation Plan section */}
+                          {risk.mitigation_plan && (
+                            <div className="mt-3 border-t border-white/5 pt-2.5">
+                              <span className="flex items-center gap-1.5 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                                <Shield className="h-3 w-3 text-emerald-400" />
+                                {t("mitigation_plan")}
+                              </span>
+                              <p className="mt-1 text-xs leading-relaxed text-slate-300/90 italic">
+                                {risk.mitigation_plan}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Footer Info & Badges */}
+                          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-white/5 pt-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                            <div className="flex items-center gap-3">
+                              {risk.target_date && (
+                                <span className="flex items-center gap-1">
+                                  <Calendar className="h-3 w-3 text-slate-400" />
+                                  <span>{risk.target_date}</span>
+                                </span>
+                              )}
+                              <span className="flex items-center gap-1 font-mono">
+                                <span>P:{risk.probability}</span>
+                                <span>I:{risk.impact}</span>
+                              </span>
+                            </div>
+
+                            <span
+                              className={cn(
+                                "rounded-md border px-2 py-0.5 text-[9px] font-bold",
+                                risk.status === "active"
+                                  ? "border-amber-500/30 bg-amber-500/10 text-amber-300"
+                                  : risk.status === "mitigated"
+                                    ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                                    : risk.status === "triggered"
+                                      ? "border-red-500/30 bg-red-500/10 text-red-300"
+                                      : "border-white/10 bg-white/5 text-slate-400",
+                              )}
+                            >
+                              {risk.status === "active"
+                                ? t("risk_active")
+                                : risk.status === "mitigated"
+                                  ? t("risk_mitigated")
+                                  : risk.status === "triggered"
+                                    ? t("risk_triggered")
+                                    : t("risk_closed")}
+                            </span>
+                          </div>
+
+                          {/* Hover action overlay */}
+                          {!isReadOnly && (
+                            <div className="absolute top-3 right-16 flex items-center gap-1 rounded-xl border border-white/10 bg-slate-950/80 px-1.5 py-1 opacity-0 shadow-xl backdrop-blur-md transition-all duration-200 group-hover:opacity-100">
+                              <button
+                                onClick={() => handleOpenEdit(risk)}
+                                title="Edit Risk"
+                                className="rounded-lg p-1 text-slate-400 transition hover:bg-white/10 hover:text-white"
+                              >
+                                <Edit2 className="h-3.5 w-3.5" />
+                              </button>
+                              <button
+                                onClick={() => handleDelete(risk.id)}
+                                title="Delete Risk"
+                                className="rounded-lg p-1 text-red-400 transition hover:bg-red-500/20 hover:text-red-300"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+                          )}
+                        </motion.div>
+                      );
+                    })
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* CRUD DIALOG MODAL WITH ANIMATE PRESENCE */}
+      <AnimatePresence>
+        {isModalOpen && activeRisk && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ duration: 0.2 }}
+              className="w-full max-w-lg rounded-2xl border border-white/15 bg-slate-900 p-6 shadow-2xl backdrop-blur-2xl"
+            >
+              <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
+                <h3 className="flex items-center gap-2 text-base font-bold tracking-wider text-white uppercase">
+                  <Shield className="text-brand-400 h-4 w-4" />
+                  {activeRisk.id ? t("edit_risk_log") : t("register_strategic_risk")}
+                </h3>
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="rounded-lg p-1 text-slate-400 transition hover:bg-white/10 hover:text-white"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <label className="mb-1 block text-[11px] font-bold tracking-wider text-slate-300 uppercase">
+                      {t("risk_code_label")}
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={activeRisk.code || ""}
+                      onChange={(e) => setActiveRisk({ ...activeRisk, code: e.target.value })}
+                      placeholder={t("risk_code_placeholder")}
+                      className="focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border border-white/10 bg-slate-950/60 px-3.5 py-2.5 text-xs text-white focus:ring-1 focus:outline-none"
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="mb-1 block text-[11px] font-bold tracking-wider text-slate-300 uppercase">
+                      {t("risk_title")}
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={activeRisk.title || ""}
+                      onChange={(e) => setActiveRisk({ ...activeRisk, title: e.target.value })}
+                      placeholder={t("risk_title_placeholder")}
+                      className="focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border border-white/10 bg-slate-950/60 px-3.5 py-2.5 text-xs text-white focus:ring-1 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-[11px] font-bold tracking-wider text-slate-300 uppercase">
+                    {t("description_1")}
+                  </label>
+                  <textarea
+                    value={activeRisk.description || ""}
+                    onChange={(e) => setActiveRisk({ ...activeRisk, description: e.target.value })}
+                    rows={2}
+                    className="focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border border-white/10 bg-slate-950/60 px-3.5 py-2 text-xs text-white focus:ring-1 focus:outline-none"
+                  />
+                </div>
+
+                {/* VISUAL SLIDERS & LIVE SCORE PREVIEW */}
+                <div className="space-y-3 rounded-xl border border-white/10 bg-slate-950/40 p-3.5">
+                  <div className="flex items-center justify-between text-xs font-bold text-slate-300 uppercase">
+                    <span>Probability & Impact Picker</span>
+                    {/* Live score readout */}
+                    {(() => {
+                      const prob = Number(activeRisk.probability || 3);
+                      const imp = Number(activeRisk.impact || 3);
+                      const score = prob * imp;
+                      const isHigh = score >= 15;
+                      const isMed = score >= 8 && score < 15;
+
+                      return (
+                        <span
+                          className={cn(
+                            "rounded-md border px-2 py-0.5 text-[10px] font-black uppercase",
+                            isHigh
+                              ? "border-red-500/40 bg-red-500/20 text-red-300"
+                              : isMed
+                                ? "border-amber-500/40 bg-amber-500/20 text-amber-300"
+                                : "border-emerald-500/40 bg-emerald-500/20 text-emerald-300",
+                          )}
+                        >
+                          Score: {prob} × {imp} = {score}
+                        </span>
+                      );
+                    })()}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="mb-1 block text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                        {t("probability_1_5")}
+                      </label>
+                      <select
+                        value={activeRisk.probability}
+                        onChange={(e) =>
+                          setActiveRisk({ ...activeRisk, probability: Number(e.target.value) })
+                        }
+                        className="focus:border-brand-500 w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-xs text-white focus:outline-none"
+                      >
+                        <option value="1">1 - {t("risk_prob_very_low")}</option>
+                        <option value="2">2 - {t("risk_prob_low")}</option>
+                        <option value="3">3 - {t("risk_prob_medium")}</option>
+                        <option value="4">4 - {t("risk_prob_high")}</option>
+                        <option value="5">5 - {t("risk_prob_very_high")}</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="mb-1 block text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                        {t("impact_1_5")}
+                      </label>
+                      <select
+                        value={activeRisk.impact}
+                        onChange={(e) =>
+                          setActiveRisk({ ...activeRisk, impact: Number(e.target.value) })
+                        }
+                        className="focus:border-brand-500 w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-xs text-white focus:outline-none"
+                      >
+                        <option value="1">1 - {t("risk_impact_negligible")}</option>
+                        <option value="2">2 - {t("risk_impact_minor")}</option>
+                        <option value="3">3 - {t("risk_impact_moderate")}</option>
+                        <option value="4">4 - {t("risk_impact_major")}</option>
+                        <option value="5">5 - {t("risk_impact_catastrophic")}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-[11px] font-bold tracking-wider text-slate-300 uppercase">
+                    {t("mitigation_plan_1")}
+                  </label>
+                  <textarea
+                    value={activeRisk.mitigation_plan || ""}
+                    onChange={(e) =>
+                      setActiveRisk({ ...activeRisk, mitigation_plan: e.target.value })
+                    }
+                    rows={2}
+                    className="focus:border-brand-500 focus:ring-brand-500 w-full rounded-xl border border-white/10 bg-slate-950/60 px-3.5 py-2 text-xs text-white focus:ring-1 focus:outline-none"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="mb-1 block text-[11px] font-bold tracking-wider text-slate-300 uppercase">
+                      {t("status_1")}
+                    </label>
+                    <select
+                      value={activeRisk.status}
+                      onChange={(e) =>
+                        setActiveRisk({
+                          ...activeRisk,
+                          status: e.target.value as "active" | "mitigated" | "triggered" | "closed",
+                        })
+                      }
+                      className="focus:border-brand-500 w-full rounded-xl border border-white/10 bg-slate-950/60 px-3 py-2 text-xs text-white focus:outline-none"
+                    >
+                      <option value="active">{t("risk_active")}</option>
+                      <option value="mitigated">{t("risk_mitigated")}</option>
+                      <option value="triggered">{t("risk_triggered")}</option>
+                      <option value="closed">{t("risk_closed")}</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-[11px] font-bold tracking-wider text-slate-300 uppercase">
+                      {t("target_date")}
+                    </label>
+                    <input
+                      type="date"
+                      value={activeRisk.target_date || ""}
+                      onChange={(e) =>
+                        setActiveRisk({ ...activeRisk, target_date: e.target.value })
+                      }
+                      className="focus:border-brand-500 w-full rounded-xl border border-white/10 bg-slate-950/60 px-3 py-2 text-xs text-white focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end gap-2 border-t border-white/10 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className="rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-slate-300 transition hover:bg-white/5 hover:text-white"
+                  >
+                    {t("cancel")}
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSaving}
+                    className="bg-brand-600 hover:bg-brand-500 flex items-center justify-center gap-2 rounded-xl px-5 py-2 text-xs font-bold text-white shadow-lg transition"
+                  >
+                    {isSaving ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        {t("saving")}
+                      </>
+                    ) : (
+                      t("swot_save")
+                    )}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -36,6 +36,7 @@ import { MetricWidget } from "@/components/ui/metric-widget";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { SlideOverPanel } from "@/components/ui/slide-over-panel";
 import { useTranslations } from "next-intl";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface UserProfile {
   email: string;
@@ -82,8 +83,12 @@ const ENTITY_TYPES = [
 
 function AuditDetailPanel({ log, onClose }: { log: AuditLogItem; onClose: () => void }) {
   return (
-    <div className="space-y-6">
-      <div className="grid gap-4 rounded-xl border border-white/5 bg-neutral-950/40 p-4 sm:grid-cols-3">
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      className="space-y-6"
+    >
+      <div className="bg-bg-secondary/40 grid gap-4 rounded-xl border border-white/5 p-4 shadow-lg backdrop-blur-md sm:grid-cols-3">
         <div>
           <p className="text-fg-muted text-[10px] font-semibold tracking-wider uppercase">Action</p>
           <Badge
@@ -120,7 +125,7 @@ function AuditDetailPanel({ log, onClose }: { log: AuditLogItem; onClose: () => 
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-xl border border-white/5 bg-neutral-950/20 p-4">
+        <div className="bg-bg-secondary/40 rounded-xl border border-white/5 p-4 shadow-lg backdrop-blur-md">
           <h4 className="text-fg-secondary mb-2 text-xs font-bold tracking-wider uppercase">
             Target Entity
           </h4>
@@ -135,7 +140,7 @@ function AuditDetailPanel({ log, onClose }: { log: AuditLogItem; onClose: () => 
             </div>
           </div>
         </div>
-        <div className="rounded-xl border border-white/5 bg-neutral-950/20 p-4">
+        <div className="bg-bg-secondary/40 rounded-xl border border-white/5 p-4 shadow-lg backdrop-blur-md">
           <h4 className="text-fg-secondary mb-2 text-xs font-bold tracking-wider uppercase">
             Meta Details
           </h4>
@@ -167,7 +172,7 @@ function AuditDetailPanel({ log, onClose }: { log: AuditLogItem; onClose: () => 
             <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
               Before State
             </span>
-            <div className="max-h-56 overflow-y-auto rounded-xl border border-white/5 bg-neutral-950 p-4 font-mono text-[11px] text-rose-300">
+            <div className="max-h-56 overflow-y-auto rounded-xl border border-white/5 bg-black/50 p-4 font-mono text-[11px] text-rose-300 shadow-inner backdrop-blur-md">
               {log.before_data ? (
                 <pre className="whitespace-pre-wrap">
                   {JSON.stringify(log.before_data, null, 2)}
@@ -182,7 +187,7 @@ function AuditDetailPanel({ log, onClose }: { log: AuditLogItem; onClose: () => 
             <span className="text-fg-muted text-[10px] font-bold tracking-wider uppercase">
               After State
             </span>
-            <div className="max-h-56 overflow-y-auto rounded-xl border border-white/5 bg-neutral-950 p-4 font-mono text-[11px] text-emerald-300">
+            <div className="max-h-56 overflow-y-auto rounded-xl border border-white/5 bg-black/50 p-4 font-mono text-[11px] text-emerald-300 shadow-inner backdrop-blur-md">
               {log.after_data ? (
                 <pre className="whitespace-pre-wrap">{JSON.stringify(log.after_data, null, 2)}</pre>
               ) : (
@@ -194,11 +199,11 @@ function AuditDetailPanel({ log, onClose }: { log: AuditLogItem; onClose: () => 
       </div>
 
       <div className="flex justify-end border-t border-white/5 pt-4">
-        <Button onClick={onClose} variant="outline">
+        <Button onClick={onClose} variant="outline" className="bg-white/5 hover:bg-white/10">
           Close Inspector
         </Button>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -209,6 +214,11 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
   const [filterAction, setFilterAction] = useState("all");
   const [filterEntity, setFilterEntity] = useState("all");
   const [selectedLog, setSelectedLog] = useState<AuditLogItem | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Statistics calculation
   const totalCount = logs.length;
@@ -292,17 +302,56 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
     return Object.values(grouped).reverse(); // assuming logs are descending originally
   }, [logs]);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring" as const, stiffness: 300, damping: 24 },
+    },
+  };
+
+  if (!isMounted) {
+    return (
+      <div className="bg-bg-secondary/40 flex h-96 w-full items-center justify-center rounded-2xl border border-white/5 backdrop-blur-xl">
+        <Activity className="text-brand-400 h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
+    <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-6">
       {/* 360° Observe: Log Volume Chart */}
-      <div className="rounded-xl border border-white/5 bg-neutral-950/40 p-6">
-        <h3 className="text-fg-primary mb-6 text-sm font-bold tracking-wide">
+      <motion.div
+        variants={itemVariants}
+        className="bg-bg-secondary/40 relative overflow-hidden rounded-2xl border border-white/5 p-6 shadow-lg backdrop-blur-xl"
+      >
+        <div className="bg-brand-500/5 absolute top-0 right-0 -mt-20 -mr-20 h-64 w-64 rounded-full blur-3xl" />
+        <h3 className="mb-6 text-sm font-bold tracking-wide text-white">
           Log Volume (Last Activity)
         </h3>
         <div className="h-64 w-full">
           {chartData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.8} />
+                    <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.1} />
+                  </linearGradient>
+                  <linearGradient id="colorSecurity" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#10b981" stopOpacity={0.8} />
+                    <stop offset="100%" stopColor="#10b981" stopOpacity={0.1} />
+                  </linearGradient>
+                </defs>
                 <CartesianGrid
                   strokeDasharray="3 3"
                   stroke="rgba(255,255,255,0.05)"
@@ -310,14 +359,14 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
                 />
                 <XAxis
                   dataKey="date"
-                  stroke="#6B7280"
+                  stroke="rgba(255,255,255,0.4)"
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
                   dy={10}
                 />
                 <YAxis
-                  stroke="#6B7280"
+                  stroke="rgba(255,255,255,0.4)"
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
@@ -326,24 +375,25 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
                 <RechartsTooltip
                   cursor={{ fill: "rgba(255,255,255,0.02)" }}
                   contentStyle={{
-                    backgroundColor: "#0E1622",
+                    backgroundColor: "rgba(10,10,10,0.9)",
                     borderColor: "rgba(255,255,255,0.1)",
-                    borderRadius: "8px",
+                    borderRadius: "12px",
+                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.5)",
                   }}
-                  itemStyle={{ color: "#F3F4F6", fontSize: "12px" }}
+                  itemStyle={{ color: "#F3F4F6", fontSize: "12px", fontWeight: "bold" }}
                   labelStyle={{ color: "#9CA3AF", fontSize: "12px", marginBottom: "4px" }}
                 />
                 <Bar
                   dataKey="count"
                   name="Total Actions"
-                  fill="#00D2FF"
+                  fill="url(#colorTotal)"
                   radius={[4, 4, 0, 0]}
                   maxBarSize={40}
                 />
                 <Bar
                   dataKey="security"
                   name="Security Events"
-                  fill="#00FF88"
+                  fill="url(#colorSecurity)"
                   radius={[4, 4, 0, 0]}
                   maxBarSize={40}
                 />
@@ -357,9 +407,9 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
             />
           )}
         </div>
-      </div>
+      </motion.div>
 
-      <div className="grid gap-3 sm:grid-cols-4">
+      <motion.div variants={itemVariants} className="grid gap-4 sm:grid-cols-4">
         <MetricWidget
           icon={Activity}
           label={t("audit_total_actions") || "Total Actions"}
@@ -375,20 +425,26 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
           label={t("audit_autopilot_runs") || "Autopilot Runs"}
           value={systemCount}
         />
-        <div className="flex items-center justify-between rounded-xl border border-white/5 bg-neutral-950/40 p-4">
-          <div className="flex items-center gap-4">
-            <Terminal className="text-fg-muted h-5 w-5" strokeWidth={1.5} />
+        <div className="bg-bg-secondary/40 group relative flex items-center justify-between overflow-hidden rounded-2xl border border-white/5 p-5 shadow-lg backdrop-blur-xl">
+          <div className="absolute top-0 right-0 -mt-4 -mr-4 h-16 w-16 rounded-full bg-purple-500/10 blur-xl transition-all group-hover:bg-purple-500/20" />
+          <div className="z-10 flex items-center gap-4">
+            <Terminal className="h-6 w-6 text-purple-400" strokeWidth={1.5} />
             <div>
-              <p className="text-fg-muted text-xs font-medium">Real-time Feed</p>
-              <p className="text-fg-primary text-sm font-bold">
+              <p className="text-fg-muted mb-1 text-[10px] font-bold tracking-wider uppercase">
+                Real-time Feed
+              </p>
+              <p className="text-lg font-bold text-white">
                 {totalCount > 0 ? t("audit_active") || "Active" : t("audit_no_data") || "No Data"}
               </p>
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <motion.div
+        variants={itemVariants}
+        className="flex flex-col gap-3 sm:flex-row sm:items-center"
+      >
         <div className="relative flex-1">
           <Search className="text-fg-muted absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2" />
           <Input
@@ -396,7 +452,7 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
             placeholder={t("audit_search_placeholder") || "Search by action, actor, IP..."}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full border-white/5 bg-neutral-950/40 pl-10 text-sm"
+            className="bg-bg-secondary/60 focus:border-brand-500/50 w-full rounded-xl border-white/10 pl-10 text-sm backdrop-blur-md"
           />
         </div>
         <div className="flex flex-wrap gap-2">
@@ -411,143 +467,154 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
             onChange={setFilterEntity}
           />
         </div>
-      </div>
+      </motion.div>
 
       {/* Main Audit Logs Table Card */}
-      <Card className="overflow-hidden border-white/10 bg-neutral-900/60 shadow-xl backdrop-blur-xl">
-        <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead>
-                <tr className="text-fg-muted border-b border-white/5 bg-neutral-950/20 text-xs font-semibold tracking-wider uppercase">
-                  <th className="p-4 pl-6">{t("audit_col_time_id") || "Time / ID"}</th>
-                  <th className="p-4">{t("audit_col_actor") || "Actor"}</th>
-                  <th className="p-4">{t("audit_col_action") || "Action"}</th>
-                  <th className="p-4">{t("audit_col_target") || "Target Entity"}</th>
-                  <th className="p-4">{t("audit_col_ip") || "IP Location"}</th>
-                  <th className="p-4 pr-6 text-right"></th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                {filteredLogs.map((log) => (
-                  <tr
-                    key={log.id}
-                    onClick={() => setSelectedLog(log)}
-                    className="group cursor-pointer transition-colors duration-150 hover:bg-white/[0.02]"
-                  >
-                    <td className="p-4 pl-6">
-                      <div className="flex flex-col">
-                        <span className="flex items-center gap-1.5 font-mono text-xs text-white">
-                          <Clock className="text-fg-muted h-3 w-3" />
-                          {new Date(log.created_at).toLocaleTimeString(locale, {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
-                          })}
-                        </span>
-                        <span className="text-fg-muted mt-0.5 font-mono text-[10px]">
-                          {log.id.slice(0, 8)}
-                        </span>
-                      </div>
-                    </td>
-
-                    <td className="p-4">
-                      {log.users ? (
-                        <div className="flex items-center gap-2">
-                          <div className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/5">
-                            <User className="text-fg-secondary h-3.5 w-3.5" />
-                          </div>
+      <motion.div variants={itemVariants}>
+        <Card className="bg-bg-secondary/40 overflow-hidden rounded-2xl border-white/5 shadow-xl backdrop-blur-xl">
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="text-fg-muted border-b border-white/5 bg-white/5 text-xs font-semibold tracking-wider uppercase">
+                    <th className="p-4 pl-6">{t("audit_col_time_id") || "Time / ID"}</th>
+                    <th className="p-4">{t("audit_col_actor") || "Actor"}</th>
+                    <th className="p-4">{t("audit_col_action") || "Action"}</th>
+                    <th className="p-4">{t("audit_col_target") || "Target Entity"}</th>
+                    <th className="p-4">{t("audit_col_ip") || "IP Location"}</th>
+                    <th className="p-4 pr-6 text-right"></th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  <AnimatePresence>
+                    {filteredLogs.map((log, i) => (
+                      <motion.tr
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: (i % 10) * 0.05 }}
+                        key={log.id}
+                        onClick={() => setSelectedLog(log)}
+                        className="group cursor-pointer transition-colors duration-150 hover:bg-white/[0.04]"
+                      >
+                        <td className="p-4 pl-6">
                           <div className="flex flex-col">
-                            <span className="text-xs font-semibold text-white">
-                              {log.users.full_name || "Unknown Staff"}
+                            <span className="group-hover:text-brand-400 flex items-center gap-1.5 font-mono text-xs text-white transition-colors">
+                              <Clock className="text-fg-muted h-3 w-3" />
+                              {new Date(log.created_at).toLocaleTimeString(locale, {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                second: "2-digit",
+                              })}
                             </span>
-                            <span className="text-fg-muted text-[10px]">{log.users.email}</span>
+                            <span className="text-fg-muted mt-0.5 font-mono text-[10px]">
+                              {log.id.slice(0, 8)}
+                            </span>
                           </div>
+                        </td>
+
+                        <td className="p-4">
+                          {log.users ? (
+                            <div className="flex items-center gap-2">
+                              <div className="group-hover:border-brand-500/30 group-hover:bg-brand-500/10 flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/5 transition-colors">
+                                <User className="text-fg-secondary group-hover:text-brand-400 h-3.5 w-3.5 transition-colors" />
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="text-xs font-semibold text-white">
+                                  {log.users.full_name || "Unknown Staff"}
+                                </span>
+                                <span className="text-fg-muted text-[10px]">{log.users.email}</span>
+                              </div>
+                              <Badge
+                                variant={log.users.role === "ceo" ? "danger" : "brand"}
+                                className="px-1.5 py-0 text-[9px]"
+                              >
+                                {log.users.role}
+                              </Badge>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-2">
+                              <div className="flex h-7 w-7 items-center justify-center rounded-full border border-purple-500/20 bg-purple-500/10">
+                                <Cpu className="h-3.5 w-3.5 text-purple-400" />
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="text-xs font-semibold text-purple-300">
+                                  SYSTEM
+                                </span>
+                                <span className="text-[10px] text-purple-400/80">
+                                  Autopilot Guard
+                                </span>
+                              </div>
+                              <Badge
+                                variant="outline"
+                                className="border-purple-500/30 bg-purple-500/5 px-1.5 py-0 text-[9px] text-purple-400"
+                              >
+                                Core
+                              </Badge>
+                            </div>
+                          )}
+                        </td>
+
+                        <td className="p-4">
                           <Badge
-                            variant={log.users.role === "ceo" ? "danger" : "brand"}
-                            className="px-1.5 py-0 text-[9px]"
+                            variant={getActionBadgeVariant(log.action)}
+                            className="font-mono text-[10px] tracking-normal normal-case"
                           >
-                            {log.users.role}
+                            {log.action}
                           </Badge>
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-2">
-                          <div className="flex h-7 w-7 items-center justify-center rounded-full border border-purple-500/20 bg-purple-500/10">
-                            <Cpu className="h-3.5 w-3.5 text-purple-400" />
+                        </td>
+
+                        <td className="p-4">
+                          <div className="flex items-center gap-2">
+                            {getEntityIcon(log.entity_type)}
+                            <div className="flex flex-col">
+                              <span className="text-xs font-medium text-white capitalize">
+                                {log.entity_type.replace("_", " ")}
+                              </span>
+                              <span className="text-fg-muted font-mono text-[10px]">
+                                {log.entity_id.slice(0, 8)}...
+                              </span>
+                            </div>
                           </div>
-                          <div className="flex flex-col">
-                            <span className="text-xs font-semibold text-purple-300">SYSTEM</span>
-                            <span className="text-[10px] text-purple-400/80">Autopilot Guard</span>
-                          </div>
-                          <Badge
+                        </td>
+
+                        <td className="p-4">
+                          <span className="text-fg-muted flex items-center gap-1.5 font-mono text-xs transition-colors group-hover:text-white">
+                            <Globe className="text-fg-muted group-hover:text-brand-400 h-3.5 w-3.5 shrink-0 transition-colors" />
+                            {log.ip_hash}
+                          </span>
+                        </td>
+
+                        <td className="p-4 pr-6 text-right">
+                          <Button
+                            size="sm"
                             variant="outline"
-                            className="border-purple-500/30 bg-purple-500/5 px-1.5 py-0 text-[9px] text-purple-400"
+                            className="h-8 border-white/10 bg-white/5 px-2.5 text-[11px] opacity-0 transition-opacity duration-150 group-hover:opacity-100 hover:bg-white/10"
                           >
-                            Core
-                          </Badge>
-                        </div>
-                      )}
-                    </td>
-
-                    <td className="p-4">
-                      <Badge
-                        variant={getActionBadgeVariant(log.action)}
-                        className="font-mono text-[10px] tracking-normal normal-case"
-                      >
-                        {log.action}
-                      </Badge>
-                    </td>
-
-                    <td className="p-4">
-                      <div className="flex items-center gap-2">
-                        {getEntityIcon(log.entity_type)}
-                        <div className="flex flex-col">
-                          <span className="text-xs font-medium text-white capitalize">
-                            {log.entity_type.replace("_", " ")}
-                          </span>
-                          <span className="text-fg-muted font-mono text-[10px]">
-                            {log.entity_id.slice(0, 8)}...
-                          </span>
-                        </div>
-                      </div>
-                    </td>
-
-                    <td className="p-4">
-                      <span className="text-fg-muted flex items-center gap-1.5 font-mono text-xs">
-                        <Globe className="text-fg-muted h-3.5 w-3.5 shrink-0" />
-                        {log.ip_hash}
-                      </span>
-                    </td>
-
-                    <td className="p-4 pr-6 text-right">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="h-8 px-2.5 text-[11px] opacity-0 transition-opacity duration-150 group-hover:opacity-100"
-                      >
-                        Inspect
-                        <ArrowRight className="ml-1 h-3 w-3" />
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-                {filteredLogs.length === 0 && (
-                  <tr>
-                    <td colSpan={6} className="text-fg-muted p-16 text-center">
-                      <Shield className="text-fg-muted/30 mx-auto mb-3 h-8 w-8" />
-                      {totalCount === 0
-                        ? t("audit_empty_state") ||
-                          "No audit logs found. Actions will appear here as they occur."
-                        : t("audit_no_match") ||
-                          "No matching audit logs found. Try adjusting your filters."}
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+                            Inspect
+                            <ArrowRight className="ml-1 h-3 w-3" />
+                          </Button>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </AnimatePresence>
+                  {filteredLogs.length === 0 && (
+                    <tr>
+                      <td colSpan={6} className="text-fg-muted p-16 text-center">
+                        <Shield className="text-fg-muted/30 mx-auto mb-3 h-8 w-8" />
+                        {totalCount === 0
+                          ? t("audit_empty_state") ||
+                            "No audit logs found. Actions will appear here as they occur."
+                          : t("audit_no_match") ||
+                            "No matching audit logs found. Try adjusting your filters."}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
 
       <SlideOverPanel
         open={!!selectedLog}
@@ -556,6 +623,6 @@ export function AuditLogClient({ initialLogs, locale }: AuditLogClientProps) {
       >
         {selectedLog && <AuditDetailPanel log={selectedLog} onClose={() => setSelectedLog(null)} />}
       </SlideOverPanel>
-    </div>
+    </motion.div>
   );
 }
