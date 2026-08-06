@@ -1533,7 +1533,7 @@
     "nav_integrations": "Entegrasyonlar",
     "nav_jules": "Google Jules",
     "nav_investors": "Yatırımcı Başvuruları",
-    "nav_kBenchmark": "K-Karşılaştırma",
+    "nav_kBenchmark": "K-Benchmark",
     "nav_vendor_portal": "Sağlayıcı Portalı",
     "vendor_portal_title": "Yapay Zeka Sağlayıcı SLA & Güven Portalı",
     "vendor_portal_subtitle": "Sağlayıcı SLA uyumunu, yanıt sürelerini, olay geçmişini ve güven sıralamalarını takip edin.",
@@ -2494,12 +2494,6 @@
     "nav_moderation": "Moderasyon",
     "group_operations": "Operasyonlar",
     "nav_k_benchmark": "K-Benchmark",
-    "nav_kBenchmark": "K-Benchmark",
-    "nav_vendor_portal": "Sağlayıcı Portalı",
-    "vendor_portal_title": "Yapay Zeka Sağlayıcı SLA & Güven Portalı",
-    "vendor_portal_subtitle": "Sağlayıcı SLA uyumunu, yanıt sürelerini, olay geçmişini ve güven sıralamalarını takip edin.",
-    "vendor_sla_uptime": "SLA Çalışma Süresi",
-    "vendor_avg_latency": "Ortalama Gecikme",
     "group_intelligence": "Intelligence",
     "nav_analysis": "Analysis",
     "nav_autopilot": "Autopilot",
@@ -4642,5 +4636,15 @@
     "cta_title": "ALPAR AI ile uyumlu kalın",
     "cta_desc": "Olay kaydınızı ve mevzuat bildirimlerinizi otomatikleştirin.",
     "cta_button": "Ücretsiz başlayın"
+  },
+  "analyzer": {
+    "title": "EU Yapay Zeka Yasası Analiz Aracı",
+    "description": "Terms of Service metnini yapıştırın ve Madde 73 ihlallerini analiz edin.",
+    "analyze_btn": "Analiz Et",
+    "result_title": "Denetim Raporu",
+    "placeholder": "Sözleşme metnini buraya yapıştırın...",
+    "score": "Uyum Skoru",
+    "risks": "Riskler",
+    "recommendations": "Öneriler"
   }
 }

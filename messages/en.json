@@ -4636,5 +4636,15 @@
     "cta_title": "Stay Compliant with ALPAR AI",
     "cta_desc": "Automate your incident logging and regulatory reporting.",
     "cta_button": "Start for Free"
+  },
+  "analyzer": {
+    "title": "EU AI Act Analyzer",
+    "description": "Paste your Terms of Service text and analyze Article 73 violations.",
+    "analyze_btn": "Analyze",
+    "result_title": "Audit Report",
+    "placeholder": "Paste contract text here...",
+    "score": "Compliance Score",
+    "risks": "Risks",
+    "recommendations": "Recommendations"
   }
 }
