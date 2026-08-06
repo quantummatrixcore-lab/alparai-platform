@@ -220,3 +220,26 @@ never invent, and never act outside their mandate.
 - Sidebar-integrity allowlist entries (`admin-sidebar-integrity.spec.ts`) carry a one-line reason:
   `// EXCEPTION: /admin/foo — utility route, no sidebar needed`. Undocumented entries fail review.
 - Imports: `@/` aliases for cross-module imports; relative paths only within the same domain folder.
+
+## Token Budget Policy — Ajan Token Sınır Tablosu (Binding)
+
+Bu kural tüm Antigravity + OpenCode ajanları için **zorunludur**.
+Her görev türüne göre maksimum token bütçesi aşağıdaki tabloya göre belirlenir.
+Ajan bu limiti aşarsa görevi bırakıp "TOKEN_BUDGET_EXCEEDED — görevi bölün" diyerek durur.
+
+| Görev Tipi                                  | Örnek                                  | Max Token | Model                        |
+| ------------------------------------------- | -------------------------------------- | --------- | ---------------------------- |
+| **Nano** — tek satır / sabit değer düzeltme | ENV değeri ekleme, import fix          | 2.000     | Flash / DeepSeek Free        |
+| **Micro** — tek dosya mekanik               | JSON fill, seed SQL, regex replace     | 5.000     | Nemotron / DeepSeek Free     |
+| **Small** — 1–3 dosya + lint                | i18n tamamlama, migration yazma        | 10.000    | Flash / Nemotron Free        |
+| **Medium** — 3–10 dosya + test              | Tek bir route refactor, webhook fix    | 20.000    | Flash Pro / Nemotron         |
+| **Large** — mimari karar + çoklu dosya      | Swarm koordinasyonu, dashboard rebuild | 40.000    | Gemini Pro / DeepSeek V4 Pro |
+| **XL** — strateji + uzun bağlam             | MASTER_PLAN yazımı, güvenlik audit     | 80.000    | Claude Sonnet / Opus         |
+
+### Uygulama Kuralları:
+
+1. **Ajan atanmadan önce** Baş Mimar (Claude/Opus) görev tipini belirler ve prompt'a yazar.
+2. **OpenCode prompt'larına** --max-tokens <N> flag'i eklenir (destekleniyorsa).
+3. **Antigravity subagent prompt'larına** "Bu görev MAX X token bütçesiyle yürütülür. Aşarsan dur ve raporla." satırı eklenir.
+4. **Biten ajan anında kill edilir** (RAM ve compute tasarrufu).
+5. **Büyük görevler bölünür**: Large+ görev tek ajana verilmez, birden fazla Small/Medium ajana parçalanır.

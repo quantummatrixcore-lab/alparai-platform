@@ -38,7 +38,6 @@ export default async function AdminAutopilotPage({
   const result = await getAdminAutopilotSnapshot(100);
   if (!result.ok || !result.snapshot) {
     return (
-    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
       <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
         <Container className="py-10">
           <Card>
@@ -393,6 +392,5 @@ function RunStatusPill({ status }: { status: string }) {
             : "bg-white/5 text-fg-secondary border border-white/10";
   return (
     <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${colour}`}>{status}</span>
-      </div></div>
   );
 }

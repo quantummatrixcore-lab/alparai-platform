@@ -149,8 +149,7 @@ function FitScoreBar({ score }: { score: number }) {
           ? "bg-amber-500"
           : "bg-danger-500";
   return (
-    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
-      <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2">
       <div className="bg-bg-tertiary/50 h-1.5 w-16 overflow-hidden rounded-full">
         <div
           className={`h-full rounded-full transition-all ${color}`}
@@ -524,6 +523,5 @@ export default async function StateSupportPage({
         </div>
       </Container>
     </div>
-      </div></div>
   );
 }

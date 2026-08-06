@@ -31,8 +31,7 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
   };
 
   return (
-    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
-      <div className="animate-in fade-in space-y-8 duration-500">
+    <div className="animate-in fade-in space-y-8 duration-500">
       <div>
         <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">
           {t("dsar_title")}
@@ -162,6 +161,5 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
         </div>
       </div>
     </div>
-      </div></div>
   );
 }
