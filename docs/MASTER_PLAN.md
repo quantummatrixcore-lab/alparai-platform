@@ -83,7 +83,7 @@ _Durum: **BLOKLU** (Otopilot değil — aşağıya bakınız) | Yürütücü: Op
 | Blok  | Öncelik | Atanan      | Görev Özeti                                                                                                        | Durum     |
 | ----- | ------- | ----------- | ------------------------------------------------------------------------------------------------------------------ | --------- |
 | OMEGA | P0      | Founder     | Cloudflare WAF 403 engeli (#128) kaldırılacak (Blocker)                                                            | pending   |
-| ZETA  | P0      | Antigravity | [ZETA-0] CI repo genelinde çökmüş (master'da 30/30 koşu başarısız); PR şeridi kapalı, ajan PR doktrini uygulanamaz | pending   |
+| ZETA  | P0      | Antigravity | [ZETA-0] CI repo genelinde çökmüş (master'da 30/30 koşu başarısız); PR şeridi kapalı, ajan PR doktrini uygulanamaz | completed |
 | SIGMA | P0      | Flash Ajan  | Stripe canlı işlem / webhook doğrulama (#208)                                                                      | completed |
 | ALPHA | P0      | Flash Ajan  | Seed Data Room & Değerleme Memosu üretimi (#201, #203)                                                             | completed |
 | ZETA  | P1      | Flash Ajan  | 400-satır CI sınırı (#209) ve Jules/Claude yönlendirme CI'ı (#213)                                                 | completed |
