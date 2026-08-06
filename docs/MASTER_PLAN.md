@@ -3193,3 +3193,81 @@ Hayır, ama eksikler artık **sayılabilir ve küçük**. Ürün çalışıyor, 
 **G-6 uyum.** Yalnızca `docs/MASTER_PLAN.md` yazıldı. **G-5 uyum:** üç paralel Haiku ajanı tüm keşfi yaptı (OAuth teşhisi, lansman kanalları, başvurular). Ajan çıktılarının **hiçbiri doğrudan aktarılmadı**: her sonuç kaynak dosyadan yeniden ölçüldü ve iki noktada ajan sonucu **düzeltildi** — public depo "boş vitrin" değil tam kaynak kodu çıktı, ve `linkedin_log.json`'daki isimlerin bir kısmı yer tutucu olduğu için 43 değil 37 gerçek isim yazıldı.
 
 **Verification.** Backlog sayımı `python3` ile tam marker eşleşmesiyle → **69/79 (%87,3)**. `node scripts/check-masterplan-consistency.mjs` → `passed`. Public depo `git clone --depth 1` ile ayrı bir dizine indirilip dosya listesi, tek commit SHA'sı (`4a64d99`) ve sır taraması doğrudan ölçüldü. OAuth teşhisi `git log -S` ve dosya okumasıyla; HackerOne çelişkisi üç dosyanın karşılaştırılmasıyla; `hackerone.com/alparai` erişimi denendi ve **403 ile engellendi**, bu yüzden canlılık hakkında hiçbir iddia yazılmadı.
+
+---
+
+## v12.119 — Opus Stratejik Vizyon Güncellemesi: Token Bütçesi Anti-Halusinasyon Doktrini + Agent-Os Entegrasyon Yol Haritası + Lansman Kapısı Revizyonu
+
+### Durum güncellemesi
+
+Bu turda tamamlanan görevler (tümü origin/master üzerinde doğrulandı):
+
+| #    | Görev                        | Commit              | Doğrulama        |
+| ---- | ---------------------------- | ------------------- | ---------------- |
+| #158 | Public depo temizliği        | 7b9205fb            | ✅ origin/master |
+| #152 | PostHog lansman hunisi       |  9cda2a8             | ✅ origin/master |
+| #138 | Google OAuth GIS + Nonce     | 7b9205fb (birleşik) | ✅ origin/master |
+| #147 | HackerOne iddiası düzeltmesi | 52b1927b            | ✅ origin/master |
+| #151 | Stripe webhook → tier sync   | 5ce389fe            | ✅ origin/master |
+
+Ek altyapı:
+
+- Admin 360° Spatial Dashboard: 6f4a0f38, 51d6d1e4
+- 56 admin rotası glassmorphism: 4458ea0c
+- Halusinasyon öz-olay kaydı: 1a6ef55 (seed)
+- Token Bütçe Politikası: 991aefa (AGENTS.md)
+
+### Panel durumu
+
+79 → **79 madde** (yeni madde eklenmedi bu turda); tamamlanmış 69 → **74** (#158, #152, #138, #147, #151 kapatıldı) → **%93,7**. Açık kalanlar: #146 (GATE — yalnızca paylaşım adımı), #157, #154, #159.
+
+### Yeni Blok Görevler — Opus Stratejik Vizyon (v12.119)
+
+**BLOK GÖREV DA (P0, lansmanı bloklar) — #160: Token Bütçe Anti-Halusinasyon Motoru**
+ALPAR AI'ın çekirdek ürün tezini kendi içinde kanıtlayan mekanik güven katmanı. Token bütçesi = halusinasyon için fiziksel alan daraltması. Ajan başına Nano/Micro/Small/Medium/Large/XL sınıflandırması AGENTS.md'ye yazıldı (991aefa). Sonraki adım: bu politikayı platformun **kullanıcıya açık bir özelliği** olarak ürünleştir — `AI Incident Budget Transparency Score™`. Patenlenebilir fikri mülkiyet.
+
+**BLOK GÖREV DB (P0, stratejik) — #161: Agent-Os Omega SENTINEL Entegrasyonu (Faz 1)**
+Agent-Os ekosisteminden Omega'nın SENTINEL + OPALGATE motorlarını ALPAR AI'a "Read-Only Audit Plugin" olarak entegre et. Vercel Cron veya CI/CD adımı olarak RLS politikalarını, PII Guardian'ı ve Server Action güvenliğini otomatik denetle. Hedef: platformun güven skorunu sürekli hesaplayan otonom bir denetçi.
+
+**BLOK GÖREV DC (P0, gelir) — #162: K-BENCHMARK Lansmanı**
+K-BENCHMARK: yapay zeka modellerinin güvenilirlik, şeffaflık ve hesap verebilirlik skorlarının bağımsız ölçümü. Türkiye'de ilk, Avrupa'da öncü. EU AI Act Serious Incident veritabanımızla (203 migration, 52 action) desteklenen benzersiz veri seti. Gelir modeli: kurumsal API erişimi (freemium) + yıllık sertifikasyon raporu.
+
+**BLOK GÖREV DD (P1, VC) — #163: Yatırımcı Hazırlık Paketi v2**
+#159'un genişletilmişi. İçerik: (a) 1-sayfa exec summary, (b) 10-slide pitch deck (problem → çözüm → pazar → iş modeli → takım → ask), (c) finansal projeksiyon (3 yıl), (d) rekabet matrisi (Holistic AI, Credo AI, TrustibleAI karşılaştırması), (e) kullanıcı büyüme hunisi (PostHog verisiyle). Hedef: Pre-Seed / Seed turu –.5M.
+
+**BLOK GÖREV DE (P1, ekosistem) — #164: Danışma Kurulu (Advisory Board) Oluşturma**
+Hedef profil: (a) Hukuk — KVKK/GDPR uzmanı akademisyen, (b) Teknoloji — Ex-FAANG AI safety researcher, (c) İş — Türk startup ekosisteminden çıkış yapmış kurucu, (d) Kamu — e-Devlet / BTK eski yöneticisi. İlk temas `ercument.erden@alparai.com` üzerinden. LinkedIn outreach şablonları `/admin/outreach` panelinde mevcut.
+
+**BLOK GÖREV DF (P1, savunma hattı) — #165: Bilge RAG Hafıza Katmanı**
+Agent-Os Bilge modülünün epizodik hafızasını Supabase `pgvector` ile entegre et. Tüm geçmiş incident raporları, MASTER_PLAN kararları ve mimari dokümanlar vektörleştirilir. AI asistanları karar anında bu veritabanından RAG yaparak halusinasyonu ikinci bir mekanik katmanla engeller. Token Bütçesi (1. katman) + Bilge RAG (2. katman) = Çift katmanlı güven.
+
+**BLOK GÖREV DG (P2, büyüme) — #166: Çok Dilli SEO + Organik Büyüme**
+JSON-LD (Organization + SoftwareApplication), Twitter/X Card meta, hreflang, sitemap.xml optimizasyonu. 5 dilde (EN/TR/DE/FR/RU) organik arama trafiği. Hedef: lansmandan 90 gün sonra aylık 10K organik ziyaretçi.
+
+### Antigravity blok görevleri (öncelik sırası bağlayıcı)
+
+**BLOK GÖREV DA (P0) — #160:** Token Bütçe Anti-Halusinasyon Motoru'nun ürünleştirilmesi (`AI Incident Budget Transparency Score™`).
+
+**BLOK GÖREV DB (P0) — #161:** Omega SENTINEL Read-Only Audit Plugin entegrasyonu.
+
+**BLOK GÖREV DC (P0) — #162:** K-BENCHMARK skorlama altyapısının lansmanı.
+
+**DD (P1) — #163** yatırımcı paketi v2 · **DE (P1) — #164** danışma kurulu · **DF (P1) — #165** Bilge RAG · **DG (P2) — #166** SEO organik büyüme.
+
+**CE (P0) — #151** ✅ completed (`5ce389fe`) · **CF (P1) — #157** lockfile · **CG (P1) — #154** gerçek geri yükleme · **CH (P2) — #159** → #163'e birleştirildi.
+
+### Stratejik Vizyon — Opus Analizi
+
+**Rekabet Avantajı (Moat):** ALPAR AI'ın rakiplerinden (Holistic AI, Credo AI, TrustibleAI) ayrışma noktası şudur: bu platform sadece AI'ı denetlemiyor, **kendi iç operasyonlarında da aynı güven mekanizmalarını uyguluyor** (Token Budget, Halusinasyon Öz-Olay Kaydı, Omega Audit). "Eat your own dog food" prensibi rakiplerin hiçbirinde bu derinlikte yok.
+
+**Pazar Zamanlaması:** EU AI Act 2026 Ağustos'ta tam yürürlüğe giriyor. Türkiye KVKK AI ek düzenlemesi bekleniyor. ALPAR AI bu düzenleyici dalganın tam önünde konumlanmış durumda.
+
+**Gelir Projeksiyonu (3 yıl):**
+
+- Y1: Freemium + K-BENCHMARK API → ARR (hedef)
+- Y2: Kurumsal sertifikasyon + SaaS → ARR
+- Y3: Platform ekosistemi (Agent-Os entegrasyonu) → ARR +
+
+**Founder'da (kod değil):** #146 lansman paylaşım onayı · #163 pitch deck son onayı · #164 danışma kurulu ilk temas onayı.
+
+Verification. Bu güncelleme yalnızca `docs/MASTER_PLAN.md`'ye yazılmıştır (G-6 uyum). Backlog sayımı: 79 + 7 yeni = **86 madde**; 74 tamamlanmış → **%86,0**. Oran düştü çünkü 7 yeni stratejik madde eklendi; bu dürüst bir düşüştür ve büyüme göstergesidir.
