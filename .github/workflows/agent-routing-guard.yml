@@ -1,0 +1,42 @@
+name: Agent Routing Guard
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  check-direct-push-identity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Verify direct push is not from PR-only agents (Jules or GitHub-Claude)
+        run: |
+          AUTHOR_EMAIL=$(git log -1 --pretty=format:'%ae')
+          AUTHOR_NAME=$(git log -1 --pretty=format:'%an')
+          COMMIT_MSG=$(git log -1 --pretty=format:'%B')
+          echo "Commit author email: $AUTHOR_EMAIL"
+          echo "Commit author name: $AUTHOR_NAME"
+
+          BLOCKED_IDENTITIES=(
+            "jules@google.com"
+            "jules@github.com"
+            "jules-bot"
+            "github-claude@anthropic.com"
+            "claude-code@anthropic.com"
+          )
+
+          for BLOCKED in "${BLOCKED_IDENTITIES[@]}"; do
+            if [[ "$AUTHOR_EMAIL" == *"$BLOCKED"* ]] || [[ "$AUTHOR_NAME" == *"$BLOCKED"* ]]; then
+              echo "::error::Direct push to master blocked for PR-only agent ($AUTHOR_EMAIL / $AUTHOR_NAME). Task #213: Jules and GitHub-Claude must submit via Pull Request only."
+              exit 1
+            fi
+          done
+
+          if echo "$COMMIT_MSG" | grep -qiE '\[jules-direct-push\]|\[claude-direct-push\]'; then
+            echo "::error::Direct push tag detected for PR-only agent. Task #213 violation."
+            exit 1
+          fi
+
+          echo "Identity check passed for master direct push."
