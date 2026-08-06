@@ -2029,6 +2029,8 @@ export type Database = {
           upvotes_count: number
           user_agent: string | null
           user_id: string | null
+          vendor_response_at: string | null
+          vendor_response_text: string | null
           views_count: number
         }
         Insert: {
@@ -2099,6 +2101,8 @@ export type Database = {
           upvotes_count?: number
           user_agent?: string | null
           user_id?: string | null
+          vendor_response_at?: string | null
+          vendor_response_text?: string | null
           views_count?: number
         }
         Update: {
@@ -2169,6 +2173,8 @@ export type Database = {
           upvotes_count?: number
           user_agent?: string | null
           user_id?: string | null
+          vendor_response_at?: string | null
+          vendor_response_text?: string | null
           views_count?: number
         }
         Relationships: [

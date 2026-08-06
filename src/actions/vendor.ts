@@ -37,7 +37,8 @@ export async function submitVendorResponseAction(
     }
 
     // Mask any sensitive PII in vendor response before storing
-    const maskedText = maskPII(responseText.trim());
+    const piiResult = maskPII(responseText.trim());
+    const maskedText = piiResult.masked;
     const vendorResponseAt = new Date().toISOString();
 
     const supabase = createAdminClient();
