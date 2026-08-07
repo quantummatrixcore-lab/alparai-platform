@@ -4,7 +4,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Wordmark } from "@/components/layout/wordmark";
-import { createServerClient } from "@/lib/supabase/server";
+import { getGlobalMetrics } from "@/lib/services/metrics-service";
 import { Download, Mail, Globe, Award, FileText, BarChart3, Code2 } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { PRESS_RELEASES } from "@/lib/constants/press-releases";
@@ -23,26 +23,8 @@ export default async function PressKitPage({ params }: { params: Promise<{ local
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "pressKit" });
 
-  const supabase = await createServerClient();
-
-  const [incidentsResult, providersResult, responsesResult] = await Promise.all([
-    supabase
-      .from("incidents")
-      .select("id", { count: "exact", head: true })
-      .eq("status", "published"),
-    supabase.from("ai_providers").select("trust_score"),
-    supabase.from("ai_provider_responses").select("id", { count: "exact", head: true }),
-  ]);
-
-  const totalIncidents = incidentsResult.count ?? 0;
-  const totalProviders = providersResult.data?.length ?? 0;
-  const totalResponses = responsesResult.count ?? 0;
-  const avgTrustScore =
-    totalProviders > 0 && providersResult.data
-      ? Math.round(
-          providersResult.data.reduce((s, p) => s + (p.trust_score ?? 0), 0) / totalProviders,
-        )
-      : 0;
+  const { totalIncidents, totalProviders, totalOfficialResponses, averageTrustScore } =
+    await getGlobalMetrics();
 
   const isEn = locale === "en";
 
@@ -103,13 +85,15 @@ export default async function PressKitPage({ params }: { params: Promise<{ local
                     </dt>
                   </div>
                   <div className="rounded-lg border border-white/5 bg-[#08121C] p-4 text-center">
-                    <dd className="text-3xl font-black text-emerald-400">{totalResponses}</dd>
+                    <dd className="text-3xl font-black text-emerald-400">
+                      {totalOfficialResponses}
+                    </dd>
                     <dt className="mt-1 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
                       {isEn ? "Official Responses" : "Resmi Yanıtlar"}
                     </dt>
                   </div>
                   <div className="rounded-lg border border-white/5 bg-[#08121C] p-4 text-center">
-                    <dd className="text-3xl font-black text-emerald-400">{avgTrustScore}</dd>
+                    <dd className="text-3xl font-black text-emerald-400">{averageTrustScore}</dd>
                     <dt className="mt-1 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
                       {isEn ? "Avg Trust Score" : "Ort. Trust Skoru"}
                     </dt>
