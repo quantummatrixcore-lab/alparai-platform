@@ -85,14 +85,14 @@ export async function generateWeeklyVideoSummary(): Promise<VideoPipelineResult>
         videoUrl = publicUrlData.publicUrl;
         logger.info("[VideoPipeline] Video uploaded successfully to storage:", { videoUrl });
       } else {
-        logger.warn("[VideoPipeline] Veo API failed, using default fallback video asset:", {
+        logger.error("[VideoPipeline] Veo API failed.", {
           error: response.error,
         });
-        videoUrl = "https://www.w3schools.com/html/mov_bbb.mp4"; // standard mock fallback mp4
+        throw new Error("Veo API failed to generate video");
       }
     } else {
-      logger.info("[VideoPipeline] Vertex API Key not set locally, using mock video fallback.");
-      videoUrl = "https://www.w3schools.com/html/mov_bbb.mp4";
+      logger.error("[VideoPipeline] Vertex API Key not set locally.");
+      throw new Error("Vertex API Key not set locally");
     }
 
     // 4. Save video meta to social_assets DB table

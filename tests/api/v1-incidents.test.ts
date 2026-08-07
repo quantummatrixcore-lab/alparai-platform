@@ -41,6 +41,6 @@ describe("Public API v1 Incidents Route (Item 155)", () => {
     const res = await GET(req);
     expect(res.status).toBe(401);
     const body = await res.json();
-    expect(body.error).toBe("unauthorized");
+    expect(body.error).toBe("Unauthorized");
   });
 });

@@ -78,20 +78,10 @@ export function UsersClient({ users, userRole, locale }: UsersClientProps) {
     { name: "Moderators", value: moderatorCount },
   ].filter((d) => d.value > 0);
 
-  // Growth Data Mock Generation from existing users for visual chart
+  // Growth Data (to be fetched from database)
   const growthData = useMemo(() => {
-    const data = [];
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
-    let baseUsers = Math.max(100, users.length * 2);
-    for (let i = 0; i < months.length; i++) {
-      data.push({
-        name: months[i],
-        users: baseUsers,
-      });
-      baseUsers += i * 15 + 10; // Deterministic pseudo-growth
-    }
-    return data;
-  }, [users.length]);
+    return [];
+  }, []);
 
   const quickActions: QuickAction[] = [
     { id: "invite", icon: UserPlus, label: "Invite User", onClick: () => {} },

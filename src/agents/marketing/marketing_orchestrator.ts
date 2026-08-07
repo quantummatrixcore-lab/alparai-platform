@@ -23,8 +23,8 @@ export class MarketingOrchestrator {
     if (process.env.MARKETING_AUTOPILOT !== "enabled") { logger.info("[MarketingOrchestrator] simulated."); return; }
     logger.info("=== Starting Autonomous Marketing Campaign ===");
 
-    // 1. Get recent updates (Mock data for now)
-    const recentUpdates = ["Implemented incident reporting", "Enhanced AI Safety protocols"];
+    // 1. Get recent updates (to be fetched from database)
+    const recentUpdates: string[] = [];
 
     // 2. Generate plan
     const plan = await this.strategist.generateContentPlan(recentUpdates);

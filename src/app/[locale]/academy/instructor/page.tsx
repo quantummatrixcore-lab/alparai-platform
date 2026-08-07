@@ -15,56 +15,12 @@ export default async function AcademyInstructorPage({
 }) {
   const t = await getTranslations({ locale, namespace: "academy" });
 
-  // 20-30 mock curriculum item indicators to construct a detailed curriculum outline
-  const mockCurriculumUnits = Array.from({ length: 5 }, (_, i) => ({
-    id: `unit-${i + 1}`,
-    title: `Unit ${i + 1}: ${
-      [
-        "Foundational Model Vulnerabilities & Hallucinations",
-        "Prompt Injection & Jailbreaking Taxonomies",
-        "Data Exfiltration & Privacy Leak Auditing",
-        "Copyright Infringement & Intellectual Property Risk",
-        "Algorithmic Bias, Discrimination & EU AI Act Audits",
-      ][i]
-    }`,
-    lessons: Array.from({ length: 4 }, (_, j) => ({
-      id: `lesson-${i + 1}-${j + 1}`,
-      title: `Lesson ${i + 1}.${j + 1}: ${
-        [
-          [
-            "Analyzing Hallucination Confidences via Wilson Score",
-            "Measuring Output Drift Over Time",
-            "Mitigation Strategies for RAG-based Systems",
-            "Real-world Case Studies: Medical Diagnosis Drift",
-          ],
-          [
-            "Indirect Prompt Injection Vectors",
-            "System Prompt Leak Prevention",
-            "Defensive Guardrails: Constitutional AI",
-            "Jailbreak Audits on Multi-modal Models",
-          ],
-          [
-            "PII Leak Audits & Masking Protocols",
-            "Membership Inference Attack Identification",
-            "Implementing Guardian-level Filters",
-            "Audit Trail Construction & GDPR Compliance",
-          ],
-          [
-            "Training Data Attribution Scans",
-            "Fair-Use Defense Metrics",
-            "Synthetic Output Plagiarism Auditing",
-            "Watermarking & Model Provenance",
-          ],
-          [
-            "EU AI Act Article 52 Obligation Tracking",
-            "Audit Checklists for High-risk Systems",
-            "Algorithmic Bias Quantification",
-            "Peer-review Consensus Arbitration",
-          ],
-        ][i]?.[j] || "Advanced AI Auditing Concept"
-      }`,
-    })),
-  }));
+  // Curriculum data (to be fetched from database)
+  const curriculumUnits: Array<{
+    id: string;
+    title: string;
+    lessons: Array<{ id: string; title: string }>;
+  }> = [];
 
   return (
     <div className="bg-bg-primary relative min-h-screen overflow-hidden pt-32 pb-24">
@@ -105,37 +61,56 @@ export default async function AcademyInstructorPage({
             <h2 className="text-fg-primary mb-2 text-xl font-bold">{t("curriculum_title")}</h2>
             <p className="text-fg-secondary mb-6 text-sm">{t("curriculum_desc")}</p>
 
-            {mockCurriculumUnits.map((unit) => (
-              <div
-                key={unit.id}
-                className="bg-bg-secondary/20 border-border-primary/30 rounded-2xl border p-6"
-              >
-                <h3 className="text-md text-fg-primary mb-4 font-bold">{unit.title}</h3>
-                <div className="space-y-3">
-                  {unit.lessons.map((lesson) => (
-                    <div
-                      key={lesson.id}
-                      className="text-fg-secondary border-border-primary/10 flex items-center space-x-3 border-b py-1 text-sm last:border-0"
-                    >
-                      <svg
-                        className="text-fg-secondary/50 h-4 w-4 flex-shrink-0"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
+            {curriculumUnits.length > 0 ? (
+              curriculumUnits.map((unit) => (
+                <div
+                  key={unit.id}
+                  className="bg-bg-secondary/20 border-border-primary/30 rounded-2xl border p-6"
+                >
+                  <h3 className="text-md text-fg-primary mb-4 font-bold">{unit.title}</h3>
+                  <div className="space-y-3">
+                    {unit.lessons.map((lesson) => (
+                      <div
+                        key={lesson.id}
+                        className="text-fg-secondary border-border-primary/10 flex items-center space-x-3 border-b py-1 text-sm last:border-0"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.232.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                        />
-                      </svg>
-                      <span>{lesson.title}</span>
-                    </div>
-                  ))}
+                        <svg
+                          className="text-fg-secondary/50 h-4 w-4 flex-shrink-0"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.232.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                          />
+                        </svg>
+                        <span>{lesson.title}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
+              ))
+            ) : (
+              <div className="bg-bg-secondary/20 border-border-primary/30 flex flex-col items-center justify-center rounded-2xl border py-20 text-center">
+                <svg
+                  className="text-border-primary mb-4 h-12 w-12"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  />
+                </svg>
+                <p className="text-fg-secondary text-sm">No curriculum data available.</p>
               </div>
-            ))}
+            )}
           </div>
 
           {/* Locked Status Card */}
