@@ -132,8 +132,8 @@ export default async function AdminDashboardPage({
                         </p>
                       </div>
                     </div>
-                    <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">
-                      MRR +14.2%
+                    <span className="rounded-full border border-zinc-500/30 bg-zinc-500/10 px-3 py-1 text-xs font-semibold text-zinc-400">
+                      MRR —
                     </span>
                   </div>
 
@@ -141,20 +141,20 @@ export default async function AdminDashboardPage({
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                     <div className="rounded-2xl border border-white/5 bg-white/[0.03] p-3.5">
                       <p className="text-xs font-medium text-zinc-400">Monthly Revenue</p>
-                      <p className="mt-1 text-lg font-bold text-emerald-400">$48,500</p>
+                      <p className="mt-1 text-lg font-bold text-emerald-400">$0</p>
                     </div>
                     <div className="rounded-2xl border border-white/5 bg-white/[0.03] p-3.5">
                       <p className="text-xs font-medium text-zinc-400">Active Subscribers</p>
-                      <p className="mt-1 text-lg font-bold text-zinc-100">1,420</p>
+                      <p className="mt-1 text-lg font-bold text-zinc-100">0</p>
                     </div>
                     <div className="rounded-2xl border border-white/5 bg-white/[0.03] p-3.5">
                       <p className="text-xs font-medium text-zinc-400">Grants & Funding</p>
-                      <p className="mt-1 text-lg font-bold text-cyan-400">$250,000</p>
+                      <p className="mt-1 text-lg font-bold text-cyan-400">$0</p>
                     </div>
                     <div className="rounded-2xl border border-white/5 bg-white/[0.03] p-3.5">
                       <p className="text-xs font-medium text-zinc-400">API & Infra Cost</p>
                       <p className="mt-1 text-lg font-bold text-amber-400">
-                        $1,240<span className="text-xs font-normal text-zinc-500">/mo</span>
+                        $0<span className="text-xs font-normal text-zinc-500">/mo</span>
                       </p>
                     </div>
                   </div>
