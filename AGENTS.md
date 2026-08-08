@@ -243,3 +243,12 @@ Ajan bu limiti aşarsa görevi bırakıp "TOKEN_BUDGET_EXCEEDED — görevi böl
 3. **Antigravity subagent prompt'larına** "Bu görev MAX X token bütçesiyle yürütülür. Aşarsan dur ve raporla." satırı eklenir.
 4. **Biten ajan anında kill edilir** (RAM ve compute tasarrufu).
 5. **Büyük görevler bölünür**: Large+ görev tek ajana verilmez, birden fazla Small/Medium ajana parçalanır.
+
+## Momentum K-Matrix (Project Prioritization Strategy) - Binding
+
+Sürekli çalışan ajanlar (Momentum Orchestrator, Swarm) için "Compute" ve "Focus" dağılımı aşağıdaki Katmanlı (Tier) önceliklendirme ile kısıtlanmıştır:
+
+- **Tier 0 (T0 - 70% Compute):** `Alparai`, `Agent-OS`. Otopilotun ana odak noktasıdır. Mimari refactor, agresif RLS iyileştirmeleri, optimizasyonlar kesintisiz uygulanır.
+- **Tier 1 (T1 - 20% Compute):** `DecasHub`. Ürün bazlı bakım. Sadece güvenlik yamaları, API sızıntı denetimi ve UI darboğazları düzeltilir. Agresif mimari değişim yapılmaz.
+- **Tier 2 (T2 - 10% Compute):** `Ercument Erden`. İkincil önceliklidir. Sadece "Yüksek/Kritik" CVE'ler ve DoS açıkları için çalışılır. Bakım modundadır.
+- **Tier 3 (T3 - 0% Compute):** (Tartarus Arşivi). `Hatay-Kabak-Tatli`, `Quantum-Matrix-*`, `ayazwater`, `carbonecomarket`, `LLM_MCP` gibi eski/kullanılmayan repolara sistem giriş yapamaz ve compute harcayamaz. (Silmek yasak, sadece arşivde kalacaklar).

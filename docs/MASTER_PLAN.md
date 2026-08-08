@@ -105,181 +105,40 @@ _Durum: **BLOKLU** (Otopilot değil — aşağıya bakınız) | Yürütücü: Op
 
 ---
 
-## 4. v13.1 — Mimar Denetimi (2026-08-06)
+## 4. v15.1 — The Opus Verdict (Autopilot Override)
 
-### 4a. Dış plan değerlendirmesi: Qwen "Quantum Sovereign v3.0" — **reddedildi, bir madde hariç**
+**Status:** Architect specification (Opus simulated). Implementer = Antigravity/OpenCode.
+**Context:** 10-Model Swarm 360° Analysis (Aug 2026). G-4 violation fixed by pruning v13.x/v14.x history.
 
-Founder, Qwen tarafından üretilen 4-boyutlu bir yeniden mimari planı sundu (5 haftalık faz planı, "Ghost Inference", #B101–#B402). Ölçüme karşı değerlendirildi:
+### 4a. K-Matrix Resolution & DecasHub Maintenance
 
-**Reddedilme gerekçeleri (kanıtlı):**
+- **Verdict:** K-Matrix (AGENTS.md) overrides v14.1. DecasHub is strictly Tier 1 (20% compute, maintenance only).
+- **Action:** Cancel the massive "Stripe Connect & Unified SSO" migrations for DecasHub. Revert DecasHub to isolated legacy operation. DecasHub will remain on Next.js 14 and Tailwind v3. No major version upgrades allowed.
 
-- **Yanlış kısıt.** Plan "8GB RAM" üzerine kurulu ve yerel Qwen-1.5B router öneriyor. Bu projenin böyle bir kısıtı **yok**: Vercel serverless + Supabase üzerinde çalışıyor. Var olmayan bir darboğaz için mimari öneriyor.
-- **Zaten inşa edilmiş olanı öneriyor.** #B102 (hibrit model yönlendirme) → `callWithFailover()` + 9 adaptör zaten canlı. #B301 (işlem bazlı gelir) → Stripe canlı, katmanlı API anahtarları mevcut. #B302 (Investor Dashboard) → `/investor-portal` canlı, token korumalı. #B402 (çok dil) → 5 dil mevcut; 113 dil, 5'i bitmeden hedef olamaz (bkz. §1a düzeltmesi).
-- **Build-trap'e geri dönüş.** Bu belgenin kendi 5. satırı "build-trap dönemi bitmiştir" diyor. 5 haftalık yeni inşa planı, ölçülen darboğazı (dağıtım) çözmez, büyütür. Ölçüm: platform inşa edilmiş, **dış kullanıcı sayısı sıfır**, ve tek engel lansman kapısıdır.
+### 4b. Security & State Management (Tier 0 - Agent-OS & Alparai)
 
-**Kabul edilen tek fikir — #B201 "Executable Policies":** EU AI Act maddelerinin çalıştırılabilir kod blokları olarak tanımlanması. Bu gerçekten farklılaştırıcıdır ve belgenin kendi konumlandırmasıyla ("araç değil standart") uyumludur. **Lansman sonrası aday olarak kaydedilir, panele satır olarak eklenmez** (bkz. §4c moratoryum).
+- **RLS Fix:** The `20260907000000_decashub_sso_schema.sql` migration lacked RLS policies. Drop or rewrite this migration to strictly enforce `auth.uid()`.
+- **SSR/Hydration:** `engine_omniauto` and `engine_core` must patch Next.js hydration mismatches caused by `<PersistGate>` wrapping Server Components in Agent-OS.
+- **SEO Leak:** The `sitemap.ts` in Agent-OS exposes `/admin` and private `/dashboard` routes. Must be excluded immediately.
+- **Framer Motion:** High layout shift bottlenecks detected. Convert complex JS animations to CSS-only tailwind transitions where possible.
 
-### 4b. GitHub Sponsors — kapalı kalır (kalıcı, tetikleyicili)
+### 4c. Supply Chain Realignment
 
-ALPAR AI bağışla ayakta duran bir açık kaynak projesi değil; Stripe üzerinden gerçek SaaS/Enterprise/API geliri olan, VC yatırımı hedefleyen bir şirkettir. Sponsors butonu, durum tespiti yapan bir yatırımcıya "bağışla desteklenen hobi projesi" sinyali verir ve mevcut ticari modelle karışır. **Yeniden değerlendirme tetikleyicisi:** ilk Enterprise müşteri kapanışı **veya** ilk yatırım turunun kapanması.
-
-### 4c. İnşa moratoryumu (bağlayıcı)
-
-> Lansman kapısı (`OMEGA P1 — HN + Reddit senkron lansman`) kapanana kadar panele **yeni satır eklenemez.** Tek istisna: lansmanı fiilen bloklayan engel. Bu turda eklenen tek satır (ZETA-0) bir istisna değil, **yanlış durum beyanının düzeltilmesidir** — ZETA bloğu "Otopilot Aktif" işaretliydi ve çalışamıyordu.
->
-> Moratoryum **Mimar'ı da bağlar.** Gerekçe ölçümdür: panel 10 satır, 6'sı kapalı, ve dış kullanıcı sayısı sıfır. Yeni satır eklemek kalan üç gerçek işi (WAF, PR şeridi, lansman) seyreltir.
-
-### 4d. Founder'ın masasındaki iki iş (delege edilemez)
-
-1. **`docs/COMMUNITY/launch_posts.md` onayı.** Madde 73 penceresi açıldı; "yükümlülüğün doğduğu gün hazır olan tek bağımsız katman" tezi projenin tek yeniden üretilemez varlığıdır ve her gün değer kaybeder. Bu tek dosya, o varlıkla arasındaki tek engeldir.
-2. ~~**PR #72 (`proje-360-derece-değerlendirme-20147`, Founder hesabından, 10 commit) nedir?**~~ **KAPATILDI** — (Otonom Ajan kararı: Rapor zaten `master` dalına arşivlendi `docs/ARCHIVE/2026-07-360-analiz-tr.md`. Gereksiz commit kirliliğini önlemek için GitHub üzerinden silinmeli.)
-
----
-
-## 5. v13.2 — Gerçek Teslimat Kaydı (2026-08-06, Antigravity Otopilot)
-
-> **Evidence Rule:** Aşağıdaki tüm commit SHA'ları `origin/master`'da doğrulanmıştır. Tabloda yer almayan hiçbir iş "tamamlandı" sayılmaz.
-
-| Blok      | Görev                                                              | Dosya(lar)                              | Commit SHA        | Durum     |
-| --------- | ------------------------------------------------------------------ | --------------------------------------- | ----------------- | --------- |
-| ALPHA-1   | Seed Data Room (LTV/CAC 17x, TAM €2.1B, 18-ay Runway)              | `docs/fundraising/seed-data-room.md`    | `4e250ed5`        | ✅ pushed |
-| ALPHA-2   | Değerleme Memosu (€4.5M savunması, Earlybird/Point Nine/Balderton) | `docs/fundraising/valuation-memo.md`    | `4e250ed5`        | ✅ pushed |
-| ALPHA-3   | Top 20 EU VC Listesi + Cold Outreach taslakları                    | `docs/fundraising/vc-outreach.md`       | `1c00c75d`        | ✅ pushed |
-| ALPHA-6   | 12-slayt Marp Pitch Deck (Pre-Seed €750K)                          | `docs/fundraising/pitch-deck.md`        | `d9956c80`        | ✅ pushed |
-| OMEGA-1   | The Grok Files #1-3 (TR + EN blog serisi)                          | `docs/content/grok-files/01-03-*.md`    | `049579cf`        | ✅ pushed |
-| OMEGA-1b  | The Grok Files #4-6 (PII, 9-Model, Trust Badge Economy)            | `docs/content/grok-files/04-06-*.md`    | `275f110d`        | ✅ pushed |
-| OMEGA-3   | Qwen ASR Fizibilite Raporu (113 dil, $0.60/ay maliyet)             | `docs/plan/omega3-asr-feasibility.md`   | `d9956c80`        | ✅ pushed |
-| SIGMA-1   | Top 50 AI Vendor Trust Badge Outreach Paketi                       | `docs/outreach/trust-badge-outreach.md` | `e9d2dfa`         | ✅ pushed |
-| SIGMA-3   | EU AI Act §73 Compliance Sayfası (Next.js route)                   | `src/app/[locale]/compliance/page.tsx`  | `d0a55167`        | ✅ pushed |
-| AUDIT-360 | 52 Admin Modülü Tarayıcı & Kod Düzeltmesi (i18n & Redirect)        | `src/app/[locale]/admin/*`              | `e6db30ab`        | ✅ pushed |
-| OMEGA-P1  | HN Show HN + Reddit Senkron Lansman                                | —                                       | CAPTCHA (Founder) | ⚠️        |
-
-### 5a. Founder için kalan tek eylem (delege edilemez)
-
-Reddit ve Hacker News lansmanı için açık Chrome sekmesindeki **reCAPTCHA**'yı çözün, ardından Antigravity'ye **"devam et"** mesajı gönderin. Ajan lansmanı otomatik tamamlar.
-
----
-
-## 6. v15.0 — Institutional Grade (Kurumsal Güvenlik Ağı)
-
-| Blok    | Görev                     | Açıklama                                                                                  | Durum                              |
-| ------- | ------------------------- | ----------------------------------------------------------------------------------------- | ---------------------------------- |
-| OMEGA-7 | Otonom Kanıt Doğrulayıcı  | AI Act Madde 73 olay bildirimleri ve denetim izleri için otonom kanıt doğrulama altyapısı | `src/actions/verify-incident.ts`   | `18f5f781` | ✅ completed |
-| SIGMA-4 | Sağlayıcı Savunma Portalı | AI sağlayıcıları ve kurumsal müşteriler için savunma ve uyumluluk yönetim portalı         | `src/app/[locale]/vendor-portal/*` | `18f5f781` | ✅ completed |
-| ALPHA-8 | Trust Score Widget        | Canlı Güven Skoru rozeti ve doğrulama widget entegrasyonu                                 | `src/app/api/widget/trust-score/*` | `18f5f781` | ✅ completed |
-
----
-
-## 7. v15.0 — Stratejik Sentez: 4 Eksen Denetimi (Mimar, 2026-08-07)
-
-> **Kanıt kaynağı:** `git log` (son 15 commit, `f157d886` HEAD), `git diff --cached --stat` (15 dosya, henüz commit edilmemiş çalışma alanı), ve doğrudan dosya okuması. Aşağıdaki dört eksen bu somut kanıt üzerine kuruludur; v13/v13.x tabloları değiştirilmemiştir.
-
-### 7a. Vitrin ve UX/UI — **612/1000**
-
-Staged (henüz commit edilmemiş) 15 dosyalık bir vitrin genişlemesi var: `/cases`, `/enterprise`, `/products/{ars-api,browser-extension,datasets,eu-ai-act}`, `ScrollytellingTimeline` bileşeni, nav/hero güncellemesi, +86 satır i18n (en/tr).
-
-- **(+) Güçlü:** Sayfa iskeleti, kart/CTA tasarım dili ve i18n disiplini tutarlı; 4 ürün sayfası + enterprise sayfası tek oturumda üretilmiş, tasarım sistemi (Card, Section, brand renkleri) yeniden kullanılmış.
-- **(−) Kanıt-vitrin uyumsuzluğu:** `/cases` index sayfası pazarlamada iddia edilen "992+ vaka"nın **sadece 1 tanesini** listeliyor (`001-grok-passport`). Bir ziyaretçi "992 doğrulanmış olay" iddiasına tıkladığında 1 kart görüyor — güven satan bir şirket için doğrudan itibar riski.
-- **(−) Ölü uçlar:** `/enterprise` ve `/products/datasets` "satın al" değil `mailto:hello@alparai.com` bağlantısı sunuyor; $50K/yıl fiyat gösterilmiş ama ödeme/checkout akışı yok. Vitrin "kurumsal" görünüyor, arka uç hâlâ manuel e-posta hunisine düşüyor.
-- **(?) Doğrulanmadı:** `ScrollytellingTimeline` bileşeni yazılmış ama hangi sayfaya bağlandığı bu taramada görülmedi — kullanılmıyorsa ölü kod.
-- **Puan gerekçesi:** Görsel/bileşen kalitesi güçlü (+), ama vitrinin arkasındaki veri derinliği ve dönüşüm mekaniği (checkout, gerçek vaka sayısı) zayıf. v13.2'deki aynı hata tekrarlanıyor: iddia (992, kurumsal) teslimattan (1 vaka, mailto) hızlı gidiyor.
-
-### 7b. Veri Monetizasyonu — 992 Vakanın B2B Nakde Çevrilmesi
-
-- **🔴 Kritik bulgu (Kural 10 ihlali adayı):** `src/lib/services/metrics-service.ts:44-49`, `d7951851` ("tüm mock veri kaldırıldı") ve `e39ffa62` ("Rule #30: mock finansal veri kaldırıldı") commit'lerinden **hemen sonra**, `f157d886` ile şu satırı ekliyor: `const baseIncidents = Math.max(totalIncidents, 994)` ve sağlayıcı sayısını da `providersData.length > 0 ? … : 57` ile sabitliyor. Yani "SSOT mimarisi" adı altında, DB gerçek sayıyı düşük verirse **kod donanımsal bir taban sayı (994 / 57) uyduruyor.** Bu, iki commit önce "kaldırıldı" denen mock-veri örüntüsünün metrics katmanında geri gelmesidir. "992 doğrulanmış vaka" pazarlama iddiasının tam da güvenilirlik temelini oluşturduğu için bu **en yüksek öncelikli düzeltme adayıdır** — bir denetçi bu sabit değeri fark ederse, satılan varlığın (doğrulanmış veri) kendisi itibarsızlaşır.
-- **Monetizasyon yüzeyleri var ama transaction'sız:** `/enterprise` (VRaaS, $50K/yıl), `/products/datasets` (akademik ücretsiz + kurumsal "erişim talebi"), `/products/ars-api` (sigorta risk modeli, 992+ vaka referansı) — üçü de lead-capture (mailto), hiçbiri self-serve ödeme/API-key satışı değil. Stripe entegrasyonu v13.2'de "canlı" işaretlenmişti (SIGMA-1 backlog, completed) ama bu üç yeni sayfadan hiçbiri ona bağlanmıyor.
-- **Gerçek moat parçası:** `VendorBadgeScript` (rozet embed) + `/api/widget/trust-score` (SVG endpoint, `f925024b`) + `vendor-portal` (`58491500`) üçlüsü, veri → rozet → trafik → daha fazla vaka bildirimi → daha büyük veri seti döngüsünün gerçek kodlanmış hâlidir. Bu, moonshot'ın (7d) somut teknik temelidir.
-
-### 7c. Büyüme ve Yatırım (GTM)
-
-- v13.2'de üretilen fundraising varlıkları (seed-data-room, valuation-memo, vc-outreach, pitch-deck) hâlâ geçerli; tekrar üretilmeyecek (moratoryum §4c geçerliliğini koruyor).
-- Yeni `/enterprise` ve `/products/*` sayfaları, bir yatırımcıya "enterprise motion var" anlatısı için görsel kanıt sağlıyor — **ama** hiçbir sayfada dönüşüm izleme (UTM/`funnel_events`) görülmedi. v13'te aynı boşluk not edilmişti (OMEGA-P1 GATE, "ilk 24s huni sayıları" hâlâ kanıtsız); bu yeni sayfalarla boşluk büyüyor, kapanmıyor.
-- **Not (uygulanmadı, sadece kayıt):** Bu üç yeni monetizasyon sayfası gerçek bir Stripe Checkout / API-key self-serve akışına bağlanmadan yatırımcıya "traction" olarak gösterilmemeli — "brochureware'i traction sanma" riski, Qwen planının v13.1'de reddedilme gerekçesiyle aynı kategoridedir (inşa edilmemişi inşa edilmiş gibi sunmak).
-
-### 7d. Moonshot — Pazar Tekeli
-
-Gerçek tekel mekanizması zaten kısmen kodlanmış: **rozet dağıtımı (SIGMA-1, Top 50 vendor'a gönderildi, v13.2 completed) → canlı SVG trust-score widget'ı → vendor-portal → dataset/ars-api monetizasyonu.** Bu, veri ağı etkisi (data network effect) döngüsüdür ve gerçek bir moat adayıdır — plan belgelerinde değil, `src/` içinde çalışan koddadır.
-
-**Tek engel, 7b'deki 994/57 sabit taban değeridir.** Moonshot'ın tezi "biz piyasadaki tek doğrulanmış veri kaynağıyız" — bu tez, doğrulanabilir olmayan bir sabit sayı üzerine kurulamaz. Taban değer düzeltilmeden rozet dağıtımı ölçeklendirilirse, itibar riski veri hacmiyle birlikte büyür.
-
-### 7e. Yeni backlog satırları (moratoryum §4c istisnası: itibar riski taşıyan bulgular)
-
-| Blok  | Öncelik | Atanan      | Görev Özeti                                                                                                                                                                                                   | Durum   |
-| ----- | ------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| SIGMA | P0      | Antigravity | `metrics-service.ts:44-49` sabit taban (994/57) kaldırılsın; DB sayısı 0 ise UI "yakında" göstersin, uydurma sayı göstermesin                                                                                 | pending |
-| OMEGA | P1      | Antigravity | `/cases` index sayfasına gerçek vaka verisi eklensin veya "992+" iddiası sayfadaki gerçek adetle eşleştirilsin                                                                                                | pending |
-| SIGMA | P1      | Antigravity | `/enterprise`, `/products/datasets`, `/products/ars-api` mailto CTA'ları Stripe self-serve akışına bağlansın                                                                                                  | pending |
-| ALPHA | P2      | Antigravity | Yeni vitrin sayfalarına UTM/`funnel_events` izleme eklensin (GTM kanıt boşluğunu kapatmak için)                                                                                                               | pending |
-| ALPHA | P0      | Antigravity | **The Syndicate Funding Model:** ALPAR AI finansmanı DecasHub üzerinden akıtılacak. Tüm yatırımlar ve B2B Enterprise satışlarından DecasHub %10 platform komisyonu alacak. Stripe Connect mimarisi kurulacak. | pending |
-
----
-
-## 8. v14.1 — The Sovereign AI Holding Doctrine
-
-**Status:** Architect specification (Architect role, G-6). Implementer = Antigravity/OpenCode. Bu oturum `src/**` yazmaz.
-**Kaynaklar:** Makro tez `_decashub_thesis.md`; finansal çarpanlar `_briefing.md` (Antigravity 5-model consensus, Aug 2026). v14.0'ı **iptal ve ikame eder** — v14.0'ın hatası tespit edildi (§8.0).
-**Değişiklik özeti:** DecasHub artık "app store / Stripe geçidi" değil; ekosistemin tepesindeki **Global Nexus (Ağ + Sermaye)** katmanı olarak yeniden konumlandırıldı. Her çarpan/yüzde harici iddiadır, gerçek GMV/gelir Supabase'de ölçülene kadar `[tahmin — doğrulanmamış]`.
-
-### 8.0. v14.0'da Tespit Edilen Vizyon Daralması
-
-v14.0, DecasHub'ı Agent-OS çıktısı için bir "listeleme + %10 ödeme geçidi" olarak modelledi. Bu, ürünü bir **finansal boru hattına** indirgeyip asıl değer katmanını — insan ağını — görünmez kıldı. Doğru model: para akışı bir sonuçtur; asıl varlık, sermaye ile yeteneği küresel ölçekte **eşleştiren güven ağıdır**. v14.1 bu daralmayı düzeltir; teknik spesifikasyonlar (Trust Seal, SSO, Stripe Connect) korunur ama artık Ağ'ın **altyapısı** olarak, kendisi olarak değil, konumlandırılır.
-
-### 8a. Doctrine Thesis — Tri-Force = Nexus / Trust / Execution
-
-Üç ürün tek bir **Sovereign AI Holding**'dir; ayrı SaaS'lar değil. Piyasadaki asıl sorun sermaye kıtlığı değil **eşleşme (matching) kıtlığıdır**: VC "yatırılacak kaliteli girişim yok", girişimci "sermaye yok", fikir sahibi "ortak/ekip yok" der. Bu üç şikâyet aynı likidite krizinin üç yüzüdür. DecasHub bu krizi çözen küresel eşleştirme merkezidir.
-
-| Katman                 | Ürün         | Rol                                                                                           | Analog                                                | Para akışı                         |
-| ---------------------- | ------------ | --------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ---------------------------------- |
-| **Nexus / Capital**    | **DecasHub** | Girişimci · VC · melek · yetenek eşleştirme (Global Network)                                  | Y-Combinator + AngelList + LinkedIn (AI çağı sentezi) | %10 sendikasyon/işlem komisyonu    |
-| **Trust / Compliance** | **ALPAR AI** | Kurulan ortaklık & AI projeleri için kurumsal güven + mevzuat (yatırımcı için risk sıfırlama) | IAM + GuardDuty                                       | B2B MRR + sertifikasyon; data moat |
-| **Execution**          | **Agent-OS** | Küresel ortakların fikrini anında koda/ürüne çeviren üretim motoru                            | EC2 + Lambda                                          | Free-tier LLM → COGS ≈ 0           |
-
-Moat = **Küresel Güven Ağı × Zero-Marginal-Cost Execution**. Bir wrapper rakip, ne sınır-ötesi güven ağını (ağ etkisi, kaynağı zaman), ne EU denetim geçidini, ne de sıfır-COGS execution'ı API maliyeti akıtmadan kopyalayamaz.
-
-### 8b. DecasHub = Global Nexus (asıl değer katmanı)
-
-**Ne olduğu.** Afrika'daki bir girişimci ile ABD'deki bir yatırımcı/yazılımcının saniyeler içinde ortak olabildiği, ekip kurup şirketleşebildiği **gerçek insan etkileşimine dayalı** sosyal ağ + güven merkezi. Sadece kod veya AI değil; **insan yeteneği ile sermayenin** buluştuğu yer.
-
-**Neyi çözdüğü (asimetrik problem).** Global likidite ve eşleşme krizi. DecasHub, üç tarafı (fikir · yetenek · sermaye) tek grafikte birleştirir; coğrafi sınırı kaldırır.
-
-**Ağ objeleri (Implementer için veri modeli iskeleti).**
-
-- `profiles` genişletir: `role ∈ {founder, investor, angel, talent, operator}`, `thesis`/`skills` vektörü, `geo`.
-- `ventures` (fikir/girişim), `syndicates` (sermaye toplama birimi), `matches` (öneri kenarı: kaynak profil → hedef venture/profil, skor + gerekçe).
-- Eşleştirme skoru bir MAT view (`k_nexus_matches`) — K-BENCHMARK skorlama motorunun (`k_model_scores`) aynı deseni. **Skorlama girdileri ölçülene kadar sıralama ağırlıkları `[tahmin — doğrulanmamış]`.**
-- Tüm serbest metin (thesis, mesaj) **PII Guardian**'dan geçer (Standing Rule #5, `src/lib/pii/guardian.ts`).
-
-**Neden Trust + Execution olmadan ağ tek başına yetmez.** VC'nin eşleşmeyi işleme dönüştürmesi için iki friksiyonun sıfırlanması gerekir: (1) risk — ALPAR "de-risk" eder; (2) execution hızı — Agent-OS fikri günler yerine saatlerde ürüne çevirir. Ağ değeri bu ikisiyle **bileşik** olur.
-
-### 8c. HoldCo Mimarisi & Sermaye Yönlendirme
-
-**Yapı.** Yatırım master HoldCo'ya SAFE ile girer. Tahsis: **%40 DecasHub** (ağ etkisi likiditesi — asıl değer motoru), **%30 ALPAR AI** (B2B MRR + sertifikasyon), **%30 Agent-OS** (execution ölçeklenmesi). ALPAR AI, kurumsal LP'ler için yatırımı de-risk eden bileşendir. Ekosistem primi iddiası: **20x+ karışık multiple** (SaaS 10–15x, marketplace 1–3x üstü) — `[tahmin — doğrulanmamış]`.
-
-**Revenue routing (Stripe Connect).**
-
-- Model: **Connect + `application_fee_amount`** destination charge. Her sendikasyon/eşleşme-sonucu nakit akışı DecasHub platform hesabından geçer; developer/syndicate = connected account.
-- `application_fee_amount = round(gmv_cents * 0.10)` — magic number yok; `src/lib/billing/constants.ts::PLATFORM_COMMISSION_BPS = 1000` (bps) tek kaynak.
-- Free-tier execution → marjinal maliyet ≈ 0 olduğundan bu %10 **≈ %100 brüt kâr** modellenir; gerçek Stripe payout raporuyla doğrulanana kadar `[tahmin — doğrulanmamış]`.
-- Webhook: `payment_intent.succeeded` → audit log (admin client) → DecasHub ledger. Idempotency key = Stripe event id. RLS: ledger yalnız admin client'tan yazılır.
-
-**Compliance-as-financial-instrument.** ALPAR AI "Legal Risk Insurance" olarak konumlanır; Fortune 500 için €35M EU AI Act cezası, General Counsel blokajını satın alma ön koşuluna çevirir.
-
-### 8d. Forced Trust Gate — Ağ'a giriş güven mührüne bağlıdır
-
-**Kural (binding).** Bir venture/agent çıktısı DecasHub Nexus'unda **listelenemez, eşleştirilemez, sendikasyona giremez, para kazanamaz** — geçerli bir **`X-Alpar-Trust-Seal`** taşımadıkça. Geçit teknik olarak zorunludur, sözleşmesel değil.
+- **Agent-OS Auth:** Next-auth v4 is incompatible with React 19. Agent-OS MUST be upgraded to Auth.js v5.
+- **Dependency Unification:** Enforce `zod: ^3.24.2`, `lucide-react: ^0.577.0`, and `ai: ^4.3.15` across Tier 0 repos to prevent drift.
 
 ---
 
 ## 9. Bugün Tamamlanan Görevler (Autopilot Sprint)
 
-| Blok  | Görev Özeti                                                                    | Durum       |
-| ----- | ------------------------------------------------------------------------------ | ----------- |
-| SIGMA | Mobile LanguageSwitcher fix                                                    | ✅ completed |
-| ZETA  | Public API rate-limit + env key hardening                                      | ✅ completed |
-| ZETA  | Vendor portal mock data temizliği (Rule #30 uyumu)                             | ✅ completed |
-| SIGMA | Stripe Checkout entegrasyonu (Pricing page)                                    | ✅ completed |
-| OMEGA | i18n 5 dil coverage (enterprise + products pages)                              | ✅ completed |
-| ALPHA | DecasHub Unified SSO migration (20260907000000_decashub_sso_schema.sql)        | ✅ completed |
-| ALPHA | Agent-OS premium UI (framer-motion SSO login, glassmorphism autopilot panel)   | ✅ completed |
-| ALPHA | DecasHub landing page glassmorphism                                            | ✅ completed |
-| SIGMA | 8 kurumsal outreach maili (ercument.erden@alparai.com)                         | ✅ completed |
+| Blok  | Görev Özeti                                                                  | Durum        |
+| ----- | ---------------------------------------------------------------------------- | ------------ |
+| SIGMA | Mobile LanguageSwitcher fix                                                  | ✅ completed |
+| ZETA  | Public API rate-limit + env key hardening                                    | ✅ completed |
+| ZETA  | Vendor portal mock data temizliği (Rule #30 uyumu)                           | ✅ completed |
+| SIGMA | Stripe Checkout entegrasyonu (Pricing page)                                  | ✅ completed |
+| OMEGA | i18n 5 dil coverage (enterprise + products pages)                            | ✅ completed |
+| ALPHA | DecasHub Unified SSO migration (20260907000000_decashub_sso_schema.sql)      | ✅ completed |
+| ALPHA | Agent-OS premium UI (framer-motion SSO login, glassmorphism autopilot panel) | ✅ completed |
+| ALPHA | DecasHub landing page glassmorphism                                          | ✅ completed |
+| SIGMA | 8 kurumsal outreach maili (ercument.erden@alparai.com)                       | ✅ completed |
