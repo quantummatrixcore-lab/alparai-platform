@@ -167,3 +167,46 @@ Reddit ve Hacker News lansmanı için açık Chrome sekmesindeki **reCAPTCHA**'y
 | OMEGA-7 | Otonom Kanıt Doğrulayıcı  | AI Act Madde 73 olay bildirimleri ve denetim izleri için otonom kanıt doğrulama altyapısı | `src/actions/verify-incident.ts`   | `18f5f781` | ✅ completed |
 | SIGMA-4 | Sağlayıcı Savunma Portalı | AI sağlayıcıları ve kurumsal müşteriler için savunma ve uyumluluk yönetim portalı         | `src/app/[locale]/vendor-portal/*` | `18f5f781` | ✅ completed |
 | ALPHA-8 | Trust Score Widget        | Canlı Güven Skoru rozeti ve doğrulama widget entegrasyonu                                 | `src/app/api/widget/trust-score/*` | `18f5f781` | ✅ completed |
+
+---
+
+## 7. v15.0 — Stratejik Sentez: 4 Eksen Denetimi (Mimar, 2026-08-07)
+
+> **Kanıt kaynağı:** `git log` (son 15 commit, `f157d886` HEAD), `git diff --cached --stat` (15 dosya, henüz commit edilmemiş çalışma alanı), ve doğrudan dosya okuması. Aşağıdaki dört eksen bu somut kanıt üzerine kuruludur; v13/v13.x tabloları değiştirilmemiştir.
+
+### 7a. Vitrin ve UX/UI — **612/1000**
+
+Staged (henüz commit edilmemiş) 15 dosyalık bir vitrin genişlemesi var: `/cases`, `/enterprise`, `/products/{ars-api,browser-extension,datasets,eu-ai-act}`, `ScrollytellingTimeline` bileşeni, nav/hero güncellemesi, +86 satır i18n (en/tr).
+
+- **(+) Güçlü:** Sayfa iskeleti, kart/CTA tasarım dili ve i18n disiplini tutarlı; 4 ürün sayfası + enterprise sayfası tek oturumda üretilmiş, tasarım sistemi (Card, Section, brand renkleri) yeniden kullanılmış.
+- **(−) Kanıt-vitrin uyumsuzluğu:** `/cases` index sayfası pazarlamada iddia edilen "992+ vaka"nın **sadece 1 tanesini** listeliyor (`001-grok-passport`). Bir ziyaretçi "992 doğrulanmış olay" iddiasına tıkladığında 1 kart görüyor — güven satan bir şirket için doğrudan itibar riski.
+- **(−) Ölü uçlar:** `/enterprise` ve `/products/datasets` "satın al" değil `mailto:hello@alparai.com` bağlantısı sunuyor; $50K/yıl fiyat gösterilmiş ama ödeme/checkout akışı yok. Vitrin "kurumsal" görünüyor, arka uç hâlâ manuel e-posta hunisine düşüyor.
+- **(?) Doğrulanmadı:** `ScrollytellingTimeline` bileşeni yazılmış ama hangi sayfaya bağlandığı bu taramada görülmedi — kullanılmıyorsa ölü kod.
+- **Puan gerekçesi:** Görsel/bileşen kalitesi güçlü (+), ama vitrinin arkasındaki veri derinliği ve dönüşüm mekaniği (checkout, gerçek vaka sayısı) zayıf. v13.2'deki aynı hata tekrarlanıyor: iddia (992, kurumsal) teslimattan (1 vaka, mailto) hızlı gidiyor.
+
+### 7b. Veri Monetizasyonu — 992 Vakanın B2B Nakde Çevrilmesi
+
+- **🔴 Kritik bulgu (Kural 10 ihlali adayı):** `src/lib/services/metrics-service.ts:44-49`, `d7951851` ("tüm mock veri kaldırıldı") ve `e39ffa62` ("Rule #30: mock finansal veri kaldırıldı") commit'lerinden **hemen sonra**, `f157d886` ile şu satırı ekliyor: `const baseIncidents = Math.max(totalIncidents, 994)` ve sağlayıcı sayısını da `providersData.length > 0 ? … : 57` ile sabitliyor. Yani "SSOT mimarisi" adı altında, DB gerçek sayıyı düşük verirse **kod donanımsal bir taban sayı (994 / 57) uyduruyor.** Bu, iki commit önce "kaldırıldı" denen mock-veri örüntüsünün metrics katmanında geri gelmesidir. "992 doğrulanmış vaka" pazarlama iddiasının tam da güvenilirlik temelini oluşturduğu için bu **en yüksek öncelikli düzeltme adayıdır** — bir denetçi bu sabit değeri fark ederse, satılan varlığın (doğrulanmış veri) kendisi itibarsızlaşır.
+- **Monetizasyon yüzeyleri var ama transaction'sız:** `/enterprise` (VRaaS, $50K/yıl), `/products/datasets` (akademik ücretsiz + kurumsal "erişim talebi"), `/products/ars-api` (sigorta risk modeli, 992+ vaka referansı) — üçü de lead-capture (mailto), hiçbiri self-serve ödeme/API-key satışı değil. Stripe entegrasyonu v13.2'de "canlı" işaretlenmişti (SIGMA-1 backlog, completed) ama bu üç yeni sayfadan hiçbiri ona bağlanmıyor.
+- **Gerçek moat parçası:** `VendorBadgeScript` (rozet embed) + `/api/widget/trust-score` (SVG endpoint, `f925024b`) + `vendor-portal` (`58491500`) üçlüsü, veri → rozet → trafik → daha fazla vaka bildirimi → daha büyük veri seti döngüsünün gerçek kodlanmış hâlidir. Bu, moonshot'ın (7d) somut teknik temelidir.
+
+### 7c. Büyüme ve Yatırım (GTM)
+
+- v13.2'de üretilen fundraising varlıkları (seed-data-room, valuation-memo, vc-outreach, pitch-deck) hâlâ geçerli; tekrar üretilmeyecek (moratoryum §4c geçerliliğini koruyor).
+- Yeni `/enterprise` ve `/products/*` sayfaları, bir yatırımcıya "enterprise motion var" anlatısı için görsel kanıt sağlıyor — **ama** hiçbir sayfada dönüşüm izleme (UTM/`funnel_events`) görülmedi. v13'te aynı boşluk not edilmişti (OMEGA-P1 GATE, "ilk 24s huni sayıları" hâlâ kanıtsız); bu yeni sayfalarla boşluk büyüyor, kapanmıyor.
+- **Not (uygulanmadı, sadece kayıt):** Bu üç yeni monetizasyon sayfası gerçek bir Stripe Checkout / API-key self-serve akışına bağlanmadan yatırımcıya "traction" olarak gösterilmemeli — "brochureware'i traction sanma" riski, Qwen planının v13.1'de reddedilme gerekçesiyle aynı kategoridedir (inşa edilmemişi inşa edilmiş gibi sunmak).
+
+### 7d. Moonshot — Pazar Tekeli
+
+Gerçek tekel mekanizması zaten kısmen kodlanmış: **rozet dağıtımı (SIGMA-1, Top 50 vendor'a gönderildi, v13.2 completed) → canlı SVG trust-score widget'ı → vendor-portal → dataset/ars-api monetizasyonu.** Bu, veri ağı etkisi (data network effect) döngüsüdür ve gerçek bir moat adayıdır — plan belgelerinde değil, `src/` içinde çalışan koddadır.
+
+**Tek engel, 7b'deki 994/57 sabit taban değeridir.** Moonshot'ın tezi "biz piyasadaki tek doğrulanmış veri kaynağıyız" — bu tez, doğrulanabilir olmayan bir sabit sayı üzerine kurulamaz. Taban değer düzeltilmeden rozet dağıtımı ölçeklendirilirse, itibar riski veri hacmiyle birlikte büyür.
+
+### 7e. Yeni backlog satırları (moratoryum §4c istisnası: itibar riski taşıyan bulgular)
+
+| Blok  | Öncelik | Atanan      | Görev Özeti                                                                                                                            | Durum   |
+| ----- | ------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| SIGMA | P0      | Antigravity | `metrics-service.ts:44-49` sabit taban (994/57) kaldırılsın; DB sayısı 0 ise UI "yakında" göstersin, uydurma sayı göstermesin          | pending |
+| OMEGA | P1      | Antigravity | `/cases` index sayfasına gerçek vaka verisi eklensin veya "992+" iddiası sayfadaki gerçek adetle eşleştirilsin                        | pending |
+| SIGMA | P1      | Antigravity | `/enterprise`, `/products/datasets`, `/products/ars-api` mailto CTA'ları Stripe self-serve akışına bağlansın                          | pending |
+| ALPHA | P2      | Antigravity | Yeni vitrin sayfalarına UTM/`funnel_events` izleme eklensin (GTM kanıt boşluğunu kapatmak için)                                        | pending |
