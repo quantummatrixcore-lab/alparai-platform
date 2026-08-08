@@ -9,6 +9,7 @@ import { Footer } from "@/components/layout/footer";
 import { MainContent } from "@/components/layout/main-content";
 import { ClientProviders } from "@/components/client-providers";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
+import { LiveTicker } from "@/components/ui/live-ticker";
 import {
   OrganizationJsonLd,
   SoftwareApplicationJsonLd,
@@ -91,7 +92,12 @@ export default async function LocaleLayout({
               <main className="m-0 min-h-screen bg-transparent p-0">{children}</main>
             ) : (
               <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden pb-16 lg:pb-0">
-                <Header user={headerUser} />
+                <div className="fixed top-0 right-0 left-0 z-[60]">
+                  <LiveTicker />
+                </div>
+                <div className="mt-8">
+                  <Header user={headerUser} />
+                </div>
                 <MainContent>{children}</MainContent>
                 <Footer />
               </div>

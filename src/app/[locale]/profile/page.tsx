@@ -109,18 +109,26 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
             <div className="flex flex-wrap gap-2">
               {badges.map((b: string, i: number) => {
                 const isFounding = b === "Founding Reporter";
+                const isEthicsAdvocate = b === "Ethics Advocate";
                 return (
                   <span
                     key={i}
                     className={`inline-flex items-center rounded-md border px-2.5 py-1 text-xs font-semibold shadow-sm ${
                       isFounding
                         ? "border-amber-500/20 bg-gradient-to-r from-amber-500/10 to-orange-500/10 text-amber-400"
-                        : "bg-bg-elevated text-fg-primary border-border-strong"
+                        : isEthicsAdvocate
+                          ? "border-emerald-500/20 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 text-emerald-400"
+                          : "bg-bg-elevated text-fg-primary border-border-strong"
                     }`}
                   >
                     {isFounding ? (
                       <span className="flex items-center gap-1">
                         <Award className="h-3.5 w-3.5 text-amber-400" />
+                        {b}
+                      </span>
+                    ) : isEthicsAdvocate ? (
+                      <span className="flex items-center gap-1">
+                        <Shield className="h-3.5 w-3.5 text-emerald-400" />
                         {b}
                       </span>
                     ) : (

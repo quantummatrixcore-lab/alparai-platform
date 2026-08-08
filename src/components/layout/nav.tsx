@@ -5,18 +5,16 @@ import { Link, usePathname } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import {
-  FileText,
   BarChart3,
   BookOpen,
   ShieldCheck,
-  Award,
   GraduationCap,
   Scale,
   Eye,
   Shield,
   ChevronDown,
-  Zap,
   Users,
+  Building,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import type { ComponentType } from "react";
@@ -28,20 +26,17 @@ interface NavItem {
 }
 
 const mainNavItems: NavItem[] = [
-  { href: "/leaderboard", labelKey: "leaderboard", icon: BarChart3 },
-  { href: "/incidents", labelKey: "incidents", icon: FileText },
-  { href: "/velocity", labelKey: "velocity", icon: Zap },
-  { href: "/ai-act", labelKey: "ai_act", icon: Shield },
-  { href: "/academy", labelKey: "academy", icon: GraduationCap },
-  { href: "/dilemmas", labelKey: "dilemmas", icon: Scale },
+  { href: "/products/ars-api", labelKey: "products", icon: Shield },
+  { href: "/incidents", labelKey: "data", icon: BarChart3 },
+  { href: "/enterprise", labelKey: "enterprise", icon: Building },
 ];
 
 const resourcesItems: NavItem[] = [
+  { href: "/academy", labelKey: "academy", icon: GraduationCap },
+  { href: "/dilemmas", labelKey: "dilemmas", icon: Scale },
+  { href: "/blog", labelKey: "blog", icon: BookOpen },
   { href: "/about/advisory-board", labelKey: "advisory_board", icon: Users },
   { href: "/transparency", labelKey: "transparency", icon: Eye },
-  { href: "/challenges", labelKey: "challenges", icon: Award },
-  { href: "/blog", labelKey: "blog", icon: BookOpen },
-  { href: "/press-kit", labelKey: "presskit", icon: Award },
 ];
 
 export function Nav({

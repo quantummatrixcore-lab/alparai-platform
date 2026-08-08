@@ -5,10 +5,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { logger } from "@/lib/utils/logger";
 import type { Json } from "@/types/database";
 
-export async function trackFunnelEvent(
-  eventName: "submit_start" | "submit_complete",
-  metadata?: Record<string, unknown>,
-) {
+export async function trackFunnelEvent(eventName: string, metadata?: Record<string, unknown>) {
   try {
     const user = await getCurrentUser();
     const supabase = await createServerClient();

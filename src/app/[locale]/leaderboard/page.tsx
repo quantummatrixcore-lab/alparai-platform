@@ -16,6 +16,7 @@ import {
   ArrowUp,
   ArrowDown,
   ShieldCheck,
+  Clock,
 } from "lucide-react";
 import { cn, formatNumber } from "@/lib/utils";
 import { Link } from "@/i18n/routing";
@@ -407,6 +408,11 @@ export default async function LeaderboardPage({
                           {p.is_verified_respondent && (
                             <span title={t("verified_respondent")}>
                               <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-400" />
+                            </span>
+                          )}
+                          {p.response_rate >= 80 && p.incident_count > 0 && (
+                            <span title={t("responsive_vendor")}>
+                              <Clock className="text-brand-400 h-4 w-4 shrink-0" />
                             </span>
                           )}
                         </Link>

@@ -450,13 +450,31 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 text-xs text-slate-400">
+                <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                  <span className="font-semibold text-slate-300">
+                    {isEn ? "Free Tier" : "Ücretsiz Plan"}
+                  </span>
+                </div>
                 <div className="flex items-center justify-between">
-                  <span>{isEn ? "Requests per minute" : "Dakika başı istek"}</span>
-                  <span className="font-bold text-white">100</span>
+                  <span>{isEn ? "Requests per day" : "Günlük istek"}</span>
+                  <span className="font-bold text-white">10,000</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>{isEn ? "Burst limit" : "Anlık limit"}</span>
-                  <span className="font-bold text-white">20</span>
+                  <span className="font-bold text-white">50</span>
+                </div>
+                <div className="mt-3 flex items-center justify-between border-t border-b border-white/5 pt-3 pb-2">
+                  <span className="font-semibold text-slate-300">
+                    {isEn ? "Enterprise Tier" : "Kurumsal Plan"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>{isEn ? "Requests per day" : "Günlük istek"}</span>
+                  <span className="font-bold text-white">100,000+</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>{isEn ? "SLA" : "SLA"}</span>
+                  <span className="font-bold text-white">99.99%</span>
                 </div>
                 <p className="border-t border-white/5 pt-3 text-[10px] leading-relaxed">
                   {isEn

@@ -40,13 +40,9 @@ export async function getGlobalMetrics(): Promise<GlobalMetrics> {
     avgScore = Math.round(sum / providersData.length);
   }
 
-  // Determine the baseline incidents count
-  // Since 992 were reported by the user as "documented AI Incidents", we'll enforce this as a baseline if DB verified counts are low
-  const baseIncidents = Math.max(totalIncidents, 994);
-
   return {
-    totalIncidents: baseIncidents,
-    totalProviders: totalProviders > 0 ? totalProviders : 57, // Same for providers baseline
+    totalIncidents,
+    totalProviders,
     totalOfficialResponses: totalOfficialResponses,
     averageTrustScore: avgScore,
   };

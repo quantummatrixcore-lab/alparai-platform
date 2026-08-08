@@ -359,28 +359,28 @@
     "free_price": "$0",
     "free_period": "/month",
     "free_desc": "For individuals and community members reporting AI incidents.",
-    "free_feature_1": "Incident reporting & voting",
-    "free_feature_2": "Full community access",
-    "free_feature_3": "Public leaderboard inspection",
-    "free_feature_4": "Transparency reports access",
+    "free_feature_1": "Unlimited incident reporting",
+    "free_feature_2": "Leaderboard & Live Feed access",
+    "free_feature_3": "Ethics Advocate badge",
+    "free_feature_4": "Community verification",
     "free_cta": "Get Started",
     "vendor_title": "Vendor Portal",
-    "vendor_price": "$49",
+    "vendor_price": "$2,500",
     "vendor_period": "/month",
-    "vendor_desc": "For AI model vendors & providers to manage reputation and disputes.",
-    "vendor_feature_1": "Right of dispute & official response",
-    "vendor_feature_2": "Priority moderation review",
-    "vendor_feature_3": "Verified Vendor badge",
-    "vendor_feature_4": "Incident risk analytics dashboard",
+    "vendor_desc": "For AI model vendors & providers to manage reputation and SLA.",
+    "vendor_feature_1": "SLA tracking dashboard",
+    "vendor_feature_2": "Internal notes & public response",
+    "vendor_feature_3": "Jira & Zendesk integration",
+    "vendor_feature_4": "TruthScore API access & GDPR reports",
     "vendor_cta": "Get Vendor Access",
     "enterprise_title": "Enterprise API",
-    "enterprise_price": "$299",
-    "enterprise_period": "/month",
-    "enterprise_desc": "For enterprises requiring high-volume API access and SLA guarantees.",
-    "enterprise_feature_1": "Full database API access (1,000+ req/day)",
-    "enterprise_feature_2": "Guaranteed SLA & 99.9% uptime",
-    "enterprise_feature_3": "Real-time webhook notifications",
-    "enterprise_feature_4": "Dedicated support & custom reporting",
+    "enterprise_price": "Custom",
+    "enterprise_period": "",
+    "enterprise_desc": "For banks, telecom, and insurance requiring real-time compliance.",
+    "enterprise_feature_1": "Real-time hallucination detection",
+    "enterprise_feature_2": "PII masking & bias filtering",
+    "enterprise_feature_3": "Low-latency (<50ms) & Dedicated SLA",
+    "enterprise_feature_4": "On-premise deployment options",
     "enterprise_cta": "Contact Sales",
     "neutrality_notice": "All content hosting and dispute resolutions are subject to our neutrality pledge.",
     "neutrality_link": "Read our Neutrality Pledge."
@@ -433,7 +433,15 @@
     "ratings": "Model Ratings",
     "challenges": "Challenges",
     "velocity": "Velocity Index",
-    "advisory_board": "Advisory Board"
+    "advisory_board": "Advisory Board",
+    "products": "Products",
+    "data": "Data & Metrics",
+    "community": "Community",
+    "cases": "Case Studies",
+    "ars_api": "Risk Score API",
+    "eu_ai_act": "EU AI Act SaaS",
+    "datasets": "Safety Datasets",
+    "enterprise": "Enterprise"
   },
   "velocity": {
     "page_title": "Velocity Engine Public Dashboard",
@@ -820,7 +828,8 @@
     "trust_score_info": "What this score means: A Trust Score of 85+ means the provider responds to >80% of incidents, resolves >40%, and averages <3 days response time. A score below 50 means the provider has not responded to any reported incidents.",
     "read_methodology_link": "Read the detailed Trust Score Methodology â†’",
     "verified_respondent": "Verified Respondent",
-    "meta_description": "Discover the global AI Provider Leaderboard. We rank the top AI companies by our proprietary Trust Score, safety metrics, and incident reports to ensure public accountability."
+    "meta_description": "Discover the global AI Provider Leaderboard. We rank the top AI companies by our proprietary Trust Score, safety metrics, and incident reports to ensure public accountability.",
+    "responsive_vendor": "Responsive Vendor (24h SLA)"
   },
   "auth": {
     "use_email_signin_fallback": "Please use email sign-in below.",
@@ -4683,5 +4692,42 @@
     "score": "Compliance Score",
     "risks": "Risks",
     "recommendations": "Recommendations"
+  },
+  "cases": {
+    "title": "Case Studies — ALPAR AI",
+    "description": "In-depth analysis of major AI incidents and their resolutions.",
+    "badge": "RESEARCH & CASES",
+    "headline": "Investigating AI Failures",
+    "subtitle": "Explore our detailed case studies on major AI incidents. We analyze the root causes, the impact, and the steps needed to prevent them in the future.",
+    "case_001_title": "The Grok Passport Incident",
+    "case_001_desc": "How xAI's Grok generated highly sensitive, unmasked personal data (passports) from a casual prompt, leading to a major privacy incident.",
+    "case_001_date": "August 2026",
+    "read_case": "Read Case Study"
+  },
+  "products": {
+    "ars_api": "ALPAR Risk Score API",
+    "eu_ai_act": "EU AI Act Compliance SaaS",
+    "datasets": "LLM Red-Teaming Datasets"
+  },
+  "enterprise": {
+    "title": "Enterprise Solutions",
+    "subtitle": "Vendor Risk-as-a-Service (VRaaS) and AI Compliance",
+    "risk_calc_title": "Vendor Risk Exposure Calculator",
+    "risk_calc_desc": "Calculate your financial exposure based on your AI vendors.",
+    "book_demo": "Schedule a Demo",
+    "features": {
+      "vraas": {
+        "title": "Vendor Risk-as-a-Service",
+        "desc": "Continuous monitoring and risk scoring for all AI models in your supply chain."
+      },
+      "api": {
+        "title": "Enterprise API",
+        "desc": "100,000+ daily limits with 99.99% SLA and dedicated support."
+      },
+      "compliance": {
+        "title": "AI Act Compliance",
+        "desc": "Article 73 ready passports for your deployed AI systems."
+      }
+    }
   }
 }

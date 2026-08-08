@@ -359,28 +359,28 @@
     "free_price": "$0",
     "free_period": "/ay",
     "free_desc": "Yapay zeka ihlallerini bildiren bireyler ve topluluk üyeleri için.",
-    "free_feature_1": "Olay bildirme ve oylama",
-    "free_feature_2": "Tam topluluk erişimi",
-    "free_feature_3": "Kamuya açık liderlik tablosu inceleme",
-    "free_feature_4": "Şeffaflık raporlarına erişim",
+    "free_feature_1": "Sınırsız vaka (incident) raporlama",
+    "free_feature_2": "Leaderboard ve Live Feed erişimi",
+    "free_feature_3": "Ethics Advocate rozeti",
+    "free_feature_4": "Topluluk doğrulaması",
     "free_cta": "Başlayın",
     "vendor_title": "Vendor Portalı",
-    "vendor_price": "$49",
+    "vendor_price": "$2,500",
     "vendor_period": "/ay",
-    "vendor_desc": "İtibar ve itiraz süreçlerini yönetmek isteyen YZ sağlayıcıları için.",
-    "vendor_feature_1": "İtiraz hakkı ve resmi yanıt",
-    "vendor_feature_2": "Öncelikli inceleme süreci",
-    "vendor_feature_3": "Doğrulanmış Sağlayıcı (Verified Badge)",
-    "vendor_feature_4": "Olay riski analitik paneli",
+    "vendor_desc": "İtibar ve SLA yönetimi yapmak isteyen YZ sağlayıcıları için.",
+    "vendor_feature_1": "SLA takip ve yönetim paneli",
+    "vendor_feature_2": "İç notlar ve resmi genel yanıt",
+    "vendor_feature_3": "Jira & Zendesk entegrasyonu",
+    "vendor_feature_4": "TruthScore API erişimi ve GDPR raporları",
     "vendor_cta": "Vendor Erişimi Alın",
     "enterprise_title": "Enterprise API",
-    "enterprise_price": "$299",
-    "enterprise_period": "/ay",
-    "enterprise_desc": "Yüksek hacimli API erişimi ve SLA garantisi arayan kurumsal yapılar için.",
-    "enterprise_feature_1": "Tam API erişimi (1.000+ istek/gün)",
-    "enterprise_feature_2": "Garantili SLA ve %99.9 erişilebilirlik",
-    "enterprise_feature_3": "Gerçek zamanlı webhook bildirimleri",
-    "enterprise_feature_4": "Özel destek ve özelleştirilmiş raporlama",
+    "enterprise_price": "Özel",
+    "enterprise_period": "",
+    "enterprise_desc": "Gerçek zamanlı regülasyon uyumu gerektiren banka, telekom ve sigorta devleri için.",
+    "enterprise_feature_1": "Gerçek zamanlı halüsinasyon tespiti",
+    "enterprise_feature_2": "PII maskeleme ve önyargı filtreleme",
+    "enterprise_feature_3": "Düşük gecikme (<50ms) ve Özel SLA",
+    "enterprise_feature_4": "On-premise (kurum içi) kurulum seçenekleri",
     "enterprise_cta": "Satışla İletişime Geçin",
     "neutrality_notice": "Tüm içerik barındırma ve ihtilaf çözümleri tarafsızlık taahhüdümüze tabidir.",
     "neutrality_link": "Tarafsızlık Şartımızı okuyun."
@@ -433,7 +433,15 @@
     "ratings": "Model Derecelendirmeleri",
     "challenges": "Meydan Okumalar",
     "velocity": "Velocity Endeksi",
-    "advisory_board": "Danışma Kurulu"
+    "advisory_board": "Danışma Kurulu",
+    "products": "Ürünler",
+    "data": "Veri & Metrikler",
+    "community": "Topluluk",
+    "cases": "Vaka İncelemeleri",
+    "ars_api": "Risk Skor API",
+    "eu_ai_act": "AB YZ Yasası SaaS",
+    "datasets": "Güvenlik Veri Setleri",
+    "enterprise": "Kurumsal"
   },
   "velocity": {
     "page_title": "Velocity Engine Kamu Kontrol Paneli",
@@ -820,7 +828,8 @@
     "trust_score_info": "Bu skor ne anlama geliyor: 85+ Güven Skoru, sağlayıcının olayların >%80'ine yanıt verdiği, >%40'ını çözdüğü ve ortalama <3 gün yanıt süresine sahip olduğu anlamına gelir. 50'nin altındaki bir skor ise sağlayıcının bildirilen hiçbir olaya yanıt vermediğini gösterir.",
     "read_methodology_link": "Detaylı Güven Skoru Metodolojisini inceleyin →",
     "verified_respondent": "Doğrulanmış Yanıtlayıcı",
-    "meta_description": "Küresel Yapay Zeka Sağlayıcı Liderlik Tablosu. Halka açık hesap verebilirliği sağlamak için en iyi yapay zeka şirketlerini Güven Skoru, güvenlik metrikleri ve ihlal raporlarıyla sıralıyoruz."
+    "meta_description": "Küresel Yapay Zeka Sağlayıcı Liderlik Tablosu. Halka açık hesap verebilirliği sağlamak için en iyi yapay zeka şirketlerini Güven Skoru, güvenlik metrikleri ve ihlal raporlarıyla sıralıyoruz.",
+    "responsive_vendor": "Hızlı Yanıt Veren (24s SLA)"
   },
   "auth": {
     "use_email_signin_fallback": "Lütfen aşağıdaki e-posta ile giriş seçeneğini kullanın.",
@@ -4683,5 +4692,42 @@
     "score": "Uyum Skoru",
     "risks": "Riskler",
     "recommendations": "Öneriler"
+  },
+  "cases": {
+    "title": "Vaka İncelemeleri — ALPAR AI",
+    "description": "Önemli yapay zeka olaylarının ve çözümlerinin derinlemesine analizi.",
+    "badge": "ARAŞTIRMA & VAKALAR",
+    "headline": "Yapay Zeka Hatalarını İnceliyoruz",
+    "subtitle": "Büyük yapay zeka olayları hakkındaki detaylı vaka incelemelerimizi keşfedin. Kök nedenleri, etkileri ve gelecekte bunları önlemek için atılması gereken adımları analiz ediyoruz.",
+    "case_001_title": "Grok Pasaport Olayı",
+    "case_001_desc": "xAI'ın Grok modelinin sıradan bir istemden son derece hassas, maskelenmemiş kişisel veriler (pasaportlar) üreterek nasıl büyük bir gizlilik ihlaline yol açtığı.",
+    "case_001_date": "Ağustos 2026",
+    "read_case": "Vakayı Oku"
+  },
+  "products": {
+    "ars_api": "ALPAR Risk Skor API",
+    "eu_ai_act": "AB YZ Yasası Uyum SaaS",
+    "datasets": "LLM Red-Teaming Veri Setleri"
+  },
+  "enterprise": {
+    "title": "Kurumsal Çözümler",
+    "subtitle": "Hizmet Olarak Sağlayıcı Riski (VRaaS) ve YZ Uyumluluğu",
+    "risk_calc_title": "Sağlayıcı Risk Maruziyeti Hesaplayıcı",
+    "risk_calc_desc": "YZ sağlayıcılarınıza bağlı finansal maruziyetinizi hesaplayın.",
+    "book_demo": "Demo Talep Et",
+    "features": {
+      "vraas": {
+        "title": "Hizmet Olarak Sağlayıcı Riski",
+        "desc": "Tedarik zincirinizdeki tüm YZ modelleri için sürekli izleme ve risk skorlaması."
+      },
+      "api": {
+        "title": "Kurumsal API",
+        "desc": "Özel destek ve %99.99 SLA ile günlük 100.000+ istek limiti."
+      },
+      "compliance": {
+        "title": "YZ Yasası Uyumluluğu",
+        "desc": "Devreye alınan YZ sistemleriniz için Madde 73 uyumlu pasaportlar."
+      }
+    }
   }
 }

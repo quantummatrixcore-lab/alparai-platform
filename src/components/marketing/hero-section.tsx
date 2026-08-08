@@ -102,27 +102,27 @@ export function HeroSection({
               className="mt-10 flex flex-col gap-4 sm:flex-row"
             >
               <Link
-                href="/submit"
+                href="/products/ars-api"
                 onClick={() => trackEvent("hero_cta_click", { action: "primary" })}
                 className="group bg-danger-500 hover:bg-danger-400 animate-gradient-shift relative inline-flex h-13 items-center justify-center gap-3 rounded-md px-8 text-base font-black text-white shadow-[0_0_25px_rgba(230,57,70,0.4)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:bg-[length:200%_auto] hover:shadow-[0_0_40px_rgba(230,57,70,0.7)]"
               >
                 <ShieldAlert className="h-5 w-5" />
-                {t("cta_primary")}
+                {t("cta_primary", { defaultValue: "Risk API'yi İncele" })}
               </Link>
               <Link
-                href="/dashboard/journalist"
-                onClick={() => trackEvent("hero_cta_click", { action: "journalist" })}
+                href="/products/eu-ai-act"
+                onClick={() => trackEvent("hero_cta_click", { action: "b2b_compliance" })}
                 className="bg-brand-600 hover:bg-brand-500 relative inline-flex h-13 items-center justify-center gap-3 rounded-md px-8 text-base font-black text-white shadow-[0_0_20px_rgba(168,85,247,0.4)] transition-all duration-300 hover:-translate-y-1 hover:scale-105"
               >
-                <Radio className="h-5 w-5" />
-                {t("cta_journalist")}
+                <Target className="h-5 w-5" />
+                {t("cta_journalist", { defaultValue: "AI Act Uyum Testi" })}
               </Link>
               <Link
-                href="/leaderboard"
+                href="/incidents"
                 onClick={() => trackEvent("hero_cta_click", { action: "secondary" })}
                 className="bg-glass text-fg-primary hover:border-brand-500/40 inline-flex h-13 items-center justify-center gap-3 rounded-md px-8 text-base font-bold shadow-xl transition-all duration-300 hover:-translate-y-1 hover:scale-105"
               >
-                {t("cta_secondary")}
+                {t("cta_secondary", { defaultValue: "Canlı Veritabanı" })}
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-2" />
               </Link>
             </motion.div>
