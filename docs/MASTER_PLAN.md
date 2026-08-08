@@ -204,9 +204,10 @@ Gerçek tekel mekanizması zaten kısmen kodlanmış: **rozet dağıtımı (SIGM
 
 ### 7e. Yeni backlog satırları (moratoryum §4c istisnası: itibar riski taşıyan bulgular)
 
-| Blok  | Öncelik | Atanan      | Görev Özeti                                                                                                                            | Durum   |
-| ----- | ------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| SIGMA | P0      | Antigravity | `metrics-service.ts:44-49` sabit taban (994/57) kaldırılsın; DB sayısı 0 ise UI "yakında" göstersin, uydurma sayı göstermesin          | pending |
-| OMEGA | P1      | Antigravity | `/cases` index sayfasına gerçek vaka verisi eklensin veya "992+" iddiası sayfadaki gerçek adetle eşleştirilsin                        | pending |
-| SIGMA | P1      | Antigravity | `/enterprise`, `/products/datasets`, `/products/ars-api` mailto CTA'ları Stripe self-serve akışına bağlansın                          | pending |
-| ALPHA | P2      | Antigravity | Yeni vitrin sayfalarına UTM/`funnel_events` izleme eklensin (GTM kanıt boşluğunu kapatmak için)                                        | pending |
+| Blok  | Öncelik | Atanan      | Görev Özeti                                                                                                                                                                                                   | Durum   |
+| ----- | ------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| SIGMA | P0      | Antigravity | `metrics-service.ts:44-49` sabit taban (994/57) kaldırılsın; DB sayısı 0 ise UI "yakında" göstersin, uydurma sayı göstermesin                                                                                 | pending |
+| OMEGA | P1      | Antigravity | `/cases` index sayfasına gerçek vaka verisi eklensin veya "992+" iddiası sayfadaki gerçek adetle eşleştirilsin                                                                                                | pending |
+| SIGMA | P1      | Antigravity | `/enterprise`, `/products/datasets`, `/products/ars-api` mailto CTA'ları Stripe self-serve akışına bağlansın                                                                                                  | pending |
+| ALPHA | P2      | Antigravity | Yeni vitrin sayfalarına UTM/`funnel_events` izleme eklensin (GTM kanıt boşluğunu kapatmak için)                                                                                                               | pending |
+| ALPHA | P0      | Antigravity | **The Syndicate Funding Model:** ALPAR AI finansmanı DecasHub üzerinden akıtılacak. Tüm yatırımlar ve B2B Enterprise satışlarından DecasHub %10 platform komisyonu alacak. Stripe Connect mimarisi kurulacak. | pending |
