@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
@@ -7,11 +7,18 @@ import { ApiPlayground } from "@/components/api-docs/api-playground";
 import { getGlobalMetrics, type GlobalMetrics } from "@/lib/services/metrics-service";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Developer API — ALPAR AI",
-  description:
-    "Public REST API for security researchers, journalists and developers. Access incident data, provider trust scores, regulator feeds, MCP server, and evaluation benchmarks.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "api_docs" });
+  return {
+    title: t("meta_title"),
+    description: t("meta_desc"),
+  };
+}
 
 const getEndpoints = (metrics: GlobalMetrics) =>
   [
@@ -361,7 +368,7 @@ const getEndpoints = (metrics: GlobalMetrics) =>
 export default async function ApiDocsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const isEn = locale === "en";
+  const t = await getTranslations({ locale, namespace: "api_docs" });
   const metrics = await getGlobalMetrics();
   const endpoints = getEndpoints(metrics);
 
@@ -375,20 +382,16 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
             className="mb-6 inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-emerald-400"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            {isEn ? "Back to Press Kit" : "Press Kit'e Dön"}
+            {t("back_to_press")}
           </Link>
           <div className="max-w-2xl">
             <span className="mb-3 inline-block rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-bold tracking-wider text-blue-400 uppercase">
-              {isEn ? "Open API — 20 Endpoints" : "Açık API — 20 Uç Nokta"}
+              {t("open_api_badge")}
             </span>
             <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-              {isEn ? "Developer API Documentation" : "Geliştirici API Dokümantasyonu"}
+              {t("title")}
             </h1>
-            <p className="mt-4 text-lg leading-relaxed text-slate-400">
-              {isEn
-                ? "Public REST API and MCP protocol for security researchers, journalists, and AI safety engineers. Transparent, rate-limited, zero-key public access."
-                : "Güvenlik araştırmacıları, gazeteciler ve AI güvenlik mühendisleri için açık REST API ve MCP protokolü. Şeffaf, rate-limitli, anahtarsız kamu erişimi."}
-            </p>
+            <p className="mt-4 text-lg leading-relaxed text-slate-400">{t("description")}</p>
           </div>
         </Container>
       </div>
@@ -400,9 +403,7 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_300px]">
           <div className="min-w-0 space-y-6">
-            <h2 className="text-lg font-bold text-white">
-              {isEn ? "API Endpoints (20 Total)" : "API Endpoint'leri (Toplam 20)"}
-            </h2>
+            <h2 className="text-lg font-bold text-white">{t("endpoints_title")}</h2>
 
             {endpoints.map((ep) => (
               <Card key={ep.path} className="border-white/5 bg-[#0F1E2E]">
@@ -420,7 +421,7 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
 
                   <div>
                     <p className="mb-1.5 text-[10px] font-bold tracking-wider text-slate-500 uppercase">
-                      {isEn ? "Example Request" : "Örnek İstek"}
+                      {t("example_request")}
                     </p>
                     <pre className="overflow-x-auto rounded-lg border border-white/5 bg-[#08121C] p-3 font-mono text-xs text-emerald-300">
                       {ep.example}
@@ -429,7 +430,7 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
 
                   <div>
                     <p className="mb-1.5 text-[10px] font-bold tracking-wider text-slate-500 uppercase">
-                      {isEn ? "Example Response" : "Örnek Yanıt"}
+                      {t("example_response")}
                     </p>
                     <pre className="overflow-x-auto rounded-lg border border-white/5 bg-[#08121C] p-3 font-mono text-xs text-slate-300">
                       {ep.response}
@@ -446,40 +447,34 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-sm text-white">
                   <Zap className="h-4 w-4 text-yellow-400" />
-                  {isEn ? "Rate Limits" : "Rate Limit"}
+                  {t("rate_limits")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 text-xs text-slate-400">
                 <div className="flex items-center justify-between border-b border-white/5 pb-2">
-                  <span className="font-semibold text-slate-300">
-                    {isEn ? "Free Tier" : "Ücretsiz Plan"}
-                  </span>
+                  <span className="font-semibold text-slate-300">{t("free_tier")}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>{isEn ? "Requests per day" : "Günlük istek"}</span>
+                  <span>{t("requests_per_day")}</span>
                   <span className="font-bold text-white">10,000</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>{isEn ? "Burst limit" : "Anlık limit"}</span>
+                  <span>{t("burst_limit")}</span>
                   <span className="font-bold text-white">50</span>
                 </div>
                 <div className="mt-3 flex items-center justify-between border-t border-b border-white/5 pt-3 pb-2">
-                  <span className="font-semibold text-slate-300">
-                    {isEn ? "Enterprise Tier" : "Kurumsal Plan"}
-                  </span>
+                  <span className="font-semibold text-slate-300">{t("enterprise_tier")}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>{isEn ? "Requests per day" : "Günlük istek"}</span>
+                  <span>{t("requests_per_day")}</span>
                   <span className="font-bold text-white">100,000+</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>{isEn ? "SLA" : "SLA"}</span>
+                  <span>{t("sla")}</span>
                   <span className="font-bold text-white">99.99%</span>
                 </div>
                 <p className="border-t border-white/5 pt-3 text-[10px] leading-relaxed">
-                  {isEn
-                    ? "Exceeded limits return HTTP 429. Check X-RateLimit-* headers for quota details."
-                    : "Limit aşıldığında HTTP 429 döner. Kalan kota için X-RateLimit-* header'larını kontrol edin."}
+                  {t("rate_limit_note")}
                 </p>
               </CardContent>
             </Card>
@@ -488,15 +483,11 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-sm text-white">
                   <Globe className="h-4 w-4 text-blue-400" />
-                  CORS
+                  {t("cors_title")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-xs text-slate-400">
-                <p>
-                  {isEn
-                    ? "All endpoints are CORS-enabled and accessible from any client origin."
-                    : "Tüm endpoint'ler CORS açık — herhangi bir istemciden erişilebilir."}
-                </p>
+                <p>{t("cors_desc")}</p>
                 <pre className="rounded border border-white/5 bg-[#08121C] p-2 font-mono text-[10px] text-slate-300">
                   Access-Control-Allow-Origin: *
                 </pre>
@@ -507,18 +498,14 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-sm text-white">
                   <Shield className="h-4 w-4 text-emerald-400" />
-                  {isEn ? "Base URL" : "Temel URL"}
+                  {t("base_url")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-xs text-slate-400">
                 <pre className="rounded border border-white/5 bg-[#08121C] p-2 font-mono text-[10px] text-emerald-300">
                   https://alparai.com/api/v1
                 </pre>
-                <p className="mt-2">
-                  {isEn
-                    ? "All endpoints return JSON responses. No secret API key required."
-                    : "Tüm endpoint'ler JSON yanıtı döner. Gizli API anahtarı gerekmez."}
-                </p>
+                <p className="mt-2">{t("base_url_desc")}</p>
               </CardContent>
             </Card>
 
@@ -526,7 +513,7 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
               <CardContent className="p-4">
                 <p className="mb-2 flex items-center gap-2 text-xs font-semibold text-white">
                   <Code2 className="h-3.5 w-3.5 text-emerald-400" />
-                  {isEn ? "Questions?" : "Sorunuz mu var?"}
+                  {t("questions")}
                 </p>
                 <a
                   href="mailto:press@alparai.com"
@@ -534,11 +521,7 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
                 >
                   press@alparai.com
                 </a>
-                <p className="mt-1 text-[10px] text-slate-500">
-                  {isEn
-                    ? "For research partnerships and regulatory data access."
-                    : "Araştırma ortaklıkları ve regülasyon veri erişim talepleri için."}
-                </p>
+                <p className="mt-1 text-[10px] text-slate-500">{t("research_contact_desc")}</p>
               </CardContent>
             </Card>
           </div>
