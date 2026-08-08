@@ -131,14 +131,17 @@ _Durum: **BLOKLU** (Otopilot değil — aşağıya bakınız) | Yürütücü: Op
 
 ## 9. Bugün Tamamlanan Görevler (Autopilot Sprint)
 
-| Blok  | Görev Özeti                                                                  | Durum        |
-| ----- | ---------------------------------------------------------------------------- | ------------ |
-| SIGMA | Mobile LanguageSwitcher fix                                                  | ✅ completed |
-| ZETA  | Public API rate-limit + env key hardening                                    | ✅ completed |
-| ZETA  | Vendor portal mock data temizliği (Rule #30 uyumu)                           | ✅ completed |
-| SIGMA | Stripe Checkout entegrasyonu (Pricing page)                                  | ✅ completed |
-| OMEGA | i18n 5 dil coverage (enterprise + products pages)                            | ✅ completed |
-| ALPHA | DecasHub Unified SSO migration (20260907000000_decashub_sso_schema.sql)      | ✅ completed |
-| ALPHA | Agent-OS premium UI (framer-motion SSO login, glassmorphism autopilot panel) | ✅ completed |
-| ALPHA | DecasHub landing page glassmorphism                                          | ✅ completed |
-| SIGMA | 8 kurumsal outreach maili (ercument.erden@alparai.com)                       | ✅ completed |
+| Blok  | Görev Özeti                                                                  | Durum                       |
+| ----- | ---------------------------------------------------------------------------- | --------------------------- |
+| SIGMA | Mobile LanguageSwitcher fix                                                  | ✅ completed                |
+| ZETA  | Public API rate-limit + env key hardening                                    | ✅ completed                |
+| ZETA  | Vendor portal mock data temizliği (Rule #30 uyumu)                           | ✅ completed                |
+| SIGMA | Stripe Checkout entegrasyonu (Pricing page)                                  | ✅ completed                |
+| OMEGA | i18n 5 dil coverage (enterprise + products pages)                            | ✅ completed                |
+| ALPHA | DecasHub Unified SSO migration (20260907000000_decashub_sso_schema.sql)      | ✅ completed                |
+| ALPHA | Agent-OS premium UI (framer-motion SSO login, glassmorphism autopilot panel) | ✅ completed                |
+| ALPHA | DecasHub landing page glassmorphism                                          | ✅ completed                |
+| SIGMA | 8 kurumsal outreach maili (ercument.erden@alparai.com)                       | ✅ completed                |
+| ZETA  | Autopilot: VoiceIncidentReporter, GlobalStateContext memory leaks (Alparai)  | ✅ 1ef85728 (origin/master) |
+| ZETA  | Autopilot: Agent-OS Auth.js v5 upgrade, Sitemap SEO & Hydration fixes        | ✅ c3249d0 (origin/main)    |
+| ZETA  | Autopilot: DecasHub SSO RLS enforcement (Tier-1 Maintenance Mode)            | ✅ 3674b75 (origin/main)    |
