@@ -214,78 +214,56 @@ Gerçek tekel mekanizması zaten kısmen kodlanmış: **rozet dağıtımı (SIGM
 
 ---
 
-## 8. v14.0 — The Sovereign AI Holding Doctrine
+## 8. v14.1 — The Sovereign AI Holding Doctrine
 
-**Status:** Architect specification (Architect role, G-6). Implementer = Antigravity/OpenCode. No `src/**` written by this session.
-**Source of all strategy figures below:** `_briefing.md` (Antigravity 5-model consensus, Aug 2026). Every multiple/percentage is an external claim, tagged `[tahmin — doğrulanmamış]` per Standing Rule #10 until measured against real revenue/GMV in Supabase.
+**Status:** Architect specification (Architect role, G-6). Implementer = Antigravity/OpenCode. Bu oturum `src/**` yazmaz.
+**Kaynaklar:** Makro tez `_decashub_thesis.md`; finansal çarpanlar `_briefing.md` (Antigravity 5-model consensus, Aug 2026). v14.0'ı **iptal ve ikame eder** — v14.0'ın hatası tespit edildi (§8.0).
+**Değişiklik özeti:** DecasHub artık "app store / Stripe geçidi" değil; ekosistemin tepesindeki **Global Nexus (Ağ + Sermaye)** katmanı olarak yeniden konumlandırıldı. Her çarpan/yüzde harici iddiadır, gerçek GMV/gelir Supabase'de ölçülene kadar `[tahmin — doğrulanmamış]`.
 
-### 8a. Doctrine Thesis
+### 8.0. v14.0'da Tespit Edilen Vizyon Daralması
 
-Üç ürün tek bir **Agentic-Era AWS**'idir; ayrı SaaS'lar değil. Tri-Force:
+v14.0, DecasHub'ı Agent-OS çıktısı için bir "listeleme + %10 ödeme geçidi" olarak modelledi. Bu, ürünü bir **finansal boru hattına** indirgeyip asıl değer katmanını — insan ağını — görünmez kıldı. Doğru model: para akışı bir sonuçtur; asıl varlık, sermaye ile yeteneği küresel ölçekte **eşleştiren güven ağıdır**. v14.1 bu daralmayı düzeltir; teknik spesifikasyonlar (Trust Seal, SSO, Stripe Connect) korunur ama artık Ağ'ın **altyapısı** olarak, kendisi olarak değil, konumlandırılır.
 
-| Katman                | Ürün         | AWS analoğu           | Rol                           | Para akışı                            |
-| --------------------- | ------------ | --------------------- | ----------------------------- | ------------------------------------- |
-| Marketplace / Capital | **DecasHub** | Console + Marketplace | Listeleme, sendikasyon, ödeme | %10 GMV komisyonu (tek gelir muslugu) |
-| Trust / Compliance    | **ALPAR AI** | IAM + GuardDuty       | PII + EU AI Act geçit katmanı | Data moat; B2B MRR + sertifikasyon    |
-| Execution             | **Agent-OS** | EC2 + Lambda          | Free-tier LLM yönlendirme     | COGS ≈ 0 → komisyon = brüt kâr        |
+### 8a. Doctrine Thesis — Tri-Force = Nexus / Trust / Execution
 
-Moat = **Zero-Marginal-Cost Trust & Execution Flywheel**. Wrapper rakip bunu API maliyeti akıtmadan veya EU denetimi geçemeden kopyalayamaz.
+Üç ürün tek bir **Sovereign AI Holding**'dir; ayrı SaaS'lar değil. Piyasadaki asıl sorun sermaye kıtlığı değil **eşleşme (matching) kıtlığıdır**: VC "yatırılacak kaliteli girişim yok", girişimci "sermaye yok", fikir sahibi "ortak/ekip yok" der. Bu üç şikâyet aynı likidite krizinin üç yüzüdür. DecasHub bu krizi çözen küresel eşleştirme merkezidir.
 
-### 8b. HoldCo İş Mimarisi & Stripe Connect %10 Yönlendirme
+| Katman                 | Ürün         | Rol                                                                                           | Analog                                                | Para akışı                         |
+| ---------------------- | ------------ | --------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ---------------------------------- |
+| **Nexus / Capital**    | **DecasHub** | Girişimci · VC · melek · yetenek eşleştirme (Global Network)                                  | Y-Combinator + AngelList + LinkedIn (AI çağı sentezi) | %10 sendikasyon/işlem komisyonu    |
+| **Trust / Compliance** | **ALPAR AI** | Kurulan ortaklık & AI projeleri için kurumsal güven + mevzuat (yatırımcı için risk sıfırlama) | IAM + GuardDuty                                       | B2B MRR + sertifikasyon; data moat |
+| **Execution**          | **Agent-OS** | Küresel ortakların fikrini anında koda/ürüne çeviren üretim motoru                            | EC2 + Lambda                                          | Free-tier LLM → COGS ≈ 0           |
 
-**Yapı.** Yatırım master HoldCo'ya SAFE ile girer. Tahsis: **%40 DecasHub** (network-effect likiditesi), **%30 ALPAR AI** (B2B MRR + sertifikasyon), **%30 Agent-OS** (execution ölçeklenmesi). ALPAR AI kurumsal LP'ler için yatırımı "de-risk" eden bileşendir. Ekosistem primi iddiası: **20x+ karışık multiple** (SaaS 10–15x, marketplace 1–3x üstü) — `[tahmin — doğrulanmamış]`.
+Moat = **Küresel Güven Ağı × Zero-Marginal-Cost Execution**. Bir wrapper rakip, ne sınır-ötesi güven ağını (ağ etkisi, kaynağı zaman), ne EU denetim geçidini, ne de sıfır-COGS execution'ı API maliyeti akıtmadan kopyalayamaz.
+
+### 8b. DecasHub = Global Nexus (asıl değer katmanı)
+
+**Ne olduğu.** Afrika'daki bir girişimci ile ABD'deki bir yatırımcı/yazılımcının saniyeler içinde ortak olabildiği, ekip kurup şirketleşebildiği **gerçek insan etkileşimine dayalı** sosyal ağ + güven merkezi. Sadece kod veya AI değil; **insan yeteneği ile sermayenin** buluştuğu yer.
+
+**Neyi çözdüğü (asimetrik problem).** Global likidite ve eşleşme krizi. DecasHub, üç tarafı (fikir · yetenek · sermaye) tek grafikte birleştirir; coğrafi sınırı kaldırır.
+
+**Ağ objeleri (Implementer için veri modeli iskeleti).**
+
+- `profiles` genişletir: `role ∈ {founder, investor, angel, talent, operator}`, `thesis`/`skills` vektörü, `geo`.
+- `ventures` (fikir/girişim), `syndicates` (sermaye toplama birimi), `matches` (öneri kenarı: kaynak profil → hedef venture/profil, skor + gerekçe).
+- Eşleştirme skoru bir MAT view (`k_nexus_matches`) — K-BENCHMARK skorlama motorunun (`k_model_scores`) aynı deseni. **Skorlama girdileri ölçülene kadar sıralama ağırlıkları `[tahmin — doğrulanmamış]`.**
+- Tüm serbest metin (thesis, mesaj) **PII Guardian**'dan geçer (Standing Rule #5, `src/lib/pii/guardian.ts`).
+
+**Neden Trust + Execution olmadan ağ tek başına yetmez.** VC'nin eşleşmeyi işleme dönüştürmesi için iki friksiyonun sıfırlanması gerekir: (1) risk — ALPAR "de-risk" eder; (2) execution hızı — Agent-OS fikri günler yerine saatlerde ürüne çevirir. Ağ değeri bu ikisiyle **bileşik** olur.
+
+### 8c. HoldCo Mimarisi & Sermaye Yönlendirme
+
+**Yapı.** Yatırım master HoldCo'ya SAFE ile girer. Tahsis: **%40 DecasHub** (ağ etkisi likiditesi — asıl değer motoru), **%30 ALPAR AI** (B2B MRR + sertifikasyon), **%30 Agent-OS** (execution ölçeklenmesi). ALPAR AI, kurumsal LP'ler için yatırımı de-risk eden bileşendir. Ekosistem primi iddiası: **20x+ karışık multiple** (SaaS 10–15x, marketplace 1–3x üstü) — `[tahmin — doğrulanmamış]`.
 
 **Revenue routing (Stripe Connect).**
 
-- Model: **Connect + `application_fee_amount`** üzerinden destination charge. Her sendikasyon nakit akışı DecasHub platform hesabından geçer; developer/syndicate = connected account.
-- **`application_fee_amount = round(gmv_cents * 0.10)`** — tek noktada sabit; ENV veya magic number değil, `src/lib/billing/constants.ts::PLATFORM_COMMISSION_BPS = 1000` (bps).
-- Free-tier execution nedeniyle marjinal maliyet ≈ 0 olduğundan bu %10 GMV **%100 brüt kâr** olarak modellenir — muhasebe doğrulaması gerçek Stripe payout raporuyla yapılana kadar `[tahmin — doğrulanmamış]`.
-- Webhook: `payment_intent.succeeded` → audit log (ALPAR admin client) → DecasHub ledger satırı. Idempotency key = Stripe event id. RLS: ledger yalnız admin client'tan yazılır.
+- Model: **Connect + `application_fee_amount`** destination charge. Her sendikasyon/eşleşme-sonucu nakit akışı DecasHub platform hesabından geçer; developer/syndicate = connected account.
+- `application_fee_amount = round(gmv_cents * 0.10)` — magic number yok; `src/lib/billing/constants.ts::PLATFORM_COMMISSION_BPS = 1000` (bps) tek kaynak.
+- Free-tier execution → marjinal maliyet ≈ 0 olduğundan bu %10 **≈ %100 brüt kâr** modellenir; gerçek Stripe payout raporuyla doğrulanana kadar `[tahmin — doğrulanmamış]`.
+- Webhook: `payment_intent.succeeded` → audit log (admin client) → DecasHub ledger. Idempotency key = Stripe event id. RLS: ledger yalnız admin client'tan yazılır.
 
-**Compliance-as-financial-instrument.** ALPAR AI "Legal Risk Insurance" olarak konumlanır; Fortune 500 için €35M EU AI Act cezası General Counsel blokajını açar → satın alma zorunlu ön koşul.
+**Compliance-as-financial-instrument.** ALPAR AI "Legal Risk Insurance" olarak konumlanır; Fortune 500 için €35M EU AI Act cezası, General Counsel blokajını satın alma ön koşuluna çevirir.
 
-### 8c. Forced Trust Gate — Agent-OS çıktısı → DecasHub listelemesi
+### 8d. Forced Trust Gate — Ağ'a giriş güven mührüne bağlıdır
 
-**Kural (binding).** Bir Agent-OS çıktısı DecasHub'da listelenemez / para kazanamaz / sendikasyona giremez — geçerli bir **`X-Alpar-Trust-Seal`** taşımadıkça. Geçit teknik olarak zorunludur, sözleşmesel değil.
-
-**Veri hattı:**
-
-```
-Agent-OS (free LLM execution)
-  → ALPAR AI stream inspection (PII Guardian + EU AI Act sınıflandırma)
-      → başarı: X-Alpar-Trust-Seal enjekte + şifreli audit log yaz
-      → başarısız: seal yok → DecasHub listeleme reddi
-  → DecasHub finansal işlemi netleştirir
-```
-
-**Seal spesifikasyonu.**
-
-- Format: kısa ömürlü imzalı JWT. Claims: `sub` (agent_id), `scan_id`, `pii_clean: bool`, `eu_act_risk_tier`, `exp`.
-- İmza: ALPAR özel anahtarı (asla tarayıcıya sızmaz, Standing Rule #6). DecasHub public key ile doğrular.
-- Doğrulama noktası: DecasHub listeleme server action → seal imza + `exp` + `pii_clean === true` kontrolü; biri düşerse insert reddedilir. RLS bu invariant'ı ikinci katmanda tekrar zorlar.
-- **SSO/Event Bus:** tek OIDC JWT kimliği + global API gateway; üç platform tek OS gibi hissettirir.
-
-**Viral loop bağlanışı:** developer → Agent-OS'a bedava compute için gelir → listelemek/fon toplamak için ALPAR geçidini geçmeye _zorlanır_ → captive ALPAR kullanıcısı olur. DecasHub başarı hikayeleri ("$0 ile kuruldu, %100 EU uyumlu, $Y kazandı") sıfır-CAC ile Agent-OS'a geri besler.
-
-### 8d. Antigravity için sıradaki 3 somut kodlama adımı
-
-Her adım bir MASTER_PLAN backlog satırıdır; G-7 gereği yalnız `origin`'de görülünce `✅` olur; rapor commit SHA + branch belirtmeli.
-
-**Adım 1 — Unified Identity (SSO temeli).**
-`src/lib/auth/oidc.ts`: tek OIDC JWT verici + doğrulayıcı. Üç ürün aynı `iss`/`aud`'ı paylaşır. Migration: `identities` tablosu + RLS. DoD: aynı token ile üç serviste `getUser()` çözülür; `pnpm lint && pnpm test` yeşil.
-
-**Adım 2 — Trust Seal verici/doğrulayıcı.**
-`src/lib/trust/seal.ts`: `issueSeal(scanResult)` (ALPAR imzalar) + `verifySeal(token)` (DecasHub doğrular). PII Guardian çıktısını (`src/lib/pii/guardian.ts`) claim'lere bağla. Migration: `trust_seals` audit tablosu, admin-only yazım. DoD: PII-kirli girdi seal alamaz — test ile kanıtlanır.
-
-**Adım 3 — Stripe Connect komisyon yönlendirme.**
-`src/actions/billing.ts::createSyndicateCharge`: destination charge + `application_fee_amount = gmv * PLATFORM_COMMISSION_BPS/10000`. `src/app/api/webhooks/stripe/route.ts`: idempotent webhook → ledger. DoD: test-mode payout raporunda %10 platform fee görünür; magic number yok; webhook imza doğrulaması var.
-
-**Sıralama gerekçesi:** Seal (Adım 2) SSO (Adım 1) kimliğine, komisyon (Adım 3) geçerli seal'a bağımlıdır — flywheel'in fiziksel bağ sırası budur.
-
-### 8e. Positioning
-
-Pitch: **"The World's First Accountable AI Capital & Execution System."** Marka: **The Sovereign AI Holding** (alt. Nexus Trust Alliance).
-
-### 8f. Governance notu
-
-Tüm finansal çarpanları ve kâr marjı iddiaları `_briefing.md` kaynaklıdır ve **ölçülmedi**; ilk gerçek Stripe payout + Supabase GMV verisi geldiğinde Standing Rule #10 uyarınca `[tahmin — doğrulanmamış]` etiketleri kaldırılıp gerçek rakamla değiştirilecektir. Spesifikasyonlar Implementer (Antigravity) tarafından yazılır; Architect yalnız doktrini kaleme aldı.
+**Kural (binding).** Bir venture/agent çıktısı DecasHub Nexus'unda **listelenemez, eşleştirilemez, sendikasyona giremez, para kazanamaz** — geçerli bir **`X-Alpar-Trust-Seal`** taşımadıkça. Geçit teknik olarak zorunludur, sözleşmesel değil.
