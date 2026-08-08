@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { RefreshCw, Home, AlertOctagon } from "lucide-react";
-import { motion } from "framer-motion";
 import { Container } from "@/components/ui/layout";
 
 interface ErrorProps {
@@ -32,22 +31,13 @@ export default function LocaleError({ error, reset }: ErrorProps) {
     <div className="relative flex min-h-[70vh] w-full items-center justify-center overflow-hidden py-16">
       {/* Ambient background glow */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        <motion.div
-          animate={{ scale: [1, 1.15, 1], opacity: [0.15, 0.25, 0.15] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="bg-danger-500/20 absolute -top-24 left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full blur-[120px]"
-        />
+        <div className="bg-danger-500/20 animate-float absolute -top-24 left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full blur-[120px]" />
       </div>
 
       <Container size="narrow" className="relative z-10 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className="flex flex-col items-center"
-        >
+        <div className="animate-fade-up flex flex-col items-center">
           {/* Glass Badge */}
-          <div className="border-danger-500/30 bg-danger-500/10 text-danger-400 mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold tracking-wider uppercase backdrop-blur-md shadow-sm">
+          <div className="border-danger-500/30 bg-danger-500/10 text-danger-400 mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold tracking-wider uppercase shadow-sm backdrop-blur-md">
             <AlertOctagon className="text-danger-400 h-4 w-4" />
             <span>{t("somethingWentWrong", { defaultValue: "Bir şeyler ters gitti" })}</span>
           </div>
@@ -89,7 +79,7 @@ export default function LocaleError({ error, reset }: ErrorProps) {
               <span>{t("goHome", { defaultValue: "Ana sayfaya dön" })}</span>
             </Link>
           </div>
-        </motion.div>
+        </div>
       </Container>
     </div>
   );

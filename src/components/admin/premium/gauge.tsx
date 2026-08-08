@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 interface GaugeProps {
@@ -54,6 +54,8 @@ export function Gauge({
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (animatedValue / 100) * circumference;
 
+  const rafIdRef = useRef<number | null>(null);
+
   useEffect(() => {
     const duration = 1500;
     const startTime = performance.now();
@@ -61,9 +63,15 @@ export function Gauge({
       const progress = Math.min((now - startTime) / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
       setAnimatedValue(eased * percentage);
-      if (progress < 1) requestAnimationFrame(animate);
+      if (progress < 1) {
+        rafIdRef.current = requestAnimationFrame(animate);
+      }
     };
-    requestAnimationFrame(animate);
+    rafIdRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+    };
   }, [percentage]);
 
   return (

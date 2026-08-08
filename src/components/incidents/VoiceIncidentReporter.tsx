@@ -20,6 +20,10 @@ export function VoiceIncidentReporter({ onTranscript }: VoiceIncidentReporterPro
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+        mediaRecorderRef.current.stream.getTracks().forEach((track) => track.stop());
+        mediaRecorderRef.current.stop();
+      }
     };
   }, []);
 

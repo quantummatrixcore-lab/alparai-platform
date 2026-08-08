@@ -20,7 +20,7 @@ export class VercelAIGatewayAdapter implements ProviderAdapter {
       const modelIdentifier = request.model.id;
 
       const { text, usage } = await generateText({
-        model: gateway(modelIdentifier),
+        model: gateway(modelIdentifier) as unknown as Parameters<typeof generateText>[0]["model"],
         system: request.systemPrompt,
         prompt: request.userMessage,
         temperature: request.temperature ?? 0.3,

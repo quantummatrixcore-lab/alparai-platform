@@ -2,7 +2,6 @@
 
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
-import { motion } from "framer-motion";
 import { Home, ShieldAlert } from "lucide-react";
 import { Container } from "@/components/ui/layout";
 
@@ -21,33 +20,20 @@ export default function NotFound() {
     <div className="relative flex min-h-[70vh] w-full items-center justify-center overflow-hidden py-16">
       {/* Ambient background glassmorphism glow */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        <motion.div
-          animate={{ scale: [1, 1.15, 1], opacity: [0.15, 0.25, 0.15] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="bg-brand-500/20 absolute -top-24 left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full blur-[120px]"
-        />
-        <motion.div
-          animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.2, 0.1] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="bg-accent-500/15 absolute -bottom-24 right-1/4 h-[400px] w-[400px] rounded-full blur-[100px]"
-        />
+        <div className="bg-brand-500/20 animate-float absolute -top-24 left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full blur-[120px]" />
+        <div className="bg-accent-500/15 animate-float-delayed absolute right-1/4 -bottom-24 h-[400px] w-[400px] rounded-full blur-[100px]" />
       </div>
 
       <Container size="narrow" className="relative z-10 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className="flex flex-col items-center"
-        >
+        <div className="animate-fade-up flex flex-col items-center">
           {/* Glass Badge */}
-          <div className="border-border-subtle bg-bg-secondary/60 text-brand-400 mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold tracking-wider uppercase backdrop-blur-md shadow-sm">
+          <div className="border-border-subtle bg-bg-secondary/60 text-brand-400 mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold tracking-wider uppercase shadow-sm backdrop-blur-md">
             <ShieldAlert className="text-brand-400 h-4 w-4" />
             <span>{error404Text}</span>
           </div>
 
           {/* 404 Large Gradient Text */}
-          <h1 className="from-fg-primary via-brand-300 to-fg-muted select-none bg-gradient-to-b bg-clip-text text-7xl font-extrabold tracking-tighter text-transparent sm:text-8xl md:text-9xl">
+          <h1 className="from-fg-primary via-brand-300 to-fg-muted bg-gradient-to-b bg-clip-text text-7xl font-extrabold tracking-tighter text-transparent select-none sm:text-8xl md:text-9xl">
             404
           </h1>
 
@@ -71,7 +57,7 @@ export default function NotFound() {
               <span>{goHomeText}</span>
             </Link>
           </div>
-        </motion.div>
+        </div>
       </Container>
     </div>
   );

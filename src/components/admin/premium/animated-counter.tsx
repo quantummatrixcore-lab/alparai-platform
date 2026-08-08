@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 interface AnimatedCounterProps {
@@ -22,6 +22,8 @@ export function AnimatedCounter({
 }: AnimatedCounterProps) {
   const [display, setDisplay] = useState(value);
 
+  const rafIdRef = useRef<number | null>(null);
+
   useEffect(() => {
     const startTime = performance.now();
     const startValue = display;
@@ -29,9 +31,15 @@ export function AnimatedCounter({
       const progress = Math.min((now - startTime) / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
       setDisplay(startValue + (value - startValue) * eased);
-      if (progress < 1) requestAnimationFrame(animate);
+      if (progress < 1) {
+        rafIdRef.current = requestAnimationFrame(animate);
+      }
     };
-    requestAnimationFrame(animate);
+    rafIdRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, duration]);
 
