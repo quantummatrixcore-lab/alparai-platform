@@ -4,6 +4,7 @@ import { Check, Shield, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
+import { CheckoutButton } from "@/components/marketing/checkout-button";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -51,7 +52,8 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
         t("vendor_feature_4"),
       ],
       cta: t("vendor_cta"),
-      href: "/contact?subject=vendor-portal",
+      href: "#",
+      checkoutTier: "pro" as const,
       variant: "primary" as const,
       popular: true,
       isMailto: false,
@@ -69,10 +71,11 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
         t("enterprise_feature_4"),
       ],
       cta: t("enterprise_cta"),
-      href: "mailto:hello@alparai.com?subject=Enterprise%20API%20Inquiry",
+      href: "#",
+      checkoutTier: "enterprise" as const,
       variant: "outline" as const,
       popular: false,
-      isMailto: true,
+      isMailto: false,
     },
   ];
 
@@ -126,7 +129,11 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
                 ))}
               </ul>
 
-              {tier.isMailto ? (
+              {tier.checkoutTier ? (
+                <CheckoutButton tier={tier.checkoutTier} variant={tier.variant} className="w-full justify-center">
+                  {tier.cta}
+                </CheckoutButton>
+              ) : tier.isMailto ? (
                 <a href={tier.href} className="w-full">
                   <Button
                     variant={tier.variant}

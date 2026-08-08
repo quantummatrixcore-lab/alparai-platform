@@ -4707,7 +4707,54 @@
   "products": {
     "ars_api": "ALPAR Risk Score API",
     "eu_ai_act": "EU AI Act Compliance SaaS",
-    "datasets": "LLM Red-Teaming Datasets"
+    "datasets": {
+      "0": "L",
+      "1": "L",
+      "2": "M",
+      "3": " ",
+      "4": "R",
+      "5": "e",
+      "6": "d",
+      "7": "-",
+      "8": "T",
+      "9": "e",
+      "10": "a",
+      "11": "m",
+      "12": "i",
+      "13": "n",
+      "14": "g",
+      "15": " ",
+      "16": "D",
+      "17": "a",
+      "18": "t",
+      "19": "a",
+      "20": "s",
+      "21": "e",
+      "22": "t",
+      "23": "s",
+      "badge": "Open Data & Research",
+      "title": "ALPAR AI Datasets",
+      "subtitle": "Access curated, structured, and cross-audited datasets of AI failures. Built for researchers, red-teamers, and policy makers to advance the safety of artificial intelligence.",
+      "features": {
+        "exports": {
+          "title": "Structured Exports",
+          "desc": "Download incident reports in JSON, CSV, and Parquet formats, ready for immediate analysis in your data pipeline."
+        },
+        "taxonomy": {
+          "title": "Taxonomy Aligned",
+          "desc": "Incidents are mapped to CSET, AIID, and EU AI Act risk categorizations for standardized research."
+        },
+        "license": {
+          "title": "Academic License",
+          "desc": "Free for academic and non-commercial research purposes to support the global AI safety community."
+        }
+      },
+      "cta": {
+        "title": "Access the Data",
+        "desc": "We provide bulk dataset access to verified research institutions and policy organizations.",
+        "button": "Request Dataset Access"
+      }
+    }
   },
   "enterprise": {
     "title": "Enterprise Solutions",
@@ -4728,6 +4775,13 @@
         "title": "AI Act Compliance",
         "desc": "Article 73 ready passports for your deployed AI systems."
       }
-    }
+    },
+    "hero_title": "Vendor Risk-as-a-Service",
+    "features_analysis": "Analyze 990+ historical incidents",
+    "features_liability": "Vendor liability assessment",
+    "features_alerts": "Real-time alerts via Webhooks",
+    "pricing_starting_at": "Enterprise Plan Starting At",
+    "pricing_per_year": "/year",
+    "pricing_includes": "Includes dedicated Slack channel & SLA."
   }
 }

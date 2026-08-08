@@ -4679,5 +4679,40 @@
     "score": "Compliance Score",
     "risks": "Risks",
     "recommendations": "Recommendations"
+  },
+  "enterprise": {
+    "hero_title": "Vendor Risk-as-a-Service",
+    "features_analysis": "Analyze 990+ historical incidents",
+    "features_liability": "Vendor liability assessment",
+    "features_alerts": "Real-time alerts via Webhooks",
+    "pricing_starting_at": "Enterprise Plan Starting At",
+    "pricing_per_year": "/year",
+    "pricing_includes": "Includes dedicated Slack channel & SLA."
+  },
+  "products": {
+    "datasets": {
+      "badge": "Open Data & Research",
+      "title": "ALPAR AI Datasets",
+      "subtitle": "Access curated, structured, and cross-audited datasets of AI failures. Built for researchers, red-teamers, and policy makers to advance the safety of artificial intelligence.",
+      "features": {
+        "exports": {
+          "title": "Structured Exports",
+          "desc": "Download incident reports in JSON, CSV, and Parquet formats, ready for immediate analysis in your data pipeline."
+        },
+        "taxonomy": {
+          "title": "Taxonomy Aligned",
+          "desc": "Incidents are mapped to CSET, AIID, and EU AI Act risk categorizations for standardized research."
+        },
+        "license": {
+          "title": "Academic License",
+          "desc": "Free for academic and non-commercial research purposes to support the global AI safety community."
+        }
+      },
+      "cta": {
+        "title": "Access the Data",
+        "desc": "We provide bulk dataset access to verified research institutions and policy organizations.",
+        "button": "Request Dataset Access"
+      }
+    }
   }
 }

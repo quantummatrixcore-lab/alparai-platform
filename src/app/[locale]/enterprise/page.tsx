@@ -23,7 +23,7 @@ export default async function EnterprisePage({ params }: { params: Promise<{ loc
               </div>
             </div>
             <h1 className="text-fg-primary mb-6 text-5xl font-black tracking-tight lg:text-7xl">
-              Vendor Risk-as-a-Service
+              {t("hero_title")}
             </h1>
             <p className="text-fg-secondary text-lg leading-relaxed lg:text-xl">{t("subtitle")}</p>
           </div>
@@ -74,19 +74,19 @@ export default async function EnterprisePage({ params }: { params: Promise<{ loc
                     <div className="flex items-center gap-3">
                       <CheckCircle className="text-success-500 h-5 w-5" />
                       <span className="text-fg-primary text-sm font-medium">
-                        Analyze 990+ historical incidents
+                        {t("features_analysis")}
                       </span>
                     </div>
                     <div className="flex items-center gap-3">
                       <CheckCircle className="text-success-500 h-5 w-5" />
                       <span className="text-fg-primary text-sm font-medium">
-                        Vendor liability assessment
+                        {t("features_liability")}
                       </span>
                     </div>
                     <div className="flex items-center gap-3">
                       <CheckCircle className="text-success-500 h-5 w-5" />
                       <span className="text-fg-primary text-sm font-medium">
-                        Real-time alerts via Webhooks
+                        {t("features_alerts")}
                       </span>
                     </div>
                   </div>
@@ -94,10 +94,10 @@ export default async function EnterprisePage({ params }: { params: Promise<{ loc
                 <div className="bg-bg-primary rounded-2xl border border-white/5 p-8 text-center">
                   <div className="mb-6">
                     <p className="text-fg-muted mb-2 text-sm font-medium">
-                      Enterprise Plan Starting At
+                      {t("pricing_starting_at")}
                     </p>
                     <p className="text-fg-primary text-4xl font-black">
-                      $50,000<span className="text-fg-muted text-lg font-normal">/year</span>
+                      $50,000<span className="text-fg-muted text-lg font-normal">{t("pricing_per_year")}</span>
                     </p>
                   </div>
 
@@ -111,7 +111,7 @@ export default async function EnterprisePage({ params }: { params: Promise<{ loc
                     </Link>
                   </TrackedCtaButton>
                   <p className="text-fg-muted mt-4 text-xs">
-                    Includes dedicated Slack channel & SLA.
+                    {t("pricing_includes")}
                   </p>
                 </div>
               </div>

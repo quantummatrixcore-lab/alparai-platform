@@ -4707,7 +4707,58 @@
   "products": {
     "ars_api": "ALPAR Risk Skor API",
     "eu_ai_act": "AB YZ Yasası Uyum SaaS",
-    "datasets": "LLM Red-Teaming Veri Setleri"
+    "datasets": {
+      "0": "L",
+      "1": "L",
+      "2": "M",
+      "3": " ",
+      "4": "R",
+      "5": "e",
+      "6": "d",
+      "7": "-",
+      "8": "T",
+      "9": "e",
+      "10": "a",
+      "11": "m",
+      "12": "i",
+      "13": "n",
+      "14": "g",
+      "15": " ",
+      "16": "V",
+      "17": "e",
+      "18": "r",
+      "19": "i",
+      "20": " ",
+      "21": "S",
+      "22": "e",
+      "23": "t",
+      "24": "l",
+      "25": "e",
+      "26": "r",
+      "27": "i",
+      "badge": "Open Data & Research",
+      "title": "ALPAR AI Datasets",
+      "subtitle": "Access curated, structured, and cross-audited datasets of AI failures. Built for researchers, red-teamers, and policy makers to advance the safety of artificial intelligence.",
+      "features": {
+        "exports": {
+          "title": "Structured Exports",
+          "desc": "Download incident reports in JSON, CSV, and Parquet formats, ready for immediate analysis in your data pipeline."
+        },
+        "taxonomy": {
+          "title": "Taxonomy Aligned",
+          "desc": "Incidents are mapped to CSET, AIID, and EU AI Act risk categorizations for standardized research."
+        },
+        "license": {
+          "title": "Academic License",
+          "desc": "Free for academic and non-commercial research purposes to support the global AI safety community."
+        }
+      },
+      "cta": {
+        "title": "Access the Data",
+        "desc": "We provide bulk dataset access to verified research institutions and policy organizations.",
+        "button": "Request Dataset Access"
+      }
+    }
   },
   "enterprise": {
     "title": "Kurumsal Çözümler",
@@ -4728,6 +4779,13 @@
         "title": "YZ Yasası Uyumluluğu",
         "desc": "Devreye alınan YZ sistemleriniz için Madde 73 uyumlu pasaportlar."
       }
-    }
+    },
+    "hero_title": "Vendor Risk-as-a-Service",
+    "features_analysis": "Analyze 990+ historical incidents",
+    "features_liability": "Vendor liability assessment",
+    "features_alerts": "Real-time alerts via Webhooks",
+    "pricing_starting_at": "Enterprise Plan Starting At",
+    "pricing_per_year": "/year",
+    "pricing_includes": "Includes dedicated Slack channel & SLA."
   }
 }

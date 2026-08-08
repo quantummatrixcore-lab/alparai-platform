@@ -1,12 +1,24 @@
 import { NextResponse } from "next/server";
+import { headers } from "next/headers";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { checkRateLimit, RATE_LIMIT_KEYS } from "@/lib/utils/rate-limit";
 
 export async function GET(request: Request) {
   try {
-    const apiKey = request.headers.get("x-api-key");
-    const validKey = process.env.PUBLIC_API_KEY || "alparai-public-api-token"; // Basic check
+    const hdrs = await headers();
+    const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+    const rl = await checkRateLimit(`${RATE_LIMIT_KEYS.api_general}:${ip}`);
+    if (!rl.ok) {
+      return NextResponse.json(
+        { error: "rate_limited", retryAfter: rl.retryAfter },
+        { status: 429 }
+      );
+    }
 
-    if (!apiKey || apiKey !== validKey) {
+    const apiKey = request.headers.get("x-api-key");
+    const validKey = process.env.PUBLIC_API_KEY;
+
+    if (!validKey || !apiKey || apiKey !== validKey) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

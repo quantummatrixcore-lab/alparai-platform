@@ -49,8 +49,8 @@ export function Header({
             <Nav user={user} />
           </div>
         </div>
-        <div className="flex items-center gap-2.5">
-          <LanguageSwitcher className="hidden sm:inline-flex" />
+        <div className="flex items-center gap-1.5 sm:gap-2.5">
+          <LanguageSwitcher className="inline-flex" />
           <Link
             href="/submit"
             style={{ whiteSpace: "nowrap" }}

@@ -34,5 +34,5 @@ Sincerely,
 
 **Ercümend Alpar**  
 Founder, ALPAR AI  
-*quantum.matrix.core@gmail.com*  
+*ercument.erden@alparai.com*  
 [alparai.com](https://alparai.com)

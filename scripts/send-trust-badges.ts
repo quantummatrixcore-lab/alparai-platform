@@ -19,10 +19,13 @@ async function sendTrustBadgeEmails() {
   for (const line of lines) {
     if (line.startsWith("|") && line.includes("@")) {
       const parts = line.split("|").map((p) => p.trim());
-      if (parts.length > 3 && parts[3].includes("@")) {
-        const email = parts[3].replace(/mailto:/g, "").trim();
-        if (email.includes("@")) {
-          emails.push(email);
+      if (parts.length > 3) {
+        const part = parts[3];
+        if (part && part.includes("@")) {
+          const email = part.replace(/mailto:/g, "").trim();
+          if (email.includes("@")) {
+            emails.push(email);
+          }
         }
       }
     }
