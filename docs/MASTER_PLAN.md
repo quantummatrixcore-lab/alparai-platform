@@ -267,3 +267,19 @@ Moat = **Küresel Güven Ağı × Zero-Marginal-Cost Execution**. Bir wrapper ra
 ### 8d. Forced Trust Gate — Ağ'a giriş güven mührüne bağlıdır
 
 **Kural (binding).** Bir venture/agent çıktısı DecasHub Nexus'unda **listelenemez, eşleştirilemez, sendikasyona giremez, para kazanamaz** — geçerli bir **`X-Alpar-Trust-Seal`** taşımadıkça. Geçit teknik olarak zorunludur, sözleşmesel değil.
+
+---
+
+## 9. Bugün Tamamlanan Görevler (Autopilot Sprint)
+
+| Blok  | Görev Özeti                                                                    | Durum       |
+| ----- | ------------------------------------------------------------------------------ | ----------- |
+| SIGMA | Mobile LanguageSwitcher fix                                                    | ✅ completed |
+| ZETA  | Public API rate-limit + env key hardening                                      | ✅ completed |
+| ZETA  | Vendor portal mock data temizliği (Rule #30 uyumu)                             | ✅ completed |
+| SIGMA | Stripe Checkout entegrasyonu (Pricing page)                                    | ✅ completed |
+| OMEGA | i18n 5 dil coverage (enterprise + products pages)                              | ✅ completed |
+| ALPHA | DecasHub Unified SSO migration (20260907000000_decashub_sso_schema.sql)        | ✅ completed |
+| ALPHA | Agent-OS premium UI (framer-motion SSO login, glassmorphism autopilot panel)   | ✅ completed |
+| ALPHA | DecasHub landing page glassmorphism                                            | ✅ completed |
+| SIGMA | 8 kurumsal outreach maili (ercument.erden@alparai.com)                         | ✅ completed |
