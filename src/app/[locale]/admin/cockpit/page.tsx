@@ -8,3 +8,8 @@ export default async function AdminCockpitRedirectPage({
   const { locale } = await params;
   redirect(`/${locale}/admin`);
 }
+
+export const metadata = {
+  title: "ALPAR AI",
+  description: "The trust infrastructure for AI accountability.",
+};

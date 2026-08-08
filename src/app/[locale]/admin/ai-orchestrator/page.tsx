@@ -77,3 +77,8 @@ export default async function AiOrchestratorAdminPage() {
     </AdminContainer>
   );
 }
+
+export const metadata = {
+  title: "ALPAR AI",
+  description: "The trust infrastructure for AI accountability.",
+};

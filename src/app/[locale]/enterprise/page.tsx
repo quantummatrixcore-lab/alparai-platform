@@ -97,7 +97,10 @@ export default async function EnterprisePage({ params }: { params: Promise<{ loc
                       {t("pricing_starting_at")}
                     </p>
                     <p className="text-fg-primary text-4xl font-black">
-                      $50,000<span className="text-fg-muted text-lg font-normal">{t("pricing_per_year")}</span>
+                      $50,000
+                      <span className="text-fg-muted text-lg font-normal">
+                        {t("pricing_per_year")}
+                      </span>
                     </p>
                   </div>
 
@@ -110,9 +113,7 @@ export default async function EnterprisePage({ params }: { params: Promise<{ loc
                       {t("book_demo")}
                     </Link>
                   </TrackedCtaButton>
-                  <p className="text-fg-muted mt-4 text-xs">
-                    {t("pricing_includes")}
-                  </p>
+                  <p className="text-fg-muted mt-4 text-xs">{t("pricing_includes")}</p>
                 </div>
               </div>
             </div>
@@ -122,3 +123,8 @@ export default async function EnterprisePage({ params }: { params: Promise<{ loc
     </div>
   );
 }
+
+export const metadata = {
+  title: "ALPAR AI",
+  description: "The trust infrastructure for AI accountability.",
+};

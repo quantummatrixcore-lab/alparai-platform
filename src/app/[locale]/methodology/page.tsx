@@ -17,3 +17,8 @@ export default async function MethodologyPage({ params }: { params: Promise<{ lo
     </main>
   );
 }
+
+export const metadata = {
+  title: "ALPAR AI",
+  description: "The trust infrastructure for AI accountability.",
+};

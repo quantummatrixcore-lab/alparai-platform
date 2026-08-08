@@ -51,17 +51,24 @@ export default async function AdminEcosystemPage({
   };
 
   return (
-    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
-      <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
-      <EcosystemDashboard
-        data={{
-          queue: queueRes.data ?? [],
-          feed: feedRes.data ?? [],
-          positive: positiveRes.data ?? [],
-          stats,
-        }}
-      />
+    <div className="min-h-screen bg-black p-6">
+      <div className="rounded-3xl bg-zinc-900/40 p-8 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl">
+        <div className="space-y-8 rounded-3xl bg-zinc-900/40 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+          <EcosystemDashboard
+            data={{
+              queue: queueRes.data ?? [],
+              feed: feedRes.data ?? [],
+              positive: positiveRes.data ?? [],
+              stats,
+            }}
+          />
+        </div>
+      </div>
     </div>
-      </div></div>
   );
 }
+
+export const metadata = {
+  title: "ALPAR AI",
+  description: "The trust infrastructure for AI accountability.",
+};

@@ -169,3 +169,8 @@ export default async function DsarPage({ params }: { params: Promise<{ locale: s
     </div>
   );
 }
+
+export const metadata = {
+  title: "ALPAR AI",
+  description: "The trust infrastructure for AI accountability.",
+};

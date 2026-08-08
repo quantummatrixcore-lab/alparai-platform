@@ -870,6 +870,8 @@
     "sending": "Gönderiliyor..."
   },
   "admin": {
+    "jules_meta_title": "Google Jules — Yapay Zeka Kodlama Ajanı | ALPAR AI Yönetim",
+    "jules_meta_desc": "ALPAR AI platformu için Google Jules otonom kodlama ajanı oturumlarını yönetin",
     "*": "*",
     "1_day_ago": "1 gün önce",
     "2_days_ago": "2 gün önce",

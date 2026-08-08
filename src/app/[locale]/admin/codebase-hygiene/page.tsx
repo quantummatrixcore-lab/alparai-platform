@@ -86,3 +86,8 @@ export default async function CodebaseHygieneAdminPage() {
     </div>
   );
 }
+
+export const metadata = {
+  title: "ALPAR AI",
+  description: "The trust infrastructure for AI accountability.",
+};

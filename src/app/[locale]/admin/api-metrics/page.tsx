@@ -172,3 +172,8 @@ export default async function ApiMetricsPage({ params }: { params: Promise<{ loc
     </div>
   );
 }
+
+export const metadata = {
+  title: "ALPAR AI",
+  description: "The trust infrastructure for AI accountability.",
+};

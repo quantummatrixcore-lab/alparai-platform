@@ -870,6 +870,8 @@
     "sending": "Sending..."
   },
   "admin": {
+    "jules_meta_title": "Google Jules — AI Coding Agent | ALPAR AI Admin",
+    "jules_meta_desc": "Manage Google Jules autonomous coding agent sessions for the ALPAR AI platform",
     "*": "*",
     "1_day_ago": "1 day ago",
     "2_days_ago": "2 days ago",
@@ -4685,10 +4687,10 @@
       "21": "e",
       "22": "t",
       "23": "s",
-      "24": "",
-      "25": "",
-      "26": "",
-      "27": "",
+      "24": " ",
+      "25": " ",
+      "26": " ",
+      "27": " ",
       "badge": "Open Data & Research",
       "title": "ALPAR AI Datasets",
       "subtitle": "Access curated, structured, and cross-audited datasets of AI failures. Built for researchers, red-teamers, and policy makers to advance the safety of artificial intelligence.",

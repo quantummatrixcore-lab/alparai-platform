@@ -44,6 +44,10 @@ const mono = JetBrains_Mono({
   display: "swap",
 });
 
+export const metadata = {
+  metadataBase: new URL("https://alparai.com"),
+};
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }

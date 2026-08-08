@@ -1,6 +1,7 @@
 import { requireAdmin } from "@/lib/auth/session";
 import { listJulesSessions } from "@/actions/admin/jules";
 import { JulesDashboard } from "@/components/admin/jules/jules-dashboard";
+import { getTranslations } from "next-intl/server";
 
 export const dynamic = "force-dynamic";
 
@@ -20,9 +21,12 @@ export default async function JulesPage() {
   );
 }
 
-export async function generateMetadata() {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "admin" });
+
   return {
-    title: "Google Jules — AI Coding Agent | ALPAR AI Admin",
-    description: "Manage Google Jules autonomous coding agent sessions for the ALPAR AI platform",
+    title: t("jules_meta_title"),
+    description: t("jules_meta_desc"),
   };
 }

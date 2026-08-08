@@ -32,18 +32,25 @@ export default async function OutreachAdminPage({
   }
 
   return (
-    <div className="min-h-screen bg-black p-6"><div className="bg-zinc-900/40 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl shadow-2xl p-8">
-      <div className="mx-auto max-w-6xl space-y-8 rounded-3xl bg-zinc-900/40 p-6 pb-12 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
-      <div>
-        <h1 className="flex items-center gap-3 text-3xl font-black tracking-tight text-white">
-          <Megaphone className="h-8 w-8 text-amber-400" />
-          {t("outreach_hub")}
-        </h1>
-        <p className="text-fg-muted mt-2 text-lg">{t("outreach_subtitle")}</p>
-      </div>
+    <div className="min-h-screen bg-black p-6">
+      <div className="rounded-3xl bg-zinc-900/40 p-8 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl">
+        <div className="mx-auto max-w-6xl space-y-8 rounded-3xl bg-zinc-900/40 p-6 pb-12 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl md:p-8">
+          <div>
+            <h1 className="flex items-center gap-3 text-3xl font-black tracking-tight text-white">
+              <Megaphone className="h-8 w-8 text-amber-400" />
+              {t("outreach_hub")}
+            </h1>
+            <p className="text-fg-muted mt-2 text-lg">{t("outreach_subtitle")}</p>
+          </div>
 
-      <OutreachPageContent initialQueue={queue || []} />
+          <OutreachPageContent initialQueue={queue || []} />
+        </div>
+      </div>
     </div>
-      </div></div>
   );
 }
+
+export const metadata = {
+  title: "ALPAR AI",
+  description: "The trust infrastructure for AI accountability.",
+};
